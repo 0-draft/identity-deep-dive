@@ -1,0 +1,85 @@
+name: Daily Update (All Tracks)
+
+on:
+  schedule:
+    - cron: "0 6 * * *"  # 06:00 UTC daily
+  workflow_dispatch:
+    inputs:
+      track:
+        description: "Run a specific track only (leave blank for all)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  update-ietf-wimse:
+    if: ${{ github.event.inputs.track == '' || github.event.inputs.track == 'ietf-wimse' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tracks/ietf-wimse
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e .
+      - run: make update
+      - name: Commit changes
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tracks/ietf-wimse/
+          git diff --cached --quiet || git commit -m "chore(ietf-wimse): daily update $(date -u +%Y-%m-%d)"
+          git push
+
+  update-oauth-wg:
+    if: ${{ github.event.inputs.track == '' || github.event.inputs.track == 'oauth-wg' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tracks/oauth-wg
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r scripts/requirements.txt 2>/dev/null || true
+      - run: bash scripts/run_daily.sh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit changes
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tracks/oauth-wg/
+          git diff --cached --quiet || git commit -m "chore(oauth-wg): daily update $(date -u +%Y-%m-%d)"
+          git push
+
+  update-openid:
+    if: ${{ github.event.inputs.track == '' || github.event.inputs.track == 'openid' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tracks/openid
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r scripts/requirements.txt
+      - run: bash scripts/run_daily.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit changes
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tracks/openid/
+          git diff --cached --quiet || git commit -m "chore(openid): daily update $(date -u +%Y-%m-%d)"
+          git push

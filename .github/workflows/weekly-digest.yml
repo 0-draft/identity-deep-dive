@@ -1,0 +1,85 @@
+name: Weekly Digest (All Tracks)
+
+on:
+  schedule:
+    - cron: "0 8 * * 1"  # Monday 08:00 UTC
+  workflow_dispatch:
+    inputs:
+      track:
+        description: "Run a specific track only (leave blank for all)"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  weekly-ietf-wimse:
+    if: ${{ github.event.inputs.track == '' || github.event.inputs.track == 'ietf-wimse' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tracks/ietf-wimse
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e .
+      - run: make weekly
+      - name: Commit changes
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tracks/ietf-wimse/
+          git diff --cached --quiet || git commit -m "chore(ietf-wimse): weekly digest $(date -u +%Y-W%V)"
+          git push
+
+  weekly-oauth-wg:
+    if: ${{ github.event.inputs.track == '' || github.event.inputs.track == 'oauth-wg' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tracks/oauth-wg
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r scripts/requirements.txt 2>/dev/null || true
+      - run: python3 scripts/build_daily_report.py --weekly 2>/dev/null || true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit changes
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tracks/oauth-wg/
+          git diff --cached --quiet || git commit -m "chore(oauth-wg): weekly digest $(date -u +%Y-W%V)"
+          git push
+
+  weekly-openid:
+    if: ${{ github.event.inputs.track == '' || github.event.inputs.track == 'openid' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: tracks/openid
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r scripts/requirements.txt
+      - run: bash scripts/run_weekly.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Commit changes
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add tracks/openid/
+          git diff --cached --quiet || git commit -m "chore(openid): weekly digest $(date -u +%Y-W%V)"
+          git push
