@@ -1,0 +1,67 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+const { title, description = "Identity Deep Dive — daily and weekly reports across IETF WIMSE, OAuth WG, and OpenID." } = Astro.props;
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const navLinks = [
+  { href: `${base}/`, label: "Overview" },
+  { href: `${base}/ietf-wimse/`, label: "IETF WIMSE" },
+  { href: `${base}/oauth-wg/`, label: "OAuth WG" },
+  { href: `${base}/openid/`, label: "OpenID" },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <div class="min-h-screen flex flex-col">
+      <header class="bg-white/80 backdrop-blur sticky top-0 z-30 border-b border-slate-200">
+        <div class="mx-auto max-w-6xl px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+          <a href={`${base}/`} class="flex items-center gap-2 text-slate-900 font-semibold tracking-tight">
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+            Identity Deep Dive
+          </a>
+          <nav class="flex flex-wrap gap-1 text-sm font-medium">
+            {navLinks.map((l) => (
+              <a
+                href={l.href}
+                class="px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+              >
+                {l.label}
+              </a>
+            ))}
+          </nav>
+        </div>
+      </header>
+      <main class="flex-1 mx-auto max-w-6xl w-full px-6 py-10">
+        <slot />
+      </main>
+      <footer class="border-t border-slate-200 bg-white">
+        <div class="mx-auto max-w-6xl px-6 py-6 text-xs text-slate-500 flex flex-wrap items-center justify-between gap-2">
+          <span>
+            Auto-generated from
+            <a class="text-blue-600 hover:underline" href="https://github.com/0-draft/identity-deep-dive">0-draft/identity-deep-dive</a>.
+          </span>
+          <span>Reports refresh daily 06:00 UTC · weekly Mon 08:00 UTC.</span>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
