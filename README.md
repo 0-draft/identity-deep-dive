@@ -47,9 +47,12 @@ scripts/                    Shared utilities
 ```bash
 cd tracks/ietf-wimse
 python3 -m venv .venv && source .venv/bin/activate
-pip install -e .   # or: pip install -r scripts/requirements.txt
-make update        # collect + normalize + score + report
+make install
+make update        # collect + normalize + score + daily report
+make weekly        # collect + normalize + score + weekly digest
 ```
+
+Every track exposes the same `install` / `update` / `weekly` Makefile targets.
 
 ### Add a new track
 
@@ -68,12 +71,12 @@ cp -R templates/deep-dive tracks/<track>/deep-dives/<topic-name>
 
 ## Automation
 
-GitHub Actions run per-track pipelines on schedule:
+Two repo-root workflows in `.github/workflows/` fan out across all tracks via a `matrix.track` list:
 
-- **Daily**: Collect, normalize, score, generate daily report.
-- **Weekly**: Generate weekly digest from accumulated daily data.
+- `daily-update.yml` — runs `make install && make update` per track at 06:00 UTC.
+- `weekly-digest.yml` — runs `make install && make weekly` per track on Mondays 08:00 UTC.
 
-See `.github/workflows/` for details.
+To wire a new track in, add its directory name to `matrix.track` in both workflows.
 
 ## Design Principles
 

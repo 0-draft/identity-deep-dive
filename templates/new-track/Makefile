@@ -3,7 +3,7 @@ PYTHON ?= python3
 .PHONY: install collect normalize score report-daily report-weekly update weekly
 
 install:
-	$(PYTHON) -m pip install -r scripts/requirements.txt
+	$(PYTHON) -m pip install -r requirements.txt
 
 collect:
 	$(PYTHON) scripts/collect.py
