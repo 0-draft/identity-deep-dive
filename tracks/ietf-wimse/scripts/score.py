@@ -171,7 +171,7 @@ def main() -> None:
                 f"| {idx} | {item['score']} | {compact_whitespace(item['title'])} | {compact_whitespace(evidence)} |"
             )
 
-    write_text(ROOT / "backlog" / "candidate-queue.md", "\n".join(lines) + "\n")
+    write_text(ROOT / "deep-dives" / "_backlog.md", "\n".join(lines) + "\n")
     print(f"score: candidates={len(ranked)} threshold={threshold}")
 
 

@@ -6,7 +6,7 @@ from datetime import timedelta
 from pathlib import Path
 from urllib.error import HTTPError
 
-from lib import env_token, github_get, github_paginate, read_json, utc_now_iso, utc_today, write_json
+from _common import env_token, github_get, github_paginate, read_json, utc_now_iso, utc_today, write_json
 
 
 ORG = "openid"

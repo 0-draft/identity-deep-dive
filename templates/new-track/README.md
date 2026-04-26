@@ -2,41 +2,47 @@
 
 Automated monitoring and deep-dive workspace for **&lt;Track Name&gt;**.
 
-## Goals
+## Purpose
 
-- Continuously collect the latest signals from primary sources.
-- Detect meaningful changes (draft revisions, new specs, repo activity, mailing-list trends).
+- Continuously collect signals from primary sources.
+- Detect meaningful changes (draft revisions, repo activity, mailing-list trends).
 - Prioritize deep-dive candidates with reproducible scoring.
-- Maintain a hands-on backlog tied to real working-group movement.
+- Generate daily and weekly Markdown reports.
 
-## Data Sources
+## Sources
 
-- &lt;!-- Add your sources here --&gt;
+Configured in `config/sources.yaml`. Add the upstream URLs and tracked repositories you want to watch.
 
-All source endpoints and tracked repositories are configured in `config/sources.yaml`.
+## Layout
 
-## Repository Layout
+```text
+config/                      sources.yaml + scoring.yaml
+data/raw/<YYYY-MM-DD>/       Raw fetch artifacts (latest only — pruned)
+data/normalized/             Merged state + scoring output
+reports/daily/<YYYY-MM-DD>.md     Latest daily report (older pruned)
+reports/weekly/<YYYY>-W<NN>.md    Latest weekly digest (older pruned)
+deep-dives/_backlog.md       Scored deep-dive candidate queue
+deep-dives/<topic>/          Investigation notes (scaffold from templates/deep-dive/)
+scripts/                     _common.py + collect.py / normalize.py / score.py / report.py
+```
 
-- `config/`: Source and scoring configuration.
-- `data/raw/<YYYY-MM-DD>/<source>.json`: Raw fetch artifacts.
-- `data/normalized/`: Merged state and scoring output.
-- `reports/daily/<YYYY-MM-DD>.md` and `reports/weekly/<YYYY>-W<NN>.md`: Generated reports.
-- `backlog/candidate-queue.md`: Scored deep-dive candidate queue.
-- `deep-dives/`: Investigation notes (scaffold from `../../templates/deep-dive/`).
-- `scripts/`: `_common.py` helpers + `collect.py` / `normalize.py` / `score.py` / `report.py`.
-
-## Local Usage
+## Usage
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 make install
-make update     # collect + normalize + score + report-daily
-make weekly     # collect + normalize + score + report-weekly
+make update     # collect + normalize + score + report-daily + prune
+make weekly     # collect + normalize + score + report-weekly + prune
 ```
 
-Individual stages: `make collect`, `make normalize`, `make score`, `make report-daily`, `make report-weekly`.
+Individual stages: `make collect`, `make normalize`, `make score`, `make report-daily`, `make report-weekly`, `make prune`.
 
 ## Automation
 
-The repo-root `.github/workflows/{daily-update,weekly-digest}.yml` files use a `matrix.track` list. Add this track's directory name to that list to wire it into CI.
+The repo-root `.github/workflows/{daily-update,weekly-digest}.yml` files run `make update` / `make weekly` per track via a `matrix.track` list. Add this track's directory name to that list to wire it into CI.
+
+## Notes
+
+- Retention policy: `make prune` (auto-invoked by `update` / `weekly`) keeps only the latest report and snapshot per category. Use git history for older state.
+- Set `GITHUB_TOKEN` (or `GH_TOKEN`) to avoid rate limits on GitHub fetches.

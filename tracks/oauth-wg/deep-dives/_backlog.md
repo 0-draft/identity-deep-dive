@@ -1,6 +1,6 @@
 # OAuth WG Backlog (2026-04-26)
 
-- generated_at_utc: `2026-04-26T09:08:59Z`
+- generated_at_utc: `2026-04-26T09:39:20Z`
 
 - [ ] `draft-ietf-oauth-rfc7523bis` score=118 updated=2026-04-20T20:12:59Z
 - [ ] `draft-ietf-oauth-transaction-tokens` score=116 updated=2026-03-27T12:21:42Z

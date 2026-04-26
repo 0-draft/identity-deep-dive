@@ -54,7 +54,7 @@ def main() -> None:
     else:
         for i, c in enumerate(ranked, start=1):
             lines.append(f"| {i} | {c['score']} | {c['title']} |")
-    write_text(ROOT / "backlog" / "candidate-queue.md", "\n".join(lines) + "\n")
+    write_text(ROOT / "deep-dives" / "_backlog.md", "\n".join(lines) + "\n")
     print(f"score: candidates={len(ranked)} threshold={threshold}")
 
 

@@ -1,0 +1,49 @@
+name: PR checks
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  web-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run build
+
+  python-syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Compile all track scripts
+        run: python -m compileall -q tracks/*/scripts
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - name: Run shellcheck
+        run: |
+          shopt -s nullglob globstar
+          files=(scripts/*.sh tracks/*/scripts/*.sh)
+          if [ ${#files[@]} -eq 0 ]; then
+            echo "No shell scripts found"
+            exit 0
+          fi
+          shellcheck "${files[@]}"

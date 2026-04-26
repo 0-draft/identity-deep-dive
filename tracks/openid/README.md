@@ -1,69 +1,61 @@
 # OpenID Deep Dive
 
-A research repository for continuously tracking public activity on `openid` (https://github.com/openid)
-and mechanically extracting "topics worth digging into right now."
+Continuous monitoring and deep-dive workspace for the OpenID Foundation org (`github.com/openid`).
 
 ## Purpose
 
-- Collect changes from key OpenID Foundation repositories on a daily basis
-- Normalize collected data and assign priority scores
-- Auto-generate daily/weekly reports
-- Continuously surface candidates for Deep Dive investigation
+- Track all public OpenID Foundation repositories (specs + reference implementations).
+- Surface deep-dive candidates ranked by activity, recency, and watchlist weighting.
+- Generate daily and weekly Markdown reports for review.
 
-## Directory Structure
+## Sources
 
-- `config/watchlist.yaml`: Priority-watch repositories
-- `config/scoring.yaml`: Scoring rules
-- `scripts/`: Collection, formatting, scoring, and report generation
-- `data/raw/YYYY-MM-DD/`: Raw GitHub API data
-- `data/normalized/`: Normalized data and scoring results
-- `reports/daily/`: Daily reports
-- `reports/weekly/`: Weekly reports
-- `deep-dives/`: Manual investigation notes and templates
-- `.github/workflows/`: Automated update workflows
+Configured in `config/watchlist.yaml` (priority repos with weights). All other public repos under the `openid` GitHub org are also collected.
 
-## Setup
+- GitHub `openid` org (repos, open PRs, open issues, merged PRs in last 30 days) — REST API via stdlib `urllib`
+
+## Layout
+
+```text
+config/                            watchlist.yaml + scoring.yaml
+data/raw/<YYYY-MM-DD>/             Raw GitHub API JSON (latest only — pruned)
+data/normalized/latest.json        Latest snapshot pointer (always present)
+data/normalized/repos-<date>.json  Normalized per-day (last 7 kept for weekly digest)
+data/normalized/scored-<date>.json Scored per-day (last 7 kept)
+data/normalized/top-<date>.json    Top N per-day (last 7 kept)
+reports/daily/<YYYY-MM-DD>.md      Latest daily report
+reports/weekly/<YYYY>-W<NN>.md     Latest weekly digest
+deep-dives/_template/              Deep-dive scaffold to copy
+deep-dives/<topic>/                Investigation notes
+scripts/                           _common.py + fetch_openid.py / normalize.py / score.py / report.py
+```
+
+## Usage
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 make install
+make update     # collect + normalize + score + report-daily + prune
+make weekly     # collect + normalize + score + report-weekly + prune
 ```
 
-Having a `GITHUB_TOKEN` (or `GH_TOKEN`) helps avoid API rate limits.
+Set `GITHUB_TOKEN` (or `GH_TOKEN`) to avoid GitHub API rate limits. Without a token, rate-limited metrics will appear as warnings in the report's Notes section.
 
-```bash
-export GITHUB_TOKEN=ghp_xxx
-```
-
-It works without a token, but when GitHub API rate limits are hit, some metrics may be missing and warnings will appear in the report's `Notes` section.
-
-## Usage
-
-```bash
-make update     # collect + normalize + score + daily report
-make weekly     # collect + normalize + score + weekly report
-```
-
-Backfill a specific date by invoking the underlying scripts directly:
+Backfill a specific date by invoking scripts directly:
 
 ```bash
 python scripts/fetch_openid.py --date 2026-04-05
-python scripts/normalize.py --date 2026-04-05
-python scripts/score.py --date 2026-04-05
-python scripts/generate_daily_report.py --date 2026-04-05
+python scripts/normalize.py     --date 2026-04-05
+python scripts/score.py         --date 2026-04-05
+python scripts/report.py --mode daily --date 2026-04-05
 ```
 
-## Automated Updates
+## Automation
 
-Driven from the repo-root `.github/workflows/{daily-update,weekly-digest}.yml`. Both commit changes when present.
+Driven by repo-root `.github/workflows/{daily-update,weekly-digest}.yml` (matrix over all tracks).
 
-## Deep Dive Workflow
+## Notes
 
-Copy `deep-dives/_template/` to start a new topic.
-
-```bash
-cp -R deep-dives/_template deep-dives/<topic-name>
-```
-
-The workflow involves filling in `context.md` / `spec-notes.md` / `interop-checklist.md` / `hands-on-log.md`.
+- Scoring weights (recency window, threshold buckets, watchlist bonus) live in `config/scoring.yaml`.
+- Retention: `make prune` keeps only the latest report and snapshot, plus the last 7 dated `data/normalized/<prefix>-<date>.json` files (needed for the weekly digest).
