@@ -27,7 +27,7 @@ Collect  ->  Normalize  ->  Score  ->  Report
 
 ## Repository Layout
 
-```
+```text
 tracks/                     Per-domain monitoring pipelines
   ietf-wimse/                 IETF WIMSE working group
   oauth-wg/                   OAuth working group
