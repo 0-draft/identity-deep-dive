@@ -35,7 +35,7 @@ export const TRACKS: TrackMeta[] = [
   },
 ];
 
-const REPO_ROOT = path.resolve(import.meta.dirname ?? __dirname, "../../..");
+const REPO_ROOT = path.resolve(process.cwd(), "..");
 
 export function trackDir(id: TrackId): string {
   return path.join(REPO_ROOT, "tracks", id);
