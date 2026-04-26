@@ -1,6 +1,6 @@
 PYTHON ?= python3
 
-.PHONY: install collect normalize score report-daily report-weekly update weekly
+.PHONY: install collect normalize score report-daily report-weekly prune update weekly
 
 install:
 	$(PYTHON) -m pip install -r requirements.txt
@@ -20,6 +20,9 @@ report-daily:
 report-weekly:
 	$(PYTHON) scripts/report.py --mode weekly
 
-update: collect normalize score report-daily
+prune:
+	bash ../../scripts/prune.sh .
 
-weekly: collect normalize score report-weekly
+update: collect normalize score report-daily prune
+
+weekly: collect normalize score report-weekly prune

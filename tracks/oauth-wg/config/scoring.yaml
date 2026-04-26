@@ -1,0 +1,33 @@
+activity_window_days: 14
+
+# Lifecycle state -> score (highest matching pattern wins)
+lifecycle_points:
+  - { match: "In Last Call",                                points: 80 }
+  - { match: "In WG Last Call",                             points: 70 }
+  - { match: "IESG Evaluation",                             points: 70 }
+  - { match: "RFC Ed Queue",                                points: 65 }
+  - { match: "AD Evaluation",                               points: 55 }
+  - { match: "WG Consensus: Waiting for Write-Up",          points: 50 }
+  - { match: "Submitted to IESG for Publication",           points: 45 }
+  - { match: "Publication Requested",                       points: 40 }
+  - { match: "WG Document",                                 points: 20 }
+  - { match: "I-D Exists",                                  points: 10 }
+
+# Days since last draft update -> score (first matching wins)
+recency_points:
+  - { within_days: 3,  points: 25 }
+  - { within_days: 7,  points: 18 }
+  - { within_days: 30, points: 8 }
+
+# Repo activity in the activity_window
+activity:
+  event_weight: 1
+  pr_weight: 3
+  issue_weight: 2
+  cap_points: 30
+  multiplier: 2
+
+# Open issue count -> score (first matching wins)
+open_issue_points:
+  - { at_least: 30, points: 15 }
+  - { at_least: 10, points: 8 }
