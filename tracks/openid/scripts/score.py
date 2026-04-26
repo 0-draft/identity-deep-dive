@@ -5,7 +5,7 @@ import argparse
 from pathlib import Path
 from typing import Any
 
-from lib import load_yaml, read_json, utc_now_iso, utc_today, write_json
+from _common import load_yaml, read_json, utc_now_iso, utc_today, write_json
 
 
 def parse_args() -> argparse.Namespace:

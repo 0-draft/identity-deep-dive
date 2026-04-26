@@ -1,64 +1,53 @@
 # IETF WIMSE Deep Dive
 
-Automated monitoring and deep-dive workspace for the IETF WIMSE working group.
+Continuous monitoring and deep-dive workspace for the IETF WIMSE working group (Workload Identity in Multi-System Environments).
 
-## Goals
+## Purpose
 
-- Continuously collect the latest WIMSE signals from primary sources.
-- Detect meaningful changes (draft revisions, new related drafts, meeting artifacts, mailing-list trends).
-- Prioritize deep-dive candidates with reproducible scoring.
-- Maintain a hands-on lab backlog tied to real WG movement.
+- Track WIMSE drafts, related specifications, and working-group activity.
+- Surface deep-dive candidates ranked by lifecycle state, recency, and mailing-list signal.
+- Generate daily and weekly Markdown reports for review.
 
-## Data Sources
+## Sources
 
-- Datatracker WG pages: documents, meetings, history.
-- IETF mail archive (`wimse` list).
-- GitHub repositories under `ietf-wg-wimse`.
+Configured in `config/sources.yaml`:
 
-All source endpoints and tracked repositories are configured in `config/sources.yaml`.
+- IETF Datatracker (WG documents, meetings, history) — HTML scrape
+- IETF Mail Archive (`mailarchive.ietf.org/arch/browse/wimse/`) — HTML scrape
+- GitHub repos under `ietf-wg-wimse/` — REST API
 
-## Repository Layout
+## Layout
 
-- `config/`: source and scoring configuration.
-- `data/raw/`: raw fetch artifacts by date.
-- `data/normalized/`: latest normalized source outputs and merged state.
-- `data/snapshots/`: daily state snapshots.
-- `reports/daily/`: generated daily markdown reports.
-- `reports/weekly/`: generated weekly markdown reports.
-- `backlog/candidate-queue.md`: scored deep-dive candidate queue.
-- `deep-dives/`: manually curated deep-dive notes (scaffold from `../../templates/deep-dive/`).
-- `scripts/`: data collection, normalization, scoring, and report generation.
+```text
+config/                      sources.yaml + scoring.yaml
+data/raw/<YYYY-MM-DD>/       Per-source audit JSON (latest only — pruned)
+data/normalized/             datatracker.json / mailarchive.json / github.json /
+                             wimse_state.json / candidates.json
+data/snapshots/<YYYY-MM-DD>/ Snapshot of normalized state
+reports/daily/<YYYY-MM-DD>.md     Latest daily report
+reports/weekly/<YYYY>-W<NN>.md    Latest weekly digest
+deep-dives/_backlog.md       Scored deep-dive candidate queue
+deep-dives/<topic>/          Investigation notes
+scripts/                     _common.py + collect_*.py / normalize.py / score.py / report.py
+```
 
-## Local Usage
+## Usage
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 make install
-make update
+make update     # collect + normalize + score + report-daily + prune
+make weekly     # collect + normalize + score + report-weekly + prune
 ```
 
-`make update` runs:
-
-1. Source collectors
-2. State normalization
-3. Candidate scoring
-4. Daily report rendering
-
-Useful targets:
-
-- `make collect`
-- `make normalize`
-- `make score`
-- `make report-daily`
-- `make report-weekly`
-- `make weekly`
+Set `GITHUB_TOKEN` (or `GH_TOKEN`) to avoid GitHub API rate limits.
 
 ## Automation
 
-Driven from the repo-root `.github/workflows/{daily-update,weekly-digest}.yml`. Both workflows commit generated outputs when changed.
+Driven by repo-root `.github/workflows/{daily-update,weekly-digest}.yml` (matrix over all tracks).
 
 ## Notes
 
-- Generated files are intentionally committed for historical traceability.
-- Scoring logic is intentionally simple and transparent; tune weights in `config/scoring.yaml`.
+- Scoring weights live in `config/scoring.yaml` (`recency_days`, `weights`, `priority_keywords`).
+- Retention: `make prune` keeps only the latest report and snapshot. For older state use git history.

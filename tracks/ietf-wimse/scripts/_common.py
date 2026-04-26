@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import datetime as dt
 import json
+import os
 import re
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 import requests
 import yaml
@@ -51,15 +53,25 @@ def write_text(path: Path, text: str) -> None:
     path.write_text(text, encoding="utf-8")
 
 
+def _build_headers(url: str) -> dict[str, str]:
+    headers = dict(DEFAULT_HEADERS)
+    host = urlparse(url).hostname or ""
+    if host.endswith("api.github.com"):
+        token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+    return headers
+
+
 def fetch_text(url: str, timeout: int = 30) -> str:
-    resp = requests.get(url, headers=DEFAULT_HEADERS, timeout=timeout)
+    resp = requests.get(url, headers=_build_headers(url), timeout=timeout)
     resp.raise_for_status()
     resp.encoding = resp.encoding or "utf-8"
     return resp.text
 
 
 def fetch_json(url: str, timeout: int = 30) -> Any:
-    resp = requests.get(url, headers=DEFAULT_HEADERS, timeout=timeout)
+    resp = requests.get(url, headers=_build_headers(url), timeout=timeout)
     resp.raise_for_status()
     return resp.json()
 

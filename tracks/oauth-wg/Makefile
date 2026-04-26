@@ -15,10 +15,10 @@ score:
 	$(PYTHON) scripts/score.py
 
 report-daily:
-	$(PYTHON) scripts/build_daily_report.py
+	$(PYTHON) scripts/report.py --mode daily
 
 report-weekly:
-	$(PYTHON) scripts/build_weekly_report.py
+	$(PYTHON) scripts/report.py --mode weekly
 
 prune:
 	bash ../../scripts/prune.sh .

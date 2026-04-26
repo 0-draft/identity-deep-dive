@@ -1,49 +1,56 @@
 # OAuth WG Deep Dive
 
-Continuous monitoring and deep-dive workspace for the IETF OAuth WG (https://github.com/oauth-wg).
+Continuous monitoring and deep-dive workspace for the IETF OAuth working group (`oauth-wg` on GitHub, `oauth` on Datatracker).
 
-Pipeline: collect (GitHub via `gh` + Datatracker + Mailarchive) → normalize → score → daily/weekly Markdown.
+## Purpose
 
-## Repository Layout
+- Track all OAuth WG drafts, repository activity, and discussion lists.
+- Surface deep-dive candidates ranked by lifecycle state, recency, and repo/issue activity.
+- Generate daily and weekly Markdown reports for review.
+
+## Sources
+
+- IETF Datatracker (group, drafts, state taxonomy) — REST API + HTML
+- GitHub `oauth-wg` org (repos, events, PRs, issues) — `gh` CLI
+- IETF Mail Archive (`oauth` list) — HTML scrape
+
+Repo→draft alias mapping lives in `config/draft_aliases.json`; auto-extended for `oauth-*` / `draft-ietf-oauth-*` names.
+
+## Layout
 
 ```text
-config/                Source/scoring configuration (YAML, JSON aliases)
-scripts/               Collection / normalization / scoring / report scripts
-data/snapshots/        Per-collection raw snapshots
-data/normalized/       Latest normalized JSON
-data/history/          Pointer to the latest snapshot directory
-reports/daily/         Daily Markdown reports
-reports/weekly/        Weekly Markdown digests
-deep-dives/            Deep-dive topic scaffolds (see scripts/scaffold_topic.sh)
+config/                      scoring.yaml + draft_aliases.json
+data/snapshots/<UTC ts>/     Per-collection raw snapshots (latest only — pruned)
+data/normalized/             drafts.json / repos.json / events.json / prs.json /
+                             issues.json / mailarchive.json / metadata.json / backlog.json
+data/history/                Pointer file: latest snapshot timestamp
+reports/daily/<YYYY-MM-DD>.md     Latest daily report
+reports/weekly/<YYYY>-W<NN>.md    Latest weekly digest
+deep-dives/_backlog.md       Scored deep-dive candidate queue
+deep-dives/<topic>/          Investigation notes (scaffold via scripts/scaffold_topic.sh)
+scripts/                     collect_*.sh / normalize.py / score.py / report.py
 ```
 
-## Prerequisites
-
-- `gh` (GitHub CLI) on PATH and `gh auth status` passing
-- `python3`, `curl`
-
-## Local Usage
+## Usage
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
 make install
-make update     # collect + normalize + score + daily report
-make weekly     # collect + normalize + score + weekly digest
+make update     # collect + normalize + score + report-daily + prune
+make weekly     # collect + normalize + score + report-weekly + prune
 ```
 
-Generated outputs:
+Prerequisites:
 
-- `data/snapshots/<UTC timestamp>/{datatracker,github,mailarchive}/...`
-- `data/normalized/{drafts,repos,events,prs,issues,mailarchive,metadata,backlog}.json`
-- `reports/daily/<YYYY-MM-DD>.md`, `reports/weekly/<YYYY>-W<NN>.md`
-- `deep-dives/_backlog.md`
+- `gh` (GitHub CLI) on `PATH`, with `gh auth status` passing (CI uses `GH_TOKEN`).
+- `python3`, `curl`.
 
 ## Automation
 
-Driven from the repo-root `.github/workflows/{daily-update,weekly-digest}.yml`. The `gh` CLI is authenticated via `GH_TOKEN`.
+Driven by repo-root `.github/workflows/{daily-update,weekly-digest}.yml` (matrix over all tracks). `GH_TOKEN` is provided to `gh` in CI.
 
 ## Notes
 
-- Scoring weights (lifecycle states, recency, repo activity) live in `config/scoring.yaml`.
-- Repo→draft alias mapping lives in `config/draft_aliases.json` and is auto-extended for repos following `oauth-*` / `draft-ietf-oauth-*` naming.
+- Scoring weights (lifecycle states, recency window, repo activity, open-issue thresholds) live in `config/scoring.yaml`.
+- Retention: `make prune` keeps only the latest report and snapshot. For older state use git history.

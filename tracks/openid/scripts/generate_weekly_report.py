@@ -6,7 +6,7 @@ from collections import defaultdict
 from datetime import date, timedelta
 from pathlib import Path
 
-from lib import read_json, utc_now_iso, utc_today
+from _common import read_json, utc_now_iso, utc_today
 
 
 def parse_args() -> argparse.Namespace:
