@@ -29,11 +29,18 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Commit changes
+      - name: Commit and push (rebase-retry)
         run: |
           cd "$GITHUB_WORKSPACE"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add tracks/${{ matrix.track }}/
-          git diff --cached --quiet || git commit -m "chore(${{ matrix.track }}): daily update $(date -u +%Y-%m-%d)"
-          git push
+          git diff --cached --quiet && { echo "no changes"; exit 0; }
+          git commit -m "chore(${{ matrix.track }}): daily update $(date -u +%Y-%m-%d)"
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push && exit 0
+            echo "push attempt $i failed, retrying after backoff..."
+            sleep $((RANDOM % 10 + 5))
+          done
+          echo "push failed after 5 attempts"
+          exit 1
