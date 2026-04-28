@@ -14,7 +14,7 @@ A unified repository for continuously monitoring identity and security standards
 
 Each track follows the same pipeline:
 
-```
+```text
 Collect  ->  Normalize  ->  Score  ->  Report
   raw API       JSON         ranked      daily/weekly
   snapshots     merge        backlog     markdown
