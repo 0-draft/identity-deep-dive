@@ -6,7 +6,7 @@ install:
 	$(PYTHON) -m pip install -r requirements.txt
 
 collect:
-	$(PYTHON) scripts/fetch_openid.py
+	$(PYTHON) scripts/collect_github.py
 
 normalize:
 	$(PYTHON) scripts/normalize.py

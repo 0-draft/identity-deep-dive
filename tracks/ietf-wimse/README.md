@@ -22,7 +22,7 @@ Configured in `config/sources.yaml`:
 config/                      sources.yaml + scoring.yaml
 data/raw/<YYYY-MM-DD>/       Per-source audit JSON (latest only — pruned)
 data/normalized/             datatracker.json / mailarchive.json / github.json /
-                             wimse_state.json / candidates.json
+                             state.json / candidates.json
 data/snapshots/<YYYY-MM-DD>/ Snapshot of normalized state
 reports/daily/<YYYY-MM-DD>.md     Latest daily report
 reports/weekly/<YYYY>-W<NN>.md    Latest weekly digest

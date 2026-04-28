@@ -49,7 +49,7 @@ def add_candidate(
 
 
 def main() -> None:
-    state = read_json(ROOT / "data" / "normalized" / "wimse_state.json")
+    state = read_json(ROOT / "data" / "normalized" / "state.json")
     cfg = load_yaml(ROOT / "config" / "scoring.yaml")
 
     today = dt.date.today()

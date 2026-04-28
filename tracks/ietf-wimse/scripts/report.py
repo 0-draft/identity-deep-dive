@@ -162,7 +162,7 @@ def main() -> None:
     parser.add_argument("--mode", choices=["daily", "weekly"], default="daily")
     args = parser.parse_args()
 
-    state = read_json(ROOT / "data" / "normalized" / "wimse_state.json")
+    state = read_json(ROOT / "data" / "normalized" / "state.json")
     candidates = read_json(ROOT / "data" / "normalized" / "candidates.json")
 
     if args.mode == "daily":

@@ -10,24 +10,24 @@ Continuous monitoring and deep-dive workspace for the OpenID Foundation org (`gi
 
 ## Sources
 
-Configured in `config/watchlist.yaml` (priority repos with weights). All other public repos under the `openid` GitHub org are also collected.
+Configured in `config/sources.yaml` (priority repos with weights). All other public repos under the `openid` GitHub org are also collected.
 
-- GitHub `openid` org (repos, open PRs, open issues, merged PRs in last 30 days) — REST API via stdlib `urllib`
+- GitHub `openid` org (repos, open PRs, open issues, merged PRs in last 30 days) — REST API via `requests`
 
 ## Layout
 
 ```text
-config/                            watchlist.yaml + scoring.yaml
-data/raw/<YYYY-MM-DD>/             Raw GitHub API JSON (latest only — pruned)
-data/normalized/latest.json        Latest snapshot pointer (always present)
-data/normalized/repos-<date>.json  Normalized per-day (last 7 kept for weekly digest)
-data/normalized/scored-<date>.json Scored per-day (last 7 kept)
-data/normalized/top-<date>.json    Top N per-day (last 7 kept)
-reports/daily/<YYYY-MM-DD>.md      Latest daily report
-reports/weekly/<YYYY>-W<NN>.md     Latest weekly digest
-deep-dives/_template/              Deep-dive scaffold to copy
-deep-dives/<topic>/                Investigation notes
-scripts/                           _common.py + fetch_openid.py / normalize.py / score.py / report.py
+config/                              sources.yaml + scoring.yaml
+data/raw/<YYYY-MM-DD>/github.json    Raw GitHub API JSON (latest only — pruned)
+data/normalized/github.json          Per-source normalized (latest collect)
+data/normalized/state.json           Merged state (input to score)
+data/normalized/candidates.json      Scored repos (input to report)
+data/snapshots/<YYYY-MM-DD>/         state.json + candidates.json (last 7 for weekly digest)
+reports/daily/<YYYY-MM-DD>.md        Latest daily report
+reports/weekly/<YYYY>-W<NN>.md       Latest weekly digest
+deep-dives/_template/                Deep-dive scaffold to copy
+deep-dives/<topic>/                  Investigation notes
+scripts/                             _common.py + collect_github.py / normalize.py / score.py / report.py
 ```
 
 ## Usage
@@ -45,9 +45,9 @@ Set `GITHUB_TOKEN` (or `GH_TOKEN`) to avoid GitHub API rate limits. Without a to
 Backfill a specific date by invoking scripts directly:
 
 ```bash
-python scripts/fetch_openid.py --date 2026-04-05
-python scripts/normalize.py     --date 2026-04-05
-python scripts/score.py         --date 2026-04-05
+python scripts/collect_github.py --date 2026-04-05
+python scripts/normalize.py      --date 2026-04-05
+python scripts/score.py          --date 2026-04-05
 python scripts/report.py --mode daily --date 2026-04-05
 ```
 
@@ -58,4 +58,4 @@ Driven by repo-root `.github/workflows/{daily-update,weekly-digest}.yml` (matrix
 ## Notes
 
 - Scoring weights (recency window, threshold buckets, watchlist bonus) live in `config/scoring.yaml`.
-- Retention: `make prune` keeps only the latest report and snapshot, plus the last 7 dated `data/normalized/<prefix>-<date>.json` files (needed for the weekly digest).
+- Retention: `make prune` keeps only the latest report and raw snapshot, plus the last 7 `data/snapshots/<date>/` directories (needed for the weekly digest's 7-day lookback).

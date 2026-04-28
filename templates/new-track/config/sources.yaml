@@ -11,9 +11,17 @@
 #   browse_url: "https://mailarchive.ietf.org/arch/browse/<list-name>/"
 #   max_posts: 120
 
-# GitHub repositories
+# GitHub repositories.
+#
+# Each repo entry can be a bare string "org/name" or a mapping with optional
+# per-repo metadata: weight (float, default 1.0), category (string, default null),
+# note (string, default null). _common.load_sources() normalizes both forms.
 github:
   api_base: "https://api.github.com"
   repos: []
   #  - "org/repo-name"
+  #  - repo: org/repo-name
+  #    weight: 1.4
+  #    category: spec
+  #    note: "core spec repo"
   max_commits_per_repo: 20

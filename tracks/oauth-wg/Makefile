@@ -6,7 +6,9 @@ install:
 	$(PYTHON) -m pip install -r requirements.txt
 
 collect:
-	bash scripts/collect_all.sh
+	$(PYTHON) scripts/collect_datatracker.py
+	$(PYTHON) scripts/collect_mailarchive.py
+	$(PYTHON) scripts/collect_github.py
 
 normalize:
 	$(PYTHON) scripts/normalize.py

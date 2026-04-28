@@ -1,42 +1,25 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
 import datetime as dt
-import json
-import pathlib
 from typing import Any
 
-import yaml
+from _common import (
+    ROOT,
+    iso_now,
+    load_yaml,
+    parse_iso8601,
+    read_json,
+    today_utc,
+    write_json,
+)
 
 
-def load_json(path: pathlib.Path) -> Any:
-    if not path.exists():
-        return {}
-    with path.open("r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-def load_yaml(path: pathlib.Path) -> dict[str, Any]:
-    with path.open("r", encoding="utf-8") as f:
-        return yaml.safe_load(f) or {}
-
-
-def save_json(path: pathlib.Path, data: Any) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2, sort_keys=True)
-        f.write("\n")
-
-
-def parse_dt(value: str) -> dt.datetime | None:
-    if not value:
-        return None
-    try:
-        if value.endswith("Z"):
-            return dt.datetime.fromisoformat(value.replace("Z", "+00:00"))
-        return dt.datetime.fromisoformat(value)
-    except ValueError:
-        return None
+def parse_args() -> argparse.Namespace:
+    p = argparse.ArgumentParser(description="Score oauth-wg drafts and write candidates.json")
+    p.add_argument("--date", help="Snapshot date YYYY-MM-DD (default: UTC today)")
+    return p.parse_args()
 
 
 def lifecycle_score(state_labels: list[str], rules: list[dict[str, Any]]) -> tuple[int, str]:
@@ -74,30 +57,33 @@ def inferred_draft_from_repo(repo_name: str) -> str | None:
 
 
 def main() -> None:
-    root_dir = pathlib.Path(__file__).resolve().parents[1]
-    normalized_dir = root_dir / "data" / "normalized"
-    cfg = load_yaml(root_dir / "config" / "scoring.yaml")
+    args = parse_args()
+    snapshot_date = (
+        dt.date.fromisoformat(args.date) if args.date else today_utc()
+    )
 
-    drafts = load_json(normalized_dir / "drafts.json")
-    repos = load_json(normalized_dir / "repos.json")
-    events = load_json(normalized_dir / "events.json")
-    prs = load_json(normalized_dir / "prs.json")
-    issues = load_json(normalized_dir / "issues.json")
-    metadata = load_json(normalized_dir / "metadata.json")
+    state = read_json(ROOT / "data" / "normalized" / "state.json")
+    cfg = load_yaml(ROOT / "config" / "scoring.yaml")
+    aliases = read_json(ROOT / "config" / "draft_aliases.json").get("repo_to_draft", {})
 
-    aliases = load_json(root_dir / "config" / "draft_aliases.json").get("repo_to_draft", {})
     activity_cfg = cfg.get("activity", {})
     now = dt.datetime.now(dt.timezone.utc)
     horizon = now - dt.timedelta(days=int(cfg.get("activity_window_days", 14)))
 
+    drafts = state.get("drafts", [])
+    repos = state.get("repos", [])
+    events = state.get("org_events", [])
+    prs = state.get("prs", [])
+    issues = state.get("issues", [])
+
     repo_to_draft = dict(aliases)
     for repo in repos:
-        repo_name = repo.get("name", "")
-        if repo_name in repo_to_draft:
+        name = repo.get("name", "")
+        if name in repo_to_draft:
             continue
-        inferred = inferred_draft_from_repo(repo_name)
+        inferred = inferred_draft_from_repo(name)
         if inferred:
-            repo_to_draft[repo_name] = inferred
+            repo_to_draft[name] = inferred
 
     draft_to_repos: dict[str, list[str]] = {}
     for repo_name, draft_name in repo_to_draft.items():
@@ -111,7 +97,7 @@ def main() -> None:
     issue_w = int(activity_cfg.get("issue_weight", 2))
 
     for e in events:
-        created = parse_dt(e.get("created_at", ""))
+        created = parse_iso8601(e.get("created_at", ""))
         if created is None or created < horizon:
             continue
         repo_full = e.get("repo", "")
@@ -119,23 +105,23 @@ def main() -> None:
         activity_weight[repo_name] = activity_weight.get(repo_name, 0) + event_w
 
     for pr in prs:
-        updated = parse_dt(pr.get("updated_at", ""))
+        updated = parse_iso8601(pr.get("updated_at", ""))
         if updated is None or updated < horizon:
             continue
-        repo_name = pr.get("repo_full_name", "").split("/")[-1]
+        repo_name = (pr.get("repo_full_name", "") or "").split("/")[-1]
         activity_weight[repo_name] = activity_weight.get(repo_name, 0) + pr_w
 
     for issue in issues:
-        updated = parse_dt(issue.get("updated_at", ""))
+        updated = parse_iso8601(issue.get("updated_at", ""))
         if updated is None or updated < horizon:
             continue
-        repo_name = issue.get("repo_full_name", "").split("/")[-1]
+        repo_name = (issue.get("repo_full_name", "") or "").split("/")[-1]
         activity_weight[repo_name] = activity_weight.get(repo_name, 0) + issue_w
 
     activity_cap = int(activity_cfg.get("cap_points", 30))
     activity_mult = int(activity_cfg.get("multiplier", 2))
 
-    candidates = []
+    candidates: list[dict[str, Any]] = []
     for draft in drafts:
         draft_name = draft.get("name", "")
         reasons: list[str] = []
@@ -149,21 +135,23 @@ def main() -> None:
             reasons.append(f"lifecycle: {state_reason} (+{state_score})")
 
         rec_score, rec_reason = recency_points(
-            parse_dt(draft.get("updated_at", "")), now, cfg.get("recency_points", [])
+            parse_iso8601(draft.get("updated_at", "")),
+            now,
+            cfg.get("recency_points", []),
         )
         score += rec_score
         if rec_score > 0:
             reasons.append(f"{rec_reason} (+{rec_score})")
 
-        linked_repos = draft_to_repos.get(draft_name, [])
-        repo_name = linked_repos[0] if linked_repos else ""
-        activity = sum(activity_weight.get(r, 0) for r in linked_repos)
+        linked = draft_to_repos.get(draft_name, [])
+        repo_name = linked[0] if linked else ""
+        activity = sum(activity_weight.get(r, 0) for r in linked)
         if activity > 0:
             add = min(activity_cap, activity * activity_mult)
             score += add
             reasons.append(f"repo activity: {activity} (+{add})")
 
-        open_issues = sum(repo_open_issues.get(r, 0) for r in linked_repos)
+        open_issues = sum(repo_open_issues.get(r, 0) for r in linked)
         oi_score = open_issue_points(open_issues, cfg.get("open_issue_points", []))
         if oi_score > 0:
             score += oi_score
@@ -185,13 +173,18 @@ def main() -> None:
 
     candidates.sort(key=lambda x: (x["score"], x["updated_at"]), reverse=True)
 
-    backlog = {
-        "generated_at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "snapshot_dir": metadata.get("snapshot_dir", ""),
+    out = {
+        "generated_at": iso_now(),
+        "snapshot_date": snapshot_date.isoformat(),
         "candidates": candidates,
     }
-    save_json(normalized_dir / "backlog.json", backlog)
-    print("scored backlog written to data/normalized/backlog.json")
+    write_json(ROOT / "data" / "normalized" / "candidates.json", out)
+    snapshot_path = (
+        ROOT / "data" / "snapshots" / snapshot_date.isoformat() / "candidates.json"
+    )
+    write_json(snapshot_path, out)
+
+    print(f"score: candidates={len(candidates)}")
 
 
 if __name__ == "__main__":

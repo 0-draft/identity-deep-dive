@@ -3,15 +3,16 @@
 ## Daily Local Run
 
 ```bash
-./scripts/run_daily.sh
+make update
 ```
 
-## Manual Snapshot Only
+## Manual Pipeline Stages
 
 ```bash
-./scripts/collect_all.sh
-./scripts/normalize.py
-./scripts/score.py
+make collect       # collect_datatracker.py + collect_mailarchive.py + collect_github.py
+make normalize     # merge into data/normalized/state.json + daily snapshot
+make score         # write data/normalized/candidates.json
+make report-daily  # render reports/daily/<date>.md + deep-dives/_backlog.md
 ```
 
 ## Manual Deep Dive Topic Scaffold
@@ -22,21 +23,17 @@
 
 ## GitHub Actions
 
-- `Collect OAuth WG Signals`:
-  - cron: every 6 hours
-  - Collection + normalization + scoring
-- `Build Daily OAuth WG Report`:
-  - cron: daily
-  - Collection + report generation
-- `Scaffold Deep Dive Topic`:
-  - Manual execution, input: `draft_name`
+Repo-root workflows handle scheduling (no per-track workflows):
+
+- `.github/workflows/daily-update.yml` — 06:00 UTC matrix run, executes `make update` for each track and commits the result.
+- `.github/workflows/weekly-digest.yml` — Mondays 08:00 UTC matrix run, executes `make weekly`.
 
 ## Failure Handling
 
 - GitHub API rate limit:
-  - Retry on next scheduled run
-  - Manually trigger `workflow_dispatch` if needed
+  - `_common._request` already retries 429/5xx with `Retry-After`; persistent failures will surface as a non-zero exit and re-run on the next schedule.
+  - Set `GITHUB_TOKEN` (or `GH_TOKEN`) in the environment to lift the unauthenticated rate limit.
 - Datatracker temporary failure:
-  - Tolerate missing raw data; keep existing normalized data
+  - Tolerate missing raw data; keep existing normalized data and re-run later.
 - Mailarchive failure:
-  - Continue with empty mail items in the report
+  - Continue with empty mail items in the report.

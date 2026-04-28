@@ -46,7 +46,7 @@ def main() -> None:
         },
     }
 
-    write_json(ROOT / "data" / "normalized" / "wimse_state.json", state)
+    write_json(ROOT / "data" / "normalized" / "state.json", state)
 
     today = dt.datetime.now(dt.UTC).date()
     snapshot_path = ROOT / "data" / "snapshots" / f"{today:%Y-%m-%d}" / "state.json"
