@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-05-10T08:13:08+00:00",
+  "collected_at": "2026-05-11T09:50:15+00:00",
   "merged_prs_30d": {
     "error": null,
     "incomplete_results": false,
@@ -4155,13 +4155,98 @@
         }
       }
     ],
-    "since": "2026-04-10",
+    "since": "2026-04-11",
     "total_count": 55
   },
   "open_issues": {
     "error": null,
     "incomplete_results": false,
     "items": [
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "COLLABORATOR",
+        "body": "The behaviour when refresh tokens are used doesn't seem to be entirely clear and I think we could clarify.\n\nhttps://datatracker.ietf.org/doc/html/rfc9396#section-7 says:\n\n> In addition to the token response parameters as defined in [[RFC6749](https://datatracker.ietf.org/doc/html/rfc6749)], the AS MUST also return the authorization_details as granted by the resource owner and assigned to the respective access token.\n\nSo I think authorization_details needs to be returned in the refresh token response if it was returned in the original request.\n\nI would suggest it would be sensible that `credential_identifiers` MUST be consistent - i.e. if the wallet still has access to the same set of credential datasets, the exact same `credential_identifiers` must be returned (i.e. the issuer must not assign new identifier values that represent the same credential datasets). But values could be added or removed if the wallet now has access to fewer or more Credential Datasets.\n",
+        "closed_at": null,
+        "comments": 0,
+        "comments_url": "https://api.github.com/repos/openid/OpenID4VCI/issues/739/comments",
+        "created_at": "2026-05-10T14:50:02Z",
+        "events_url": "https://api.github.com/repos/openid/OpenID4VCI/issues/739/events",
+        "html_url": "https://github.com/openid/OpenID4VCI/issues/739",
+        "id": 4415920992,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "labels": [
+          {
+            "color": "aaaaaa",
+            "default": false,
+            "description": null,
+            "id": 10638073745,
+            "name": "certification",
+            "node_id": "LA_kwDOKOJpvM8AAAACehQfkQ",
+            "url": "https://api.github.com/repos/openid/OpenID4VCI/labels/certification"
+          }
+        ],
+        "labels_url": "https://api.github.com/repos/openid/OpenID4VCI/issues/739/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOKOJpvM8AAAABBzWbYA",
+        "number": 739,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/openid/OpenID4VCI/issues/739/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/openid/OpenID4VCI",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/openid/OpenID4VCI/issues/739/timeline",
+        "title": "credential_identifiers should remain consistent after use of refresh token",
+        "type": null,
+        "updated_at": "2026-05-10T14:50:02Z",
+        "url": "https://api.github.com/repos/openid/OpenID4VCI/issues/739",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/316456?v=4",
+          "events_url": "https://api.github.com/users/jogu/events{/privacy}",
+          "followers_url": "https://api.github.com/users/jogu/followers",
+          "following_url": "https://api.github.com/users/jogu/following{/other_user}",
+          "gists_url": "https://api.github.com/users/jogu/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/jogu",
+          "id": 316456,
+          "login": "jogu",
+          "node_id": "MDQ6VXNlcjMxNjQ1Ng==",
+          "organizations_url": "https://api.github.com/users/jogu/orgs",
+          "received_events_url": "https://api.github.com/users/jogu/received_events",
+          "repos_url": "https://api.github.com/users/jogu/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/jogu/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/jogu/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/jogu",
+          "user_view_type": "public"
+        }
+      },
       {
         "active_lock_reason": null,
         "assignee": null,
@@ -97723,84 +97808,9 @@
           "url": "https://api.github.com/users/jsmarr",
           "user_view_type": "public"
         }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "NONE",
-        "body": "4) Crypto\n- Dirk Balfanz and Brian Eaton have circulated a new OAuth2 signature proposal. A thorough security review is needed for the OAuth2 user agent flow and the use of signatures to validate identity assertions.\n",
-        "closed_at": null,
-        "comments": 1,
-        "comments_url": "https://api.github.com/repos/openid/connect-site/issues/4/comments",
-        "created_at": "2010-11-01T05:47:46Z",
-        "events_url": "https://api.github.com/repos/openid/connect-site/issues/4/events",
-        "html_url": "https://github.com/openid/connect-site/issues/4",
-        "id": 392951,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/openid/connect-site/issues/4/labels{/name}",
-        "locked": true,
-        "milestone": null,
-        "node_id": "MDU6SXNzdWUzOTI5NTE=",
-        "number": 4,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/openid/connect-site/issues/4/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/openid/connect-site",
-        "score": 1.0,
-        "state": "open",
-        "state_reason": null,
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/openid/connect-site/issues/4/timeline",
-        "title": "Provide secure crypto option for static validation of identity assertions",
-        "type": null,
-        "updated_at": "2010-11-01T05:49:37Z",
-        "url": "https://api.github.com/repos/openid/connect-site/issues/4",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/462319?v=4",
-          "events_url": "https://api.github.com/users/jsmarr/events{/privacy}",
-          "followers_url": "https://api.github.com/users/jsmarr/followers",
-          "following_url": "https://api.github.com/users/jsmarr/following{/other_user}",
-          "gists_url": "https://api.github.com/users/jsmarr/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/jsmarr",
-          "id": 462319,
-          "login": "jsmarr",
-          "node_id": "MDQ6VXNlcjQ2MjMxOQ==",
-          "organizations_url": "https://api.github.com/users/jsmarr/orgs",
-          "received_events_url": "https://api.github.com/users/jsmarr/received_events",
-          "repos_url": "https://api.github.com/users/jsmarr/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/jsmarr/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/jsmarr/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/jsmarr",
-          "user_view_type": "public"
-        }
       }
     ],
-    "total_count": 1003
+    "total_count": 1004
   },
   "open_prs": {
     "error": null,
@@ -99277,7 +99287,7 @@
         "author_association": "CONTRIBUTOR",
         "body": "Hi there,\r\n\r\nI did the following steps to address Issue #3.\r\n\r\n- Added a Use Cases subsection to the Introduction\r\n- Removed redundancies with Introduction\r\n- Made the Introduction more specific",
         "closed_at": null,
-        "comments": 6,
+        "comments": 7,
         "comments_url": "https://api.github.com/repos/openid/connect-key-binding/issues/13/comments",
         "created_at": "2026-04-23T12:48:56Z",
         "draft": false,
@@ -99317,7 +99327,7 @@
         "timeline_url": "https://api.github.com/repos/openid/connect-key-binding/issues/13/timeline",
         "title": "Clarify Use Cases",
         "type": null,
-        "updated_at": "2026-05-08T17:09:06Z",
+        "updated_at": "2026-05-11T08:15:55Z",
         "url": "https://api.github.com/repos/openid/connect-key-binding/issues/13",
         "user": {
           "avatar_url": "https://avatars.githubusercontent.com/u/16904516?v=4",
@@ -110834,8 +110844,8 @@
       "name": "OpenID4VCI",
       "node_id": "R_kgDOKOJpvA",
       "notifications_url": "https://api.github.com/repos/openid/OpenID4VCI/notifications{?since,all,participating}",
-      "open_issues": 134,
-      "open_issues_count": 134,
+      "open_issues": 135,
+      "open_issues_count": 135,
       "owner": {
         "avatar_url": "https://avatars.githubusercontent.com/u/71971?v=4",
         "events_url": "https://api.github.com/users/openid/events{/privacy}",
@@ -115194,5 +115204,5 @@
       "web_commit_signoff_required": false
     }
   ],
-  "snapshot_date": "2026-05-10"
+  "snapshot_date": "2026-05-11"
 }
