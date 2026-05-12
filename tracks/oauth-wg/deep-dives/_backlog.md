@@ -1,14 +1,14 @@
-# OAuth WG Backlog (2026-05-11)
+# OAuth WG Backlog (2026-05-12)
 
-- generated_at_utc: `2026-05-11T09:50:19+00:00`
+- generated_at_utc: `2026-05-12T08:46:51+00:00`
 
 - [ ] `draft-ietf-oauth-transaction-tokens` score=108 updated=2026-03-27T12:21:42Z
-- [ ] `draft-ietf-oauth-identity-chaining` score=100 updated=2026-05-11T07:13:03Z
-- [ ] `draft-ietf-oauth-rfc7523bis` score=96 updated=2026-05-07T15:46:59Z
+- [ ] `draft-ietf-oauth-identity-chaining` score=100 updated=2026-05-11T17:07:19Z
+- [ ] `draft-ietf-oauth-rfc7523bis` score=89 updated=2026-05-07T15:46:59Z
 - [ ] `draft-ietf-oauth-sd-jwt-vc` score=88 updated=2026-04-24T18:54:46Z
 - [ ] `draft-ietf-oauth-status-list` score=78 updated=2026-04-20T11:14:05Z
-- [ ] `draft-ietf-oauth-refresh-token-expiration` score=67 updated=2026-05-08T21:04:46Z
 - [ ] `draft-ietf-oauth-identity-assertion-authz-grant` score=66 updated=2026-04-22T22:16:37Z
+- [ ] `draft-ietf-oauth-refresh-token-expiration` score=65 updated=2026-05-08T21:04:46Z
 - [ ] `draft-ietf-oauth-cross-device-security` score=65 updated=2026-03-04T14:06:34Z
 - [ ] `draft-ietf-oauth-v2-1` score=65 updated=2026-03-02T18:53:37Z
 - [ ] `draft-ietf-oauth-client-id-metadata-document` score=65 updated=2026-03-02T03:28:49Z
