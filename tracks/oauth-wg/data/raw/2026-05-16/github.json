@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-05-15T08:54:44+00:00",
+  "collected_at": "2026-05-16T08:10:07+00:00",
   "issues": {
     "error": null,
     "items": [
@@ -7,10 +7,85 @@
         "active_lock_reason": null,
         "assignee": null,
         "assignees": [],
+        "author_association": "CONTRIBUTOR",
+        "body": "Just so we don't loose his comments in the [mailing list](https://mailarchive.ietf.org/arch/msg/oauth/DRzDT8q_j3PaGwoEJEpgZwcyccI/), I'm copying them here below, we'll probably want to review these separately or split them out into separate issues later:\n\n---\n\nOverall:\n\nI think this is missing a discussion on the kinds of clients where this approach makes sense, and where it does not. Namely, if a client is relatively well-known and has an established home, like a website, then this works great. For other clients, including those in §4.2, it's not as great a fit. I think it's fine for this specification to not work for a class of clients - and it should be upfront about it instead of pretending it fits well.\n\n§3\n\nThis feels like it should be a list, not a paragraph. Try reformatting and see if that works?\n\nGlobally redefining \"client identifier\" seems a bridge too far for this spec to do in isolation, consider perhaps defining \"Client Identifier URI\" or something specific to CIMD so as not to imply that ALL client identifiers are now URLs.\n\nRefer to the URI spec (RFC3986) for URI parts. The \"username or password\" is called the \"userinfo\" subcomponent of the authority, for example. And \"port\" is also part of the authority.\n\n\"Port\" should probably have some matching done to it — like defaults of 443 being equivalent to non included — or it should be direct string comparison only as implied by §4.1 and default port processing expressly disallowed. Really, leaning on the URI definitions will help this too.\n\n\"This specification places no restrictions\" after a bunch of restrictions is … weird. Perhaps be more specific about what \"no restrictions\" are included in \"no restrictions\" like URL shorteners or stability. That said, most shorteners use redirects to work, which breaks the resolution restriction in §4, can we square that circle?\n\n§4\n\nIt's not clear why fetching the document is a \"should\". I know it can be associated by hand, so I think maybe that's what this SHOULD is trying to get at. Perhaps call out that it MUST be associated with a set of client metadata, which is available at the URL, and the AS SHOULD fetch it automatically within security considerations.\n\n§4.1\n\n\"The client metadata document MUST be served with a 200 OK HTTP status code\" this is a requirement of the fetch process not the document.\n\nDoes \"the URL of the document\" mean the URL used to fetch the document, exactly? This sounds like it's something the AS (fetcher) needs to validate, then — call out both of these more explicitly.\n\nSuggest that the discussion on client secrets be pulled out as a separate section to highlight its importance here. Also add discussion on private keys, but public keys are allowable.\n\nI see no discussion of software_Statement and how it would fit with this work, suggest we add discussion of how (or if) they fit together. I personally think they could be layered with some cautions on the trustworthiness of the software_statement (since it's no longer presented inline by the client).\n\nSuggest that you separate the \"what's in the doc\" from \"how you get the doc\" in this section overall.\n\n§4.2\n\nWhile I see the practical appeal, the CIMD-service really just feels like a weird way to do static registration but use a side door to do so. This also seems like it directly contradicts the trust model proposed by this specification. I would recommend removal of this beyond discussion in security considerations, or add it as an appendix to describe how CIMD-as-a-service could be built and offered by a party, and discuss the security and reputation implications thereof.\n\n§4.3\n\nWhat if the server isn't fetching it, under some circumstances allowed by §4? Are there any validation requirements (that might need its own section alongside 4.1)\n\n§4.5\n\nBy \"exact match\" I assume this means string-match, either call that out or point to the logic in the core OAuth specs that say so.\n\nThis also implies that only redirect-based grants are allowed to be used, but I don't see that called out anywhere in here. Could I use CIMD for client_credentials or token exchange? Device flow? CIBA? Why or why not?\n\n§6\n\nGenerally speaking, there shouldn't be any normative text in security considerations. Especially the MAYs here are pointless and more explanatory than requirement anyway. Stick to non-normative text in this section and put the normative requirements further up.\n\n§6.5\n\n\"except when the authorization server itself is also running on a loopback address and the resolved address matches the same loopback interface\" — couldn't this be used to force an AS to call a loopback function from the outside via a client-provided value? I'm failing to see what the use case to allow this cutout is. Development is a different world where restrictions like this are routinely relaxed, but here it reads like this should be a normal cutout for the protocol.\n\n§6.6\n\n\"Authorization servers SHOULD limit the response size\" — how does the AS limit the size of a file it does not control? Do you mean limit processing to the first 5k and erroring or discarding the rest?\n\n§6.8\n\nSuggest adding a discussion of allowlists, especially of domain patterns — eg, \"anything from [foo.com](http://foo.com/)\". The framing of different policies for different states of client trust is a good one, keep that.\n\n§6.9\n\nThis doesn't seem like a security consideration, but an implementation consideration.\n\nMore to the point, the AS needs to be able to differentiate between clients registered via CIMD and clients registered by other means. Client ID prefix is only one aspect of this, as there might be AS's that do use https:// for clients (such as vanity IDs or stable developer-facing identifiers), but don't fetch the data. Suggest calling out that \"do I fetch this or not\" is the key difference.\n\n§6.10\n\nThis doesn't seem like a security consideration, but an implementation consideration. I would argue that it leverages the namespacing and other aspects of CIMD while not relying on automated systems — so I would suggest not framing it as \"Defeating the purpose\". This discussion could be helped by separating the \"fetch\" from \"format\" as suggested above.\n\n§??\n\nThis is missing privacy considerations, please add them. In particular, AS fetching or providing to the end user any URLs dynamically handed over by the client in a CIMD could lead to leaking user usage patterns or information.",
+        "closed_at": null,
+        "comments": 0,
+        "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/79/comments",
+        "created_at": "2026-05-15T22:48:54Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/79/events",
+        "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/79",
+        "id": 4457421090,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/79/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOL_Xevs8AAAABCa7ZIg",
+        "number": 79,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/79/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/79/timeline",
+        "title": "Review from Justin Richer",
+        "type": null,
+        "updated_at": "2026-05-15T22:48:54Z",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/79",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/30827?v=4",
+          "events_url": "https://api.github.com/users/ThisIsMissEm/events{/privacy}",
+          "followers_url": "https://api.github.com/users/ThisIsMissEm/followers",
+          "following_url": "https://api.github.com/users/ThisIsMissEm/following{/other_user}",
+          "gists_url": "https://api.github.com/users/ThisIsMissEm/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/ThisIsMissEm",
+          "id": 30827,
+          "login": "ThisIsMissEm",
+          "node_id": "MDQ6VXNlcjMwODI3",
+          "organizations_url": "https://api.github.com/users/ThisIsMissEm/orgs",
+          "received_events_url": "https://api.github.com/users/ThisIsMissEm/received_events",
+          "repos_url": "https://api.github.com/users/ThisIsMissEm/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/ThisIsMissEm/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/ThisIsMissEm/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/ThisIsMissEm",
+          "user_view_type": "public"
+        }
+      },
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
         "author_association": "MEMBER",
         "body": "When a Resource Authorization Server is configured to the enterprise IdP with SAML for SSO, the values currently in the ID-JAG are not able to be mapped to their SAML equivalents.\n\nFor example, the Resource AS might recognize a SAML issuer like `https://example.com/exk33qwjcwDda7luK346` and receive SAML NameIds that are a username or email address. An ID-JAG will contain an OIDC issuer URL like `https://tenant123.example.com/` and subject identifiers that are a random string. (there is no guarantee the SAML issuer and OIDC issuer domain names have anything in common.)\n\nWhen a Resource AS is configured for SAML SSO, what are the options for how it can map the ID-JAG values to the SAML SSO connection? As far as I can tell there are a couple options for the issuer:\n\n* No change to the ID-JAG, require that the customer manually add the OIDC issuer URL into their SAML SSO configuration. This provides the AS the association between the SAML issuer and OIDC issuer.\n* Include the SAML issuer in the ID-JAG somewhere.\n\nFor the user ID question, the options would be:\n\n* Send whatever value the SAML NameId would have been in the ID-JAG `sub` (this is currently allowed according to [section 3.1](https://www.ietf.org/archive/id/draft-ietf-oauth-identity-assertion-authz-grant-03.html#section-3.1) because it would be \"the same as the subject identifier used in an Identity Assertion for the Resource Authorization Server as a Relying Party for Single Sign-On (SSO)\")\n* Send the SAML NameId as a new claim in the ID-JAG\n\nIf we go with adding new claims to the ID-JAG, the question becomes whether these should be SAML-specific claims or something generic, e.g.\n\n* `saml_issuer` and `saml_nameid`\n* `alt_issuer` and `alt_sub`\n\n### Minimal Changed Example ID-JAG\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"user@idp.example\",                  /* assuming email addresses were sent as SAML NameId */\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n### Example ID-JAG with New Claims\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"U019488227\",\n  \"alt_iss\": \"https://idp.example/exk33qwjcwDda7luK346\",\n  \"alt_sub\": \"user@idp.example\",\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n",
         "closed_at": null,
-        "comments": 2,
+        "comments": 7,
         "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/comments",
         "created_at": "2026-05-13T18:48:08Z",
         "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/events",
@@ -54,7 +129,7 @@
         "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/timeline",
         "title": "How can a Resource Authorization Server recognize an ID-JAG when it is configured with SAML SSO",
         "type": null,
-        "updated_at": "2026-05-15T03:24:49Z",
+        "updated_at": "2026-05-15T18:39:34Z",
         "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
         "user": {
           "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
@@ -83,9 +158,84 @@
         "assignee": null,
         "assignees": [],
         "author_association": "NONE",
+        "body": "Thanks for writing up ID on Transaction Tokens. \n\n1. I was hoping to find a reference to [RFC 9396](https://datatracker.ietf.org/doc/html/rfc9396) Rich Authorization Requests somewhere, especially while discussing Authorization Context. \n\n2. Also since RFC 9396's `authorization_details` is already registered in OAuth [Parameters registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml) perhaps it could be used here as well to provide value for `request_context?` It is already approved for token request and token response.\n\n3. Can `authorization_details` be used here as a [claim](https://datatracker.ietf.org/doc/html/rfc9396#name-oauth-parameters-registrati) instead of tctx, inside tctx or in addition to tact?  \n\nFor #2 and #3, I would not know if reuse is prohibited, it was ignored or it was discussed and a decision was taken not to reuse.\n\nSorry in advance if these issues are already discussed and resolved. \n\nthanks,\nsanjay",
+        "closed_at": null,
+        "comments": 0,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/comments",
+        "created_at": "2026-05-15T17:23:33Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/events",
+        "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/351",
+        "id": 4455724316,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOJt_WwM8AAAABCZT1HA",
+        "number": 351,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/timeline",
+        "title": "Using RFC 9396's authorization_details as a claim and for request_context",
+        "type": null,
+        "updated_at": "2026-05-15T17:23:33Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/21368261?v=4",
+          "events_url": "https://api.github.com/users/sdatspun2/events{/privacy}",
+          "followers_url": "https://api.github.com/users/sdatspun2/followers",
+          "following_url": "https://api.github.com/users/sdatspun2/following{/other_user}",
+          "gists_url": "https://api.github.com/users/sdatspun2/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/sdatspun2",
+          "id": 21368261,
+          "login": "sdatspun2",
+          "node_id": "MDQ6VXNlcjIxMzY4MjYx",
+          "organizations_url": "https://api.github.com/users/sdatspun2/orgs",
+          "received_events_url": "https://api.github.com/users/sdatspun2/received_events",
+          "repos_url": "https://api.github.com/users/sdatspun2/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/sdatspun2/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/sdatspun2/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/sdatspun2",
+          "user_view_type": "public"
+        }
+      },
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "NONE",
         "body": "From [12.3. Txn-Token Request Processing](https://www.ietf.org/archive/id/draft-ietf-oauth-transaction-tokens-08.html#section-12.3):\n> If a `request_context` parameter is present in the Txn-Token Request, the data SHOULD be added to the `rctx` object of the Txn-Token.\n\nDoes the \"added\" here mean \"added as is\" (copied)? Or is TTS allowed to perform some sort of mapping? The examples in 10.2.4 / 12.1 suggest the former. Would be nice to clarify this.\n\n> If a `request_details` parameter is present in the Txn-Token Request, then the TTS SHOULD propagate the data from the `request_details` object into the claims in the `tctx` object as authorized by the TTS authorization policy for the requesting client.\n\nThe wording is different here (\"propagated\" vs. \"added\"), so I'd say some sort of mapping is assumed. To further intricate things, there is no `request_details` in the TraT request example in 12.1, making this a pure guesswork. Would be nice to clarify this as well, and also add `request_details` to the example.\n\nFinally, the examples for `rctx` / `tctx` in 10.2.2 / 10.2.3 are inconsistent:\n\n```json\n{\n    \"rctx\": {\n      \"req_ip\": \"69.151.72.123\", // env context of external call\n      \"authn\": \"urn:ietf:rfc:6749\" // env context of external call\n    }\n}\n```\n\n```json\n\"tctx\": {\n  \"action\": \"BUY\", // parameter of external call\n  \"ticker\": \"MSFT\", // parameter of external call\n  \"quantity\": \"100\", // parameter of external call\n  \"customer_type\": { // computed value not present in external call\n    \"geo\": \"US\",\n    \"level\": \"VIP\"\n  }\n}\n```\n\n`rctx` is enclosed in curly braces, whilst `tctx` is not. And ultimately, `quantity` should be a JSON number and not a string (`100` instead of `\"100\"`). ",
         "closed_at": null,
-        "comments": 1,
+        "comments": 2,
         "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/comments",
         "created_at": "2026-05-14T18:51:11Z",
         "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/events",
@@ -129,8 +279,83 @@
         "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/timeline",
         "title": "More rctx/tctx fun",
         "type": null,
-        "updated_at": "2026-05-14T19:47:09Z",
+        "updated_at": "2026-05-15T15:18:27Z",
         "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/13701445?v=4",
+          "events_url": "https://api.github.com/users/dteleguin/events{/privacy}",
+          "followers_url": "https://api.github.com/users/dteleguin/followers",
+          "following_url": "https://api.github.com/users/dteleguin/following{/other_user}",
+          "gists_url": "https://api.github.com/users/dteleguin/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/dteleguin",
+          "id": 13701445,
+          "login": "dteleguin",
+          "node_id": "MDQ6VXNlcjEzNzAxNDQ1",
+          "organizations_url": "https://api.github.com/users/dteleguin/orgs",
+          "received_events_url": "https://api.github.com/users/dteleguin/received_events",
+          "repos_url": "https://api.github.com/users/dteleguin/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/dteleguin/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/dteleguin/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/dteleguin",
+          "user_view_type": "public"
+        }
+      },
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "NONE",
+        "body": "Imagine a scenario where the user makes a call to the service and requests a transaction, but the actual transaction execution should be deferred or scheduled for later. By that time, the access token will have expired. If the service requests a TraT right away, it will expire as well.\n\nOne of the solutions is to use impersonation; when it is time to execute the actual transaction, the service would request a service account token via client credentials grant, then exchange it to the user's access token, which in turn will be used to request a TraT (together with stored request context / details). This adds overhead, and also depends on impersonation support and concrete implementation (e.g. Keycloak provides \"[direct naked impersonation](https://www.keycloak.org/securing-apps/token-exchange#_direct_naked_impersonation)\").\n\nCan we provide some guidance / recommendations for the above scenario? Is it an option to use a longer-lived credential (e.g. ID token) as `subject_token` in the TraT request?\n\n(Using ID tokens might seem \"less secure\" compared to access tokens, but according to [OpenID Connect](https://openid.net/specs/openid-connect-core-1_0.html#IDToken) [standards](https://openid.net/specs/fapi-2_0-attacker-model.html#section-2.2), the security requirements for ID tokens are similar to those for access tokens. Additionally, ID token could be even sender-constrained; DPoP doesn't explicitly mention ID tokens, but doesn't prohibit DPoP-binding them.)",
+        "closed_at": null,
+        "comments": 0,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/350/comments",
+        "created_at": "2026-05-15T12:08:02Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/350/events",
+        "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/350",
+        "id": 4453767164,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/350/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOJt_WwM8AAAABCXcX_A",
+        "number": 350,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/350/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/350/timeline",
+        "title": "​​subject_token​ and deferred transactions",
+        "type": null,
+        "updated_at": "2026-05-15T12:08:02Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/350",
         "user": {
           "avatar_url": "https://avatars.githubusercontent.com/u/13701445?v=4",
           "events_url": "https://api.github.com/users/dteleguin/events{/privacy}",
@@ -48539,246 +48764,1291 @@
           "url": "https://api.github.com/users/ashayraut",
           "user_view_type": "public"
         }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "COLLABORATOR",
-        "body": "How are we thinking of modeling \"on behalf of\" use cases?\n\nAs Tx token carries the identity of the actor, a service deep down in the call chain in SOA, can verify that actor for which data is being requested, is actually signed in or not. However, often a Customer Service (CS) agent is the actor that is initiating a request on behalf of the customer, then in such cases, identity of the CS agent is definitely captured but not the identity of the real customer, who's data is going to be accessed as part of the request. Does the real customerId/customerInfo suppose to go in tctx field?\n\nI'm thinking if we should model this more explicitly to say there is optional OnBehalfOf field that represents that actor that triggered request is acting on behalf of someone else. Tx token issuer will need a way to assert that actor is really working with that customer or not but that is something the company/domain owners have to setup. e.g. if there is authoritative service that contains mapping of CS Agent -> Customers, they are working with, then Tx token issuer could call that service and pull the information and add the customer.",
-        "closed_at": "2025-08-22T16:33:59Z",
-        "comments": 3,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/166/comments",
-        "created_at": "2025-03-31T21:55:07Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/166/events",
-        "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/166",
-        "id": 2961665811,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "labels": [
-          {
-            "color": "0d9373",
-            "default": false,
-            "description": "topics considered out of scope for this draft, but may be considered for a follow-on draft.",
-            "id": 9154398185,
-            "name": "Out-Of-Scope",
-            "node_id": "LA_kwDOJt_WwM8AAAACIaUH6Q",
-            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/labels/Out-Of-Scope"
-          }
-        ],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/166/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOJt_WwM6wh28T",
-        "number": 166,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/166/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
-        "score": 1.0,
-        "state": "closed",
-        "state_reason": "completed",
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/166/timeline",
-        "title": "Modelling OnBehalfOf use cases",
-        "type": null,
-        "updated_at": "2025-08-22T16:33:59Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/166",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/5172575?v=4",
-          "events_url": "https://api.github.com/users/ashayraut/events{/privacy}",
-          "followers_url": "https://api.github.com/users/ashayraut/followers",
-          "following_url": "https://api.github.com/users/ashayraut/following{/other_user}",
-          "gists_url": "https://api.github.com/users/ashayraut/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/ashayraut",
-          "id": 5172575,
-          "login": "ashayraut",
-          "node_id": "MDQ6VXNlcjUxNzI1NzU=",
-          "organizations_url": "https://api.github.com/users/ashayraut/orgs",
-          "received_events_url": "https://api.github.com/users/ashayraut/received_events",
-          "repos_url": "https://api.github.com/users/ashayraut/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/ashayraut/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/ashayraut/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/ashayraut",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "NONE",
-        "body": "In the description of the `authn` parameter of the requester context, it is described as a StringOrURI uniquely identifying the method used to authenticate.  In 5.2.3.1 there is an example that includes the context as `urn:ietd:rfc:6749`, indicating authn via OAuth.  (I'd call this authZ...) \n\nShould this be defined more concretely?  I am concerned that this is pretty open ended and may not accurately represent the authentication in use.  For example, I can see a use case where the workload needs to know that the user has used a phishing resistant authenticator to authenticate and the client has authorized access using OAuth.  In this case would the context be `urn:ietd:rfc:6749` or `prMFA` or something else entirely?  \n\nThere's an argument to be made that this may not make any difference since the tokens are all used within a single trust domain which could define whatever strings they way for the `authn` parameter.  ",
-        "closed_at": "2025-08-22T16:31:44Z",
-        "comments": 1,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/163/comments",
-        "created_at": "2025-03-25T21:28:15Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/163/events",
-        "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/163",
-        "id": 2947810046,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/163/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOJt_WwM6vtAL-",
-        "number": 163,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/163/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
-        "score": 1.0,
-        "state": "closed",
-        "state_reason": "completed",
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/163/timeline",
-        "title": "Requester Context - authn",
-        "type": null,
-        "updated_at": "2025-08-22T16:31:44Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/163",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/176071371?v=4",
-          "events_url": "https://api.github.com/users/dhs-BI/events{/privacy}",
-          "followers_url": "https://api.github.com/users/dhs-BI/followers",
-          "following_url": "https://api.github.com/users/dhs-BI/following{/other_user}",
-          "gists_url": "https://api.github.com/users/dhs-BI/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/dhs-BI",
-          "id": 176071371,
-          "login": "dhs-BI",
-          "node_id": "U_kgDOCn6iyw",
-          "organizations_url": "https://api.github.com/users/dhs-BI/orgs",
-          "received_events_url": "https://api.github.com/users/dhs-BI/received_events",
-          "repos_url": "https://api.github.com/users/dhs-BI/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/dhs-BI/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/dhs-BI/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/dhs-BI",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "COLLABORATOR",
-        "body": "Hannes, Joe Salowey and Jaroslav of Wimse pointed out that we are using the term \"internal microservice\" in the diagram, but calling it \"workload\" in the rest of the spec. We should review and see if renaming the item in the diagram to \"workload\" makes sense.",
-        "closed_at": "2025-08-22T16:28:40Z",
-        "comments": 1,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/154/comments",
-        "created_at": "2025-02-03T19:56:13Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/154/events",
-        "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/154",
-        "id": 2828398420,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/154/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOJt_WwM6ole9U",
-        "number": 154,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/154/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
-        "score": 1.0,
-        "state": "closed",
-        "state_reason": "completed",
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/154/timeline",
-        "title": "\"Internal microservice\" -> workload",
-        "type": null,
-        "updated_at": "2025-08-22T16:28:40Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/154",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/8116763?v=4",
-          "events_url": "https://api.github.com/users/tulshi/events{/privacy}",
-          "followers_url": "https://api.github.com/users/tulshi/followers",
-          "following_url": "https://api.github.com/users/tulshi/following{/other_user}",
-          "gists_url": "https://api.github.com/users/tulshi/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/tulshi",
-          "id": 8116763,
-          "login": "tulshi",
-          "node_id": "MDQ6VXNlcjgxMTY3NjM=",
-          "organizations_url": "https://api.github.com/users/tulshi/orgs",
-          "received_events_url": "https://api.github.com/users/tulshi/received_events",
-          "repos_url": "https://api.github.com/users/tulshi/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/tulshi/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/tulshi/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/tulshi",
-          "user_view_type": "public"
-        }
       }
     ],
-    "total_count": 1703
+    "total_count": 1706
   },
   "org_events": [
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/30827?",
+        "display_login": "ThisIsMissEm",
+        "gravatar_id": "",
+        "id": 30827,
+        "login": "ThisIsMissEm",
+        "url": "https://api.github.com/users/ThisIsMissEm"
+      },
+      "created_at": "2026-05-15T22:48:55Z",
+      "id": "9525883003",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "opened",
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "Just so we don't loose his comments in the [mailing list](https://mailarchive.ietf.org/arch/msg/oauth/DRzDT8q_j3PaGwoEJEpgZwcyccI/), I'm copying them here below, we'll probably want to review these separately or split them out into separate issues later:\n\n---\n\nOverall:\n\nI think this is missing a discussion on the kinds of clients where this approach makes sense, and where it does not. Namely, if a client is relatively well-known and has an established home, like a website, then this works great. For other clients, including those in §4.2, it's not as great a fit. I think it's fine for this specification to not work for a class of clients - and it should be upfront about it instead of pretending it fits well.\n\n§3\n\nThis feels like it should be a list, not a paragraph. Try reformatting and see if that works?\n\nGlobally redefining \"client identifier\" seems a bridge too far for this spec to do in isolation, consider perhaps defining \"Client Identifier URI\" or something specific to CIMD so as not to imply that ALL client identifiers are now URLs.\n\nRefer to the URI spec (RFC3986) for URI parts. The \"username or password\" is called the \"userinfo\" subcomponent of the authority, for example. And \"port\" is also part of the authority.\n\n\"Port\" should probably have some matching done to it — like defaults of 443 being equivalent to non included — or it should be direct string comparison only as implied by §4.1 and default port processing expressly disallowed. Really, leaning on the URI definitions will help this too.\n\n\"This specification places no restrictions\" after a bunch of restrictions is … weird. Perhaps be more specific about what \"no restrictions\" are included in \"no restrictions\" like URL shorteners or stability. That said, most shorteners use redirects to work, which breaks the resolution restriction in §4, can we square that circle?\n\n§4\n\nIt's not clear why fetching the document is a \"should\". I know it can be associated by hand, so I think maybe that's what this SHOULD is trying to get at. Perhaps call out that it MUST be associated with a set of client metadata, which is available at the URL, and the AS SHOULD fetch it automatically within security considerations.\n\n§4.1\n\n\"The client metadata document MUST be served with a 200 OK HTTP status code\" this is a requirement of the fetch process not the document.\n\nDoes \"the URL of the document\" mean the URL used to fetch the document, exactly? This sounds like it's something the AS (fetcher) needs to validate, then — call out both of these more explicitly.\n\nSuggest that the discussion on client secrets be pulled out as a separate section to highlight its importance here. Also add discussion on private keys, but public keys are allowable.\n\nI see no discussion of software_Statement and how it would fit with this work, suggest we add discussion of how (or if) they fit together. I personally think they could be layered with some cautions on the trustworthiness of the software_statement (since it's no longer presented inline by the client).\n\nSuggest that you separate the \"what's in the doc\" from \"how you get the doc\" in this section overall.\n\n§4.2\n\nWhile I see the practical appeal, the CIMD-service really just feels like a weird way to do static registration but use a side door to do so. This also seems like it directly contradicts the trust model proposed by this specification. I would recommend removal of this beyond discussion in security considerations, or add it as an appendix to describe how CIMD-as-a-service could be built and offered by a party, and discuss the security and reputation implications thereof.\n\n§4.3\n\nWhat if the server isn't fetching it, under some circumstances allowed by §4? Are there any validation requirements (that might need its own section alongside 4.1)\n\n§4.5\n\nBy \"exact match\" I assume this means string-match, either call that out or point to the logic in the core OAuth specs that say so.\n\nThis also implies that only redirect-based grants are allowed to be used, but I don't see that called out anywhere in here. Could I use CIMD for client_credentials or token exchange? Device flow? CIBA? Why or why not?\n\n§6\n\nGenerally speaking, there shouldn't be any normative text in security considerations. Especially the MAYs here are pointless and more explanatory than requirement anyway. Stick to non-normative text in this section and put the normative requirements further up.\n\n§6.5\n\n\"except when the authorization server itself is also running on a loopback address and the resolved address matches the same loopback interface\" — couldn't this be used to force an AS to call a loopback function from the outside via a client-provided value? I'm failing to see what the use case to allow this cutout is. Development is a different world where restrictions like this are routinely relaxed, but here it reads like this should be a normal cutout for the protocol.\n\n§6.6\n\n\"Authorization servers SHOULD limit the response size\" — how does the AS limit the size of a file it does not control? Do you mean limit processing to the first 5k and erroring or discarding the rest?\n\n§6.8\n\nSuggest adding a discussion of allowlists, especially of domain patterns — eg, \"anything from [foo.com](http://foo.com/)\". The framing of different policies for different states of client trust is a good one, keep that.\n\n§6.9\n\nThis doesn't seem like a security consideration, but an implementation consideration.\n\nMore to the point, the AS needs to be able to differentiate between clients registered via CIMD and clients registered by other means. Client ID prefix is only one aspect of this, as there might be AS's that do use https:// for clients (such as vanity IDs or stable developer-facing identifiers), but don't fetch the data. Suggest calling out that \"do I fetch this or not\" is the key difference.\n\n§6.10\n\nThis doesn't seem like a security consideration, but an implementation consideration. I would argue that it leverages the namespacing and other aspects of CIMD while not relying on automated systems — so I would suggest not framing it as \"Defeating the purpose\". This discussion could be helped by separating the \"fetch\" from \"format\" as suggested above.\n\n§??\n\nThis is missing privacy considerations, please add them. In particular, AS fetching or providing to the end user any URLs dynamically handed over by the client in a CIMD could lead to leaking user usage patterns or information.",
+          "closed_at": null,
+          "comments": 0,
+          "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/79/comments",
+          "created_at": "2026-05-15T22:48:54Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/79/events",
+          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/79",
+          "id": 4457421090,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/79/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOL_Xevs8AAAABCa7ZIg",
+          "number": 79,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/79/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/79/timeline",
+          "title": "Review from Justin Richer",
+          "type": null,
+          "updated_at": "2026-05-15T22:48:54Z",
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/79",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/30827?v=4",
+            "events_url": "https://api.github.com/users/ThisIsMissEm/events{/privacy}",
+            "followers_url": "https://api.github.com/users/ThisIsMissEm/followers",
+            "following_url": "https://api.github.com/users/ThisIsMissEm/following{/other_user}",
+            "gists_url": "https://api.github.com/users/ThisIsMissEm/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/ThisIsMissEm",
+            "id": 30827,
+            "login": "ThisIsMissEm",
+            "node_id": "MDQ6VXNlcjMwODI3",
+            "organizations_url": "https://api.github.com/users/ThisIsMissEm/orgs",
+            "received_events_url": "https://api.github.com/users/ThisIsMissEm/received_events",
+            "repos_url": "https://api.github.com/users/ThisIsMissEm/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/ThisIsMissEm/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/ThisIsMissEm/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/ThisIsMissEm",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 804642494,
+        "name": "oauth-wg/draft-ietf-oauth-client-id-metadata-document",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document"
+      },
+      "type": "IssuesEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/1944352?",
+        "display_login": "mcguinness",
+        "gravatar_id": "",
+        "id": 1944352,
+        "login": "mcguinness",
+        "url": "https://api.github.com/users/mcguinness"
+      },
+      "created_at": "2026-05-15T18:15:54Z",
+      "id": "9517487281",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "SAML Subject NameID is a string but it also may carry semantic qualifiers and metadata attributes such as:\n\n- Format\n- NameQualifier\n- SPNameQualifier\n- SPProvidedID\n\nAs @gffletch indicated, the spec also doesn't require NameID but from my experience its required for most of SaaS based deployments.  \n\nThere is a lot of surface area to define mappings and interoperability requirements.   You can get a taste of the complexity https://mcguinness.github.io/draft-connect-saml-migration/draft-mcguinness-saml-oidc-migration-profile.html#name-subject-identifier-mapping\n\nOne idea which as originally proposed in this issue was to adopt `sub_id` from secevents/SSF.\n\nhttps://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/51#issuecomment-3398407476\n\nWe could define a new `format` for an SAML NameID \n\nExample ID-JAG:\n```\n{\n  \"iss\": \"https://tenant123.example.com/\",\n  \"sub\": \"00u7abc123random\",\n  \"aud\": \"https://resource-as.example.com/\",\n  \"client_id\": \"client-123\",\n  \"exp\": 1715800000,\n  \"iat\": 1715799700,\n  \"sub_id\": {\n    \"format\": \"saml-nameid\",\n    \"issuer\": \"https://example.com/exk33qwjcwDda7luK346\",\n    \"nameid\": \"foo@example.com\",\n    \"nameid_format\": \"urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress\",\n    \"sp_name_qualifier\": \"https://resource.example.com/saml/sp\"\n  }\n}\n```\n\nI would make only these required:\n\n```\n{\n  \"format\": \"saml-nameid\",\n  \"issuer\": \"https://example.com/exk33qwjcwDda7luK346\",\n  \"nameid\": \"foo@example.com\"\n}\n```\n\nAnd make the SAML qualifiers optional:\n\n```\n{\n  \"format\": \"saml-nameid\",\n  \"issuer\": \"https://example.com/exk33qwjcwDda7luK346\",\n  \"nameid\": \"foo@example.com\",\n  \"nameid_format\": \"urn:oasis:names:tc:SAML:2.0:nameid-format:persistent\",\n  \"name_qualifier\": \"https://example.com/exk33qwjcwDda7luK346\",\n  \"sp_name_qualifier\": \"https://resource.example.com/saml/sp\",\n  \"sp_provided_id\": \"local-sp-provided-id\"\n}\n```\n\nThe ID-JAG with still need a `sub` so we would still need to define that but  this works because RFC 9493 already says `sub_id` can identify the JWT subject using a different identifier namespace from the JWT iss/sub which seems to match the use case here.  \n\nSpec text shape:\n\n`saml-nameid` Subject Identifier Format\n\nThe `saml-nameid` Subject Identifier Format identifies a subject using a SAML NameID value within the context of a SAML issuer.\n\nA Subject Identifier in this format MUST contain:\n\n* `format`: The value `saml-nameid`.\n* `issuer`: A JSON string containing the SAML issuer/entityID.\n* `nameid`: A JSON string containing the SAML NameID value.\n\nA Subject Identifier in this format MAY contain:\n\n* `nameid_format`: A JSON string containing the SAML NameID Format URI.\n* `name_qualifier`: A JSON string containing the SAML NameQualifier value.\n* `sp_name_qualifier`: A JSON string containing the SAML SPNameQualifier value.\n* `sp_provided_id`: A JSON string containing the SAML SPProvidedID value.\n\nThen add ID-JAG processing text:\n\nWhen the Resource Authorization Server resolves users by SAML NameID, the IdP Authorization Server MAY include a `sub_id` claim using the `saml-nameid` Subject Identifier Format. The `sub_id` claim identifies the same subject as\nthe ID-JAG `sub` claim, but in the SAML subject namespace used by the Resource Authorization Server for SSO.\n\nThe Resource Authorization Server MAY use `sub_id` for subject resolution when it supports the indicated Subject Identifier Format.\n\nSecurity guardrails:\n\nThe Resource Authorization Server MUST NOT use the `sub_id.issuer` value to establish trust in the ID-JAG issuer. The ID-JAG MUST first be validated using the `iss` claim, signature, audience, expiration, and client binding\naccording to this specification.\n\nThe Resource Authorization Server MUST use a `saml-nameid` `sub_id` only when the validated ID-JAG issuer is explicitly associated with the SAML issuer identified by `sub_id.issuer` through local configuration or trusted\nfederation metadata.\n\nThe IdP Authorization Server MUST include a `saml-nameid` `sub_id` only when the SAML NameID identifies the same subject as the ID-JAG `sub` claim for the target Resource Authorization Server.\n\nI would also soften the current “sub MUST be the same as the SSO subject” language. It does not hold cleanly across OIDC and SAML. Better:\n\nThe `sub` claim identifies the End-User in the subject namespace of the ID-JAG issuer. When the Resource Authorization Server uses a different subject namespace for SSO, such as a SAML NameID namespace, the ID-JAG MAY include\n`sub_id` to carry the SSO subject identifier. When both `sub` and `sub_id` are present, they MUST identify the same End-User.\n\nThat avoids forcing an impossible SAML NameID-to-JWT sub equality while still preserving the security invariant that both identifiers refer to the same user.\n",
+          "created_at": "2026-05-15T18:15:54Z",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/94#issuecomment-4462161016",
+          "id": 4462161016,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
+          "node_id": "IC_kwDOKv5r-s8AAAABCfcseA",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/4462161016/reactions"
+          },
+          "updated_at": "2026-05-15T18:39:34Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/4462161016",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
+            "events_url": "https://api.github.com/users/mcguinness/events{/privacy}",
+            "followers_url": "https://api.github.com/users/mcguinness/followers",
+            "following_url": "https://api.github.com/users/mcguinness/following{/other_user}",
+            "gists_url": "https://api.github.com/users/mcguinness/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/mcguinness",
+            "id": 1944352,
+            "login": "mcguinness",
+            "node_id": "MDQ6VXNlcjE5NDQzNTI=",
+            "organizations_url": "https://api.github.com/users/mcguinness/orgs",
+            "received_events_url": "https://api.github.com/users/mcguinness/received_events",
+            "repos_url": "https://api.github.com/users/mcguinness/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/mcguinness/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/mcguinness/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/mcguinness",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "When a Resource Authorization Server is configured to the enterprise IdP with SAML for SSO, the values currently in the ID-JAG are not able to be mapped to their SAML equivalents.\n\nFor example, the Resource AS might recognize a SAML issuer like `https://example.com/exk33qwjcwDda7luK346` and receive SAML NameIds that are a username or email address. An ID-JAG will contain an OIDC issuer URL like `https://tenant123.example.com/` and subject identifiers that are a random string. (there is no guarantee the SAML issuer and OIDC issuer domain names have anything in common.)\n\nWhen a Resource AS is configured for SAML SSO, what are the options for how it can map the ID-JAG values to the SAML SSO connection? As far as I can tell there are a couple options for the issuer:\n\n* No change to the ID-JAG, require that the customer manually add the OIDC issuer URL into their SAML SSO configuration. This provides the AS the association between the SAML issuer and OIDC issuer.\n* Include the SAML issuer in the ID-JAG somewhere.\n\nFor the user ID question, the options would be:\n\n* Send whatever value the SAML NameId would have been in the ID-JAG `sub` (this is currently allowed according to [section 3.1](https://www.ietf.org/archive/id/draft-ietf-oauth-identity-assertion-authz-grant-03.html#section-3.1) because it would be \"the same as the subject identifier used in an Identity Assertion for the Resource Authorization Server as a Relying Party for Single Sign-On (SSO)\")\n* Send the SAML NameId as a new claim in the ID-JAG\n\nIf we go with adding new claims to the ID-JAG, the question becomes whether these should be SAML-specific claims or something generic, e.g.\n\n* `saml_issuer` and `saml_nameid`\n* `alt_issuer` and `alt_sub`\n\n### Minimal Changed Example ID-JAG\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"user@idp.example\",                  /* assuming email addresses were sent as SAML NameId */\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n### Example ID-JAG with New Claims\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"U019488227\",\n  \"alt_iss\": \"https://idp.example/exk33qwjcwDda7luK346\",\n  \"alt_sub\": \"user@idp.example\",\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n",
+          "closed_at": null,
+          "comments": 7,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/comments",
+          "created_at": "2026-05-13T18:48:08Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/events",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
+          "id": 4440384214,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOKv5r-s8AAAABCKri1g",
+          "number": 94,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/timeline",
+          "title": "How can a Resource Authorization Server recognize an ID-JAG when it is configured with SAML SSO",
+          "type": null,
+          "updated_at": "2026-05-15T18:39:34Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
+            "events_url": "https://api.github.com/users/aaronpk/events{/privacy}",
+            "followers_url": "https://api.github.com/users/aaronpk/followers",
+            "following_url": "https://api.github.com/users/aaronpk/following{/other_user}",
+            "gists_url": "https://api.github.com/users/aaronpk/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/aaronpk",
+            "id": 113001,
+            "login": "aaronpk",
+            "node_id": "MDQ6VXNlcjExMzAwMQ==",
+            "organizations_url": "https://api.github.com/users/aaronpk/orgs",
+            "received_events_url": "https://api.github.com/users/aaronpk/received_events",
+            "repos_url": "https://api.github.com/users/aaronpk/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/aaronpk/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/aaronpk/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/aaronpk",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/21368261?",
+        "display_login": "sdatspun2",
+        "gravatar_id": "",
+        "id": 21368261,
+        "login": "sdatspun2",
+        "url": "https://api.github.com/users/sdatspun2"
+      },
+      "created_at": "2026-05-15T17:23:35Z",
+      "id": "9515765480",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "opened",
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "Thanks for writing up ID on Transaction Tokens. \n\n1. I was hoping to find a reference to [RFC 9396](https://datatracker.ietf.org/doc/html/rfc9396) Rich Authorization Requests somewhere, especially while discussing Authorization Context. \n\n2. Also since RFC 9396's `authorization_details` is already registered in OAuth [Parameters registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml) perhaps it could be used here as well to provide value for `request_context?` It is already approved for token request and token response.\n\n3. Can `authorization_details` be used here as a [claim](https://datatracker.ietf.org/doc/html/rfc9396#name-oauth-parameters-registrati) instead of tctx, inside tctx or in addition to tact?  \n\nFor #2 and #3, I would not know if reuse is prohibited, it was ignored or it was discussed and a decision was taken not to reuse.\n\nSorry in advance if these issues are already discussed and resolved. \n\nthanks,\nsanjay",
+          "closed_at": null,
+          "comments": 0,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/comments",
+          "created_at": "2026-05-15T17:23:33Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/events",
+          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/351",
+          "id": 4455724316,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJt_WwM8AAAABCZT1HA",
+          "number": 351,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/timeline",
+          "title": "Using RFC 9396's authorization_details as a claim and for request_context",
+          "type": null,
+          "updated_at": "2026-05-15T17:23:33Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/21368261?v=4",
+            "events_url": "https://api.github.com/users/sdatspun2/events{/privacy}",
+            "followers_url": "https://api.github.com/users/sdatspun2/followers",
+            "following_url": "https://api.github.com/users/sdatspun2/following{/other_user}",
+            "gists_url": "https://api.github.com/users/sdatspun2/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/sdatspun2",
+            "id": 21368261,
+            "login": "sdatspun2",
+            "node_id": "MDQ6VXNlcjIxMzY4MjYx",
+            "organizations_url": "https://api.github.com/users/sdatspun2/orgs",
+            "received_events_url": "https://api.github.com/users/sdatspun2/received_events",
+            "repos_url": "https://api.github.com/users/sdatspun2/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/sdatspun2/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/sdatspun2/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/sdatspun2",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 652203712,
+        "name": "oauth-wg/oauth-transaction-tokens",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
+      },
+      "type": "IssuesEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/751457?",
+        "display_login": "gffletch",
+        "gravatar_id": "",
+        "id": 751457,
+        "login": "gffletch",
+        "url": "https://api.github.com/users/gffletch"
+      },
+      "created_at": "2026-05-15T15:32:43Z",
+      "id": "9511892094",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "According to this [SAML V2.0 Subject Identifier Attribute Profile v1.0](https://docs.oasis-open.org/security/saml-subject-id-attr/v1.0/cs01/saml-subject-id-attr-v1.0-cs01.html) there may be some SAML deployments that don't use `NameID` at all. I don't know if this is a common deployment model or not.",
+          "created_at": "2026-05-15T15:32:43Z",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/94#issuecomment-4461123127",
+          "id": 4461123127,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
+          "node_id": "IC_kwDOKv5r-s8AAAABCedWNw",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/4461123127/reactions"
+          },
+          "updated_at": "2026-05-15T15:32:43Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/4461123127",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/751457?v=4",
+            "events_url": "https://api.github.com/users/gffletch/events{/privacy}",
+            "followers_url": "https://api.github.com/users/gffletch/followers",
+            "following_url": "https://api.github.com/users/gffletch/following{/other_user}",
+            "gists_url": "https://api.github.com/users/gffletch/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/gffletch",
+            "id": 751457,
+            "login": "gffletch",
+            "node_id": "MDQ6VXNlcjc1MTQ1Nw==",
+            "organizations_url": "https://api.github.com/users/gffletch/orgs",
+            "received_events_url": "https://api.github.com/users/gffletch/received_events",
+            "repos_url": "https://api.github.com/users/gffletch/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/gffletch/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/gffletch/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/gffletch",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "When a Resource Authorization Server is configured to the enterprise IdP with SAML for SSO, the values currently in the ID-JAG are not able to be mapped to their SAML equivalents.\n\nFor example, the Resource AS might recognize a SAML issuer like `https://example.com/exk33qwjcwDda7luK346` and receive SAML NameIds that are a username or email address. An ID-JAG will contain an OIDC issuer URL like `https://tenant123.example.com/` and subject identifiers that are a random string. (there is no guarantee the SAML issuer and OIDC issuer domain names have anything in common.)\n\nWhen a Resource AS is configured for SAML SSO, what are the options for how it can map the ID-JAG values to the SAML SSO connection? As far as I can tell there are a couple options for the issuer:\n\n* No change to the ID-JAG, require that the customer manually add the OIDC issuer URL into their SAML SSO configuration. This provides the AS the association between the SAML issuer and OIDC issuer.\n* Include the SAML issuer in the ID-JAG somewhere.\n\nFor the user ID question, the options would be:\n\n* Send whatever value the SAML NameId would have been in the ID-JAG `sub` (this is currently allowed according to [section 3.1](https://www.ietf.org/archive/id/draft-ietf-oauth-identity-assertion-authz-grant-03.html#section-3.1) because it would be \"the same as the subject identifier used in an Identity Assertion for the Resource Authorization Server as a Relying Party for Single Sign-On (SSO)\")\n* Send the SAML NameId as a new claim in the ID-JAG\n\nIf we go with adding new claims to the ID-JAG, the question becomes whether these should be SAML-specific claims or something generic, e.g.\n\n* `saml_issuer` and `saml_nameid`\n* `alt_issuer` and `alt_sub`\n\n### Minimal Changed Example ID-JAG\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"user@idp.example\",                  /* assuming email addresses were sent as SAML NameId */\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n### Example ID-JAG with New Claims\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"U019488227\",\n  \"alt_iss\": \"https://idp.example/exk33qwjcwDda7luK346\",\n  \"alt_sub\": \"user@idp.example\",\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n",
+          "closed_at": null,
+          "comments": 7,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/comments",
+          "created_at": "2026-05-13T18:48:08Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/events",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
+          "id": 4440384214,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOKv5r-s8AAAABCKri1g",
+          "number": 94,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/timeline",
+          "title": "How can a Resource Authorization Server recognize an ID-JAG when it is configured with SAML SSO",
+          "type": null,
+          "updated_at": "2026-05-15T18:39:34Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
+            "events_url": "https://api.github.com/users/aaronpk/events{/privacy}",
+            "followers_url": "https://api.github.com/users/aaronpk/followers",
+            "following_url": "https://api.github.com/users/aaronpk/following{/other_user}",
+            "gists_url": "https://api.github.com/users/aaronpk/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/aaronpk",
+            "id": 113001,
+            "login": "aaronpk",
+            "node_id": "MDQ6VXNlcjExMzAwMQ==",
+            "organizations_url": "https://api.github.com/users/aaronpk/orgs",
+            "received_events_url": "https://api.github.com/users/aaronpk/received_events",
+            "repos_url": "https://api.github.com/users/aaronpk/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/aaronpk/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/aaronpk/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/aaronpk",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/113001?",
+        "display_login": "aaronpk",
+        "gravatar_id": "",
+        "id": 113001,
+        "login": "aaronpk",
+        "url": "https://api.github.com/users/aaronpk"
+      },
+      "created_at": "2026-05-15T15:24:13Z",
+      "id": "9511573139",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "Are there any cases of a SAML NameId having attributes other than the string value? That might be enough of a reason to move the SAML NameId into its own claim in the ID-JAG and create a definition of how to represent those in JSON.",
+          "created_at": "2026-05-15T15:24:13Z",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/94#issuecomment-4461064317",
+          "id": 4461064317,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
+          "node_id": "IC_kwDOKv5r-s8AAAABCeZwfQ",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/4461064317/reactions"
+          },
+          "updated_at": "2026-05-15T15:24:13Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/4461064317",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
+            "events_url": "https://api.github.com/users/aaronpk/events{/privacy}",
+            "followers_url": "https://api.github.com/users/aaronpk/followers",
+            "following_url": "https://api.github.com/users/aaronpk/following{/other_user}",
+            "gists_url": "https://api.github.com/users/aaronpk/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/aaronpk",
+            "id": 113001,
+            "login": "aaronpk",
+            "node_id": "MDQ6VXNlcjExMzAwMQ==",
+            "organizations_url": "https://api.github.com/users/aaronpk/orgs",
+            "received_events_url": "https://api.github.com/users/aaronpk/received_events",
+            "repos_url": "https://api.github.com/users/aaronpk/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/aaronpk/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/aaronpk/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/aaronpk",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "When a Resource Authorization Server is configured to the enterprise IdP with SAML for SSO, the values currently in the ID-JAG are not able to be mapped to their SAML equivalents.\n\nFor example, the Resource AS might recognize a SAML issuer like `https://example.com/exk33qwjcwDda7luK346` and receive SAML NameIds that are a username or email address. An ID-JAG will contain an OIDC issuer URL like `https://tenant123.example.com/` and subject identifiers that are a random string. (there is no guarantee the SAML issuer and OIDC issuer domain names have anything in common.)\n\nWhen a Resource AS is configured for SAML SSO, what are the options for how it can map the ID-JAG values to the SAML SSO connection? As far as I can tell there are a couple options for the issuer:\n\n* No change to the ID-JAG, require that the customer manually add the OIDC issuer URL into their SAML SSO configuration. This provides the AS the association between the SAML issuer and OIDC issuer.\n* Include the SAML issuer in the ID-JAG somewhere.\n\nFor the user ID question, the options would be:\n\n* Send whatever value the SAML NameId would have been in the ID-JAG `sub` (this is currently allowed according to [section 3.1](https://www.ietf.org/archive/id/draft-ietf-oauth-identity-assertion-authz-grant-03.html#section-3.1) because it would be \"the same as the subject identifier used in an Identity Assertion for the Resource Authorization Server as a Relying Party for Single Sign-On (SSO)\")\n* Send the SAML NameId as a new claim in the ID-JAG\n\nIf we go with adding new claims to the ID-JAG, the question becomes whether these should be SAML-specific claims or something generic, e.g.\n\n* `saml_issuer` and `saml_nameid`\n* `alt_issuer` and `alt_sub`\n\n### Minimal Changed Example ID-JAG\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"user@idp.example\",                  /* assuming email addresses were sent as SAML NameId */\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n### Example ID-JAG with New Claims\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"U019488227\",\n  \"alt_iss\": \"https://idp.example/exk33qwjcwDda7luK346\",\n  \"alt_sub\": \"user@idp.example\",\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n",
+          "closed_at": null,
+          "comments": 7,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/comments",
+          "created_at": "2026-05-13T18:48:08Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/events",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
+          "id": 4440384214,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOKv5r-s8AAAABCKri1g",
+          "number": 94,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/timeline",
+          "title": "How can a Resource Authorization Server recognize an ID-JAG when it is configured with SAML SSO",
+          "type": null,
+          "updated_at": "2026-05-15T18:39:34Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
+            "events_url": "https://api.github.com/users/aaronpk/events{/privacy}",
+            "followers_url": "https://api.github.com/users/aaronpk/followers",
+            "following_url": "https://api.github.com/users/aaronpk/following{/other_user}",
+            "gists_url": "https://api.github.com/users/aaronpk/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/aaronpk",
+            "id": 113001,
+            "login": "aaronpk",
+            "node_id": "MDQ6VXNlcjExMzAwMQ==",
+            "organizations_url": "https://api.github.com/users/aaronpk/orgs",
+            "received_events_url": "https://api.github.com/users/aaronpk/received_events",
+            "repos_url": "https://api.github.com/users/aaronpk/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/aaronpk/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/aaronpk/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/aaronpk",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/1944352?",
+        "display_login": "mcguinness",
+        "gravatar_id": "",
+        "id": 1944352,
+        "login": "mcguinness",
+        "url": "https://api.github.com/users/mcguinness"
+      },
+      "created_at": "2026-05-15T14:53:33Z",
+      "id": "9510354839",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "I was over-indexing on OIDCs normative rule around sub claim. ID-JAG can have a more relaxed take. There are side effects for subject resolution and JIT that we will need to document. I would still prefer that sub is RECOMMENDED to be immutable. ",
+          "created_at": "2026-05-15T14:53:33Z",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/94#issuecomment-4460814287",
+          "id": 4460814287,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
+          "node_id": "IC_kwDOKv5r-s8AAAABCeKfzw",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/4460814287/reactions"
+          },
+          "updated_at": "2026-05-15T14:53:33Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/4460814287",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
+            "events_url": "https://api.github.com/users/mcguinness/events{/privacy}",
+            "followers_url": "https://api.github.com/users/mcguinness/followers",
+            "following_url": "https://api.github.com/users/mcguinness/following{/other_user}",
+            "gists_url": "https://api.github.com/users/mcguinness/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/mcguinness",
+            "id": 1944352,
+            "login": "mcguinness",
+            "node_id": "MDQ6VXNlcjE5NDQzNTI=",
+            "organizations_url": "https://api.github.com/users/mcguinness/orgs",
+            "received_events_url": "https://api.github.com/users/mcguinness/received_events",
+            "repos_url": "https://api.github.com/users/mcguinness/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/mcguinness/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/mcguinness/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/mcguinness",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "When a Resource Authorization Server is configured to the enterprise IdP with SAML for SSO, the values currently in the ID-JAG are not able to be mapped to their SAML equivalents.\n\nFor example, the Resource AS might recognize a SAML issuer like `https://example.com/exk33qwjcwDda7luK346` and receive SAML NameIds that are a username or email address. An ID-JAG will contain an OIDC issuer URL like `https://tenant123.example.com/` and subject identifiers that are a random string. (there is no guarantee the SAML issuer and OIDC issuer domain names have anything in common.)\n\nWhen a Resource AS is configured for SAML SSO, what are the options for how it can map the ID-JAG values to the SAML SSO connection? As far as I can tell there are a couple options for the issuer:\n\n* No change to the ID-JAG, require that the customer manually add the OIDC issuer URL into their SAML SSO configuration. This provides the AS the association between the SAML issuer and OIDC issuer.\n* Include the SAML issuer in the ID-JAG somewhere.\n\nFor the user ID question, the options would be:\n\n* Send whatever value the SAML NameId would have been in the ID-JAG `sub` (this is currently allowed according to [section 3.1](https://www.ietf.org/archive/id/draft-ietf-oauth-identity-assertion-authz-grant-03.html#section-3.1) because it would be \"the same as the subject identifier used in an Identity Assertion for the Resource Authorization Server as a Relying Party for Single Sign-On (SSO)\")\n* Send the SAML NameId as a new claim in the ID-JAG\n\nIf we go with adding new claims to the ID-JAG, the question becomes whether these should be SAML-specific claims or something generic, e.g.\n\n* `saml_issuer` and `saml_nameid`\n* `alt_issuer` and `alt_sub`\n\n### Minimal Changed Example ID-JAG\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"user@idp.example\",                  /* assuming email addresses were sent as SAML NameId */\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n### Example ID-JAG with New Claims\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"U019488227\",\n  \"alt_iss\": \"https://idp.example/exk33qwjcwDda7luK346\",\n  \"alt_sub\": \"user@idp.example\",\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n",
+          "closed_at": null,
+          "comments": 7,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/comments",
+          "created_at": "2026-05-13T18:48:08Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/events",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
+          "id": 4440384214,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOKv5r-s8AAAABCKri1g",
+          "number": 94,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/timeline",
+          "title": "How can a Resource Authorization Server recognize an ID-JAG when it is configured with SAML SSO",
+          "type": null,
+          "updated_at": "2026-05-15T18:39:34Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
+            "events_url": "https://api.github.com/users/aaronpk/events{/privacy}",
+            "followers_url": "https://api.github.com/users/aaronpk/followers",
+            "following_url": "https://api.github.com/users/aaronpk/following{/other_user}",
+            "gists_url": "https://api.github.com/users/aaronpk/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/aaronpk",
+            "id": 113001,
+            "login": "aaronpk",
+            "node_id": "MDQ6VXNlcjExMzAwMQ==",
+            "organizations_url": "https://api.github.com/users/aaronpk/orgs",
+            "received_events_url": "https://api.github.com/users/aaronpk/received_events",
+            "repos_url": "https://api.github.com/users/aaronpk/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/aaronpk/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/aaronpk/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/aaronpk",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/113001?",
+        "display_login": "aaronpk",
+        "gravatar_id": "",
+        "id": 113001,
+        "login": "aaronpk",
+        "url": "https://api.github.com/users/aaronpk"
+      },
+      "created_at": "2026-05-15T14:44:49Z",
+      "id": "9510015676",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "In the [definition of the ID-JAG claims](https://www.ietf.org/archive/id/draft-ietf-oauth-identity-assertion-authz-grant-03.html#section-3.1), it says \n\n> The identifier MUST be the same as the subject identifier used in an Identity Assertion for the Resource Authorization Server as a Relying Party for Single Sign-On (SSO)\n\nSo for the Resource App, when the SAML NameId is configured as the email address, we've been interpreting this as the `sub` in the ID-JAG should be the email address.",
+          "created_at": "2026-05-15T14:44:49Z",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/94#issuecomment-4460745503",
+          "id": 4460745503,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
+          "node_id": "IC_kwDOKv5r-s8AAAABCeGTHw",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/4460745503/reactions"
+          },
+          "updated_at": "2026-05-15T14:44:49Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/4460745503",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
+            "events_url": "https://api.github.com/users/aaronpk/events{/privacy}",
+            "followers_url": "https://api.github.com/users/aaronpk/followers",
+            "following_url": "https://api.github.com/users/aaronpk/following{/other_user}",
+            "gists_url": "https://api.github.com/users/aaronpk/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/aaronpk",
+            "id": 113001,
+            "login": "aaronpk",
+            "node_id": "MDQ6VXNlcjExMzAwMQ==",
+            "organizations_url": "https://api.github.com/users/aaronpk/orgs",
+            "received_events_url": "https://api.github.com/users/aaronpk/received_events",
+            "repos_url": "https://api.github.com/users/aaronpk/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/aaronpk/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/aaronpk/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/aaronpk",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "When a Resource Authorization Server is configured to the enterprise IdP with SAML for SSO, the values currently in the ID-JAG are not able to be mapped to their SAML equivalents.\n\nFor example, the Resource AS might recognize a SAML issuer like `https://example.com/exk33qwjcwDda7luK346` and receive SAML NameIds that are a username or email address. An ID-JAG will contain an OIDC issuer URL like `https://tenant123.example.com/` and subject identifiers that are a random string. (there is no guarantee the SAML issuer and OIDC issuer domain names have anything in common.)\n\nWhen a Resource AS is configured for SAML SSO, what are the options for how it can map the ID-JAG values to the SAML SSO connection? As far as I can tell there are a couple options for the issuer:\n\n* No change to the ID-JAG, require that the customer manually add the OIDC issuer URL into their SAML SSO configuration. This provides the AS the association between the SAML issuer and OIDC issuer.\n* Include the SAML issuer in the ID-JAG somewhere.\n\nFor the user ID question, the options would be:\n\n* Send whatever value the SAML NameId would have been in the ID-JAG `sub` (this is currently allowed according to [section 3.1](https://www.ietf.org/archive/id/draft-ietf-oauth-identity-assertion-authz-grant-03.html#section-3.1) because it would be \"the same as the subject identifier used in an Identity Assertion for the Resource Authorization Server as a Relying Party for Single Sign-On (SSO)\")\n* Send the SAML NameId as a new claim in the ID-JAG\n\nIf we go with adding new claims to the ID-JAG, the question becomes whether these should be SAML-specific claims or something generic, e.g.\n\n* `saml_issuer` and `saml_nameid`\n* `alt_issuer` and `alt_sub`\n\n### Minimal Changed Example ID-JAG\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"user@idp.example\",                  /* assuming email addresses were sent as SAML NameId */\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n### Example ID-JAG with New Claims\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"U019488227\",\n  \"alt_iss\": \"https://idp.example/exk33qwjcwDda7luK346\",\n  \"alt_sub\": \"user@idp.example\",\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n",
+          "closed_at": null,
+          "comments": 7,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/comments",
+          "created_at": "2026-05-13T18:48:08Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/events",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
+          "id": 4440384214,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOKv5r-s8AAAABCKri1g",
+          "number": 94,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/timeline",
+          "title": "How can a Resource Authorization Server recognize an ID-JAG when it is configured with SAML SSO",
+          "type": null,
+          "updated_at": "2026-05-15T18:39:34Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
+            "events_url": "https://api.github.com/users/aaronpk/events{/privacy}",
+            "followers_url": "https://api.github.com/users/aaronpk/followers",
+            "following_url": "https://api.github.com/users/aaronpk/following{/other_user}",
+            "gists_url": "https://api.github.com/users/aaronpk/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/aaronpk",
+            "id": 113001,
+            "login": "aaronpk",
+            "node_id": "MDQ6VXNlcjExMzAwMQ==",
+            "organizations_url": "https://api.github.com/users/aaronpk/orgs",
+            "received_events_url": "https://api.github.com/users/aaronpk/received_events",
+            "repos_url": "https://api.github.com/users/aaronpk/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/aaronpk/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/aaronpk/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/aaronpk",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/13701445?",
+        "display_login": "dteleguin",
+        "gravatar_id": "",
+        "id": 13701445,
+        "login": "dteleguin",
+        "url": "https://api.github.com/users/dteleguin"
+      },
+      "created_at": "2026-05-15T12:08:03Z",
+      "id": "9504150336",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "opened",
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "Imagine a scenario where the user makes a call to the service and requests a transaction, but the actual transaction execution should be deferred or scheduled for later. By that time, the access token will have expired. If the service requests a TraT right away, it will expire as well.\n\nOne of the solutions is to use impersonation; when it is time to execute the actual transaction, the service would request a service account token via client credentials grant, then exchange it to the user's access token, which in turn will be used to request a TraT (together with stored request context / details). This adds overhead, and also depends on impersonation support and concrete implementation (e.g. Keycloak provides \"[direct naked impersonation](https://www.keycloak.org/securing-apps/token-exchange#_direct_naked_impersonation)\").\n\nCan we provide some guidance / recommendations for the above scenario? Is it an option to use a longer-lived credential (e.g. ID token) as `subject_token` in the TraT request?\n\n(Using ID tokens might seem \"less secure\" compared to access tokens, but according to [OpenID Connect](https://openid.net/specs/openid-connect-core-1_0.html#IDToken) [standards](https://openid.net/specs/fapi-2_0-attacker-model.html#section-2.2), the security requirements for ID tokens are similar to those for access tokens. Additionally, ID token could be even sender-constrained; DPoP doesn't explicitly mention ID tokens, but doesn't prohibit DPoP-binding them.)",
+          "closed_at": null,
+          "comments": 0,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/350/comments",
+          "created_at": "2026-05-15T12:08:02Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/350/events",
+          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/350",
+          "id": 4453767164,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/350/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJt_WwM8AAAABCXcX_A",
+          "number": 350,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/350/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/350/timeline",
+          "title": "​​subject_token​ and deferred transactions",
+          "type": null,
+          "updated_at": "2026-05-15T12:08:02Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/350",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/13701445?v=4",
+            "events_url": "https://api.github.com/users/dteleguin/events{/privacy}",
+            "followers_url": "https://api.github.com/users/dteleguin/followers",
+            "following_url": "https://api.github.com/users/dteleguin/following{/other_user}",
+            "gists_url": "https://api.github.com/users/dteleguin/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/dteleguin",
+            "id": 13701445,
+            "login": "dteleguin",
+            "node_id": "MDQ6VXNlcjEzNzAxNDQ1",
+            "organizations_url": "https://api.github.com/users/dteleguin/orgs",
+            "received_events_url": "https://api.github.com/users/dteleguin/received_events",
+            "repos_url": "https://api.github.com/users/dteleguin/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/dteleguin/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/dteleguin/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/dteleguin",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 652203712,
+        "name": "oauth-wg/oauth-transaction-tokens",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
+      },
+      "type": "IssuesEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/13701445?",
+        "display_login": "dteleguin",
+        "gravatar_id": "",
+        "id": 13701445,
+        "login": "dteleguin",
+        "url": "https://api.github.com/users/dteleguin"
+      },
+      "created_at": "2026-05-15T12:00:51Z",
+      "id": "9503913712",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "Thanks George, this is definitely more clear.\n\nSo the idea is the following: TTS should either copy individual claims from `request_context` to `rctx` (as is) or not copy them; it should neither transform those claims nor add any claims on its own; the same applies for `request_details` to `tctx`. Is this correct?",
+          "created_at": "2026-05-15T12:00:51Z",
+          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/349#issuecomment-4459561010",
+          "id": 4459561010,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349",
+          "node_id": "IC_kwDOJt_WwM8AAAABCc-AMg",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/comments/4459561010/reactions"
+          },
+          "updated_at": "2026-05-15T15:18:27Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/comments/4459561010",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/13701445?v=4",
+            "events_url": "https://api.github.com/users/dteleguin/events{/privacy}",
+            "followers_url": "https://api.github.com/users/dteleguin/followers",
+            "following_url": "https://api.github.com/users/dteleguin/following{/other_user}",
+            "gists_url": "https://api.github.com/users/dteleguin/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/dteleguin",
+            "id": 13701445,
+            "login": "dteleguin",
+            "node_id": "MDQ6VXNlcjEzNzAxNDQ1",
+            "organizations_url": "https://api.github.com/users/dteleguin/orgs",
+            "received_events_url": "https://api.github.com/users/dteleguin/received_events",
+            "repos_url": "https://api.github.com/users/dteleguin/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/dteleguin/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/dteleguin/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/dteleguin",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "From [12.3. Txn-Token Request Processing](https://www.ietf.org/archive/id/draft-ietf-oauth-transaction-tokens-08.html#section-12.3):\n> If a `request_context` parameter is present in the Txn-Token Request, the data SHOULD be added to the `rctx` object of the Txn-Token.\n\nDoes the \"added\" here mean \"added as is\" (copied)? Or is TTS allowed to perform some sort of mapping? The examples in 10.2.4 / 12.1 suggest the former. Would be nice to clarify this.\n\n> If a `request_details` parameter is present in the Txn-Token Request, then the TTS SHOULD propagate the data from the `request_details` object into the claims in the `tctx` object as authorized by the TTS authorization policy for the requesting client.\n\nThe wording is different here (\"propagated\" vs. \"added\"), so I'd say some sort of mapping is assumed. To further intricate things, there is no `request_details` in the TraT request example in 12.1, making this a pure guesswork. Would be nice to clarify this as well, and also add `request_details` to the example.\n\nFinally, the examples for `rctx` / `tctx` in 10.2.2 / 10.2.3 are inconsistent:\n\n```json\n{\n    \"rctx\": {\n      \"req_ip\": \"69.151.72.123\", // env context of external call\n      \"authn\": \"urn:ietf:rfc:6749\" // env context of external call\n    }\n}\n```\n\n```json\n\"tctx\": {\n  \"action\": \"BUY\", // parameter of external call\n  \"ticker\": \"MSFT\", // parameter of external call\n  \"quantity\": \"100\", // parameter of external call\n  \"customer_type\": { // computed value not present in external call\n    \"geo\": \"US\",\n    \"level\": \"VIP\"\n  }\n}\n```\n\n`rctx` is enclosed in curly braces, whilst `tctx` is not. And ultimately, `quantity` should be a JSON number and not a string (`100` instead of `\"100\"`). ",
+          "closed_at": null,
+          "comments": 2,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/comments",
+          "created_at": "2026-05-14T18:51:11Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/events",
+          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/349",
+          "id": 4448450906,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJt_WwM8AAAABCSX5Wg",
+          "number": 349,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/timeline",
+          "title": "More rctx/tctx fun",
+          "type": null,
+          "updated_at": "2026-05-15T15:18:27Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/13701445?v=4",
+            "events_url": "https://api.github.com/users/dteleguin/events{/privacy}",
+            "followers_url": "https://api.github.com/users/dteleguin/followers",
+            "following_url": "https://api.github.com/users/dteleguin/following{/other_user}",
+            "gists_url": "https://api.github.com/users/dteleguin/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/dteleguin",
+            "id": 13701445,
+            "login": "dteleguin",
+            "node_id": "MDQ6VXNlcjEzNzAxNDQ1",
+            "organizations_url": "https://api.github.com/users/dteleguin/orgs",
+            "received_events_url": "https://api.github.com/users/dteleguin/received_events",
+            "repos_url": "https://api.github.com/users/dteleguin/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/dteleguin/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/dteleguin/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/dteleguin",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 652203712,
+        "name": "oauth-wg/oauth-transaction-tokens",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/90690777?",
+        "display_login": "PieterKas",
+        "gravatar_id": "",
+        "id": 90690777,
+        "login": "PieterKas",
+        "url": "https://api.github.com/users/PieterKas"
+      },
+      "created_at": "2026-05-15T10:34:20Z",
+      "id": "9501058542",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "pull_request": {
+          "base": {
+            "ref": "main",
+            "repo": {
+              "id": 652203712,
+              "name": "oauth-transaction-tokens",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
+            },
+            "sha": "d956b0789ba73a8355b369dbc7f06e4944a2f201"
+          },
+          "head": {
+            "ref": "issue_332",
+            "repo": {
+              "id": 717309100,
+              "name": "transaction-tokens",
+              "url": "https://api.github.com/repos/gffletch/transaction-tokens"
+            },
+            "sha": "877dd8b50e05a2829c18fed82a9a54729a900057"
+          },
+          "id": 3678550974,
+          "number": 346,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/346"
+        },
+        "review": {
+          "_links": {
+            "html": {
+              "href": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/346#pullrequestreview-4297398312"
+            },
+            "pull_request": {
+              "href": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/346"
+            }
+          },
+          "body": null,
+          "commit_id": "877dd8b50e05a2829c18fed82a9a54729a900057",
+          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/346#pullrequestreview-4297398312",
+          "id": 4297398312,
+          "node_id": "PRR_kwDOJt_WwM8AAAABACUYKA",
+          "pull_request_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/346",
+          "state": "approved",
+          "submitted_at": "2026-05-15T10:34:18Z",
+          "updated_at": "2026-05-15T10:34:18Z",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
+            "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
+            "followers_url": "https://api.github.com/users/PieterKas/followers",
+            "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
+            "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/PieterKas",
+            "id": 90690777,
+            "login": "PieterKas",
+            "node_id": "MDQ6VXNlcjkwNjkwNzc3",
+            "organizations_url": "https://api.github.com/users/PieterKas/orgs",
+            "received_events_url": "https://api.github.com/users/PieterKas/received_events",
+            "repos_url": "https://api.github.com/users/PieterKas/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/PieterKas",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 652203712,
+        "name": "oauth-wg/oauth-transaction-tokens",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
+      },
+      "type": "PullRequestReviewEvent"
+    },
     {
       "actor": {
         "avatar_url": "https://avatars.githubusercontent.com/u/1944352?",
@@ -48850,7 +50120,7 @@
           "assignees": [],
           "body": "When a Resource Authorization Server is configured to the enterprise IdP with SAML for SSO, the values currently in the ID-JAG are not able to be mapped to their SAML equivalents.\n\nFor example, the Resource AS might recognize a SAML issuer like `https://example.com/exk33qwjcwDda7luK346` and receive SAML NameIds that are a username or email address. An ID-JAG will contain an OIDC issuer URL like `https://tenant123.example.com/` and subject identifiers that are a random string. (there is no guarantee the SAML issuer and OIDC issuer domain names have anything in common.)\n\nWhen a Resource AS is configured for SAML SSO, what are the options for how it can map the ID-JAG values to the SAML SSO connection? As far as I can tell there are a couple options for the issuer:\n\n* No change to the ID-JAG, require that the customer manually add the OIDC issuer URL into their SAML SSO configuration. This provides the AS the association between the SAML issuer and OIDC issuer.\n* Include the SAML issuer in the ID-JAG somewhere.\n\nFor the user ID question, the options would be:\n\n* Send whatever value the SAML NameId would have been in the ID-JAG `sub` (this is currently allowed according to [section 3.1](https://www.ietf.org/archive/id/draft-ietf-oauth-identity-assertion-authz-grant-03.html#section-3.1) because it would be \"the same as the subject identifier used in an Identity Assertion for the Resource Authorization Server as a Relying Party for Single Sign-On (SSO)\")\n* Send the SAML NameId as a new claim in the ID-JAG\n\nIf we go with adding new claims to the ID-JAG, the question becomes whether these should be SAML-specific claims or something generic, e.g.\n\n* `saml_issuer` and `saml_nameid`\n* `alt_issuer` and `alt_sub`\n\n### Minimal Changed Example ID-JAG\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"user@idp.example\",                  /* assuming email addresses were sent as SAML NameId */\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n### Example ID-JAG with New Claims\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"U019488227\",\n  \"alt_iss\": \"https://idp.example/exk33qwjcwDda7luK346\",\n  \"alt_sub\": \"user@idp.example\",\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n",
           "closed_at": null,
-          "comments": 2,
+          "comments": 7,
           "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/comments",
           "created_at": "2026-05-13T18:48:08Z",
           "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/events",
@@ -48893,7 +50163,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/timeline",
           "title": "How can a Resource Authorization Server recognize an ID-JAG when it is configured with SAML SSO",
           "type": null,
-          "updated_at": "2026-05-15T03:24:49Z",
+          "updated_at": "2026-05-15T18:39:34Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
@@ -49359,7 +50629,7 @@
           "assignees": [],
           "body": "From [12.3. Txn-Token Request Processing](https://www.ietf.org/archive/id/draft-ietf-oauth-transaction-tokens-08.html#section-12.3):\n> If a `request_context` parameter is present in the Txn-Token Request, the data SHOULD be added to the `rctx` object of the Txn-Token.\n\nDoes the \"added\" here mean \"added as is\" (copied)? Or is TTS allowed to perform some sort of mapping? The examples in 10.2.4 / 12.1 suggest the former. Would be nice to clarify this.\n\n> If a `request_details` parameter is present in the Txn-Token Request, then the TTS SHOULD propagate the data from the `request_details` object into the claims in the `tctx` object as authorized by the TTS authorization policy for the requesting client.\n\nThe wording is different here (\"propagated\" vs. \"added\"), so I'd say some sort of mapping is assumed. To further intricate things, there is no `request_details` in the TraT request example in 12.1, making this a pure guesswork. Would be nice to clarify this as well, and also add `request_details` to the example.\n\nFinally, the examples for `rctx` / `tctx` in 10.2.2 / 10.2.3 are inconsistent:\n\n```json\n{\n    \"rctx\": {\n      \"req_ip\": \"69.151.72.123\", // env context of external call\n      \"authn\": \"urn:ietf:rfc:6749\" // env context of external call\n    }\n}\n```\n\n```json\n\"tctx\": {\n  \"action\": \"BUY\", // parameter of external call\n  \"ticker\": \"MSFT\", // parameter of external call\n  \"quantity\": \"100\", // parameter of external call\n  \"customer_type\": { // computed value not present in external call\n    \"geo\": \"US\",\n    \"level\": \"VIP\"\n  }\n}\n```\n\n`rctx` is enclosed in curly braces, whilst `tctx` is not. And ultimately, `quantity` should be a JSON number and not a string (`100` instead of `\"100\"`). ",
           "closed_at": null,
-          "comments": 1,
+          "comments": 2,
           "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/comments",
           "created_at": "2026-05-14T18:51:11Z",
           "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/events",
@@ -49402,7 +50672,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/timeline",
           "title": "More rctx/tctx fun",
           "type": null,
-          "updated_at": "2026-05-14T19:47:09Z",
+          "updated_at": "2026-05-15T15:18:27Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/13701445?v=4",
@@ -49461,7 +50731,7 @@
           "assignees": [],
           "body": "From [12.3. Txn-Token Request Processing](https://www.ietf.org/archive/id/draft-ietf-oauth-transaction-tokens-08.html#section-12.3):\n> If a `request_context` parameter is present in the Txn-Token Request, the data SHOULD be added to the `rctx` object of the Txn-Token.\n\nDoes the \"added\" here mean \"added as is\" (copied)? Or is TTS allowed to perform some sort of mapping? The examples in 10.2.4 / 12.1 suggest the former. Would be nice to clarify this.\n\n> If a `request_details` parameter is present in the Txn-Token Request, then the TTS SHOULD propagate the data from the `request_details` object into the claims in the `tctx` object as authorized by the TTS authorization policy for the requesting client.\n\nThe wording is different here (\"propagated\" vs. \"added\"), so I'd say some sort of mapping is assumed. To further intricate things, there is no `request_details` in the TraT request example in 12.1, making this a pure guesswork. Would be nice to clarify this as well, and also add `request_details` to the example.\n\nFinally, the examples for `rctx` / `tctx` in 10.2.2 / 10.2.3 are inconsistent:\n\n```json\n{\n    \"rctx\": {\n      \"req_ip\": \"69.151.72.123\", // env context of external call\n      \"authn\": \"urn:ietf:rfc:6749\" // env context of external call\n    }\n}\n```\n\n```json\n\"tctx\": {\n  \"action\": \"BUY\", // parameter of external call\n  \"ticker\": \"MSFT\", // parameter of external call\n  \"quantity\": \"100\", // parameter of external call\n  \"customer_type\": { // computed value not present in external call\n    \"geo\": \"US\",\n    \"level\": \"VIP\"\n  }\n}\n```\n\n`rctx` is enclosed in curly braces, whilst `tctx` is not. And ultimately, `quantity` should be a JSON number and not a string (`100` instead of `\"100\"`). ",
           "closed_at": null,
-          "comments": 1,
+          "comments": 2,
           "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/comments",
           "created_at": "2026-05-14T18:51:11Z",
           "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/events",
@@ -49504,7 +50774,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/timeline",
           "title": "More rctx/tctx fun",
           "type": null,
-          "updated_at": "2026-05-14T19:47:09Z",
+          "updated_at": "2026-05-15T15:18:27Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/13701445?v=4",
@@ -49750,7 +51020,7 @@
           "assignees": [],
           "body": "When a Resource Authorization Server is configured to the enterprise IdP with SAML for SSO, the values currently in the ID-JAG are not able to be mapped to their SAML equivalents.\n\nFor example, the Resource AS might recognize a SAML issuer like `https://example.com/exk33qwjcwDda7luK346` and receive SAML NameIds that are a username or email address. An ID-JAG will contain an OIDC issuer URL like `https://tenant123.example.com/` and subject identifiers that are a random string. (there is no guarantee the SAML issuer and OIDC issuer domain names have anything in common.)\n\nWhen a Resource AS is configured for SAML SSO, what are the options for how it can map the ID-JAG values to the SAML SSO connection? As far as I can tell there are a couple options for the issuer:\n\n* No change to the ID-JAG, require that the customer manually add the OIDC issuer URL into their SAML SSO configuration. This provides the AS the association between the SAML issuer and OIDC issuer.\n* Include the SAML issuer in the ID-JAG somewhere.\n\nFor the user ID question, the options would be:\n\n* Send whatever value the SAML NameId would have been in the ID-JAG `sub` (this is currently allowed according to [section 3.1](https://www.ietf.org/archive/id/draft-ietf-oauth-identity-assertion-authz-grant-03.html#section-3.1) because it would be \"the same as the subject identifier used in an Identity Assertion for the Resource Authorization Server as a Relying Party for Single Sign-On (SSO)\")\n* Send the SAML NameId as a new claim in the ID-JAG\n\nIf we go with adding new claims to the ID-JAG, the question becomes whether these should be SAML-specific claims or something generic, e.g.\n\n* `saml_issuer` and `saml_nameid`\n* `alt_issuer` and `alt_sub`\n\n### Minimal Changed Example ID-JAG\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"user@idp.example\",                  /* assuming email addresses were sent as SAML NameId */\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n### Example ID-JAG with New Claims\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"U019488227\",\n  \"alt_iss\": \"https://idp.example/exk33qwjcwDda7luK346\",\n  \"alt_sub\": \"user@idp.example\",\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n",
           "closed_at": null,
-          "comments": 2,
+          "comments": 7,
           "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/comments",
           "created_at": "2026-05-13T18:48:08Z",
           "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/events",
@@ -49793,7 +51063,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/timeline",
           "title": "How can a Resource Authorization Server recognize an ID-JAG when it is configured with SAML SSO",
           "type": null,
-          "updated_at": "2026-05-15T03:24:49Z",
+          "updated_at": "2026-05-15T18:39:34Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
@@ -49946,7 +51216,7 @@
               "name": "oauth-transaction-tokens",
               "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
             },
-            "sha": "0b82e34f6e324b97c380e65e28bf24a79f7bed2f"
+            "sha": "d956b0789ba73a8355b369dbc7f06e4944a2f201"
           },
           "head": {
             "ref": "issue_332",
@@ -49955,7 +51225,7 @@
               "name": "transaction-tokens",
               "url": "https://api.github.com/repos/gffletch/transaction-tokens"
             },
-            "sha": "ae414bdb7bc7a2e84d3a39a62d1321758ff7617d"
+            "sha": "877dd8b50e05a2829c18fed82a9a54729a900057"
           },
           "id": 3678550974,
           "number": 346,
@@ -50551,7 +51821,7 @@
               "name": "oauth-transaction-tokens",
               "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
             },
-            "sha": "0b82e34f6e324b97c380e65e28bf24a79f7bed2f"
+            "sha": "d956b0789ba73a8355b369dbc7f06e4944a2f201"
           },
           "head": {
             "ref": "issue_332",
@@ -50560,7 +51830,7 @@
               "name": "transaction-tokens",
               "url": "https://api.github.com/repos/gffletch/transaction-tokens"
             },
-            "sha": "ae414bdb7bc7a2e84d3a39a62d1321758ff7617d"
+            "sha": "877dd8b50e05a2829c18fed82a9a54729a900057"
           },
           "id": 3678550974,
           "number": 346,
@@ -50601,7 +51871,7 @@
           "assignees": [],
           "body": "When a Resource Authorization Server is configured to the enterprise IdP with SAML for SSO, the values currently in the ID-JAG are not able to be mapped to their SAML equivalents.\n\nFor example, the Resource AS might recognize a SAML issuer like `https://example.com/exk33qwjcwDda7luK346` and receive SAML NameIds that are a username or email address. An ID-JAG will contain an OIDC issuer URL like `https://tenant123.example.com/` and subject identifiers that are a random string. (there is no guarantee the SAML issuer and OIDC issuer domain names have anything in common.)\n\nWhen a Resource AS is configured for SAML SSO, what are the options for how it can map the ID-JAG values to the SAML SSO connection? As far as I can tell there are a couple options for the issuer:\n\n* No change to the ID-JAG, require that the customer manually add the OIDC issuer URL into their SAML SSO configuration. This provides the AS the association between the SAML issuer and OIDC issuer.\n* Include the SAML issuer in the ID-JAG somewhere.\n\nFor the user ID question, the options would be:\n\n* Send whatever value the SAML NameId would have been in the ID-JAG `sub` (this is currently allowed according to [section 3.1](https://www.ietf.org/archive/id/draft-ietf-oauth-identity-assertion-authz-grant-03.html#section-3.1) because it would be \"the same as the subject identifier used in an Identity Assertion for the Resource Authorization Server as a Relying Party for Single Sign-On (SSO)\")\n* Send the SAML NameId as a new claim in the ID-JAG\n\nIf we go with adding new claims to the ID-JAG, the question becomes whether these should be SAML-specific claims or something generic, e.g.\n\n* `saml_issuer` and `saml_nameid`\n* `alt_issuer` and `alt_sub`\n\n### Minimal Changed Example ID-JAG\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"user@idp.example\",                  /* assuming email addresses were sent as SAML NameId */\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n### Example ID-JAG with New Claims\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"U019488227\",\n  \"alt_iss\": \"https://idp.example/exk33qwjcwDda7luK346\",\n  \"alt_sub\": \"user@idp.example\",\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n",
           "closed_at": null,
-          "comments": 2,
+          "comments": 7,
           "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/comments",
           "created_at": "2026-05-13T18:48:08Z",
           "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/events",
@@ -50644,7 +51914,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/timeline",
           "title": "How can a Resource Authorization Server recognize an ID-JAG when it is configured with SAML SSO",
           "type": null,
-          "updated_at": "2026-05-15T03:24:49Z",
+          "updated_at": "2026-05-15T18:39:34Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
@@ -55777,755 +57047,82 @@
         "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
       },
       "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
-        "display_login": "bc-pi",
-        "gravatar_id": "",
-        "id": 71398439,
-        "login": "bc-pi",
-        "url": "https://api.github.com/users/bc-pi"
-      },
-      "created_at": "2026-05-11T17:04:27Z",
-      "id": "11706894479",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "full_ref": "refs/heads/genart-lc-review",
-        "pusher_type": "user",
-        "ref": "genart-lc-review",
-        "ref_type": "branch"
-      },
-      "public": true,
-      "repo": {
-        "id": 652659140,
-        "name": "oauth-wg/oauth-identity-chaining",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-      },
-      "type": "DeleteEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
-        "display_login": "bc-pi",
-        "gravatar_id": "",
-        "id": 71398439,
-        "login": "bc-pi",
-        "url": "https://api.github.com/users/bc-pi"
-      },
-      "created_at": "2026-05-11T17:04:25Z",
-      "id": "11706893186",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "c8d9d6012e8bd5f4e8d91fa7819ee5d9716bdda3",
-        "head": "d96d8c10fe8af95e08a7a8e4c2c933a7fd7435b4",
-        "push_id": 33997965052,
-        "ref": "refs/heads/main",
-        "repository_id": 652659140
-      },
-      "public": true,
-      "repo": {
-        "id": 652659140,
-        "name": "oauth-wg/oauth-identity-chaining",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
-        "display_login": "bc-pi",
-        "gravatar_id": "",
-        "id": 71398439,
-        "login": "bc-pi",
-        "url": "https://api.github.com/users/bc-pi"
-      },
-      "created_at": "2026-05-11T17:04:23Z",
-      "id": "9324609640",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "merged",
-        "number": 190,
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 652659140,
-              "name": "oauth-identity-chaining",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-            },
-            "sha": "c8d9d6012e8bd5f4e8d91fa7819ee5d9716bdda3"
-          },
-          "head": {
-            "ref": "genart-lc-review",
-            "repo": {
-              "id": 652659140,
-              "name": "oauth-identity-chaining",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-            },
-            "sha": "95df96f32d86eac412d2d719f4bb0820907f4e5e"
-          },
-          "id": 3645551264,
-          "number": 190,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/190"
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 652659140,
-        "name": "oauth-wg/oauth-identity-chaining",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-      },
-      "type": "PullRequestEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
-        "display_login": "bc-pi",
-        "gravatar_id": "",
-        "id": 71398439,
-        "login": "bc-pi",
-        "url": "https://api.github.com/users/bc-pi"
-      },
-      "created_at": "2026-05-11T17:04:07Z",
-      "id": "9324597412",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "comment": {
-          "body": "danke",
-          "created_at": "2026-05-11T17:04:07Z",
-          "html_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/190#issuecomment-4422966295",
-          "id": 4422966295,
-          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/190",
-          "node_id": "IC_kwDOJubJxM8AAAABB6EcFw",
-          "performed_via_github_app": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/comments/4422966295/reactions"
-          },
-          "updated_at": "2026-05-11T17:04:07Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/comments/4422966295",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
-            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
-            "followers_url": "https://api.github.com/users/bc-pi/followers",
-            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
-            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/bc-pi",
-            "id": 71398439,
-            "login": "bc-pi",
-            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
-            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
-            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
-            "repos_url": "https://api.github.com/users/bc-pi/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/bc-pi",
-            "user_view_type": "public"
-          }
-        },
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "#189 and https://mailarchive.ietf.org/arch/msg/oauth/SZGcRHwX1dXB0Fln5iJJeAsxsmo/ \r\n\r\npreview https://drafts.oauth.net/oauth-identity-chaining/genart-lc-review/draft-ietf-oauth-identity-chaining.html",
-          "closed_at": "2026-05-11T17:04:23Z",
-          "comments": 2,
-          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/190/comments",
-          "created_at": "2026-05-07T20:10:10Z",
-          "draft": false,
-          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/190/events",
-          "html_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/190",
-          "id": 4401664194,
-          "labels": [],
-          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/190/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "PR_kwDOJubJxM7ZSrKg",
-          "number": 190,
-          "performed_via_github_app": null,
-          "pull_request": {
-            "diff_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/190.diff",
-            "html_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/190",
-            "merged_at": "2026-05-11T17:04:23Z",
-            "patch_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/190.patch",
-            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/190"
-          },
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/190/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining",
-          "state": "closed",
-          "state_reason": null,
-          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/190/timeline",
-          "title": "Genart lc review",
-          "type": null,
-          "updated_at": "2026-05-11T17:04:27Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/190",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
-            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
-            "followers_url": "https://api.github.com/users/bc-pi/followers",
-            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
-            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/bc-pi",
-            "id": 71398439,
-            "login": "bc-pi",
-            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
-            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
-            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
-            "repos_url": "https://api.github.com/users/bc-pi/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/bc-pi",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 652659140,
-        "name": "oauth-wg/oauth-identity-chaining",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-      },
-      "type": "IssueCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/90690777?",
-        "display_login": "PieterKas",
-        "gravatar_id": "",
-        "id": 90690777,
-        "login": "PieterKas",
-        "url": "https://api.github.com/users/PieterKas"
-      },
-      "created_at": "2026-05-11T13:39:40Z",
-      "id": "9315886919",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 652659140,
-              "name": "oauth-identity-chaining",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-            },
-            "sha": "c8d9d6012e8bd5f4e8d91fa7819ee5d9716bdda3"
-          },
-          "head": {
-            "ref": "genart-lc-review",
-            "repo": {
-              "id": 652659140,
-              "name": "oauth-identity-chaining",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-            },
-            "sha": "95df96f32d86eac412d2d719f4bb0820907f4e5e"
-          },
-          "id": 3645551264,
-          "number": 190,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/190"
-        },
-        "review": {
-          "_links": {
-            "html": {
-              "href": "https://github.com/oauth-wg/oauth-identity-chaining/pull/190#pullrequestreview-4264142429"
-            },
-            "pull_request": {
-              "href": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/190"
-            }
-          },
-          "body": null,
-          "commit_id": "95df96f32d86eac412d2d719f4bb0820907f4e5e",
-          "html_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/190#pullrequestreview-4264142429",
-          "id": 4264142429,
-          "node_id": "PRR_kwDOJubJxM7-KaZd",
-          "pull_request_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/190",
-          "state": "approved",
-          "submitted_at": "2026-05-11T13:39:39Z",
-          "updated_at": "2026-05-11T13:39:39Z",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
-            "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
-            "followers_url": "https://api.github.com/users/PieterKas/followers",
-            "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
-            "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/PieterKas",
-            "id": 90690777,
-            "login": "PieterKas",
-            "node_id": "MDQ6VXNlcjkwNjkwNzc3",
-            "organizations_url": "https://api.github.com/users/PieterKas/orgs",
-            "received_events_url": "https://api.github.com/users/PieterKas/received_events",
-            "repos_url": "https://api.github.com/users/PieterKas/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/PieterKas",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 652659140,
-        "name": "oauth-wg/oauth-identity-chaining",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-      },
-      "type": "PullRequestReviewEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
-        "display_login": "bc-pi",
-        "gravatar_id": "",
-        "id": 71398439,
-        "login": "bc-pi",
-        "url": "https://api.github.com/users/bc-pi"
-      },
-      "created_at": "2026-05-11T12:15:02Z",
-      "id": "9312360169",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "comment": {
-          "body": "> Looks good, one minor suggestion.\r\n\r\nsuggestion taken https://github.com/oauth-wg/oauth-identity-chaining/pull/190/changes/95df96f32d86eac412d2d719f4bb0820907f4e5e ",
-          "created_at": "2026-05-11T12:15:02Z",
-          "html_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/190#issuecomment-4420575241",
-          "id": 4420575241,
-          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/190",
-          "node_id": "IC_kwDOJubJxM8AAAABB3ygCQ",
-          "performed_via_github_app": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/comments/4420575241/reactions"
-          },
-          "updated_at": "2026-05-11T12:15:02Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/comments/4420575241",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
-            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
-            "followers_url": "https://api.github.com/users/bc-pi/followers",
-            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
-            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/bc-pi",
-            "id": 71398439,
-            "login": "bc-pi",
-            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
-            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
-            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
-            "repos_url": "https://api.github.com/users/bc-pi/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/bc-pi",
-            "user_view_type": "public"
-          }
-        },
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "#189 and https://mailarchive.ietf.org/arch/msg/oauth/SZGcRHwX1dXB0Fln5iJJeAsxsmo/ \r\n\r\npreview https://drafts.oauth.net/oauth-identity-chaining/genart-lc-review/draft-ietf-oauth-identity-chaining.html",
-          "closed_at": "2026-05-11T17:04:23Z",
-          "comments": 2,
-          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/190/comments",
-          "created_at": "2026-05-07T20:10:10Z",
-          "draft": false,
-          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/190/events",
-          "html_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/190",
-          "id": 4401664194,
-          "labels": [],
-          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/190/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "PR_kwDOJubJxM7ZSrKg",
-          "number": 190,
-          "performed_via_github_app": null,
-          "pull_request": {
-            "diff_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/190.diff",
-            "html_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/190",
-            "merged_at": "2026-05-11T17:04:23Z",
-            "patch_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/190.patch",
-            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/190"
-          },
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/190/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining",
-          "state": "closed",
-          "state_reason": null,
-          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/190/timeline",
-          "title": "Genart lc review",
-          "type": null,
-          "updated_at": "2026-05-11T17:04:27Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/190",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
-            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
-            "followers_url": "https://api.github.com/users/bc-pi/followers",
-            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
-            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/bc-pi",
-            "id": 71398439,
-            "login": "bc-pi",
-            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
-            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
-            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
-            "repos_url": "https://api.github.com/users/bc-pi/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/bc-pi",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 652659140,
-        "name": "oauth-wg/oauth-identity-chaining",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-      },
-      "type": "IssueCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-05-11T12:14:31Z",
-      "id": "11693569081",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "26d1ad7a944c2f2cee87ed1d8cfaaccb7620b45b",
-        "head": "ef870f3142cb609cca4fc87d7146451b973726fc",
-        "push_id": 33984680764,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 652659140
-      },
-      "public": true,
-      "repo": {
-        "id": 652659140,
-        "name": "oauth-wg/oauth-identity-chaining",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
-        "display_login": "bc-pi",
-        "gravatar_id": "",
-        "id": 71398439,
-        "login": "bc-pi",
-        "url": "https://api.github.com/users/bc-pi"
-      },
-      "created_at": "2026-05-11T12:13:54Z",
-      "id": "11693543664",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "cf4d0e69ea6508f974cb78af04d0a1c67c63fb62",
-        "head": "95df96f32d86eac412d2d719f4bb0820907f4e5e",
-        "push_id": 33984655499,
-        "ref": "refs/heads/genart-lc-review",
-        "repository_id": 652659140
-      },
-      "public": true,
-      "repo": {
-        "id": 652659140,
-        "name": "oauth-wg/oauth-identity-chaining",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/90690777?",
-        "display_login": "PieterKas",
-        "gravatar_id": "",
-        "id": 90690777,
-        "login": "PieterKas",
-        "url": "https://api.github.com/users/PieterKas"
-      },
-      "created_at": "2026-05-11T12:05:01Z",
-      "id": "9311982799",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 652659140,
-              "name": "oauth-identity-chaining",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-            },
-            "sha": "c8d9d6012e8bd5f4e8d91fa7819ee5d9716bdda3"
-          },
-          "head": {
-            "ref": "genart-lc-review",
-            "repo": {
-              "id": 652659140,
-              "name": "oauth-identity-chaining",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-            },
-            "sha": "95df96f32d86eac412d2d719f4bb0820907f4e5e"
-          },
-          "id": 3645551264,
-          "number": 190,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/190"
-        },
-        "review": {
-          "_links": {
-            "html": {
-              "href": "https://github.com/oauth-wg/oauth-identity-chaining/pull/190#pullrequestreview-4263456019"
-            },
-            "pull_request": {
-              "href": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/190"
-            }
-          },
-          "body": "Looks good, one minor suggestion.",
-          "commit_id": "cf4d0e69ea6508f974cb78af04d0a1c67c63fb62",
-          "html_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/190#pullrequestreview-4263456019",
-          "id": 4263456019,
-          "node_id": "PRR_kwDOJubJxM7-Hy0T",
-          "pull_request_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/190",
-          "state": "changes_requested",
-          "submitted_at": "2026-05-11T12:04:59Z",
-          "updated_at": "2026-05-11T12:04:59Z",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
-            "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
-            "followers_url": "https://api.github.com/users/PieterKas/followers",
-            "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
-            "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/PieterKas",
-            "id": 90690777,
-            "login": "PieterKas",
-            "node_id": "MDQ6VXNlcjkwNjkwNzc3",
-            "organizations_url": "https://api.github.com/users/PieterKas/orgs",
-            "received_events_url": "https://api.github.com/users/PieterKas/received_events",
-            "repos_url": "https://api.github.com/users/PieterKas/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/PieterKas",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 652659140,
-        "name": "oauth-wg/oauth-identity-chaining",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-      },
-      "type": "PullRequestReviewEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/90690777?",
-        "display_login": "PieterKas",
-        "gravatar_id": "",
-        "id": 90690777,
-        "login": "PieterKas",
-        "url": "https://api.github.com/users/PieterKas"
-      },
-      "created_at": "2026-05-11T11:54:41Z",
-      "id": "9311575541",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 652659140,
-              "name": "oauth-identity-chaining",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-            },
-            "sha": "c8d9d6012e8bd5f4e8d91fa7819ee5d9716bdda3"
-          },
-          "head": {
-            "ref": "genart-lc-review",
-            "repo": {
-              "id": 652659140,
-              "name": "oauth-identity-chaining",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-            },
-            "sha": "95df96f32d86eac412d2d719f4bb0820907f4e5e"
-          },
-          "id": 3645551264,
-          "number": 190,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/190"
-        },
-        "review": {
-          "_links": {
-            "html": {
-              "href": "https://github.com/oauth-wg/oauth-identity-chaining/pull/190#pullrequestreview-4263373615"
-            },
-            "pull_request": {
-              "href": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/190"
-            }
-          },
-          "body": null,
-          "commit_id": "cf4d0e69ea6508f974cb78af04d0a1c67c63fb62",
-          "html_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/190#pullrequestreview-4263373615",
-          "id": 4263373615,
-          "node_id": "PRR_kwDOJubJxM7-Hesv",
-          "pull_request_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/190",
-          "state": "commented",
-          "submitted_at": "2026-05-11T11:54:39Z",
-          "updated_at": "2026-05-11T11:54:40Z",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
-            "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
-            "followers_url": "https://api.github.com/users/PieterKas/followers",
-            "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
-            "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/PieterKas",
-            "id": 90690777,
-            "login": "PieterKas",
-            "node_id": "MDQ6VXNlcjkwNjkwNzc3",
-            "organizations_url": "https://api.github.com/users/PieterKas/orgs",
-            "received_events_url": "https://api.github.com/users/PieterKas/received_events",
-            "repos_url": "https://api.github.com/users/PieterKas/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/PieterKas",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 652659140,
-        "name": "oauth-wg/oauth-identity-chaining",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-      },
-      "type": "PullRequestReviewEvent"
     }
   ],
   "prs": {
     "error": null,
     "items": [
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "COLLABORATOR",
+        "body": "Updated the Txn-Token Request parameters from OPTIONAL to RECOMMENDED to enhance clarity and guidance. Also changed the introduction sentence which previously also included the term RECOMMENDED.\r\n\r\nNOTE: Brian also made the recommendation to move from RECOMMENDED to something less like a SHOULD as we don't define concretely what goes in these objects. Additionally, I didn't change body claims as I believe the OPTIONAL make sense for a JWT body claim but less so for an API request parameter. Happy to update accordingly.",
+        "closed_at": null,
+        "comments": 0,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/346/comments",
+        "created_at": "2026-05-13T19:37:59Z",
+        "draft": false,
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/346/events",
+        "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/346",
+        "id": 4440670850,
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/346/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "PR_kwDOJt_WwM7bQju-",
+        "number": 346,
+        "performed_via_github_app": null,
+        "pull_request": {
+          "diff_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/346.diff",
+          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/346",
+          "merged_at": null,
+          "patch_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/346.patch",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/346"
+        },
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/346/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/346/timeline",
+        "title": "Change Txn-Token Request parameters to RECOMMENDED",
+        "type": null,
+        "updated_at": "2026-05-15T10:34:18Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/346",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/751457?v=4",
+          "events_url": "https://api.github.com/users/gffletch/events{/privacy}",
+          "followers_url": "https://api.github.com/users/gffletch/followers",
+          "following_url": "https://api.github.com/users/gffletch/following{/other_user}",
+          "gists_url": "https://api.github.com/users/gffletch/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/gffletch",
+          "id": 751457,
+          "login": "gffletch",
+          "node_id": "MDQ6VXNlcjc1MTQ1Nw==",
+          "organizations_url": "https://api.github.com/users/gffletch/orgs",
+          "received_events_url": "https://api.github.com/users/gffletch/received_events",
+          "repos_url": "https://api.github.com/users/gffletch/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/gffletch/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/gffletch/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/gffletch",
+          "user_view_type": "public"
+        }
+      },
       {
         "active_lock_reason": null,
         "assignee": null,
@@ -56646,77 +57243,6 @@
         "type": null,
         "updated_at": "2026-05-14T20:45:45Z",
         "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/347",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/751457?v=4",
-          "events_url": "https://api.github.com/users/gffletch/events{/privacy}",
-          "followers_url": "https://api.github.com/users/gffletch/followers",
-          "following_url": "https://api.github.com/users/gffletch/following{/other_user}",
-          "gists_url": "https://api.github.com/users/gffletch/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/gffletch",
-          "id": 751457,
-          "login": "gffletch",
-          "node_id": "MDQ6VXNlcjc1MTQ1Nw==",
-          "organizations_url": "https://api.github.com/users/gffletch/orgs",
-          "received_events_url": "https://api.github.com/users/gffletch/received_events",
-          "repos_url": "https://api.github.com/users/gffletch/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/gffletch/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/gffletch/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/gffletch",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "COLLABORATOR",
-        "body": "Updated the Txn-Token Request parameters from OPTIONAL to RECOMMENDED to enhance clarity and guidance. Also changed the introduction sentence which previously also included the term RECOMMENDED.\r\n\r\nNOTE: Brian also made the recommendation to move from RECOMMENDED to something less like a SHOULD as we don't define concretely what goes in these objects. Additionally, I didn't change body claims as I believe the OPTIONAL make sense for a JWT body claim but less so for an API request parameter. Happy to update accordingly.",
-        "closed_at": null,
-        "comments": 0,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/346/comments",
-        "created_at": "2026-05-13T19:37:59Z",
-        "draft": false,
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/346/events",
-        "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/346",
-        "id": 4440670850,
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/346/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "PR_kwDOJt_WwM7bQju-",
-        "number": 346,
-        "performed_via_github_app": null,
-        "pull_request": {
-          "diff_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/346.diff",
-          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/346",
-          "merged_at": null,
-          "patch_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/346.patch",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/346"
-        },
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/346/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
-        "score": 1.0,
-        "state": "open",
-        "state_reason": null,
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/346/timeline",
-        "title": "Change Txn-Token Request parameters to RECOMMENDED",
-        "type": null,
-        "updated_at": "2026-05-14T19:40:29Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/346",
         "user": {
           "avatar_url": "https://avatars.githubusercontent.com/u/751457?v=4",
           "events_url": "https://api.github.com/users/gffletch/events{/privacy}",
@@ -94277,7 +94803,7 @@
       "releases_url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/releases{/id}",
       "size": 1265,
       "ssh_url": "git@github.com:oauth-wg/oauth-browser-based-apps.git",
-      "stargazers_count": 41,
+      "stargazers_count": 40,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/stargazers",
       "statuses_url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/statuses/{sha}",
       "subscribers_url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/subscribers",
@@ -94287,11 +94813,11 @@
       "teams_url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/teams",
       "topics": [],
       "trees_url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/git/trees{/sha}",
-      "updated_at": "2026-02-01T16:42:33Z",
+      "updated_at": "2026-05-15T10:18:23Z",
       "url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps",
       "visibility": "public",
-      "watchers": 41,
-      "watchers_count": 41,
+      "watchers": 40,
+      "watchers_count": 40,
       "web_commit_signoff_required": false
     },
     {
@@ -95415,8 +95941,8 @@
       "name": "oauth-transaction-tokens",
       "node_id": "R_kgDOJt_WwA",
       "notifications_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/notifications{?since,all,participating}",
-      "open_issues": 14,
-      "open_issues_count": 14,
+      "open_issues": 16,
+      "open_issues_count": 16,
       "owner": {
         "avatar_url": "https://avatars.githubusercontent.com/u/111596788?v=4",
         "events_url": "https://api.github.com/users/oauth-wg/events{/privacy}",
@@ -95883,8 +96409,8 @@
       "name": "draft-ietf-oauth-client-id-metadata-document",
       "node_id": "R_kgDOL_Xevg",
       "notifications_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/notifications{?since,all,participating}",
-      "open_issues": 39,
-      "open_issues_count": 39,
+      "open_issues": 40,
+      "open_issues_count": 40,
       "owner": {
         "avatar_url": "https://avatars.githubusercontent.com/u/111596788?v=4",
         "events_url": "https://api.github.com/users/oauth-wg/events{/privacy}",
@@ -96289,5 +96815,5 @@
       "web_commit_signoff_required": false
     }
   ],
-  "snapshot_date": "2026-05-15"
+  "snapshot_date": "2026-05-16"
 }
