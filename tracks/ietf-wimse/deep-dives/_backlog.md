@@ -1,11 +1,11 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-05-20T09:42:18+00:00
+Generated at: 2026-05-21T09:51:20+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
-| 1 | 10 | Investigate mailing-list trend: credential-brokering | topic=credential-brokering count=8 |
-| 2 | 9 | Investigate mailing-list trend: ai-agent | topic=ai-agent count=4 |
+| 1 | 10 | Investigate mailing-list trend: ai-agent | topic=ai-agent count=8 |
+| 2 | 10 | Investigate mailing-list trend: credential-brokering | topic=credential-brokering count=6 |
 | 3 | 8 | Investigate mailing-list trend: meeting-minutes | topic=meeting-minutes count=6 |
 | 4 | 7 | Diff active WG draft: draft-ietf-wimse-http-signature-03 | draft-ietf-wimse-http-signature-03 (2026-04-07) |
 | 5 | 7 | Diff active WG draft: draft-ietf-wimse-mutual-tls-01 | draft-ietf-wimse-mutual-tls-01 (2026-05-05) |
