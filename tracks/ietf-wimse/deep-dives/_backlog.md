@@ -1,14 +1,13 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-05-22T09:36:39+00:00
+Generated at: 2026-05-23T08:25:07+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
 | 1 | 10 | Investigate mailing-list trend: ai-agent | topic=ai-agent count=8 |
-| 2 | 10 | Investigate mailing-list trend: credential-brokering | topic=credential-brokering count=6 |
+| 2 | 9 | Investigate mailing-list trend: credential-brokering | topic=credential-brokering count=4 |
 | 3 | 8 | Investigate mailing-list trend: meeting-minutes | topic=meeting-minutes count=6 |
-| 4 | 7 | Diff active WG draft: draft-ietf-wimse-http-signature-03 | draft-ietf-wimse-http-signature-03 (2026-04-07) |
-| 5 | 7 | Diff active WG draft: draft-ietf-wimse-mutual-tls-01 | draft-ietf-wimse-mutual-tls-01 (2026-05-05) |
-| 6 | 7 | Diff active WG draft: draft-ietf-wimse-workload-creds-01 | draft-ietf-wimse-workload-creds-01 (2026-05-05) |
-| 7 | 6 | Review related draft: draft-munoz-wimse-authorization-evidence-00 | draft-munoz-wimse-authorization-evidence-00 (2026-05-15) |
-| 8 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-04 | draft-ietf-wimse-workload-identity-practices-04 (2026-04-10) |
+| 4 | 7 | Diff active WG draft: draft-ietf-wimse-mutual-tls-01 | draft-ietf-wimse-mutual-tls-01 (2026-05-05) |
+| 5 | 7 | Diff active WG draft: draft-ietf-wimse-workload-creds-01 | draft-ietf-wimse-workload-creds-01 (2026-05-05) |
+| 6 | 6 | Review related draft: draft-munoz-wimse-authorization-evidence-00 | draft-munoz-wimse-authorization-evidence-00 (2026-05-15) |
+| 7 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-04 | draft-ietf-wimse-workload-identity-practices-04 (2026-04-10) |
