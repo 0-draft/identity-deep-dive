@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-05-25T10:18:32+00:00
+Generated at: 2026-05-25T11:40:17+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
