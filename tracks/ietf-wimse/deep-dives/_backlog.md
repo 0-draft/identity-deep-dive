@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-05-25T11:40:17+00:00
+Generated at: 2026-05-26T10:04:15+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -10,4 +10,3 @@ Generated at: 2026-05-25T11:40:17+00:00
 | 4 | 7 | Diff active WG draft: draft-ietf-wimse-mutual-tls-01 | draft-ietf-wimse-mutual-tls-01 (2026-05-05) |
 | 5 | 7 | Diff active WG draft: draft-ietf-wimse-workload-creds-01 | draft-ietf-wimse-workload-creds-01 (2026-05-05) |
 | 6 | 6 | Review related draft: draft-munoz-wimse-authorization-evidence-00 | draft-munoz-wimse-authorization-evidence-00 (2026-05-15) |
-| 7 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-04 | draft-ietf-wimse-workload-identity-practices-04 (2026-04-10) |
