@@ -1,8 +1,255 @@
 {
-  "collected_at": "2026-05-26T10:04:34+00:00",
+  "collected_at": "2026-05-27T10:02:47+00:00",
   "issues": {
     "error": null,
     "items": [
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "NONE",
+        "body": "For example, if `client_id=https://example.com/oauth/client_id.json`, the AS would `GET https://example.com/oauth/client_id.json?iss=https://example-as.com`.\n\nThis allows the client to do a few things:\n\nProgressive rollouts of changes to CIMD, so that blast radius is limited to only certain AS. Making a global change to a client id is bad practice from a production safety point of view, and \"random percentage\" rollouts may not work if the AS queries the CIMD more than once and gets two different documents.  Of course, `iss` isn't a perfect solution here, but it's easy and better than nothing.\n\nThe client could also return AS-specific metadata (as long as it's not secret because `iss` is unvalidated). This could help address certain incompatibilities that may arise in practice where the same values are rejected by some AS but not by others.",
+        "closed_at": null,
+        "comments": 13,
+        "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/comments",
+        "created_at": "2026-05-01T00:45:14Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/events",
+        "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78",
+        "id": 4362160170,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOL_Xevs8AAAABBAFIKg",
+        "number": 78,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/timeline",
+        "title": "Can AS optionally provide `iss` when fetching client_id?",
+        "type": null,
+        "updated_at": "2026-05-27T03:11:46Z",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/1567051?v=4",
+          "events_url": "https://api.github.com/users/njwatson32/events{/privacy}",
+          "followers_url": "https://api.github.com/users/njwatson32/followers",
+          "following_url": "https://api.github.com/users/njwatson32/following{/other_user}",
+          "gists_url": "https://api.github.com/users/njwatson32/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/njwatson32",
+          "id": 1567051,
+          "login": "njwatson32",
+          "node_id": "MDQ6VXNlcjE1NjcwNTE=",
+          "organizations_url": "https://api.github.com/users/njwatson32/orgs",
+          "received_events_url": "https://api.github.com/users/njwatson32/received_events",
+          "repos_url": "https://api.github.com/users/njwatson32/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/njwatson32/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/njwatson32/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/njwatson32",
+          "user_view_type": "public"
+        }
+      },
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "COLLABORATOR",
+        "body": "Note - I'm unsure of the best place to discuss this concept but I'm starting the conversation here, due to its potential relationship to this draft.\n\nDPoP as defined in RFC9449 provides a mechanism for sender-constraining tokens issued in OAuth 2.0. By design however the mechanism for sender-constraining of tokens isn't intended to provide wider integrity guarantees over the HTTP message upon which a DPoP proof is attached to. The same problem exists for client attestations.\n\nWe've now encountered situations where DPoP (and potentially Client attestations) are (or going to be) used and integrity over the request body of the HTTP message is also desired. This leaves implementations with a couple of possible choices\n\n1. To not have integrity over the request body (beyond what TLS already provides) - This is a difficult argument to make in some of the proposed applications where TLS isn't sufficiently trusted to provide the required integrity\n2. To define a seperate mechanism to provide integrity over the request body seperate from DPoP or Client attestations\n3. To devise a mechanism whereby a DPoP proof or Client Attestation PoP could also provide integrity over the request body\n\nThe remainder of this issue focuses on discussing a proposal for option 3.\n\nHTTP defines a specific header called [Content-Digest](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Digest) which provides a hash/digest over the HTTP message content. In essence, if the value of this header were included inside a DPoP proof / Client Attestation PoP, integrity over the HTTP message content could verified.\n\nAn example of a DPoP proof\n\n```\n{\n  \"typ\":\"dpop+jwt\",\n  \"alg\":\"ES256\",\n  \"jwk\": {\n    \"kty\":\"EC\",\n    \"x\":\"l8tFrhx-34tV3hRICRDY9zCkDlpBhF42UQUfWVAWBFs\",\n    \"y\":\"9VE4jf_Ok_o64zbTTlcuNJajHmt6v9TDVrU0CdvGRDA\",\n    \"crv\":\"P-256\"\n  }\n}\n.\n{\n  \"jti\":\"-BwC3ESc6acc2lTc\",\n  \"htm\":\"POST\",\n  \"htu\":\"https://server.example.com/token\",\n  **\"htcd\": \"sha-256=:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=:\",**\n  \"iat\":1562262616\n}\n```\n\nNote the new `htcd` JWT claim where the value is the value of the Content-Digest HTTP header.\n\nThe main advantage I can see to this proposal is that integrity is provided via DPoP without the need for an additional signature over the HTTP message content.\n\nAlternative proposals could involve\n1. Providing a seperate signature over the HTTP message using HTTP message signatures - this requires two signatures in the HTTP message\n2. Providing a seperate signature over the HTTP message using JWS on the request body - awkward if the request body isn't JSON and also suffers from two signatures in the HTTP message\n",
+        "closed_at": "2026-05-26T06:20:56Z",
+        "comments": 5,
+        "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/comments",
+        "created_at": "2025-11-13T04:36:27Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/events",
+        "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168",
+        "id": 3619389013,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [
+          {
+            "color": "D76CC5",
+            "default": false,
+            "description": "",
+            "id": 5987774151,
+            "name": "pending-close",
+            "node_id": "LA_kwDOJaEkaM8AAAABZOYuxw",
+            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/labels/pending-close"
+          },
+          {
+            "color": "aaaaaa",
+            "default": false,
+            "description": null,
+            "id": 10861428255,
+            "name": "out-of-scope",
+            "node_id": "LA_kwDOJaEkaM8AAAACh2Q-Hw",
+            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/labels/out-of-scope"
+          }
+        ],
+        "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOJaEkaM7Xu35V",
+        "number": 168,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 2,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 2,
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "score": 1.0,
+        "state": "closed",
+        "state_reason": "completed",
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/timeline",
+        "title": "Integrity protecting HTTP requests using DPoP and Client Attestations",
+        "type": null,
+        "updated_at": "2026-05-26T14:25:13Z",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/15972525?v=4",
+          "events_url": "https://api.github.com/users/tplooker/events{/privacy}",
+          "followers_url": "https://api.github.com/users/tplooker/followers",
+          "following_url": "https://api.github.com/users/tplooker/following{/other_user}",
+          "gists_url": "https://api.github.com/users/tplooker/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/tplooker",
+          "id": 15972525,
+          "login": "tplooker",
+          "node_id": "MDQ6VXNlcjE1OTcyNTI1",
+          "organizations_url": "https://api.github.com/users/tplooker/orgs",
+          "received_events_url": "https://api.github.com/users/tplooker/received_events",
+          "repos_url": "https://api.github.com/users/tplooker/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/tplooker/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/tplooker/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/tplooker",
+          "user_view_type": "public"
+        }
+      },
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "NONE",
+        "body": "Thanks for writing up ID on Transaction Tokens. \n\n1. I was hoping to find a reference to [RFC 9396](https://datatracker.ietf.org/doc/html/rfc9396) Rich Authorization Requests somewhere, especially while discussing Authorization Context. \n\n2. Also since RFC 9396's `authorization_details` is already registered in OAuth [Parameters registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml) perhaps it could be used here as well to provide value for `request_context?` It is already approved for token request and token response.\n\n3. Can `authorization_details` be used here as a [claim](https://datatracker.ietf.org/doc/html/rfc9396#name-oauth-parameters-registrati) instead of tctx, inside tctx or in addition to tact?  \n\nFor #2 and #3, I would not know if reuse is prohibited, it was ignored or it was discussed and a decision was taken not to reuse.\n\nSorry in advance if these issues are already discussed and resolved. \n\nthanks,\nsanjay",
+        "closed_at": null,
+        "comments": 3,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/comments",
+        "created_at": "2026-05-15T17:23:33Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/events",
+        "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/351",
+        "id": 4455724316,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOJt_WwM8AAAABCZT1HA",
+        "number": 351,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/timeline",
+        "title": "Using RFC 9396's authorization_details as a claim and for request_context",
+        "type": null,
+        "updated_at": "2026-05-26T13:51:00Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/21368261?v=4",
+          "events_url": "https://api.github.com/users/sdatspun2/events{/privacy}",
+          "followers_url": "https://api.github.com/users/sdatspun2/followers",
+          "following_url": "https://api.github.com/users/sdatspun2/following{/other_user}",
+          "gists_url": "https://api.github.com/users/sdatspun2/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/sdatspun2",
+          "id": 21368261,
+          "login": "sdatspun2",
+          "node_id": "MDQ6VXNlcjIxMzY4MjYx",
+          "organizations_url": "https://api.github.com/users/sdatspun2/orgs",
+          "received_events_url": "https://api.github.com/users/sdatspun2/received_events",
+          "repos_url": "https://api.github.com/users/sdatspun2/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/sdatspun2/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/sdatspun2/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/sdatspun2",
+          "user_view_type": "public"
+        }
+      },
       {
         "active_lock_reason": null,
         "assignee": null,
@@ -646,101 +893,6 @@
           "subscriptions_url": "https://api.github.com/users/Denisthemalice/subscriptions",
           "type": "User",
           "url": "https://api.github.com/users/Denisthemalice",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "COLLABORATOR",
-        "body": "Note - I'm unsure of the best place to discuss this concept but I'm starting the conversation here, due to its potential relationship to this draft.\n\nDPoP as defined in RFC9449 provides a mechanism for sender-constraining tokens issued in OAuth 2.0. By design however the mechanism for sender-constraining of tokens isn't intended to provide wider integrity guarantees over the HTTP message upon which a DPoP proof is attached to. The same problem exists for client attestations.\n\nWe've now encountered situations where DPoP (and potentially Client attestations) are (or going to be) used and integrity over the request body of the HTTP message is also desired. This leaves implementations with a couple of possible choices\n\n1. To not have integrity over the request body (beyond what TLS already provides) - This is a difficult argument to make in some of the proposed applications where TLS isn't sufficiently trusted to provide the required integrity\n2. To define a seperate mechanism to provide integrity over the request body seperate from DPoP or Client attestations\n3. To devise a mechanism whereby a DPoP proof or Client Attestation PoP could also provide integrity over the request body\n\nThe remainder of this issue focuses on discussing a proposal for option 3.\n\nHTTP defines a specific header called [Content-Digest](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Digest) which provides a hash/digest over the HTTP message content. In essence, if the value of this header were included inside a DPoP proof / Client Attestation PoP, integrity over the HTTP message content could verified.\n\nAn example of a DPoP proof\n\n```\n{\n  \"typ\":\"dpop+jwt\",\n  \"alg\":\"ES256\",\n  \"jwk\": {\n    \"kty\":\"EC\",\n    \"x\":\"l8tFrhx-34tV3hRICRDY9zCkDlpBhF42UQUfWVAWBFs\",\n    \"y\":\"9VE4jf_Ok_o64zbTTlcuNJajHmt6v9TDVrU0CdvGRDA\",\n    \"crv\":\"P-256\"\n  }\n}\n.\n{\n  \"jti\":\"-BwC3ESc6acc2lTc\",\n  \"htm\":\"POST\",\n  \"htu\":\"https://server.example.com/token\",\n  **\"htcd\": \"sha-256=:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=:\",**\n  \"iat\":1562262616\n}\n```\n\nNote the new `htcd` JWT claim where the value is the value of the Content-Digest HTTP header.\n\nThe main advantage I can see to this proposal is that integrity is provided via DPoP without the need for an additional signature over the HTTP message content.\n\nAlternative proposals could involve\n1. Providing a seperate signature over the HTTP message using HTTP message signatures - this requires two signatures in the HTTP message\n2. Providing a seperate signature over the HTTP message using JWS on the request body - awkward if the request body isn't JSON and also suffers from two signatures in the HTTP message\n",
-        "closed_at": "2026-05-26T06:20:56Z",
-        "comments": 3,
-        "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/comments",
-        "created_at": "2025-11-13T04:36:27Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/events",
-        "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168",
-        "id": 3619389013,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [
-          {
-            "color": "D76CC5",
-            "default": false,
-            "description": "",
-            "id": 5987774151,
-            "name": "pending-close",
-            "node_id": "LA_kwDOJaEkaM8AAAABZOYuxw",
-            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/labels/pending-close"
-          },
-          {
-            "color": "aaaaaa",
-            "default": false,
-            "description": null,
-            "id": 10861428255,
-            "name": "out-of-scope",
-            "node_id": "LA_kwDOJaEkaM8AAAACh2Q-Hw",
-            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/labels/out-of-scope"
-          }
-        ],
-        "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOJaEkaM7Xu35V",
-        "number": 168,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 2,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 2,
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
-        "score": 1.0,
-        "state": "closed",
-        "state_reason": "completed",
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/timeline",
-        "title": "Integrity protecting HTTP requests using DPoP and Client Attestations",
-        "type": null,
-        "updated_at": "2026-05-26T06:20:56Z",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/15972525?v=4",
-          "events_url": "https://api.github.com/users/tplooker/events{/privacy}",
-          "followers_url": "https://api.github.com/users/tplooker/followers",
-          "following_url": "https://api.github.com/users/tplooker/following{/other_user}",
-          "gists_url": "https://api.github.com/users/tplooker/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/tplooker",
-          "id": 15972525,
-          "login": "tplooker",
-          "node_id": "MDQ6VXNlcjE1OTcyNTI1",
-          "organizations_url": "https://api.github.com/users/tplooker/orgs",
-          "received_events_url": "https://api.github.com/users/tplooker/received_events",
-          "repos_url": "https://api.github.com/users/tplooker/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/tplooker/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/tplooker/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/tplooker",
           "user_view_type": "public"
         }
       },
@@ -2022,82 +2174,6 @@
         "active_lock_reason": null,
         "assignee": null,
         "assignees": [],
-        "author_association": "NONE",
-        "body": "For example, if `client_id=https://example.com/oauth/client_id.json`, the AS would `GET https://example.com/oauth/client_id.json?iss=https://example-as.com`.\n\nThis allows the client to do a few things:\n\nProgressive rollouts of changes to CIMD, so that blast radius is limited to only certain AS. Making a global change to a client id is bad practice from a production safety point of view, and \"random percentage\" rollouts may not work if the AS queries the CIMD more than once and gets two different documents.  Of course, `iss` isn't a perfect solution here, but it's easy and better than nothing.\n\nThe client could also return AS-specific metadata (as long as it's not secret because `iss` is unvalidated). This could help address certain incompatibilities that may arise in practice where the same values are rejected by some AS but not by others.",
-        "closed_at": null,
-        "comments": 12,
-        "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/comments",
-        "created_at": "2026-05-01T00:45:14Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/events",
-        "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78",
-        "id": 4362160170,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOL_Xevs8AAAABBAFIKg",
-        "number": 78,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document",
-        "score": 1.0,
-        "state": "open",
-        "state_reason": null,
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/timeline",
-        "title": "Can AS optionally provide `iss` when fetching client_id?",
-        "type": null,
-        "updated_at": "2026-05-20T20:17:02Z",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/1567051?v=4",
-          "events_url": "https://api.github.com/users/njwatson32/events{/privacy}",
-          "followers_url": "https://api.github.com/users/njwatson32/followers",
-          "following_url": "https://api.github.com/users/njwatson32/following{/other_user}",
-          "gists_url": "https://api.github.com/users/njwatson32/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/njwatson32",
-          "id": 1567051,
-          "login": "njwatson32",
-          "node_id": "MDQ6VXNlcjE1NjcwNTE=",
-          "organizations_url": "https://api.github.com/users/njwatson32/orgs",
-          "received_events_url": "https://api.github.com/users/njwatson32/received_events",
-          "repos_url": "https://api.github.com/users/njwatson32/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/njwatson32/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/njwatson32/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/njwatson32",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
         "author_association": "MEMBER",
         "body": "By Judith Kahrer on the mailing list:\n\n> I agree with the conversation in the minutes. Leave the details of the attestation process out of scope. However, I suggest you list the requirements as it currently is unclear what attestation means. What do you expect an attester to validate at a bare minimum (i.e., client instance controlling the key)? What makes the key-bound JWT a client attestation? What information should/does the client attestation JWT convey? In section 6.4 you mention: \"[Sending additional security signals] may provide additional assurance about the client's authenticity, integrity, state or other information contained in the Client Attestation\". Make it clear (as part of the terminology?) that this is what you expect from an attester and client attestation. Imo, the client's authenticity and integrity are key to an attestation (without having to get into technical details...). ",
         "closed_at": null,
@@ -2523,82 +2599,6 @@
           "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
           "type": "User",
           "url": "https://api.github.com/users/PieterKas",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "NONE",
-        "body": "Thanks for writing up ID on Transaction Tokens. \n\n1. I was hoping to find a reference to [RFC 9396](https://datatracker.ietf.org/doc/html/rfc9396) Rich Authorization Requests somewhere, especially while discussing Authorization Context. \n\n2. Also since RFC 9396's `authorization_details` is already registered in OAuth [Parameters registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml) perhaps it could be used here as well to provide value for `request_context?` It is already approved for token request and token response.\n\n3. Can `authorization_details` be used here as a [claim](https://datatracker.ietf.org/doc/html/rfc9396#name-oauth-parameters-registrati) instead of tctx, inside tctx or in addition to tact?  \n\nFor #2 and #3, I would not know if reuse is prohibited, it was ignored or it was discussed and a decision was taken not to reuse.\n\nSorry in advance if these issues are already discussed and resolved. \n\nthanks,\nsanjay",
-        "closed_at": null,
-        "comments": 1,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/comments",
-        "created_at": "2026-05-15T17:23:33Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/events",
-        "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/351",
-        "id": 4455724316,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOJt_WwM8AAAABCZT1HA",
-        "number": 351,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
-        "score": 1.0,
-        "state": "open",
-        "state_reason": null,
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/timeline",
-        "title": "Using RFC 9396's authorization_details as a claim and for request_context",
-        "type": null,
-        "updated_at": "2026-05-18T09:44:39Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/21368261?v=4",
-          "events_url": "https://api.github.com/users/sdatspun2/events{/privacy}",
-          "followers_url": "https://api.github.com/users/sdatspun2/followers",
-          "following_url": "https://api.github.com/users/sdatspun2/following{/other_user}",
-          "gists_url": "https://api.github.com/users/sdatspun2/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/sdatspun2",
-          "id": 21368261,
-          "login": "sdatspun2",
-          "node_id": "MDQ6VXNlcjIxMzY4MjYx",
-          "organizations_url": "https://api.github.com/users/sdatspun2/orgs",
-          "received_events_url": "https://api.github.com/users/sdatspun2/received_events",
-          "repos_url": "https://api.github.com/users/sdatspun2/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/sdatspun2/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/sdatspun2/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/sdatspun2",
           "user_view_type": "public"
         }
       },
@@ -49401,6 +49401,813 @@
   "org_events": [
     {
       "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/158512442?",
+        "display_login": "ciamshrek",
+        "gravatar_id": "",
+        "id": 158512442,
+        "login": "ciamshrek",
+        "url": "https://api.github.com/users/ciamshrek"
+      },
+      "created_at": "2026-05-27T03:11:46Z",
+      "id": "9935667050",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "I think a slightly different use-case here might for something like SingPass, or Highly Controlled Ecosystems, where its required to use a different signing key. Right now since CIMD exposes a single `jwks_uri` it also ends up requiring us to generate urls as \n\n```https://example.com/connection/<unique_name>/oauth/client.json```\n\nWhich IMO is suboptimal to\n\n```\nhttps://example.com/oauth/client.json\n```",
+          "created_at": "2026-05-27T03:11:46Z",
+          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78#issuecomment-4550888917",
+          "id": 4550888917,
+          "issue_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78",
+          "node_id": "IC_kwDOL_Xevs8AAAABD0EN1Q",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/comments/4550888917/reactions"
+          },
+          "updated_at": "2026-05-27T03:11:46Z",
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/comments/4550888917",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/158512442?v=4",
+            "events_url": "https://api.github.com/users/ciamshrek/events{/privacy}",
+            "followers_url": "https://api.github.com/users/ciamshrek/followers",
+            "following_url": "https://api.github.com/users/ciamshrek/following{/other_user}",
+            "gists_url": "https://api.github.com/users/ciamshrek/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/ciamshrek",
+            "id": 158512442,
+            "login": "ciamshrek",
+            "node_id": "U_kgDOCXK1Og",
+            "organizations_url": "https://api.github.com/users/ciamshrek/orgs",
+            "received_events_url": "https://api.github.com/users/ciamshrek/received_events",
+            "repos_url": "https://api.github.com/users/ciamshrek/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/ciamshrek/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/ciamshrek/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/ciamshrek",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "For example, if `client_id=https://example.com/oauth/client_id.json`, the AS would `GET https://example.com/oauth/client_id.json?iss=https://example-as.com`.\n\nThis allows the client to do a few things:\n\nProgressive rollouts of changes to CIMD, so that blast radius is limited to only certain AS. Making a global change to a client id is bad practice from a production safety point of view, and \"random percentage\" rollouts may not work if the AS queries the CIMD more than once and gets two different documents.  Of course, `iss` isn't a perfect solution here, but it's easy and better than nothing.\n\nThe client could also return AS-specific metadata (as long as it's not secret because `iss` is unvalidated). This could help address certain incompatibilities that may arise in practice where the same values are rejected by some AS but not by others.",
+          "closed_at": null,
+          "comments": 13,
+          "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/comments",
+          "created_at": "2026-05-01T00:45:14Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/events",
+          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78",
+          "id": 4362160170,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOL_Xevs8AAAABBAFIKg",
+          "number": 78,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/timeline",
+          "title": "Can AS optionally provide `iss` when fetching client_id?",
+          "type": null,
+          "updated_at": "2026-05-27T03:11:46Z",
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/1567051?v=4",
+            "events_url": "https://api.github.com/users/njwatson32/events{/privacy}",
+            "followers_url": "https://api.github.com/users/njwatson32/followers",
+            "following_url": "https://api.github.com/users/njwatson32/following{/other_user}",
+            "gists_url": "https://api.github.com/users/njwatson32/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/njwatson32",
+            "id": 1567051,
+            "login": "njwatson32",
+            "node_id": "MDQ6VXNlcjE1NjcwNTE=",
+            "organizations_url": "https://api.github.com/users/njwatson32/orgs",
+            "received_events_url": "https://api.github.com/users/njwatson32/received_events",
+            "repos_url": "https://api.github.com/users/njwatson32/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/njwatson32/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/njwatson32/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/njwatson32",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 804642494,
+        "name": "oauth-wg/draft-ietf-oauth-client-id-metadata-document",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/109007497?",
+        "display_login": "s3loy",
+        "gravatar_id": "",
+        "id": 109007497,
+        "login": "s3loy",
+        "url": "https://api.github.com/users/s3loy"
+      },
+      "created_at": "2026-05-26T16:15:19Z",
+      "id": "9914721809",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "started"
+      },
+      "public": true,
+      "repo": {
+        "id": 239594214,
+        "name": "oauth-wg/oauth-v2-1",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1"
+      },
+      "type": "WatchEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/16320000?",
+        "display_login": "paulbastian",
+        "gravatar_id": "",
+        "id": 16320000,
+        "login": "paulbastian",
+        "url": "https://api.github.com/users/paulbastian"
+      },
+      "created_at": "2026-05-26T14:25:13Z",
+      "id": "9909966437",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "> @paulbastian just a data point, but the entire reason for this RFC being relevant to something like my use-case (adoption and inter-communication of devices that each provide some OIDC endponts), was #187, which led me here.\n> \n> If the entire RFC is based on HTTPS being available, that kinda makes it hard to use within LAN environments., while digest would make this more feasible.\n\nHi, thanks for pointing this out.\n\nHer is my view on this: \n- the DPoP optimization to include a digest for protecting the header discussed in #168 will only work for HTTPS, because DPoP is only designed to work with TLS, so this path would not be an option\n- the primary pop option of this draft does not have such an option yet, we may discuss this, but as the primary purpose is client authentication, I'm not sure it will fit in\n- a possible option in your case could be a PoP using http message signatures (if you don't care about confidentiality), I will propose ideas on how to use those in OAuth in conjunction with this draft at the OAuth Security workshop this week",
+          "created_at": "2026-05-26T14:25:13Z",
+          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168#issuecomment-4545015189",
+          "id": 4545015189,
+          "issue_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168",
+          "node_id": "IC_kwDOJaEkaM8AAAABDudtlQ",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 1,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 1,
+            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/comments/4545015189/reactions"
+          },
+          "updated_at": "2026-05-26T14:25:13Z",
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/comments/4545015189",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/16320000?v=4",
+            "events_url": "https://api.github.com/users/paulbastian/events{/privacy}",
+            "followers_url": "https://api.github.com/users/paulbastian/followers",
+            "following_url": "https://api.github.com/users/paulbastian/following{/other_user}",
+            "gists_url": "https://api.github.com/users/paulbastian/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/paulbastian",
+            "id": 16320000,
+            "login": "paulbastian",
+            "node_id": "MDQ6VXNlcjE2MzIwMDAw",
+            "organizations_url": "https://api.github.com/users/paulbastian/orgs",
+            "received_events_url": "https://api.github.com/users/paulbastian/received_events",
+            "repos_url": "https://api.github.com/users/paulbastian/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/paulbastian/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/paulbastian/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/paulbastian",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "Note - I'm unsure of the best place to discuss this concept but I'm starting the conversation here, due to its potential relationship to this draft.\n\nDPoP as defined in RFC9449 provides a mechanism for sender-constraining tokens issued in OAuth 2.0. By design however the mechanism for sender-constraining of tokens isn't intended to provide wider integrity guarantees over the HTTP message upon which a DPoP proof is attached to. The same problem exists for client attestations.\n\nWe've now encountered situations where DPoP (and potentially Client attestations) are (or going to be) used and integrity over the request body of the HTTP message is also desired. This leaves implementations with a couple of possible choices\n\n1. To not have integrity over the request body (beyond what TLS already provides) - This is a difficult argument to make in some of the proposed applications where TLS isn't sufficiently trusted to provide the required integrity\n2. To define a seperate mechanism to provide integrity over the request body seperate from DPoP or Client attestations\n3. To devise a mechanism whereby a DPoP proof or Client Attestation PoP could also provide integrity over the request body\n\nThe remainder of this issue focuses on discussing a proposal for option 3.\n\nHTTP defines a specific header called [Content-Digest](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Digest) which provides a hash/digest over the HTTP message content. In essence, if the value of this header were included inside a DPoP proof / Client Attestation PoP, integrity over the HTTP message content could verified.\n\nAn example of a DPoP proof\n\n```\n{\n  \"typ\":\"dpop+jwt\",\n  \"alg\":\"ES256\",\n  \"jwk\": {\n    \"kty\":\"EC\",\n    \"x\":\"l8tFrhx-34tV3hRICRDY9zCkDlpBhF42UQUfWVAWBFs\",\n    \"y\":\"9VE4jf_Ok_o64zbTTlcuNJajHmt6v9TDVrU0CdvGRDA\",\n    \"crv\":\"P-256\"\n  }\n}\n.\n{\n  \"jti\":\"-BwC3ESc6acc2lTc\",\n  \"htm\":\"POST\",\n  \"htu\":\"https://server.example.com/token\",\n  **\"htcd\": \"sha-256=:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=:\",**\n  \"iat\":1562262616\n}\n```\n\nNote the new `htcd` JWT claim where the value is the value of the Content-Digest HTTP header.\n\nThe main advantage I can see to this proposal is that integrity is provided via DPoP without the need for an additional signature over the HTTP message content.\n\nAlternative proposals could involve\n1. Providing a seperate signature over the HTTP message using HTTP message signatures - this requires two signatures in the HTTP message\n2. Providing a seperate signature over the HTTP message using JWS on the request body - awkward if the request body isn't JSON and also suffers from two signatures in the HTTP message\n",
+          "closed_at": "2026-05-26T06:20:56Z",
+          "comments": 5,
+          "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/comments",
+          "created_at": "2025-11-13T04:36:27Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/events",
+          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168",
+          "id": 3619389013,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [
+            {
+              "color": "D76CC5",
+              "default": false,
+              "description": "",
+              "id": 5987774151,
+              "name": "pending-close",
+              "node_id": "LA_kwDOJaEkaM8AAAABZOYuxw",
+              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/labels/pending-close"
+            },
+            {
+              "color": "aaaaaa",
+              "default": false,
+              "description": null,
+              "id": 10861428255,
+              "name": "out-of-scope",
+              "node_id": "LA_kwDOJaEkaM8AAAACh2Q-Hw",
+              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/labels/out-of-scope"
+            }
+          ],
+          "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJaEkaM7Xu35V",
+          "number": 168,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 2,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 2,
+            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+          "state": "closed",
+          "state_reason": "completed",
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/timeline",
+          "title": "Integrity protecting HTTP requests using DPoP and Client Attestations",
+          "type": null,
+          "updated_at": "2026-05-26T14:25:13Z",
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/15972525?v=4",
+            "events_url": "https://api.github.com/users/tplooker/events{/privacy}",
+            "followers_url": "https://api.github.com/users/tplooker/followers",
+            "following_url": "https://api.github.com/users/tplooker/following{/other_user}",
+            "gists_url": "https://api.github.com/users/tplooker/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/tplooker",
+            "id": 15972525,
+            "login": "tplooker",
+            "node_id": "MDQ6VXNlcjE1OTcyNTI1",
+            "organizations_url": "https://api.github.com/users/tplooker/orgs",
+            "received_events_url": "https://api.github.com/users/tplooker/received_events",
+            "repos_url": "https://api.github.com/users/tplooker/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/tplooker/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/tplooker/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/tplooker",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 631317608,
+        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/154256?",
+        "display_login": "Ocramius",
+        "gravatar_id": "",
+        "id": 154256,
+        "login": "Ocramius",
+        "url": "https://api.github.com/users/Ocramius"
+      },
+      "created_at": "2026-05-26T14:01:08Z",
+      "id": "9908891907",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "@paulbastian just a data point, but the entire reason for this RFC being relevant to something like my use-case (adoption and inter-communication of devices that each provide some OIDC endponts), was #187, which led me here.\n\nIf the entire RFC is based on HTTPS being available, that kinda makes it hard to use within LAN environments., while digest would make this more feasible.",
+          "created_at": "2026-05-26T14:01:08Z",
+          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168#issuecomment-4544775704",
+          "id": 4544775704,
+          "issue_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168",
+          "node_id": "IC_kwDOJaEkaM8AAAABDuPGGA",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/comments/4544775704/reactions"
+          },
+          "updated_at": "2026-05-26T14:01:08Z",
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/comments/4544775704",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/154256?v=4",
+            "events_url": "https://api.github.com/users/Ocramius/events{/privacy}",
+            "followers_url": "https://api.github.com/users/Ocramius/followers",
+            "following_url": "https://api.github.com/users/Ocramius/following{/other_user}",
+            "gists_url": "https://api.github.com/users/Ocramius/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/Ocramius",
+            "id": 154256,
+            "login": "Ocramius",
+            "node_id": "MDQ6VXNlcjE1NDI1Ng==",
+            "organizations_url": "https://api.github.com/users/Ocramius/orgs",
+            "received_events_url": "https://api.github.com/users/Ocramius/received_events",
+            "repos_url": "https://api.github.com/users/Ocramius/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/Ocramius/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/Ocramius/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/Ocramius",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "Note - I'm unsure of the best place to discuss this concept but I'm starting the conversation here, due to its potential relationship to this draft.\n\nDPoP as defined in RFC9449 provides a mechanism for sender-constraining tokens issued in OAuth 2.0. By design however the mechanism for sender-constraining of tokens isn't intended to provide wider integrity guarantees over the HTTP message upon which a DPoP proof is attached to. The same problem exists for client attestations.\n\nWe've now encountered situations where DPoP (and potentially Client attestations) are (or going to be) used and integrity over the request body of the HTTP message is also desired. This leaves implementations with a couple of possible choices\n\n1. To not have integrity over the request body (beyond what TLS already provides) - This is a difficult argument to make in some of the proposed applications where TLS isn't sufficiently trusted to provide the required integrity\n2. To define a seperate mechanism to provide integrity over the request body seperate from DPoP or Client attestations\n3. To devise a mechanism whereby a DPoP proof or Client Attestation PoP could also provide integrity over the request body\n\nThe remainder of this issue focuses on discussing a proposal for option 3.\n\nHTTP defines a specific header called [Content-Digest](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Digest) which provides a hash/digest over the HTTP message content. In essence, if the value of this header were included inside a DPoP proof / Client Attestation PoP, integrity over the HTTP message content could verified.\n\nAn example of a DPoP proof\n\n```\n{\n  \"typ\":\"dpop+jwt\",\n  \"alg\":\"ES256\",\n  \"jwk\": {\n    \"kty\":\"EC\",\n    \"x\":\"l8tFrhx-34tV3hRICRDY9zCkDlpBhF42UQUfWVAWBFs\",\n    \"y\":\"9VE4jf_Ok_o64zbTTlcuNJajHmt6v9TDVrU0CdvGRDA\",\n    \"crv\":\"P-256\"\n  }\n}\n.\n{\n  \"jti\":\"-BwC3ESc6acc2lTc\",\n  \"htm\":\"POST\",\n  \"htu\":\"https://server.example.com/token\",\n  **\"htcd\": \"sha-256=:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=:\",**\n  \"iat\":1562262616\n}\n```\n\nNote the new `htcd` JWT claim where the value is the value of the Content-Digest HTTP header.\n\nThe main advantage I can see to this proposal is that integrity is provided via DPoP without the need for an additional signature over the HTTP message content.\n\nAlternative proposals could involve\n1. Providing a seperate signature over the HTTP message using HTTP message signatures - this requires two signatures in the HTTP message\n2. Providing a seperate signature over the HTTP message using JWS on the request body - awkward if the request body isn't JSON and also suffers from two signatures in the HTTP message\n",
+          "closed_at": "2026-05-26T06:20:56Z",
+          "comments": 5,
+          "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/comments",
+          "created_at": "2025-11-13T04:36:27Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/events",
+          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168",
+          "id": 3619389013,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [
+            {
+              "color": "D76CC5",
+              "default": false,
+              "description": "",
+              "id": 5987774151,
+              "name": "pending-close",
+              "node_id": "LA_kwDOJaEkaM8AAAABZOYuxw",
+              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/labels/pending-close"
+            },
+            {
+              "color": "aaaaaa",
+              "default": false,
+              "description": null,
+              "id": 10861428255,
+              "name": "out-of-scope",
+              "node_id": "LA_kwDOJaEkaM8AAAACh2Q-Hw",
+              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/labels/out-of-scope"
+            }
+          ],
+          "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJaEkaM7Xu35V",
+          "number": 168,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 2,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 2,
+            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+          "state": "closed",
+          "state_reason": "completed",
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/timeline",
+          "title": "Integrity protecting HTTP requests using DPoP and Client Attestations",
+          "type": null,
+          "updated_at": "2026-05-26T14:25:13Z",
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/15972525?v=4",
+            "events_url": "https://api.github.com/users/tplooker/events{/privacy}",
+            "followers_url": "https://api.github.com/users/tplooker/followers",
+            "following_url": "https://api.github.com/users/tplooker/following{/other_user}",
+            "gists_url": "https://api.github.com/users/tplooker/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/tplooker",
+            "id": 15972525,
+            "login": "tplooker",
+            "node_id": "MDQ6VXNlcjE1OTcyNTI1",
+            "organizations_url": "https://api.github.com/users/tplooker/orgs",
+            "received_events_url": "https://api.github.com/users/tplooker/received_events",
+            "repos_url": "https://api.github.com/users/tplooker/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/tplooker/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/tplooker/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/tplooker",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 631317608,
+        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/5172575?",
+        "display_login": "ashayraut",
+        "gravatar_id": "",
+        "id": 5172575,
+        "login": "ashayraut",
+        "url": "https://api.github.com/users/ashayraut"
+      },
+      "created_at": "2026-05-26T13:51:00Z",
+      "id": "9908417728",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "@embesozzi you mentioned actx, so I'm curious as I have https://www.ietf.org/archive/id/draft-araut-oauth-transaction-tokens-for-agents-02.html which is attempt to standardize agentic context.\n\nIn my draft's 01 version, I had RAR included in it but got feedback that its not necessarily agentic context so removed it. Here's v01 https://www.ietf.org/archive/id/draft-araut-oauth-transaction-tokens-for-agents-01.html.\n\nIn general, regarding Txn Tokens, I believe the format is open if you really want to add authorization details in it but I also think that details in RAR are usually for Authorization Server and for one hop in service graph. Passing RAR details across the entire call chain of workloads could mean that it will start to get used in manner that was not intended and now the details that were meant to be shared between two services (workloads) is now suddenly available to many. This changes 'governance' aspect around what does in RAR.. but I ack that some details from RAR could be added in Txn token by Txn Token issuer if need be.",
+          "created_at": "2026-05-26T13:51:00Z",
+          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/351#issuecomment-4544676068",
+          "id": 4544676068,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351",
+          "node_id": "IC_kwDOJt_WwM8AAAABDuJA5A",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/comments/4544676068/reactions"
+          },
+          "updated_at": "2026-05-26T13:51:00Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/comments/4544676068",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/5172575?v=4",
+            "events_url": "https://api.github.com/users/ashayraut/events{/privacy}",
+            "followers_url": "https://api.github.com/users/ashayraut/followers",
+            "following_url": "https://api.github.com/users/ashayraut/following{/other_user}",
+            "gists_url": "https://api.github.com/users/ashayraut/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/ashayraut",
+            "id": 5172575,
+            "login": "ashayraut",
+            "node_id": "MDQ6VXNlcjUxNzI1NzU=",
+            "organizations_url": "https://api.github.com/users/ashayraut/orgs",
+            "received_events_url": "https://api.github.com/users/ashayraut/received_events",
+            "repos_url": "https://api.github.com/users/ashayraut/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/ashayraut/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/ashayraut/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/ashayraut",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "Thanks for writing up ID on Transaction Tokens. \n\n1. I was hoping to find a reference to [RFC 9396](https://datatracker.ietf.org/doc/html/rfc9396) Rich Authorization Requests somewhere, especially while discussing Authorization Context. \n\n2. Also since RFC 9396's `authorization_details` is already registered in OAuth [Parameters registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml) perhaps it could be used here as well to provide value for `request_context?` It is already approved for token request and token response.\n\n3. Can `authorization_details` be used here as a [claim](https://datatracker.ietf.org/doc/html/rfc9396#name-oauth-parameters-registrati) instead of tctx, inside tctx or in addition to tact?  \n\nFor #2 and #3, I would not know if reuse is prohibited, it was ignored or it was discussed and a decision was taken not to reuse.\n\nSorry in advance if these issues are already discussed and resolved. \n\nthanks,\nsanjay",
+          "closed_at": null,
+          "comments": 3,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/comments",
+          "created_at": "2026-05-15T17:23:33Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/events",
+          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/351",
+          "id": 4455724316,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJt_WwM8AAAABCZT1HA",
+          "number": 351,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/timeline",
+          "title": "Using RFC 9396's authorization_details as a claim and for request_context",
+          "type": null,
+          "updated_at": "2026-05-26T13:51:00Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/21368261?v=4",
+            "events_url": "https://api.github.com/users/sdatspun2/events{/privacy}",
+            "followers_url": "https://api.github.com/users/sdatspun2/followers",
+            "following_url": "https://api.github.com/users/sdatspun2/following{/other_user}",
+            "gists_url": "https://api.github.com/users/sdatspun2/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/sdatspun2",
+            "id": 21368261,
+            "login": "sdatspun2",
+            "node_id": "MDQ6VXNlcjIxMzY4MjYx",
+            "organizations_url": "https://api.github.com/users/sdatspun2/orgs",
+            "received_events_url": "https://api.github.com/users/sdatspun2/received_events",
+            "repos_url": "https://api.github.com/users/sdatspun2/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/sdatspun2/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/sdatspun2/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/sdatspun2",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 652203712,
+        "name": "oauth-wg/oauth-transaction-tokens",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/25515681?",
+        "display_login": "embesozzi",
+        "gravatar_id": "",
+        "id": 25515681,
+        "login": "embesozzi",
+        "url": "https://api.github.com/users/embesozzi"
+      },
+      "created_at": "2026-05-26T13:35:45Z",
+      "id": "9907741773",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "Just checking if there’s a formal definition for mapping the authorization_details claim within tts?\nSo far, I’m mapping this claim at the top level of the JWT.\n\nFor certain rar types, I parse and place them in the actx claim (agent context) for specific use cases, but that’s specific to my implementation and outside the scope of these specs.",
+          "created_at": "2026-05-26T13:35:45Z",
+          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/351#issuecomment-4544533033",
+          "id": 4544533033,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351",
+          "node_id": "IC_kwDOJt_WwM8AAAABDuASKQ",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/comments/4544533033/reactions"
+          },
+          "updated_at": "2026-05-26T13:35:45Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/comments/4544533033",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/25515681?v=4",
+            "events_url": "https://api.github.com/users/embesozzi/events{/privacy}",
+            "followers_url": "https://api.github.com/users/embesozzi/followers",
+            "following_url": "https://api.github.com/users/embesozzi/following{/other_user}",
+            "gists_url": "https://api.github.com/users/embesozzi/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/embesozzi",
+            "id": 25515681,
+            "login": "embesozzi",
+            "node_id": "MDQ6VXNlcjI1NTE1Njgx",
+            "organizations_url": "https://api.github.com/users/embesozzi/orgs",
+            "received_events_url": "https://api.github.com/users/embesozzi/received_events",
+            "repos_url": "https://api.github.com/users/embesozzi/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/embesozzi/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/embesozzi/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/embesozzi",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "Thanks for writing up ID on Transaction Tokens. \n\n1. I was hoping to find a reference to [RFC 9396](https://datatracker.ietf.org/doc/html/rfc9396) Rich Authorization Requests somewhere, especially while discussing Authorization Context. \n\n2. Also since RFC 9396's `authorization_details` is already registered in OAuth [Parameters registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml) perhaps it could be used here as well to provide value for `request_context?` It is already approved for token request and token response.\n\n3. Can `authorization_details` be used here as a [claim](https://datatracker.ietf.org/doc/html/rfc9396#name-oauth-parameters-registrati) instead of tctx, inside tctx or in addition to tact?  \n\nFor #2 and #3, I would not know if reuse is prohibited, it was ignored or it was discussed and a decision was taken not to reuse.\n\nSorry in advance if these issues are already discussed and resolved. \n\nthanks,\nsanjay",
+          "closed_at": null,
+          "comments": 3,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/comments",
+          "created_at": "2026-05-15T17:23:33Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/events",
+          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/351",
+          "id": 4455724316,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJt_WwM8AAAABCZT1HA",
+          "number": 351,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/timeline",
+          "title": "Using RFC 9396's authorization_details as a claim and for request_context",
+          "type": null,
+          "updated_at": "2026-05-26T13:51:00Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/21368261?v=4",
+            "events_url": "https://api.github.com/users/sdatspun2/events{/privacy}",
+            "followers_url": "https://api.github.com/users/sdatspun2/followers",
+            "following_url": "https://api.github.com/users/sdatspun2/following{/other_user}",
+            "gists_url": "https://api.github.com/users/sdatspun2/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/sdatspun2",
+            "id": 21368261,
+            "login": "sdatspun2",
+            "node_id": "MDQ6VXNlcjIxMzY4MjYx",
+            "organizations_url": "https://api.github.com/users/sdatspun2/orgs",
+            "received_events_url": "https://api.github.com/users/sdatspun2/received_events",
+            "repos_url": "https://api.github.com/users/sdatspun2/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/sdatspun2/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/sdatspun2/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/sdatspun2",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 652203712,
+        "name": "oauth-wg/oauth-transaction-tokens",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
         "avatar_url": "https://avatars.githubusercontent.com/u/16320000?",
         "display_login": "paulbastian",
         "gravatar_id": "",
@@ -51051,7 +51858,7 @@
           "assignees": [],
           "body": "Note - I'm unsure of the best place to discuss this concept but I'm starting the conversation here, due to its potential relationship to this draft.\n\nDPoP as defined in RFC9449 provides a mechanism for sender-constraining tokens issued in OAuth 2.0. By design however the mechanism for sender-constraining of tokens isn't intended to provide wider integrity guarantees over the HTTP message upon which a DPoP proof is attached to. The same problem exists for client attestations.\n\nWe've now encountered situations where DPoP (and potentially Client attestations) are (or going to be) used and integrity over the request body of the HTTP message is also desired. This leaves implementations with a couple of possible choices\n\n1. To not have integrity over the request body (beyond what TLS already provides) - This is a difficult argument to make in some of the proposed applications where TLS isn't sufficiently trusted to provide the required integrity\n2. To define a seperate mechanism to provide integrity over the request body seperate from DPoP or Client attestations\n3. To devise a mechanism whereby a DPoP proof or Client Attestation PoP could also provide integrity over the request body\n\nThe remainder of this issue focuses on discussing a proposal for option 3.\n\nHTTP defines a specific header called [Content-Digest](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Digest) which provides a hash/digest over the HTTP message content. In essence, if the value of this header were included inside a DPoP proof / Client Attestation PoP, integrity over the HTTP message content could verified.\n\nAn example of a DPoP proof\n\n```\n{\n  \"typ\":\"dpop+jwt\",\n  \"alg\":\"ES256\",\n  \"jwk\": {\n    \"kty\":\"EC\",\n    \"x\":\"l8tFrhx-34tV3hRICRDY9zCkDlpBhF42UQUfWVAWBFs\",\n    \"y\":\"9VE4jf_Ok_o64zbTTlcuNJajHmt6v9TDVrU0CdvGRDA\",\n    \"crv\":\"P-256\"\n  }\n}\n.\n{\n  \"jti\":\"-BwC3ESc6acc2lTc\",\n  \"htm\":\"POST\",\n  \"htu\":\"https://server.example.com/token\",\n  **\"htcd\": \"sha-256=:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=:\",**\n  \"iat\":1562262616\n}\n```\n\nNote the new `htcd` JWT claim where the value is the value of the Content-Digest HTTP header.\n\nThe main advantage I can see to this proposal is that integrity is provided via DPoP without the need for an additional signature over the HTTP message content.\n\nAlternative proposals could involve\n1. Providing a seperate signature over the HTTP message using HTTP message signatures - this requires two signatures in the HTTP message\n2. Providing a seperate signature over the HTTP message using JWS on the request body - awkward if the request body isn't JSON and also suffers from two signatures in the HTTP message\n",
           "closed_at": "2026-05-26T06:20:56Z",
-          "comments": 3,
+          "comments": 5,
           "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/comments",
           "created_at": "2025-11-13T04:36:27Z",
           "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/events",
@@ -51114,7 +51921,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/timeline",
           "title": "Integrity protecting HTTP requests using DPoP and Client Attestations",
           "type": null,
-          "updated_at": "2026-05-26T06:20:56Z",
+          "updated_at": "2026-05-26T14:25:13Z",
           "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/15972525?v=4",
@@ -51218,7 +52025,7 @@
           "assignees": [],
           "body": "Note - I'm unsure of the best place to discuss this concept but I'm starting the conversation here, due to its potential relationship to this draft.\n\nDPoP as defined in RFC9449 provides a mechanism for sender-constraining tokens issued in OAuth 2.0. By design however the mechanism for sender-constraining of tokens isn't intended to provide wider integrity guarantees over the HTTP message upon which a DPoP proof is attached to. The same problem exists for client attestations.\n\nWe've now encountered situations where DPoP (and potentially Client attestations) are (or going to be) used and integrity over the request body of the HTTP message is also desired. This leaves implementations with a couple of possible choices\n\n1. To not have integrity over the request body (beyond what TLS already provides) - This is a difficult argument to make in some of the proposed applications where TLS isn't sufficiently trusted to provide the required integrity\n2. To define a seperate mechanism to provide integrity over the request body seperate from DPoP or Client attestations\n3. To devise a mechanism whereby a DPoP proof or Client Attestation PoP could also provide integrity over the request body\n\nThe remainder of this issue focuses on discussing a proposal for option 3.\n\nHTTP defines a specific header called [Content-Digest](https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Content-Digest) which provides a hash/digest over the HTTP message content. In essence, if the value of this header were included inside a DPoP proof / Client Attestation PoP, integrity over the HTTP message content could verified.\n\nAn example of a DPoP proof\n\n```\n{\n  \"typ\":\"dpop+jwt\",\n  \"alg\":\"ES256\",\n  \"jwk\": {\n    \"kty\":\"EC\",\n    \"x\":\"l8tFrhx-34tV3hRICRDY9zCkDlpBhF42UQUfWVAWBFs\",\n    \"y\":\"9VE4jf_Ok_o64zbTTlcuNJajHmt6v9TDVrU0CdvGRDA\",\n    \"crv\":\"P-256\"\n  }\n}\n.\n{\n  \"jti\":\"-BwC3ESc6acc2lTc\",\n  \"htm\":\"POST\",\n  \"htu\":\"https://server.example.com/token\",\n  **\"htcd\": \"sha-256=:47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=:\",**\n  \"iat\":1562262616\n}\n```\n\nNote the new `htcd` JWT claim where the value is the value of the Content-Digest HTTP header.\n\nThe main advantage I can see to this proposal is that integrity is provided via DPoP without the need for an additional signature over the HTTP message content.\n\nAlternative proposals could involve\n1. Providing a seperate signature over the HTTP message using HTTP message signatures - this requires two signatures in the HTTP message\n2. Providing a seperate signature over the HTTP message using JWS on the request body - awkward if the request body isn't JSON and also suffers from two signatures in the HTTP message\n",
           "closed_at": "2026-05-26T06:20:56Z",
-          "comments": 3,
+          "comments": 5,
           "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/comments",
           "created_at": "2025-11-13T04:36:27Z",
           "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/events",
@@ -51281,7 +52088,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168/timeline",
           "title": "Integrity protecting HTTP requests using DPoP and Client Attestations",
           "type": null,
-          "updated_at": "2026-05-26T06:20:56Z",
+          "updated_at": "2026-05-26T14:25:13Z",
           "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/168",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/15972525?v=4",
@@ -54740,38 +55547,6 @@
     },
     {
       "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/113001?",
-        "display_login": "aaronpk",
-        "gravatar_id": "",
-        "id": 113001,
-        "login": "aaronpk",
-        "url": "https://api.github.com/users/aaronpk"
-      },
-      "created_at": "2026-05-21T20:58:55Z",
-      "id": "12198678420",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "full_ref": "refs/heads/xaa-clarify",
-        "pusher_type": "user",
-        "ref": "xaa-clarify",
-        "ref_type": "branch"
-      },
-      "public": true,
-      "repo": {
-        "id": 721316858,
-        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-      },
-      "type": "DeleteEvent"
-    },
-    {
-      "actor": {
         "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
         "display_login": "github-actions",
         "gravatar_id": "",
@@ -54802,6 +55577,38 @@
         "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
       },
       "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/113001?",
+        "display_login": "aaronpk",
+        "gravatar_id": "",
+        "id": 113001,
+        "login": "aaronpk",
+        "url": "https://api.github.com/users/aaronpk"
+      },
+      "created_at": "2026-05-21T20:58:55Z",
+      "id": "12198678420",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "full_ref": "refs/heads/xaa-clarify",
+        "pusher_type": "user",
+        "ref": "xaa-clarify",
+        "ref_type": "branch"
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "DeleteEvent"
     },
     {
       "actor": {
@@ -57099,7 +57906,7 @@
           "assignees": [],
           "body": "For example, if `client_id=https://example.com/oauth/client_id.json`, the AS would `GET https://example.com/oauth/client_id.json?iss=https://example-as.com`.\n\nThis allows the client to do a few things:\n\nProgressive rollouts of changes to CIMD, so that blast radius is limited to only certain AS. Making a global change to a client id is bad practice from a production safety point of view, and \"random percentage\" rollouts may not work if the AS queries the CIMD more than once and gets two different documents.  Of course, `iss` isn't a perfect solution here, but it's easy and better than nothing.\n\nThe client could also return AS-specific metadata (as long as it's not secret because `iss` is unvalidated). This could help address certain incompatibilities that may arise in practice where the same values are rejected by some AS but not by others.",
           "closed_at": null,
-          "comments": 12,
+          "comments": 13,
           "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/comments",
           "created_at": "2026-05-01T00:45:14Z",
           "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/events",
@@ -57143,7 +57950,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/timeline",
           "title": "Can AS optionally provide `iss` when fetching client_id?",
           "type": null,
-          "updated_at": "2026-05-20T20:17:02Z",
+          "updated_at": "2026-05-27T03:11:46Z",
           "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/1567051?v=4",
@@ -57395,330 +58202,6 @@
           "id": 3586141329,
           "number": 91,
           "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/pulls/91"
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 721316858,
-        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-      },
-      "type": "PullRequestEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/113001?",
-        "display_login": "aaronpk",
-        "gravatar_id": "",
-        "id": 113001,
-        "login": "aaronpk",
-        "url": "https://api.github.com/users/aaronpk"
-      },
-      "created_at": "2026-05-20T20:01:26Z",
-      "id": "12142654627",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "f7229f1d6792d6d953ba5acc1fa5387066d92438",
-        "head": "c5b6adc7ff12206c8009346a1494551b392410d2",
-        "push_id": 34433099023,
-        "ref": "refs/heads/main",
-        "repository_id": 721316858
-      },
-      "public": true,
-      "repo": {
-        "id": 721316858,
-        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-05-20T20:00:12Z",
-      "id": "12142596591",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "4d8d6ae255676e683b1fb83195aa7510a50d1883",
-        "head": "8137342657f15f07c8cc477f5446d23e3ce62554",
-        "push_id": 34433040869,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 721316858
-      },
-      "public": true,
-      "repo": {
-        "id": 721316858,
-        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/113001?",
-        "display_login": "aaronpk",
-        "gravatar_id": "",
-        "id": 113001,
-        "login": "aaronpk",
-        "url": "https://api.github.com/users/aaronpk"
-      },
-      "created_at": "2026-05-20T19:59:52Z",
-      "id": "9708077633",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "closed",
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "When a Resource Authorization Server is configured to the enterprise IdP with SAML for SSO, the values currently in the ID-JAG are not able to be mapped to their SAML equivalents.\n\nFor example, the Resource AS might recognize a SAML issuer like `https://example.com/exk33qwjcwDda7luK346` and receive SAML NameIds that are a username or email address. An ID-JAG will contain an OIDC issuer URL like `https://tenant123.example.com/` and subject identifiers that are a random string. (there is no guarantee the SAML issuer and OIDC issuer domain names have anything in common.)\n\nWhen a Resource AS is configured for SAML SSO, what are the options for how it can map the ID-JAG values to the SAML SSO connection? As far as I can tell there are a couple options for the issuer:\n\n* No change to the ID-JAG, require that the customer manually add the OIDC issuer URL into their SAML SSO configuration. This provides the AS the association between the SAML issuer and OIDC issuer.\n* Include the SAML issuer in the ID-JAG somewhere.\n\nFor the user ID question, the options would be:\n\n* Send whatever value the SAML NameId would have been in the ID-JAG `sub` (this is currently allowed according to [section 3.1](https://www.ietf.org/archive/id/draft-ietf-oauth-identity-assertion-authz-grant-03.html#section-3.1) because it would be \"the same as the subject identifier used in an Identity Assertion for the Resource Authorization Server as a Relying Party for Single Sign-On (SSO)\")\n* Send the SAML NameId as a new claim in the ID-JAG\n\nIf we go with adding new claims to the ID-JAG, the question becomes whether these should be SAML-specific claims or something generic, e.g.\n\n* `saml_issuer` and `saml_nameid`\n* `alt_issuer` and `alt_sub`\n\n### Minimal Changed Example ID-JAG\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"user@idp.example\",                  /* assuming email addresses were sent as SAML NameId */\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n### Example ID-JAG with New Claims\n\n```\n{\n  \"typ\": \"oauth-id-jag+jwt\"\n}\n.\n{\n  \"jti\": \"9e43f81b64a33f20116179\",\n  \"iss\": \"https://acme.idp.example\",\n  \"sub\": \"U019488227\",\n  \"alt_iss\": \"https://idp.example/exk33qwjcwDda7luK346\",\n  \"alt_sub\": \"user@idp.example\",\n  \"aud\": \"https://acme.chat.example/\",\n  \"client_id\": \"f53f191f9311af35\",\n  \"exp\": 1311281970,\n  \"iat\": 1311280970,\n  \"resource\": \"https://acme.chat.example/api\",\n  \"scope\": \"chat.read chat.history\"\n}\n.\nsignature\n```\n\n",
-          "closed_at": "2026-05-20T19:59:52Z",
-          "comments": 9,
-          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/comments",
-          "created_at": "2026-05-13T18:48:08Z",
-          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/events",
-          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
-          "id": 4440384214,
-          "issue_dependencies_summary": {
-            "blocked_by": 0,
-            "blocking": 0,
-            "total_blocked_by": 0,
-            "total_blocking": 0
-          },
-          "issue_field_values": [],
-          "labels": [],
-          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/labels{/name}",
-          "locked": false,
-          "milestone": {
-            "closed_at": null,
-            "closed_issues": 14,
-            "created_at": "2026-04-22T22:10:03Z",
-            "creator": {
-              "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
-              "events_url": "https://api.github.com/users/aaronpk/events{/privacy}",
-              "followers_url": "https://api.github.com/users/aaronpk/followers",
-              "following_url": "https://api.github.com/users/aaronpk/following{/other_user}",
-              "gists_url": "https://api.github.com/users/aaronpk/gists{/gist_id}",
-              "gravatar_id": "",
-              "html_url": "https://github.com/aaronpk",
-              "id": 113001,
-              "login": "aaronpk",
-              "node_id": "MDQ6VXNlcjExMzAwMQ==",
-              "organizations_url": "https://api.github.com/users/aaronpk/orgs",
-              "received_events_url": "https://api.github.com/users/aaronpk/received_events",
-              "repos_url": "https://api.github.com/users/aaronpk/repos",
-              "site_admin": false,
-              "starred_url": "https://api.github.com/users/aaronpk/starred{/owner}{/repo}",
-              "subscriptions_url": "https://api.github.com/users/aaronpk/subscriptions",
-              "type": "User",
-              "url": "https://api.github.com/users/aaronpk",
-              "user_view_type": "public"
-            },
-            "description": "",
-            "due_on": "2026-07-06T00:00:00Z",
-            "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/milestone/3",
-            "id": 15650197,
-            "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/milestones/3/labels",
-            "node_id": "MI_kwDOKv5r-s4A7s2V",
-            "number": 3,
-            "open_issues": 0,
-            "state": "open",
-            "title": "IETF 126",
-            "updated_at": "2026-05-21T21:49:35Z",
-            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/milestones/3"
-          },
-          "node_id": "I_kwDOKv5r-s8AAAABCKri1g",
-          "number": 94,
-          "performed_via_github_app": null,
-          "pinned_comment": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
-          "state": "closed",
-          "state_reason": "completed",
-          "sub_issues_summary": {
-            "completed": 0,
-            "percent_completed": 0,
-            "total": 0
-          },
-          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94/timeline",
-          "title": "How can a Resource Authorization Server recognize an ID-JAG when it is configured with SAML SSO",
-          "type": null,
-          "updated_at": "2026-05-21T21:49:35Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/94",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
-            "events_url": "https://api.github.com/users/aaronpk/events{/privacy}",
-            "followers_url": "https://api.github.com/users/aaronpk/followers",
-            "following_url": "https://api.github.com/users/aaronpk/following{/other_user}",
-            "gists_url": "https://api.github.com/users/aaronpk/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/aaronpk",
-            "id": 113001,
-            "login": "aaronpk",
-            "node_id": "MDQ6VXNlcjExMzAwMQ==",
-            "organizations_url": "https://api.github.com/users/aaronpk/orgs",
-            "received_events_url": "https://api.github.com/users/aaronpk/received_events",
-            "repos_url": "https://api.github.com/users/aaronpk/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/aaronpk/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/aaronpk/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/aaronpk",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 721316858,
-        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-      },
-      "type": "IssuesEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/113001?",
-        "display_login": "aaronpk",
-        "gravatar_id": "",
-        "id": 113001,
-        "login": "aaronpk",
-        "url": "https://api.github.com/users/aaronpk"
-      },
-      "created_at": "2026-05-20T19:59:35Z",
-      "id": "12142569403",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "full_ref": "refs/heads/saml-nameid",
-        "pusher_type": "user",
-        "ref": "saml-nameid",
-        "ref_type": "branch"
-      },
-      "public": true,
-      "repo": {
-        "id": 721316858,
-        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-      },
-      "type": "DeleteEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/113001?",
-        "display_login": "aaronpk",
-        "gravatar_id": "",
-        "id": 113001,
-        "login": "aaronpk",
-        "url": "https://api.github.com/users/aaronpk"
-      },
-      "created_at": "2026-05-20T19:59:35Z",
-      "id": "12142569033",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "4b22498ea3c10122efd79278f845d6ba35e63acc",
-        "head": "f7229f1d6792d6d953ba5acc1fa5387066d92438",
-        "push_id": 34433013360,
-        "ref": "refs/heads/main",
-        "repository_id": 721316858
-      },
-      "public": true,
-      "repo": {
-        "id": 721316858,
-        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1944352?",
-        "display_login": "mcguinness",
-        "gravatar_id": "",
-        "id": 1944352,
-        "login": "mcguinness",
-        "url": "https://api.github.com/users/mcguinness"
-      },
-      "created_at": "2026-05-20T19:59:30Z",
-      "id": "9708065584",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "merged",
-        "number": 95,
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 721316858,
-              "name": "oauth-identity-assertion-authz-grant",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-            },
-            "sha": "4b22498ea3c10122efd79278f845d6ba35e63acc"
-          },
-          "head": {
-            "ref": "saml-nameid",
-            "repo": {
-              "id": 721316858,
-              "name": "oauth-identity-assertion-authz-grant",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-            },
-            "sha": "879f086c44aa1189ec91a97599931baff0b158f0"
-          },
-          "id": 3711779528,
-          "number": 95,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/pulls/95"
         }
       },
       "public": true,
@@ -96101,7 +96584,7 @@
       "releases_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/releases{/id}",
       "size": 5045,
       "ssh_url": "git@github.com:oauth-wg/oauth-v2-1.git",
-      "stargazers_count": 91,
+      "stargazers_count": 92,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/stargazers",
       "statuses_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/statuses/{sha}",
       "subscribers_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/subscribers",
@@ -96114,11 +96597,11 @@
         "oauth2"
       ],
       "trees_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/git/trees{/sha}",
-      "updated_at": "2026-05-05T06:02:33Z",
+      "updated_at": "2026-05-26T16:15:20Z",
       "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1",
       "visibility": "public",
-      "watchers": 91,
-      "watchers_count": 91,
+      "watchers": 92,
+      "watchers_count": 92,
       "web_commit_signoff_required": false
     },
     {
@@ -97996,5 +98479,5 @@
       "web_commit_signoff_required": false
     }
   ],
-  "snapshot_date": "2026-05-26"
+  "snapshot_date": "2026-05-27"
 }
