@@ -1,8 +1,94 @@
 {
-  "collected_at": "2026-05-27T10:02:47+00:00",
+  "collected_at": "2026-05-28T10:12:19+00:00",
   "issues": {
     "error": null,
     "items": [
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "COLLABORATOR",
+        "body": "# Problem\n\nSection 2.1 of the draft currently says:\n\n> It is RECOMMENDED that the ID-JAG contain an `email` and/or `aud_sub` claim. The Resource Authorization Server MAY use these claims for account resolution or just-in-time (JIT) account creation... Additional Resource Authorization Server specific identity claims MAY be needed for account resolution or JIT account creation.\n\nThis language acknowledges the JIT problem but does not solve it. There is no interoperable mechanism for a Resource Authorization Server (RAS) to signal which identity claims it requires, or for a Client to convey that signal back to the IdP so it can include them in the ID-JAG. The result requires out-of-band coordination between every IdP/RAS pair, which undermines the composability goal of the spec.\n\n## Specific failure modes\n\n1. **What claims does the IdP put in the ID-JAG?** The spec provides a fixed optional set (`email`, `aud_sub`) but gives no mechanism for the RAS to express its requirements. IdPs must either over-include claims (privacy risk) or guess conservatively and leave JIT broken.\n\n2. **What claims does the RAS need to JIT?** RAS-specific claims (department, cost center, license tier, custom identifiers) may not be OIDC standard claims. Even for OIDC-defined claims, different RASes need different subsets. There is no way to express this per-RAS, per-deployment requirement today.\n\n3. **How does the IdP know to issue the right claims?** The IdP has no standardized signal from the Client about what the target RAS needs. The Client knows the RAS endpoint (from discovery) but cannot ask the IdP to tailor the ID-JAG for that RAS's JIT requirements.\n\n4. **The UserInfo dead end.** When the RAS receives the ID-JAG it has no Access Token and cannot reach back to the IdP's UserInfo endpoint or any other IdP-hosted endpoint to fetch additional claims. The ID-JAG exchange must succeed or fail on the claims already present in the token. This is not a fixable limitation; it is a structural constraint of the grant flow.\n\n# Proposed Solution\n\nStandardize exactly three things.\n\n## 1. Error code: `insufficient_identity_claims`\n\nIf the RAS determines that the identity assertion is cryptographically valid and the grant type is accepted, but the token does not contain sufficient identity claims to perform account resolution or JIT account creation, it SHOULD return an error response per RFC 6749 Section 5.2:\n\n```\nHTTP/1.1 400 Bad Request\nContent-Type: application/json\n\n{\n  \"error\": \"insufficient_identity_claims\",\n  \"error_description\": \"The identity assertion is missing required claims for account resolution.\"\n}\n```\n\nThe name follows the `insufficient_*` pattern established by RFC 9470 (`insufficient_user_authentication`). It signals \"valid but not enough\", distinguishing this condition from `invalid_grant`, which would indicate the token itself is rejected. \n\n## 2. Error response parameter: `required_claims`\n\nThe error response SHOULD include a `required_claims` parameter: a space-separated list of the claim names the RAS requires, following the same format as `scope` (RFC 6749 Section 3.3):\n\n```json\n{\n  \"error\": \"insufficient_identity_claims\",\n  \"error_description\": \"The identity assertion is missing required claims for account resolution.\",\n  \"required_claims\": \"email department employee_number\"\n}\n```\n\nSpace-separated is the right format here. Claim names are JSON member names and cannot contain spaces, so the delimiter is unambiguous. This is consistent with `scope` and avoids the framework-parsing ambiguity of a JSON array in a form-encoded body (cf. RFC 9396 `authorization_details`, which uses JSON because its values are structured objects; claim names are flat tokens and do not warrant that complexity).\n\n`required_claims` is intentionally defined as a flat list of names. Value constraints, type hints, and schema references are deferred pending real deployment experience.\n\n## 3. Token Exchange request extension parameter: `required_claims`\n\nA Client receiving an `insufficient_identity_claims` error MAY retry the Token Exchange request to the IdP Authorization Server, including the `required_claims` parameter with the value carried directly from the RAS error response:\n\n```\nPOST /oauth2/token\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=urn:ietf:params:oauth:grant-type:token-exchange\n&requested_token_type=urn:ietf:params:oauth:token-type:id-jag\n&subject_token=<id_token>\n&subject_token_type=urn:ietf:params:oauth:token-type:id_token\n&audience=https://api.example.com/\n&required_claims=email+department+employee_number\n```\n\nThe symmetric naming (`required_claims` in both the error response and the Token Exchange request) means the Client can pass the value through without transformation. \"Required\" reflects the RAS's perspective, which is authoritative: these claims are required for the flow to succeed. It does not obligate the IdP to provide all of them; the IdP SHOULD include the requested claims subject to its own policy (consent, availability, privacy controls), and MAY decline to include specific claims.\n\n## End-to-end flow\n\n```\nClient → IdP:    Token Exchange → ID-JAG (minimal claims)\nClient → RAS:    Token Exchange with ID-JAG\nRAS → Client:    400 insufficient_identity_claims\n                     required_claims=email department employee_number\nClient → IdP:    Token Exchange + required_claims=email department employee_number\nIdP → Client:    ID-JAG with additional claims included\nClient → RAS:    Token Exchange with enriched ID-JAG\nRAS → Client:    200 OK, access_token\n```\n\n# Editorial: relax `email` and `aud_sub` to plain OPTIONAL\n\nWith `required_claims` providing the negotiation mechanism, the RECOMMENDED status of `email` and `aud_sub` in Section 2.1 should be downgraded to OPTIONAL. These claims become examples of what a RAS might request rather than a standing recommendation that every IdP include them. The existing guidance language should be replaced with a pointer to the `required_claims` mechanism as the interoperable way to express and negotiate claim requirements, and an example end-to-end flow demonstrating the retry pattern.\n\n# Advanced use case: RAS Token Exchange to IdP\n\nFor deployments where the identity data needed cannot reasonably be pre-embedded in a signed token (because it is large, sensitive, or needs to be fresher than the ID-JAG allows), the RAS MAY perform its own Token Exchange: presenting the received ID-JAG as the subject token to the IdP's token endpoint and requesting an Access Token scoped to the IdP's identity APIs.\n\nThis covers the UserInfo-equivalent pattern without burdening the Client as intermediary, and without embedding what is effectively a profile API response inside the ID-JAG. It should be acknowledged in the spec as a valid deployment pattern with the IdP-side API contract left to a future profile. This keeps the core ID-JAG spec clean and avoids scope creep.\n\n# Optional / future: claim requirements discovery at the RAS\n\nTo allow IdPs to import a RAS's claim requirements at onboarding time rather than waiting for a runtime error, the RAS could advertise the claims it needs for JIT provisioning via its Authorization Server metadata (RFC 8414), using a new metadata parameter scoped to this profile (to avoid collision with base OAuth or other profiles).\n\nThis is an optimization for IdP onboarding UX, not a correctness requirement. The runtime `insufficient_identity_claims` negotiation works without it. Worth raising for debate; not a blocker for the core proposal.\n\n---\n\n# Questions for the group\n\n1. **Error name:** `insufficient_identity_claims` (cause, RFC 9470 pattern)  or alternative?\n2. **IdP acknowledgment:** Should the IdP be required to indicate in the ID-JAG which claims from `required_claims` it was able to include, or is the Client expected to inspect the resulting token before retrying at the RAS?\n3. **RAS-to-IdP Token Exchange:** Should the advanced pattern be noted in Security Considerations? The RAS acting as an OAuth client to the IdP has trust and SSRF implications worth calling out even if the pattern itself is out of scope.",
+        "closed_at": null,
+        "comments": 10,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83/comments",
+        "created_at": "2026-04-14T22:49:22Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83/events",
+        "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/83",
+        "id": 4265158667,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [
+          {
+            "color": "f7c144",
+            "default": false,
+            "description": "",
+            "id": 11019102466,
+            "name": "ietf-126",
+            "node_id": "LA_kwDOKv5r-s8AAAACkMopAg",
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/labels/ietf-126"
+          }
+        ],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOKv5r-s7-OSgL",
+        "number": 83,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 2,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 2,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83/timeline",
+        "title": "Interoperability gap: JIT provisioning and identity claim negotiation",
+        "type": null,
+        "updated_at": "2026-05-27T18:11:01Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
+          "events_url": "https://api.github.com/users/mcguinness/events{/privacy}",
+          "followers_url": "https://api.github.com/users/mcguinness/followers",
+          "following_url": "https://api.github.com/users/mcguinness/following{/other_user}",
+          "gists_url": "https://api.github.com/users/mcguinness/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/mcguinness",
+          "id": 1944352,
+          "login": "mcguinness",
+          "node_id": "MDQ6VXNlcjE5NDQzNTI=",
+          "organizations_url": "https://api.github.com/users/mcguinness/orgs",
+          "received_events_url": "https://api.github.com/users/mcguinness/received_events",
+          "repos_url": "https://api.github.com/users/mcguinness/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/mcguinness/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/mcguinness/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/mcguinness",
+          "user_view_type": "public"
+        }
+      },
       {
         "active_lock_reason": null,
         "assignee": null,
@@ -1504,92 +1590,6 @@
           "subscriptions_url": "https://api.github.com/users/anoopgarlapati/subscriptions",
           "type": "User",
           "url": "https://api.github.com/users/anoopgarlapati",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "COLLABORATOR",
-        "body": "# Problem\n\nSection 2.1 of the draft currently says:\n\n> It is RECOMMENDED that the ID-JAG contain an `email` and/or `aud_sub` claim. The Resource Authorization Server MAY use these claims for account resolution or just-in-time (JIT) account creation... Additional Resource Authorization Server specific identity claims MAY be needed for account resolution or JIT account creation.\n\nThis language acknowledges the JIT problem but does not solve it. There is no interoperable mechanism for a Resource Authorization Server (RAS) to signal which identity claims it requires, or for a Client to convey that signal back to the IdP so it can include them in the ID-JAG. The result requires out-of-band coordination between every IdP/RAS pair, which undermines the composability goal of the spec.\n\n## Specific failure modes\n\n1. **What claims does the IdP put in the ID-JAG?** The spec provides a fixed optional set (`email`, `aud_sub`) but gives no mechanism for the RAS to express its requirements. IdPs must either over-include claims (privacy risk) or guess conservatively and leave JIT broken.\n\n2. **What claims does the RAS need to JIT?** RAS-specific claims (department, cost center, license tier, custom identifiers) may not be OIDC standard claims. Even for OIDC-defined claims, different RASes need different subsets. There is no way to express this per-RAS, per-deployment requirement today.\n\n3. **How does the IdP know to issue the right claims?** The IdP has no standardized signal from the Client about what the target RAS needs. The Client knows the RAS endpoint (from discovery) but cannot ask the IdP to tailor the ID-JAG for that RAS's JIT requirements.\n\n4. **The UserInfo dead end.** When the RAS receives the ID-JAG it has no Access Token and cannot reach back to the IdP's UserInfo endpoint or any other IdP-hosted endpoint to fetch additional claims. The ID-JAG exchange must succeed or fail on the claims already present in the token. This is not a fixable limitation; it is a structural constraint of the grant flow.\n\n# Proposed Solution\n\nStandardize exactly three things.\n\n## 1. Error code: `insufficient_identity_claims`\n\nIf the RAS determines that the identity assertion is cryptographically valid and the grant type is accepted, but the token does not contain sufficient identity claims to perform account resolution or JIT account creation, it SHOULD return an error response per RFC 6749 Section 5.2:\n\n```\nHTTP/1.1 400 Bad Request\nContent-Type: application/json\n\n{\n  \"error\": \"insufficient_identity_claims\",\n  \"error_description\": \"The identity assertion is missing required claims for account resolution.\"\n}\n```\n\nThe name follows the `insufficient_*` pattern established by RFC 9470 (`insufficient_user_authentication`). It signals \"valid but not enough\", distinguishing this condition from `invalid_grant`, which would indicate the token itself is rejected. \n\n## 2. Error response parameter: `required_claims`\n\nThe error response SHOULD include a `required_claims` parameter: a space-separated list of the claim names the RAS requires, following the same format as `scope` (RFC 6749 Section 3.3):\n\n```json\n{\n  \"error\": \"insufficient_identity_claims\",\n  \"error_description\": \"The identity assertion is missing required claims for account resolution.\",\n  \"required_claims\": \"email department employee_number\"\n}\n```\n\nSpace-separated is the right format here. Claim names are JSON member names and cannot contain spaces, so the delimiter is unambiguous. This is consistent with `scope` and avoids the framework-parsing ambiguity of a JSON array in a form-encoded body (cf. RFC 9396 `authorization_details`, which uses JSON because its values are structured objects; claim names are flat tokens and do not warrant that complexity).\n\n`required_claims` is intentionally defined as a flat list of names. Value constraints, type hints, and schema references are deferred pending real deployment experience.\n\n## 3. Token Exchange request extension parameter: `required_claims`\n\nA Client receiving an `insufficient_identity_claims` error MAY retry the Token Exchange request to the IdP Authorization Server, including the `required_claims` parameter with the value carried directly from the RAS error response:\n\n```\nPOST /oauth2/token\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=urn:ietf:params:oauth:grant-type:token-exchange\n&requested_token_type=urn:ietf:params:oauth:token-type:id-jag\n&subject_token=<id_token>\n&subject_token_type=urn:ietf:params:oauth:token-type:id_token\n&audience=https://api.example.com/\n&required_claims=email+department+employee_number\n```\n\nThe symmetric naming (`required_claims` in both the error response and the Token Exchange request) means the Client can pass the value through without transformation. \"Required\" reflects the RAS's perspective, which is authoritative: these claims are required for the flow to succeed. It does not obligate the IdP to provide all of them; the IdP SHOULD include the requested claims subject to its own policy (consent, availability, privacy controls), and MAY decline to include specific claims.\n\n## End-to-end flow\n\n```\nClient → IdP:    Token Exchange → ID-JAG (minimal claims)\nClient → RAS:    Token Exchange with ID-JAG\nRAS → Client:    400 insufficient_identity_claims\n                     required_claims=email department employee_number\nClient → IdP:    Token Exchange + required_claims=email department employee_number\nIdP → Client:    ID-JAG with additional claims included\nClient → RAS:    Token Exchange with enriched ID-JAG\nRAS → Client:    200 OK, access_token\n```\n\n# Editorial: relax `email` and `aud_sub` to plain OPTIONAL\n\nWith `required_claims` providing the negotiation mechanism, the RECOMMENDED status of `email` and `aud_sub` in Section 2.1 should be downgraded to OPTIONAL. These claims become examples of what a RAS might request rather than a standing recommendation that every IdP include them. The existing guidance language should be replaced with a pointer to the `required_claims` mechanism as the interoperable way to express and negotiate claim requirements, and an example end-to-end flow demonstrating the retry pattern.\n\n# Advanced use case: RAS Token Exchange to IdP\n\nFor deployments where the identity data needed cannot reasonably be pre-embedded in a signed token (because it is large, sensitive, or needs to be fresher than the ID-JAG allows), the RAS MAY perform its own Token Exchange: presenting the received ID-JAG as the subject token to the IdP's token endpoint and requesting an Access Token scoped to the IdP's identity APIs.\n\nThis covers the UserInfo-equivalent pattern without burdening the Client as intermediary, and without embedding what is effectively a profile API response inside the ID-JAG. It should be acknowledged in the spec as a valid deployment pattern with the IdP-side API contract left to a future profile. This keeps the core ID-JAG spec clean and avoids scope creep.\n\n# Optional / future: claim requirements discovery at the RAS\n\nTo allow IdPs to import a RAS's claim requirements at onboarding time rather than waiting for a runtime error, the RAS could advertise the claims it needs for JIT provisioning via its Authorization Server metadata (RFC 8414), using a new metadata parameter scoped to this profile (to avoid collision with base OAuth or other profiles).\n\nThis is an optimization for IdP onboarding UX, not a correctness requirement. The runtime `insufficient_identity_claims` negotiation works without it. Worth raising for debate; not a blocker for the core proposal.\n\n---\n\n# Questions for the group\n\n1. **Error name:** `insufficient_identity_claims` (cause, RFC 9470 pattern)  or alternative?\n2. **IdP acknowledgment:** Should the IdP be required to indicate in the ID-JAG which claims from `required_claims` it was able to include, or is the Client expected to inspect the resulting token before retrying at the RAS?\n3. **RAS-to-IdP Token Exchange:** Should the advanced pattern be noted in Security Considerations? The RAS acting as an OAuth client to the IdP has trust and SSRF implications worth calling out even if the pattern itself is out of scope.",
-        "closed_at": null,
-        "comments": 9,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83/comments",
-        "created_at": "2026-04-14T22:49:22Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83/events",
-        "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/83",
-        "id": 4265158667,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [
-          {
-            "color": "f7c144",
-            "default": false,
-            "description": "",
-            "id": 11019102466,
-            "name": "ietf-126",
-            "node_id": "LA_kwDOKv5r-s8AAAACkMopAg",
-            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/labels/ietf-126"
-          }
-        ],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOKv5r-s7-OSgL",
-        "number": 83,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 2,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 2,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
-        "score": 1.0,
-        "state": "open",
-        "state_reason": null,
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83/timeline",
-        "title": "Interoperability gap: JIT provisioning and identity claim negotiation",
-        "type": null,
-        "updated_at": "2026-05-22T11:02:50Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
-          "events_url": "https://api.github.com/users/mcguinness/events{/privacy}",
-          "followers_url": "https://api.github.com/users/mcguinness/followers",
-          "following_url": "https://api.github.com/users/mcguinness/following{/other_user}",
-          "gists_url": "https://api.github.com/users/mcguinness/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/mcguinness",
-          "id": 1944352,
-          "login": "mcguinness",
-          "node_id": "MDQ6VXNlcjE5NDQzNTI=",
-          "organizations_url": "https://api.github.com/users/mcguinness/orgs",
-          "received_events_url": "https://api.github.com/users/mcguinness/received_events",
-          "repos_url": "https://api.github.com/users/mcguinness/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/mcguinness/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/mcguinness/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/mcguinness",
           "user_view_type": "public"
         }
       },
@@ -49401,6 +49401,325 @@
   "org_events": [
     {
       "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-05-28T00:43:18Z",
+      "id": "12464786755",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "f1c35302ed11999342772c8698c2c079c2457874",
+        "head": "08562977cb6a42e02316bb2f845d092378425b35",
+        "push_id": 34754628585,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 652203712
+      },
+      "public": true,
+      "repo": {
+        "id": 652203712,
+        "name": "oauth-wg/oauth-transaction-tokens",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-05-28T00:34:38Z",
+      "id": "12464567009",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "ab9ed48f1085a01622cb57884aad758b124a592b",
+        "head": "4817bd4a1e376f53b9c838c47139e039b6139d4e",
+        "push_id": 34754409604,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 631317608
+      },
+      "public": true,
+      "repo": {
+        "id": 631317608,
+        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-05-28T00:21:06Z",
+      "id": "12464216724",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "1bb2f2ebd89a4454e0154ffd51c77b4af8f2faca",
+        "head": "0b2e2fcdc92bf43d29c617f9caac60d2fc67ccf1",
+        "push_id": 34754060690,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 721316858
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-05-28T00:16:58Z",
+      "id": "12464111777",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "c0d672ab82686e2da5edaf36134f5687f06c1585",
+        "head": "e432431831644955ba842d37bf9b75503e093561",
+        "push_id": 34753956143,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 804642494
+      },
+      "public": true,
+      "repo": {
+        "id": 804642494,
+        "name": "oauth-wg/draft-ietf-oauth-client-id-metadata-document",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/1944352?",
+        "display_login": "mcguinness",
+        "gravatar_id": "",
+        "id": 1944352,
+        "login": "mcguinness",
+        "url": "https://api.github.com/users/mcguinness"
+      },
+      "created_at": "2026-05-27T18:11:01Z",
+      "id": "9967416185",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "https://datatracker.ietf.org/doc/draft-mcguinness-oauth-insufficient-claims/",
+          "created_at": "2026-05-27T18:11:01Z",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/83#issuecomment-4557299152",
+          "id": 4557299152,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83",
+          "node_id": "IC_kwDOKv5r-s8AAAABD6Ld0A",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/4557299152/reactions"
+          },
+          "updated_at": "2026-05-27T18:11:01Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/4557299152",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
+            "events_url": "https://api.github.com/users/mcguinness/events{/privacy}",
+            "followers_url": "https://api.github.com/users/mcguinness/followers",
+            "following_url": "https://api.github.com/users/mcguinness/following{/other_user}",
+            "gists_url": "https://api.github.com/users/mcguinness/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/mcguinness",
+            "id": 1944352,
+            "login": "mcguinness",
+            "node_id": "MDQ6VXNlcjE5NDQzNTI=",
+            "organizations_url": "https://api.github.com/users/mcguinness/orgs",
+            "received_events_url": "https://api.github.com/users/mcguinness/received_events",
+            "repos_url": "https://api.github.com/users/mcguinness/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/mcguinness/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/mcguinness/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/mcguinness",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "# Problem\n\nSection 2.1 of the draft currently says:\n\n> It is RECOMMENDED that the ID-JAG contain an `email` and/or `aud_sub` claim. The Resource Authorization Server MAY use these claims for account resolution or just-in-time (JIT) account creation... Additional Resource Authorization Server specific identity claims MAY be needed for account resolution or JIT account creation.\n\nThis language acknowledges the JIT problem but does not solve it. There is no interoperable mechanism for a Resource Authorization Server (RAS) to signal which identity claims it requires, or for a Client to convey that signal back to the IdP so it can include them in the ID-JAG. The result requires out-of-band coordination between every IdP/RAS pair, which undermines the composability goal of the spec.\n\n## Specific failure modes\n\n1. **What claims does the IdP put in the ID-JAG?** The spec provides a fixed optional set (`email`, `aud_sub`) but gives no mechanism for the RAS to express its requirements. IdPs must either over-include claims (privacy risk) or guess conservatively and leave JIT broken.\n\n2. **What claims does the RAS need to JIT?** RAS-specific claims (department, cost center, license tier, custom identifiers) may not be OIDC standard claims. Even for OIDC-defined claims, different RASes need different subsets. There is no way to express this per-RAS, per-deployment requirement today.\n\n3. **How does the IdP know to issue the right claims?** The IdP has no standardized signal from the Client about what the target RAS needs. The Client knows the RAS endpoint (from discovery) but cannot ask the IdP to tailor the ID-JAG for that RAS's JIT requirements.\n\n4. **The UserInfo dead end.** When the RAS receives the ID-JAG it has no Access Token and cannot reach back to the IdP's UserInfo endpoint or any other IdP-hosted endpoint to fetch additional claims. The ID-JAG exchange must succeed or fail on the claims already present in the token. This is not a fixable limitation; it is a structural constraint of the grant flow.\n\n# Proposed Solution\n\nStandardize exactly three things.\n\n## 1. Error code: `insufficient_identity_claims`\n\nIf the RAS determines that the identity assertion is cryptographically valid and the grant type is accepted, but the token does not contain sufficient identity claims to perform account resolution or JIT account creation, it SHOULD return an error response per RFC 6749 Section 5.2:\n\n```\nHTTP/1.1 400 Bad Request\nContent-Type: application/json\n\n{\n  \"error\": \"insufficient_identity_claims\",\n  \"error_description\": \"The identity assertion is missing required claims for account resolution.\"\n}\n```\n\nThe name follows the `insufficient_*` pattern established by RFC 9470 (`insufficient_user_authentication`). It signals \"valid but not enough\", distinguishing this condition from `invalid_grant`, which would indicate the token itself is rejected. \n\n## 2. Error response parameter: `required_claims`\n\nThe error response SHOULD include a `required_claims` parameter: a space-separated list of the claim names the RAS requires, following the same format as `scope` (RFC 6749 Section 3.3):\n\n```json\n{\n  \"error\": \"insufficient_identity_claims\",\n  \"error_description\": \"The identity assertion is missing required claims for account resolution.\",\n  \"required_claims\": \"email department employee_number\"\n}\n```\n\nSpace-separated is the right format here. Claim names are JSON member names and cannot contain spaces, so the delimiter is unambiguous. This is consistent with `scope` and avoids the framework-parsing ambiguity of a JSON array in a form-encoded body (cf. RFC 9396 `authorization_details`, which uses JSON because its values are structured objects; claim names are flat tokens and do not warrant that complexity).\n\n`required_claims` is intentionally defined as a flat list of names. Value constraints, type hints, and schema references are deferred pending real deployment experience.\n\n## 3. Token Exchange request extension parameter: `required_claims`\n\nA Client receiving an `insufficient_identity_claims` error MAY retry the Token Exchange request to the IdP Authorization Server, including the `required_claims` parameter with the value carried directly from the RAS error response:\n\n```\nPOST /oauth2/token\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=urn:ietf:params:oauth:grant-type:token-exchange\n&requested_token_type=urn:ietf:params:oauth:token-type:id-jag\n&subject_token=<id_token>\n&subject_token_type=urn:ietf:params:oauth:token-type:id_token\n&audience=https://api.example.com/\n&required_claims=email+department+employee_number\n```\n\nThe symmetric naming (`required_claims` in both the error response and the Token Exchange request) means the Client can pass the value through without transformation. \"Required\" reflects the RAS's perspective, which is authoritative: these claims are required for the flow to succeed. It does not obligate the IdP to provide all of them; the IdP SHOULD include the requested claims subject to its own policy (consent, availability, privacy controls), and MAY decline to include specific claims.\n\n## End-to-end flow\n\n```\nClient → IdP:    Token Exchange → ID-JAG (minimal claims)\nClient → RAS:    Token Exchange with ID-JAG\nRAS → Client:    400 insufficient_identity_claims\n                     required_claims=email department employee_number\nClient → IdP:    Token Exchange + required_claims=email department employee_number\nIdP → Client:    ID-JAG with additional claims included\nClient → RAS:    Token Exchange with enriched ID-JAG\nRAS → Client:    200 OK, access_token\n```\n\n# Editorial: relax `email` and `aud_sub` to plain OPTIONAL\n\nWith `required_claims` providing the negotiation mechanism, the RECOMMENDED status of `email` and `aud_sub` in Section 2.1 should be downgraded to OPTIONAL. These claims become examples of what a RAS might request rather than a standing recommendation that every IdP include them. The existing guidance language should be replaced with a pointer to the `required_claims` mechanism as the interoperable way to express and negotiate claim requirements, and an example end-to-end flow demonstrating the retry pattern.\n\n# Advanced use case: RAS Token Exchange to IdP\n\nFor deployments where the identity data needed cannot reasonably be pre-embedded in a signed token (because it is large, sensitive, or needs to be fresher than the ID-JAG allows), the RAS MAY perform its own Token Exchange: presenting the received ID-JAG as the subject token to the IdP's token endpoint and requesting an Access Token scoped to the IdP's identity APIs.\n\nThis covers the UserInfo-equivalent pattern without burdening the Client as intermediary, and without embedding what is effectively a profile API response inside the ID-JAG. It should be acknowledged in the spec as a valid deployment pattern with the IdP-side API contract left to a future profile. This keeps the core ID-JAG spec clean and avoids scope creep.\n\n# Optional / future: claim requirements discovery at the RAS\n\nTo allow IdPs to import a RAS's claim requirements at onboarding time rather than waiting for a runtime error, the RAS could advertise the claims it needs for JIT provisioning via its Authorization Server metadata (RFC 8414), using a new metadata parameter scoped to this profile (to avoid collision with base OAuth or other profiles).\n\nThis is an optimization for IdP onboarding UX, not a correctness requirement. The runtime `insufficient_identity_claims` negotiation works without it. Worth raising for debate; not a blocker for the core proposal.\n\n---\n\n# Questions for the group\n\n1. **Error name:** `insufficient_identity_claims` (cause, RFC 9470 pattern)  or alternative?\n2. **IdP acknowledgment:** Should the IdP be required to indicate in the ID-JAG which claims from `required_claims` it was able to include, or is the Client expected to inspect the resulting token before retrying at the RAS?\n3. **RAS-to-IdP Token Exchange:** Should the advanced pattern be noted in Security Considerations? The RAS acting as an OAuth client to the IdP has trust and SSRF implications worth calling out even if the pattern itself is out of scope.",
+          "closed_at": null,
+          "comments": 10,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83/comments",
+          "created_at": "2026-04-14T22:49:22Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83/events",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/83",
+          "id": 4265158667,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [
+            {
+              "color": "f7c144",
+              "default": false,
+              "description": "",
+              "id": 11019102466,
+              "name": "ietf-126",
+              "node_id": "LA_kwDOKv5r-s8AAAACkMopAg",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/labels/ietf-126"
+            }
+          ],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOKv5r-s7-OSgL",
+          "number": 83,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 2,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 2,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83/timeline",
+          "title": "Interoperability gap: JIT provisioning and identity claim negotiation",
+          "type": null,
+          "updated_at": "2026-05-27T18:11:01Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
+            "events_url": "https://api.github.com/users/mcguinness/events{/privacy}",
+            "followers_url": "https://api.github.com/users/mcguinness/followers",
+            "following_url": "https://api.github.com/users/mcguinness/following{/other_user}",
+            "gists_url": "https://api.github.com/users/mcguinness/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/mcguinness",
+            "id": 1944352,
+            "login": "mcguinness",
+            "node_id": "MDQ6VXNlcjE5NDQzNTI=",
+            "organizations_url": "https://api.github.com/users/mcguinness/orgs",
+            "received_events_url": "https://api.github.com/users/mcguinness/received_events",
+            "repos_url": "https://api.github.com/users/mcguinness/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/mcguinness/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/mcguinness/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/mcguinness",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/267932816?",
+        "display_login": "RespectTH",
+        "gravatar_id": "",
+        "id": 267932816,
+        "login": "RespectTH",
+        "url": "https://api.github.com/users/RespectTH"
+      },
+      "created_at": "2026-05-27T16:47:12Z",
+      "id": "9964217874",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "started"
+      },
+      "public": true,
+      "repo": {
+        "id": 239594214,
+        "name": "oauth-wg/oauth-v2-1",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1"
+      },
+      "type": "WatchEvent"
+    },
+    {
+      "actor": {
         "avatar_url": "https://avatars.githubusercontent.com/u/158512442?",
         "display_login": "ciamshrek",
         "gravatar_id": "",
@@ -54756,7 +55075,7 @@
           "assignees": [],
           "body": "# Problem\n\nSection 2.1 of the draft currently says:\n\n> It is RECOMMENDED that the ID-JAG contain an `email` and/or `aud_sub` claim. The Resource Authorization Server MAY use these claims for account resolution or just-in-time (JIT) account creation... Additional Resource Authorization Server specific identity claims MAY be needed for account resolution or JIT account creation.\n\nThis language acknowledges the JIT problem but does not solve it. There is no interoperable mechanism for a Resource Authorization Server (RAS) to signal which identity claims it requires, or for a Client to convey that signal back to the IdP so it can include them in the ID-JAG. The result requires out-of-band coordination between every IdP/RAS pair, which undermines the composability goal of the spec.\n\n## Specific failure modes\n\n1. **What claims does the IdP put in the ID-JAG?** The spec provides a fixed optional set (`email`, `aud_sub`) but gives no mechanism for the RAS to express its requirements. IdPs must either over-include claims (privacy risk) or guess conservatively and leave JIT broken.\n\n2. **What claims does the RAS need to JIT?** RAS-specific claims (department, cost center, license tier, custom identifiers) may not be OIDC standard claims. Even for OIDC-defined claims, different RASes need different subsets. There is no way to express this per-RAS, per-deployment requirement today.\n\n3. **How does the IdP know to issue the right claims?** The IdP has no standardized signal from the Client about what the target RAS needs. The Client knows the RAS endpoint (from discovery) but cannot ask the IdP to tailor the ID-JAG for that RAS's JIT requirements.\n\n4. **The UserInfo dead end.** When the RAS receives the ID-JAG it has no Access Token and cannot reach back to the IdP's UserInfo endpoint or any other IdP-hosted endpoint to fetch additional claims. The ID-JAG exchange must succeed or fail on the claims already present in the token. This is not a fixable limitation; it is a structural constraint of the grant flow.\n\n# Proposed Solution\n\nStandardize exactly three things.\n\n## 1. Error code: `insufficient_identity_claims`\n\nIf the RAS determines that the identity assertion is cryptographically valid and the grant type is accepted, but the token does not contain sufficient identity claims to perform account resolution or JIT account creation, it SHOULD return an error response per RFC 6749 Section 5.2:\n\n```\nHTTP/1.1 400 Bad Request\nContent-Type: application/json\n\n{\n  \"error\": \"insufficient_identity_claims\",\n  \"error_description\": \"The identity assertion is missing required claims for account resolution.\"\n}\n```\n\nThe name follows the `insufficient_*` pattern established by RFC 9470 (`insufficient_user_authentication`). It signals \"valid but not enough\", distinguishing this condition from `invalid_grant`, which would indicate the token itself is rejected. \n\n## 2. Error response parameter: `required_claims`\n\nThe error response SHOULD include a `required_claims` parameter: a space-separated list of the claim names the RAS requires, following the same format as `scope` (RFC 6749 Section 3.3):\n\n```json\n{\n  \"error\": \"insufficient_identity_claims\",\n  \"error_description\": \"The identity assertion is missing required claims for account resolution.\",\n  \"required_claims\": \"email department employee_number\"\n}\n```\n\nSpace-separated is the right format here. Claim names are JSON member names and cannot contain spaces, so the delimiter is unambiguous. This is consistent with `scope` and avoids the framework-parsing ambiguity of a JSON array in a form-encoded body (cf. RFC 9396 `authorization_details`, which uses JSON because its values are structured objects; claim names are flat tokens and do not warrant that complexity).\n\n`required_claims` is intentionally defined as a flat list of names. Value constraints, type hints, and schema references are deferred pending real deployment experience.\n\n## 3. Token Exchange request extension parameter: `required_claims`\n\nA Client receiving an `insufficient_identity_claims` error MAY retry the Token Exchange request to the IdP Authorization Server, including the `required_claims` parameter with the value carried directly from the RAS error response:\n\n```\nPOST /oauth2/token\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=urn:ietf:params:oauth:grant-type:token-exchange\n&requested_token_type=urn:ietf:params:oauth:token-type:id-jag\n&subject_token=<id_token>\n&subject_token_type=urn:ietf:params:oauth:token-type:id_token\n&audience=https://api.example.com/\n&required_claims=email+department+employee_number\n```\n\nThe symmetric naming (`required_claims` in both the error response and the Token Exchange request) means the Client can pass the value through without transformation. \"Required\" reflects the RAS's perspective, which is authoritative: these claims are required for the flow to succeed. It does not obligate the IdP to provide all of them; the IdP SHOULD include the requested claims subject to its own policy (consent, availability, privacy controls), and MAY decline to include specific claims.\n\n## End-to-end flow\n\n```\nClient → IdP:    Token Exchange → ID-JAG (minimal claims)\nClient → RAS:    Token Exchange with ID-JAG\nRAS → Client:    400 insufficient_identity_claims\n                     required_claims=email department employee_number\nClient → IdP:    Token Exchange + required_claims=email department employee_number\nIdP → Client:    ID-JAG with additional claims included\nClient → RAS:    Token Exchange with enriched ID-JAG\nRAS → Client:    200 OK, access_token\n```\n\n# Editorial: relax `email` and `aud_sub` to plain OPTIONAL\n\nWith `required_claims` providing the negotiation mechanism, the RECOMMENDED status of `email` and `aud_sub` in Section 2.1 should be downgraded to OPTIONAL. These claims become examples of what a RAS might request rather than a standing recommendation that every IdP include them. The existing guidance language should be replaced with a pointer to the `required_claims` mechanism as the interoperable way to express and negotiate claim requirements, and an example end-to-end flow demonstrating the retry pattern.\n\n# Advanced use case: RAS Token Exchange to IdP\n\nFor deployments where the identity data needed cannot reasonably be pre-embedded in a signed token (because it is large, sensitive, or needs to be fresher than the ID-JAG allows), the RAS MAY perform its own Token Exchange: presenting the received ID-JAG as the subject token to the IdP's token endpoint and requesting an Access Token scoped to the IdP's identity APIs.\n\nThis covers the UserInfo-equivalent pattern without burdening the Client as intermediary, and without embedding what is effectively a profile API response inside the ID-JAG. It should be acknowledged in the spec as a valid deployment pattern with the IdP-side API contract left to a future profile. This keeps the core ID-JAG spec clean and avoids scope creep.\n\n# Optional / future: claim requirements discovery at the RAS\n\nTo allow IdPs to import a RAS's claim requirements at onboarding time rather than waiting for a runtime error, the RAS could advertise the claims it needs for JIT provisioning via its Authorization Server metadata (RFC 8414), using a new metadata parameter scoped to this profile (to avoid collision with base OAuth or other profiles).\n\nThis is an optimization for IdP onboarding UX, not a correctness requirement. The runtime `insufficient_identity_claims` negotiation works without it. Worth raising for debate; not a blocker for the core proposal.\n\n---\n\n# Questions for the group\n\n1. **Error name:** `insufficient_identity_claims` (cause, RFC 9470 pattern)  or alternative?\n2. **IdP acknowledgment:** Should the IdP be required to indicate in the ID-JAG which claims from `required_claims` it was able to include, or is the Client expected to inspect the resulting token before retrying at the RAS?\n3. **RAS-to-IdP Token Exchange:** Should the advanced pattern be noted in Security Considerations? The RAS acting as an OAuth client to the IdP has trust and SSRF implications worth calling out even if the pattern itself is out of scope.",
           "closed_at": null,
-          "comments": 9,
+          "comments": 10,
           "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83/comments",
           "created_at": "2026-04-14T22:49:22Z",
           "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83/events",
@@ -54810,7 +55129,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83/timeline",
           "title": "Interoperability gap: JIT provisioning and identity claim negotiation",
           "type": null,
-          "updated_at": "2026-05-22T11:02:50Z",
+          "updated_at": "2026-05-27T18:11:01Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/83",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
@@ -57768,449 +58087,6 @@
         "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
       },
       "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-05-21T00:23:26Z",
-      "id": "12151080934",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "4c7873f92980f7f3ce299790780d959b86bc523e",
-        "head": "600a8b9e0ec4eecdf27bb54ffb2ff854de8a35fb",
-        "push_id": 34441492609,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 721316858
-      },
-      "public": true,
-      "repo": {
-        "id": 721316858,
-        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-05-21T00:19:08Z",
-      "id": "12150970941",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "1b152dc07b0503a2738776c0cf2c9e8d89552984",
-        "head": "d40326e8b927f409863a9d537d176be2d8b62d4a",
-        "push_id": 34441383307,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 804642494
-      },
-      "public": true,
-      "repo": {
-        "id": 804642494,
-        "name": "oauth-wg/draft-ietf-oauth-client-id-metadata-document",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/89937743?",
-        "display_login": "max-stytch",
-        "gravatar_id": "",
-        "id": 89937743,
-        "login": "max-stytch",
-        "url": "https://api.github.com/users/max-stytch"
-      },
-      "created_at": "2026-05-20T20:17:02Z",
-      "id": "9708733706",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "comment": {
-          "body": "Per-issuer CIMD documents would also enable a client to reveal a unique callback URL per-issuer, which is one of the mitigation strategies for issuer mix-up attacks. ",
-          "created_at": "2026-05-20T20:17:02Z",
-          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78#issuecomment-4502302325",
-          "id": 4502302325,
-          "issue_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78",
-          "node_id": "IC_kwDOL_Xevs8AAAABDFuudQ",
-          "performed_via_github_app": null,
-          "pin": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/comments/4502302325/reactions"
-          },
-          "updated_at": "2026-05-20T20:17:02Z",
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/comments/4502302325",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/89937743?v=4",
-            "events_url": "https://api.github.com/users/max-stytch/events{/privacy}",
-            "followers_url": "https://api.github.com/users/max-stytch/followers",
-            "following_url": "https://api.github.com/users/max-stytch/following{/other_user}",
-            "gists_url": "https://api.github.com/users/max-stytch/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/max-stytch",
-            "id": 89937743,
-            "login": "max-stytch",
-            "node_id": "MDQ6VXNlcjg5OTM3NzQz",
-            "organizations_url": "https://api.github.com/users/max-stytch/orgs",
-            "received_events_url": "https://api.github.com/users/max-stytch/received_events",
-            "repos_url": "https://api.github.com/users/max-stytch/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/max-stytch/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/max-stytch/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/max-stytch",
-            "user_view_type": "public"
-          }
-        },
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "For example, if `client_id=https://example.com/oauth/client_id.json`, the AS would `GET https://example.com/oauth/client_id.json?iss=https://example-as.com`.\n\nThis allows the client to do a few things:\n\nProgressive rollouts of changes to CIMD, so that blast radius is limited to only certain AS. Making a global change to a client id is bad practice from a production safety point of view, and \"random percentage\" rollouts may not work if the AS queries the CIMD more than once and gets two different documents.  Of course, `iss` isn't a perfect solution here, but it's easy and better than nothing.\n\nThe client could also return AS-specific metadata (as long as it's not secret because `iss` is unvalidated). This could help address certain incompatibilities that may arise in practice where the same values are rejected by some AS but not by others.",
-          "closed_at": null,
-          "comments": 13,
-          "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/comments",
-          "created_at": "2026-05-01T00:45:14Z",
-          "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/events",
-          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78",
-          "id": 4362160170,
-          "issue_dependencies_summary": {
-            "blocked_by": 0,
-            "blocking": 0,
-            "total_blocked_by": 0,
-            "total_blocking": 0
-          },
-          "issue_field_values": [],
-          "labels": [],
-          "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "I_kwDOL_Xevs8AAAABBAFIKg",
-          "number": 78,
-          "performed_via_github_app": null,
-          "pinned_comment": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document",
-          "state": "open",
-          "state_reason": null,
-          "sub_issues_summary": {
-            "completed": 0,
-            "percent_completed": 0,
-            "total": 0
-          },
-          "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78/timeline",
-          "title": "Can AS optionally provide `iss` when fetching client_id?",
-          "type": null,
-          "updated_at": "2026-05-27T03:11:46Z",
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/78",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/1567051?v=4",
-            "events_url": "https://api.github.com/users/njwatson32/events{/privacy}",
-            "followers_url": "https://api.github.com/users/njwatson32/followers",
-            "following_url": "https://api.github.com/users/njwatson32/following{/other_user}",
-            "gists_url": "https://api.github.com/users/njwatson32/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/njwatson32",
-            "id": 1567051,
-            "login": "njwatson32",
-            "node_id": "MDQ6VXNlcjE1NjcwNTE=",
-            "organizations_url": "https://api.github.com/users/njwatson32/orgs",
-            "received_events_url": "https://api.github.com/users/njwatson32/received_events",
-            "repos_url": "https://api.github.com/users/njwatson32/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/njwatson32/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/njwatson32/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/njwatson32",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 804642494,
-        "name": "oauth-wg/draft-ietf-oauth-client-id-metadata-document",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document"
-      },
-      "type": "IssueCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/113001?",
-        "display_login": "aaronpk",
-        "gravatar_id": "",
-        "id": 113001,
-        "login": "aaronpk",
-        "url": "https://api.github.com/users/aaronpk"
-      },
-      "created_at": "2026-05-20T20:07:01Z",
-      "id": "9708350118",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "comment": {
-          "body": "Since the ID-JAG carries the login state from SSO into the client, that may not be sufficient to access a particular resource. For example:\r\n\r\n* App 1 (Client) requires any 2 factors for SSO\r\n* App 2 (Resource) requires a phishing-resistant factor for SSO\r\n\r\nSo when the user first logs in to the Client, they may authenticate at the IdP with password + OTP. When the client requests an ID-JAG for the Resource, the password + OTP factors don't meet the requirement of phishing-resistant that is required for the Resource. \r\n\r\nThis lets the IdP return an error that will trigger the client to start a new SSO flow with the appropriate factors needed for the Resource.",
-          "created_at": "2026-05-20T20:07:01Z",
-          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/88#issuecomment-4502215806",
-          "id": 4502215806,
-          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/88",
-          "node_id": "IC_kwDOKv5r-s8AAAABDFpcfg",
-          "performed_via_github_app": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/4502215806/reactions"
-          },
-          "updated_at": "2026-05-20T20:07:01Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/4502215806",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
-            "events_url": "https://api.github.com/users/aaronpk/events{/privacy}",
-            "followers_url": "https://api.github.com/users/aaronpk/followers",
-            "following_url": "https://api.github.com/users/aaronpk/following{/other_user}",
-            "gists_url": "https://api.github.com/users/aaronpk/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/aaronpk",
-            "id": 113001,
-            "login": "aaronpk",
-            "node_id": "MDQ6VXNlcjExMzAwMQ==",
-            "organizations_url": "https://api.github.com/users/aaronpk/orgs",
-            "received_events_url": "https://api.github.com/users/aaronpk/received_events",
-            "repos_url": "https://api.github.com/users/aaronpk/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/aaronpk/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/aaronpk/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/aaronpk",
-            "user_view_type": "public"
-          }
-        },
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": null,
-          "closed_at": null,
-          "comments": 4,
-          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/88/comments",
-          "created_at": "2026-04-22T22:17:29Z",
-          "draft": false,
-          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/88/events",
-          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/88",
-          "id": 4312145575,
-          "issue_field_values": [],
-          "labels": [],
-          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/88/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "PR_kwDOKv5r-s7Ux_L_",
-          "number": 88,
-          "performed_via_github_app": null,
-          "pull_request": {
-            "diff_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/88.diff",
-            "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/88",
-            "merged_at": null,
-            "patch_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/88.patch",
-            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/pulls/88"
-          },
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/88/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
-          "state": "open",
-          "state_reason": null,
-          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/88/timeline",
-          "title": "Clarify step-up authentication semantics for token exchange",
-          "type": null,
-          "updated_at": "2026-05-20T20:07:01Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/88",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
-            "events_url": "https://api.github.com/users/mcguinness/events{/privacy}",
-            "followers_url": "https://api.github.com/users/mcguinness/followers",
-            "following_url": "https://api.github.com/users/mcguinness/following{/other_user}",
-            "gists_url": "https://api.github.com/users/mcguinness/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/mcguinness",
-            "id": 1944352,
-            "login": "mcguinness",
-            "node_id": "MDQ6VXNlcjE5NDQzNTI=",
-            "organizations_url": "https://api.github.com/users/mcguinness/orgs",
-            "received_events_url": "https://api.github.com/users/mcguinness/received_events",
-            "repos_url": "https://api.github.com/users/mcguinness/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/mcguinness/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/mcguinness/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/mcguinness",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 721316858,
-        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-      },
-      "type": "IssueCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-05-20T20:01:50Z",
-      "id": "12142671714",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "8137342657f15f07c8cc477f5446d23e3ce62554",
-        "head": "4c7873f92980f7f3ce299790780d959b86bc523e",
-        "push_id": 34433116154,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 721316858
-      },
-      "public": true,
-      "repo": {
-        "id": 721316858,
-        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/3943066?",
-        "display_login": "havetisyan",
-        "gravatar_id": "",
-        "id": 3943066,
-        "login": "havetisyan",
-        "url": "https://api.github.com/users/havetisyan"
-      },
-      "created_at": "2026-05-20T20:01:24Z",
-      "id": "9708136719",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "merged",
-        "number": 91,
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 721316858,
-              "name": "oauth-identity-assertion-authz-grant",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-            },
-            "sha": "4b22498ea3c10122efd79278f845d6ba35e63acc"
-          },
-          "head": {
-            "ref": "havetisyan-patch-1",
-            "repo": {
-              "id": 1221799088,
-              "name": "oauth-identity-assertion-authz-grant",
-              "url": "https://api.github.com/repos/havetisyan/oauth-identity-assertion-authz-grant"
-            },
-            "sha": "0ec37ae69596bb51f9fe0ec7b4985a5e9cd381e6"
-          },
-          "id": 3586141329,
-          "number": 91,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/pulls/91"
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 721316858,
-        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-      },
-      "type": "PullRequestEvent"
     }
   ],
   "prs": {
@@ -96584,7 +96460,7 @@
       "releases_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/releases{/id}",
       "size": 5045,
       "ssh_url": "git@github.com:oauth-wg/oauth-v2-1.git",
-      "stargazers_count": 92,
+      "stargazers_count": 93,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/stargazers",
       "statuses_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/statuses/{sha}",
       "subscribers_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/subscribers",
@@ -96597,11 +96473,11 @@
         "oauth2"
       ],
       "trees_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/git/trees{/sha}",
-      "updated_at": "2026-05-26T16:15:20Z",
+      "updated_at": "2026-05-27T16:47:12Z",
       "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1",
       "visibility": "public",
-      "watchers": 92,
-      "watchers_count": 92,
+      "watchers": 93,
+      "watchers_count": 93,
       "web_commit_signoff_required": false
     },
     {
@@ -97283,9 +97159,9 @@
       "private": false,
       "pull_request_creation_policy": "all",
       "pulls_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls{/number}",
-      "pushed_at": "2026-05-26T06:14:08Z",
+      "pushed_at": "2026-05-28T00:34:38Z",
       "releases_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/releases{/id}",
-      "size": 2065,
+      "size": 2280,
       "ssh_url": "git@github.com:oauth-wg/draft-ietf-oauth-attestation-based-client-auth.git",
       "stargazers_count": 20,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/stargazers",
@@ -97638,9 +97514,9 @@
       "private": false,
       "pull_request_creation_policy": "all",
       "pulls_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls{/number}",
-      "pushed_at": "2026-05-21T00:47:53Z",
+      "pushed_at": "2026-05-28T00:43:17Z",
       "releases_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/releases{/id}",
-      "size": 3298,
+      "size": 3561,
       "ssh_url": "git@github.com:oauth-wg/oauth-transaction-tokens.git",
       "stargazers_count": 14,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/stargazers",
@@ -97989,9 +97865,9 @@
       "private": false,
       "pull_request_creation_policy": "all",
       "pulls_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/pulls{/number}",
-      "pushed_at": "2026-05-24T00:20:15Z",
+      "pushed_at": "2026-05-28T00:21:06Z",
       "releases_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/releases{/id}",
-      "size": 1545,
+      "size": 1675,
       "ssh_url": "git@github.com:oauth-wg/oauth-identity-assertion-authz-grant.git",
       "stargazers_count": 7,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/stargazers",
@@ -98106,9 +97982,9 @@
       "private": false,
       "pull_request_creation_policy": "all",
       "pulls_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pulls{/number}",
-      "pushed_at": "2026-05-26T00:17:18Z",
+      "pushed_at": "2026-05-28T00:16:58Z",
       "releases_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/releases{/id}",
-      "size": 1485,
+      "size": 1568,
       "ssh_url": "git@github.com:oauth-wg/draft-ietf-oauth-client-id-metadata-document.git",
       "stargazers_count": 11,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/stargazers",
@@ -98479,5 +98355,5 @@
       "web_commit_signoff_required": false
     }
   ],
-  "snapshot_date": "2026-05-27"
+  "snapshot_date": "2026-05-28"
 }
