@@ -1,8 +1,84 @@
 {
-  "collected_at": "2026-06-07T09:21:40+00:00",
+  "collected_at": "2026-06-08T11:05:33+00:00",
   "issues": {
     "error": null,
     "items": [
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "NONE",
+        "body": "https://drafts.oauth.net/oauth-sd-jwt-vc/draft-ietf-oauth-sd-jwt-vc.html#section-4.3.1-1 says:\n\n> A URI in the vct claim can be used to express a type. If the type is a URL using the HTTPS scheme, Type Metadata MAY be retrieved from it\n\nI'm not sure the 'MAY' is clear. I think the general English reading would be \"if vct contains a https URI then type metadata must be retrievable from it, but it's up to the consumer whether they retrieve it or not\".\n\n(The alternative reading would be that trying to retrieve type metadata may or may not work, but I assume the point of picking a https vct instead of a urn would be so that type data can be retrieved.)\n\nI'd probably suggest clarifying the spec text to make the intent clearer.\n\nOverlaps a little with https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/411#issue-4368798891\n",
+        "closed_at": null,
+        "comments": 0,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/414/comments",
+        "created_at": "2026-06-07T12:53:48Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/414/events",
+        "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/414",
+        "id": 4607389350,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/414/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOJbVClc8AAAABEp8upg",
+        "number": 414,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/414/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/414/timeline",
+        "title": "what does \"Type Metadata MAY be retrieved\" mean?",
+        "type": null,
+        "updated_at": "2026-06-07T12:54:56Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/414",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/316456?v=4",
+          "events_url": "https://api.github.com/users/jogu/events{/privacy}",
+          "followers_url": "https://api.github.com/users/jogu/followers",
+          "following_url": "https://api.github.com/users/jogu/following{/other_user}",
+          "gists_url": "https://api.github.com/users/jogu/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/jogu",
+          "id": 316456,
+          "login": "jogu",
+          "node_id": "MDQ6VXNlcjMxNjQ1Ng==",
+          "organizations_url": "https://api.github.com/users/jogu/orgs",
+          "received_events_url": "https://api.github.com/users/jogu/received_events",
+          "repos_url": "https://api.github.com/users/jogu/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/jogu/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/jogu/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/jogu",
+          "user_view_type": "public"
+        }
+      },
       {
         "active_lock_reason": null,
         "assignee": null,
@@ -49141,97 +49217,143 @@
           "url": "https://api.github.com/users/PieterKas",
           "user_view_type": "public"
         }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "MEMBER",
-        "body": "Example:\n- there's a european PID type \"urn:ec.eu.x.y.z\" and a national type \"urn:de.bla\" that extends \"urn:ec.eu.x.y.z\"\n- a rogue issuer issues a credential \"urn:attacker\" that extends either \"urn:ec.eu.x.y.z\" or \"urn:ec.eu.x.y.z\"\n- it is now important that verifiers/wallets don't accept these credentials. the fact that someone issued a credential extending a known type does not imply that they are allowed to do so (or that they are a valid issuer at all)\n\nThis should be captured in a security consideration, ideally also in processing rules.",
-        "closed_at": "2025-09-02T19:10:36Z",
-        "comments": 1,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/302/comments",
-        "created_at": "2025-03-18T18:37:39Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/302/events",
-        "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/302",
-        "id": 2929512245,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [
-          {
-            "color": "1d76db",
-            "default": false,
-            "description": "",
-            "id": 5487579914,
-            "name": "HAS PR",
-            "node_id": "LA_kwDOJbVClc8AAAABRxXTCg",
-            "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/labels/HAS%20PR"
-          }
-        ],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/302/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOJbVClc6unM81",
-        "number": 302,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 2,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 2,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/302/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
-        "score": 1.0,
-        "state": "closed",
-        "state_reason": "completed",
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/302/timeline",
-        "title": "Add security consideration: Extending a type doesn't imply authorization to issue the type",
-        "type": null,
-        "updated_at": "2025-09-02T19:10:36Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/302",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/89476?v=4",
-          "events_url": "https://api.github.com/users/danielfett/events{/privacy}",
-          "followers_url": "https://api.github.com/users/danielfett/followers",
-          "following_url": "https://api.github.com/users/danielfett/following{/other_user}",
-          "gists_url": "https://api.github.com/users/danielfett/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/danielfett",
-          "id": 89476,
-          "login": "danielfett",
-          "node_id": "MDQ6VXNlcjg5NDc2",
-          "organizations_url": "https://api.github.com/users/danielfett/orgs",
-          "received_events_url": "https://api.github.com/users/danielfett/received_events",
-          "repos_url": "https://api.github.com/users/danielfett/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/danielfett/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/danielfett/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/danielfett",
-          "user_view_type": "public"
-        }
       }
     ],
-    "total_count": 1716
+    "total_count": 1717
   },
   "org_events": [
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/97076656?",
+        "display_login": "NoClueMike",
+        "gravatar_id": "",
+        "id": 97076656,
+        "login": "NoClueMike",
+        "url": "https://api.github.com/users/NoClueMike"
+      },
+      "created_at": "2026-06-07T20:48:04Z",
+      "id": "10383974820",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "started"
+      },
+      "public": true,
+      "repo": {
+        "id": 652659140,
+        "name": "oauth-wg/oauth-identity-chaining",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+      },
+      "type": "WatchEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/316456?",
+        "display_login": "jogu",
+        "gravatar_id": "",
+        "id": 316456,
+        "login": "jogu",
+        "url": "https://api.github.com/users/jogu"
+      },
+      "created_at": "2026-06-07T12:53:49Z",
+      "id": "10377359014",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "opened",
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "https://drafts.oauth.net/oauth-sd-jwt-vc/draft-ietf-oauth-sd-jwt-vc.html#section-4.3.1-1 says:\n\n> A URI in the vct claim can be used to express a type. If the type is a URL using the HTTPS scheme, Type Metadata MAY be retrieved from it\n\nI'm not sure the 'MAY' is clear. I think the general English reading would be \"if vct contains a https URI then type metadata must be retrievable from it, but it's up to the consumer whether they retrieve it or not\".\n\n(The alternative reading would be that trying to retrieve type metadata may or may not work, but I assume the point of picking a https vct instead of a urn would be so that type data can be retrieved.)\n\nI'd probably suggest clarifying the spec text to make the intent clearer.\n\nOverlaps a little with https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/411#issue-4368798891\n",
+          "closed_at": null,
+          "comments": 0,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/414/comments",
+          "created_at": "2026-06-07T12:53:48Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/414/events",
+          "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/414",
+          "id": 4607389350,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/414/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJbVClc8AAAABEp8upg",
+          "number": 414,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/414/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/414/timeline",
+          "title": "what does \"Type Metadata MAY be retrieved\" mean?",
+          "type": null,
+          "updated_at": "2026-06-07T12:54:56Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/414",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/316456?v=4",
+            "events_url": "https://api.github.com/users/jogu/events{/privacy}",
+            "followers_url": "https://api.github.com/users/jogu/followers",
+            "following_url": "https://api.github.com/users/jogu/following{/other_user}",
+            "gists_url": "https://api.github.com/users/jogu/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/jogu",
+            "id": 316456,
+            "login": "jogu",
+            "node_id": "MDQ6VXNlcjMxNjQ1Ng==",
+            "organizations_url": "https://api.github.com/users/jogu/orgs",
+            "received_events_url": "https://api.github.com/users/jogu/received_events",
+            "repos_url": "https://api.github.com/users/jogu/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/jogu/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/jogu/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/jogu",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 632636053,
+        "name": "oauth-wg/oauth-sd-jwt-vc",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+      },
+      "type": "IssuesEvent"
+    },
     {
       "actor": {
         "avatar_url": "https://avatars.githubusercontent.com/u/90690777?",
@@ -57514,72 +57636,6 @@
         "before": "7cd977231bd03b1428dcf9b979a8da91648e06dc",
         "head": "16b820f75766b422b3675a4b1518b910a8146db3",
         "push_id": 34648800695,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 631317608
-      },
-      "public": true,
-      "repo": {
-        "id": 631317608,
-        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-05-26T00:17:18Z",
-      "id": "12358135564",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "80f94a04d2166e28013554b5c71c29d529d1d5da",
-        "head": "c0d672ab82686e2da5edaf36134f5687f06c1585",
-        "push_id": 34648359334,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 804642494
-      },
-      "public": true,
-      "repo": {
-        "id": 804642494,
-        "name": "oauth-wg/draft-ietf-oauth-client-id-metadata-document",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-05-25T10:31:11Z",
-      "id": "12330764696",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "c0acd0dece74c8a8bcbb73b0f436f93afef7c163",
-        "head": "7cd977231bd03b1428dcf9b979a8da91648e06dc",
-        "push_id": 34620977880,
         "ref": "refs/heads/gh-pages",
         "repository_id": 631317608
       },
@@ -96683,8 +96739,8 @@
       "name": "oauth-sd-jwt-vc",
       "node_id": "R_kgDOJbVClQ",
       "notifications_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/notifications{?since,all,participating}",
-      "open_issues": 6,
-      "open_issues_count": 6,
+      "open_issues": 7,
+      "open_issues_count": 7,
       "owner": {
         "avatar_url": "https://avatars.githubusercontent.com/u/111596788?v=4",
         "events_url": "https://api.github.com/users/oauth-wg/events{/privacy}",
@@ -97075,7 +97131,7 @@
       "releases_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/releases{/id}",
       "size": 834,
       "ssh_url": "git@github.com:oauth-wg/oauth-identity-chaining.git",
-      "stargazers_count": 8,
+      "stargazers_count": 9,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/stargazers",
       "statuses_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/statuses/{sha}",
       "subscribers_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/subscribers",
@@ -97085,11 +97141,11 @@
       "teams_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/teams",
       "topics": [],
       "trees_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/git/trees{/sha}",
-      "updated_at": "2026-06-02T18:22:55Z",
+      "updated_at": "2026-06-07T20:48:05Z",
       "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining",
       "visibility": "public",
-      "watchers": 8,
-      "watchers_count": 8,
+      "watchers": 9,
+      "watchers_count": 9,
       "web_commit_signoff_required": false
     },
     {
@@ -97795,5 +97851,5 @@
       "web_commit_signoff_required": false
     }
   ],
-  "snapshot_date": "2026-06-07"
+  "snapshot_date": "2026-06-08"
 }
