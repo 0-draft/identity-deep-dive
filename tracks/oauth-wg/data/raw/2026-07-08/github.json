@@ -1,8 +1,288 @@
 {
-  "collected_at": "2026-07-07T09:50:08+00:00",
+  "collected_at": "2026-07-08T08:35:33+00:00",
   "issues": {
     "error": null,
     "items": [
+      {
+        "active_lock_reason": null,
+        "assignee": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
+          "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
+          "followers_url": "https://api.github.com/users/PieterKas/followers",
+          "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
+          "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/PieterKas",
+          "id": 90690777,
+          "login": "PieterKas",
+          "node_id": "MDQ6VXNlcjkwNjkwNzc3",
+          "organizations_url": "https://api.github.com/users/PieterKas/orgs",
+          "received_events_url": "https://api.github.com/users/PieterKas/received_events",
+          "repos_url": "https://api.github.com/users/PieterKas/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/PieterKas",
+          "user_view_type": "public"
+        },
+        "assignees": [
+          {
+            "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
+            "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
+            "followers_url": "https://api.github.com/users/PieterKas/followers",
+            "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
+            "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/PieterKas",
+            "id": 90690777,
+            "login": "PieterKas",
+            "node_id": "MDQ6VXNlcjkwNjkwNzc3",
+            "organizations_url": "https://api.github.com/users/PieterKas/orgs",
+            "received_events_url": "https://api.github.com/users/PieterKas/received_events",
+            "repos_url": "https://api.github.com/users/PieterKas/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/PieterKas",
+            "user_view_type": "public"
+          }
+        ],
+        "author_association": "NONE",
+        "body": "From [12.3. Txn-Token Request Processing](https://www.ietf.org/archive/id/draft-ietf-oauth-transaction-tokens-08.html#section-12.3):\n> If a `request_context` parameter is present in the Txn-Token Request, the data SHOULD be added to the `rctx` object of the Txn-Token.\n\nDoes the \"added\" here mean \"added as is\" (copied)? Or is TTS allowed to perform some sort of mapping? The examples in 10.2.4 / 12.1 suggest the former. Would be nice to clarify this.\n\n> If a `request_details` parameter is present in the Txn-Token Request, then the TTS SHOULD propagate the data from the `request_details` object into the claims in the `tctx` object as authorized by the TTS authorization policy for the requesting client.\n\nThe wording is different here (\"propagated\" vs. \"added\"), so I'd say some sort of mapping is assumed. To further intricate things, there is no `request_details` in the TraT request example in 12.1, making this a pure guesswork. Would be nice to clarify this as well, and also add `request_details` to the example.\n\nFinally, the examples for `rctx` / `tctx` in 10.2.2 / 10.2.3 are inconsistent:\n\n```json\n{\n    \"rctx\": {\n      \"req_ip\": \"69.151.72.123\", // env context of external call\n      \"authn\": \"urn:ietf:rfc:6749\" // env context of external call\n    }\n}\n```\n\n```json\n\"tctx\": {\n  \"action\": \"BUY\", // parameter of external call\n  \"ticker\": \"MSFT\", // parameter of external call\n  \"quantity\": \"100\", // parameter of external call\n  \"customer_type\": { // computed value not present in external call\n    \"geo\": \"US\",\n    \"level\": \"VIP\"\n  }\n}\n```\n\n`rctx` is enclosed in curly braces, whilst `tctx` is not. And ultimately, `quantity` should be a JSON number and not a string (`100` instead of `\"100\"`). ",
+        "closed_at": "2026-07-07T11:42:33Z",
+        "comments": 7,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/comments",
+        "created_at": "2026-05-14T18:51:11Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/events",
+        "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/349",
+        "id": 4448450906,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [
+          {
+            "color": "aaaaaa",
+            "default": false,
+            "description": null,
+            "id": 9174600891,
+            "name": "WGLC Feedback",
+            "node_id": "LA_kwDOJt_WwM8AAAACItlMuw",
+            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/labels/WGLC%20Feedback"
+          }
+        ],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOJt_WwM8AAAABCSX5Wg",
+        "number": 349,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
+        "score": 1.0,
+        "state": "closed",
+        "state_reason": "completed",
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/timeline",
+        "title": "More rctx/tctx fun",
+        "type": null,
+        "updated_at": "2026-07-07T11:54:54Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/13701445?v=4",
+          "events_url": "https://api.github.com/users/dteleguin/events{/privacy}",
+          "followers_url": "https://api.github.com/users/dteleguin/followers",
+          "following_url": "https://api.github.com/users/dteleguin/following{/other_user}",
+          "gists_url": "https://api.github.com/users/dteleguin/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/dteleguin",
+          "id": 13701445,
+          "login": "dteleguin",
+          "node_id": "MDQ6VXNlcjEzNzAxNDQ1",
+          "organizations_url": "https://api.github.com/users/dteleguin/orgs",
+          "received_events_url": "https://api.github.com/users/dteleguin/received_events",
+          "repos_url": "https://api.github.com/users/dteleguin/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/dteleguin/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/dteleguin/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/dteleguin",
+          "user_view_type": "public"
+        }
+      },
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "NONE",
+        "body": "Thanks for writing up ID on Transaction Tokens. \n\n1. I was hoping to find a reference to [RFC 9396](https://datatracker.ietf.org/doc/html/rfc9396) Rich Authorization Requests somewhere, especially while discussing Authorization Context. \n\n2. Also since RFC 9396's `authorization_details` is already registered in OAuth [Parameters registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml) perhaps it could be used here as well to provide value for `request_context?` It is already approved for token request and token response.\n\n3. Can `authorization_details` be used here as a [claim](https://datatracker.ietf.org/doc/html/rfc9396#name-oauth-parameters-registrati) instead of tctx, inside tctx or in addition to tact?  \n\nFor #2 and #3, I would not know if reuse is prohibited, it was ignored or it was discussed and a decision was taken not to reuse.\n\nSorry in advance if these issues are already discussed and resolved. \n\nthanks,\nsanjay",
+        "closed_at": null,
+        "comments": 11,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/comments",
+        "created_at": "2026-05-15T17:23:33Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/events",
+        "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/351",
+        "id": 4455724316,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOJt_WwM8AAAABCZT1HA",
+        "number": 351,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/timeline",
+        "title": "Using RFC 9396's authorization_details as a claim and for request_context",
+        "type": null,
+        "updated_at": "2026-07-07T11:45:41Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/21368261?v=4",
+          "events_url": "https://api.github.com/users/sdatspun2/events{/privacy}",
+          "followers_url": "https://api.github.com/users/sdatspun2/followers",
+          "following_url": "https://api.github.com/users/sdatspun2/following{/other_user}",
+          "gists_url": "https://api.github.com/users/sdatspun2/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/sdatspun2",
+          "id": 21368261,
+          "login": "sdatspun2",
+          "node_id": "MDQ6VXNlcjIxMzY4MjYx",
+          "organizations_url": "https://api.github.com/users/sdatspun2/orgs",
+          "received_events_url": "https://api.github.com/users/sdatspun2/received_events",
+          "repos_url": "https://api.github.com/users/sdatspun2/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/sdatspun2/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/sdatspun2/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/sdatspun2",
+          "user_view_type": "public"
+        }
+      },
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "NONE",
+        "body": "**Section:** 14.6 (Scope Processing); related: §12.3.\n\n**Issue.** §14.6 says:\n\n> \"The TTS MUST ensure that the requested scope of the Txn-Token is equal\n> or less than the scope(s) identified in the subject_token.\"\n\nThe text doesn't define behavior when the `subject_token` carries **no\n`scope` claim at all**. Two readings are each defensible and they diverge\nin exactly the privilege-escalation case the section exists to prevent:\n\n1. **Absent parent scope == empty set.** Any non-empty requested scope is\n   strictly greater, so the request is refused. (Conservative.)\n2. **Absent parent scope == unconstrained.** The MUST has nothing to\n   compare against, so any requested scope passes. (Permissive.)\n\n§12.3 (\"the TTS MUST evaluate the value specified in the scope parameter\")\ndoesn't resolve it either — it constrains the requested scope, not the\nabsent-parent case.\n\n**Implementation experience.** In an open-source implementation (authgent),\na literal reading of the §14.6 MUST produced reading (2): the subset check\nonly fires when the parent scope is non-empty, so a `subject_token` with no\n`scope` claim currently lets *any* requested scope through unrestricted.\nThat is arguably the unintentional-scope-increase case §14.6 exists to\nprevent — which is precisely why I think the absent-`scope` case needs\nexplicit text. A conscientious implementer reading §14.6 as written can\nland on the permissive behavior without realizing it.\n\n**Suggested clarification** (one sentence in §14.6):\n\n> \"If the subject_token carries no `scope` claim, the TTS MUST treat the\n> available scope as the empty set for the purpose of this comparison\n> (i.e. it MUST NOT issue a Txn-Token with a non-empty scope).\"\n\nHappy to turn this into a PR if the editors agree with the direction.",
+        "closed_at": "2026-07-07T11:42:19Z",
+        "comments": 5,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357/comments",
+        "created_at": "2026-06-23T20:42:45Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357/events",
+        "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/357",
+        "id": 4729402518,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOJt_WwM8AAAABGeT0lg",
+        "number": 357,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
+        "score": 1.0,
+        "state": "closed",
+        "state_reason": "completed",
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357/timeline",
+        "title": "§14.6 Scope Processing: behavior undefined when subject_token has no `scope` claim",
+        "type": null,
+        "updated_at": "2026-07-07T11:42:19Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/35123745?v=4",
+          "events_url": "https://api.github.com/users/Dhruvagnihotri/events{/privacy}",
+          "followers_url": "https://api.github.com/users/Dhruvagnihotri/followers",
+          "following_url": "https://api.github.com/users/Dhruvagnihotri/following{/other_user}",
+          "gists_url": "https://api.github.com/users/Dhruvagnihotri/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/Dhruvagnihotri",
+          "id": 35123745,
+          "login": "Dhruvagnihotri",
+          "node_id": "MDQ6VXNlcjM1MTIzNzQ1",
+          "organizations_url": "https://api.github.com/users/Dhruvagnihotri/orgs",
+          "received_events_url": "https://api.github.com/users/Dhruvagnihotri/received_events",
+          "repos_url": "https://api.github.com/users/Dhruvagnihotri/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/Dhruvagnihotri/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/Dhruvagnihotri/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/Dhruvagnihotri",
+          "user_view_type": "public"
+        }
+      },
       {
         "active_lock_reason": null,
         "assignee": {
@@ -342,82 +622,6 @@
           "subscriptions_url": "https://api.github.com/users/aaronpk/subscriptions",
           "type": "User",
           "url": "https://api.github.com/users/aaronpk",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "NONE",
-        "body": "**Section:** 14.6 (Scope Processing); related: §12.3.\n\n**Issue.** §14.6 says:\n\n> \"The TTS MUST ensure that the requested scope of the Txn-Token is equal\n> or less than the scope(s) identified in the subject_token.\"\n\nThe text doesn't define behavior when the `subject_token` carries **no\n`scope` claim at all**. Two readings are each defensible and they diverge\nin exactly the privilege-escalation case the section exists to prevent:\n\n1. **Absent parent scope == empty set.** Any non-empty requested scope is\n   strictly greater, so the request is refused. (Conservative.)\n2. **Absent parent scope == unconstrained.** The MUST has nothing to\n   compare against, so any requested scope passes. (Permissive.)\n\n§12.3 (\"the TTS MUST evaluate the value specified in the scope parameter\")\ndoesn't resolve it either — it constrains the requested scope, not the\nabsent-parent case.\n\n**Implementation experience.** In an open-source implementation (authgent),\na literal reading of the §14.6 MUST produced reading (2): the subset check\nonly fires when the parent scope is non-empty, so a `subject_token` with no\n`scope` claim currently lets *any* requested scope through unrestricted.\nThat is arguably the unintentional-scope-increase case §14.6 exists to\nprevent — which is precisely why I think the absent-`scope` case needs\nexplicit text. A conscientious implementer reading §14.6 as written can\nland on the permissive behavior without realizing it.\n\n**Suggested clarification** (one sentence in §14.6):\n\n> \"If the subject_token carries no `scope` claim, the TTS MUST treat the\n> available scope as the empty set for the purpose of this comparison\n> (i.e. it MUST NOT issue a Txn-Token with a non-empty scope).\"\n\nHappy to turn this into a PR if the editors agree with the direction.",
-        "closed_at": null,
-        "comments": 5,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357/comments",
-        "created_at": "2026-06-23T20:42:45Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357/events",
-        "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/357",
-        "id": 4729402518,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOJt_WwM8AAAABGeT0lg",
-        "number": 357,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
-        "score": 1.0,
-        "state": "open",
-        "state_reason": null,
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357/timeline",
-        "title": "§14.6 Scope Processing: behavior undefined when subject_token has no `scope` claim",
-        "type": null,
-        "updated_at": "2026-07-06T18:52:37Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/35123745?v=4",
-          "events_url": "https://api.github.com/users/Dhruvagnihotri/events{/privacy}",
-          "followers_url": "https://api.github.com/users/Dhruvagnihotri/followers",
-          "following_url": "https://api.github.com/users/Dhruvagnihotri/following{/other_user}",
-          "gists_url": "https://api.github.com/users/Dhruvagnihotri/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/Dhruvagnihotri",
-          "id": 35123745,
-          "login": "Dhruvagnihotri",
-          "node_id": "MDQ6VXNlcjM1MTIzNzQ1",
-          "organizations_url": "https://api.github.com/users/Dhruvagnihotri/orgs",
-          "received_events_url": "https://api.github.com/users/Dhruvagnihotri/received_events",
-          "repos_url": "https://api.github.com/users/Dhruvagnihotri/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/Dhruvagnihotri/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/Dhruvagnihotri/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/Dhruvagnihotri",
           "user_view_type": "public"
         }
       },
@@ -3325,210 +3529,6 @@
           "subscriptions_url": "https://api.github.com/users/aaronpk/subscriptions",
           "type": "User",
           "url": "https://api.github.com/users/aaronpk",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
-          "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
-          "followers_url": "https://api.github.com/users/PieterKas/followers",
-          "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
-          "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/PieterKas",
-          "id": 90690777,
-          "login": "PieterKas",
-          "node_id": "MDQ6VXNlcjkwNjkwNzc3",
-          "organizations_url": "https://api.github.com/users/PieterKas/orgs",
-          "received_events_url": "https://api.github.com/users/PieterKas/received_events",
-          "repos_url": "https://api.github.com/users/PieterKas/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/PieterKas",
-          "user_view_type": "public"
-        },
-        "assignees": [
-          {
-            "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
-            "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
-            "followers_url": "https://api.github.com/users/PieterKas/followers",
-            "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
-            "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/PieterKas",
-            "id": 90690777,
-            "login": "PieterKas",
-            "node_id": "MDQ6VXNlcjkwNjkwNzc3",
-            "organizations_url": "https://api.github.com/users/PieterKas/orgs",
-            "received_events_url": "https://api.github.com/users/PieterKas/received_events",
-            "repos_url": "https://api.github.com/users/PieterKas/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/PieterKas",
-            "user_view_type": "public"
-          }
-        ],
-        "author_association": "NONE",
-        "body": "From [12.3. Txn-Token Request Processing](https://www.ietf.org/archive/id/draft-ietf-oauth-transaction-tokens-08.html#section-12.3):\n> If a `request_context` parameter is present in the Txn-Token Request, the data SHOULD be added to the `rctx` object of the Txn-Token.\n\nDoes the \"added\" here mean \"added as is\" (copied)? Or is TTS allowed to perform some sort of mapping? The examples in 10.2.4 / 12.1 suggest the former. Would be nice to clarify this.\n\n> If a `request_details` parameter is present in the Txn-Token Request, then the TTS SHOULD propagate the data from the `request_details` object into the claims in the `tctx` object as authorized by the TTS authorization policy for the requesting client.\n\nThe wording is different here (\"propagated\" vs. \"added\"), so I'd say some sort of mapping is assumed. To further intricate things, there is no `request_details` in the TraT request example in 12.1, making this a pure guesswork. Would be nice to clarify this as well, and also add `request_details` to the example.\n\nFinally, the examples for `rctx` / `tctx` in 10.2.2 / 10.2.3 are inconsistent:\n\n```json\n{\n    \"rctx\": {\n      \"req_ip\": \"69.151.72.123\", // env context of external call\n      \"authn\": \"urn:ietf:rfc:6749\" // env context of external call\n    }\n}\n```\n\n```json\n\"tctx\": {\n  \"action\": \"BUY\", // parameter of external call\n  \"ticker\": \"MSFT\", // parameter of external call\n  \"quantity\": \"100\", // parameter of external call\n  \"customer_type\": { // computed value not present in external call\n    \"geo\": \"US\",\n    \"level\": \"VIP\"\n  }\n}\n```\n\n`rctx` is enclosed in curly braces, whilst `tctx` is not. And ultimately, `quantity` should be a JSON number and not a string (`100` instead of `\"100\"`). ",
-        "closed_at": null,
-        "comments": 6,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/comments",
-        "created_at": "2026-05-14T18:51:11Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/events",
-        "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/349",
-        "id": 4448450906,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [
-          {
-            "color": "aaaaaa",
-            "default": false,
-            "description": null,
-            "id": 9174600891,
-            "name": "WGLC Feedback",
-            "node_id": "LA_kwDOJt_WwM8AAAACItlMuw",
-            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/labels/WGLC%20Feedback"
-          }
-        ],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOJt_WwM8AAAABCSX5Wg",
-        "number": 349,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
-        "score": 1.0,
-        "state": "open",
-        "state_reason": null,
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/timeline",
-        "title": "More rctx/tctx fun",
-        "type": null,
-        "updated_at": "2026-07-01T10:26:11Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/13701445?v=4",
-          "events_url": "https://api.github.com/users/dteleguin/events{/privacy}",
-          "followers_url": "https://api.github.com/users/dteleguin/followers",
-          "following_url": "https://api.github.com/users/dteleguin/following{/other_user}",
-          "gists_url": "https://api.github.com/users/dteleguin/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/dteleguin",
-          "id": 13701445,
-          "login": "dteleguin",
-          "node_id": "MDQ6VXNlcjEzNzAxNDQ1",
-          "organizations_url": "https://api.github.com/users/dteleguin/orgs",
-          "received_events_url": "https://api.github.com/users/dteleguin/received_events",
-          "repos_url": "https://api.github.com/users/dteleguin/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/dteleguin/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/dteleguin/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/dteleguin",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "NONE",
-        "body": "Thanks for writing up ID on Transaction Tokens. \n\n1. I was hoping to find a reference to [RFC 9396](https://datatracker.ietf.org/doc/html/rfc9396) Rich Authorization Requests somewhere, especially while discussing Authorization Context. \n\n2. Also since RFC 9396's `authorization_details` is already registered in OAuth [Parameters registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml) perhaps it could be used here as well to provide value for `request_context?` It is already approved for token request and token response.\n\n3. Can `authorization_details` be used here as a [claim](https://datatracker.ietf.org/doc/html/rfc9396#name-oauth-parameters-registrati) instead of tctx, inside tctx or in addition to tact?  \n\nFor #2 and #3, I would not know if reuse is prohibited, it was ignored or it was discussed and a decision was taken not to reuse.\n\nSorry in advance if these issues are already discussed and resolved. \n\nthanks,\nsanjay",
-        "closed_at": null,
-        "comments": 10,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/comments",
-        "created_at": "2026-05-15T17:23:33Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/events",
-        "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/351",
-        "id": 4455724316,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOJt_WwM8AAAABCZT1HA",
-        "number": 351,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
-        "score": 1.0,
-        "state": "open",
-        "state_reason": null,
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/timeline",
-        "title": "Using RFC 9396's authorization_details as a claim and for request_context",
-        "type": null,
-        "updated_at": "2026-06-30T23:19:52Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/21368261?v=4",
-          "events_url": "https://api.github.com/users/sdatspun2/events{/privacy}",
-          "followers_url": "https://api.github.com/users/sdatspun2/followers",
-          "following_url": "https://api.github.com/users/sdatspun2/following{/other_user}",
-          "gists_url": "https://api.github.com/users/sdatspun2/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/sdatspun2",
-          "id": 21368261,
-          "login": "sdatspun2",
-          "node_id": "MDQ6VXNlcjIxMzY4MjYx",
-          "organizations_url": "https://api.github.com/users/sdatspun2/orgs",
-          "received_events_url": "https://api.github.com/users/sdatspun2/received_events",
-          "repos_url": "https://api.github.com/users/sdatspun2/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/sdatspun2/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/sdatspun2/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/sdatspun2",
           "user_view_type": "public"
         }
       },
@@ -48813,6 +48813,1330 @@
   "org_events": [
     {
       "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/20430448?",
+        "display_login": "will-bartlett",
+        "gravatar_id": "",
+        "id": 20430448,
+        "login": "will-bartlett",
+        "url": "https://api.github.com/users/will-bartlett"
+      },
+      "created_at": "2026-07-07T21:52:10Z",
+      "id": "11482276518",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "@aaronpk - is this waiting on anything? Can we merge this?",
+          "created_at": "2026-07-07T21:52:10Z",
+          "html_url": "https://github.com/oauth-wg/oauth-v2-1/pull/250#issuecomment-4909378520",
+          "id": 4909378520,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250",
+          "node_id": "IC_kwDODkfq5s8AAAABJJ8r2A",
+          "performed_via_github_app": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/comments/4909378520/reactions"
+          },
+          "updated_at": "2026-07-07T21:52:10Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/comments/4909378520",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/20430448?v=4",
+            "events_url": "https://api.github.com/users/will-bartlett/events{/privacy}",
+            "followers_url": "https://api.github.com/users/will-bartlett/followers",
+            "following_url": "https://api.github.com/users/will-bartlett/following{/other_user}",
+            "gists_url": "https://api.github.com/users/will-bartlett/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/will-bartlett",
+            "id": 20430448,
+            "login": "will-bartlett",
+            "node_id": "MDQ6VXNlcjIwNDMwNDQ4",
+            "organizations_url": "https://api.github.com/users/will-bartlett/orgs",
+            "received_events_url": "https://api.github.com/users/will-bartlett/received_events",
+            "repos_url": "https://api.github.com/users/will-bartlett/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/will-bartlett/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/will-bartlett/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/will-bartlett",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "This does not change the requirements for the client, the client can still choose which mix-up mitigation method to use\r\n\r\ncloses #233",
+          "closed_at": null,
+          "comments": 2,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250/comments",
+          "created_at": "2026-05-04T23:30:02Z",
+          "draft": false,
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250/events",
+          "html_url": "https://github.com/oauth-wg/oauth-v2-1/pull/250",
+          "id": 4380368401,
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "PR_kwDODkfq5s7YNCbt",
+          "number": 250,
+          "performed_via_github_app": null,
+          "pull_request": {
+            "diff_url": "https://github.com/oauth-wg/oauth-v2-1/pull/250.diff",
+            "html_url": "https://github.com/oauth-wg/oauth-v2-1/pull/250",
+            "merged_at": null,
+            "patch_url": "https://github.com/oauth-wg/oauth-v2-1/pull/250.patch",
+            "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/pulls/250"
+          },
+          "reactions": {
+            "+1": 1,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 1,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1",
+          "state": "open",
+          "state_reason": null,
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250/timeline",
+          "title": "Make `iss` response parameter required to be sent by the AS",
+          "type": null,
+          "updated_at": "2026-07-07T21:52:10Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
+            "events_url": "https://api.github.com/users/aaronpk/events{/privacy}",
+            "followers_url": "https://api.github.com/users/aaronpk/followers",
+            "following_url": "https://api.github.com/users/aaronpk/following{/other_user}",
+            "gists_url": "https://api.github.com/users/aaronpk/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/aaronpk",
+            "id": 113001,
+            "login": "aaronpk",
+            "node_id": "MDQ6VXNlcjExMzAwMQ==",
+            "organizations_url": "https://api.github.com/users/aaronpk/orgs",
+            "received_events_url": "https://api.github.com/users/aaronpk/received_events",
+            "repos_url": "https://api.github.com/users/aaronpk/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/aaronpk/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/aaronpk/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/aaronpk",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 239594214,
+        "name": "oauth-wg/oauth-v2-1",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
+        "display_login": "bc-pi",
+        "gravatar_id": "",
+        "id": 71398439,
+        "login": "bc-pi",
+        "url": "https://api.github.com/users/bc-pi"
+      },
+      "created_at": "2026-07-07T20:25:51Z",
+      "id": "11479139570",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "pull_request": {
+          "base": {
+            "ref": "main",
+            "repo": {
+              "id": 652659140,
+              "name": "oauth-identity-chaining",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+            },
+            "sha": "c889a7552f727f339cbc6ab75dcc0227384fe201"
+          },
+          "head": {
+            "ref": "PieterKas-patch-5",
+            "repo": {
+              "id": 652659140,
+              "name": "oauth-identity-chaining",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+            },
+            "sha": "78dd7465f0ae4fb706cf6fa5b9f861051987ce08"
+          },
+          "id": 4008621530,
+          "number": 199,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/199"
+        },
+        "review": {
+          "_links": {
+            "html": {
+              "href": "https://github.com/oauth-wg/oauth-identity-chaining/pull/199#pullrequestreview-4648650891"
+            },
+            "pull_request": {
+              "href": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/199"
+            }
+          },
+          "body": "One fun thing about the backticks is that (AFAIK) the text and htmlized outputs lose any formatting somewhere in markdown to xml to HTML/text/htmlized text processing. So while this might move towards consistent backtick usage in the markdown, the final output results don't necessarily have that consistency. Or even anything to denote the difference between prose and protocol things. Some have expressed an affinity for double quotes in addition to or instead of the '`'s. \n\nThat said, this is not at all unique to this document and it's ultimately a subjective matter of editorial taste (AFAIK). ",
+          "commit_id": "78dd7465f0ae4fb706cf6fa5b9f861051987ce08",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/199#pullrequestreview-4648650891",
+          "id": 4648650891,
+          "node_id": "PRR_kwDOJubJxM8AAAABFRTIiw",
+          "pull_request_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/199",
+          "state": "approved",
+          "submitted_at": "2026-07-07T20:25:50Z",
+          "updated_at": "2026-07-07T20:25:50Z",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
+            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
+            "followers_url": "https://api.github.com/users/bc-pi/followers",
+            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
+            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/bc-pi",
+            "id": 71398439,
+            "login": "bc-pi",
+            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
+            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
+            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
+            "repos_url": "https://api.github.com/users/bc-pi/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/bc-pi",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 652659140,
+        "name": "oauth-wg/oauth-identity-chaining",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+      },
+      "type": "PullRequestReviewEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/90690777?",
+        "display_login": "PieterKas",
+        "gravatar_id": "",
+        "id": 90690777,
+        "login": "PieterKas",
+        "url": "https://api.github.com/users/PieterKas"
+      },
+      "created_at": "2026-07-07T17:11:55Z",
+      "id": "11471554449",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "opened",
+        "number": 199,
+        "pull_request": {
+          "base": {
+            "ref": "main",
+            "repo": {
+              "id": 652659140,
+              "name": "oauth-identity-chaining",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+            },
+            "sha": "c889a7552f727f339cbc6ab75dcc0227384fe201"
+          },
+          "head": {
+            "ref": "PieterKas-patch-5",
+            "repo": {
+              "id": 652659140,
+              "name": "oauth-identity-chaining",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+            },
+            "sha": "78dd7465f0ae4fb706cf6fa5b9f861051987ce08"
+          },
+          "id": 4008621530,
+          "number": 199,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/199"
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 652659140,
+        "name": "oauth-wg/oauth-identity-chaining",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+      },
+      "type": "PullRequestEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-07-07T17:09:27Z",
+      "id": "14501428236",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "6613bdab467d6db0fb1c06c3041e8c4dc548cc68",
+        "head": "effb65941608f63f0aa44804401e661cc9dba5a5",
+        "push_id": 36790728227,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 652659140
+      },
+      "public": true,
+      "repo": {
+        "id": 652659140,
+        "name": "oauth-wg/oauth-identity-chaining",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/90690777?",
+        "display_login": "PieterKas",
+        "gravatar_id": "",
+        "id": 90690777,
+        "login": "PieterKas",
+        "url": "https://api.github.com/users/PieterKas"
+      },
+      "created_at": "2026-07-07T17:09:02Z",
+      "id": "14501411731",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "full_ref": "refs/heads/PieterKas-patch-4",
+        "pusher_type": "user",
+        "ref": "PieterKas-patch-4",
+        "ref_type": "branch"
+      },
+      "public": true,
+      "repo": {
+        "id": 652659140,
+        "name": "oauth-wg/oauth-identity-chaining",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+      },
+      "type": "DeleteEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/90690777?",
+        "display_login": "PieterKas",
+        "gravatar_id": "",
+        "id": 90690777,
+        "login": "PieterKas",
+        "url": "https://api.github.com/users/PieterKas"
+      },
+      "created_at": "2026-07-07T17:09:01Z",
+      "id": "14501411320",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "ea94d0ee1f6f88b198e71d34d7dec73715ae4876",
+        "head": "c889a7552f727f339cbc6ab75dcc0227384fe201",
+        "push_id": 36790704670,
+        "ref": "refs/heads/main",
+        "repository_id": 652659140
+      },
+      "public": true,
+      "repo": {
+        "id": 652659140,
+        "name": "oauth-wg/oauth-identity-chaining",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/90690777?",
+        "display_login": "PieterKas",
+        "gravatar_id": "",
+        "id": 90690777,
+        "login": "PieterKas",
+        "url": "https://api.github.com/users/PieterKas"
+      },
+      "created_at": "2026-07-07T17:08:59Z",
+      "id": "11471440446",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "merged",
+        "number": 198,
+        "pull_request": {
+          "base": {
+            "ref": "main",
+            "repo": {
+              "id": 652659140,
+              "name": "oauth-identity-chaining",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+            },
+            "sha": "ea94d0ee1f6f88b198e71d34d7dec73715ae4876"
+          },
+          "head": {
+            "ref": "PieterKas-patch-4",
+            "repo": {
+              "id": 652659140,
+              "name": "oauth-identity-chaining",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+            },
+            "sha": "4e1a6e9bb211bb8ba806e912de8aba506bec7f1b"
+          },
+          "id": 4008406845,
+          "number": 198,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/198"
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 652659140,
+        "name": "oauth-wg/oauth-identity-chaining",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+      },
+      "type": "PullRequestEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-07-07T17:08:43Z",
+      "id": "14501384361",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "3149495f2ba438e2743b26958232a566e4fc580c",
+        "head": "6613bdab467d6db0fb1c06c3041e8c4dc548cc68",
+        "push_id": 36790690364,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 652659140
+      },
+      "public": true,
+      "repo": {
+        "id": 652659140,
+        "name": "oauth-wg/oauth-identity-chaining",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/90690777?",
+        "display_login": "PieterKas",
+        "gravatar_id": "",
+        "id": 90690777,
+        "login": "PieterKas",
+        "url": "https://api.github.com/users/PieterKas"
+      },
+      "created_at": "2026-07-07T17:08:07Z",
+      "id": "14501381013",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "description": "Draft specification for Identity Chaining",
+        "full_ref": "refs/heads/PieterKas-patch-5",
+        "master_branch": "main",
+        "pusher_type": "user",
+        "ref": "PieterKas-patch-5",
+        "ref_type": "branch"
+      },
+      "public": true,
+      "repo": {
+        "id": 652659140,
+        "name": "oauth-wg/oauth-identity-chaining",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+      },
+      "type": "CreateEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
+        "display_login": "bc-pi",
+        "gravatar_id": "",
+        "id": 71398439,
+        "login": "bc-pi",
+        "url": "https://api.github.com/users/bc-pi"
+      },
+      "created_at": "2026-07-07T17:00:10Z",
+      "id": "11471075632",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "pull_request": {
+          "base": {
+            "ref": "main",
+            "repo": {
+              "id": 652659140,
+              "name": "oauth-identity-chaining",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+            },
+            "sha": "ea94d0ee1f6f88b198e71d34d7dec73715ae4876"
+          },
+          "head": {
+            "ref": "PieterKas-patch-4",
+            "repo": {
+              "id": 652659140,
+              "name": "oauth-identity-chaining",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+            },
+            "sha": "4e1a6e9bb211bb8ba806e912de8aba506bec7f1b"
+          },
+          "id": 4008406845,
+          "number": 198,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/198"
+        },
+        "review": {
+          "_links": {
+            "html": {
+              "href": "https://github.com/oauth-wg/oauth-identity-chaining/pull/198#pullrequestreview-4647287492"
+            },
+            "pull_request": {
+              "href": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/198"
+            }
+          },
+          "body": "ok sure",
+          "commit_id": "4e1a6e9bb211bb8ba806e912de8aba506bec7f1b",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/198#pullrequestreview-4647287492",
+          "id": 4647287492,
+          "node_id": "PRR_kwDOJubJxM8AAAABFP_6xA",
+          "pull_request_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/198",
+          "state": "approved",
+          "submitted_at": "2026-07-07T17:00:10Z",
+          "updated_at": "2026-07-07T17:00:10Z",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
+            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
+            "followers_url": "https://api.github.com/users/bc-pi/followers",
+            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
+            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/bc-pi",
+            "id": 71398439,
+            "login": "bc-pi",
+            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
+            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
+            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
+            "repos_url": "https://api.github.com/users/bc-pi/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/bc-pi",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 652659140,
+        "name": "oauth-wg/oauth-identity-chaining",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+      },
+      "type": "PullRequestReviewEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-07-07T16:36:43Z",
+      "id": "14499717864",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "30b471f57e3cdaad94e5936674449e772ab51473",
+        "head": "3149495f2ba438e2743b26958232a566e4fc580c",
+        "push_id": 36789004037,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 652659140
+      },
+      "public": true,
+      "repo": {
+        "id": 652659140,
+        "name": "oauth-wg/oauth-identity-chaining",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/90690777?",
+        "display_login": "PieterKas",
+        "gravatar_id": "",
+        "id": 90690777,
+        "login": "PieterKas",
+        "url": "https://api.github.com/users/PieterKas"
+      },
+      "created_at": "2026-07-07T16:36:23Z",
+      "id": "11470103478",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "opened",
+        "number": 198,
+        "pull_request": {
+          "base": {
+            "ref": "main",
+            "repo": {
+              "id": 652659140,
+              "name": "oauth-identity-chaining",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+            },
+            "sha": "ea94d0ee1f6f88b198e71d34d7dec73715ae4876"
+          },
+          "head": {
+            "ref": "PieterKas-patch-4",
+            "repo": {
+              "id": 652659140,
+              "name": "oauth-identity-chaining",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+            },
+            "sha": "4e1a6e9bb211bb8ba806e912de8aba506bec7f1b"
+          },
+          "id": 4008406845,
+          "number": 198,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/198"
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 652659140,
+        "name": "oauth-wg/oauth-identity-chaining",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+      },
+      "type": "PullRequestEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/90690777?",
+        "display_login": "PieterKas",
+        "gravatar_id": "",
+        "id": 90690777,
+        "login": "PieterKas",
+        "url": "https://api.github.com/users/PieterKas"
+      },
+      "created_at": "2026-07-07T16:36:19Z",
+      "id": "14499696733",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "description": "Draft specification for Identity Chaining",
+        "full_ref": "refs/heads/PieterKas-patch-4",
+        "master_branch": "main",
+        "pusher_type": "user",
+        "ref": "PieterKas-patch-4",
+        "ref_type": "branch"
+      },
+      "public": true,
+      "repo": {
+        "id": 652659140,
+        "name": "oauth-wg/oauth-identity-chaining",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
+      },
+      "type": "CreateEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/13701445?",
+        "display_login": "dteleguin",
+        "gravatar_id": "",
+        "id": 13701445,
+        "login": "dteleguin",
+        "url": "https://api.github.com/users/dteleguin"
+      },
+      "created_at": "2026-07-07T11:53:20Z",
+      "id": "11457135196",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "Thanks everyone, looks much clearer now 👏 my only remaining nitpick is about `quantity` in the examples being a string and not a number. Fields like that will most likely be subject to policy evaluation involving arithmetic.",
+          "created_at": "2026-07-07T11:53:20Z",
+          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/349#issuecomment-4903473563",
+          "id": 4903473563,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349",
+          "node_id": "IC_kwDOJt_WwM8AAAABJEURmw",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/comments/4903473563/reactions"
+          },
+          "updated_at": "2026-07-07T11:54:54Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/comments/4903473563",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/13701445?v=4",
+            "events_url": "https://api.github.com/users/dteleguin/events{/privacy}",
+            "followers_url": "https://api.github.com/users/dteleguin/followers",
+            "following_url": "https://api.github.com/users/dteleguin/following{/other_user}",
+            "gists_url": "https://api.github.com/users/dteleguin/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/dteleguin",
+            "id": 13701445,
+            "login": "dteleguin",
+            "node_id": "MDQ6VXNlcjEzNzAxNDQ1",
+            "organizations_url": "https://api.github.com/users/dteleguin/orgs",
+            "received_events_url": "https://api.github.com/users/dteleguin/received_events",
+            "repos_url": "https://api.github.com/users/dteleguin/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/dteleguin/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/dteleguin/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/dteleguin",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
+            "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
+            "followers_url": "https://api.github.com/users/PieterKas/followers",
+            "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
+            "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/PieterKas",
+            "id": 90690777,
+            "login": "PieterKas",
+            "node_id": "MDQ6VXNlcjkwNjkwNzc3",
+            "organizations_url": "https://api.github.com/users/PieterKas/orgs",
+            "received_events_url": "https://api.github.com/users/PieterKas/received_events",
+            "repos_url": "https://api.github.com/users/PieterKas/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/PieterKas",
+            "user_view_type": "public"
+          },
+          "assignees": [
+            {
+              "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
+              "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
+              "followers_url": "https://api.github.com/users/PieterKas/followers",
+              "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
+              "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
+              "gravatar_id": "",
+              "html_url": "https://github.com/PieterKas",
+              "id": 90690777,
+              "login": "PieterKas",
+              "node_id": "MDQ6VXNlcjkwNjkwNzc3",
+              "organizations_url": "https://api.github.com/users/PieterKas/orgs",
+              "received_events_url": "https://api.github.com/users/PieterKas/received_events",
+              "repos_url": "https://api.github.com/users/PieterKas/repos",
+              "site_admin": false,
+              "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
+              "type": "User",
+              "url": "https://api.github.com/users/PieterKas",
+              "user_view_type": "public"
+            }
+          ],
+          "body": "From [12.3. Txn-Token Request Processing](https://www.ietf.org/archive/id/draft-ietf-oauth-transaction-tokens-08.html#section-12.3):\n> If a `request_context` parameter is present in the Txn-Token Request, the data SHOULD be added to the `rctx` object of the Txn-Token.\n\nDoes the \"added\" here mean \"added as is\" (copied)? Or is TTS allowed to perform some sort of mapping? The examples in 10.2.4 / 12.1 suggest the former. Would be nice to clarify this.\n\n> If a `request_details` parameter is present in the Txn-Token Request, then the TTS SHOULD propagate the data from the `request_details` object into the claims in the `tctx` object as authorized by the TTS authorization policy for the requesting client.\n\nThe wording is different here (\"propagated\" vs. \"added\"), so I'd say some sort of mapping is assumed. To further intricate things, there is no `request_details` in the TraT request example in 12.1, making this a pure guesswork. Would be nice to clarify this as well, and also add `request_details` to the example.\n\nFinally, the examples for `rctx` / `tctx` in 10.2.2 / 10.2.3 are inconsistent:\n\n```json\n{\n    \"rctx\": {\n      \"req_ip\": \"69.151.72.123\", // env context of external call\n      \"authn\": \"urn:ietf:rfc:6749\" // env context of external call\n    }\n}\n```\n\n```json\n\"tctx\": {\n  \"action\": \"BUY\", // parameter of external call\n  \"ticker\": \"MSFT\", // parameter of external call\n  \"quantity\": \"100\", // parameter of external call\n  \"customer_type\": { // computed value not present in external call\n    \"geo\": \"US\",\n    \"level\": \"VIP\"\n  }\n}\n```\n\n`rctx` is enclosed in curly braces, whilst `tctx` is not. And ultimately, `quantity` should be a JSON number and not a string (`100` instead of `\"100\"`). ",
+          "closed_at": "2026-07-07T11:42:33Z",
+          "comments": 7,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/comments",
+          "created_at": "2026-05-14T18:51:11Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/events",
+          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/349",
+          "id": 4448450906,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [
+            {
+              "color": "aaaaaa",
+              "default": false,
+              "description": null,
+              "id": 9174600891,
+              "name": "WGLC Feedback",
+              "node_id": "LA_kwDOJt_WwM8AAAACItlMuw",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/labels/WGLC%20Feedback"
+            }
+          ],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJt_WwM8AAAABCSX5Wg",
+          "number": 349,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
+          "state": "closed",
+          "state_reason": "completed",
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/timeline",
+          "title": "More rctx/tctx fun",
+          "type": null,
+          "updated_at": "2026-07-07T11:54:54Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/13701445?v=4",
+            "events_url": "https://api.github.com/users/dteleguin/events{/privacy}",
+            "followers_url": "https://api.github.com/users/dteleguin/followers",
+            "following_url": "https://api.github.com/users/dteleguin/following{/other_user}",
+            "gists_url": "https://api.github.com/users/dteleguin/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/dteleguin",
+            "id": 13701445,
+            "login": "dteleguin",
+            "node_id": "MDQ6VXNlcjEzNzAxNDQ1",
+            "organizations_url": "https://api.github.com/users/dteleguin/orgs",
+            "received_events_url": "https://api.github.com/users/dteleguin/received_events",
+            "repos_url": "https://api.github.com/users/dteleguin/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/dteleguin/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/dteleguin/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/dteleguin",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 652203712,
+        "name": "oauth-wg/oauth-transaction-tokens",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/90690777?",
+        "display_login": "PieterKas",
+        "gravatar_id": "",
+        "id": 90690777,
+        "login": "PieterKas",
+        "url": "https://api.github.com/users/PieterKas"
+      },
+      "created_at": "2026-07-07T11:45:41Z",
+      "id": "11456818404",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "The current drafts allows for the use of RAR, or any other structures to include additional information in the transaction token. If there is interest in using RAR, I think it is a sufficiently complex topic that it deserves its own draft.",
+          "created_at": "2026-07-07T11:45:41Z",
+          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/351#issuecomment-4903412702",
+          "id": 4903412702,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351",
+          "node_id": "IC_kwDOJt_WwM8AAAABJEQj3g",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/comments/4903412702/reactions"
+          },
+          "updated_at": "2026-07-07T11:45:41Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/comments/4903412702",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
+            "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
+            "followers_url": "https://api.github.com/users/PieterKas/followers",
+            "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
+            "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/PieterKas",
+            "id": 90690777,
+            "login": "PieterKas",
+            "node_id": "MDQ6VXNlcjkwNjkwNzc3",
+            "organizations_url": "https://api.github.com/users/PieterKas/orgs",
+            "received_events_url": "https://api.github.com/users/PieterKas/received_events",
+            "repos_url": "https://api.github.com/users/PieterKas/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/PieterKas",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "Thanks for writing up ID on Transaction Tokens. \n\n1. I was hoping to find a reference to [RFC 9396](https://datatracker.ietf.org/doc/html/rfc9396) Rich Authorization Requests somewhere, especially while discussing Authorization Context. \n\n2. Also since RFC 9396's `authorization_details` is already registered in OAuth [Parameters registry](https://www.iana.org/assignments/oauth-parameters/oauth-parameters.xhtml) perhaps it could be used here as well to provide value for `request_context?` It is already approved for token request and token response.\n\n3. Can `authorization_details` be used here as a [claim](https://datatracker.ietf.org/doc/html/rfc9396#name-oauth-parameters-registrati) instead of tctx, inside tctx or in addition to tact?  \n\nFor #2 and #3, I would not know if reuse is prohibited, it was ignored or it was discussed and a decision was taken not to reuse.\n\nSorry in advance if these issues are already discussed and resolved. \n\nthanks,\nsanjay",
+          "closed_at": null,
+          "comments": 11,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/comments",
+          "created_at": "2026-05-15T17:23:33Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/events",
+          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/351",
+          "id": 4455724316,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJt_WwM8AAAABCZT1HA",
+          "number": 351,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351/timeline",
+          "title": "Using RFC 9396's authorization_details as a claim and for request_context",
+          "type": null,
+          "updated_at": "2026-07-07T11:45:41Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/351",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/21368261?v=4",
+            "events_url": "https://api.github.com/users/sdatspun2/events{/privacy}",
+            "followers_url": "https://api.github.com/users/sdatspun2/followers",
+            "following_url": "https://api.github.com/users/sdatspun2/following{/other_user}",
+            "gists_url": "https://api.github.com/users/sdatspun2/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/sdatspun2",
+            "id": 21368261,
+            "login": "sdatspun2",
+            "node_id": "MDQ6VXNlcjIxMzY4MjYx",
+            "organizations_url": "https://api.github.com/users/sdatspun2/orgs",
+            "received_events_url": "https://api.github.com/users/sdatspun2/received_events",
+            "repos_url": "https://api.github.com/users/sdatspun2/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/sdatspun2/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/sdatspun2/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/sdatspun2",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 652203712,
+        "name": "oauth-wg/oauth-transaction-tokens",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/90690777?",
+        "display_login": "PieterKas",
+        "gravatar_id": "",
+        "id": 90690777,
+        "login": "PieterKas",
+        "url": "https://api.github.com/users/PieterKas"
+      },
+      "created_at": "2026-07-07T11:42:33Z",
+      "id": "11456689414",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "closed",
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
+            "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
+            "followers_url": "https://api.github.com/users/PieterKas/followers",
+            "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
+            "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/PieterKas",
+            "id": 90690777,
+            "login": "PieterKas",
+            "node_id": "MDQ6VXNlcjkwNjkwNzc3",
+            "organizations_url": "https://api.github.com/users/PieterKas/orgs",
+            "received_events_url": "https://api.github.com/users/PieterKas/received_events",
+            "repos_url": "https://api.github.com/users/PieterKas/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/PieterKas",
+            "user_view_type": "public"
+          },
+          "assignees": [
+            {
+              "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
+              "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
+              "followers_url": "https://api.github.com/users/PieterKas/followers",
+              "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
+              "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
+              "gravatar_id": "",
+              "html_url": "https://github.com/PieterKas",
+              "id": 90690777,
+              "login": "PieterKas",
+              "node_id": "MDQ6VXNlcjkwNjkwNzc3",
+              "organizations_url": "https://api.github.com/users/PieterKas/orgs",
+              "received_events_url": "https://api.github.com/users/PieterKas/received_events",
+              "repos_url": "https://api.github.com/users/PieterKas/repos",
+              "site_admin": false,
+              "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
+              "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
+              "type": "User",
+              "url": "https://api.github.com/users/PieterKas",
+              "user_view_type": "public"
+            }
+          ],
+          "body": "From [12.3. Txn-Token Request Processing](https://www.ietf.org/archive/id/draft-ietf-oauth-transaction-tokens-08.html#section-12.3):\n> If a `request_context` parameter is present in the Txn-Token Request, the data SHOULD be added to the `rctx` object of the Txn-Token.\n\nDoes the \"added\" here mean \"added as is\" (copied)? Or is TTS allowed to perform some sort of mapping? The examples in 10.2.4 / 12.1 suggest the former. Would be nice to clarify this.\n\n> If a `request_details` parameter is present in the Txn-Token Request, then the TTS SHOULD propagate the data from the `request_details` object into the claims in the `tctx` object as authorized by the TTS authorization policy for the requesting client.\n\nThe wording is different here (\"propagated\" vs. \"added\"), so I'd say some sort of mapping is assumed. To further intricate things, there is no `request_details` in the TraT request example in 12.1, making this a pure guesswork. Would be nice to clarify this as well, and also add `request_details` to the example.\n\nFinally, the examples for `rctx` / `tctx` in 10.2.2 / 10.2.3 are inconsistent:\n\n```json\n{\n    \"rctx\": {\n      \"req_ip\": \"69.151.72.123\", // env context of external call\n      \"authn\": \"urn:ietf:rfc:6749\" // env context of external call\n    }\n}\n```\n\n```json\n\"tctx\": {\n  \"action\": \"BUY\", // parameter of external call\n  \"ticker\": \"MSFT\", // parameter of external call\n  \"quantity\": \"100\", // parameter of external call\n  \"customer_type\": { // computed value not present in external call\n    \"geo\": \"US\",\n    \"level\": \"VIP\"\n  }\n}\n```\n\n`rctx` is enclosed in curly braces, whilst `tctx` is not. And ultimately, `quantity` should be a JSON number and not a string (`100` instead of `\"100\"`). ",
+          "closed_at": "2026-07-07T11:42:33Z",
+          "comments": 7,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/comments",
+          "created_at": "2026-05-14T18:51:11Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/events",
+          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/349",
+          "id": 4448450906,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [
+            {
+              "color": "aaaaaa",
+              "default": false,
+              "description": null,
+              "id": 9174600891,
+              "name": "WGLC Feedback",
+              "node_id": "LA_kwDOJt_WwM8AAAACItlMuw",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/labels/WGLC%20Feedback"
+            }
+          ],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJt_WwM8AAAABCSX5Wg",
+          "number": 349,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
+          "state": "closed",
+          "state_reason": "completed",
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349/timeline",
+          "title": "More rctx/tctx fun",
+          "type": null,
+          "updated_at": "2026-07-07T11:54:54Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/349",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/13701445?v=4",
+            "events_url": "https://api.github.com/users/dteleguin/events{/privacy}",
+            "followers_url": "https://api.github.com/users/dteleguin/followers",
+            "following_url": "https://api.github.com/users/dteleguin/following{/other_user}",
+            "gists_url": "https://api.github.com/users/dteleguin/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/dteleguin",
+            "id": 13701445,
+            "login": "dteleguin",
+            "node_id": "MDQ6VXNlcjEzNzAxNDQ1",
+            "organizations_url": "https://api.github.com/users/dteleguin/orgs",
+            "received_events_url": "https://api.github.com/users/dteleguin/received_events",
+            "repos_url": "https://api.github.com/users/dteleguin/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/dteleguin/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/dteleguin/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/dteleguin",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 652203712,
+        "name": "oauth-wg/oauth-transaction-tokens",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
+      },
+      "type": "IssuesEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/90690777?",
+        "display_login": "PieterKas",
+        "gravatar_id": "",
+        "id": 90690777,
+        "login": "PieterKas",
+        "url": "https://api.github.com/users/PieterKas"
+      },
+      "created_at": "2026-07-07T11:42:19Z",
+      "id": "11456680051",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "closed",
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "**Section:** 14.6 (Scope Processing); related: §12.3.\n\n**Issue.** §14.6 says:\n\n> \"The TTS MUST ensure that the requested scope of the Txn-Token is equal\n> or less than the scope(s) identified in the subject_token.\"\n\nThe text doesn't define behavior when the `subject_token` carries **no\n`scope` claim at all**. Two readings are each defensible and they diverge\nin exactly the privilege-escalation case the section exists to prevent:\n\n1. **Absent parent scope == empty set.** Any non-empty requested scope is\n   strictly greater, so the request is refused. (Conservative.)\n2. **Absent parent scope == unconstrained.** The MUST has nothing to\n   compare against, so any requested scope passes. (Permissive.)\n\n§12.3 (\"the TTS MUST evaluate the value specified in the scope parameter\")\ndoesn't resolve it either — it constrains the requested scope, not the\nabsent-parent case.\n\n**Implementation experience.** In an open-source implementation (authgent),\na literal reading of the §14.6 MUST produced reading (2): the subset check\nonly fires when the parent scope is non-empty, so a `subject_token` with no\n`scope` claim currently lets *any* requested scope through unrestricted.\nThat is arguably the unintentional-scope-increase case §14.6 exists to\nprevent — which is precisely why I think the absent-`scope` case needs\nexplicit text. A conscientious implementer reading §14.6 as written can\nland on the permissive behavior without realizing it.\n\n**Suggested clarification** (one sentence in §14.6):\n\n> \"If the subject_token carries no `scope` claim, the TTS MUST treat the\n> available scope as the empty set for the purpose of this comparison\n> (i.e. it MUST NOT issue a Txn-Token with a non-empty scope).\"\n\nHappy to turn this into a PR if the editors agree with the direction.",
+          "closed_at": "2026-07-07T11:42:19Z",
+          "comments": 5,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357/comments",
+          "created_at": "2026-06-23T20:42:45Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357/events",
+          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/357",
+          "id": 4729402518,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJt_WwM8AAAABGeT0lg",
+          "number": 357,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
+          "state": "closed",
+          "state_reason": "completed",
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357/timeline",
+          "title": "§14.6 Scope Processing: behavior undefined when subject_token has no `scope` claim",
+          "type": null,
+          "updated_at": "2026-07-07T11:42:19Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/35123745?v=4",
+            "events_url": "https://api.github.com/users/Dhruvagnihotri/events{/privacy}",
+            "followers_url": "https://api.github.com/users/Dhruvagnihotri/followers",
+            "following_url": "https://api.github.com/users/Dhruvagnihotri/following{/other_user}",
+            "gists_url": "https://api.github.com/users/Dhruvagnihotri/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/Dhruvagnihotri",
+            "id": 35123745,
+            "login": "Dhruvagnihotri",
+            "node_id": "MDQ6VXNlcjM1MTIzNzQ1",
+            "organizations_url": "https://api.github.com/users/Dhruvagnihotri/orgs",
+            "received_events_url": "https://api.github.com/users/Dhruvagnihotri/received_events",
+            "repos_url": "https://api.github.com/users/Dhruvagnihotri/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/Dhruvagnihotri/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/Dhruvagnihotri/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/Dhruvagnihotri",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 652203712,
+        "name": "oauth-wg/oauth-transaction-tokens",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
+      },
+      "type": "IssuesEvent"
+    },
+    {
+      "actor": {
         "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
         "display_login": "github-actions",
         "gravatar_id": "",
@@ -53727,7 +55051,7 @@
           "assignee": null,
           "assignees": [],
           "body": "**Section:** 14.6 (Scope Processing); related: §12.3.\n\n**Issue.** §14.6 says:\n\n> \"The TTS MUST ensure that the requested scope of the Txn-Token is equal\n> or less than the scope(s) identified in the subject_token.\"\n\nThe text doesn't define behavior when the `subject_token` carries **no\n`scope` claim at all**. Two readings are each defensible and they diverge\nin exactly the privilege-escalation case the section exists to prevent:\n\n1. **Absent parent scope == empty set.** Any non-empty requested scope is\n   strictly greater, so the request is refused. (Conservative.)\n2. **Absent parent scope == unconstrained.** The MUST has nothing to\n   compare against, so any requested scope passes. (Permissive.)\n\n§12.3 (\"the TTS MUST evaluate the value specified in the scope parameter\")\ndoesn't resolve it either — it constrains the requested scope, not the\nabsent-parent case.\n\n**Implementation experience.** In an open-source implementation (authgent),\na literal reading of the §14.6 MUST produced reading (2): the subset check\nonly fires when the parent scope is non-empty, so a `subject_token` with no\n`scope` claim currently lets *any* requested scope through unrestricted.\nThat is arguably the unintentional-scope-increase case §14.6 exists to\nprevent — which is precisely why I think the absent-`scope` case needs\nexplicit text. A conscientious implementer reading §14.6 as written can\nland on the permissive behavior without realizing it.\n\n**Suggested clarification** (one sentence in §14.6):\n\n> \"If the subject_token carries no `scope` claim, the TTS MUST treat the\n> available scope as the empty set for the purpose of this comparison\n> (i.e. it MUST NOT issue a Txn-Token with a non-empty scope).\"\n\nHappy to turn this into a PR if the editors agree with the direction.",
-          "closed_at": null,
+          "closed_at": "2026-07-07T11:42:19Z",
           "comments": 5,
           "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357/comments",
           "created_at": "2026-06-23T20:42:45Z",
@@ -53762,8 +55086,8 @@
             "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357/reactions"
           },
           "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
-          "state": "open",
-          "state_reason": null,
+          "state": "closed",
+          "state_reason": "completed",
           "sub_issues_summary": {
             "completed": 0,
             "percent_completed": 0,
@@ -53772,7 +55096,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357/timeline",
           "title": "§14.6 Scope Processing: behavior undefined when subject_token has no `scope` claim",
           "type": null,
-          "updated_at": "2026-07-06T18:52:37Z",
+          "updated_at": "2026-07-07T11:42:19Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/357",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/35123745?v=4",
@@ -54146,858 +55470,227 @@
         "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
       },
       "type": "PullRequestReviewEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/8774236?",
-        "display_login": "c2bo",
-        "gravatar_id": "",
-        "id": 8774236,
-        "login": "c2bo",
-        "url": "https://api.github.com/users/c2bo"
-      },
-      "created_at": "2026-07-06T17:56:03Z",
-      "id": "11420834422",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "opened",
-        "number": 209,
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 631317608,
-              "name": "draft-ietf-oauth-attestation-based-client-auth",
-              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
-            },
-            "sha": "108de562a06b7f55ddbf94bd0fd3866f6d7f7ec0"
-          },
-          "head": {
-            "ref": "198-clarify-pop-modes-validation",
-            "repo": {
-              "id": 631317608,
-              "name": "draft-ietf-oauth-attestation-based-client-auth",
-              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
-            },
-            "sha": "8fceebf33370745241d9eab439fa4e55c4c50683"
-          },
-          "id": 4000977562,
-          "number": 209,
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls/209"
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 631317608,
-        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
-      },
-      "type": "PullRequestEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-07-06T17:54:39Z",
-      "id": "14437806454",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "72c6d2cfa75eb85486b60dede0b90c756115cd64",
-        "head": "9483d876473158839a3a301600cac1ddaf5e4a4a",
-        "push_id": 36727078551,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 631317608
-      },
-      "public": true,
-      "repo": {
-        "id": 631317608,
-        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/8774236?",
-        "display_login": "c2bo",
-        "gravatar_id": "",
-        "id": 8774236,
-        "login": "c2bo",
-        "url": "https://api.github.com/users/c2bo"
-      },
-      "created_at": "2026-07-06T17:54:09Z",
-      "id": "14437781461",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "description": null,
-        "full_ref": "refs/heads/198-clarify-pop-modes-validation",
-        "master_branch": "main",
-        "pusher_type": "user",
-        "ref": "198-clarify-pop-modes-validation",
-        "ref_type": "branch"
-      },
-      "public": true,
-      "repo": {
-        "id": 631317608,
-        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
-      },
-      "type": "CreateEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-07-06T17:32:52Z",
-      "id": "14436695500",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "80b046b78eed95bf7575087a41a3181c7bc70083",
-        "head": "c5d0b6b7f9ebfced6a554ab6ca6b4a860b747e69",
-        "push_id": 36725964943,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 960127947
-      },
-      "public": true,
-      "repo": {
-        "id": 960127947,
-        "name": "oauth-wg/rt-expiration",
-        "url": "https://api.github.com/repos/oauth-wg/rt-expiration"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-07-06T17:16:22Z",
-      "id": "14435894394",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "0dfe4501a627eb281891ed3036a7bff0a6ee8fab",
-        "head": "0ce914e4880f70cdbc34a113997ce70d3405f375",
-        "push_id": 36725121514,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 652203712
-      },
-      "public": true,
-      "repo": {
-        "id": 652203712,
-        "name": "oauth-wg/oauth-transaction-tokens",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/8116763?",
-        "display_login": "tulshi",
-        "gravatar_id": "",
-        "id": 8116763,
-        "login": "tulshi",
-        "url": "https://api.github.com/users/tulshi"
-      },
-      "created_at": "2026-07-06T17:15:54Z",
-      "id": "14435830523",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "full_ref": "refs/heads/fix-replacement-comma",
-        "pusher_type": "user",
-        "ref": "fix-replacement-comma",
-        "ref_type": "branch"
-      },
-      "public": true,
-      "repo": {
-        "id": 652203712,
-        "name": "oauth-wg/oauth-transaction-tokens",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-      },
-      "type": "DeleteEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/8116763?",
-        "display_login": "tulshi",
-        "gravatar_id": "",
-        "id": 8116763,
-        "login": "tulshi",
-        "url": "https://api.github.com/users/tulshi"
-      },
-      "created_at": "2026-07-06T17:15:52Z",
-      "id": "11419181607",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "merged",
-        "number": 360,
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 652203712,
-              "name": "oauth-transaction-tokens",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-            },
-            "sha": "fb3e2c16b11e40e46a9c32255ffbfcfc7f070741"
-          },
-          "head": {
-            "ref": "fix-replacement-comma",
-            "repo": {
-              "id": 652203712,
-              "name": "oauth-transaction-tokens",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-            },
-            "sha": "adefdfb4e4164bff5bb83154e6f2b11c8bd31b81"
-          },
-          "id": 3937174814,
-          "number": 360,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/360"
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 652203712,
-        "name": "oauth-wg/oauth-transaction-tokens",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-      },
-      "type": "PullRequestEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/8116763?",
-        "display_login": "tulshi",
-        "gravatar_id": "",
-        "id": 8116763,
-        "login": "tulshi",
-        "url": "https://api.github.com/users/tulshi"
-      },
-      "created_at": "2026-07-06T17:15:53Z",
-      "id": "14435829544",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "fb3e2c16b11e40e46a9c32255ffbfcfc7f070741",
-        "head": "d80e3d62f90fd491e01980b5568866a510c4bd12",
-        "push_id": 36725097373,
-        "ref": "refs/heads/main",
-        "repository_id": 652203712
-      },
-      "public": true,
-      "repo": {
-        "id": 652203712,
-        "name": "oauth-wg/oauth-transaction-tokens",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/8116763?",
-        "display_login": "tulshi",
-        "gravatar_id": "",
-        "id": 8116763,
-        "login": "tulshi",
-        "url": "https://api.github.com/users/tulshi"
-      },
-      "created_at": "2026-07-06T17:15:53Z",
-      "id": "11419180788",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "closed",
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "https://datatracker.ietf.org/doc/html/draft-ietf-oauth-transaction-tokens-08#section-10.2-2.20.1 \n\n> req_wl:\n> \n> REQUIRED. A string value that identifies the workload that requested the Txn-Token. The value SHOULD contain a single workload identifier. In some circumstances, the value MAY contain multiple workload identifiers with each identifier separated by a comma (,).\n\nWhat are some circumstances? [14.11.1.](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-transaction-tokens-08#section-14.11.1) has two bullets (that should probably be together) about req_wl that are maybe these \"some circumstances\" but that's a lot left to the reader. Also not great justification for a under-defied structured format for use inside a different data format that has ways to structure data.\n\nWhat if some of workload identifiers contain commas? Workload identifiers aren't defined in here, are they?\n\nDo we really want to define a sometimes comma separated values list as a the value of a claim?\n\nIf the [Requester Context](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-transaction-tokens-08#name-requester-context) claim can contain \"information about the computational entity that requested the Txn-Token\", then how/why is that different than \"the workload that requested the Txn-Token\"? \n\nCould the [\"act\" (Actor) Claim](https://www.rfc-editor.org/rfc/rfc8693.html#name-act-actor-claim) be of any relevance here? I am painfully aware that representing delegation is a bit of a mess. But does introducing another construct help the situation? I've not yet read @mcguinness's https://notes.karlmcguinness.com/notes/standardize-act-across-assertion-grants-and-jwt-access-tokens/ and don't know if I agree with proposal(s) but highly suspect it describes some of that \"bit of a mess\". Is a new sometimes-csv valued claim at the top-level going to improve the situation or enworseify it?\n\n\n",
-          "closed_at": "2026-07-06T17:15:53Z",
-          "comments": 11,
-          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/331/comments",
-          "created_at": "2026-04-10T13:10:10Z",
-          "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/331/events",
-          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/331",
-          "id": 4239363473,
-          "issue_dependencies_summary": {
-            "blocked_by": 0,
-            "blocking": 0,
-            "total_blocked_by": 0,
-            "total_blocking": 0
-          },
-          "issue_field_values": [],
-          "labels": [
-            {
-              "color": "aaaaaa",
-              "default": false,
-              "description": null,
-              "id": 9174600891,
-              "name": "WGLC Feedback",
-              "node_id": "LA_kwDOJt_WwM8AAAACItlMuw",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/labels/WGLC%20Feedback"
-            }
-          ],
-          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/331/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "I_kwDOJt_WwM78r42R",
-          "number": 331,
-          "performed_via_github_app": null,
-          "pinned_comment": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/331/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
-          "state": "closed",
-          "state_reason": "completed",
-          "sub_issues_summary": {
-            "completed": 0,
-            "percent_completed": 0,
-            "total": 0
-          },
-          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/331/timeline",
-          "title": "... req_wl ... ",
-          "type": null,
-          "updated_at": "2026-07-06T17:15:53Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/331",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
-            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
-            "followers_url": "https://api.github.com/users/bc-pi/followers",
-            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
-            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/bc-pi",
-            "id": 71398439,
-            "login": "bc-pi",
-            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
-            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
-            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
-            "repos_url": "https://api.github.com/users/bc-pi/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/bc-pi",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 652203712,
-        "name": "oauth-wg/oauth-transaction-tokens",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-      },
-      "type": "IssuesEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/90690777?",
-        "display_login": "PieterKas",
-        "gravatar_id": "",
-        "id": 90690777,
-        "login": "PieterKas",
-        "url": "https://api.github.com/users/PieterKas"
-      },
-      "created_at": "2026-07-06T17:15:44Z",
-      "id": "11419174900",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 652203712,
-              "name": "oauth-transaction-tokens",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-            },
-            "sha": "fb3e2c16b11e40e46a9c32255ffbfcfc7f070741"
-          },
-          "head": {
-            "ref": "fix-replacement-comma",
-            "repo": {
-              "id": 652203712,
-              "name": "oauth-transaction-tokens",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-            },
-            "sha": "adefdfb4e4164bff5bb83154e6f2b11c8bd31b81"
-          },
-          "id": 3937174814,
-          "number": 360,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/360"
-        },
-        "review": {
-          "_links": {
-            "html": {
-              "href": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/360#pullrequestreview-4638170585"
-            },
-            "pull_request": {
-              "href": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/360"
-            }
-          },
-          "body": null,
-          "commit_id": "adefdfb4e4164bff5bb83154e6f2b11c8bd31b81",
-          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/360#pullrequestreview-4638170585",
-          "id": 4638170585,
-          "node_id": "PRR_kwDOJt_WwM8AAAABFHTd2Q",
-          "pull_request_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/360",
-          "state": "approved",
-          "submitted_at": "2026-07-06T17:15:44Z",
-          "updated_at": "2026-07-06T17:15:44Z",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
-            "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
-            "followers_url": "https://api.github.com/users/PieterKas/followers",
-            "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
-            "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/PieterKas",
-            "id": 90690777,
-            "login": "PieterKas",
-            "node_id": "MDQ6VXNlcjkwNjkwNzc3",
-            "organizations_url": "https://api.github.com/users/PieterKas/orgs",
-            "received_events_url": "https://api.github.com/users/PieterKas/received_events",
-            "repos_url": "https://api.github.com/users/PieterKas/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/PieterKas",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 652203712,
-        "name": "oauth-wg/oauth-transaction-tokens",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-      },
-      "type": "PullRequestReviewEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-07-06T17:14:57Z",
-      "id": "14435781166",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "079cd2d703dde0d3106575495814541a4b30d826",
-        "head": "0dfe4501a627eb281891ed3036a7bff0a6ee8fab",
-        "push_id": 36725048853,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 652203712
-      },
-      "public": true,
-      "repo": {
-        "id": 652203712,
-        "name": "oauth-wg/oauth-transaction-tokens",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/8116763?",
-        "display_login": "tulshi",
-        "gravatar_id": "",
-        "id": 8116763,
-        "login": "tulshi",
-        "url": "https://api.github.com/users/tulshi"
-      },
-      "created_at": "2026-07-06T17:14:30Z",
-      "id": "14435757848",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "17f6e257f31c46cef6fa2049c2d10941d872073e",
-        "head": "adefdfb4e4164bff5bb83154e6f2b11c8bd31b81",
-        "push_id": 36725025442,
-        "ref": "refs/heads/fix-replacement-comma",
-        "repository_id": 652203712
-      },
-      "public": true,
-      "repo": {
-        "id": 652203712,
-        "name": "oauth-wg/oauth-transaction-tokens",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/90690777?",
-        "display_login": "PieterKas",
-        "gravatar_id": "",
-        "id": 90690777,
-        "login": "PieterKas",
-        "url": "https://api.github.com/users/PieterKas"
-      },
-      "created_at": "2026-07-06T17:13:22Z",
-      "id": "11419076465",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 652203712,
-              "name": "oauth-transaction-tokens",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-            },
-            "sha": "fb3e2c16b11e40e46a9c32255ffbfcfc7f070741"
-          },
-          "head": {
-            "ref": "fix-replacement-comma",
-            "repo": {
-              "id": 652203712,
-              "name": "oauth-transaction-tokens",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-            },
-            "sha": "adefdfb4e4164bff5bb83154e6f2b11c8bd31b81"
-          },
-          "id": 3937174814,
-          "number": 360,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/360"
-        },
-        "review": {
-          "_links": {
-            "html": {
-              "href": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/360#pullrequestreview-4638154757"
-            },
-            "pull_request": {
-              "href": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/360"
-            }
-          },
-          "body": null,
-          "commit_id": "a09af240b4781d6062a55d4a36e4d17dec401b66",
-          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/360#pullrequestreview-4638154757",
-          "id": 4638154757,
-          "node_id": "PRR_kwDOJt_WwM8AAAABFHSgBQ",
-          "pull_request_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/360",
-          "state": "commented",
-          "submitted_at": "2026-07-06T17:13:20Z",
-          "updated_at": "2026-07-06T17:13:20Z",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
-            "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
-            "followers_url": "https://api.github.com/users/PieterKas/followers",
-            "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
-            "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/PieterKas",
-            "id": 90690777,
-            "login": "PieterKas",
-            "node_id": "MDQ6VXNlcjkwNjkwNzc3",
-            "organizations_url": "https://api.github.com/users/PieterKas/orgs",
-            "received_events_url": "https://api.github.com/users/PieterKas/received_events",
-            "repos_url": "https://api.github.com/users/PieterKas/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/PieterKas",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 652203712,
-        "name": "oauth-wg/oauth-transaction-tokens",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-      },
-      "type": "PullRequestReviewEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/90690777?",
-        "display_login": "PieterKas",
-        "gravatar_id": "",
-        "id": 90690777,
-        "login": "PieterKas",
-        "url": "https://api.github.com/users/PieterKas"
-      },
-      "created_at": "2026-07-06T17:13:20Z",
-      "id": "11419075243",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "comment": {
-          "_links": {
-            "html": {
-              "href": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/360#discussion_r3530785341"
-            },
-            "pull_request": {
-              "href": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/360"
-            },
-            "self": {
-              "href": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/comments/3530785341"
-            }
-          },
-          "body": "I would propose dropping \"obscure\" and just say that is should be maintained (I can imagine some anonymisation may be applied etc, so lets not preclude that and also not introduce a debate about what \"obscure\" means.\n\n```suggestion\n* MUST maintain the Call Chain of workloads that requested the Txn-Token being replaced in the subsequently issued Txn-Token. The mechanism for maintaining this Call Chain is out of scope for this specification.\n```",
-          "commit_id": "a09af240b4781d6062a55d4a36e4d17dec401b66",
-          "created_at": "2026-07-06T17:13:20Z",
-          "diff_hunk": "@@ -607,11 +607,10 @@ A TTS MUST exercise caution when receiving a Txn-token as a `subject_token`. Any\n * MAY enable additional asserted values.\n * MUST NOT enable modification to asserted values that expand the scope of permitted actions.\n * MUST NOT modify `txn`, `sub`, and `aud` values of the Txn-Token in the request.\n-* MUST NOT remove any of the existing requesting workload identifiers from the `req_wl` claim.\n * MUST NOT issue a new Txn-Token when the Txn-Token being replaced has expired.\n * MAY issue a replacement Txn-Token with a lifetime exceeding the lifetime of the input Txn-Token, subject to the policy of the TTS.\n * SHOULD limit the number of times a Txn-Token is replaced if it allows extending the lifetime beyond that of the input Txn-Token to reduce replay risks.\n-* MUST append the workload identifier of the workload requesting the replacement to the `req_wl` claim using the character `,` as the separator between individual workload identifiers.\n+* MUST maintain the Call Chain of workloads that requested the Txn-Token being replaced, and MUST NOT remove or obscure any of those workload identities in the subsequently issued Txn-Token. The mechanism for maintaining this Call Chain is out of scope for this specification.",
-          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/360#discussion_r3530785341",
-          "id": 3530785341,
-          "node_id": "PRRC_kwDOJt_WwM7Sc4I9",
-          "original_commit_id": "a09af240b4781d6062a55d4a36e4d17dec401b66",
-          "original_position": 18,
-          "path": "draft-ietf-oauth-transaction-tokens.md",
-          "position": 1,
-          "pull_request_review_id": 4638154757,
-          "pull_request_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/360",
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/comments/3530785341/reactions"
-          },
-          "subject_type": "line",
-          "updated_at": "2026-07-06T17:13:20Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/comments/3530785341",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
-            "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
-            "followers_url": "https://api.github.com/users/PieterKas/followers",
-            "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
-            "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/PieterKas",
-            "id": 90690777,
-            "login": "PieterKas",
-            "node_id": "MDQ6VXNlcjkwNjkwNzc3",
-            "organizations_url": "https://api.github.com/users/PieterKas/orgs",
-            "received_events_url": "https://api.github.com/users/PieterKas/received_events",
-            "repos_url": "https://api.github.com/users/PieterKas/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/PieterKas",
-            "user_view_type": "public"
-          }
-        },
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 652203712,
-              "name": "oauth-transaction-tokens",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-            },
-            "sha": "fb3e2c16b11e40e46a9c32255ffbfcfc7f070741"
-          },
-          "head": {
-            "ref": "fix-replacement-comma",
-            "repo": {
-              "id": 652203712,
-              "name": "oauth-transaction-tokens",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-            },
-            "sha": "adefdfb4e4164bff5bb83154e6f2b11c8bd31b81"
-          },
-          "id": 3937174814,
-          "number": 360,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/360"
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 652203712,
-        "name": "oauth-wg/oauth-transaction-tokens",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-      },
-      "type": "PullRequestReviewCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-07-06T17:11:23Z",
-      "id": "14435594595",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "8acdc2c5e0ccad1f002f6f96f295268b47bf3179",
-        "head": "079cd2d703dde0d3106575495814541a4b30d826",
-        "push_id": 36724861721,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 652203712
-      },
-      "public": true,
-      "repo": {
-        "id": 652203712,
-        "name": "oauth-wg/oauth-transaction-tokens",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/8116763?",
-        "display_login": "tulshi",
-        "gravatar_id": "",
-        "id": 8116763,
-        "login": "tulshi",
-        "url": "https://api.github.com/users/tulshi"
-      },
-      "created_at": "2026-07-06T17:10:52Z",
-      "id": "14435566069",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "a09af240b4781d6062a55d4a36e4d17dec401b66",
-        "head": "17f6e257f31c46cef6fa2049c2d10941d872073e",
-        "push_id": 36724833055,
-        "ref": "refs/heads/fix-replacement-comma",
-        "repository_id": 652203712
-      },
-      "public": true,
-      "repo": {
-        "id": 652203712,
-        "name": "oauth-wg/oauth-transaction-tokens",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-      },
-      "type": "PushEvent"
     }
   ],
   "prs": {
     "error": null,
     "items": [
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "MEMBER",
+        "body": "This does not change the requirements for the client, the client can still choose which mix-up mitigation method to use\r\n\r\ncloses #233",
+        "closed_at": null,
+        "comments": 2,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250/comments",
+        "created_at": "2026-05-04T23:30:02Z",
+        "draft": false,
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250/events",
+        "html_url": "https://github.com/oauth-wg/oauth-v2-1/pull/250",
+        "id": 4380368401,
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "PR_kwDODkfq5s7YNCbt",
+        "number": 250,
+        "performed_via_github_app": null,
+        "pull_request": {
+          "diff_url": "https://github.com/oauth-wg/oauth-v2-1/pull/250.diff",
+          "html_url": "https://github.com/oauth-wg/oauth-v2-1/pull/250",
+          "merged_at": null,
+          "patch_url": "https://github.com/oauth-wg/oauth-v2-1/pull/250.patch",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/pulls/250"
+        },
+        "reactions": {
+          "+1": 1,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 1,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250/timeline",
+        "title": "Make `iss` response parameter required to be sent by the AS",
+        "type": null,
+        "updated_at": "2026-07-07T21:52:10Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
+          "events_url": "https://api.github.com/users/aaronpk/events{/privacy}",
+          "followers_url": "https://api.github.com/users/aaronpk/followers",
+          "following_url": "https://api.github.com/users/aaronpk/following{/other_user}",
+          "gists_url": "https://api.github.com/users/aaronpk/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/aaronpk",
+          "id": 113001,
+          "login": "aaronpk",
+          "node_id": "MDQ6VXNlcjExMzAwMQ==",
+          "organizations_url": "https://api.github.com/users/aaronpk/orgs",
+          "received_events_url": "https://api.github.com/users/aaronpk/received_events",
+          "repos_url": "https://api.github.com/users/aaronpk/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/aaronpk/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/aaronpk/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/aaronpk",
+          "user_view_type": "public"
+        }
+      },
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "CONTRIBUTOR",
+        "body": "use backticks consistently for parameter, claim, and metadata names",
+        "closed_at": null,
+        "comments": 0,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/199/comments",
+        "created_at": "2026-07-07T17:11:55Z",
+        "draft": false,
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/199/events",
+        "html_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/199",
+        "id": 4830684764,
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/199/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "PR_kwDOJubJxM7u7rXa",
+        "number": 199,
+        "performed_via_github_app": null,
+        "pull_request": {
+          "diff_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/199.diff",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/199",
+          "merged_at": null,
+          "patch_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/199.patch",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/199"
+        },
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/199/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/199/timeline",
+        "title": "Replace inline code formatting with backticks",
+        "type": null,
+        "updated_at": "2026-07-07T20:25:50Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/199",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
+          "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
+          "followers_url": "https://api.github.com/users/PieterKas/followers",
+          "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
+          "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/PieterKas",
+          "id": 90690777,
+          "login": "PieterKas",
+          "node_id": "MDQ6VXNlcjkwNjkwNzc3",
+          "organizations_url": "https://api.github.com/users/PieterKas/orgs",
+          "received_events_url": "https://api.github.com/users/PieterKas/received_events",
+          "repos_url": "https://api.github.com/users/PieterKas/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/PieterKas",
+          "user_view_type": "public"
+        }
+      },
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "CONTRIBUTOR",
+        "body": null,
+        "closed_at": "2026-07-07T17:08:59Z",
+        "comments": 0,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/198/comments",
+        "created_at": "2026-07-07T16:36:23Z",
+        "draft": false,
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/198/events",
+        "html_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/198",
+        "id": 4830432604,
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/198/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "PR_kwDOJubJxM7u6289",
+        "number": 198,
+        "performed_via_github_app": null,
+        "pull_request": {
+          "diff_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/198.diff",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/198",
+          "merged_at": "2026-07-07T17:08:59Z",
+          "patch_url": "https://github.com/oauth-wg/oauth-identity-chaining/pull/198.patch",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls/198"
+        },
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/198/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining",
+        "score": 1.0,
+        "state": "closed",
+        "state_reason": null,
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/198/timeline",
+        "title": "ID Nits",
+        "type": null,
+        "updated_at": "2026-07-07T17:09:01Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/issues/198",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
+          "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
+          "followers_url": "https://api.github.com/users/PieterKas/followers",
+          "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
+          "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/PieterKas",
+          "id": 90690777,
+          "login": "PieterKas",
+          "node_id": "MDQ6VXNlcjkwNjkwNzc3",
+          "organizations_url": "https://api.github.com/users/PieterKas/orgs",
+          "received_events_url": "https://api.github.com/users/PieterKas/received_events",
+          "repos_url": "https://api.github.com/users/PieterKas/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/PieterKas",
+          "user_view_type": "public"
+        }
+      },
       {
         "active_lock_reason": null,
         "assignee": null,
@@ -59983,78 +60676,6 @@
           "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
           "type": "User",
           "url": "https://api.github.com/users/bc-pi",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "MEMBER",
-        "body": "This does not change the requirements for the client, the client can still choose which mix-up mitigation method to use\r\n\r\ncloses #233",
-        "closed_at": null,
-        "comments": 1,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250/comments",
-        "created_at": "2026-05-04T23:30:02Z",
-        "draft": false,
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250/events",
-        "html_url": "https://github.com/oauth-wg/oauth-v2-1/pull/250",
-        "id": 4380368401,
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "PR_kwDODkfq5s7YNCbt",
-        "number": 250,
-        "performed_via_github_app": null,
-        "pull_request": {
-          "diff_url": "https://github.com/oauth-wg/oauth-v2-1/pull/250.diff",
-          "html_url": "https://github.com/oauth-wg/oauth-v2-1/pull/250",
-          "merged_at": null,
-          "patch_url": "https://github.com/oauth-wg/oauth-v2-1/pull/250.patch",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/pulls/250"
-        },
-        "reactions": {
-          "+1": 1,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 1,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1",
-        "score": 1.0,
-        "state": "open",
-        "state_reason": null,
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250/timeline",
-        "title": "Make `iss` response parameter required to be sent by the AS",
-        "type": null,
-        "updated_at": "2026-05-05T13:47:07Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/250",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
-          "events_url": "https://api.github.com/users/aaronpk/events{/privacy}",
-          "followers_url": "https://api.github.com/users/aaronpk/followers",
-          "following_url": "https://api.github.com/users/aaronpk/following{/other_user}",
-          "gists_url": "https://api.github.com/users/aaronpk/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/aaronpk",
-          "id": 113001,
-          "login": "aaronpk",
-          "node_id": "MDQ6VXNlcjExMzAwMQ==",
-          "organizations_url": "https://api.github.com/users/aaronpk/orgs",
-          "received_events_url": "https://api.github.com/users/aaronpk/received_events",
-          "repos_url": "https://api.github.com/users/aaronpk/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/aaronpk/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/aaronpk/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/aaronpk",
           "user_view_type": "public"
         }
       },
@@ -92854,153 +93475,9 @@
           "url": "https://api.github.com/users/aaronpk",
           "user_view_type": "public"
         }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "MEMBER",
-        "body": "closes #91",
-        "closed_at": "2025-07-03T23:31:18Z",
-        "comments": 0,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/issues/108/comments",
-        "created_at": "2025-07-03T23:28:45Z",
-        "draft": false,
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/issues/108/events",
-        "html_url": "https://github.com/oauth-wg/oauth-browser-based-apps/pull/108",
-        "id": 3200880331,
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/issues/108/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "PR_kwDOCUe3lM6dWS0f",
-        "number": 108,
-        "performed_via_github_app": null,
-        "pull_request": {
-          "diff_url": "https://github.com/oauth-wg/oauth-browser-based-apps/pull/108.diff",
-          "html_url": "https://github.com/oauth-wg/oauth-browser-based-apps/pull/108",
-          "merged_at": "2025-07-03T23:31:18Z",
-          "patch_url": "https://github.com/oauth-wg/oauth-browser-based-apps/pull/108.patch",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/pulls/108"
-        },
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/issues/108/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps",
-        "score": 1.0,
-        "state": "closed",
-        "state_reason": null,
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/issues/108/timeline",
-        "title": "Terminology references",
-        "type": null,
-        "updated_at": "2025-07-03T23:31:21Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/issues/108",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
-          "events_url": "https://api.github.com/users/aaronpk/events{/privacy}",
-          "followers_url": "https://api.github.com/users/aaronpk/followers",
-          "following_url": "https://api.github.com/users/aaronpk/following{/other_user}",
-          "gists_url": "https://api.github.com/users/aaronpk/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/aaronpk",
-          "id": 113001,
-          "login": "aaronpk",
-          "node_id": "MDQ6VXNlcjExMzAwMQ==",
-          "organizations_url": "https://api.github.com/users/aaronpk/orgs",
-          "received_events_url": "https://api.github.com/users/aaronpk/received_events",
-          "repos_url": "https://api.github.com/users/aaronpk/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/aaronpk/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/aaronpk/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/aaronpk",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "MEMBER",
-        "body": "* add reference for OpenID Scopes #100\r\n* clarify \"previous recommendations\" in Section 7 intro #101\r\n* Remove references to Facebook and Twitter #102\r\n",
-        "closed_at": "2025-07-03T15:50:40Z",
-        "comments": 0,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/issues/107/comments",
-        "created_at": "2025-07-03T15:48:03Z",
-        "draft": false,
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/issues/107/events",
-        "html_url": "https://github.com/oauth-wg/oauth-browser-based-apps/pull/107",
-        "id": 3199849953,
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/issues/107/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "PR_kwDOCUe3lM6dS0k6",
-        "number": 107,
-        "performed_via_github_app": null,
-        "pull_request": {
-          "diff_url": "https://github.com/oauth-wg/oauth-browser-based-apps/pull/107.diff",
-          "html_url": "https://github.com/oauth-wg/oauth-browser-based-apps/pull/107",
-          "merged_at": "2025-07-03T15:50:40Z",
-          "patch_url": "https://github.com/oauth-wg/oauth-browser-based-apps/pull/107.patch",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/pulls/107"
-        },
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/issues/107/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps",
-        "score": 1.0,
-        "state": "closed",
-        "state_reason": null,
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/issues/107/timeline",
-        "title": "Roman review",
-        "type": null,
-        "updated_at": "2025-07-03T15:50:43Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-browser-based-apps/issues/107",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
-          "events_url": "https://api.github.com/users/aaronpk/events{/privacy}",
-          "followers_url": "https://api.github.com/users/aaronpk/followers",
-          "following_url": "https://api.github.com/users/aaronpk/following{/other_user}",
-          "gists_url": "https://api.github.com/users/aaronpk/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/aaronpk",
-          "id": 113001,
-          "login": "aaronpk",
-          "node_id": "MDQ6VXNlcjExMzAwMQ==",
-          "organizations_url": "https://api.github.com/users/aaronpk/orgs",
-          "received_events_url": "https://api.github.com/users/aaronpk/received_events",
-          "repos_url": "https://api.github.com/users/aaronpk/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/aaronpk/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/aaronpk/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/aaronpk",
-          "user_view_type": "public"
-        }
       }
     ],
-    "total_count": 1571
+    "total_count": 1573
   },
   "repos": [
     {
@@ -94241,8 +94718,8 @@
       "name": "oauth-transaction-tokens",
       "node_id": "R_kgDOJt_WwA",
       "notifications_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/notifications{?since,all,participating}",
-      "open_issues": 4,
-      "open_issues_count": 4,
+      "open_issues": 2,
+      "open_issues_count": 2,
       "owner": {
         "avatar_url": "https://avatars.githubusercontent.com/u/111596788?v=4",
         "events_url": "https://api.github.com/users/oauth-wg/events{/privacy}",
@@ -94358,8 +94835,8 @@
       "name": "oauth-identity-chaining",
       "node_id": "R_kgDOJubJxA",
       "notifications_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/notifications{?since,all,participating}",
-      "open_issues": 0,
-      "open_issues_count": 0,
+      "open_issues": 1,
+      "open_issues_count": 1,
       "owner": {
         "avatar_url": "https://avatars.githubusercontent.com/u/111596788?v=4",
         "events_url": "https://api.github.com/users/oauth-wg/events{/privacy}",
@@ -94391,9 +94868,9 @@
       "private": false,
       "pull_request_creation_policy": "all",
       "pulls_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/pulls{/number}",
-      "pushed_at": "2026-06-26T14:42:20Z",
+      "pushed_at": "2026-07-07T17:09:26Z",
       "releases_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/releases{/id}",
-      "size": 1029,
+      "size": 1112,
       "ssh_url": "git@github.com:oauth-wg/oauth-identity-chaining.git",
       "stargazers_count": 9,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/stargazers",
@@ -94405,7 +94882,7 @@
       "teams_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/teams",
       "topics": [],
       "trees_url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining/git/trees{/sha}",
-      "updated_at": "2026-06-24T12:33:28Z",
+      "updated_at": "2026-07-07T17:09:47Z",
       "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining",
       "visibility": "public",
       "watchers": 9,
@@ -95232,5 +95709,5 @@
       "web_commit_signoff_required": false
     }
   ],
-  "snapshot_date": "2026-07-07"
+  "snapshot_date": "2026-07-08"
 }
