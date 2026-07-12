@@ -1,6 +1,6 @@
-# OAuth WG Backlog (2026-07-11)
+# OAuth WG Backlog (2026-07-12)
 
-- generated_at_utc: `2026-07-11T08:02:32+00:00`
+- generated_at_utc: `2026-07-12T08:23:53+00:00`
 
 - [ ] `draft-ietf-oauth-identity-chaining` score=120 updated=2026-07-10T20:24:17Z
 - [ ] `draft-ietf-oauth-transaction-tokens` score=118 updated=2026-07-06T17:40:07Z
