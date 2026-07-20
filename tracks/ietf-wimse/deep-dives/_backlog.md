@@ -1,10 +1,10 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-07-19T08:24:54+00:00
+Generated at: 2026-07-20T09:22:25+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
-| 1 | 7 | Diff active WG draft: draft-ietf-wimse-http-signature-04 | draft-ietf-wimse-http-signature-04 (2026-07-06) |
+| 1 | 7 | Diff active WG draft: draft-ietf-wimse-http-signature-05 | draft-ietf-wimse-http-signature-05 (2026-07-20) |
 | 2 | 7 | Diff active WG draft: draft-ietf-wimse-mutual-tls-02 | draft-ietf-wimse-mutual-tls-02 (2026-07-06) |
 | 3 | 7 | Diff active WG draft: draft-ietf-wimse-workload-creds-02 | draft-ietf-wimse-workload-creds-02 (2026-07-02) |
 | 4 | 6 | Review related draft: draft-jiang-wimse-heterogeneous-credential-01 | draft-jiang-wimse-heterogeneous-credential-01 (2026-06-30) |
