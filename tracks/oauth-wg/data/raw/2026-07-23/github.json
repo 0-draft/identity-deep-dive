@@ -1,8 +1,312 @@
 {
-  "collected_at": "2026-07-22T08:34:59+00:00",
+  "collected_at": "2026-07-23T08:36:24+00:00",
   "issues": {
     "error": null,
     "items": [
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "NONE",
+        "body": "In draft 00 of OAuth SPIFFE Client Authentication, when using Client Authentication with X509-SVID, it requires that the value of the `client_id` request parameter be the SPIFFE ID. However, I believe this requirement should be removed. The reasons are as follows:\n\n* Systems that use the [OpenID Federation 1.0](https://openid.net/specs/openid-federation-1_0.html) specification cannot use OAuth SPIFFE Client Authentication.\n* Systems that use the [OAuth Client ID Metadata Document](https://datatracker.ietf.org/doc/draft-ietf-oauth-client-id-metadata-document/) specification cannot use OAuth SPIFFE Client Authentication.\n* Systems in which client IDs cannot be flexibly changed cannot use OAuth SPIFFE Client Authentication.\n\nThe client authentication method defined in RFC 8705 [Section 2.1](https://www.rfc-editor.org/rfc/rfc8705.html#section-2.1) works correctly even if the value of the `tls_client_auth_san_uri` client metadata differs from the client ID.\n",
+        "closed_at": null,
+        "comments": 2,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29/comments",
+        "created_at": "2026-02-20T14:39:50Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29/events",
+        "html_url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/issues/29",
+        "id": 3968872135,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOOml42M7skC7H",
+        "number": 29,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 1,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 1,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29/timeline",
+        "title": "Client ID for Client Authentication using X509-SVID",
+        "type": null,
+        "updated_at": "2026-07-23T01:27:39Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/1641166?v=4",
+          "events_url": "https://api.github.com/users/TakahikoKawasaki/events{/privacy}",
+          "followers_url": "https://api.github.com/users/TakahikoKawasaki/followers",
+          "following_url": "https://api.github.com/users/TakahikoKawasaki/following{/other_user}",
+          "gists_url": "https://api.github.com/users/TakahikoKawasaki/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/TakahikoKawasaki",
+          "id": 1641166,
+          "login": "TakahikoKawasaki",
+          "node_id": "MDQ6VXNlcjE2NDExNjY=",
+          "organizations_url": "https://api.github.com/users/TakahikoKawasaki/orgs",
+          "received_events_url": "https://api.github.com/users/TakahikoKawasaki/received_events",
+          "repos_url": "https://api.github.com/users/TakahikoKawasaki/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/TakahikoKawasaki/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/TakahikoKawasaki/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/TakahikoKawasaki",
+          "user_view_type": "public"
+        }
+      },
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "COLLABORATOR",
+        "body": "## Context\n\nThe current draft says in Security Considerations that this specification SHOULD only be supported for confidential clients, and Cross-Domain Client ID Handling notes that requiring a confidential client at the Resource Authorization Server helps prevent the IdP from delegating access to any valid client at the Resource Authorization Server.\n\nIssue #85 asks whether this constraint can be relaxed when the ID-JAG itself is key-bound via `cnf`/DPoP, on the theory that proof-of-possession at the RAS provides an alternative to confidential client authentication at the RAS.\n\nThis issue proposes a related but distinct relaxation, one layer earlier: when the ID Token used as the `subject_token` is key-bound via OpenID Connect Key Binding 1.0 (https://openid.github.io/connect-key-binding/main.html), the authentication assurance for the client is anchored in the ID Token itself, and the confidential-client requirement can be reconsidered on that basis.\n\n## Proposal\n\nAllow the Client at the IdP to be a public client, or otherwise not required to present confidential client credentials at the Token Exchange endpoint, when all of the following hold:\n\n- The `subject_token` is a key-bound ID Token per OpenID Connect Key Binding 1.0.\n- The IdP validates the key binding of the ID Token per that spec.\n- The IdP issues a key-bound ID-JAG whose `cnf` is derived from (or otherwise chained to) the ID Token's binding key or an explicit DPoP proof presented alongside.\n- The Client presents proof-of-possession when redeeming the ID-JAG at the Resource Authorization Server, and the RAS validates the `cnf` against that proof per the existing DPoP processing rules.\n\nThe Resource Authorization Server-side confidential requirement would remain a deployment choice as discussed in #85; this issue focuses on the IdP-side Token Exchange step where the ID Token's key binding is the anchoring credential.\n\n## How this relates to #85\n\n- **#85** is about the RAS accepting public clients when the ID-JAG is key-bound at the RAS boundary. The anchoring credential there is the ID-JAG's `cnf` plus a proof presented to the RAS.\n- **This issue** is about the IdP accepting a non-confidential client at Token Exchange when the ID Token itself is key-bound. The anchoring credential is the ID Token's own binding.\n\nThey can be adopted independently or together. Together, they enable an end-to-end model where the client's device (or the client's attestation-provided key) carries authentication assurance from SSO issuance through ID-JAG issuance to access token exchange, without requiring the client to maintain separate confidential credentials at either authorization server.\n\n## Tradeoffs\n\nPreserved:\n- Sender-constraint on the ID Token, ID-JAG, and (if the RAS opts in) the access token.\n- Prevention of casual replay by parties without the binding key.\n\nReduced or requiring explicit spec handling:\n- Anti-substitution properties that rely on confidential client authentication at the IdP need to be reproved via the key-binding chain. Specifically: how the IdP validates that the Client presenting the ID Token is the same party the ID Token was issued to (this is exactly what OpenID Connect Key Binding covers, but the ID-JAG draft would need to say so and reference it).\n- The Client's `client_id` at the IdP for Token Exchange still needs to be identified; the ID Token's `azp`/`aud` are the natural candidates, but the draft would need to state this normatively for the public-client-plus-key-bound case.\n\n## Asking for\n\nFeedback on whether this relaxation belongs in the base spec, or in a separate profile that stacks with #85's relaxation. If the working group is broadly comfortable with the direction, I'm happy to PR the required processing rules (validation, `client_id` derivation, cross-referencing OpenID Connect Key Binding 1.0).",
+        "closed_at": null,
+        "comments": 0,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/113/comments",
+        "created_at": "2026-07-22T16:30:47Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/113/events",
+        "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/113",
+        "id": 4951042308,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/113/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOKv5r-s8AAAABJxrpBA",
+        "number": 113,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/113/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/113/timeline",
+        "title": "Relax confidential client requirement when the ID Token is key-bound (OpenID Connect Key Binding 1.0)",
+        "type": null,
+        "updated_at": "2026-07-22T16:30:47Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/113",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
+          "events_url": "https://api.github.com/users/mcguinness/events{/privacy}",
+          "followers_url": "https://api.github.com/users/mcguinness/followers",
+          "following_url": "https://api.github.com/users/mcguinness/following{/other_user}",
+          "gists_url": "https://api.github.com/users/mcguinness/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/mcguinness",
+          "id": 1944352,
+          "login": "mcguinness",
+          "node_id": "MDQ6VXNlcjE5NDQzNTI=",
+          "organizations_url": "https://api.github.com/users/mcguinness/orgs",
+          "received_events_url": "https://api.github.com/users/mcguinness/received_events",
+          "repos_url": "https://api.github.com/users/mcguinness/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/mcguinness/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/mcguinness/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/mcguinness",
+          "user_view_type": "public"
+        }
+      },
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "NONE",
+        "body": "In section 3.2 we say:\n```\nThe request MUST include the client_id parameter containing the\n   SPIFFE-ID of the client.  It MUST match the URI SAN of the presented\n   X509-SVID client credential.\n```\n\nThere's no such wording in section 3.1.\n\nBoth sections including something like the following in the validation part of them:\n```\nSPIFFE ID in the sub claim matches or is associated with a recognized client identifier\n```\n\nThis is a weaker claim than previously mentioned claim. I read as either:\n1. The client id matches the SPIFFE ID\n2. The client id is associated (authorised?) to authenticate as the given client id.\n\nIt would be good to be clarify a bit more the relationship between the client ID and the SPIFFE ID of the presented SVIDs.",
+        "closed_at": null,
+        "comments": 0,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/43/comments",
+        "created_at": "2026-07-22T09:13:50Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/43/events",
+        "html_url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/issues/43",
+        "id": 4947389048,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/43/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOOml42M8AAAABJuMqeA",
+        "number": 43,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/43/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/43/timeline",
+        "title": "Client ID relationship with SPIFFE ID",
+        "type": null,
+        "updated_at": "2026-07-22T09:13:50Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/43",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/210746?v=4",
+          "events_url": "https://api.github.com/users/sorindumitru/events{/privacy}",
+          "followers_url": "https://api.github.com/users/sorindumitru/followers",
+          "following_url": "https://api.github.com/users/sorindumitru/following{/other_user}",
+          "gists_url": "https://api.github.com/users/sorindumitru/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/sorindumitru",
+          "id": 210746,
+          "login": "sorindumitru",
+          "node_id": "MDQ6VXNlcjIxMDc0Ng==",
+          "organizations_url": "https://api.github.com/users/sorindumitru/orgs",
+          "received_events_url": "https://api.github.com/users/sorindumitru/received_events",
+          "repos_url": "https://api.github.com/users/sorindumitru/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/sorindumitru/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/sorindumitru/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/sorindumitru",
+          "user_view_type": "public"
+        }
+      },
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "NONE",
+        "body": "oauth-identity-assertion-authz-grant is expected to be a profile of [identity chaining](https://datatracker.ietf.org/doc/draft-ietf-oauth-identity-chaining/):\n\n> Identity Chaining intentionally leaves many details unspecified in order to support multiple use cases. **This specification profiles it [Identity Chaining]** […]\n\nHowever, their definition of the `resource` parameter in the token Exchange Request is incompatible:\n\n* For identity chaining, this identifies the *authorization server* for trust domain B (i.e. the *resource authorization server*)\n* For identity assertion authz grant, this identified the *resource server*\n\n***\n\nIn identity chaining, we have:\n\n> Token Exchange Request\n>\n> […]\n>\n> resource, URI of **authorization server** for trust domain B\n\nIn oauth-identity-assertion-authz-grant:\n\n> The Client makes a Token Exchange [[RFC8693](https://www.rfc-editor.org/rfc/rfc8693)] request to the IdP Authorization Server's Token Endpoint with the following parameters:\n>\n> […]\n>\n> resource: OPTIONAL - The Resource Identifier of the **Resource Server** as defined in [Section 2](https://rfc-editor.org/rfc/rfc8707#section-2) of [[RFC8707](https://www.rfc-editor.org/rfc/rfc8707)].\n\n***\n\nI would claim oauth-identity-chaining is more consistent with the definition of `resource` because as per RFC 8693, they are supposed to have the [same semantic meaning](https://datatracker.ietf.org/doc/html/rfc8693#name-request).",
+        "closed_at": null,
+        "comments": 2,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110/comments",
+        "created_at": "2026-07-13T00:03:26Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110/events",
+        "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/110",
+        "id": 4869307408,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOKv5r-s8AAAABIju8EA",
+        "number": 110,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110/timeline",
+        "title": "Usage of \"resource\" request parameter incompatible with oauth-identity-chaining",
+        "type": null,
+        "updated_at": "2026-07-22T08:43:34Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/946727?v=4",
+          "events_url": "https://api.github.com/users/randomstuff/events{/privacy}",
+          "followers_url": "https://api.github.com/users/randomstuff/followers",
+          "following_url": "https://api.github.com/users/randomstuff/following{/other_user}",
+          "gists_url": "https://api.github.com/users/randomstuff/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/randomstuff",
+          "id": 946727,
+          "login": "randomstuff",
+          "node_id": "MDQ6VXNlcjk0NjcyNw==",
+          "organizations_url": "https://api.github.com/users/randomstuff/orgs",
+          "received_events_url": "https://api.github.com/users/randomstuff/received_events",
+          "repos_url": "https://api.github.com/users/randomstuff/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/randomstuff/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/randomstuff/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/randomstuff",
+          "user_view_type": "public"
+        }
+      },
       {
         "active_lock_reason": null,
         "assignee": null,
@@ -1347,82 +1651,6 @@
           "subscriptions_url": "https://api.github.com/users/arndt-s/subscriptions",
           "type": "User",
           "url": "https://api.github.com/users/arndt-s",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "NONE",
-        "body": "oauth-identity-assertion-authz-grant is expected to be a profile of [identity chaining](https://datatracker.ietf.org/doc/draft-ietf-oauth-identity-chaining/):\n\n> Identity Chaining intentionally leaves many details unspecified in order to support multiple use cases. **This specification profiles it [Identity Chaining]** […]\n\nHowever, their definition of the `resource` parameter in the token Exchange Request is incompatible:\n\n* For identity chaining, this identifies the *authorization server* for trust domain B (i.e. the *resource authorization server*)\n* For identity assertion authz grant, this identified the *resource server*\n\n***\n\nIn identity chaining, we have:\n\n> Token Exchange Request\n>\n> […]\n>\n> resource, URI of **authorization server** for trust domain B\n\nIn oauth-identity-assertion-authz-grant:\n\n> The Client makes a Token Exchange [[RFC8693](https://www.rfc-editor.org/rfc/rfc8693)] request to the IdP Authorization Server's Token Endpoint with the following parameters:\n>\n> […]\n>\n> resource: OPTIONAL - The Resource Identifier of the **Resource Server** as defined in [Section 2](https://rfc-editor.org/rfc/rfc8707#section-2) of [[RFC8707](https://www.rfc-editor.org/rfc/rfc8707)].\n\n***\n\nI would claim oauth-identity-chaining is more consistent with the definition of `resource` because as per RFC 8693, they are supposed to have the [same semantic meaning](https://datatracker.ietf.org/doc/html/rfc8693#name-request).",
-        "closed_at": null,
-        "comments": 1,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110/comments",
-        "created_at": "2026-07-13T00:03:26Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110/events",
-        "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/110",
-        "id": 4869307408,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOKv5r-s8AAAABIju8EA",
-        "number": 110,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
-        "score": 1.0,
-        "state": "open",
-        "state_reason": null,
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110/timeline",
-        "title": "Usage of \"resource\" request parameter incompatible with oauth-identity-chaining",
-        "type": null,
-        "updated_at": "2026-07-13T20:11:42Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/946727?v=4",
-          "events_url": "https://api.github.com/users/randomstuff/events{/privacy}",
-          "followers_url": "https://api.github.com/users/randomstuff/followers",
-          "following_url": "https://api.github.com/users/randomstuff/following{/other_user}",
-          "gists_url": "https://api.github.com/users/randomstuff/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/randomstuff",
-          "id": 946727,
-          "login": "randomstuff",
-          "node_id": "MDQ6VXNlcjk0NjcyNw==",
-          "organizations_url": "https://api.github.com/users/randomstuff/orgs",
-          "received_events_url": "https://api.github.com/users/randomstuff/received_events",
-          "repos_url": "https://api.github.com/users/randomstuff/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/randomstuff/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/randomstuff/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/randomstuff",
           "user_view_type": "public"
         }
       },
@@ -9529,82 +9757,6 @@
           "subscriptions_url": "https://api.github.com/users/sergioalzatejimenez68-ai/subscriptions",
           "type": "User",
           "url": "https://api.github.com/users/sergioalzatejimenez68-ai",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "NONE",
-        "body": "In draft 00 of OAuth SPIFFE Client Authentication, when using Client Authentication with X509-SVID, it requires that the value of the `client_id` request parameter be the SPIFFE ID. However, I believe this requirement should be removed. The reasons are as follows:\n\n* Systems that use the [OpenID Federation 1.0](https://openid.net/specs/openid-federation-1_0.html) specification cannot use OAuth SPIFFE Client Authentication.\n* Systems that use the [OAuth Client ID Metadata Document](https://datatracker.ietf.org/doc/draft-ietf-oauth-client-id-metadata-document/) specification cannot use OAuth SPIFFE Client Authentication.\n* Systems in which client IDs cannot be flexibly changed cannot use OAuth SPIFFE Client Authentication.\n\nThe client authentication method defined in RFC 8705 [Section 2.1](https://www.rfc-editor.org/rfc/rfc8705.html#section-2.1) works correctly even if the value of the `tls_client_auth_san_uri` client metadata differs from the client ID.\n",
-        "closed_at": null,
-        "comments": 1,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29/comments",
-        "created_at": "2026-02-20T14:39:50Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29/events",
-        "html_url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/issues/29",
-        "id": 3968872135,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOOml42M7skC7H",
-        "number": 29,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication",
-        "score": 1.0,
-        "state": "open",
-        "state_reason": null,
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29/timeline",
-        "title": "Client ID for Client Authentication using X509-SVID",
-        "type": null,
-        "updated_at": "2026-05-17T06:56:56Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/1641166?v=4",
-          "events_url": "https://api.github.com/users/TakahikoKawasaki/events{/privacy}",
-          "followers_url": "https://api.github.com/users/TakahikoKawasaki/followers",
-          "following_url": "https://api.github.com/users/TakahikoKawasaki/following{/other_user}",
-          "gists_url": "https://api.github.com/users/TakahikoKawasaki/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/TakahikoKawasaki",
-          "id": 1641166,
-          "login": "TakahikoKawasaki",
-          "node_id": "MDQ6VXNlcjE2NDExNjY=",
-          "organizations_url": "https://api.github.com/users/TakahikoKawasaki/orgs",
-          "received_events_url": "https://api.github.com/users/TakahikoKawasaki/received_events",
-          "repos_url": "https://api.github.com/users/TakahikoKawasaki/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/TakahikoKawasaki/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/TakahikoKawasaki/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/TakahikoKawasaki",
           "user_view_type": "public"
         }
       },
@@ -48452,215 +48604,785 @@
           "url": "https://api.github.com/users/ThierryThevenet",
           "user_view_type": "public"
         }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "MEMBER",
-        "body": null,
-        "closed_at": "2025-10-03T10:06:00Z",
-        "comments": 1,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/13/comments",
-        "created_at": "2025-09-24T11:07:00Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/13/events",
-        "html_url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/issues/13",
-        "id": 3448913844,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/13/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOOml42M7Nkj-0",
-        "number": 13,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/13/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication",
-        "score": 1.0,
-        "state": "closed",
-        "state_reason": "completed",
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/13/timeline",
-        "title": "Add implementation status section",
-        "type": null,
-        "updated_at": "2025-10-03T10:06:00Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/13",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/17650715?v=4",
-          "events_url": "https://api.github.com/users/arndt-s/events{/privacy}",
-          "followers_url": "https://api.github.com/users/arndt-s/followers",
-          "following_url": "https://api.github.com/users/arndt-s/following{/other_user}",
-          "gists_url": "https://api.github.com/users/arndt-s/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/arndt-s",
-          "id": 17650715,
-          "login": "arndt-s",
-          "node_id": "MDQ6VXNlcjE3NjUwNzE1",
-          "organizations_url": "https://api.github.com/users/arndt-s/orgs",
-          "received_events_url": "https://api.github.com/users/arndt-s/received_events",
-          "repos_url": "https://api.github.com/users/arndt-s/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/arndt-s/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/arndt-s/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/arndt-s",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/89476?v=4",
-          "events_url": "https://api.github.com/users/danielfett/events{/privacy}",
-          "followers_url": "https://api.github.com/users/danielfett/followers",
-          "following_url": "https://api.github.com/users/danielfett/following{/other_user}",
-          "gists_url": "https://api.github.com/users/danielfett/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/danielfett",
-          "id": 89476,
-          "login": "danielfett",
-          "node_id": "MDQ6VXNlcjg5NDc2",
-          "organizations_url": "https://api.github.com/users/danielfett/orgs",
-          "received_events_url": "https://api.github.com/users/danielfett/received_events",
-          "repos_url": "https://api.github.com/users/danielfett/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/danielfett/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/danielfett/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/danielfett",
-          "user_view_type": "public"
-        },
-        "assignees": [
-          {
-            "avatar_url": "https://avatars.githubusercontent.com/u/89476?v=4",
-            "events_url": "https://api.github.com/users/danielfett/events{/privacy}",
-            "followers_url": "https://api.github.com/users/danielfett/followers",
-            "following_url": "https://api.github.com/users/danielfett/following{/other_user}",
-            "gists_url": "https://api.github.com/users/danielfett/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/danielfett",
-            "id": 89476,
-            "login": "danielfett",
-            "node_id": "MDQ6VXNlcjg5NDc2",
-            "organizations_url": "https://api.github.com/users/danielfett/orgs",
-            "received_events_url": "https://api.github.com/users/danielfett/received_events",
-            "repos_url": "https://api.github.com/users/danielfett/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/danielfett/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/danielfett/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/danielfett",
-            "user_view_type": "public"
-          }
-        ],
-        "author_association": "NONE",
-        "body": "I'm not sure why 'vct' is not (as REQUIRED) in 6.2 Type Metadata Format. Is it bug or is this some sort of implicit? It is in the  6.1. Type Metadata Example and also it is twice referenced in 6.3.5 From Type Metadata Glue Documents: \"the Consumer MUST ensure that the vct claim in the credential matches the one in the Type Metadata document\" and \"the Consumer MUST ensure that the value of the extends property in the Type Metadata document matches that of the vct in the Type Metadata document\"\r\n",
-        "closed_at": "2025-10-02T17:08:34Z",
-        "comments": 4,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/241/comments",
-        "created_at": "2024-07-12T11:49:07Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/241/events",
-        "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/241",
-        "id": 2405395612,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [
-          {
-            "color": "1d76db",
-            "default": false,
-            "description": "",
-            "id": 5487579914,
-            "name": "HAS PR",
-            "node_id": "LA_kwDOJbVClc8AAAABRxXTCg",
-            "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/labels/HAS%20PR"
-          }
-        ],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/241/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOJbVClc6PX2yc",
-        "number": 241,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/241/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
-        "score": 1.0,
-        "state": "closed",
-        "state_reason": "completed",
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/241/timeline",
-        "title": "Claim 'vct' is missing in Type Metadata Format",
-        "type": null,
-        "updated_at": "2025-10-02T17:08:34Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/241",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/198542?v=4",
-          "events_url": "https://api.github.com/users/jtalir/events{/privacy}",
-          "followers_url": "https://api.github.com/users/jtalir/followers",
-          "following_url": "https://api.github.com/users/jtalir/following{/other_user}",
-          "gists_url": "https://api.github.com/users/jtalir/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/jtalir",
-          "id": 198542,
-          "login": "jtalir",
-          "node_id": "MDQ6VXNlcjE5ODU0Mg==",
-          "organizations_url": "https://api.github.com/users/jtalir/orgs",
-          "received_events_url": "https://api.github.com/users/jtalir/received_events",
-          "repos_url": "https://api.github.com/users/jtalir/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/jtalir/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/jtalir/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/jtalir",
-          "user_view_type": "public"
-        }
       }
     ],
-    "total_count": 1772
+    "total_count": 1774
   },
   "org_events": [
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/35098287?",
+        "display_login": "RalphBragg",
+        "gravatar_id": "",
+        "id": 35098287,
+        "login": "RalphBragg",
+        "url": "https://api.github.com/users/RalphBragg"
+      },
+      "created_at": "2026-07-23T01:15:15Z",
+      "id": "12169603859",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "Adding deployment evidence in support of this issue, plus one editorial point on the -02 text.\n\nRaidiam operates OpenID Federation and directory based ecosystems in production with several thousand registered clients whose `client_id` is an https entity identifier resolved through a trust chain. Client IDs there cannot change, so under the current Section 3.2 text these deployments can never use the X509-SVID method. The JWT-SVID path already has the right model (3.1 step 5: \"matches or is associated with a recognized client identifier\"), consistent with the implementation experience reported above.\n\nSection 3.2 also appears to contradict itself: the request rule mandates that `client_id` equal the URI SAN, yet validation step 5 accepts a SPIFFE ID that \"is associated with a registered client identifier\", a branch the request rule makes unreachable.\n\nRFC 8705 Section 2.1.2 solved this for certificates: the expected identity (`tls_client_auth_san_uri`) is registered metadata and `client_id` remains the registration identifier. The draft already has the equivalent in `spiffe_id` (Section 5.1, IANA Section 9.1). Proposed replacement for the 3.2 request rule:\n\n> The request MUST include the `client_id` parameter identifying the client. The authorization server MUST verify that the SPIFFE ID in the URI SAN of the presented X509-SVID matches, or is covered by, the `spiffe_id` metadata registered for or otherwise associated with that client.\n\nSection 5.1's wildcard prose would then need to cover the URI SAN as well as the JWT `sub` claim. Deployments that use the SPIFFE ID as their `client_id` are unaffected, since the association check degenerates to equality.\n",
+          "created_at": "2026-07-23T01:15:15Z",
+          "html_url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/issues/29#issuecomment-5053260465",
+          "id": 5053260465,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29",
+          "minimized": null,
+          "node_id": "IC_kwDOOml42M8AAAABLTKisQ",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/comments/5053260465/reactions"
+          },
+          "updated_at": "2026-07-23T01:27:39Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/comments/5053260465",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/35098287?v=4",
+            "events_url": "https://api.github.com/users/RalphBragg/events{/privacy}",
+            "followers_url": "https://api.github.com/users/RalphBragg/followers",
+            "following_url": "https://api.github.com/users/RalphBragg/following{/other_user}",
+            "gists_url": "https://api.github.com/users/RalphBragg/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/RalphBragg",
+            "id": 35098287,
+            "login": "RalphBragg",
+            "node_id": "MDQ6VXNlcjM1MDk4Mjg3",
+            "organizations_url": "https://api.github.com/users/RalphBragg/orgs",
+            "received_events_url": "https://api.github.com/users/RalphBragg/received_events",
+            "repos_url": "https://api.github.com/users/RalphBragg/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/RalphBragg/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/RalphBragg/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/RalphBragg",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "In draft 00 of OAuth SPIFFE Client Authentication, when using Client Authentication with X509-SVID, it requires that the value of the `client_id` request parameter be the SPIFFE ID. However, I believe this requirement should be removed. The reasons are as follows:\n\n* Systems that use the [OpenID Federation 1.0](https://openid.net/specs/openid-federation-1_0.html) specification cannot use OAuth SPIFFE Client Authentication.\n* Systems that use the [OAuth Client ID Metadata Document](https://datatracker.ietf.org/doc/draft-ietf-oauth-client-id-metadata-document/) specification cannot use OAuth SPIFFE Client Authentication.\n* Systems in which client IDs cannot be flexibly changed cannot use OAuth SPIFFE Client Authentication.\n\nThe client authentication method defined in RFC 8705 [Section 2.1](https://www.rfc-editor.org/rfc/rfc8705.html#section-2.1) works correctly even if the value of the `tls_client_auth_san_uri` client metadata differs from the client ID.\n",
+          "closed_at": null,
+          "comments": 2,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29/comments",
+          "created_at": "2026-02-20T14:39:50Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29/events",
+          "html_url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/issues/29",
+          "id": 3968872135,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOOml42M7skC7H",
+          "number": 29,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 1,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 1,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29/timeline",
+          "title": "Client ID for Client Authentication using X509-SVID",
+          "type": null,
+          "updated_at": "2026-07-23T01:27:39Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/29",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/1641166?v=4",
+            "events_url": "https://api.github.com/users/TakahikoKawasaki/events{/privacy}",
+            "followers_url": "https://api.github.com/users/TakahikoKawasaki/followers",
+            "following_url": "https://api.github.com/users/TakahikoKawasaki/following{/other_user}",
+            "gists_url": "https://api.github.com/users/TakahikoKawasaki/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/TakahikoKawasaki",
+            "id": 1641166,
+            "login": "TakahikoKawasaki",
+            "node_id": "MDQ6VXNlcjE2NDExNjY=",
+            "organizations_url": "https://api.github.com/users/TakahikoKawasaki/orgs",
+            "received_events_url": "https://api.github.com/users/TakahikoKawasaki/received_events",
+            "repos_url": "https://api.github.com/users/TakahikoKawasaki/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/TakahikoKawasaki/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/TakahikoKawasaki/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/TakahikoKawasaki",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 979990744,
+        "name": "oauth-wg/oauth-spiffe-client-authentication",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-07-23T00:28:21Z",
+      "id": "15586692248",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "ac68cb1f6569bcf4a298ed751e8ae86301685169",
+        "head": "899ebf4bb3df62cfd36c308bfc1a91108cff90a4",
+        "push_id": 37878943673,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 631317608
+      },
+      "public": true,
+      "repo": {
+        "id": 631317608,
+        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-07-23T00:25:58Z",
+      "id": "15586606600",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "65c24e57c48b0fab1c40f7e225498208b51d9ea2",
+        "head": "92e30d7090612cd88b81264f77804adfb2590ce2",
+        "push_id": 37878855585,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 979990744
+      },
+      "public": true,
+      "repo": {
+        "id": 979990744,
+        "name": "oauth-wg/oauth-spiffe-client-authentication",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-07-23T00:18:52Z",
+      "id": "15586348933",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "af79831f07f3f9484e3274694d6c2af401b8eee7",
+        "head": "5c0c99375da449ab51d8c53c88d8d6c571f010f2",
+        "push_id": 37878591511,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 721316858
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-07-23T00:16:21Z",
+      "id": "15586258485",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "fd3e2d770b3bca8af3d58be5b87a163ce45abf0a",
+        "head": "5fd23099f6811af98137f528ca87df7239916521",
+        "push_id": 37878498625,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 804642494
+      },
+      "public": true,
+      "repo": {
+        "id": 804642494,
+        "name": "oauth-wg/draft-ietf-oauth-client-id-metadata-document",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/7583658?",
+        "display_login": "fandreas",
+        "gravatar_id": "",
+        "id": 7583658,
+        "login": "fandreas",
+        "url": "https://api.github.com/users/fandreas"
+      },
+      "created_at": "2026-07-22T20:21:02Z",
+      "id": "12159986097",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "forked",
+        "forkee": {
+          "allow_forking": true,
+          "archive_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/{archive_format}{/ref}",
+          "archived": false,
+          "assignees_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/assignees{/user}",
+          "blobs_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/git/blobs{/sha}",
+          "branches_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/branches{/branch}",
+          "clone_url": "https://github.com/fandreas/oauth-spiffe-client-authentication.git",
+          "collaborators_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/collaborators{/collaborator}",
+          "comments_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/comments{/number}",
+          "commits_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/commits{/sha}",
+          "compare_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/compare/{base}...{head}",
+          "contents_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/contents/{+path}",
+          "contributors_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/contributors",
+          "created_at": "2026-07-22T20:21:02Z",
+          "default_branch": "main",
+          "deployments_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/deployments",
+          "description": "A draft specification that defines how SPIFFE credentials can be used as OAuth client authentication",
+          "disabled": false,
+          "downloads_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/downloads",
+          "events_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/events",
+          "fork": true,
+          "forks": 0,
+          "forks_count": 0,
+          "forks_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/forks",
+          "full_name": "fandreas/oauth-spiffe-client-authentication",
+          "git_commits_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/git/commits{/sha}",
+          "git_refs_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/git/refs{/sha}",
+          "git_tags_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/git/tags{/sha}",
+          "git_url": "git://github.com/fandreas/oauth-spiffe-client-authentication.git",
+          "has_discussions": false,
+          "has_downloads": false,
+          "has_issues": false,
+          "has_pages": false,
+          "has_projects": true,
+          "has_pull_requests": true,
+          "has_wiki": true,
+          "homepage": "https://drafts.oauth.net/oauth-spiffe-client-authentication/",
+          "hooks_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/hooks",
+          "html_url": "https://github.com/fandreas/oauth-spiffe-client-authentication",
+          "id": 1309223097,
+          "is_template": false,
+          "issue_comment_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/issues/comments{/number}",
+          "issue_events_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/issues/events{/number}",
+          "issues_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/issues{/number}",
+          "keys_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/keys{/key_id}",
+          "labels_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/labels{/name}",
+          "language": null,
+          "languages_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/languages",
+          "license": {
+            "key": "other",
+            "name": "Other",
+            "node_id": "MDc6TGljZW5zZTA=",
+            "spdx_id": "NOASSERTION",
+            "url": null
+          },
+          "merges_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/merges",
+          "milestones_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/milestones{/number}",
+          "mirror_url": null,
+          "name": "oauth-spiffe-client-authentication",
+          "node_id": "R_kgDOTgkouQ",
+          "notifications_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/notifications{?since,all,participating}",
+          "open_issues": 0,
+          "open_issues_count": 0,
+          "owner": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/7583658?v=4",
+            "events_url": "https://api.github.com/users/fandreas/events{/privacy}",
+            "followers_url": "https://api.github.com/users/fandreas/followers",
+            "following_url": "https://api.github.com/users/fandreas/following{/other_user}",
+            "gists_url": "https://api.github.com/users/fandreas/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/fandreas",
+            "id": 7583658,
+            "login": "fandreas",
+            "node_id": "MDQ6VXNlcjc1ODM2NTg=",
+            "organizations_url": "https://api.github.com/users/fandreas/orgs",
+            "received_events_url": "https://api.github.com/users/fandreas/received_events",
+            "repos_url": "https://api.github.com/users/fandreas/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/fandreas/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/fandreas/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/fandreas",
+            "user_view_type": "public"
+          },
+          "private": false,
+          "pull_request_creation_policy": "all",
+          "pulls_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/pulls{/number}",
+          "pushed_at": "2026-06-18T00:41:14Z",
+          "releases_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/releases{/id}",
+          "size": 285,
+          "ssh_url": "git@github.com:fandreas/oauth-spiffe-client-authentication.git",
+          "stargazers_count": 0,
+          "stargazers_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/stargazers",
+          "statuses_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/statuses/{sha}",
+          "subscribers_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/subscribers",
+          "subscription_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/subscription",
+          "svn_url": "https://github.com/fandreas/oauth-spiffe-client-authentication",
+          "tags_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/tags",
+          "teams_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/teams",
+          "topics": [],
+          "trees_url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication/git/trees{/sha}",
+          "updated_at": "2026-07-22T20:21:02Z",
+          "url": "https://api.github.com/repos/fandreas/oauth-spiffe-client-authentication",
+          "visibility": "public",
+          "watchers": 0,
+          "watchers_count": 0,
+          "web_commit_signoff_required": false
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 979990744,
+        "name": "oauth-wg/oauth-spiffe-client-authentication",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication"
+      },
+      "type": "ForkEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/1944352?",
+        "display_login": "mcguinness",
+        "gravatar_id": "",
+        "id": 1944352,
+        "login": "mcguinness",
+        "url": "https://api.github.com/users/mcguinness"
+      },
+      "created_at": "2026-07-22T16:30:48Z",
+      "id": "12149560941",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "opened",
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "## Context\n\nThe current draft says in Security Considerations that this specification SHOULD only be supported for confidential clients, and Cross-Domain Client ID Handling notes that requiring a confidential client at the Resource Authorization Server helps prevent the IdP from delegating access to any valid client at the Resource Authorization Server.\n\nIssue #85 asks whether this constraint can be relaxed when the ID-JAG itself is key-bound via `cnf`/DPoP, on the theory that proof-of-possession at the RAS provides an alternative to confidential client authentication at the RAS.\n\nThis issue proposes a related but distinct relaxation, one layer earlier: when the ID Token used as the `subject_token` is key-bound via OpenID Connect Key Binding 1.0 (https://openid.github.io/connect-key-binding/main.html), the authentication assurance for the client is anchored in the ID Token itself, and the confidential-client requirement can be reconsidered on that basis.\n\n## Proposal\n\nAllow the Client at the IdP to be a public client, or otherwise not required to present confidential client credentials at the Token Exchange endpoint, when all of the following hold:\n\n- The `subject_token` is a key-bound ID Token per OpenID Connect Key Binding 1.0.\n- The IdP validates the key binding of the ID Token per that spec.\n- The IdP issues a key-bound ID-JAG whose `cnf` is derived from (or otherwise chained to) the ID Token's binding key or an explicit DPoP proof presented alongside.\n- The Client presents proof-of-possession when redeeming the ID-JAG at the Resource Authorization Server, and the RAS validates the `cnf` against that proof per the existing DPoP processing rules.\n\nThe Resource Authorization Server-side confidential requirement would remain a deployment choice as discussed in #85; this issue focuses on the IdP-side Token Exchange step where the ID Token's key binding is the anchoring credential.\n\n## How this relates to #85\n\n- **#85** is about the RAS accepting public clients when the ID-JAG is key-bound at the RAS boundary. The anchoring credential there is the ID-JAG's `cnf` plus a proof presented to the RAS.\n- **This issue** is about the IdP accepting a non-confidential client at Token Exchange when the ID Token itself is key-bound. The anchoring credential is the ID Token's own binding.\n\nThey can be adopted independently or together. Together, they enable an end-to-end model where the client's device (or the client's attestation-provided key) carries authentication assurance from SSO issuance through ID-JAG issuance to access token exchange, without requiring the client to maintain separate confidential credentials at either authorization server.\n\n## Tradeoffs\n\nPreserved:\n- Sender-constraint on the ID Token, ID-JAG, and (if the RAS opts in) the access token.\n- Prevention of casual replay by parties without the binding key.\n\nReduced or requiring explicit spec handling:\n- Anti-substitution properties that rely on confidential client authentication at the IdP need to be reproved via the key-binding chain. Specifically: how the IdP validates that the Client presenting the ID Token is the same party the ID Token was issued to (this is exactly what OpenID Connect Key Binding covers, but the ID-JAG draft would need to say so and reference it).\n- The Client's `client_id` at the IdP for Token Exchange still needs to be identified; the ID Token's `azp`/`aud` are the natural candidates, but the draft would need to state this normatively for the public-client-plus-key-bound case.\n\n## Asking for\n\nFeedback on whether this relaxation belongs in the base spec, or in a separate profile that stacks with #85's relaxation. If the working group is broadly comfortable with the direction, I'm happy to PR the required processing rules (validation, `client_id` derivation, cross-referencing OpenID Connect Key Binding 1.0).",
+          "closed_at": null,
+          "comments": 0,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/113/comments",
+          "created_at": "2026-07-22T16:30:47Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/113/events",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/113",
+          "id": 4951042308,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/113/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOKv5r-s8AAAABJxrpBA",
+          "number": 113,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/113/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/113/timeline",
+          "title": "Relax confidential client requirement when the ID Token is key-bound (OpenID Connect Key Binding 1.0)",
+          "type": null,
+          "updated_at": "2026-07-22T16:30:47Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/113",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
+            "events_url": "https://api.github.com/users/mcguinness/events{/privacy}",
+            "followers_url": "https://api.github.com/users/mcguinness/followers",
+            "following_url": "https://api.github.com/users/mcguinness/following{/other_user}",
+            "gists_url": "https://api.github.com/users/mcguinness/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/mcguinness",
+            "id": 1944352,
+            "login": "mcguinness",
+            "node_id": "MDQ6VXNlcjE5NDQzNTI=",
+            "organizations_url": "https://api.github.com/users/mcguinness/orgs",
+            "received_events_url": "https://api.github.com/users/mcguinness/received_events",
+            "repos_url": "https://api.github.com/users/mcguinness/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/mcguinness/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/mcguinness/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/mcguinness",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "IssuesEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/210746?",
+        "display_login": "sorindumitru",
+        "gravatar_id": "",
+        "id": 210746,
+        "login": "sorindumitru",
+        "url": "https://api.github.com/users/sorindumitru"
+      },
+      "created_at": "2026-07-22T09:13:52Z",
+      "id": "12127931648",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "opened",
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "In section 3.2 we say:\n```\nThe request MUST include the client_id parameter containing the\n   SPIFFE-ID of the client.  It MUST match the URI SAN of the presented\n   X509-SVID client credential.\n```\n\nThere's no such wording in section 3.1.\n\nBoth sections including something like the following in the validation part of them:\n```\nSPIFFE ID in the sub claim matches or is associated with a recognized client identifier\n```\n\nThis is a weaker claim than previously mentioned claim. I read as either:\n1. The client id matches the SPIFFE ID\n2. The client id is associated (authorised?) to authenticate as the given client id.\n\nIt would be good to be clarify a bit more the relationship between the client ID and the SPIFFE ID of the presented SVIDs.",
+          "closed_at": null,
+          "comments": 0,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/43/comments",
+          "created_at": "2026-07-22T09:13:50Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/43/events",
+          "html_url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/issues/43",
+          "id": 4947389048,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/43/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOOml42M8AAAABJuMqeA",
+          "number": 43,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/43/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/43/timeline",
+          "title": "Client ID relationship with SPIFFE ID",
+          "type": null,
+          "updated_at": "2026-07-22T09:13:50Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/issues/43",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/210746?v=4",
+            "events_url": "https://api.github.com/users/sorindumitru/events{/privacy}",
+            "followers_url": "https://api.github.com/users/sorindumitru/followers",
+            "following_url": "https://api.github.com/users/sorindumitru/following{/other_user}",
+            "gists_url": "https://api.github.com/users/sorindumitru/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/sorindumitru",
+            "id": 210746,
+            "login": "sorindumitru",
+            "node_id": "MDQ6VXNlcjIxMDc0Ng==",
+            "organizations_url": "https://api.github.com/users/sorindumitru/orgs",
+            "received_events_url": "https://api.github.com/users/sorindumitru/received_events",
+            "repos_url": "https://api.github.com/users/sorindumitru/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/sorindumitru/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/sorindumitru/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/sorindumitru",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 979990744,
+        "name": "oauth-wg/oauth-spiffe-client-authentication",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication"
+      },
+      "type": "IssuesEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/113001?",
+        "display_login": "aaronpk",
+        "gravatar_id": "",
+        "id": 113001,
+        "login": "aaronpk",
+        "url": "https://api.github.com/users/aaronpk"
+      },
+      "created_at": "2026-07-22T08:43:34Z",
+      "id": "12126503669",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "I had been similarly thinking of the identity chaining definition as using the `audience` to identify the RAS freeing up the `resource` for other purposes. \n\nThe Token Exchange definition of the terms does not limit the parameters to identify the authorization server, it says \"target service or resource\", and a \"service\" can be the combination of the resource AS and RS.\n",
+          "created_at": "2026-07-22T08:43:34Z",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/110#issuecomment-5043763170",
+          "id": 5043763170,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110",
+          "minimized": null,
+          "node_id": "IC_kwDOKv5r-s8AAAABLKG34g",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/5043763170/reactions"
+          },
+          "updated_at": "2026-07-22T08:43:34Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/5043763170",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/113001?v=4",
+            "events_url": "https://api.github.com/users/aaronpk/events{/privacy}",
+            "followers_url": "https://api.github.com/users/aaronpk/followers",
+            "following_url": "https://api.github.com/users/aaronpk/following{/other_user}",
+            "gists_url": "https://api.github.com/users/aaronpk/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/aaronpk",
+            "id": 113001,
+            "login": "aaronpk",
+            "node_id": "MDQ6VXNlcjExMzAwMQ==",
+            "organizations_url": "https://api.github.com/users/aaronpk/orgs",
+            "received_events_url": "https://api.github.com/users/aaronpk/received_events",
+            "repos_url": "https://api.github.com/users/aaronpk/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/aaronpk/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/aaronpk/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/aaronpk",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "oauth-identity-assertion-authz-grant is expected to be a profile of [identity chaining](https://datatracker.ietf.org/doc/draft-ietf-oauth-identity-chaining/):\n\n> Identity Chaining intentionally leaves many details unspecified in order to support multiple use cases. **This specification profiles it [Identity Chaining]** […]\n\nHowever, their definition of the `resource` parameter in the token Exchange Request is incompatible:\n\n* For identity chaining, this identifies the *authorization server* for trust domain B (i.e. the *resource authorization server*)\n* For identity assertion authz grant, this identified the *resource server*\n\n***\n\nIn identity chaining, we have:\n\n> Token Exchange Request\n>\n> […]\n>\n> resource, URI of **authorization server** for trust domain B\n\nIn oauth-identity-assertion-authz-grant:\n\n> The Client makes a Token Exchange [[RFC8693](https://www.rfc-editor.org/rfc/rfc8693)] request to the IdP Authorization Server's Token Endpoint with the following parameters:\n>\n> […]\n>\n> resource: OPTIONAL - The Resource Identifier of the **Resource Server** as defined in [Section 2](https://rfc-editor.org/rfc/rfc8707#section-2) of [[RFC8707](https://www.rfc-editor.org/rfc/rfc8707)].\n\n***\n\nI would claim oauth-identity-chaining is more consistent with the definition of `resource` because as per RFC 8693, they are supposed to have the [same semantic meaning](https://datatracker.ietf.org/doc/html/rfc8693#name-request).",
+          "closed_at": null,
+          "comments": 2,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110/comments",
+          "created_at": "2026-07-13T00:03:26Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110/events",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/110",
+          "id": 4869307408,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOKv5r-s8AAAABIju8EA",
+          "number": 110,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110/timeline",
+          "title": "Usage of \"resource\" request parameter incompatible with oauth-identity-chaining",
+          "type": null,
+          "updated_at": "2026-07-22T08:43:34Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/946727?v=4",
+            "events_url": "https://api.github.com/users/randomstuff/events{/privacy}",
+            "followers_url": "https://api.github.com/users/randomstuff/followers",
+            "following_url": "https://api.github.com/users/randomstuff/following{/other_user}",
+            "gists_url": "https://api.github.com/users/randomstuff/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/randomstuff",
+            "id": 946727,
+            "login": "randomstuff",
+            "node_id": "MDQ6VXNlcjk0NjcyNw==",
+            "organizations_url": "https://api.github.com/users/randomstuff/orgs",
+            "received_events_url": "https://api.github.com/users/randomstuff/received_events",
+            "repos_url": "https://api.github.com/users/randomstuff/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/randomstuff/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/randomstuff/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/randomstuff",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "IssueCommentEvent"
+    },
     {
       "actor": {
         "avatar_url": "https://avatars.githubusercontent.com/u/8774236?",
@@ -55461,7 +56183,7 @@
           "assignees": [],
           "body": "oauth-identity-assertion-authz-grant is expected to be a profile of [identity chaining](https://datatracker.ietf.org/doc/draft-ietf-oauth-identity-chaining/):\n\n> Identity Chaining intentionally leaves many details unspecified in order to support multiple use cases. **This specification profiles it [Identity Chaining]** […]\n\nHowever, their definition of the `resource` parameter in the token Exchange Request is incompatible:\n\n* For identity chaining, this identifies the *authorization server* for trust domain B (i.e. the *resource authorization server*)\n* For identity assertion authz grant, this identified the *resource server*\n\n***\n\nIn identity chaining, we have:\n\n> Token Exchange Request\n>\n> […]\n>\n> resource, URI of **authorization server** for trust domain B\n\nIn oauth-identity-assertion-authz-grant:\n\n> The Client makes a Token Exchange [[RFC8693](https://www.rfc-editor.org/rfc/rfc8693)] request to the IdP Authorization Server's Token Endpoint with the following parameters:\n>\n> […]\n>\n> resource: OPTIONAL - The Resource Identifier of the **Resource Server** as defined in [Section 2](https://rfc-editor.org/rfc/rfc8707#section-2) of [[RFC8707](https://www.rfc-editor.org/rfc/rfc8707)].\n\n***\n\nI would claim oauth-identity-chaining is more consistent with the definition of `resource` because as per RFC 8693, they are supposed to have the [same semantic meaning](https://datatracker.ietf.org/doc/html/rfc8693#name-request).",
           "closed_at": null,
-          "comments": 1,
+          "comments": 2,
           "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110/comments",
           "created_at": "2026-07-13T00:03:26Z",
           "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110/events",
@@ -55505,7 +56227,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110/timeline",
           "title": "Usage of \"resource\" request parameter incompatible with oauth-identity-chaining",
           "type": null,
-          "updated_at": "2026-07-13T20:11:42Z",
+          "updated_at": "2026-07-22T08:43:34Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/110",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/946727?v=4",
@@ -56803,344 +57525,6 @@
         "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
       },
       "type": "IssueCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-07-13T18:30:07Z",
-      "id": "14912948855",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "f4a046577640204f4adfc6e7d059c26c765924ce",
-        "head": "ed4c900f0752c23586ba13ea4f3e3e2fd18688c5",
-        "push_id": 37202986189,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 906747170
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
-        "display_login": "yaronf",
-        "gravatar_id": "",
-        "id": 1265636,
-        "login": "yaronf",
-        "url": "https://api.github.com/users/yaronf"
-      },
-      "created_at": "2026-07-13T18:29:35Z",
-      "id": "11727507441",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "opened",
-        "number": 48,
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 906747170,
-              "name": "draft-ietf-oauth-rfc8725bis",
-              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-            },
-            "sha": "e4ecdc6810274baf81a56bfe4d774ba793978ddf"
-          },
-          "head": {
-            "ref": "ys-artart-313",
-            "repo": {
-              "id": 906747170,
-              "name": "draft-ietf-oauth-rfc8725bis",
-              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-            },
-            "sha": "fdc0a0000cd0f966bb5c2066265c6460513d0dff"
-          },
-          "id": 4046828198,
-          "number": 48,
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/pulls/48"
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "PullRequestEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
-        "display_login": "yaronf",
-        "gravatar_id": "",
-        "id": 1265636,
-        "login": "yaronf",
-        "url": "https://api.github.com/users/yaronf"
-      },
-      "created_at": "2026-07-13T18:29:34Z",
-      "id": "14912918205",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "description": null,
-        "full_ref": "refs/heads/ys-artart-313",
-        "master_branch": "main",
-        "pusher_type": "user",
-        "ref": "ys-artart-313",
-        "ref_type": "branch"
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "CreateEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-07-13T18:27:14Z",
-      "id": "14912792901",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "c6b2fea2111086d78490f6f72d842f250d7176b1",
-        "head": "f4a046577640204f4adfc6e7d059c26c765924ce",
-        "push_id": 37202830481,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 906747170
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
-        "display_login": "yaronf",
-        "gravatar_id": "",
-        "id": 1265636,
-        "login": "yaronf",
-        "url": "https://api.github.com/users/yaronf"
-      },
-      "created_at": "2026-07-13T18:26:40Z",
-      "id": "11727386617",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "opened",
-        "number": 47,
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 906747170,
-              "name": "draft-ietf-oauth-rfc8725bis",
-              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-            },
-            "sha": "e4ecdc6810274baf81a56bfe4d774ba793978ddf"
-          },
-          "head": {
-            "ref": "ys-artart-311",
-            "repo": {
-              "id": 906747170,
-              "name": "draft-ietf-oauth-rfc8725bis",
-              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-            },
-            "sha": "d8a3a519ea3c856d0d8bb9d6dd164641e8d276b1"
-          },
-          "id": 4046811531,
-          "number": 47,
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/pulls/47"
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "PullRequestEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
-        "display_login": "yaronf",
-        "gravatar_id": "",
-        "id": 1265636,
-        "login": "yaronf",
-        "url": "https://api.github.com/users/yaronf"
-      },
-      "created_at": "2026-07-13T18:26:39Z",
-      "id": "14912761697",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "description": null,
-        "full_ref": "refs/heads/ys-artart-311",
-        "master_branch": "main",
-        "pusher_type": "user",
-        "ref": "ys-artart-311",
-        "ref_type": "branch"
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "CreateEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-07-13T16:39:19Z",
-      "id": "14906789573",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "6abe94dcf53b0ae22ad7b060a3c45ea021926d89",
-        "head": "e20514ee2838eb4e09b4bba442d6d7f35e54a0b9",
-        "push_id": 37196832374,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 652659140
-      },
-      "public": true,
-      "repo": {
-        "id": 652659140,
-        "name": "oauth-wg/oauth-identity-chaining",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
-        "display_login": "bc-pi",
-        "gravatar_id": "",
-        "id": 71398439,
-        "login": "bc-pi",
-        "url": "https://api.github.com/users/bc-pi"
-      },
-      "created_at": "2026-07-13T16:38:52Z",
-      "id": "14906762370",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "full_ref": "refs/heads/sourcecode-vs-artwork",
-        "pusher_type": "user",
-        "ref": "sourcecode-vs-artwork",
-        "ref_type": "branch"
-      },
-      "public": true,
-      "repo": {
-        "id": 652659140,
-        "name": "oauth-wg/oauth-identity-chaining",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-      },
-      "type": "DeleteEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
-        "display_login": "bc-pi",
-        "gravatar_id": "",
-        "id": 71398439,
-        "login": "bc-pi",
-        "url": "https://api.github.com/users/bc-pi"
-      },
-      "created_at": "2026-07-13T16:38:51Z",
-      "id": "14906760863",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "425f098f270284a369e5de544946dd2af8cfa9ea",
-        "head": "c94ed3b88ae4823277f70021f5255bbc9c927147",
-        "push_id": 37196803619,
-        "ref": "refs/heads/main",
-        "repository_id": 652659140
-      },
-      "public": true,
-      "repo": {
-        "id": 652659140,
-        "name": "oauth-wg/oauth-identity-chaining",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-chaining"
-      },
-      "type": "PushEvent"
     }
   ],
   "prs": {
@@ -96067,9 +96451,9 @@
       "private": false,
       "pull_request_creation_policy": "all",
       "pulls_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls{/number}",
-      "pushed_at": "2026-07-21T00:28:20Z",
+      "pushed_at": "2026-07-23T00:28:20Z",
       "releases_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/releases{/id}",
-      "size": 2197,
+      "size": 2431,
       "ssh_url": "git@github.com:oauth-wg/draft-ietf-oauth-attestation-based-client-auth.git",
       "stargazers_count": 20,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/stargazers",
@@ -96740,8 +97124,8 @@
       "name": "oauth-identity-assertion-authz-grant",
       "node_id": "R_kgDOKv5r-g",
       "notifications_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/notifications{?since,all,participating}",
-      "open_issues": 28,
-      "open_issues_count": 28,
+      "open_issues": 29,
+      "open_issues_count": 29,
       "owner": {
         "avatar_url": "https://avatars.githubusercontent.com/u/111596788?v=4",
         "events_url": "https://api.github.com/users/oauth-wg/events{/privacy}",
@@ -96773,9 +97157,9 @@
       "private": false,
       "pull_request_creation_policy": "all",
       "pulls_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/pulls{/number}",
-      "pushed_at": "2026-07-21T16:51:03Z",
+      "pushed_at": "2026-07-23T00:18:52Z",
       "releases_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/releases{/id}",
-      "size": 1091,
+      "size": 1095,
       "ssh_url": "git@github.com:oauth-wg/oauth-identity-assertion-authz-grant.git",
       "stargazers_count": 8,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/stargazers",
@@ -96890,9 +97274,9 @@
       "private": false,
       "pull_request_creation_policy": "all",
       "pulls_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pulls{/number}",
-      "pushed_at": "2026-07-21T00:16:12Z",
+      "pushed_at": "2026-07-23T00:16:21Z",
       "releases_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/releases{/id}",
-      "size": 934,
+      "size": 1048,
       "ssh_url": "git@github.com:oauth-wg/draft-ietf-oauth-client-id-metadata-document.git",
       "stargazers_count": 13,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/stargazers",
@@ -97285,8 +97669,8 @@
       "downloads_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/downloads",
       "events_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/events",
       "fork": false,
-      "forks": 5,
-      "forks_count": 5,
+      "forks": 6,
+      "forks_count": 6,
       "forks_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/forks",
       "full_name": "oauth-wg/oauth-spiffe-client-authentication",
       "git_commits_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/git/commits{/sha}",
@@ -97325,8 +97709,8 @@
       "name": "oauth-spiffe-client-authentication",
       "node_id": "R_kgDOOml42A",
       "notifications_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/notifications{?since,all,participating}",
-      "open_issues": 11,
-      "open_issues_count": 11,
+      "open_issues": 12,
+      "open_issues_count": 12,
       "owner": {
         "avatar_url": "https://avatars.githubusercontent.com/u/111596788?v=4",
         "events_url": "https://api.github.com/users/oauth-wg/events{/privacy}",
@@ -97358,9 +97742,9 @@
       "private": false,
       "pull_request_creation_policy": "all",
       "pulls_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/pulls{/number}",
-      "pushed_at": "2026-06-18T00:41:14Z",
+      "pushed_at": "2026-07-23T00:25:57Z",
       "releases_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/releases{/id}",
-      "size": 285,
+      "size": 288,
       "ssh_url": "git@github.com:oauth-wg/oauth-spiffe-client-authentication.git",
       "stargazers_count": 5,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/stargazers",
@@ -97380,5 +97764,5 @@
       "web_commit_signoff_required": false
     }
   ],
-  "snapshot_date": "2026-07-22"
+  "snapshot_date": "2026-07-23"
 }
