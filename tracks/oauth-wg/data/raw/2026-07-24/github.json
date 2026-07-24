@@ -1,8 +1,160 @@
 {
-  "collected_at": "2026-07-23T08:36:24+00:00",
+  "collected_at": "2026-07-24T08:32:48+00:00",
   "issues": {
     "error": null,
     "items": [
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "NONE",
+        "body": "Dynamic modification of the metadata seems like a new capability to attack users, by customizing metadata per user in order to mislead them, and not reveal the misinformation to other parties.\n\nIt seems like this is intended for publishing public documents at stable URLs, which would be beneficial for users trying to protect themselves -- they can access that metadata through a proxy; a researcher can check the contents of that data and try to detect abuse. But if the metadata is provided dynamically, like dynamically generated customized per user or per authorization server, then it's easier to track users who are interested in an oauth client's metadata and it's easier to mislead users by providing them different, misleading metadata.\n\nIt would be useful for privacy and security if we at least identified whether the metadata document was intended to be consistent (and if so, we could work on technical mechanisms for that). And if it's not intended to be consistent, then I think we should document the threats as a result, and what users need to do to protect themselves.\n\n(The use cases where I'm thinking about this in particular are when a relying party is requesting verifiable digital credential presentations from a user's wallet. Some have suggested that client metadata would be the way to indicate privacy-relevant details, like privacy policies or usage commitments. But if that data is inconsistent, then it's more of a way to mislead users than a way for users to obtain reliable metadata.)",
+        "closed_at": null,
+        "comments": 1,
+        "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91/comments",
+        "created_at": "2026-07-23T12:56:22Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91/events",
+        "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91",
+        "id": 4959019838,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOL_Xevs8AAAABJ5SjPg",
+        "number": 91,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91/timeline",
+        "title": "privacy and security risks of inconsistent client metadata",
+        "type": null,
+        "updated_at": "2026-07-23T22:46:03Z",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/63572?v=4",
+          "events_url": "https://api.github.com/users/npdoty/events{/privacy}",
+          "followers_url": "https://api.github.com/users/npdoty/followers",
+          "following_url": "https://api.github.com/users/npdoty/following{/other_user}",
+          "gists_url": "https://api.github.com/users/npdoty/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/npdoty",
+          "id": 63572,
+          "login": "npdoty",
+          "node_id": "MDQ6VXNlcjYzNTcy",
+          "organizations_url": "https://api.github.com/users/npdoty/orgs",
+          "received_events_url": "https://api.github.com/users/npdoty/received_events",
+          "repos_url": "https://api.github.com/users/npdoty/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/npdoty/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/npdoty/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/npdoty",
+          "user_view_type": "public"
+        }
+      },
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "NONE",
+        "body": "## Problem Summary\nIn emerging **Agentic AI / Model Context Protocol (MCP)** architectures, a public client (e.g., a CLI tool or local agent) connects to a central API Gateway/Proxy, which then proxies requests to upstream services protected by distinct Resource Authorization Servers (AS). \n\nUnder the current rules of `draft-ietf-oauth-identity-assertion-authz-grant` (Section 4.3.3), this multi-hop topology cannot legally execute the ID-JAG Token Exchange because:\n1. The **Public Client** is the subject/audience of the initial OpenID Connect ID Token, but cannot (and should not) perform the ID-JAG Token Exchange.\n2. The **Gateway** is the confidential client performing the Token Exchange, but its `client_id` fails the mandatory `aud` validation check against the ID Token presented in the request.\n\n---\n\n## Topology Overview\n\n```mermaid\nsequenceDiagram\n    autonumber\n    actor User\n    participant Agent as Public Client<br/>(AI Agent / CLI)\n    participant IdP as Enterprise IdP\n    participant Gateway as MCP Gateway<br/>(Confidential Client)\n    participant UpstreamAS as Upstream AS<br/>(Resource AS)\n\n    User->>Agent: Initiate action\n    Agent->>IdP: OIDC Auth (PKCE)\n    IdP-->>Agent: ID Token (aud = Agent client_id)<br/>& Gateway Access Token\n    \n    Agent->>Gateway: Request tool call + ID Token\n    \n    Note over Gateway,IdP: ID-JAG Token Exchange Blocked\n    Gateway->>IdP: Token Exchange Request<br/>(subject_token = Agent ID Token)\n    IdP--xGateway: ❌ REJECTED (Section 4.3.3)<br/>aud (Agent) != client_id (Gateway)\n\n    opt If Exchange Succeeded\n        Gateway->>UpstreamAS: JWT-Bearer Redemption (ID-JAG)\n        UpstreamAS-->>Gateway: Upstream Access Token\n    end\n```\n\n1. **Client Setup:** An AI coding agent acts as a public client (native/CLI app, PKCE, no client secret) and authenticates at the enterprise IdP.\n2. **Initial Tokens:** As per OpenID Connect Core, the issued ID Token's `aud` claim is set to the agent's own `client_id`. In the same flow, the agent receives an access token scoped for an **MCP Gateway**.\n3. **Gateway Aggregation:** The Gateway aggregates multiple upstream MCP servers. Each upstream server is protected by its own Resource Authorization Server (AS) that independently trusts the enterprise IdP.\n4. **Target Flow (ID-JAG):** Per ID-JAG, to call an upstream server, the Gateway needs to redeem an access token by first calling Token Exchange (`grant_type=urn:ietf:params:oauth:grant-type:token-exchange`) at the IdP to obtain an ID-JAG (`aud = upstream_AS`), then executing a JWT-Bearer grant (`RFC 7523`) at that AS.\n\n---\n\n## Specification Conflict\n\n### 1. Section 4.3.3 Processing Rules Violation\nSection 4.3.3 (*IdP Token Exchange Processing Rules*) states:\n> *\"When the subject_token presented in the Token Exchange call is an identity assertion (ID Token), the IdP MUST validate the assertion and MUST validate that the audience of the assertion (e.g., the aud claim of the ID Token or SAML Audience) matches the client_id of the client authentication of the request.\"*\n\nIn the Gateway topology, this requirement creates a deadlock:\n\n* **The Agent cannot call Token Exchange:** \n  * The agent's `client_id` matches the ID Token `aud`, but the agent does not know which upstream AS/audience a specific MCP tool call will require dynamically.\n  * The agent is a **public client**, whereas Section 4 explicitly notes: *\"This specification SHOULD only be supported for confidential clients.\"*\n  * Giving public clients direct capability to mint cross-domain assertions breaches principle-of-least-privilege boundaries.\n\n* **The Gateway cannot call Token Exchange:** \n  * The Gateway is a **confidential client** and knows which upstream AS to target.\n  * However, when the Gateway authenticates the Token Exchange request using its own `client_id`, the IdP **MUST reject** the call because the ID Token's `aud` contains the Agent's `client_id`, not the Gateway's `client_id`.\n\n---\n\n## Questions & Possible Paths Forward\n\n1. **Role of RFC 8693 Actor Tokens / Identity Chaining:**\n   Should ID-JAG explicitly address delegation/proxy patterns where the Gateway acts as an intermediary (e.g., utilizing `actor_token` [RFC 8693]) to relax the strict 1:1 `aud == authenticated_client_id` requirement for confidential proxies?\n\n2. **Public Client + Gateway/Proxy Guidance:**\n   As Agentic/MCP and API Gateway patterns become mainstream, is there an intended profile or recommended flow where an enterprise IdP allows a trusted confidential gateway to exchange a public client's ID Token on their behalf?\n\nI would appreciate the Working Group's perspective on whether this topology is considered out-of-scope, or if the specification could accommodate intermediate confidential proxies.",
+        "closed_at": null,
+        "comments": 1,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114/comments",
+        "created_at": "2026-07-23T09:08:51Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114/events",
+        "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/114",
+        "id": 4957266108,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOKv5r-s8AAAABJ3ngvA",
+        "number": 114,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114/timeline",
+        "title": "Architectural Conflict in Gateway / Proxy Topology with Public Clients (Section 4.3.3 Audience Check)",
+        "type": null,
+        "updated_at": "2026-07-23T22:09:50Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/3110552?v=4",
+          "events_url": "https://api.github.com/users/leleueri/events{/privacy}",
+          "followers_url": "https://api.github.com/users/leleueri/followers",
+          "following_url": "https://api.github.com/users/leleueri/following{/other_user}",
+          "gists_url": "https://api.github.com/users/leleueri/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/leleueri",
+          "id": 3110552,
+          "login": "leleueri",
+          "node_id": "MDQ6VXNlcjMxMTA1NTI=",
+          "organizations_url": "https://api.github.com/users/leleueri/orgs",
+          "received_events_url": "https://api.github.com/users/leleueri/received_events",
+          "repos_url": "https://api.github.com/users/leleueri/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/leleueri/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/leleueri/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/leleueri",
+          "user_view_type": "public"
+        }
+      },
       {
         "active_lock_reason": null,
         "assignee": null,
@@ -48410,205 +48562,755 @@
           "url": "https://api.github.com/users/bc-pi",
           "user_view_type": "public"
         }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/241506?v=4",
-          "events_url": "https://api.github.com/users/panva/events{/privacy}",
-          "followers_url": "https://api.github.com/users/panva/followers",
-          "following_url": "https://api.github.com/users/panva/following{/other_user}",
-          "gists_url": "https://api.github.com/users/panva/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/panva",
-          "id": 241506,
-          "login": "panva",
-          "node_id": "MDQ6VXNlcjI0MTUwNg==",
-          "organizations_url": "https://api.github.com/users/panva/orgs",
-          "received_events_url": "https://api.github.com/users/panva/received_events",
-          "repos_url": "https://api.github.com/users/panva/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/panva/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/panva/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/panva",
-          "user_view_type": "public"
-        },
-        "assignees": [
-          {
-            "avatar_url": "https://avatars.githubusercontent.com/u/241506?v=4",
-            "events_url": "https://api.github.com/users/panva/events{/privacy}",
-            "followers_url": "https://api.github.com/users/panva/followers",
-            "following_url": "https://api.github.com/users/panva/following{/other_user}",
-            "gists_url": "https://api.github.com/users/panva/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/panva",
-            "id": 241506,
-            "login": "panva",
-            "node_id": "MDQ6VXNlcjI0MTUwNg==",
-            "organizations_url": "https://api.github.com/users/panva/orgs",
-            "received_events_url": "https://api.github.com/users/panva/received_events",
-            "repos_url": "https://api.github.com/users/panva/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/panva/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/panva/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/panva",
-            "user_view_type": "public"
-          }
-        ],
-        "author_association": "COLLABORATOR",
-        "body": "[On LinkedIn](https://www.linkedin.com/feed/update/urn:li:activity:7353373233863151616?commentUrn=urn%3Ali%3Acomment%3A%28activity%3A7353373233863151616%2C7353430286484832256%29&dashCommentUrn=urn%3Ali%3Afsd_comment%3A%287353430286484832256%2Curn%3Ali%3Aactivity%3A7353373233863151616%29), @nynymike wrote:\n> Just a comment which you can feel free to ignore... but \"Updates to Audience Values for OAuth 2.0 Authorization Servers\" makes me think of all the JWTs issued by the AS. It might be more clear if the title was \"sent to\" OAuth 2.0 AS instead of just \"for\". \n\nSo he is suggesting\n> Updates to Audience Values Sent to OAuth 2.0 Authorization Servers\n\nrather than the current\n> Updates to Audience Values for OAuth 2.0 Authorization Servers\n\nAnother possible title is:\n> Updates to Audience Values Intended for OAuth 2.0 Authorization Servers\n",
-        "closed_at": "2025-10-07T15:39:22Z",
-        "comments": 1,
-        "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc7523bis/issues/16/comments",
-        "created_at": "2025-07-24T02:14:32Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc7523bis/issues/16/events",
-        "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-rfc7523bis/issues/16",
-        "id": 3258248703,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc7523bis/issues/16/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDONPDDUs7CNO3_",
-        "number": 16,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc7523bis/issues/16/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc7523bis",
-        "score": 1.0,
-        "state": "closed",
-        "state_reason": "completed",
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc7523bis/issues/16/timeline",
-        "title": "Improve Specification Title",
-        "type": null,
-        "updated_at": "2025-10-07T15:39:22Z",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc7523bis/issues/16",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/7644414?v=4",
-          "events_url": "https://api.github.com/users/selfissued/events{/privacy}",
-          "followers_url": "https://api.github.com/users/selfissued/followers",
-          "following_url": "https://api.github.com/users/selfissued/following{/other_user}",
-          "gists_url": "https://api.github.com/users/selfissued/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/selfissued",
-          "id": 7644414,
-          "login": "selfissued",
-          "node_id": "MDQ6VXNlcjc2NDQ0MTQ=",
-          "organizations_url": "https://api.github.com/users/selfissued/orgs",
-          "received_events_url": "https://api.github.com/users/selfissued/received_events",
-          "repos_url": "https://api.github.com/users/selfissued/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/selfissued/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/selfissued/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/selfissued",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "NONE",
-        "body": "The disappearance of the DID in section 3.5 is causing questions and a lot of disappointment among projects. Considering that the SD-JWT VC standard is backward-looking, towards x509 certificates from the 1980s, while the demand today is clearly towards decentralized ecosystems. Just for your information.\nThe information in section 10.2 generally suggesting that in fact the other methods (DIDs?) would be less reliable than those cited is perplexing (this is a personal opinion).",
-        "closed_at": "2025-10-03T12:17:34Z",
-        "comments": 3,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/326/comments",
-        "created_at": "2025-07-21T08:15:03Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/326/events",
-        "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/326",
-        "id": 3247660585,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/326/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOJbVClc7Bk14p",
-        "number": 326,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 4,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 4,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/326/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
-        "score": 1.0,
-        "state": "closed",
-        "state_reason": "completed",
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/326/timeline",
-        "title": "No more DIDs in 3.5 of draft 10",
-        "type": null,
-        "updated_at": "2025-10-03T12:17:34Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/326",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/32768069?v=4",
-          "events_url": "https://api.github.com/users/ThierryThevenet/events{/privacy}",
-          "followers_url": "https://api.github.com/users/ThierryThevenet/followers",
-          "following_url": "https://api.github.com/users/ThierryThevenet/following{/other_user}",
-          "gists_url": "https://api.github.com/users/ThierryThevenet/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/ThierryThevenet",
-          "id": 32768069,
-          "login": "ThierryThevenet",
-          "node_id": "MDQ6VXNlcjMyNzY4MDY5",
-          "organizations_url": "https://api.github.com/users/ThierryThevenet/orgs",
-          "received_events_url": "https://api.github.com/users/ThierryThevenet/received_events",
-          "repos_url": "https://api.github.com/users/ThierryThevenet/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/ThierryThevenet/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/ThierryThevenet/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/ThierryThevenet",
-          "user_view_type": "public"
-        }
       }
     ],
-    "total_count": 1774
+    "total_count": 1776
   },
   "org_events": [
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/30827?",
+        "display_login": "ThisIsMissEm",
+        "gravatar_id": "",
+        "id": 30827,
+        "login": "ThisIsMissEm",
+        "url": "https://api.github.com/users/ThisIsMissEm"
+      },
+      "created_at": "2026-07-23T22:46:03Z",
+      "id": "12222199677",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "That's why we try to have language to explicitly discourage dynamic CIMDs",
+          "created_at": "2026-07-23T22:46:03Z",
+          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91#issuecomment-5064270794",
+          "id": 5064270794,
+          "issue_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91",
+          "minimized": null,
+          "node_id": "IC_kwDOL_Xevs8AAAABLdqjyg",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/comments/5064270794/reactions"
+          },
+          "updated_at": "2026-07-23T22:46:03Z",
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/comments/5064270794",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/30827?v=4",
+            "events_url": "https://api.github.com/users/ThisIsMissEm/events{/privacy}",
+            "followers_url": "https://api.github.com/users/ThisIsMissEm/followers",
+            "following_url": "https://api.github.com/users/ThisIsMissEm/following{/other_user}",
+            "gists_url": "https://api.github.com/users/ThisIsMissEm/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/ThisIsMissEm",
+            "id": 30827,
+            "login": "ThisIsMissEm",
+            "node_id": "MDQ6VXNlcjMwODI3",
+            "organizations_url": "https://api.github.com/users/ThisIsMissEm/orgs",
+            "received_events_url": "https://api.github.com/users/ThisIsMissEm/received_events",
+            "repos_url": "https://api.github.com/users/ThisIsMissEm/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/ThisIsMissEm/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/ThisIsMissEm/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/ThisIsMissEm",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "Dynamic modification of the metadata seems like a new capability to attack users, by customizing metadata per user in order to mislead them, and not reveal the misinformation to other parties.\n\nIt seems like this is intended for publishing public documents at stable URLs, which would be beneficial for users trying to protect themselves -- they can access that metadata through a proxy; a researcher can check the contents of that data and try to detect abuse. But if the metadata is provided dynamically, like dynamically generated customized per user or per authorization server, then it's easier to track users who are interested in an oauth client's metadata and it's easier to mislead users by providing them different, misleading metadata.\n\nIt would be useful for privacy and security if we at least identified whether the metadata document was intended to be consistent (and if so, we could work on technical mechanisms for that). And if it's not intended to be consistent, then I think we should document the threats as a result, and what users need to do to protect themselves.\n\n(The use cases where I'm thinking about this in particular are when a relying party is requesting verifiable digital credential presentations from a user's wallet. Some have suggested that client metadata would be the way to indicate privacy-relevant details, like privacy policies or usage commitments. But if that data is inconsistent, then it's more of a way to mislead users than a way for users to obtain reliable metadata.)",
+          "closed_at": null,
+          "comments": 1,
+          "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91/comments",
+          "created_at": "2026-07-23T12:56:22Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91/events",
+          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91",
+          "id": 4959019838,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOL_Xevs8AAAABJ5SjPg",
+          "number": 91,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91/timeline",
+          "title": "privacy and security risks of inconsistent client metadata",
+          "type": null,
+          "updated_at": "2026-07-23T22:46:03Z",
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/63572?v=4",
+            "events_url": "https://api.github.com/users/npdoty/events{/privacy}",
+            "followers_url": "https://api.github.com/users/npdoty/followers",
+            "following_url": "https://api.github.com/users/npdoty/following{/other_user}",
+            "gists_url": "https://api.github.com/users/npdoty/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/npdoty",
+            "id": 63572,
+            "login": "npdoty",
+            "node_id": "MDQ6VXNlcjYzNTcy",
+            "organizations_url": "https://api.github.com/users/npdoty/orgs",
+            "received_events_url": "https://api.github.com/users/npdoty/received_events",
+            "repos_url": "https://api.github.com/users/npdoty/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/npdoty/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/npdoty/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/npdoty",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 804642494,
+        "name": "oauth-wg/draft-ietf-oauth-client-id-metadata-document",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/257530108?",
+        "display_login": "0xbrainkid",
+        "gravatar_id": "",
+        "id": 257530108,
+        "login": "0xbrainkid",
+        "url": "https://api.github.com/users/0xbrainkid"
+      },
+      "created_at": "2026-07-23T22:09:50Z",
+      "id": "12221046931",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "This topology feels worth handling explicitly because it shows up in MCP gateways and agent tool routers: the runtime that starts the user session is often not the component that can safely know or mint every downstream audience.\n\nOne way to keep the security boundary intact is to make the gateway exchange produce evidence of delegated authority rather than treating the public client's ID token as if it were simply addressed to the gateway. In practice I would want the resulting assertion or token exchange record to bind:\n\n- subject user / initiating public client\n- confidential gateway identity\n- requested downstream audience\n- actor/delegation chain\n- tool or resource scope being requested\n- policy version / decision time\n- expiry and revocation context\n\nThat would let an upstream AS verify \"this gateway is acting for this user/client, for this audience and purpose, under a fresh policy decision\" without giving the public client broad cross-domain minting power or weakening the audience check into a generic bearer-token pass-through.\n\nFrom the SATP / AgentFolio side, the important part is auditability across hops: if an autonomous agent action later needs a receipt, the authority chain should be reconstructable without trusting the agent runtime's own log summary. An explicit proxy/delegation profile here would help downstream tool protocols avoid inventing incompatible patterns around the same gap.\n",
+          "created_at": "2026-07-23T22:09:50Z",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/114#issuecomment-5064031137",
+          "id": 5064031137,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114",
+          "minimized": null,
+          "node_id": "IC_kwDOKv5r-s8AAAABLdb7oQ",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/5064031137/reactions"
+          },
+          "updated_at": "2026-07-23T22:09:50Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/5064031137",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/257530108?v=4",
+            "events_url": "https://api.github.com/users/0xbrainkid/events{/privacy}",
+            "followers_url": "https://api.github.com/users/0xbrainkid/followers",
+            "following_url": "https://api.github.com/users/0xbrainkid/following{/other_user}",
+            "gists_url": "https://api.github.com/users/0xbrainkid/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/0xbrainkid",
+            "id": 257530108,
+            "login": "0xbrainkid",
+            "node_id": "U_kgDOD1mY_A",
+            "organizations_url": "https://api.github.com/users/0xbrainkid/orgs",
+            "received_events_url": "https://api.github.com/users/0xbrainkid/received_events",
+            "repos_url": "https://api.github.com/users/0xbrainkid/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/0xbrainkid/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/0xbrainkid/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/0xbrainkid",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "## Problem Summary\nIn emerging **Agentic AI / Model Context Protocol (MCP)** architectures, a public client (e.g., a CLI tool or local agent) connects to a central API Gateway/Proxy, which then proxies requests to upstream services protected by distinct Resource Authorization Servers (AS). \n\nUnder the current rules of `draft-ietf-oauth-identity-assertion-authz-grant` (Section 4.3.3), this multi-hop topology cannot legally execute the ID-JAG Token Exchange because:\n1. The **Public Client** is the subject/audience of the initial OpenID Connect ID Token, but cannot (and should not) perform the ID-JAG Token Exchange.\n2. The **Gateway** is the confidential client performing the Token Exchange, but its `client_id` fails the mandatory `aud` validation check against the ID Token presented in the request.\n\n---\n\n## Topology Overview\n\n```mermaid\nsequenceDiagram\n    autonumber\n    actor User\n    participant Agent as Public Client<br/>(AI Agent / CLI)\n    participant IdP as Enterprise IdP\n    participant Gateway as MCP Gateway<br/>(Confidential Client)\n    participant UpstreamAS as Upstream AS<br/>(Resource AS)\n\n    User->>Agent: Initiate action\n    Agent->>IdP: OIDC Auth (PKCE)\n    IdP-->>Agent: ID Token (aud = Agent client_id)<br/>& Gateway Access Token\n    \n    Agent->>Gateway: Request tool call + ID Token\n    \n    Note over Gateway,IdP: ID-JAG Token Exchange Blocked\n    Gateway->>IdP: Token Exchange Request<br/>(subject_token = Agent ID Token)\n    IdP--xGateway: ❌ REJECTED (Section 4.3.3)<br/>aud (Agent) != client_id (Gateway)\n\n    opt If Exchange Succeeded\n        Gateway->>UpstreamAS: JWT-Bearer Redemption (ID-JAG)\n        UpstreamAS-->>Gateway: Upstream Access Token\n    end\n```\n\n1. **Client Setup:** An AI coding agent acts as a public client (native/CLI app, PKCE, no client secret) and authenticates at the enterprise IdP.\n2. **Initial Tokens:** As per OpenID Connect Core, the issued ID Token's `aud` claim is set to the agent's own `client_id`. In the same flow, the agent receives an access token scoped for an **MCP Gateway**.\n3. **Gateway Aggregation:** The Gateway aggregates multiple upstream MCP servers. Each upstream server is protected by its own Resource Authorization Server (AS) that independently trusts the enterprise IdP.\n4. **Target Flow (ID-JAG):** Per ID-JAG, to call an upstream server, the Gateway needs to redeem an access token by first calling Token Exchange (`grant_type=urn:ietf:params:oauth:grant-type:token-exchange`) at the IdP to obtain an ID-JAG (`aud = upstream_AS`), then executing a JWT-Bearer grant (`RFC 7523`) at that AS.\n\n---\n\n## Specification Conflict\n\n### 1. Section 4.3.3 Processing Rules Violation\nSection 4.3.3 (*IdP Token Exchange Processing Rules*) states:\n> *\"When the subject_token presented in the Token Exchange call is an identity assertion (ID Token), the IdP MUST validate the assertion and MUST validate that the audience of the assertion (e.g., the aud claim of the ID Token or SAML Audience) matches the client_id of the client authentication of the request.\"*\n\nIn the Gateway topology, this requirement creates a deadlock:\n\n* **The Agent cannot call Token Exchange:** \n  * The agent's `client_id` matches the ID Token `aud`, but the agent does not know which upstream AS/audience a specific MCP tool call will require dynamically.\n  * The agent is a **public client**, whereas Section 4 explicitly notes: *\"This specification SHOULD only be supported for confidential clients.\"*\n  * Giving public clients direct capability to mint cross-domain assertions breaches principle-of-least-privilege boundaries.\n\n* **The Gateway cannot call Token Exchange:** \n  * The Gateway is a **confidential client** and knows which upstream AS to target.\n  * However, when the Gateway authenticates the Token Exchange request using its own `client_id`, the IdP **MUST reject** the call because the ID Token's `aud` contains the Agent's `client_id`, not the Gateway's `client_id`.\n\n---\n\n## Questions & Possible Paths Forward\n\n1. **Role of RFC 8693 Actor Tokens / Identity Chaining:**\n   Should ID-JAG explicitly address delegation/proxy patterns where the Gateway acts as an intermediary (e.g., utilizing `actor_token` [RFC 8693]) to relax the strict 1:1 `aud == authenticated_client_id` requirement for confidential proxies?\n\n2. **Public Client + Gateway/Proxy Guidance:**\n   As Agentic/MCP and API Gateway patterns become mainstream, is there an intended profile or recommended flow where an enterprise IdP allows a trusted confidential gateway to exchange a public client's ID Token on their behalf?\n\nI would appreciate the Working Group's perspective on whether this topology is considered out-of-scope, or if the specification could accommodate intermediate confidential proxies.",
+          "closed_at": null,
+          "comments": 1,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114/comments",
+          "created_at": "2026-07-23T09:08:51Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114/events",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/114",
+          "id": 4957266108,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOKv5r-s8AAAABJ3ngvA",
+          "number": 114,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114/timeline",
+          "title": "Architectural Conflict in Gateway / Proxy Topology with Public Clients (Section 4.3.3 Audience Check)",
+          "type": null,
+          "updated_at": "2026-07-23T22:09:50Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/3110552?v=4",
+            "events_url": "https://api.github.com/users/leleueri/events{/privacy}",
+            "followers_url": "https://api.github.com/users/leleueri/followers",
+            "following_url": "https://api.github.com/users/leleueri/following{/other_user}",
+            "gists_url": "https://api.github.com/users/leleueri/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/leleueri",
+            "id": 3110552,
+            "login": "leleueri",
+            "node_id": "MDQ6VXNlcjMxMTA1NTI=",
+            "organizations_url": "https://api.github.com/users/leleueri/orgs",
+            "received_events_url": "https://api.github.com/users/leleueri/received_events",
+            "repos_url": "https://api.github.com/users/leleueri/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/leleueri/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/leleueri/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/leleueri",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-07-23T16:39:38Z",
+      "id": "15647232285",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "6a8f0b4a3e07b07857802d2f3afe6cfd2c3b622b",
+        "head": "ee93ad237ed517f2458c9715c15257d927329d09",
+        "push_id": 37941091036,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 631317608
+      },
+      "public": true,
+      "repo": {
+        "id": 631317608,
+        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/16320000?",
+        "display_login": "paulbastian",
+        "gravatar_id": "",
+        "id": 16320000,
+        "login": "paulbastian",
+        "url": "https://api.github.com/users/paulbastian"
+      },
+      "created_at": "2026-07-23T16:38:14Z",
+      "id": "12207041062",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "opened",
+        "number": 216,
+        "pull_request": {
+          "base": {
+            "ref": "main",
+            "repo": {
+              "id": 631317608,
+              "name": "draft-ietf-oauth-attestation-based-client-auth",
+              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+            },
+            "sha": "565a092deefe1e02afd00944c872839a11bab6bd"
+          },
+          "head": {
+            "ref": "pb/duplicate_verification_step",
+            "repo": {
+              "id": 631317608,
+              "name": "draft-ietf-oauth-attestation-based-client-auth",
+              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+            },
+            "sha": "d6017c1ea5dd87b4c1566af5f85d484a1514cba3"
+          },
+          "id": 4118320634,
+          "number": 216,
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls/216"
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 631317608,
+        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+      },
+      "type": "PullRequestEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/16320000?",
+        "display_login": "paulbastian",
+        "gravatar_id": "",
+        "id": 16320000,
+        "login": "paulbastian",
+        "url": "https://api.github.com/users/paulbastian"
+      },
+      "created_at": "2026-07-23T16:38:02Z",
+      "id": "15647132573",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "description": null,
+        "full_ref": "refs/heads/pb/duplicate_verification_step",
+        "master_branch": "main",
+        "pusher_type": "user",
+        "ref": "pb/duplicate_verification_step",
+        "ref_type": "branch"
+      },
+      "public": true,
+      "repo": {
+        "id": 631317608,
+        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+      },
+      "type": "CreateEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/8774236?",
+        "display_login": "c2bo",
+        "gravatar_id": "",
+        "id": 8774236,
+        "login": "c2bo",
+        "url": "https://api.github.com/users/c2bo"
+      },
+      "created_at": "2026-07-23T15:30:34Z",
+      "id": "12203713995",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "opened",
+        "number": 215,
+        "pull_request": {
+          "base": {
+            "ref": "main",
+            "repo": {
+              "id": 631317608,
+              "name": "draft-ietf-oauth-attestation-based-client-auth",
+              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+            },
+            "sha": "565a092deefe1e02afd00944c872839a11bab6bd"
+          },
+          "head": {
+            "ref": "c2bo/fixes-for-as",
+            "repo": {
+              "id": 631317608,
+              "name": "draft-ietf-oauth-attestation-based-client-auth",
+              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+            },
+            "sha": "18bad9a34f14859582d60e3a35958e1a4c3930d5"
+          },
+          "id": 4117849719,
+          "number": 215,
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls/215"
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 631317608,
+        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+      },
+      "type": "PullRequestEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-07-23T15:27:24Z",
+      "id": "15642260916",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "899ebf4bb3df62cfd36c308bfc1a91108cff90a4",
+        "head": "6a8f0b4a3e07b07857802d2f3afe6cfd2c3b622b",
+        "push_id": 37936029070,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 631317608
+      },
+      "public": true,
+      "repo": {
+        "id": 631317608,
+        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/8774236?",
+        "display_login": "c2bo",
+        "gravatar_id": "",
+        "id": 8774236,
+        "login": "c2bo",
+        "url": "https://api.github.com/users/c2bo"
+      },
+      "created_at": "2026-07-23T15:27:01Z",
+      "id": "15642233510",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "description": null,
+        "full_ref": "refs/heads/c2bo/fixes-for-as",
+        "master_branch": "main",
+        "pusher_type": "user",
+        "ref": "c2bo/fixes-for-as",
+        "ref_type": "branch"
+      },
+      "public": true,
+      "repo": {
+        "id": 631317608,
+        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+      },
+      "type": "CreateEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/63572?",
+        "display_login": "npdoty",
+        "gravatar_id": "",
+        "id": 63572,
+        "login": "npdoty",
+        "url": "https://api.github.com/users/npdoty"
+      },
+      "created_at": "2026-07-23T12:56:24Z",
+      "id": "12195419265",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "opened",
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "Dynamic modification of the metadata seems like a new capability to attack users, by customizing metadata per user in order to mislead them, and not reveal the misinformation to other parties.\n\nIt seems like this is intended for publishing public documents at stable URLs, which would be beneficial for users trying to protect themselves -- they can access that metadata through a proxy; a researcher can check the contents of that data and try to detect abuse. But if the metadata is provided dynamically, like dynamically generated customized per user or per authorization server, then it's easier to track users who are interested in an oauth client's metadata and it's easier to mislead users by providing them different, misleading metadata.\n\nIt would be useful for privacy and security if we at least identified whether the metadata document was intended to be consistent (and if so, we could work on technical mechanisms for that). And if it's not intended to be consistent, then I think we should document the threats as a result, and what users need to do to protect themselves.\n\n(The use cases where I'm thinking about this in particular are when a relying party is requesting verifiable digital credential presentations from a user's wallet. Some have suggested that client metadata would be the way to indicate privacy-relevant details, like privacy policies or usage commitments. But if that data is inconsistent, then it's more of a way to mislead users than a way for users to obtain reliable metadata.)",
+          "closed_at": null,
+          "comments": 1,
+          "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91/comments",
+          "created_at": "2026-07-23T12:56:22Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91/events",
+          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91",
+          "id": 4959019838,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOL_Xevs8AAAABJ5SjPg",
+          "number": 91,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91/timeline",
+          "title": "privacy and security risks of inconsistent client metadata",
+          "type": null,
+          "updated_at": "2026-07-23T22:46:03Z",
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/91",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/63572?v=4",
+            "events_url": "https://api.github.com/users/npdoty/events{/privacy}",
+            "followers_url": "https://api.github.com/users/npdoty/followers",
+            "following_url": "https://api.github.com/users/npdoty/following{/other_user}",
+            "gists_url": "https://api.github.com/users/npdoty/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/npdoty",
+            "id": 63572,
+            "login": "npdoty",
+            "node_id": "MDQ6VXNlcjYzNTcy",
+            "organizations_url": "https://api.github.com/users/npdoty/orgs",
+            "received_events_url": "https://api.github.com/users/npdoty/received_events",
+            "repos_url": "https://api.github.com/users/npdoty/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/npdoty/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/npdoty/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/npdoty",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 804642494,
+        "name": "oauth-wg/draft-ietf-oauth-client-id-metadata-document",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document"
+      },
+      "type": "IssuesEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/3110552?",
+        "display_login": "leleueri",
+        "gravatar_id": "",
+        "id": 3110552,
+        "login": "leleueri",
+        "url": "https://api.github.com/users/leleueri"
+      },
+      "created_at": "2026-07-23T09:08:53Z",
+      "id": "12185001212",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "opened",
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "## Problem Summary\nIn emerging **Agentic AI / Model Context Protocol (MCP)** architectures, a public client (e.g., a CLI tool or local agent) connects to a central API Gateway/Proxy, which then proxies requests to upstream services protected by distinct Resource Authorization Servers (AS). \n\nUnder the current rules of `draft-ietf-oauth-identity-assertion-authz-grant` (Section 4.3.3), this multi-hop topology cannot legally execute the ID-JAG Token Exchange because:\n1. The **Public Client** is the subject/audience of the initial OpenID Connect ID Token, but cannot (and should not) perform the ID-JAG Token Exchange.\n2. The **Gateway** is the confidential client performing the Token Exchange, but its `client_id` fails the mandatory `aud` validation check against the ID Token presented in the request.\n\n---\n\n## Topology Overview\n\n```mermaid\nsequenceDiagram\n    autonumber\n    actor User\n    participant Agent as Public Client<br/>(AI Agent / CLI)\n    participant IdP as Enterprise IdP\n    participant Gateway as MCP Gateway<br/>(Confidential Client)\n    participant UpstreamAS as Upstream AS<br/>(Resource AS)\n\n    User->>Agent: Initiate action\n    Agent->>IdP: OIDC Auth (PKCE)\n    IdP-->>Agent: ID Token (aud = Agent client_id)<br/>& Gateway Access Token\n    \n    Agent->>Gateway: Request tool call + ID Token\n    \n    Note over Gateway,IdP: ID-JAG Token Exchange Blocked\n    Gateway->>IdP: Token Exchange Request<br/>(subject_token = Agent ID Token)\n    IdP--xGateway: ❌ REJECTED (Section 4.3.3)<br/>aud (Agent) != client_id (Gateway)\n\n    opt If Exchange Succeeded\n        Gateway->>UpstreamAS: JWT-Bearer Redemption (ID-JAG)\n        UpstreamAS-->>Gateway: Upstream Access Token\n    end\n```\n\n1. **Client Setup:** An AI coding agent acts as a public client (native/CLI app, PKCE, no client secret) and authenticates at the enterprise IdP.\n2. **Initial Tokens:** As per OpenID Connect Core, the issued ID Token's `aud` claim is set to the agent's own `client_id`. In the same flow, the agent receives an access token scoped for an **MCP Gateway**.\n3. **Gateway Aggregation:** The Gateway aggregates multiple upstream MCP servers. Each upstream server is protected by its own Resource Authorization Server (AS) that independently trusts the enterprise IdP.\n4. **Target Flow (ID-JAG):** Per ID-JAG, to call an upstream server, the Gateway needs to redeem an access token by first calling Token Exchange (`grant_type=urn:ietf:params:oauth:grant-type:token-exchange`) at the IdP to obtain an ID-JAG (`aud = upstream_AS`), then executing a JWT-Bearer grant (`RFC 7523`) at that AS.\n\n---\n\n## Specification Conflict\n\n### 1. Section 4.3.3 Processing Rules Violation\nSection 4.3.3 (*IdP Token Exchange Processing Rules*) states:\n> *\"When the subject_token presented in the Token Exchange call is an identity assertion (ID Token), the IdP MUST validate the assertion and MUST validate that the audience of the assertion (e.g., the aud claim of the ID Token or SAML Audience) matches the client_id of the client authentication of the request.\"*\n\nIn the Gateway topology, this requirement creates a deadlock:\n\n* **The Agent cannot call Token Exchange:** \n  * The agent's `client_id` matches the ID Token `aud`, but the agent does not know which upstream AS/audience a specific MCP tool call will require dynamically.\n  * The agent is a **public client**, whereas Section 4 explicitly notes: *\"This specification SHOULD only be supported for confidential clients.\"*\n  * Giving public clients direct capability to mint cross-domain assertions breaches principle-of-least-privilege boundaries.\n\n* **The Gateway cannot call Token Exchange:** \n  * The Gateway is a **confidential client** and knows which upstream AS to target.\n  * However, when the Gateway authenticates the Token Exchange request using its own `client_id`, the IdP **MUST reject** the call because the ID Token's `aud` contains the Agent's `client_id`, not the Gateway's `client_id`.\n\n---\n\n## Questions & Possible Paths Forward\n\n1. **Role of RFC 8693 Actor Tokens / Identity Chaining:**\n   Should ID-JAG explicitly address delegation/proxy patterns where the Gateway acts as an intermediary (e.g., utilizing `actor_token` [RFC 8693]) to relax the strict 1:1 `aud == authenticated_client_id` requirement for confidential proxies?\n\n2. **Public Client + Gateway/Proxy Guidance:**\n   As Agentic/MCP and API Gateway patterns become mainstream, is there an intended profile or recommended flow where an enterprise IdP allows a trusted confidential gateway to exchange a public client's ID Token on their behalf?\n\nI would appreciate the Working Group's perspective on whether this topology is considered out-of-scope, or if the specification could accommodate intermediate confidential proxies.",
+          "closed_at": null,
+          "comments": 1,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114/comments",
+          "created_at": "2026-07-23T09:08:51Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114/events",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/114",
+          "id": 4957266108,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOKv5r-s8AAAABJ3ngvA",
+          "number": 114,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114/timeline",
+          "title": "Architectural Conflict in Gateway / Proxy Topology with Public Clients (Section 4.3.3 Audience Check)",
+          "type": null,
+          "updated_at": "2026-07-23T22:09:50Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/114",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/3110552?v=4",
+            "events_url": "https://api.github.com/users/leleueri/events{/privacy}",
+            "followers_url": "https://api.github.com/users/leleueri/followers",
+            "following_url": "https://api.github.com/users/leleueri/following{/other_user}",
+            "gists_url": "https://api.github.com/users/leleueri/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/leleueri",
+            "id": 3110552,
+            "login": "leleueri",
+            "node_id": "MDQ6VXNlcjMxMTA1NTI=",
+            "organizations_url": "https://api.github.com/users/leleueri/orgs",
+            "received_events_url": "https://api.github.com/users/leleueri/received_events",
+            "repos_url": "https://api.github.com/users/leleueri/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/leleueri/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/leleueri/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/leleueri",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "IssuesEvent"
+    },
     {
       "actor": {
         "avatar_url": "https://avatars.githubusercontent.com/u/35098287?",
@@ -56541,995 +57243,155 @@
         "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document"
       },
       "type": "IssuesEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/113001?",
-        "display_login": "aaronpk",
-        "gravatar_id": "",
-        "id": 113001,
-        "login": "aaronpk",
-        "url": "https://api.github.com/users/aaronpk"
-      },
-      "created_at": "2026-07-13T19:00:02Z",
-      "id": "11728817620",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "labeled",
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "As raised in issue https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/51, a seamless user experience requires that Requesting Apps have a way to discover which applications, and their specific instances, a user is allowed to access. This would allow mirroring the experience of SSO dashboards, where users can simply select the app instance they want to use.\n\nThis raises several questions:\n- Should the IdP expose an \"Accessible Resources API\" to list the available Resource Apps and their instances for an authenticated user?\n- How should such an API structure its data to clearly differentiate between multiple instances of the same application?\n- **Should this API be standardized?**",
-          "closed_at": null,
-          "comments": 21,
-          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/52/comments",
-          "created_at": "2025-10-10T09:22:45Z",
-          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/52/events",
-          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/52",
-          "id": 3502057384,
-          "issue_dependencies_summary": {
-            "blocked_by": 0,
-            "blocking": 0,
-            "total_blocked_by": 0,
-            "total_blocking": 0
-          },
-          "issue_field_values": [],
-          "labels": [
-            {
-              "color": "f7c144",
-              "default": false,
-              "description": "",
-              "id": 11019102466,
-              "name": "ietf-126",
-              "node_id": "LA_kwDOKv5r-s8AAAACkMopAg",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/labels/ietf-126"
-            }
-          ],
-          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/52/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "I_kwDOKv5r-s7QvSeo",
-          "number": 52,
-          "performed_via_github_app": null,
-          "pinned_comment": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/52/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
-          "state": "open",
-          "state_reason": null,
-          "sub_issues_summary": {
-            "completed": 0,
-            "percent_completed": 0,
-            "total": 0
-          },
-          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/52/timeline",
-          "title": "Discovering allowed Resource App (instances) for the logged in user",
-          "type": null,
-          "updated_at": "2026-07-13T19:00:02Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/52",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/4090187?v=4",
-            "events_url": "https://api.github.com/users/dlozlla/events{/privacy}",
-            "followers_url": "https://api.github.com/users/dlozlla/followers",
-            "following_url": "https://api.github.com/users/dlozlla/following{/other_user}",
-            "gists_url": "https://api.github.com/users/dlozlla/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/dlozlla",
-            "id": 4090187,
-            "login": "dlozlla",
-            "node_id": "MDQ6VXNlcjQwOTAxODc=",
-            "organizations_url": "https://api.github.com/users/dlozlla/orgs",
-            "received_events_url": "https://api.github.com/users/dlozlla/received_events",
-            "repos_url": "https://api.github.com/users/dlozlla/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/dlozlla/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/dlozlla/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/dlozlla",
-            "user_view_type": "public"
-          }
-        },
-        "label": {
-          "color": "f7c144",
-          "default": false,
-          "description": "",
-          "id": 11019102466,
-          "name": "ietf-126",
-          "node_id": "LA_kwDOKv5r-s8AAAACkMopAg",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/labels/ietf-126"
-        },
-        "labels": [
-          {
-            "color": "f7c144",
-            "default": false,
-            "description": "",
-            "id": 11019102466,
-            "name": "ietf-126",
-            "node_id": "LA_kwDOKv5r-s8AAAACkMopAg",
-            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/labels/ietf-126"
-          }
-        ]
-      },
-      "public": true,
-      "repo": {
-        "id": 721316858,
-        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-      },
-      "type": "IssuesEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/704663?",
-        "display_login": "pcarleton",
-        "gravatar_id": "",
-        "id": 704663,
-        "login": "pcarleton",
-        "url": "https://api.github.com/users/pcarleton"
-      },
-      "created_at": "2026-07-13T18:59:13Z",
-      "id": "11728783114",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "opened",
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "On the final leg of the ID-JAG flow, we often get back `invalid_grant` when a user does not have a license (i.e. it's a 100 person company, and only 50 people have a Figma license). This causes problems because it's difficult to know when to retry and what to tell the user for how to get access to the app.  `invalid_grant` is indistinguishable from a misconfiguration.\n\nRelated, but separate issue from discussion, is the user might have a license in the resource server, but it's not configured in the IdP.\n\n",
-          "closed_at": null,
-          "comments": 2,
-          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/111/comments",
-          "created_at": "2026-07-13T18:59:12Z",
-          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/111/events",
-          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/111",
-          "id": 4876710876,
-          "issue_dependencies_summary": {
-            "blocked_by": 0,
-            "blocking": 0,
-            "total_blocked_by": 0,
-            "total_blocking": 0
-          },
-          "issue_field_values": [],
-          "labels": [],
-          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/111/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "I_kwDOKv5r-s8AAAABIqyz3A",
-          "number": 111,
-          "performed_via_github_app": null,
-          "pinned_comment": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/111/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
-          "state": "open",
-          "state_reason": null,
-          "sub_issues_summary": {
-            "completed": 0,
-            "percent_completed": 0,
-            "total": 0
-          },
-          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/111/timeline",
-          "title": "Standardize error code for \"user does not have a license\" - today we get `invalid_grant`",
-          "type": null,
-          "updated_at": "2026-07-20T20:29:10Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/111",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/704663?v=4",
-            "events_url": "https://api.github.com/users/pcarleton/events{/privacy}",
-            "followers_url": "https://api.github.com/users/pcarleton/followers",
-            "following_url": "https://api.github.com/users/pcarleton/following{/other_user}",
-            "gists_url": "https://api.github.com/users/pcarleton/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/pcarleton",
-            "id": 704663,
-            "login": "pcarleton",
-            "node_id": "MDQ6VXNlcjcwNDY2Mw==",
-            "organizations_url": "https://api.github.com/users/pcarleton/orgs",
-            "received_events_url": "https://api.github.com/users/pcarleton/received_events",
-            "repos_url": "https://api.github.com/users/pcarleton/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/pcarleton/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/pcarleton/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/pcarleton",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 721316858,
-        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-      },
-      "type": "IssuesEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-07-13T18:55:40Z",
-      "id": "14914325037",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "ed4c900f0752c23586ba13ea4f3e3e2fd18688c5",
-        "head": "7bdd4c66915771018c79d84b9b79bd2eb9b7e914",
-        "push_id": 37204360672,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 906747170
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
-        "display_login": "yaronf",
-        "gravatar_id": "",
-        "id": 1265636,
-        "login": "yaronf",
-        "url": "https://api.github.com/users/yaronf"
-      },
-      "created_at": "2026-07-13T18:55:12Z",
-      "id": "11728615019",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "opened",
-        "number": 49,
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 906747170,
-              "name": "draft-ietf-oauth-rfc8725bis",
-              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-            },
-            "sha": "9502158ffbb7f93974ac526dacfb3aadf5fea6a0"
-          },
-          "head": {
-            "ref": "ys-artart-shoulds",
-            "repo": {
-              "id": 906747170,
-              "name": "draft-ietf-oauth-rfc8725bis",
-              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-            },
-            "sha": "1700d590c64c9356cd3a2a07d287a128fcee01e7"
-          },
-          "id": 4046985149,
-          "number": 49,
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/pulls/49"
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "PullRequestEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
-        "display_login": "yaronf",
-        "gravatar_id": "",
-        "id": 1265636,
-        "login": "yaronf",
-        "url": "https://api.github.com/users/yaronf"
-      },
-      "created_at": "2026-07-13T18:55:11Z",
-      "id": "14914299923",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "description": null,
-        "full_ref": "refs/heads/ys-artart-shoulds",
-        "master_branch": "main",
-        "pusher_type": "user",
-        "ref": "ys-artart-shoulds",
-        "ref_type": "branch"
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "CreateEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
-        "display_login": "yaronf",
-        "gravatar_id": "",
-        "id": 1265636,
-        "login": "yaronf",
-        "url": "https://api.github.com/users/yaronf"
-      },
-      "created_at": "2026-07-13T18:36:08Z",
-      "id": "11727800364",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "comment": {
-          "body": "Resolved without text change; see explanation above.",
-          "created_at": "2026-07-13T18:36:08Z",
-          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45#issuecomment-4961335910",
-          "id": 4961335910,
-          "issue_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45",
-          "minimized": null,
-          "node_id": "IC_kwDONgvdIs8AAAABJ7f6Zg",
-          "performed_via_github_app": null,
-          "pin": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/comments/4961335910/reactions"
-          },
-          "updated_at": "2026-07-13T18:36:08Z",
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/comments/4961335910",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/1265636?v=4",
-            "events_url": "https://api.github.com/users/yaronf/events{/privacy}",
-            "followers_url": "https://api.github.com/users/yaronf/followers",
-            "following_url": "https://api.github.com/users/yaronf/following{/other_user}",
-            "gists_url": "https://api.github.com/users/yaronf/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/yaronf",
-            "id": 1265636,
-            "login": "yaronf",
-            "node_id": "MDQ6VXNlcjEyNjU2MzY=",
-            "organizations_url": "https://api.github.com/users/yaronf/orgs",
-            "received_events_url": "https://api.github.com/users/yaronf/received_events",
-            "repos_url": "https://api.github.com/users/yaronf/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/yaronf/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/yaronf/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/yaronf",
-            "user_view_type": "public"
-          }
-        },
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "ARTART review by @smyslov on draft-ietf-oauth-rfc8725bis-06 (Ready with Issues).\n\n**Source:** https://mailarchive.ietf.org/arch/msg/art/Zi5bZU0nFbrhy0EmDHZbo-sO7Ww/\n\n**Comment (item 4):**\n\nIn §3.13 (Limit Hash Iteration Count), the reviewer finds the two RECOMMENDED clauses potentially inconsistent:\n\n1. Implementations are RECOMMENDED to set a reasonable upper limit on the number of hash iterations...\n2. Rejecting inputs with a `p2c` (PBES2 Count) value larger than twice that figure is RECOMMENDED...\n\n**Question:** What values are recommended to reject — larger than the limit, or larger than twice the limit?\n\n**Action:** Clarify the relationship between the upper limit and the rejection threshold so the two recommendations are clearly consistent.",
-          "closed_at": "2026-07-13T18:36:09Z",
-          "comments": 2,
-          "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45/comments",
-          "created_at": "2026-07-10T11:09:05Z",
-          "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45/events",
-          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45",
-          "id": 4854452654,
-          "issue_dependencies_summary": {
-            "blocked_by": 0,
-            "blocking": 0,
-            "total_blocked_by": 0,
-            "total_blocking": 0
-          },
-          "issue_field_values": [],
-          "labels": [
-            {
-              "color": "1d76db",
-              "default": false,
-              "description": "ART Area Review Team (ARTART) review comment",
-              "id": 11483177774,
-              "name": "artart review",
-              "node_id": "LA_kwDONgvdIs8AAAACrHNjLg",
-              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/labels/artart%20review"
-            }
-          ],
-          "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "I_kwDONgvdIs8AAAABIVkRrg",
-          "number": 45,
-          "performed_via_github_app": null,
-          "pinned_comment": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis",
-          "state": "closed",
-          "state_reason": "completed",
-          "sub_issues_summary": {
-            "completed": 0,
-            "percent_completed": 0,
-            "total": 0
-          },
-          "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45/timeline",
-          "title": "ARTART: Clarify PBES2 p2c rejection threshold in §3.13",
-          "type": null,
-          "updated_at": "2026-07-13T18:36:09Z",
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/1265636?v=4",
-            "events_url": "https://api.github.com/users/yaronf/events{/privacy}",
-            "followers_url": "https://api.github.com/users/yaronf/followers",
-            "following_url": "https://api.github.com/users/yaronf/following{/other_user}",
-            "gists_url": "https://api.github.com/users/yaronf/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/yaronf",
-            "id": 1265636,
-            "login": "yaronf",
-            "node_id": "MDQ6VXNlcjEyNjU2MzY=",
-            "organizations_url": "https://api.github.com/users/yaronf/orgs",
-            "received_events_url": "https://api.github.com/users/yaronf/received_events",
-            "repos_url": "https://api.github.com/users/yaronf/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/yaronf/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/yaronf/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/yaronf",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "IssueCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
-        "display_login": "yaronf",
-        "gravatar_id": "",
-        "id": 1265636,
-        "login": "yaronf",
-        "url": "https://api.github.com/users/yaronf"
-      },
-      "created_at": "2026-07-13T18:36:09Z",
-      "id": "11727799590",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "closed",
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "ARTART review by @smyslov on draft-ietf-oauth-rfc8725bis-06 (Ready with Issues).\n\n**Source:** https://mailarchive.ietf.org/arch/msg/art/Zi5bZU0nFbrhy0EmDHZbo-sO7Ww/\n\n**Comment (item 4):**\n\nIn §3.13 (Limit Hash Iteration Count), the reviewer finds the two RECOMMENDED clauses potentially inconsistent:\n\n1. Implementations are RECOMMENDED to set a reasonable upper limit on the number of hash iterations...\n2. Rejecting inputs with a `p2c` (PBES2 Count) value larger than twice that figure is RECOMMENDED...\n\n**Question:** What values are recommended to reject — larger than the limit, or larger than twice the limit?\n\n**Action:** Clarify the relationship between the upper limit and the rejection threshold so the two recommendations are clearly consistent.",
-          "closed_at": "2026-07-13T18:36:09Z",
-          "comments": 2,
-          "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45/comments",
-          "created_at": "2026-07-10T11:09:05Z",
-          "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45/events",
-          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45",
-          "id": 4854452654,
-          "issue_dependencies_summary": {
-            "blocked_by": 0,
-            "blocking": 0,
-            "total_blocked_by": 0,
-            "total_blocking": 0
-          },
-          "issue_field_values": [],
-          "labels": [
-            {
-              "color": "1d76db",
-              "default": false,
-              "description": "ART Area Review Team (ARTART) review comment",
-              "id": 11483177774,
-              "name": "artart review",
-              "node_id": "LA_kwDONgvdIs8AAAACrHNjLg",
-              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/labels/artart%20review"
-            }
-          ],
-          "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "I_kwDONgvdIs8AAAABIVkRrg",
-          "number": 45,
-          "performed_via_github_app": null,
-          "pinned_comment": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis",
-          "state": "closed",
-          "state_reason": "completed",
-          "sub_issues_summary": {
-            "completed": 0,
-            "percent_completed": 0,
-            "total": 0
-          },
-          "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45/timeline",
-          "title": "ARTART: Clarify PBES2 p2c rejection threshold in §3.13",
-          "type": null,
-          "updated_at": "2026-07-13T18:36:09Z",
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/1265636?v=4",
-            "events_url": "https://api.github.com/users/yaronf/events{/privacy}",
-            "followers_url": "https://api.github.com/users/yaronf/followers",
-            "following_url": "https://api.github.com/users/yaronf/following{/other_user}",
-            "gists_url": "https://api.github.com/users/yaronf/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/yaronf",
-            "id": 1265636,
-            "login": "yaronf",
-            "node_id": "MDQ6VXNlcjEyNjU2MzY=",
-            "organizations_url": "https://api.github.com/users/yaronf/orgs",
-            "received_events_url": "https://api.github.com/users/yaronf/received_events",
-            "repos_url": "https://api.github.com/users/yaronf/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/yaronf/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/yaronf/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/yaronf",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "IssuesEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
-        "display_login": "yaronf",
-        "gravatar_id": "",
-        "id": 1265636,
-        "login": "yaronf",
-        "url": "https://api.github.com/users/yaronf"
-      },
-      "created_at": "2026-07-13T18:36:03Z",
-      "id": "11727796390",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "comment": {
-          "body": "Thanks for the review, @smyslov.\n\nOn re-reading, we think the existing text is clear enough and prefer to keep it as-is.\n\nThe two RECOMMENDED clauses serve different purposes:\n1. The first recommends that implementations set a reasonable upper limit on iterations they will perform when validating PBES2-encrypted content.\n2. The second gives a concrete rejection threshold: reject `p2c` values larger than twice the OWASP example figure (600,000 → 1,200,000).\n\n\"That figure\" in the second clause refers to the OWASP iteration count in the immediately preceding sentence, not to the implementation's configured upper limit. The OWASP number is an illustration of what \"reasonable\" means; the rejection threshold is explicitly twice that illustration.\n\nClosing #48 without merging — no text change planned for this item.",
-          "created_at": "2026-07-13T18:36:03Z",
-          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45#issuecomment-4961335220",
-          "id": 4961335220,
-          "issue_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45",
-          "minimized": null,
-          "node_id": "IC_kwDONgvdIs8AAAABJ7f3tA",
-          "performed_via_github_app": null,
-          "pin": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/comments/4961335220/reactions"
-          },
-          "updated_at": "2026-07-13T18:36:03Z",
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/comments/4961335220",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/1265636?v=4",
-            "events_url": "https://api.github.com/users/yaronf/events{/privacy}",
-            "followers_url": "https://api.github.com/users/yaronf/followers",
-            "following_url": "https://api.github.com/users/yaronf/following{/other_user}",
-            "gists_url": "https://api.github.com/users/yaronf/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/yaronf",
-            "id": 1265636,
-            "login": "yaronf",
-            "node_id": "MDQ6VXNlcjEyNjU2MzY=",
-            "organizations_url": "https://api.github.com/users/yaronf/orgs",
-            "received_events_url": "https://api.github.com/users/yaronf/received_events",
-            "repos_url": "https://api.github.com/users/yaronf/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/yaronf/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/yaronf/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/yaronf",
-            "user_view_type": "public"
-          }
-        },
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "ARTART review by @smyslov on draft-ietf-oauth-rfc8725bis-06 (Ready with Issues).\n\n**Source:** https://mailarchive.ietf.org/arch/msg/art/Zi5bZU0nFbrhy0EmDHZbo-sO7Ww/\n\n**Comment (item 4):**\n\nIn §3.13 (Limit Hash Iteration Count), the reviewer finds the two RECOMMENDED clauses potentially inconsistent:\n\n1. Implementations are RECOMMENDED to set a reasonable upper limit on the number of hash iterations...\n2. Rejecting inputs with a `p2c` (PBES2 Count) value larger than twice that figure is RECOMMENDED...\n\n**Question:** What values are recommended to reject — larger than the limit, or larger than twice the limit?\n\n**Action:** Clarify the relationship between the upper limit and the rejection threshold so the two recommendations are clearly consistent.",
-          "closed_at": "2026-07-13T18:36:09Z",
-          "comments": 2,
-          "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45/comments",
-          "created_at": "2026-07-10T11:09:05Z",
-          "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45/events",
-          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45",
-          "id": 4854452654,
-          "issue_dependencies_summary": {
-            "blocked_by": 0,
-            "blocking": 0,
-            "total_blocked_by": 0,
-            "total_blocking": 0
-          },
-          "issue_field_values": [],
-          "labels": [
-            {
-              "color": "1d76db",
-              "default": false,
-              "description": "ART Area Review Team (ARTART) review comment",
-              "id": 11483177774,
-              "name": "artart review",
-              "node_id": "LA_kwDONgvdIs8AAAACrHNjLg",
-              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/labels/artart%20review"
-            }
-          ],
-          "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "I_kwDONgvdIs8AAAABIVkRrg",
-          "number": 45,
-          "performed_via_github_app": null,
-          "pinned_comment": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis",
-          "state": "closed",
-          "state_reason": "completed",
-          "sub_issues_summary": {
-            "completed": 0,
-            "percent_completed": 0,
-            "total": 0
-          },
-          "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45/timeline",
-          "title": "ARTART: Clarify PBES2 p2c rejection threshold in §3.13",
-          "type": null,
-          "updated_at": "2026-07-13T18:36:09Z",
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/45",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/1265636?v=4",
-            "events_url": "https://api.github.com/users/yaronf/events{/privacy}",
-            "followers_url": "https://api.github.com/users/yaronf/followers",
-            "following_url": "https://api.github.com/users/yaronf/following{/other_user}",
-            "gists_url": "https://api.github.com/users/yaronf/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/yaronf",
-            "id": 1265636,
-            "login": "yaronf",
-            "node_id": "MDQ6VXNlcjEyNjU2MzY=",
-            "organizations_url": "https://api.github.com/users/yaronf/orgs",
-            "received_events_url": "https://api.github.com/users/yaronf/received_events",
-            "repos_url": "https://api.github.com/users/yaronf/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/yaronf/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/yaronf/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/yaronf",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "IssueCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
-        "display_login": "yaronf",
-        "gravatar_id": "",
-        "id": 1265636,
-        "login": "yaronf",
-        "url": "https://api.github.com/users/yaronf"
-      },
-      "created_at": "2026-07-13T18:29:35Z",
-      "id": "11727795250",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "closed",
-        "number": 48,
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 906747170,
-              "name": "draft-ietf-oauth-rfc8725bis",
-              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-            },
-            "sha": "e4ecdc6810274baf81a56bfe4d774ba793978ddf"
-          },
-          "head": {
-            "ref": "ys-artart-313",
-            "repo": {
-              "id": 906747170,
-              "name": "draft-ietf-oauth-rfc8725bis",
-              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-            },
-            "sha": "fdc0a0000cd0f966bb5c2066265c6460513d0dff"
-          },
-          "id": 4046828198,
-          "number": 48,
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/pulls/48"
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "PullRequestEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
-        "display_login": "yaronf",
-        "gravatar_id": "",
-        "id": 1265636,
-        "login": "yaronf",
-        "url": "https://api.github.com/users/yaronf"
-      },
-      "created_at": "2026-07-13T18:36:02Z",
-      "id": "11727794408",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "comment": {
-          "body": "Closing without merge. After author review, we prefer the original wording; see comment on #45.",
-          "created_at": "2026-07-13T18:36:02Z",
-          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-rfc8725bis/pull/48#issuecomment-4961334919",
-          "id": 4961334919,
-          "issue_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/48",
-          "minimized": null,
-          "node_id": "IC_kwDONgvdIs8AAAABJ7f2hw",
-          "performed_via_github_app": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/comments/4961334919/reactions"
-          },
-          "updated_at": "2026-07-13T18:36:02Z",
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/comments/4961334919",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/1265636?v=4",
-            "events_url": "https://api.github.com/users/yaronf/events{/privacy}",
-            "followers_url": "https://api.github.com/users/yaronf/followers",
-            "following_url": "https://api.github.com/users/yaronf/following{/other_user}",
-            "gists_url": "https://api.github.com/users/yaronf/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/yaronf",
-            "id": 1265636,
-            "login": "yaronf",
-            "node_id": "MDQ6VXNlcjEyNjU2MzY=",
-            "organizations_url": "https://api.github.com/users/yaronf/orgs",
-            "received_events_url": "https://api.github.com/users/yaronf/received_events",
-            "repos_url": "https://api.github.com/users/yaronf/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/yaronf/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/yaronf/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/yaronf",
-            "user_view_type": "public"
-          }
-        },
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "## Summary\n\nAddresses ARTART review comment #4 from @smyslov on Section 3.13 (Limit Hash Iteration Count).\n\nThe previous text had two RECOMMENDED clauses whose relationship was ambiguous: an upper limit on iterations vs. rejecting `p2c` values larger than \"twice that figure\" (unclear whether \"that figure\" meant the limit or the OWASP example).\n\nThis rewrite:\n- States that implementations should reject `p2c` values exceeding their configured upper limit\n- Uses the OWASP 600,000-iteration example to illustrate a reasonable limit choice (twice that figure = 1,200,000)\n- Adds `-07` document history entry\n\n## Issues\n\nCloses #45\n\n## Test plan\n\n- [x] `make` builds successfully\n- [ ] Co-author review\n\n## Note\n\nThis PR is independent of #47 (Section 3.11). Both add a `-07` history entry; these will need to be merged into a single entry when both land.\n\nMade with [Cursor](https://cursor.com)",
-          "closed_at": "2026-07-13T18:36:02Z",
-          "comments": 1,
-          "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/48/comments",
-          "created_at": "2026-07-13T18:29:35Z",
-          "draft": false,
-          "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/48/events",
-          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-rfc8725bis/pull/48",
-          "id": 4876497429,
-          "issue_field_values": [],
-          "labels": [],
-          "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/48/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "PR_kwDONgvdIs7xNbKm",
-          "number": 48,
-          "performed_via_github_app": null,
-          "pull_request": {
-            "diff_url": "https://github.com/oauth-wg/draft-ietf-oauth-rfc8725bis/pull/48.diff",
-            "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-rfc8725bis/pull/48",
-            "merged_at": null,
-            "patch_url": "https://github.com/oauth-wg/draft-ietf-oauth-rfc8725bis/pull/48.patch",
-            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/pulls/48"
-          },
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/48/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis",
-          "state": "closed",
-          "state_reason": null,
-          "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/48/timeline",
-          "title": "ARTART: clarify PBES2 p2c rejection threshold (Section 3.13)",
-          "type": null,
-          "updated_at": "2026-07-13T18:36:02Z",
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis/issues/48",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/1265636?v=4",
-            "events_url": "https://api.github.com/users/yaronf/events{/privacy}",
-            "followers_url": "https://api.github.com/users/yaronf/followers",
-            "following_url": "https://api.github.com/users/yaronf/following{/other_user}",
-            "gists_url": "https://api.github.com/users/yaronf/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/yaronf",
-            "id": 1265636,
-            "login": "yaronf",
-            "node_id": "MDQ6VXNlcjEyNjU2MzY=",
-            "organizations_url": "https://api.github.com/users/yaronf/orgs",
-            "received_events_url": "https://api.github.com/users/yaronf/received_events",
-            "repos_url": "https://api.github.com/users/yaronf/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/yaronf/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/yaronf/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/yaronf",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "IssueCommentEvent"
     }
   ],
   "prs": {
     "error": null,
     "items": [
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "COLLABORATOR",
+        "body": "…ttestation PoP JWT",
+        "closed_at": null,
+        "comments": 0,
+        "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/216/comments",
+        "created_at": "2026-07-23T16:38:14Z",
+        "draft": false,
+        "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/216/events",
+        "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/216",
+        "id": 4960934315,
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/216/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "PR_kwDOJaEkaM71eJX6",
+        "number": 216,
+        "performed_via_github_app": null,
+        "pull_request": {
+          "diff_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/216.diff",
+          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/216",
+          "merged_at": null,
+          "patch_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/216.patch",
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls/216"
+        },
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/216/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/216/timeline",
+        "title": "remove duplication challenge verification in Verifivation of Client A…",
+        "type": null,
+        "updated_at": "2026-07-23T16:38:15Z",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/216",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/16320000?v=4",
+          "events_url": "https://api.github.com/users/paulbastian/events{/privacy}",
+          "followers_url": "https://api.github.com/users/paulbastian/followers",
+          "following_url": "https://api.github.com/users/paulbastian/following{/other_user}",
+          "gists_url": "https://api.github.com/users/paulbastian/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/paulbastian",
+          "id": 16320000,
+          "login": "paulbastian",
+          "node_id": "MDQ6VXNlcjE2MzIwMDAw",
+          "organizations_url": "https://api.github.com/users/paulbastian/orgs",
+          "received_events_url": "https://api.github.com/users/paulbastian/received_events",
+          "repos_url": "https://api.github.com/users/paulbastian/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/paulbastian/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/paulbastian/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/paulbastian",
+          "user_view_type": "public"
+        }
+      },
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "MEMBER",
+        "body": "Clarifies combined mode implications, error handling, etc.\r\n\r\nThis didn't touch the dpop part yet @panva - will do that in another PR",
+        "closed_at": null,
+        "comments": 0,
+        "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/215/comments",
+        "created_at": "2026-07-23T15:30:34Z",
+        "draft": true,
+        "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/215/events",
+        "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/215",
+        "id": 4960381527,
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/215/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "PR_kwDOJaEkaM71cWZ3",
+        "number": 215,
+        "performed_via_github_app": null,
+        "pull_request": {
+          "diff_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/215.diff",
+          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/215",
+          "merged_at": null,
+          "patch_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/215.patch",
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls/215"
+        },
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/215/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/215/timeline",
+        "title": "add clarifications for combined mode",
+        "type": null,
+        "updated_at": "2026-07-23T16:24:31Z",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/215",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/8774236?v=4",
+          "events_url": "https://api.github.com/users/c2bo/events{/privacy}",
+          "followers_url": "https://api.github.com/users/c2bo/followers",
+          "following_url": "https://api.github.com/users/c2bo/following{/other_user}",
+          "gists_url": "https://api.github.com/users/c2bo/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/c2bo",
+          "id": 8774236,
+          "login": "c2bo",
+          "node_id": "MDQ6VXNlcjg3NzQyMzY=",
+          "organizations_url": "https://api.github.com/users/c2bo/orgs",
+          "received_events_url": "https://api.github.com/users/c2bo/received_events",
+          "repos_url": "https://api.github.com/users/c2bo/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/c2bo/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/c2bo/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/c2bo",
+          "user_view_type": "public"
+        }
+      },
       {
         "active_lock_reason": null,
         "assignee": null,
@@ -95386,153 +95248,9 @@
           "url": "https://api.github.com/users/bc-pi",
           "user_view_type": "public"
         }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "MEMBER",
-        "body": "Closes #122 ",
-        "closed_at": "2025-07-07T07:11:37Z",
-        "comments": 0,
-        "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/126/comments",
-        "created_at": "2025-07-06T13:59:29Z",
-        "draft": false,
-        "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/126/events",
-        "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/126",
-        "id": 3206581436,
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/126/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "PR_kwDOJaEkaM6dokOt",
-        "number": 126,
-        "performed_via_github_app": null,
-        "pull_request": {
-          "diff_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/126.diff",
-          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/126",
-          "merged_at": "2025-07-07T07:11:37Z",
-          "patch_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/126.patch",
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls/126"
-        },
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/126/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
-        "score": 1.0,
-        "state": "closed",
-        "state_reason": null,
-        "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/126/timeline",
-        "title": "Verification and Processing rules",
-        "type": null,
-        "updated_at": "2025-07-07T07:11:37Z",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/126",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/8774236?v=4",
-          "events_url": "https://api.github.com/users/c2bo/events{/privacy}",
-          "followers_url": "https://api.github.com/users/c2bo/followers",
-          "following_url": "https://api.github.com/users/c2bo/following{/other_user}",
-          "gists_url": "https://api.github.com/users/c2bo/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/c2bo",
-          "id": 8774236,
-          "login": "c2bo",
-          "node_id": "MDQ6VXNlcjg3NzQyMzY=",
-          "organizations_url": "https://api.github.com/users/c2bo/orgs",
-          "received_events_url": "https://api.github.com/users/c2bo/received_events",
-          "repos_url": "https://api.github.com/users/c2bo/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/c2bo/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/c2bo/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/c2bo",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "COLLABORATOR",
-        "body": "Fixes #81 ",
-        "closed_at": "2025-07-07T06:53:13Z",
-        "comments": 0,
-        "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/129/comments",
-        "created_at": "2025-07-06T22:17:41Z",
-        "draft": false,
-        "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/129/events",
-        "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/129",
-        "id": 3207093340,
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/129/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "PR_kwDOJaEkaM6dqOUd",
-        "number": 129,
-        "performed_via_github_app": null,
-        "pull_request": {
-          "diff_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/129.diff",
-          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/129",
-          "merged_at": "2025-07-07T06:53:13Z",
-          "patch_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/129.patch",
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls/129"
-        },
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/129/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
-        "score": 1.0,
-        "state": "closed",
-        "state_reason": null,
-        "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/129/timeline",
-        "title": "Clarify that client_id in client attestation MUST be consistent with token request",
-        "type": null,
-        "updated_at": "2025-07-07T06:53:13Z",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/129",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/15972525?v=4",
-          "events_url": "https://api.github.com/users/tplooker/events{/privacy}",
-          "followers_url": "https://api.github.com/users/tplooker/followers",
-          "following_url": "https://api.github.com/users/tplooker/following{/other_user}",
-          "gists_url": "https://api.github.com/users/tplooker/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/tplooker",
-          "id": 15972525,
-          "login": "tplooker",
-          "node_id": "MDQ6VXNlcjE1OTcyNTI1",
-          "organizations_url": "https://api.github.com/users/tplooker/orgs",
-          "received_events_url": "https://api.github.com/users/tplooker/received_events",
-          "repos_url": "https://api.github.com/users/tplooker/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/tplooker/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/tplooker/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/tplooker",
-          "user_view_type": "public"
-        }
       }
     ],
-    "total_count": 1582
+    "total_count": 1584
   },
   "repos": [
     {
@@ -96418,8 +96136,8 @@
       "name": "draft-ietf-oauth-attestation-based-client-auth",
       "node_id": "R_kgDOJaEkaA",
       "notifications_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/notifications{?since,all,participating}",
-      "open_issues": 7,
-      "open_issues_count": 7,
+      "open_issues": 9,
+      "open_issues_count": 9,
       "owner": {
         "avatar_url": "https://avatars.githubusercontent.com/u/111596788?v=4",
         "events_url": "https://api.github.com/users/oauth-wg/events{/privacy}",
@@ -96451,9 +96169,9 @@
       "private": false,
       "pull_request_creation_policy": "all",
       "pulls_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls{/number}",
-      "pushed_at": "2026-07-23T00:28:20Z",
+      "pushed_at": "2026-07-23T16:39:37Z",
       "releases_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/releases{/id}",
-      "size": 2431,
+      "size": 2552,
       "ssh_url": "git@github.com:oauth-wg/draft-ietf-oauth-attestation-based-client-auth.git",
       "stargazers_count": 20,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/stargazers",
@@ -97124,8 +96842,8 @@
       "name": "oauth-identity-assertion-authz-grant",
       "node_id": "R_kgDOKv5r-g",
       "notifications_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/notifications{?since,all,participating}",
-      "open_issues": 29,
-      "open_issues_count": 29,
+      "open_issues": 30,
+      "open_issues_count": 30,
       "owner": {
         "avatar_url": "https://avatars.githubusercontent.com/u/111596788?v=4",
         "events_url": "https://api.github.com/users/oauth-wg/events{/privacy}",
@@ -97241,8 +96959,8 @@
       "name": "draft-ietf-oauth-client-id-metadata-document",
       "node_id": "R_kgDOL_Xevg",
       "notifications_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/notifications{?since,all,participating}",
-      "open_issues": 42,
-      "open_issues_count": 42,
+      "open_issues": 43,
+      "open_issues_count": 43,
       "owner": {
         "avatar_url": "https://avatars.githubusercontent.com/u/111596788?v=4",
         "events_url": "https://api.github.com/users/oauth-wg/events{/privacy}",
@@ -97764,5 +97482,5 @@
       "web_commit_signoff_required": false
     }
   ],
-  "snapshot_date": "2026-07-23"
+  "snapshot_date": "2026-07-24"
 }
