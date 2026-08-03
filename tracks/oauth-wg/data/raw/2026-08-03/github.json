@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-08-03T09:53:40+00:00",
+  "collected_at": "2026-08-03T11:09:45+00:00",
   "issues": {
     "error": null,
     "items": [
@@ -48486,6 +48486,98 @@
   "org_events": [
     {
       "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/241506?",
+        "display_login": "panva",
+        "gravatar_id": "",
+        "id": 241506,
+        "login": "panva",
+        "url": "https://api.github.com/users/panva"
+      },
+      "created_at": "2026-08-03T10:32:54Z",
+      "id": "12691061036",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "pull_request": {
+          "base": {
+            "ref": "main",
+            "repo": {
+              "id": 631317608,
+              "name": "draft-ietf-oauth-attestation-based-client-auth",
+              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+            },
+            "sha": "0d02715c0d883cca3f2330e76508cd6bdec8f35c"
+          },
+          "head": {
+            "ref": "c2bo/fixes-for-as",
+            "repo": {
+              "id": 631317608,
+              "name": "draft-ietf-oauth-attestation-based-client-auth",
+              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+            },
+            "sha": "29b01af5aa3df2c444aa710d45098e5d0a979a3b"
+          },
+          "id": 4117849719,
+          "number": 215,
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls/215"
+        },
+        "review": {
+          "_links": {
+            "html": {
+              "href": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/215#pullrequestreview-4843129641"
+            },
+            "pull_request": {
+              "href": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls/215"
+            }
+          },
+          "body": "I can't apply suggestions to hunks outside of your patch, i produced an appliable diff instead\n\n```diff\ndiff --git a/draft-ietf-oauth-attestation-based-client-auth.md b/draft-ietf-oauth-attestation-based-client-auth.md\nindex fd3fdd2..fcada81 100644\n--- a/draft-ietf-oauth-attestation-based-client-auth.md\n+++ b/draft-ietf-oauth-attestation-based-client-auth.md\n@@ -334,7 +334,7 @@ token68                        = 1*( ALPHA / DIGIT / \"-\" / \".\" /\n \n This section defines an optimization that allows a single Proof of Possession (PoP) JWT to satisfy the role of both (a) the Client Attestation PoP defined in this specification and (b) the DPoP proof defined in {{RFC9449}} for sender-constrained access tokens. In this \"combined mode\" the Client Instance Key and the DPoP Key are the same asymmetric key pair, and a request using the mechanism carries only one PoP, the DPoP proof, instead of two separate PoP JWTs (the DPoP proof and Client Attestation PoP JWT).\n \n-Note when authorization code binding as defined in {{Section 10 of RFC9449}} is used, this mode only works with the DPoP Proof header containing a proof of possession and not `dpop_jkt`. When using `dpop_jkt`, the normal mode has to be used.\n+Note that combined mode requires an actual DPoP proof to be presented, since the DPoP proof also serves as the Client Attestation PoP; the `dpop_jkt` authorization request parameter defined in {{Section 10 of RFC9449}} cannot substitute for it. A Client that binds the authorization code using `dpop_jkt` without presenting a DPoP proof therefore uses the normal mode.\n \n Note that DPoP {{RFC9449}} can also be used alongside the Client Attestation PoP JWT without this combined mode. In this case, the DPoP proof is validated according to {{RFC9449}} independently of this specification and its public key is not required to match the key in the `cnf` claim of the Client Attestation JWT (see [](#verification)).\n \n@@ -343,7 +343,7 @@ The following rules apply to the DPoP proof as defined in {{RFC9449}}:\n 1. The DPoP proof MUST adhere to {{RFC9449}}\n 2. The public key located in the DPoP proof MUST match the public key located in the `cnf` claim of the Client Attestation JWT.\n \n-In combined mode, the Challenge mechanisms defined by this specification (the `challenge` claim and the `OAuth-Client-Attestation-Challenge` HTTP header field, see [](#challenges)) are not used for the DPoP proof. Instead, server-provided freshness and replay protection rely solely on the DPoP nonce mechanism defined in {{Section 8 of RFC9449}} and {{Section 9 of RFC9449}}: the server provides a nonce that the Client includes in the `nonce` claim of the DPoP proof. In addition to the means defined by {{RFC9449}}, the server MUST provide a fresh DPoP nonce in the response of the challenge endpoint as described in [](#challenge-endpoint) if a nonce is required, allowing the Client to obtain a nonce proactively.\n+In combined mode, the Challenge mechanisms defined by this specification (the `challenge` claim and the `OAuth-Client-Attestation-Challenge` HTTP header field, see [](#challenges)) are not used for the DPoP proof. Instead, server-provided freshness and replay protection rely solely on the DPoP nonce mechanism defined in {{Section 8 of RFC9449}} and {{Section 9 of RFC9449}}: the server provides a nonce that the Client includes in the `nonce` claim of the DPoP proof. In addition to the means defined by {{RFC9449}}, a server that supports DPoP with server-provided nonces provides a fresh DPoP nonce in the response of the challenge endpoint as described in [](#challenge-endpoint), allowing the Client to obtain a nonce proactively.\n \n The following non-normative example shows a token request using combined mode (line breaks for display only):\n \n@@ -456,7 +456,7 @@ This section defines the verification and processing rules for the proof of poss\n An Authorization Server MAY support both `attest_jwt_client_auth` and `attest_jwt_client_auth_dpop` and distinguish them by the following rules:\n \n - If the request contains an `OAuth-Client-Attestation-PoP` HTTP request header field, the receiving server MUST apply the validation rules of [](#verification-client-attestation-pop-jwt) and if present, a DPoP proof present in the request is validated according to {{RFC9449}} independently of this specification.\n-- If no `OAuth-Client-Attestation-PoP` HTTP request header field is present, but a DPoP proof is, the receiving server MUST apply the validation rules of [](#verification-dpop-combined).\n+- If an `OAuth-Client-Attestation` HTTP request header field and a DPoP proof are present, but no `OAuth-Client-Attestation-PoP` HTTP request header field, the receiving server MUST apply the validation rules of [](#verification-dpop-combined).\n - If the request contains an `OAuth-Client-Attestation` header field and a DPoP proof, but no OAuth-Client-Attestation-PoP header field, and the Authorization Server does not support `attest_jwt_client_auth_dpop`, it MUST reject the request (see [](#errors)).\n \n ## Client Attestation JWT {#verification-client-attestation-jwt}\n```",
+          "commit_id": "29b01af5aa3df2c444aa710d45098e5d0a979a3b",
+          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/215#pullrequestreview-4843129641",
+          "id": 4843129641,
+          "node_id": "PRR_kwDOJaEkaM8AAAABIKxLKQ",
+          "pull_request_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls/215",
+          "state": "commented",
+          "submitted_at": "2026-08-03T10:32:53Z",
+          "updated_at": "2026-08-03T10:32:53Z",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/241506?v=4",
+            "events_url": "https://api.github.com/users/panva/events{/privacy}",
+            "followers_url": "https://api.github.com/users/panva/followers",
+            "following_url": "https://api.github.com/users/panva/following{/other_user}",
+            "gists_url": "https://api.github.com/users/panva/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/panva",
+            "id": 241506,
+            "login": "panva",
+            "node_id": "MDQ6VXNlcjI0MTUwNg==",
+            "organizations_url": "https://api.github.com/users/panva/orgs",
+            "received_events_url": "https://api.github.com/users/panva/received_events",
+            "repos_url": "https://api.github.com/users/panva/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/panva/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/panva/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/panva",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 631317608,
+        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+      },
+      "type": "PullRequestReviewEvent"
+    },
+    {
+      "actor": {
         "avatar_url": "https://avatars.githubusercontent.com/u/16320000?",
         "display_login": "paulbastian",
         "gravatar_id": "",
@@ -53823,7 +53915,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/215/timeline",
           "title": "add clarifications for combined mode",
           "type": null,
-          "updated_at": "2026-08-03T09:36:53Z",
+          "updated_at": "2026-08-03T10:32:53Z",
           "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/215",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/8774236?v=4",
@@ -55263,40 +55355,6 @@
         "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
       },
       "type": "PullRequestEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/8774236?",
-        "display_login": "c2bo",
-        "gravatar_id": "",
-        "id": 8774236,
-        "login": "c2bo",
-        "url": "https://api.github.com/users/c2bo"
-      },
-      "created_at": "2026-07-31T21:01:52Z",
-      "id": "16350588737",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "description": null,
-        "full_ref": "refs/heads/c2bo/fix-iana-registrations",
-        "master_branch": "main",
-        "pusher_type": "user",
-        "ref": "c2bo/fix-iana-registrations",
-        "ref_type": "branch"
-      },
-      "public": true,
-      "repo": {
-        "id": 631317608,
-        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
-      },
-      "type": "CreateEvent"
     }
   ],
   "prs": {
@@ -55350,7 +55408,7 @@
         "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/215/timeline",
         "title": "add clarifications for combined mode",
         "type": null,
-        "updated_at": "2026-08-03T09:36:53Z",
+        "updated_at": "2026-08-03T10:32:53Z",
         "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/215",
         "user": {
           "avatar_url": "https://avatars.githubusercontent.com/u/8774236?v=4",
