@@ -1,10 +1,10 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-08-11T07:13:44+00:00
+Generated at: 2026-08-12T07:38:20+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
-| 1 | 10 | Investigate mailing-list trend: ai-agent | topic=ai-agent count=17 |
+| 1 | 10 | Investigate mailing-list trend: ai-agent | topic=ai-agent count=28 |
 | 2 | 7 | Diff active WG draft: draft-ietf-wimse-http-signature-06 | draft-ietf-wimse-http-signature-06 (2026-08-04) |
 | 3 | 7 | Diff active WG draft: draft-ietf-wimse-mutual-tls-02 | draft-ietf-wimse-mutual-tls-02 (2026-07-06) |
 | 4 | 7 | Diff active WG draft: draft-ietf-wimse-workload-creds-02 | draft-ietf-wimse-workload-creds-02 (2026-07-02) |
@@ -16,4 +16,4 @@ Generated at: 2026-08-11T07:13:44+00:00
 | 10 | 6 | Review related draft: draft-winmagic-wimse-condition-bounded-credentials-01 | draft-winmagic-wimse-condition-bounded-credentials-01 (2026-07-06) |
 | 11 | 5 | Diff active WG draft: draft-ietf-wimse-arch-08 | draft-ietf-wimse-arch-08 (2026-07-06) |
 | 12 | 5 | Diff active WG draft: draft-ietf-wimse-identifier-03 | draft-ietf-wimse-identifier-03 (2026-07-06) |
-| 13 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-05 | draft-ietf-wimse-workload-identity-practices-05 (2026-06-30) |
+| 13 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-06 | draft-ietf-wimse-workload-identity-practices-06 (2026-08-11) |
