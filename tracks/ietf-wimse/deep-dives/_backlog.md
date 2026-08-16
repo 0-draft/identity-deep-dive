@@ -1,10 +1,10 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-08-15T06:43:35+00:00
+Generated at: 2026-08-16T06:45:25+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
-| 1 | 10 | Investigate mailing-list trend: ai-agent | topic=ai-agent count=24 |
+| 1 | 10 | Investigate mailing-list trend: ai-agent | topic=ai-agent count=22 |
 | 2 | 7 | Diff active WG draft: draft-ietf-wimse-http-signature-06 | draft-ietf-wimse-http-signature-06 (2026-08-04) |
 | 3 | 7 | Diff active WG draft: draft-ietf-wimse-mutual-tls-02 | draft-ietf-wimse-mutual-tls-02 (2026-07-06) |
 | 4 | 7 | Diff active WG draft: draft-ietf-wimse-workload-creds-02 | draft-ietf-wimse-workload-creds-02 (2026-07-02) |
