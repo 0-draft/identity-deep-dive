@@ -1,17 +1,16 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-08-17T08:27:38+00:00
+Generated at: 2026-08-18T06:49:45+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
-| 1 | 10 | Investigate mailing-list trend: ai-agent | topic=ai-agent count=20 |
+| 1 | 10 | Investigate mailing-list trend: ai-agent | topic=ai-agent count=21 |
 | 2 | 7 | Diff active WG draft: draft-ietf-wimse-http-signature-06 | draft-ietf-wimse-http-signature-06 (2026-08-04) |
 | 3 | 7 | Diff active WG draft: draft-ietf-wimse-mutual-tls-02 | draft-ietf-wimse-mutual-tls-02 (2026-07-06) |
 | 4 | 6 | Review related draft: draft-munoz-wimse-authorization-evidence-01 | draft-munoz-wimse-authorization-evidence-01 (2026-07-19) |
 | 5 | 6 | Review related draft: draft-reece-wimse-cross-org-delegation-01 | draft-reece-wimse-cross-org-delegation-01 (2026-07-30) |
-| 6 | 6 | Review related draft: draft-schwenkschuster-wimse-trust-domain-discovery-00 | draft-schwenkschuster-wimse-trust-domain-discovery-00 (2026-07-03) |
-| 7 | 6 | Review related draft: draft-sweeney-wimse-credential-delegation-00 | draft-sweeney-wimse-credential-delegation-00 (2026-07-27) |
-| 8 | 6 | Review related draft: draft-winmagic-wimse-condition-bounded-credentials-01 | draft-winmagic-wimse-condition-bounded-credentials-01 (2026-07-06) |
-| 9 | 5 | Diff active WG draft: draft-ietf-wimse-arch-08 | draft-ietf-wimse-arch-08 (2026-07-06) |
-| 10 | 5 | Diff active WG draft: draft-ietf-wimse-identifier-03 | draft-ietf-wimse-identifier-03 (2026-07-06) |
-| 11 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-06 | draft-ietf-wimse-workload-identity-practices-06 (2026-08-11) |
+| 6 | 6 | Review related draft: draft-sweeney-wimse-credential-delegation-00 | draft-sweeney-wimse-credential-delegation-00 (2026-07-27) |
+| 7 | 6 | Review related draft: draft-winmagic-wimse-condition-bounded-credentials-01 | draft-winmagic-wimse-condition-bounded-credentials-01 (2026-07-06) |
+| 8 | 5 | Diff active WG draft: draft-ietf-wimse-arch-08 | draft-ietf-wimse-arch-08 (2026-07-06) |
+| 9 | 5 | Diff active WG draft: draft-ietf-wimse-identifier-03 | draft-ietf-wimse-identifier-03 (2026-07-06) |
+| 10 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-06 | draft-ietf-wimse-workload-identity-practices-06 (2026-08-11) |
