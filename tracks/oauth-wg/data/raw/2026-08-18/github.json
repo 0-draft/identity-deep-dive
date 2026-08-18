@@ -1,8 +1,84 @@
 {
-  "collected_at": "2026-08-17T08:27:53+00:00",
+  "collected_at": "2026-08-18T06:49:58+00:00",
   "issues": {
     "error": null,
     "items": [
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "NONE",
+        "body": "After reading the spec, there are some open questions about the `challenge` when using challenge endpoint.\n\nThe client does not know the usage policy for the challenges of the AS, i.e., max lifetime, single-usage, and the spec does not explicitly disallow using the same challenge twice. As a result, the client is left with a heuristic such as: \"get a challenge first, and use this challenge until AS complains..\".\n\n**Is it acceptable to use a challenge twice?\nShould the client call the challenge endpoint for each new OAuth2 flow, or for every DPoP proof?**\n\nIf the AS provides challenges in previous responses (6.1), this works, because the client receives a new challenge anytime the AS wants the client to use a new one with the `use_attestation_challenge`.\n\nWhen an AS **only** supports the challenge endpoint, there is currently no way to signal to the client that it should call the challenge endpoint to get a new one (because the provided challenge is no longer accepted).\n\n**How to signal that the client should call the challenge endpoint?**\n\nPossible solutions:\n1. Change the `use_attestation_challenge` error so that when no new challenge is given in the header, the client should call the challenge endpoint.\n2. Add a new error, `use_challenge_endpoint`, to indicate that the client needs a new challenge from the challenge endpoint.\n",
+        "closed_at": null,
+        "comments": 5,
+        "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218/comments",
+        "created_at": "2026-07-28T14:39:52Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218/events",
+        "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218",
+        "id": 4999787538,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOJaEkaM8AAAABKgK0Eg",
+        "number": 218,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218/timeline",
+        "title": "clarification for challenge usage needed?",
+        "type": null,
+        "updated_at": "2026-08-18T06:13:45Z",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/7931215?v=4",
+          "events_url": "https://api.github.com/users/mickrau/events{/privacy}",
+          "followers_url": "https://api.github.com/users/mickrau/followers",
+          "following_url": "https://api.github.com/users/mickrau/following{/other_user}",
+          "gists_url": "https://api.github.com/users/mickrau/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/mickrau",
+          "id": 7931215,
+          "login": "mickrau",
+          "node_id": "MDQ6VXNlcjc5MzEyMTU=",
+          "organizations_url": "https://api.github.com/users/mickrau/orgs",
+          "received_events_url": "https://api.github.com/users/mickrau/received_events",
+          "repos_url": "https://api.github.com/users/mickrau/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/mickrau/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/mickrau/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/mickrau",
+          "user_view_type": "public"
+        }
+      },
       {
         "active_lock_reason": null,
         "assignee": null,
@@ -1620,82 +1696,6 @@
           "subscriptions_url": "https://api.github.com/users/arndt-s/subscriptions",
           "type": "User",
           "url": "https://api.github.com/users/arndt-s",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "NONE",
-        "body": "After reading the spec, there are some open questions about the `challenge` when using challenge endpoint.\n\nThe client does not know the usage policy for the challenges of the AS, i.e., max lifetime, single-usage, and the spec does not explicitly disallow using the same challenge twice. As a result, the client is left with a heuristic such as: \"get a challenge first, and use this challenge until AS complains..\".\n\n**Is it acceptable to use a challenge twice?\nShould the client call the challenge endpoint for each new OAuth2 flow, or for every DPoP proof?**\n\nIf the AS provides challenges in previous responses (6.1), this works, because the client receives a new challenge anytime the AS wants the client to use a new one with the `use_attestation_challenge`.\n\nWhen an AS **only** supports the challenge endpoint, there is currently no way to signal to the client that it should call the challenge endpoint to get a new one (because the provided challenge is no longer accepted).\n\n**How to signal that the client should call the challenge endpoint?**\n\nPossible solutions:\n1. Change the `use_attestation_challenge` error so that when no new challenge is given in the header, the client should call the challenge endpoint.\n2. Add a new error, `use_challenge_endpoint`, to indicate that the client needs a new challenge from the challenge endpoint.\n",
-        "closed_at": null,
-        "comments": 4,
-        "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218/comments",
-        "created_at": "2026-07-28T14:39:52Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218/events",
-        "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218",
-        "id": 4999787538,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOJaEkaM8AAAABKgK0Eg",
-        "number": 218,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
-        "score": 1.0,
-        "state": "open",
-        "state_reason": null,
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218/timeline",
-        "title": "clarification for challenge usage needed?",
-        "type": null,
-        "updated_at": "2026-08-10T21:15:32Z",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/7931215?v=4",
-          "events_url": "https://api.github.com/users/mickrau/events{/privacy}",
-          "followers_url": "https://api.github.com/users/mickrau/followers",
-          "following_url": "https://api.github.com/users/mickrau/following{/other_user}",
-          "gists_url": "https://api.github.com/users/mickrau/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/mickrau",
-          "id": 7931215,
-          "login": "mickrau",
-          "node_id": "MDQ6VXNlcjc5MzEyMTU=",
-          "organizations_url": "https://api.github.com/users/mickrau/orgs",
-          "received_events_url": "https://api.github.com/users/mickrau/received_events",
-          "repos_url": "https://api.github.com/users/mickrau/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/mickrau/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/mickrau/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/mickrau",
           "user_view_type": "public"
         }
       },
@@ -48228,6 +48228,388 @@
   "org_events": [
     {
       "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/284455695?",
+        "display_login": "danhduykhan-code",
+        "gravatar_id": "",
+        "id": 284455695,
+        "login": "danhduykhan-code",
+        "url": "https://api.github.com/users/danhduykhan-code"
+      },
+      "created_at": "2026-08-18T06:44:38Z",
+      "id": "13436565964",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "started"
+      },
+      "public": true,
+      "repo": {
+        "id": 239594214,
+        "name": "oauth-wg/oauth-v2-1",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1"
+      },
+      "type": "WatchEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/16320000?",
+        "display_login": "paulbastian",
+        "gravatar_id": "",
+        "id": 16320000,
+        "login": "paulbastian",
+        "url": "https://api.github.com/users/paulbastian"
+      },
+      "created_at": "2026-08-18T06:13:45Z",
+      "id": "13435274423",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "Editors call:\n- leave the challenge as a MUST in the use_attestation_challenge error\n- add consideration of reusing client attestation if used at PAR and Token endpoint\n- no expires_in for challenge endpoint",
+          "created_at": "2026-08-18T06:13:45Z",
+          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218#issuecomment-5324347879",
+          "id": 5324347879,
+          "issue_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218",
+          "minimized": null,
+          "node_id": "IC_kwDOJaEkaM8AAAABPVsZ5w",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/comments/5324347879/reactions"
+          },
+          "updated_at": "2026-08-18T06:13:45Z",
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/comments/5324347879",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/16320000?v=4",
+            "events_url": "https://api.github.com/users/paulbastian/events{/privacy}",
+            "followers_url": "https://api.github.com/users/paulbastian/followers",
+            "following_url": "https://api.github.com/users/paulbastian/following{/other_user}",
+            "gists_url": "https://api.github.com/users/paulbastian/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/paulbastian",
+            "id": 16320000,
+            "login": "paulbastian",
+            "node_id": "MDQ6VXNlcjE2MzIwMDAw",
+            "organizations_url": "https://api.github.com/users/paulbastian/orgs",
+            "received_events_url": "https://api.github.com/users/paulbastian/received_events",
+            "repos_url": "https://api.github.com/users/paulbastian/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/paulbastian/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/paulbastian/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/paulbastian",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "After reading the spec, there are some open questions about the `challenge` when using challenge endpoint.\n\nThe client does not know the usage policy for the challenges of the AS, i.e., max lifetime, single-usage, and the spec does not explicitly disallow using the same challenge twice. As a result, the client is left with a heuristic such as: \"get a challenge first, and use this challenge until AS complains..\".\n\n**Is it acceptable to use a challenge twice?\nShould the client call the challenge endpoint for each new OAuth2 flow, or for every DPoP proof?**\n\nIf the AS provides challenges in previous responses (6.1), this works, because the client receives a new challenge anytime the AS wants the client to use a new one with the `use_attestation_challenge`.\n\nWhen an AS **only** supports the challenge endpoint, there is currently no way to signal to the client that it should call the challenge endpoint to get a new one (because the provided challenge is no longer accepted).\n\n**How to signal that the client should call the challenge endpoint?**\n\nPossible solutions:\n1. Change the `use_attestation_challenge` error so that when no new challenge is given in the header, the client should call the challenge endpoint.\n2. Add a new error, `use_challenge_endpoint`, to indicate that the client needs a new challenge from the challenge endpoint.\n",
+          "closed_at": null,
+          "comments": 5,
+          "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218/comments",
+          "created_at": "2026-07-28T14:39:52Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218/events",
+          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218",
+          "id": 4999787538,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJaEkaM8AAAABKgK0Eg",
+          "number": 218,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218/timeline",
+          "title": "clarification for challenge usage needed?",
+          "type": null,
+          "updated_at": "2026-08-18T06:13:45Z",
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/218",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/7931215?v=4",
+            "events_url": "https://api.github.com/users/mickrau/events{/privacy}",
+            "followers_url": "https://api.github.com/users/mickrau/followers",
+            "following_url": "https://api.github.com/users/mickrau/following{/other_user}",
+            "gists_url": "https://api.github.com/users/mickrau/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/mickrau",
+            "id": 7931215,
+            "login": "mickrau",
+            "node_id": "MDQ6VXNlcjc5MzEyMTU=",
+            "organizations_url": "https://api.github.com/users/mickrau/orgs",
+            "received_events_url": "https://api.github.com/users/mickrau/received_events",
+            "repos_url": "https://api.github.com/users/mickrau/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/mickrau/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/mickrau/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/mickrau",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 631317608,
+        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/3953314?",
+        "display_login": "kamronbatman",
+        "gravatar_id": "",
+        "id": 3953314,
+        "login": "kamronbatman",
+        "url": "https://api.github.com/users/kamronbatman"
+      },
+      "created_at": "2026-08-18T00:55:47Z",
+      "id": "13425125053",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "forked",
+        "forkee": {
+          "allow_forking": true,
+          "archive_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/{archive_format}{/ref}",
+          "archived": false,
+          "assignees_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/assignees{/user}",
+          "blobs_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/git/blobs{/sha}",
+          "branches_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/branches{/branch}",
+          "clone_url": "https://github.com/kamronbatman/draft-ietf-oauth-client-id-metadata-document.git",
+          "collaborators_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/collaborators{/collaborator}",
+          "comments_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/comments{/number}",
+          "commits_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/commits{/sha}",
+          "compare_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/compare/{base}...{head}",
+          "contents_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/contents/{+path}",
+          "contributors_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/contributors",
+          "created_at": "2026-08-18T00:55:47Z",
+          "default_branch": "main",
+          "deployments_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/deployments",
+          "description": null,
+          "disabled": false,
+          "downloads_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/downloads",
+          "events_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/events",
+          "fork": true,
+          "forks": 0,
+          "forks_count": 0,
+          "forks_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/forks",
+          "full_name": "kamronbatman/draft-ietf-oauth-client-id-metadata-document",
+          "git_commits_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/git/commits{/sha}",
+          "git_refs_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/git/refs{/sha}",
+          "git_tags_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/git/tags{/sha}",
+          "git_url": "git://github.com/kamronbatman/draft-ietf-oauth-client-id-metadata-document.git",
+          "has_discussions": false,
+          "has_downloads": false,
+          "has_issues": false,
+          "has_pages": false,
+          "has_projects": true,
+          "has_pull_requests": true,
+          "has_wiki": false,
+          "homepage": null,
+          "hooks_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/hooks",
+          "html_url": "https://github.com/kamronbatman/draft-ietf-oauth-client-id-metadata-document",
+          "id": 1337835311,
+          "is_template": false,
+          "issue_comment_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/issues/comments{/number}",
+          "issue_events_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/issues/events{/number}",
+          "issues_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/issues{/number}",
+          "keys_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/keys{/key_id}",
+          "labels_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/labels{/name}",
+          "language": null,
+          "languages_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/languages",
+          "license": {
+            "key": "other",
+            "name": "Other",
+            "node_id": "MDc6TGljZW5zZTA=",
+            "spdx_id": "NOASSERTION",
+            "url": null
+          },
+          "merges_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/merges",
+          "milestones_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/milestones{/number}",
+          "mirror_url": null,
+          "name": "draft-ietf-oauth-client-id-metadata-document",
+          "node_id": "R_kgDOT72_Lw",
+          "notifications_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/notifications{?since,all,participating}",
+          "open_issues": 0,
+          "open_issues_count": 0,
+          "owner": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/3953314?v=4",
+            "events_url": "https://api.github.com/users/kamronbatman/events{/privacy}",
+            "followers_url": "https://api.github.com/users/kamronbatman/followers",
+            "following_url": "https://api.github.com/users/kamronbatman/following{/other_user}",
+            "gists_url": "https://api.github.com/users/kamronbatman/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/kamronbatman",
+            "id": 3953314,
+            "login": "kamronbatman",
+            "node_id": "MDQ6VXNlcjM5NTMzMTQ=",
+            "organizations_url": "https://api.github.com/users/kamronbatman/orgs",
+            "received_events_url": "https://api.github.com/users/kamronbatman/received_events",
+            "repos_url": "https://api.github.com/users/kamronbatman/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/kamronbatman/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/kamronbatman/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/kamronbatman",
+            "user_view_type": "public"
+          },
+          "private": false,
+          "pull_request_creation_policy": "all",
+          "pulls_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/pulls{/number}",
+          "pushed_at": "2026-08-18T01:01:29Z",
+          "releases_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/releases{/id}",
+          "size": 190,
+          "ssh_url": "git@github.com:kamronbatman/draft-ietf-oauth-client-id-metadata-document.git",
+          "stargazers_count": 0,
+          "stargazers_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/stargazers",
+          "statuses_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/statuses/{sha}",
+          "subscribers_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/subscribers",
+          "subscription_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/subscription",
+          "svn_url": "https://github.com/kamronbatman/draft-ietf-oauth-client-id-metadata-document",
+          "tags_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/tags",
+          "teams_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/teams",
+          "topics": [],
+          "trees_url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document/git/trees{/sha}",
+          "updated_at": "2026-08-18T00:55:47Z",
+          "url": "https://api.github.com/repos/kamronbatman/draft-ietf-oauth-client-id-metadata-document",
+          "visibility": "public",
+          "watchers": 0,
+          "watchers_count": 0,
+          "web_commit_signoff_required": false
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 804642494,
+        "name": "oauth-wg/draft-ietf-oauth-client-id-metadata-document",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document"
+      },
+      "type": "ForkEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-08-18T00:11:23Z",
+      "id": "17981101162",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "2f7f84b8ecf5dfd3f10dd34e2b138cf014dcf417",
+        "head": "2a09b78c7fa28bf93eb6a3dd1a2492c4e29fdef9",
+        "push_id": 40305184680,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 239594214
+      },
+      "public": true,
+      "repo": {
+        "id": 239594214,
+        "name": "oauth-wg/oauth-v2-1",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-08-18T00:01:54Z",
+      "id": "17979894691",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "67ac6acef1eb7f78f6fba8fd80870a5dee0fdfc7",
+        "head": "93ba153362c372ec5b0462e9c23b52f21bd82a39",
+        "push_id": 40304657941,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 804642494
+      },
+      "public": true,
+      "repo": {
+        "id": 804642494,
+        "name": "oauth-wg/draft-ietf-oauth-client-id-metadata-document",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
         "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
         "display_login": "yaronf",
         "gravatar_id": "",
@@ -54906,539 +55288,6 @@
         "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
       },
       "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
-        "display_login": "bc-pi",
-        "gravatar_id": "",
-        "id": 71398439,
-        "login": "bc-pi",
-        "url": "https://api.github.com/users/bc-pi"
-      },
-      "created_at": "2026-08-12T18:13:59Z",
-      "id": "17504638046",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "af7df47d0cc9ef2b8d1ea4ad1740d16cc6722aae",
-        "head": "6b48b9e3b37a04779b5eff3fe3d1eb22352fe152",
-        "push_id": 39824862931,
-        "ref": "refs/heads/PieterKas-patch-1",
-        "repository_id": 652203712
-      },
-      "public": true,
-      "repo": {
-        "id": 652203712,
-        "name": "oauth-wg/oauth-transaction-tokens",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
-        "display_login": "bc-pi",
-        "gravatar_id": "",
-        "id": 71398439,
-        "login": "bc-pi",
-        "url": "https://api.github.com/users/bc-pi"
-      },
-      "created_at": "2026-08-12T17:54:23Z",
-      "id": "13183085621",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "comment": {
-          "body": "I have endeavored to make a suggestion in #371 and also one small request. ",
-          "created_at": "2026-08-12T17:54:23Z",
-          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/370#issuecomment-5270528876",
-          "id": 5270528876,
-          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/370",
-          "minimized": null,
-          "node_id": "IC_kwDOJt_WwM8AAAABOiXjbA",
-          "performed_via_github_app": null,
-          "pin": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/comments/5270528876/reactions"
-          },
-          "updated_at": "2026-08-12T17:54:23Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/comments/5270528876",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
-            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
-            "followers_url": "https://api.github.com/users/bc-pi/followers",
-            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
-            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/bc-pi",
-            "id": 71398439,
-            "login": "bc-pi",
-            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
-            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
-            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
-            "repos_url": "https://api.github.com/users/bc-pi/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/bc-pi",
-            "user_view_type": "public"
-          }
-        },
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "Small excerpt below from a recent conversation that suggests the text at https://datatracker.ietf.org/doc/html/draft-ietf-oauth-transaction-tokens-11#section-13.13-3 could use some improvements and/or clarifications. \n\n<img width=\"714\" height=\"115\" alt=\"Image\" src=\"https://github.com/user-attachments/assets/06ed3d77-1fcd-46b4-828d-2756c141fef8\" />\n\n \n> This could be read to say transaction tokens should not carry delegation and authorization information. Is that the intent?\n\n\n",
-          "closed_at": "2026-08-12T20:18:23Z",
-          "comments": 3,
-          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/370/comments",
-          "created_at": "2026-08-11T19:44:45Z",
-          "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/370/events",
-          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/issues/370",
-          "id": 5123958707,
-          "issue_dependencies_summary": {
-            "blocked_by": 0,
-            "blocking": 0,
-            "total_blocked_by": 0,
-            "total_blocking": 0
-          },
-          "issue_field_values": [],
-          "labels": [],
-          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/370/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "I_kwDOJt_WwM8AAAABMWlnsw",
-          "number": 370,
-          "performed_via_github_app": null,
-          "pinned_comment": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/370/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
-          "state": "closed",
-          "state_reason": "completed",
-          "sub_issues_summary": {
-            "completed": 0,
-            "percent_completed": 0,
-            "total": 0
-          },
-          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/370/timeline",
-          "title": "transaction tokens can carry delegation and authorization information, right? Right?",
-          "type": null,
-          "updated_at": "2026-08-12T20:18:23Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/370",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
-            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
-            "followers_url": "https://api.github.com/users/bc-pi/followers",
-            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
-            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/bc-pi",
-            "id": 71398439,
-            "login": "bc-pi",
-            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
-            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
-            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
-            "repos_url": "https://api.github.com/users/bc-pi/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/bc-pi",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 652203712,
-        "name": "oauth-wg/oauth-transaction-tokens",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-      },
-      "type": "IssueCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
-        "display_login": "bc-pi",
-        "gravatar_id": "",
-        "id": 71398439,
-        "login": "bc-pi",
-        "url": "https://api.github.com/users/bc-pi"
-      },
-      "created_at": "2026-08-12T17:49:07Z",
-      "id": "13182821085",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "comment": {
-          "body": "Would you mind adding Patrick Harding (my boss) to the Acknowledgements? A conversation with him was the impetus for the feedback.  ",
-          "created_at": "2026-08-12T17:49:07Z",
-          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/371#issuecomment-5270439290",
-          "id": 5270439290,
-          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/371",
-          "minimized": null,
-          "node_id": "IC_kwDOJt_WwM8AAAABOiSFeg",
-          "performed_via_github_app": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/comments/5270439290/reactions"
-          },
-          "updated_at": "2026-08-12T17:49:07Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/comments/5270439290",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
-            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
-            "followers_url": "https://api.github.com/users/bc-pi/followers",
-            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
-            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/bc-pi",
-            "id": 71398439,
-            "login": "bc-pi",
-            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
-            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
-            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
-            "repos_url": "https://api.github.com/users/bc-pi/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/bc-pi",
-            "user_view_type": "public"
-          }
-        },
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "Updated terminology for `tctx` and `rctx` to clarify their definitions. Adjusted text to improve clarity regarding transaction tokens and their usage.\r\n\r\nSee issues #370 and #369 ",
-          "closed_at": "2026-08-12T20:18:21Z",
-          "comments": 3,
-          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/371/comments",
-          "created_at": "2026-08-12T09:56:36Z",
-          "draft": false,
-          "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/371/events",
-          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/371",
-          "id": 5129599938,
-          "issue_field_values": [],
-          "labels": [],
-          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/371/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "PR_kwDOJt_WwM79_CC8",
-          "number": 371,
-          "performed_via_github_app": null,
-          "pull_request": {
-            "diff_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/371.diff",
-            "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/371",
-            "merged_at": "2026-08-12T20:18:21Z",
-            "patch_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/371.patch",
-            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/371"
-          },
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/371/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
-          "state": "closed",
-          "state_reason": null,
-          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/371/timeline",
-          "title": "WGLC Feedback",
-          "type": null,
-          "updated_at": "2026-08-12T20:18:24Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/371",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
-            "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
-            "followers_url": "https://api.github.com/users/PieterKas/followers",
-            "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
-            "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/PieterKas",
-            "id": 90690777,
-            "login": "PieterKas",
-            "node_id": "MDQ6VXNlcjkwNjkwNzc3",
-            "organizations_url": "https://api.github.com/users/PieterKas/orgs",
-            "received_events_url": "https://api.github.com/users/PieterKas/received_events",
-            "repos_url": "https://api.github.com/users/PieterKas/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/PieterKas",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 652203712,
-        "name": "oauth-wg/oauth-transaction-tokens",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-      },
-      "type": "IssueCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
-        "display_login": "bc-pi",
-        "gravatar_id": "",
-        "id": 71398439,
-        "login": "bc-pi",
-        "url": "https://api.github.com/users/bc-pi"
-      },
-      "created_at": "2026-08-12T17:45:07Z",
-      "id": "13182617320",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 652203712,
-              "name": "oauth-transaction-tokens",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-            },
-            "sha": "146e47d47e9f0ee276033917aa2823298e05cc5f"
-          },
-          "head": {
-            "ref": "PieterKas-patch-1",
-            "repo": {
-              "id": 652203712,
-              "name": "oauth-transaction-tokens",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-            },
-            "sha": "4bab1807c8c2095b8250cec9b84ea63328d36198"
-          },
-          "id": 4261159100,
-          "number": 371,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/371"
-        },
-        "review": {
-          "_links": {
-            "html": {
-              "href": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/371#pullrequestreview-4919445500"
-            },
-            "pull_request": {
-              "href": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/371"
-            }
-          },
-          "body": null,
-          "commit_id": "af7df47d0cc9ef2b8d1ea4ad1740d16cc6722aae",
-          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/371#pullrequestreview-4919445500",
-          "id": 4919445500,
-          "node_id": "PRR_kwDOJt_WwM8AAAABJTjH_A",
-          "pull_request_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/371",
-          "state": "commented",
-          "submitted_at": "2026-08-12T17:45:05Z",
-          "updated_at": "2026-08-12T17:45:05Z",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
-            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
-            "followers_url": "https://api.github.com/users/bc-pi/followers",
-            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
-            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/bc-pi",
-            "id": 71398439,
-            "login": "bc-pi",
-            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
-            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
-            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
-            "repos_url": "https://api.github.com/users/bc-pi/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/bc-pi",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 652203712,
-        "name": "oauth-wg/oauth-transaction-tokens",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-      },
-      "type": "PullRequestReviewEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
-        "display_login": "bc-pi",
-        "gravatar_id": "",
-        "id": 71398439,
-        "login": "bc-pi",
-        "url": "https://api.github.com/users/bc-pi"
-      },
-      "created_at": "2026-08-12T17:45:05Z",
-      "id": "13182616233",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "comment": {
-          "_links": {
-            "html": {
-              "href": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/371#discussion_r3768873869"
-            },
-            "pull_request": {
-              "href": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/371"
-            },
-            "self": {
-              "href": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/comments/3768873869"
-            }
-          },
-          "body": "I don't know if that's good but I believe it's better.",
-          "commit_id": "81a06c639bbf58fafc50543ae6e52d7504169c2e",
-          "created_at": "2026-08-12T17:45:05Z",
-          "diff_hunk": "@@ -599,7 +599,7 @@ A workload MUST NOT use a transaction token as an OAuth 2.0 Access Token. An OAu\n \n Transaction tokens support the principle of least privilege since they are narrowly scoped to a single transaction and have short lifetimes. This makes them less susceptible to broad replay attacks than the longer-lived access tokens. By maintaining a distinct token type, the protocol ensures that context propagation while minimizing the risk of lateral access if a transaction token is intercepted within the Trust Domain. This separation also reduces the need for including transaction context in the access token, reducing token size.\n \n-Using a dedicated HTTP header from the `Authorization: Bearer` header for transaction tokens allows services to distinguish between an access token, which carries authorization delegation information, and the transaction token, which carries transaction context.\n+Using a dedicated HTTP header from the `Authorization: Bearer` header for transaction tokens allows services to distinguish between an access token.",
-          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/371#discussion_r3768873869",
-          "id": 3768873869,
-          "in_reply_to_id": 3768854850,
-          "node_id": "PRRC_kwDOJt_WwM7gpHON",
-          "original_commit_id": "af7df47d0cc9ef2b8d1ea4ad1740d16cc6722aae",
-          "original_position": 18,
-          "path": "draft-ietf-oauth-transaction-tokens.md",
-          "position": 1,
-          "pull_request_review_id": 4919445500,
-          "pull_request_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/371",
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/comments/3768873869/reactions"
-          },
-          "subject_type": "line",
-          "updated_at": "2026-08-12T17:45:06Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/comments/3768873869",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
-            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
-            "followers_url": "https://api.github.com/users/bc-pi/followers",
-            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
-            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/bc-pi",
-            "id": 71398439,
-            "login": "bc-pi",
-            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
-            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
-            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
-            "repos_url": "https://api.github.com/users/bc-pi/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/bc-pi",
-            "user_view_type": "public"
-          }
-        },
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 652203712,
-              "name": "oauth-transaction-tokens",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-            },
-            "sha": "146e47d47e9f0ee276033917aa2823298e05cc5f"
-          },
-          "head": {
-            "ref": "PieterKas-patch-1",
-            "repo": {
-              "id": 652203712,
-              "name": "oauth-transaction-tokens",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-            },
-            "sha": "4bab1807c8c2095b8250cec9b84ea63328d36198"
-          },
-          "id": 4261159100,
-          "number": 371,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/371"
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 652203712,
-        "name": "oauth-wg/oauth-transaction-tokens",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens"
-      },
-      "type": "PullRequestReviewCommentEvent"
     }
   ],
   "prs": {
@@ -93588,11 +93437,11 @@
       "private": false,
       "pull_request_creation_policy": "all",
       "pulls_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/pulls{/number}",
-      "pushed_at": "2026-08-16T00:09:24Z",
+      "pushed_at": "2026-08-18T00:11:22Z",
       "releases_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/releases{/id}",
-      "size": 3101,
+      "size": 3287,
       "ssh_url": "git@github.com:oauth-wg/oauth-v2-1.git",
-      "stargazers_count": 102,
+      "stargazers_count": 103,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/stargazers",
       "statuses_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/statuses/{sha}",
       "subscribers_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/subscribers",
@@ -93605,11 +93454,11 @@
         "oauth2"
       ],
       "trees_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/git/trees{/sha}",
-      "updated_at": "2026-08-12T15:32:35Z",
+      "updated_at": "2026-08-18T06:44:39Z",
       "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1",
       "visibility": "public",
-      "watchers": 102,
-      "watchers_count": 102,
+      "watchers": 103,
+      "watchers_count": 103,
       "web_commit_signoff_required": false
     },
     {
@@ -95041,8 +94890,8 @@
       "downloads_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/downloads",
       "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/events",
       "fork": false,
-      "forks": 9,
-      "forks_count": 9,
+      "forks": 10,
+      "forks_count": 10,
       "forks_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/forks",
       "full_name": "oauth-wg/draft-ietf-oauth-client-id-metadata-document",
       "git_commits_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/git/commits{/sha}",
@@ -95114,9 +94963,9 @@
       "private": false,
       "pull_request_creation_policy": "all",
       "pulls_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pulls{/number}",
-      "pushed_at": "2026-08-13T00:10:02Z",
+      "pushed_at": "2026-08-18T00:01:53Z",
       "releases_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/releases{/id}",
-      "size": 1512,
+      "size": 1525,
       "ssh_url": "git@github.com:oauth-wg/draft-ietf-oauth-client-id-metadata-document.git",
       "stargazers_count": 13,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/stargazers",
@@ -95604,5 +95453,5 @@
       "web_commit_signoff_required": false
     }
   ],
-  "snapshot_date": "2026-08-17"
+  "snapshot_date": "2026-08-18"
 }
