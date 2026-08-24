@@ -1,6 +1,6 @@
-# OAuth WG Backlog (2026-08-23)
+# OAuth WG Backlog (2026-08-24)
 
-- generated_at_utc: `2026-08-23T06:47:51+00:00`
+- generated_at_utc: `2026-08-24T07:05:33+00:00`
 
 - [ ] `draft-ietf-oauth-rfc8725bis` score=100 updated=2026-08-22T10:28:51Z
 - [ ] `draft-ietf-oauth-transaction-tokens` score=99 updated=2026-08-21T11:57:16Z
@@ -12,6 +12,7 @@
 - [ ] `draft-ietf-oauth-identity-assertion-authz-grant` score=65 updated=2026-05-21T22:18:28Z
 - [ ] `draft-ietf-oauth-v2-1` score=65 updated=2026-03-02T18:53:37Z
 - [ ] `draft-ietf-oauth-first-party-apps` score=50 updated=2026-07-15T17:25:20Z
+- [ ] `draft-ietf-oauth-rar-metadata-remediation` score=45 updated=2026-08-23T20:29:29Z
 - [ ] `draft-ietf-oauth-attestation-based-client-auth` score=42 updated=2026-07-10T13:29:37Z
 - [ ] `draft-ietf-oauth-refresh-token-expiration` score=20 updated=2026-07-06T17:53:06Z
 - [ ] `draft-ietf-oauth-security-topics-update` score=20 updated=2026-07-06T06:41:36Z
