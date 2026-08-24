@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-08-24T07:05:34+00:00",
+  "collected_at": "2026-08-24T08:33:10+00:00",
   "merged_prs_30d": {
     "error": null,
     "incomplete_results": false,
@@ -47874,7 +47874,7 @@
         "author_association": "NONE",
         "body": "Root Cause Analysis\n\nDuring logout flow validation, SSO providers (including cloudsso-uat) redirect to the post_logout_redirect_uri without returning the original state parameter.\nAs AppAuth expects the state value for validation, it reports the error -61439 (State mismatch … but got nil).\n\nMore more info:\n\nThe issue is a state parameter mismatch during the logout flow between the ON!Track iOS app (using AppAuth-iOS 2.0.0) and the CloudSSO logout endpoint.\n\nThe Flow\n1. AppAuth-iOS creates an OIDEndSessionRequest with a randomly generated state value and opens the browser to the \\\n2. CloudSSO LogoutService receives this request, validates the client, and constructs a redirect to Auth0:\nhttps:///v2/logout?returnTo=&post_logo…\nThe state is embedded as a query parameter inside the returnTo URL (via getLogoutQueryString()).\n3. Auth0's /v2/logout terminates the session and redirects the browser to the decoded returnTo URL:\n4. AppAuth-iOS intercepts this redirect at https://baseurl/oauth/oauth_callback and parses the URL query parameters looking for state.\n\nThe Problem\nLooking at the AppAuth-iOS source code (OIDAuthorizationService.m, the OIDEndSessionSession class), the state validation logic is:\nif (!OIDIsEqualIncludingNil(_request.state, response.state)) {\n// \"State mismatch, expecting %@ but got %@ in authorization response %@\"\n}\nThe OIDEndSessionResponse is initialized from the query parameters of the redirect URL. The issue is one of these scenarios:",
         "closed_at": null,
-        "comments": 1,
+        "comments": 2,
         "comments_url": "https://api.github.com/repos/openid/AppAuth-iOS/issues/956/comments",
         "created_at": "2026-05-26T10:07:18Z",
         "events_url": "https://api.github.com/repos/openid/AppAuth-iOS/issues/956/events",
@@ -47938,7 +47938,7 @@
         "timeline_url": "https://api.github.com/repos/openid/AppAuth-iOS/issues/956/timeline",
         "title": "Unable to do logout in iOS",
         "type": null,
-        "updated_at": "2026-06-26T19:25:08Z",
+        "updated_at": "2026-08-24T07:50:44Z",
         "url": "https://api.github.com/repos/openid/AppAuth-iOS/issues/956",
         "user": {
           "avatar_url": "https://avatars.githubusercontent.com/u/116337133?v=4",
