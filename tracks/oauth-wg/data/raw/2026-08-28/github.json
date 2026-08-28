@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-08-27T17:29:07+00:00",
+  "collected_at": "2026-08-28T18:23:10+00:00",
   "issues": {
     "error": null,
     "items": [
@@ -48023,6 +48023,298 @@
   "org_events": [
     {
       "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/7931215?",
+        "display_login": "mickrau",
+        "gravatar_id": "",
+        "id": 7931215,
+        "login": "mickrau",
+        "url": "https://api.github.com/users/mickrau"
+      },
+      "created_at": "2026-08-28T16:59:37Z",
+      "id": "14032808460",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "_links": {
+            "html": {
+              "href": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/221#discussion_r3882459175"
+            },
+            "pull_request": {
+              "href": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls/221"
+            },
+            "self": {
+              "href": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls/comments/3882459175"
+            }
+          },
+          "body": "I only changed the second sentence (line 412) of Christian's suggestion to make it clear that challenge endpoint support is a precondition.\n\n```suggestion\nA Client MUST include the most recently received Challenge provided by the Authorization Server or Resource Server in the Client Attestation PoP JWT as defined in [](#client-attestation-pop-jwt), irrespective of whether that Challenge was obtained from the challenge endpoint or from a previous response as described in [](#challenge-in-response).\nIf the Authorization Server or Resource Server provides a challenge endpoint as defined in [](#challenge-endpoint), a Client that does not hold a Challenge SHOULD obtain a Challenge from that endpoint rather than sending a request without a Challenge and relying on the resulting error response.\nA Client MAY use the same Challenge in more than one Client Attestation PoP JWT. If the Authorization Server or Resource Server accepts a Challenge only once, it rejects the second use with the `use_attestation_challenge` error as defined in [](#errors) and provides a fresh Challenge in that response.\nUpon receiving a `use_attestation_challenge` error, a Client SHOULD retry the request once, using a newly created Client Attestation PoP JWT containing the Challenge provided with that error response. A Client MUST NOT retry indefinitely.\n```",
+          "commit_id": "59757fef655c22b9e3440914898bfe5fb980744f",
+          "created_at": "2026-08-28T16:59:37Z",
+          "diff_hunk": "@@ -400,11 +400,63 @@ Note that additional claims may be present in the DPoP proof depending on the co\n \n # Challenges {#challenges}\n \n-This section defines optional mechanisms that allow a Client to receive a fresh Challenge from the Authorization Server or Resource Server and to include the Challenge in the proof of possession. This construct may be similar or equivalent to a nonce, see [](#terminology). The value of the challenge is opaque to the client.\n+Challenges may be used by the Authorization Server or Resource Server to guarantee freshness and can be used to detect replay attacks. Support for Challenges is OPTIONAL for the Authorization Server or Resource Server. The lifetime of a Challenge, and whether a Challenge may be used in more than one Client Attestation PoP JWT, are determined solely by the local policy of the Authorization Server or Resource Server. If they are provided, the Client MUST include the Challenge in the proof of possession. The value of the challenge is opaque to the Client.\n+\n+A server that uses Challenges:\n+\n+- MUST provide a Challenge in the `use_attestation_challenge` error defined in [](#errors),\n+- MAY provide a Challenge in any HTTP response as described in [](#challenge-in-response), or\n+- MAY provide a Challenge at the OPTIONAL challenge endpoint described in [](#challenge-endpoint).\n+\n+A Client MUST include the most recently received Challenge provided by the Authorization Server or Resource Server in the Client Attestation PoP JWT as defined in [](#client-attestation-pop-jwt), irrespective of whether that Challenge was obtained from the challenge endpoint or from a previous response as described in [](#challenge-in-response). A Client that does not hold a Challenge SHOULD obtain a Challenge from the challenge endpoint rather than sending a request without a Challenge and relying on the resulting error response. A Challenge received in a response supersedes any Challenge the Client holds, irrespective of how either was obtained. A Client MAY use the same Challenge in more than one Client Attestation PoP JWT. If the Authorization Server or Resource Server accepts a Challenge only once, it rejects the second use with the `use_attestation_challenge` error as defined in [](#errors) and provides a fresh Challenge in that response. Upon receiving a `use_attestation_challenge` error, a Client SHOULD retry the request once, using a newly created Client Attestation PoP JWT containing the Challenge provided with that error response. A Client MUST NOT retry indefinitely.",
+          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pull/221#discussion_r3882459175",
+          "id": 3882459175,
+          "in_reply_to_id": 3872744042,
+          "node_id": "PRRC_kwDOJaEkaM7naaAn",
+          "original_commit_id": "59757fef655c22b9e3440914898bfe5fb980744f",
+          "original_position": 13,
+          "path": "draft-ietf-oauth-attestation-based-client-auth.md",
+          "position": 13,
+          "pull_request_review_id": 5053257966,
+          "pull_request_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls/221",
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls/comments/3882459175/reactions"
+          },
+          "subject_type": "line",
+          "updated_at": "2026-08-28T17:43:12Z",
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls/comments/3882459175",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/7931215?v=4",
+            "events_url": "https://api.github.com/users/mickrau/events{/privacy}",
+            "followers_url": "https://api.github.com/users/mickrau/followers",
+            "following_url": "https://api.github.com/users/mickrau/following{/other_user}",
+            "gists_url": "https://api.github.com/users/mickrau/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/mickrau",
+            "id": 7931215,
+            "login": "mickrau",
+            "node_id": "MDQ6VXNlcjc5MzEyMTU=",
+            "organizations_url": "https://api.github.com/users/mickrau/orgs",
+            "received_events_url": "https://api.github.com/users/mickrau/received_events",
+            "repos_url": "https://api.github.com/users/mickrau/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/mickrau/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/mickrau/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/mickrau",
+            "user_view_type": "public"
+          }
+        },
+        "pull_request": {
+          "base": {
+            "ref": "main",
+            "repo": {
+              "id": 631317608,
+              "name": "draft-ietf-oauth-attestation-based-client-auth",
+              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+            },
+            "sha": "98fd08a83c5cbb1951b70c53fa852bc6349449dc"
+          },
+          "head": {
+            "ref": "pb/challenges2",
+            "repo": {
+              "id": 631317608,
+              "name": "draft-ietf-oauth-attestation-based-client-auth",
+              "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+            },
+            "sha": "59757fef655c22b9e3440914898bfe5fb980744f"
+          },
+          "id": 4323105112,
+          "number": 221,
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls/221"
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 631317608,
+        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+      },
+      "type": "PullRequestReviewCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
+        "display_login": "bc-pi",
+        "gravatar_id": "",
+        "id": 71398439,
+        "login": "bc-pi",
+        "url": "https://api.github.com/users/bc-pi"
+      },
+      "created_at": "2026-08-28T15:37:57Z",
+      "id": "14029154068",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "> Thanks for the very detailed and actionable feedback on the PR.\r\n\r\nWhile lacking in detail, it was concise and very actionable. ",
+          "created_at": "2026-08-28T15:37:57Z",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/119#issuecomment-5454522846",
+          "id": 5454522846,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119",
+          "minimized": null,
+          "node_id": "IC_kwDOKv5r-s8AAAABRR1p3g",
+          "performed_via_github_app": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/5454522846/reactions"
+          },
+          "updated_at": "2026-08-28T15:37:57Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/5454522846",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
+            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
+            "followers_url": "https://api.github.com/users/bc-pi/followers",
+            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
+            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/bc-pi",
+            "id": 71398439,
+            "login": "bc-pi",
+            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
+            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
+            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
+            "repos_url": "https://api.github.com/users/bc-pi/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/bc-pi",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "## Summary\n\nAddresses [#73](https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/73) (workload/agent as principal). Adds native support in ID-JAG for a Principal that is a workload or autonomous agent, in addition to the existing End-User Principal.\n\nAligns with the function-based `subject_token` selection framing in [#115](https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/115): a JWT credential the workload or agent presents to authenticate as the Principal is an Identity Assertion for that Principal, and is a valid `subject_token` under this profile.\n\n## Design\n\nThe Principal a workload or agent authenticates as is the same Principal the ID-JAG's `sub` identifies. Rather than enumerating specific client authentication specs (Client Assertion, Client Attestation, Client Instance Assertion, SPIFFE, WIMSE, ...), the profile defines the Identity Assertion for a workload/agent Principal by function:\n\n> *\"A JWT credential the workload or agent presents to authenticate as the Principal to the IdP Authorization Server. Any JWT-based client authentication method the IdP Authorization Server accepts for that Principal MAY be used, including those registered under the `token_endpoint_auth_methods_supported` authorization server metadata parameter.\"*\n\nThis scales to future client authentication methods without listing each by hand.\n\n## Changes\n\n- **Terminology (§2.2)**: introduces the **Principal** term (End-User, workload, or autonomous agent) and broadens the **Identity Assertion** definition to be function-based, pointing at `token_endpoint_auth_methods_supported` as the mechanism registry.\n- **§3 Intro**: broadens \"on behalf of a user\" to \"on behalf of a Principal (End-User, workload, or autonomous agent)\".\n- **§3.1 `sub` claim**: broadens from End-User Subject Identifier to Principal Identifier.\n- **§3.3 Workload and Autonomous Agent Principals** (new): describes when the Principal is a workload or agent; defines JWT invariants (`iss`, `sub`, `aud`, `exp` REQUIRED; `iat`, `jti` SHOULD); and calls out that IdP policy MAY require attestation, specific trusted issuers (e.g., SPIFFE trust domain, WIMSE Identity Server, client backend attestation service), or other trust-establishment properties.\n- **§4.3 `subject_token` / `subject_token_type`**: extended to accept workload/agent Identity Assertions with token type `urn:ietf:params:oauth:token-type:jwt`.\n- **§4.3 Processing Rules**: adds a rule for validating workload/agent Identity Assertions. The audience of these assertions is the IdP token endpoint (not the `client_id`), and the mapping from authenticated OAuth client to Principal is IdP policy.\n- **§9 Security Considerations**: adds a subsection on Workload and Autonomous Agent Principals — absence of End-User consent semantics, validation requirements (including attestation and issuer-trust), RAS-side policy expectations, and a sender-constraining recommendation.\n- **-05** document history entry.\n\n## Alignment with existing work\n\n- **[#115](https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/115) (subject_token type selection)**: This PR is a direct application of the function-based framing in #115. Where #115 excludes access tokens because they are resource authorization credentials rather than identity assertions, this PR includes workload/agent client authentication credentials because they ARE identity assertions for the workload or agent Principal. Same primitive, extended to a new Principal type.\n- **Composition with `draft-carleton-workload-authz-grant`**: The composition anticipated by draft-carleton §6 — *\"the authorization grant's issuer is the customer's Enterprise IdP ... obtained, e.g., by token exchange with the IdP\"* — is what this branch enables. ID-JAG covers the Enterprise IdP → cross-domain Resource Authorization Server topology; draft-carleton's platform-direct-issuance topology is complementary rather than subsumed by this PR.\n- **Actor delegation** (workload acting on behalf of a user via `act`): out of scope here. See the Actor Profile work.\n\n## Open design questions\n\n### 1. Should ID-JAG support a `sub_profile` claim (from OAuth Entity Profiles) to help RAS processing?\n\nUnder this PR, the Principal type (End-User vs. workload vs. autonomous agent) is not carried as an explicit claim. A Resource Authorization Server infers Principal type from context — presence or absence of End-User claims (`auth_time`, `acr`, `amr`, `email`), local policy for the audience, or the shape of the `sub` value.\n\nAn explicit `sub_profile` claim (as defined in `draft-mora-oauth-entity-profiles`) would let the RAS branch its processing on the Principal type without inference. Values like `user`, `service`, `ai-agent` would be normative.\n\n**Trade-offs:**\n\n- **For inclusion**: eliminates inference at the RAS; makes Principal type explicit and audit-friendly; aligns with the Entity Profiles direction.\n- **Against inclusion**: introduces a dependency on `draft-mora-oauth-entity-profiles` (individual submission, not WG-adopted); adds a new normative claim; the RAS can already infer type from context in most deployments.\n\n**Options:**\n\n1. Leave out (current PR) — Principal type is implicit; RAS infers.\n2. Add `sub_profile` as OPTIONAL — deployments that want explicit signaling can use it.\n3. Add `sub_profile` as RECOMMENDED — normative signaling with defined values.\n\n### 2. Should ID-JAG add a `subject_token_types_supported` discovery parameter?\n\nThe accepted `subject_token_type` values are described in §4.3 as normative text. There is currently no discovery mechanism for a client to learn which types a specific IdP Authorization Server accepts before attempting a Token Exchange request.\n\nFor workload/agent Principals this becomes more variable: an IdP might accept ID Tokens and SAML for End-Users but not workload JWT credentials, or vice versa. A workload has no clean way to check without attempting the exchange.\n\nA new AS metadata parameter would signal support explicitly:\n\n```json\n{\n  \"subject_token_types_supported\": [\n    \"urn:ietf:params:oauth:token-type:id_token\",\n    \"urn:ietf:params:oauth:token-type:saml2\",\n    \"urn:ietf:params:oauth:token-type:refresh_token\",\n    \"urn:ietf:params:oauth:token-type:jwt\"\n  ]\n}\n```\n\n**Trade-offs:**\n\n- **For inclusion**: runtime discovery avoids failed exchanges; explicit about workload/agent support; scales cleanly if additional `subject_token` types are added later; consistent naming with existing `_supported`-suffixed metadata parameters.\n- **Against inclusion**: a new metadata parameter to register and maintain; may duplicate what deployments already communicate out-of-band; overlaps in intent with `authorization_grant_profiles_supported` if per-profile token type info is added there.\n\n**Options:**\n\n1. Leave out (current PR) — no discovery; clients infer from documentation or trial.\n2. Add `subject_token_types_supported` — new AS metadata parameter for ID-JAG.\n3. Extend `authorization_grant_profiles_supported` with per-profile subject token type info instead of a separate parameter.\n\nReviewer input on both design questions welcome.\n\nCloses #73.\n\n## Test plan\n\n- [ ] CI builds the draft (kramdown-rfc render succeeds)\n- [ ] Internal anchors resolve (`workload-agent-principal`, `workload-principal-security`)\n- [ ] Rendered HTML shows §3.3 Workload and Autonomous Agent Principals under the ID-JAG chapter\n- [ ] Rendered HTML shows Security Considerations subsection on Workload and Autonomous Agent Principals\n- [ ] Document history `-05` entry appears",
+          "closed_at": "2026-08-23T03:46:45Z",
+          "comments": 3,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119/comments",
+          "created_at": "2026-08-04T21:59:40Z",
+          "draft": false,
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119/events",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/119",
+          "id": 5065269517,
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "PR_kwDOKv5r-s76yLT4",
+          "number": 119,
+          "performed_via_github_app": null,
+          "pull_request": {
+            "diff_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/119.diff",
+            "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/119",
+            "merged_at": null,
+            "patch_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/119.patch",
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/pulls/119"
+          },
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+          "state": "closed",
+          "state_reason": null,
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119/timeline",
+          "title": "Add native support for workload and autonomous agent Principals",
+          "type": null,
+          "updated_at": "2026-08-28T15:37:57Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
+            "events_url": "https://api.github.com/users/mcguinness/events{/privacy}",
+            "followers_url": "https://api.github.com/users/mcguinness/followers",
+            "following_url": "https://api.github.com/users/mcguinness/following{/other_user}",
+            "gists_url": "https://api.github.com/users/mcguinness/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/mcguinness",
+            "id": 1944352,
+            "login": "mcguinness",
+            "node_id": "MDQ6VXNlcjE5NDQzNTI=",
+            "organizations_url": "https://api.github.com/users/mcguinness/orgs",
+            "received_events_url": "https://api.github.com/users/mcguinness/received_events",
+            "repos_url": "https://api.github.com/users/mcguinness/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/mcguinness/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/mcguinness/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/mcguinness",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-08-27T01:09:08Z",
+      "id": "19140196001",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "56ff09f980f4c9853894dd44324c945bf88b5608",
+        "head": "0071fd13b5587516b88abbf0362ff194340b06a4",
+        "push_id": 41379202213,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 721316858
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
         "avatar_url": "https://avatars.githubusercontent.com/u/113001?",
         "display_login": "aaronpk",
         "gravatar_id": "",
@@ -50265,7 +50557,7 @@
           "assignees": [],
           "body": "## Summary\n\nAddresses [#73](https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/73) (workload/agent as principal). Adds native support in ID-JAG for a Principal that is a workload or autonomous agent, in addition to the existing End-User Principal.\n\nAligns with the function-based `subject_token` selection framing in [#115](https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/115): a JWT credential the workload or agent presents to authenticate as the Principal is an Identity Assertion for that Principal, and is a valid `subject_token` under this profile.\n\n## Design\n\nThe Principal a workload or agent authenticates as is the same Principal the ID-JAG's `sub` identifies. Rather than enumerating specific client authentication specs (Client Assertion, Client Attestation, Client Instance Assertion, SPIFFE, WIMSE, ...), the profile defines the Identity Assertion for a workload/agent Principal by function:\n\n> *\"A JWT credential the workload or agent presents to authenticate as the Principal to the IdP Authorization Server. Any JWT-based client authentication method the IdP Authorization Server accepts for that Principal MAY be used, including those registered under the `token_endpoint_auth_methods_supported` authorization server metadata parameter.\"*\n\nThis scales to future client authentication methods without listing each by hand.\n\n## Changes\n\n- **Terminology (§2.2)**: introduces the **Principal** term (End-User, workload, or autonomous agent) and broadens the **Identity Assertion** definition to be function-based, pointing at `token_endpoint_auth_methods_supported` as the mechanism registry.\n- **§3 Intro**: broadens \"on behalf of a user\" to \"on behalf of a Principal (End-User, workload, or autonomous agent)\".\n- **§3.1 `sub` claim**: broadens from End-User Subject Identifier to Principal Identifier.\n- **§3.3 Workload and Autonomous Agent Principals** (new): describes when the Principal is a workload or agent; defines JWT invariants (`iss`, `sub`, `aud`, `exp` REQUIRED; `iat`, `jti` SHOULD); and calls out that IdP policy MAY require attestation, specific trusted issuers (e.g., SPIFFE trust domain, WIMSE Identity Server, client backend attestation service), or other trust-establishment properties.\n- **§4.3 `subject_token` / `subject_token_type`**: extended to accept workload/agent Identity Assertions with token type `urn:ietf:params:oauth:token-type:jwt`.\n- **§4.3 Processing Rules**: adds a rule for validating workload/agent Identity Assertions. The audience of these assertions is the IdP token endpoint (not the `client_id`), and the mapping from authenticated OAuth client to Principal is IdP policy.\n- **§9 Security Considerations**: adds a subsection on Workload and Autonomous Agent Principals — absence of End-User consent semantics, validation requirements (including attestation and issuer-trust), RAS-side policy expectations, and a sender-constraining recommendation.\n- **-05** document history entry.\n\n## Alignment with existing work\n\n- **[#115](https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/115) (subject_token type selection)**: This PR is a direct application of the function-based framing in #115. Where #115 excludes access tokens because they are resource authorization credentials rather than identity assertions, this PR includes workload/agent client authentication credentials because they ARE identity assertions for the workload or agent Principal. Same primitive, extended to a new Principal type.\n- **Composition with `draft-carleton-workload-authz-grant`**: The composition anticipated by draft-carleton §6 — *\"the authorization grant's issuer is the customer's Enterprise IdP ... obtained, e.g., by token exchange with the IdP\"* — is what this branch enables. ID-JAG covers the Enterprise IdP → cross-domain Resource Authorization Server topology; draft-carleton's platform-direct-issuance topology is complementary rather than subsumed by this PR.\n- **Actor delegation** (workload acting on behalf of a user via `act`): out of scope here. See the Actor Profile work.\n\n## Open design questions\n\n### 1. Should ID-JAG support a `sub_profile` claim (from OAuth Entity Profiles) to help RAS processing?\n\nUnder this PR, the Principal type (End-User vs. workload vs. autonomous agent) is not carried as an explicit claim. A Resource Authorization Server infers Principal type from context — presence or absence of End-User claims (`auth_time`, `acr`, `amr`, `email`), local policy for the audience, or the shape of the `sub` value.\n\nAn explicit `sub_profile` claim (as defined in `draft-mora-oauth-entity-profiles`) would let the RAS branch its processing on the Principal type without inference. Values like `user`, `service`, `ai-agent` would be normative.\n\n**Trade-offs:**\n\n- **For inclusion**: eliminates inference at the RAS; makes Principal type explicit and audit-friendly; aligns with the Entity Profiles direction.\n- **Against inclusion**: introduces a dependency on `draft-mora-oauth-entity-profiles` (individual submission, not WG-adopted); adds a new normative claim; the RAS can already infer type from context in most deployments.\n\n**Options:**\n\n1. Leave out (current PR) — Principal type is implicit; RAS infers.\n2. Add `sub_profile` as OPTIONAL — deployments that want explicit signaling can use it.\n3. Add `sub_profile` as RECOMMENDED — normative signaling with defined values.\n\n### 2. Should ID-JAG add a `subject_token_types_supported` discovery parameter?\n\nThe accepted `subject_token_type` values are described in §4.3 as normative text. There is currently no discovery mechanism for a client to learn which types a specific IdP Authorization Server accepts before attempting a Token Exchange request.\n\nFor workload/agent Principals this becomes more variable: an IdP might accept ID Tokens and SAML for End-Users but not workload JWT credentials, or vice versa. A workload has no clean way to check without attempting the exchange.\n\nA new AS metadata parameter would signal support explicitly:\n\n```json\n{\n  \"subject_token_types_supported\": [\n    \"urn:ietf:params:oauth:token-type:id_token\",\n    \"urn:ietf:params:oauth:token-type:saml2\",\n    \"urn:ietf:params:oauth:token-type:refresh_token\",\n    \"urn:ietf:params:oauth:token-type:jwt\"\n  ]\n}\n```\n\n**Trade-offs:**\n\n- **For inclusion**: runtime discovery avoids failed exchanges; explicit about workload/agent support; scales cleanly if additional `subject_token` types are added later; consistent naming with existing `_supported`-suffixed metadata parameters.\n- **Against inclusion**: a new metadata parameter to register and maintain; may duplicate what deployments already communicate out-of-band; overlaps in intent with `authorization_grant_profiles_supported` if per-profile token type info is added there.\n\n**Options:**\n\n1. Leave out (current PR) — no discovery; clients infer from documentation or trial.\n2. Add `subject_token_types_supported` — new AS metadata parameter for ID-JAG.\n3. Extend `authorization_grant_profiles_supported` with per-profile subject token type info instead of a separate parameter.\n\nReviewer input on both design questions welcome.\n\nCloses #73.\n\n## Test plan\n\n- [ ] CI builds the draft (kramdown-rfc render succeeds)\n- [ ] Internal anchors resolve (`workload-agent-principal`, `workload-principal-security`)\n- [ ] Rendered HTML shows §3.3 Workload and Autonomous Agent Principals under the ID-JAG chapter\n- [ ] Rendered HTML shows Security Considerations subsection on Workload and Autonomous Agent Principals\n- [ ] Document history `-05` entry appears",
           "closed_at": "2026-08-23T03:46:45Z",
-          "comments": 2,
+          "comments": 3,
           "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119/comments",
           "created_at": "2026-08-04T21:59:40Z",
           "draft": false,
@@ -50305,7 +50597,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119/timeline",
           "title": "Add native support for workload and autonomous agent Principals",
           "type": null,
-          "updated_at": "2026-08-23T03:46:46Z",
+          "updated_at": "2026-08-28T15:37:57Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
@@ -51333,7 +51625,7 @@
         "url": "https://api.github.com/users/yaronf"
       },
       "created_at": "2026-08-22T10:34:11Z",
-      "id": "18498773917",
+      "id": "18498774912",
       "org": {
         "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
         "gravatar_id": "",
@@ -51342,9 +51634,9 @@
         "url": "https://api.github.com/orgs/oauth-wg"
       },
       "payload": {
-        "full_ref": "refs/heads/ys-50",
+        "full_ref": "refs/heads/ys-52",
         "pusher_type": "user",
-        "ref": "ys-50",
+        "ref": "ys-52",
         "ref_type": "branch"
       },
       "public": true,
@@ -51365,7 +51657,7 @@
         "url": "https://api.github.com/users/yaronf"
       },
       "created_at": "2026-08-22T10:34:11Z",
-      "id": "18498774912",
+      "id": "18498773917",
       "org": {
         "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
         "gravatar_id": "",
@@ -51374,9 +51666,9 @@
         "url": "https://api.github.com/orgs/oauth-wg"
       },
       "payload": {
-        "full_ref": "refs/heads/ys-52",
+        "full_ref": "refs/heads/ys-50",
         "pusher_type": "user",
-        "ref": "ys-52",
+        "ref": "ys-50",
         "ref_type": "branch"
       },
       "public": true,
@@ -53433,265 +53725,6 @@
         "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
       },
       "type": "PullRequestReviewCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/175728472?",
-        "display_login": "copilot-pull-request-reviewer",
-        "gravatar_id": "",
-        "id": 175728472,
-        "login": "Copilot",
-        "url": "https://api.github.com/users/Copilot"
-      },
-      "created_at": "2026-08-21T09:47:16Z",
-      "id": "13637117024",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 979990744,
-              "name": "oauth-spiffe-client-authentication",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication"
-            },
-            "sha": "23d64eaaf11bf952183f03bc9ba4062c7fe792b7"
-          },
-          "head": {
-            "ref": "arndt/resolve_47",
-            "repo": {
-              "id": 979990744,
-              "name": "oauth-spiffe-client-authentication",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication"
-            },
-            "sha": "e86d12ff5b5e78f37affd097a2c0a455711c3daf"
-          },
-          "id": 4330683895,
-          "number": 51,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/pulls/51"
-        },
-        "review": {
-          "_links": {
-            "html": {
-              "href": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/51#pullrequestreview-4992047349"
-            },
-            "pull_request": {
-              "href": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/pulls/51"
-            }
-          },
-          "body": "## Pull request overview\n\nUpdates repository “supporting files” generated by the `i-d-template` (`make update*`) to reflect the draft’s working group adoption and the repository move under the `oauth-wg` organization.\n\n**Changes:**\n- Refreshes README links/text for the WG draft name (`draft-ietf-oauth-spiffe-client-auth`).\n- Updates GitHub Actions workflows (permissions, newer action majors, additional publish/ghpages behavior).\n- Renames ignored/generated artifacts and updates CODEOWNERS for the WG draft filename and editor list.\n\n### Reviewed changes\n\nCopilot reviewed 7 out of 8 changed files in this pull request and generated 1 comment.\n\n<details>\n<summary>Show a summary per file</summary>\n\n| File | Description |\r\n| ---- | ----------- |\r\n| README.md | Updates draft references to WG adoption; still contains some old-repo links needing adjustment. |\r\n| Makefile | Makes inclusion of `lib/main.mk` non-fatal while bootstrapping template files. |\r\n| .gitignore | Updates ignored XML draft filename to the WG draft name. |\r\n| .github/workflows/update.yml | Adds write permissions and bumps checkout action major. |\r\n| .github/workflows/publish.yml | Bumps action majors; fetches full history/tags; archives artifacts only on successful build. |\r\n| .github/workflows/ghpages.yml | Bumps action majors; adds PR write permission; adds lint-fix/suggestion steps for PRs. |\r\n| .github/workflows/archive.yml | Adds read permissions for issues/PRs; bumps checkout/upload-artifact majors. |\r\n| .github/CODEOWNERS | Updates ownership entry to WG draft filename and expanded editor list. |\n</details>\n\n\n\n\n\n<details>\n<summary>Suppressed comments (1)</summary>\n\n**README.md:18**\n* The Contributing link still hard-codes the old GitHub location (github.com/arndt-s/...). Using a repo-relative link avoids breaking again if the repository moves, and aligns with the repo now being under oauth-wg.\n```\nSee the\n[guidelines for contributions](https://github.com/arndt-s/oauth-spiffe-client-authentication/blob/main/CONTRIBUTING.md).\n\nThe contributing file also has tips on how to make contributions, if you\n```\n</details>\n\n\n\n---\n\n💡 <a href=\"/oauth-wg/oauth-spiffe-client-authentication/new/main?filename=.github/skills/code-review/SKILL.md\" class=\"Link--inTextBlock\" target=\"_blank\" rel=\"noopener noreferrer\">Add a `code-review` agent skill</a> or configure MCP servers for context-aware, tailored reviews. <a href=\"https://docs.github.com/en/copilot/how-tos/use-copilot-agents/request-a-code-review/use-code-review#mcp-servers-and-agent-skills\" class=\"Link--inTextBlock\" target=\"_blank\" rel=\"noopener noreferrer\">Learn more in the docs.</a>",
-          "commit_id": "82ae8e024188b49033a05ec0a69166a5ed1abda3",
-          "html_url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/51#pullrequestreview-4992047349",
-          "id": 4992047349,
-          "node_id": "PRR_kwDOOml42M8AAAABKYyY9Q",
-          "pull_request_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/pulls/51",
-          "state": "commented",
-          "submitted_at": "2026-08-21T09:47:16Z",
-          "updated_at": "2026-08-21T09:47:16Z",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/in/946600?v=4",
-            "events_url": "https://api.github.com/users/Copilot/events{/privacy}",
-            "followers_url": "https://api.github.com/users/Copilot/followers",
-            "following_url": "https://api.github.com/users/Copilot/following{/other_user}",
-            "gists_url": "https://api.github.com/users/Copilot/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/apps/copilot-pull-request-reviewer",
-            "id": 175728472,
-            "login": "Copilot",
-            "node_id": "BOT_kgDOCnlnWA",
-            "organizations_url": "https://api.github.com/users/Copilot/orgs",
-            "received_events_url": "https://api.github.com/users/Copilot/received_events",
-            "repos_url": "https://api.github.com/users/Copilot/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/Copilot/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/Copilot/subscriptions",
-            "type": "Bot",
-            "url": "https://api.github.com/users/Copilot",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 979990744,
-        "name": "oauth-wg/oauth-spiffe-client-authentication",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication"
-      },
-      "type": "PullRequestReviewEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/175728472?",
-        "display_login": "copilot-pull-request-reviewer",
-        "gravatar_id": "",
-        "id": 175728472,
-        "login": "Copilot",
-        "url": "https://api.github.com/users/Copilot"
-      },
-      "created_at": "2026-08-21T09:47:15Z",
-      "id": "13637116573",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "comment": {
-          "_links": {
-            "html": {
-              "href": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/51#discussion_r3829220362"
-            },
-            "pull_request": {
-              "href": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/pulls/51"
-            },
-            "self": {
-              "href": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/pulls/comments/3829220362"
-            }
-          },
-          "body": "The Editor’s Copy / diff links still point to arndt-s.github.io. Since the repository metadata now references the oauth-wg org (e.g., draft header uses \"oauth-wg/oauth-spiffe-client-authentication\"), these links should be updated to the org’s GitHub Pages site so they don’t direct readers to the old location.\n\nThis issue also appears on line 15 of the same file.",
-          "commit_id": "82ae8e024188b49033a05ec0a69166a5ed1abda3",
-          "created_at": "2026-08-21T09:47:15Z",
-          "diff_hunk": "@@ -2,22 +2,21 @@\n \n # OAuth SPIFFE Client Authentication\n \n-This is the working area for the individual Internet-Draft, \"OAuth SPIFFE Client Authentication\".\n+This is the working area for the IETF [OAUTH Working Group](https://datatracker.ietf.org/group/oauth/documents/) Internet-Draft, \"OAuth SPIFFE Client Authentication\".\n \n-* [Editor's Copy](https://arndt-s.github.io/oauth-spiffe-client-authentication/#go.draft-schwenkschuster-oauth-spiffe-client-auth.html)\n-* [Datatracker Page](https://datatracker.ietf.org/doc/draft-schwenkschuster-oauth-spiffe-client-auth)\n-* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-schwenkschuster-oauth-spiffe-client-auth)\n-* [Compare Editor's Copy to Individual Draft](https://arndt-s.github.io/oauth-spiffe-client-authentication/#go.draft-schwenkschuster-oauth-spiffe-client-auth.diff)\n+* [Editor's Copy](https://arndt-s.github.io/oauth-spiffe-client-authentication/#go.draft-ietf-oauth-spiffe-client-auth.html)\n+* [Datatracker Page](https://datatracker.ietf.org/doc/draft-ietf-oauth-spiffe-client-auth)\n+* [Working Group Draft](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-spiffe-client-auth)\n+* [Compare Editor's Copy to Working Group Draft](https://arndt-s.github.io/oauth-spiffe-client-authentication/#go.draft-ietf-oauth-spiffe-client-auth.diff)",
-          "html_url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/51#discussion_r3829220362",
-          "id": 3829220362,
-          "node_id": "PRRC_kwDOOml42M7kPUQK",
-          "original_commit_id": "82ae8e024188b49033a05ec0a69166a5ed1abda3",
-          "original_position": 14,
-          "path": "README.md",
-          "position": 1,
-          "pull_request_review_id": 4992047349,
-          "pull_request_url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/pulls/51",
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/pulls/comments/3829220362/reactions"
-          },
-          "subject_type": "line",
-          "updated_at": "2026-08-21T09:47:16Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/pulls/comments/3829220362",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/in/946600?v=4",
-            "events_url": "https://api.github.com/users/Copilot/events{/privacy}",
-            "followers_url": "https://api.github.com/users/Copilot/followers",
-            "following_url": "https://api.github.com/users/Copilot/following{/other_user}",
-            "gists_url": "https://api.github.com/users/Copilot/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/apps/copilot-pull-request-reviewer",
-            "id": 175728472,
-            "login": "Copilot",
-            "node_id": "BOT_kgDOCnlnWA",
-            "organizations_url": "https://api.github.com/users/Copilot/orgs",
-            "received_events_url": "https://api.github.com/users/Copilot/received_events",
-            "repos_url": "https://api.github.com/users/Copilot/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/Copilot/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/Copilot/subscriptions",
-            "type": "Bot",
-            "url": "https://api.github.com/users/Copilot",
-            "user_view_type": "public"
-          }
-        },
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 979990744,
-              "name": "oauth-spiffe-client-authentication",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication"
-            },
-            "sha": "23d64eaaf11bf952183f03bc9ba4062c7fe792b7"
-          },
-          "head": {
-            "ref": "arndt/resolve_47",
-            "repo": {
-              "id": 979990744,
-              "name": "oauth-spiffe-client-authentication",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication"
-            },
-            "sha": "e86d12ff5b5e78f37affd097a2c0a455711c3daf"
-          },
-          "id": 4330683895,
-          "number": 51,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/pulls/51"
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 979990744,
-        "name": "oauth-wg/oauth-spiffe-client-authentication",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication"
-      },
-      "type": "PullRequestReviewCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/17650715?",
-        "display_login": "arndt-s",
-        "gravatar_id": "",
-        "id": 17650715,
-        "login": "arndt-s",
-        "url": "https://api.github.com/users/arndt-s"
-      },
-      "created_at": "2026-08-21T09:43:25Z",
-      "id": "13636925267",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "opened",
-        "number": 51,
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 979990744,
-              "name": "oauth-spiffe-client-authentication",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication"
-            },
-            "sha": "23d64eaaf11bf952183f03bc9ba4062c7fe792b7"
-          },
-          "head": {
-            "ref": "arndt/resolve_47",
-            "repo": {
-              "id": 979990744,
-              "name": "oauth-spiffe-client-authentication",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication"
-            },
-            "sha": "e86d12ff5b5e78f37affd097a2c0a455711c3daf"
-          },
-          "id": 4330683895,
-          "number": 51,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication/pulls/51"
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 979990744,
-        "name": "oauth-wg/oauth-spiffe-client-authentication",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication"
-      },
-      "type": "PullRequestEvent"
     }
   ],
   "prs": {
@@ -53745,7 +53778,7 @@
         "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/221/timeline",
         "title": "Clarify Challenge endpoint",
         "type": null,
-        "updated_at": "2026-08-27T14:35:22Z",
+        "updated_at": "2026-08-28T17:43:12Z",
         "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/221",
         "user": {
           "avatar_url": "https://avatars.githubusercontent.com/u/16320000?v=4",
@@ -53766,6 +53799,78 @@
           "subscriptions_url": "https://api.github.com/users/paulbastian/subscriptions",
           "type": "User",
           "url": "https://api.github.com/users/paulbastian",
+          "user_view_type": "public"
+        }
+      },
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "COLLABORATOR",
+        "body": "## Summary\n\nAddresses [#73](https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/73) (workload/agent as principal). Adds native support in ID-JAG for a Principal that is a workload or autonomous agent, in addition to the existing End-User Principal.\n\nAligns with the function-based `subject_token` selection framing in [#115](https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/115): a JWT credential the workload or agent presents to authenticate as the Principal is an Identity Assertion for that Principal, and is a valid `subject_token` under this profile.\n\n## Design\n\nThe Principal a workload or agent authenticates as is the same Principal the ID-JAG's `sub` identifies. Rather than enumerating specific client authentication specs (Client Assertion, Client Attestation, Client Instance Assertion, SPIFFE, WIMSE, ...), the profile defines the Identity Assertion for a workload/agent Principal by function:\n\n> *\"A JWT credential the workload or agent presents to authenticate as the Principal to the IdP Authorization Server. Any JWT-based client authentication method the IdP Authorization Server accepts for that Principal MAY be used, including those registered under the `token_endpoint_auth_methods_supported` authorization server metadata parameter.\"*\n\nThis scales to future client authentication methods without listing each by hand.\n\n## Changes\n\n- **Terminology (§2.2)**: introduces the **Principal** term (End-User, workload, or autonomous agent) and broadens the **Identity Assertion** definition to be function-based, pointing at `token_endpoint_auth_methods_supported` as the mechanism registry.\n- **§3 Intro**: broadens \"on behalf of a user\" to \"on behalf of a Principal (End-User, workload, or autonomous agent)\".\n- **§3.1 `sub` claim**: broadens from End-User Subject Identifier to Principal Identifier.\n- **§3.3 Workload and Autonomous Agent Principals** (new): describes when the Principal is a workload or agent; defines JWT invariants (`iss`, `sub`, `aud`, `exp` REQUIRED; `iat`, `jti` SHOULD); and calls out that IdP policy MAY require attestation, specific trusted issuers (e.g., SPIFFE trust domain, WIMSE Identity Server, client backend attestation service), or other trust-establishment properties.\n- **§4.3 `subject_token` / `subject_token_type`**: extended to accept workload/agent Identity Assertions with token type `urn:ietf:params:oauth:token-type:jwt`.\n- **§4.3 Processing Rules**: adds a rule for validating workload/agent Identity Assertions. The audience of these assertions is the IdP token endpoint (not the `client_id`), and the mapping from authenticated OAuth client to Principal is IdP policy.\n- **§9 Security Considerations**: adds a subsection on Workload and Autonomous Agent Principals — absence of End-User consent semantics, validation requirements (including attestation and issuer-trust), RAS-side policy expectations, and a sender-constraining recommendation.\n- **-05** document history entry.\n\n## Alignment with existing work\n\n- **[#115](https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/115) (subject_token type selection)**: This PR is a direct application of the function-based framing in #115. Where #115 excludes access tokens because they are resource authorization credentials rather than identity assertions, this PR includes workload/agent client authentication credentials because they ARE identity assertions for the workload or agent Principal. Same primitive, extended to a new Principal type.\n- **Composition with `draft-carleton-workload-authz-grant`**: The composition anticipated by draft-carleton §6 — *\"the authorization grant's issuer is the customer's Enterprise IdP ... obtained, e.g., by token exchange with the IdP\"* — is what this branch enables. ID-JAG covers the Enterprise IdP → cross-domain Resource Authorization Server topology; draft-carleton's platform-direct-issuance topology is complementary rather than subsumed by this PR.\n- **Actor delegation** (workload acting on behalf of a user via `act`): out of scope here. See the Actor Profile work.\n\n## Open design questions\n\n### 1. Should ID-JAG support a `sub_profile` claim (from OAuth Entity Profiles) to help RAS processing?\n\nUnder this PR, the Principal type (End-User vs. workload vs. autonomous agent) is not carried as an explicit claim. A Resource Authorization Server infers Principal type from context — presence or absence of End-User claims (`auth_time`, `acr`, `amr`, `email`), local policy for the audience, or the shape of the `sub` value.\n\nAn explicit `sub_profile` claim (as defined in `draft-mora-oauth-entity-profiles`) would let the RAS branch its processing on the Principal type without inference. Values like `user`, `service`, `ai-agent` would be normative.\n\n**Trade-offs:**\n\n- **For inclusion**: eliminates inference at the RAS; makes Principal type explicit and audit-friendly; aligns with the Entity Profiles direction.\n- **Against inclusion**: introduces a dependency on `draft-mora-oauth-entity-profiles` (individual submission, not WG-adopted); adds a new normative claim; the RAS can already infer type from context in most deployments.\n\n**Options:**\n\n1. Leave out (current PR) — Principal type is implicit; RAS infers.\n2. Add `sub_profile` as OPTIONAL — deployments that want explicit signaling can use it.\n3. Add `sub_profile` as RECOMMENDED — normative signaling with defined values.\n\n### 2. Should ID-JAG add a `subject_token_types_supported` discovery parameter?\n\nThe accepted `subject_token_type` values are described in §4.3 as normative text. There is currently no discovery mechanism for a client to learn which types a specific IdP Authorization Server accepts before attempting a Token Exchange request.\n\nFor workload/agent Principals this becomes more variable: an IdP might accept ID Tokens and SAML for End-Users but not workload JWT credentials, or vice versa. A workload has no clean way to check without attempting the exchange.\n\nA new AS metadata parameter would signal support explicitly:\n\n```json\n{\n  \"subject_token_types_supported\": [\n    \"urn:ietf:params:oauth:token-type:id_token\",\n    \"urn:ietf:params:oauth:token-type:saml2\",\n    \"urn:ietf:params:oauth:token-type:refresh_token\",\n    \"urn:ietf:params:oauth:token-type:jwt\"\n  ]\n}\n```\n\n**Trade-offs:**\n\n- **For inclusion**: runtime discovery avoids failed exchanges; explicit about workload/agent support; scales cleanly if additional `subject_token` types are added later; consistent naming with existing `_supported`-suffixed metadata parameters.\n- **Against inclusion**: a new metadata parameter to register and maintain; may duplicate what deployments already communicate out-of-band; overlaps in intent with `authorization_grant_profiles_supported` if per-profile token type info is added there.\n\n**Options:**\n\n1. Leave out (current PR) — no discovery; clients infer from documentation or trial.\n2. Add `subject_token_types_supported` — new AS metadata parameter for ID-JAG.\n3. Extend `authorization_grant_profiles_supported` with per-profile subject token type info instead of a separate parameter.\n\nReviewer input on both design questions welcome.\n\nCloses #73.\n\n## Test plan\n\n- [ ] CI builds the draft (kramdown-rfc render succeeds)\n- [ ] Internal anchors resolve (`workload-agent-principal`, `workload-principal-security`)\n- [ ] Rendered HTML shows §3.3 Workload and Autonomous Agent Principals under the ID-JAG chapter\n- [ ] Rendered HTML shows Security Considerations subsection on Workload and Autonomous Agent Principals\n- [ ] Document history `-05` entry appears",
+        "closed_at": "2026-08-23T03:46:45Z",
+        "comments": 3,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119/comments",
+        "created_at": "2026-08-04T21:59:40Z",
+        "draft": false,
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119/events",
+        "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/119",
+        "id": 5065269517,
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "PR_kwDOKv5r-s76yLT4",
+        "number": 119,
+        "performed_via_github_app": null,
+        "pull_request": {
+          "diff_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/119.diff",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/119",
+          "merged_at": null,
+          "patch_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/119.patch",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/pulls/119"
+        },
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+        "score": 1.0,
+        "state": "closed",
+        "state_reason": null,
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119/timeline",
+        "title": "Add native support for workload and autonomous agent Principals",
+        "type": null,
+        "updated_at": "2026-08-28T15:37:57Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
+          "events_url": "https://api.github.com/users/mcguinness/events{/privacy}",
+          "followers_url": "https://api.github.com/users/mcguinness/followers",
+          "following_url": "https://api.github.com/users/mcguinness/following{/other_user}",
+          "gists_url": "https://api.github.com/users/mcguinness/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/mcguinness",
+          "id": 1944352,
+          "login": "mcguinness",
+          "node_id": "MDQ6VXNlcjE5NDQzNTI=",
+          "organizations_url": "https://api.github.com/users/mcguinness/orgs",
+          "received_events_url": "https://api.github.com/users/mcguinness/received_events",
+          "repos_url": "https://api.github.com/users/mcguinness/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/mcguinness/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/mcguinness/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/mcguinness",
           "user_view_type": "public"
         }
       },
@@ -54198,78 +54303,6 @@
           "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
           "type": "User",
           "url": "https://api.github.com/users/bc-pi",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "COLLABORATOR",
-        "body": "## Summary\n\nAddresses [#73](https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/73) (workload/agent as principal). Adds native support in ID-JAG for a Principal that is a workload or autonomous agent, in addition to the existing End-User Principal.\n\nAligns with the function-based `subject_token` selection framing in [#115](https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/115): a JWT credential the workload or agent presents to authenticate as the Principal is an Identity Assertion for that Principal, and is a valid `subject_token` under this profile.\n\n## Design\n\nThe Principal a workload or agent authenticates as is the same Principal the ID-JAG's `sub` identifies. Rather than enumerating specific client authentication specs (Client Assertion, Client Attestation, Client Instance Assertion, SPIFFE, WIMSE, ...), the profile defines the Identity Assertion for a workload/agent Principal by function:\n\n> *\"A JWT credential the workload or agent presents to authenticate as the Principal to the IdP Authorization Server. Any JWT-based client authentication method the IdP Authorization Server accepts for that Principal MAY be used, including those registered under the `token_endpoint_auth_methods_supported` authorization server metadata parameter.\"*\n\nThis scales to future client authentication methods without listing each by hand.\n\n## Changes\n\n- **Terminology (§2.2)**: introduces the **Principal** term (End-User, workload, or autonomous agent) and broadens the **Identity Assertion** definition to be function-based, pointing at `token_endpoint_auth_methods_supported` as the mechanism registry.\n- **§3 Intro**: broadens \"on behalf of a user\" to \"on behalf of a Principal (End-User, workload, or autonomous agent)\".\n- **§3.1 `sub` claim**: broadens from End-User Subject Identifier to Principal Identifier.\n- **§3.3 Workload and Autonomous Agent Principals** (new): describes when the Principal is a workload or agent; defines JWT invariants (`iss`, `sub`, `aud`, `exp` REQUIRED; `iat`, `jti` SHOULD); and calls out that IdP policy MAY require attestation, specific trusted issuers (e.g., SPIFFE trust domain, WIMSE Identity Server, client backend attestation service), or other trust-establishment properties.\n- **§4.3 `subject_token` / `subject_token_type`**: extended to accept workload/agent Identity Assertions with token type `urn:ietf:params:oauth:token-type:jwt`.\n- **§4.3 Processing Rules**: adds a rule for validating workload/agent Identity Assertions. The audience of these assertions is the IdP token endpoint (not the `client_id`), and the mapping from authenticated OAuth client to Principal is IdP policy.\n- **§9 Security Considerations**: adds a subsection on Workload and Autonomous Agent Principals — absence of End-User consent semantics, validation requirements (including attestation and issuer-trust), RAS-side policy expectations, and a sender-constraining recommendation.\n- **-05** document history entry.\n\n## Alignment with existing work\n\n- **[#115](https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/115) (subject_token type selection)**: This PR is a direct application of the function-based framing in #115. Where #115 excludes access tokens because they are resource authorization credentials rather than identity assertions, this PR includes workload/agent client authentication credentials because they ARE identity assertions for the workload or agent Principal. Same primitive, extended to a new Principal type.\n- **Composition with `draft-carleton-workload-authz-grant`**: The composition anticipated by draft-carleton §6 — *\"the authorization grant's issuer is the customer's Enterprise IdP ... obtained, e.g., by token exchange with the IdP\"* — is what this branch enables. ID-JAG covers the Enterprise IdP → cross-domain Resource Authorization Server topology; draft-carleton's platform-direct-issuance topology is complementary rather than subsumed by this PR.\n- **Actor delegation** (workload acting on behalf of a user via `act`): out of scope here. See the Actor Profile work.\n\n## Open design questions\n\n### 1. Should ID-JAG support a `sub_profile` claim (from OAuth Entity Profiles) to help RAS processing?\n\nUnder this PR, the Principal type (End-User vs. workload vs. autonomous agent) is not carried as an explicit claim. A Resource Authorization Server infers Principal type from context — presence or absence of End-User claims (`auth_time`, `acr`, `amr`, `email`), local policy for the audience, or the shape of the `sub` value.\n\nAn explicit `sub_profile` claim (as defined in `draft-mora-oauth-entity-profiles`) would let the RAS branch its processing on the Principal type without inference. Values like `user`, `service`, `ai-agent` would be normative.\n\n**Trade-offs:**\n\n- **For inclusion**: eliminates inference at the RAS; makes Principal type explicit and audit-friendly; aligns with the Entity Profiles direction.\n- **Against inclusion**: introduces a dependency on `draft-mora-oauth-entity-profiles` (individual submission, not WG-adopted); adds a new normative claim; the RAS can already infer type from context in most deployments.\n\n**Options:**\n\n1. Leave out (current PR) — Principal type is implicit; RAS infers.\n2. Add `sub_profile` as OPTIONAL — deployments that want explicit signaling can use it.\n3. Add `sub_profile` as RECOMMENDED — normative signaling with defined values.\n\n### 2. Should ID-JAG add a `subject_token_types_supported` discovery parameter?\n\nThe accepted `subject_token_type` values are described in §4.3 as normative text. There is currently no discovery mechanism for a client to learn which types a specific IdP Authorization Server accepts before attempting a Token Exchange request.\n\nFor workload/agent Principals this becomes more variable: an IdP might accept ID Tokens and SAML for End-Users but not workload JWT credentials, or vice versa. A workload has no clean way to check without attempting the exchange.\n\nA new AS metadata parameter would signal support explicitly:\n\n```json\n{\n  \"subject_token_types_supported\": [\n    \"urn:ietf:params:oauth:token-type:id_token\",\n    \"urn:ietf:params:oauth:token-type:saml2\",\n    \"urn:ietf:params:oauth:token-type:refresh_token\",\n    \"urn:ietf:params:oauth:token-type:jwt\"\n  ]\n}\n```\n\n**Trade-offs:**\n\n- **For inclusion**: runtime discovery avoids failed exchanges; explicit about workload/agent support; scales cleanly if additional `subject_token` types are added later; consistent naming with existing `_supported`-suffixed metadata parameters.\n- **Against inclusion**: a new metadata parameter to register and maintain; may duplicate what deployments already communicate out-of-band; overlaps in intent with `authorization_grant_profiles_supported` if per-profile token type info is added there.\n\n**Options:**\n\n1. Leave out (current PR) — no discovery; clients infer from documentation or trial.\n2. Add `subject_token_types_supported` — new AS metadata parameter for ID-JAG.\n3. Extend `authorization_grant_profiles_supported` with per-profile subject token type info instead of a separate parameter.\n\nReviewer input on both design questions welcome.\n\nCloses #73.\n\n## Test plan\n\n- [ ] CI builds the draft (kramdown-rfc render succeeds)\n- [ ] Internal anchors resolve (`workload-agent-principal`, `workload-principal-security`)\n- [ ] Rendered HTML shows §3.3 Workload and Autonomous Agent Principals under the ID-JAG chapter\n- [ ] Rendered HTML shows Security Considerations subsection on Workload and Autonomous Agent Principals\n- [ ] Document history `-05` entry appears",
-        "closed_at": "2026-08-23T03:46:45Z",
-        "comments": 2,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119/comments",
-        "created_at": "2026-08-04T21:59:40Z",
-        "draft": false,
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119/events",
-        "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/119",
-        "id": 5065269517,
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "PR_kwDOKv5r-s76yLT4",
-        "number": 119,
-        "performed_via_github_app": null,
-        "pull_request": {
-          "diff_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/119.diff",
-          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/119",
-          "merged_at": null,
-          "patch_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/119.patch",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/pulls/119"
-        },
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
-        "score": 1.0,
-        "state": "closed",
-        "state_reason": null,
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119/timeline",
-        "title": "Add native support for workload and autonomous agent Principals",
-        "type": null,
-        "updated_at": "2026-08-23T03:46:46Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/119",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
-          "events_url": "https://api.github.com/users/mcguinness/events{/privacy}",
-          "followers_url": "https://api.github.com/users/mcguinness/followers",
-          "following_url": "https://api.github.com/users/mcguinness/following{/other_user}",
-          "gists_url": "https://api.github.com/users/mcguinness/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/mcguinness",
-          "id": 1944352,
-          "login": "mcguinness",
-          "node_id": "MDQ6VXNlcjE5NDQzNTI=",
-          "organizations_url": "https://api.github.com/users/mcguinness/orgs",
-          "received_events_url": "https://api.github.com/users/mcguinness/received_events",
-          "repos_url": "https://api.github.com/users/mcguinness/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/mcguinness/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/mcguinness/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/mcguinness",
           "user_view_type": "public"
         }
       },
@@ -93983,5 +94016,5 @@
       "web_commit_signoff_required": false
     }
   ],
-  "snapshot_date": "2026-08-27"
+  "snapshot_date": "2026-08-28"
 }
