@@ -1,8 +1,84 @@
 {
-  "collected_at": "2026-09-03T10:55:50+00:00",
+  "collected_at": "2026-09-04T10:55:46+00:00",
   "issues": {
     "error": null,
     "items": [
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "NONE",
+        "body": "ID-JAG encodes “which OAuth client may redeem this grant” rather than “which delegated actor may act.” Those are practically related but semantically different.\nmay_act would have modeled the delegation more cleanly, while client_id optimizes for existing OAuth AS implementation and client policy machinery.\n\nWhy weren't RFC 8693 delegation semantics not used? e.g:\n\n- Name the approved delegated party using may_act, which could contain either a client_id (+ optional iss when not using CIMD), or a cnf claim referencing a public key the client controls, such as dpop key.\n```\n\"may_act\": {\n  \"client_id\": \"ras-client-id\",\n  \"iss\": \"https://ras.example.com\"\n}\n```\n\n```\n\"may_act\": {\n  \"cnf\": {\n    \"jkt\": \"...\"\n  }\n}\n```\n\n- Using cnf enables clients to exchange the JAG at the RAS while proving legitimate sender constraining but without having to be its client.",
+        "closed_at": null,
+        "comments": 7,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/comments",
+        "created_at": "2026-09-02T11:00:29Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/events",
+        "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/126",
+        "id": 5323030660,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOKv5r-s8AAAABPUcAhA",
+        "number": 126,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/timeline",
+        "title": "Client delegation semantics",
+        "type": null,
+        "updated_at": "2026-09-03T20:05:35Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/159145437?v=4",
+          "events_url": "https://api.github.com/users/yaron-zehavi/events{/privacy}",
+          "followers_url": "https://api.github.com/users/yaron-zehavi/followers",
+          "following_url": "https://api.github.com/users/yaron-zehavi/following{/other_user}",
+          "gists_url": "https://api.github.com/users/yaron-zehavi/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/yaron-zehavi",
+          "id": 159145437,
+          "login": "yaron-zehavi",
+          "node_id": "U_kgDOCXxd3Q",
+          "organizations_url": "https://api.github.com/users/yaron-zehavi/orgs",
+          "received_events_url": "https://api.github.com/users/yaron-zehavi/received_events",
+          "repos_url": "https://api.github.com/users/yaron-zehavi/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/yaron-zehavi/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/yaron-zehavi/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/yaron-zehavi",
+          "user_view_type": "public"
+        }
+      },
       {
         "active_lock_reason": null,
         "assignee": null,
@@ -76,82 +152,6 @@
           "subscriptions_url": "https://api.github.com/users/mickrau/subscriptions",
           "type": "User",
           "url": "https://api.github.com/users/mickrau",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "NONE",
-        "body": "ID-JAG encodes “which OAuth client may redeem this grant” rather than “which delegated actor may act.” Those are practically related but semantically different.\nmay_act would have modeled the delegation more cleanly, while client_id optimizes for existing OAuth AS implementation and client policy machinery.\n\nWhy weren't RFC 8693 delegation semantics not used? e.g:\n\n- Name the approved delegated party using may_act, which could contain either a client_id (+ optional iss when not using CIMD), or a cnf claim referencing a public key the client controls, such as dpop key.\n```\n\"may_act\": {\n  \"client_id\": \"ras-client-id\",\n  \"iss\": \"https://ras.example.com\"\n}\n```\n\n```\n\"may_act\": {\n  \"cnf\": {\n    \"jkt\": \"...\"\n  }\n}\n```\n\n- Using cnf enables clients to exchange the JAG at the RAS while proving legitimate sender constraining but without having to be its client.",
-        "closed_at": null,
-        "comments": 4,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/comments",
-        "created_at": "2026-09-02T11:00:29Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/events",
-        "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/126",
-        "id": 5323030660,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOKv5r-s8AAAABPUcAhA",
-        "number": 126,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
-        "score": 1.0,
-        "state": "open",
-        "state_reason": null,
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/timeline",
-        "title": "Client delegation semantics",
-        "type": null,
-        "updated_at": "2026-09-03T06:23:19Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/159145437?v=4",
-          "events_url": "https://api.github.com/users/yaron-zehavi/events{/privacy}",
-          "followers_url": "https://api.github.com/users/yaron-zehavi/followers",
-          "following_url": "https://api.github.com/users/yaron-zehavi/following{/other_user}",
-          "gists_url": "https://api.github.com/users/yaron-zehavi/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/yaron-zehavi",
-          "id": 159145437,
-          "login": "yaron-zehavi",
-          "node_id": "U_kgDOCXxd3Q",
-          "organizations_url": "https://api.github.com/users/yaron-zehavi/orgs",
-          "received_events_url": "https://api.github.com/users/yaron-zehavi/received_events",
-          "repos_url": "https://api.github.com/users/yaron-zehavi/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/yaron-zehavi/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/yaron-zehavi/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/yaron-zehavi",
           "user_view_type": "public"
         }
       },
@@ -427,7 +427,7 @@
         "labels_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/233/labels{/name}",
         "locked": false,
         "milestone": {
-          "closed_at": null,
+          "closed_at": "2026-09-03T15:49:35Z",
           "closed_issues": 6,
           "created_at": "2026-03-02T18:54:40Z",
           "creator": {
@@ -459,9 +459,9 @@
           "node_id": "MI_kwDODkfq5s4A5L-9",
           "number": 11,
           "open_issues": 0,
-          "state": "open",
+          "state": "closed",
           "title": "Version -16",
-          "updated_at": "2026-09-03T00:10:59Z",
+          "updated_at": "2026-09-03T15:49:35Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/milestones/11"
         },
         "node_id": "I_kwDODkfq5s7ZSe6f",
@@ -550,7 +550,7 @@
         "labels_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/236/labels{/name}",
         "locked": false,
         "milestone": {
-          "closed_at": null,
+          "closed_at": "2026-09-03T15:49:35Z",
           "closed_issues": 6,
           "created_at": "2026-03-02T18:54:40Z",
           "creator": {
@@ -582,9 +582,9 @@
           "node_id": "MI_kwDODkfq5s4A5L-9",
           "number": 11,
           "open_issues": 0,
-          "state": "open",
+          "state": "closed",
           "title": "Version -16",
-          "updated_at": "2026-09-03T00:10:59Z",
+          "updated_at": "2026-09-03T15:49:35Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/milestones/11"
         },
         "node_id": "I_kwDODkfq5s7jFvrB",
@@ -13539,7 +13539,7 @@
         "labels_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/76/labels{/name}",
         "locked": false,
         "milestone": {
-          "closed_at": null,
+          "closed_at": "2026-09-03T15:49:35Z",
           "closed_issues": 6,
           "created_at": "2026-03-02T18:54:40Z",
           "creator": {
@@ -13571,9 +13571,9 @@
           "node_id": "MI_kwDODkfq5s4A5L-9",
           "number": 11,
           "open_issues": 0,
-          "state": "open",
+          "state": "closed",
           "title": "Version -16",
-          "updated_at": "2026-09-03T00:10:59Z",
+          "updated_at": "2026-09-03T15:49:35Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/milestones/11"
         },
         "node_id": "MDU6SXNzdWU4NDk3NTg1NDc=",
@@ -13652,7 +13652,7 @@
         "labels_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/246/labels{/name}",
         "locked": false,
         "milestone": {
-          "closed_at": null,
+          "closed_at": "2026-09-03T15:49:35Z",
           "closed_issues": 6,
           "created_at": "2026-03-02T18:54:40Z",
           "creator": {
@@ -13684,9 +13684,9 @@
           "node_id": "MI_kwDODkfq5s4A5L-9",
           "number": 11,
           "open_issues": 0,
-          "state": "open",
+          "state": "closed",
           "title": "Version -16",
-          "updated_at": "2026-09-03T00:10:59Z",
+          "updated_at": "2026-09-03T15:49:35Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/milestones/11"
         },
         "node_id": "I_kwDODkfq5s7-NDAC",
@@ -48075,6 +48075,717 @@
         "login": "github-actions[bot]",
         "url": "https://api.github.com/users/github-actions[bot]"
       },
+      "created_at": "2026-09-02T23:59:47Z",
+      "id": "19989518402",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "2a09b78c7fa28bf93eb6a3dd1a2492c4e29fdef9",
+        "head": "388b5987b6e024400a8df8fe35ba9d68f6d17491",
+        "push_id": 42352903669,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 239594214
+      },
+      "public": true,
+      "repo": {
+        "id": 239594214,
+        "name": "oauth-wg/oauth-v2-1",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-09-03T00:03:32Z",
+      "id": "19986301094",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "99829b09ee253bd93e21e6ed2f42ea79184005d3",
+        "head": "909f555283e9af65df9bcdd4b3cde4c3afa104c3",
+        "push_id": 42353227410,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 239594214
+      },
+      "public": true,
+      "repo": {
+        "id": 239594214,
+        "name": "oauth-wg/oauth-v2-1",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/113001?",
+        "display_login": "aaronpk",
+        "gravatar_id": "",
+        "id": 113001,
+        "login": "aaronpk",
+        "url": "https://api.github.com/users/aaronpk"
+      },
+      "created_at": "2026-09-02T23:59:02Z",
+      "id": "19985816794",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "b8601c22cfbd4ee26e857f4df96deb824066039c",
+        "head": "257c7504c3c60fb8e5a5857452f6becfad0c02aa",
+        "push_id": 42352847120,
+        "ref": "refs/heads/main",
+        "repository_id": 239594214
+      },
+      "public": true,
+      "repo": {
+        "id": 239594214,
+        "name": "oauth-wg/oauth-v2-1",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-09-03T00:19:41Z",
+      "id": "19929142539",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "c868cd8b4b4b0adec57e99bc661479906d4989e3",
+        "head": "4e1f435192d7edcbccac9fd4d2911c85e2ad33a7",
+        "push_id": 42354509264,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 631317608
+      },
+      "public": true,
+      "repo": {
+        "id": 631317608,
+        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/113001?",
+        "display_login": "aaronpk",
+        "gravatar_id": "",
+        "id": 113001,
+        "login": "aaronpk",
+        "url": "https://api.github.com/users/aaronpk"
+      },
+      "created_at": "2026-09-03T00:03:47Z",
+      "id": "19928794398",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "fbb6a3f2cbf84bc55ddd15172800e61dd6a3e0db",
+        "head": "d04b368313c8835a930a2e55a68ef547312b7b32",
+        "push_id": 42353247914,
+        "ref": "refs/heads/main",
+        "repository_id": 239594214
+      },
+      "public": true,
+      "repo": {
+        "id": 239594214,
+        "name": "oauth-wg/oauth-v2-1",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/16320000?",
+        "display_login": "paulbastian",
+        "gravatar_id": "",
+        "id": 16320000,
+        "login": "paulbastian",
+        "url": "https://api.github.com/users/paulbastian"
+      },
+      "created_at": "2026-09-02T08:19:28Z",
+      "id": "19927661683",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "df4a63c8bbb7d4593d3e0ece3c0e16202e01b774",
+        "head": "c515bc0b2cfe3e8536808321d084ef3cbe2a8750",
+        "push_id": 42240490837,
+        "ref": "refs/heads/pb/challenges2",
+        "repository_id": 631317608
+      },
+      "public": true,
+      "repo": {
+        "id": 631317608,
+        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/159145437?",
+        "display_login": "yaron-zehavi",
+        "gravatar_id": "",
+        "id": 159145437,
+        "login": "yaron-zehavi",
+        "url": "https://api.github.com/users/yaron-zehavi"
+      },
+      "created_at": "2026-09-03T20:05:34Z",
+      "id": "14388914144",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "Agree this is not a may_act fitting use-case as it's not delegation.\n\"client_id still identifies the requesting client, just **expressed in the audience's namespace** since the RAS consumes the claim\"\nMy point is doesn't this justify a different claim name, denoting this is the same logical client but in the ras_ or ext_ namespace?\nI totally understand if despite seeing it this way in principal, ID-JAG would opt to reuse client_id for interoperability reasons.",
+          "created_at": "2026-09-03T20:05:34Z",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/126#issuecomment-5531436844",
+          "id": 5531436844,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126",
+          "minimized": null,
+          "node_id": "IC_kwDOKv5r-s8AAAABSbMHLA",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/5531436844/reactions"
+          },
+          "updated_at": "2026-09-03T20:05:34Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/5531436844",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/159145437?v=4",
+            "events_url": "https://api.github.com/users/yaron-zehavi/events{/privacy}",
+            "followers_url": "https://api.github.com/users/yaron-zehavi/followers",
+            "following_url": "https://api.github.com/users/yaron-zehavi/following{/other_user}",
+            "gists_url": "https://api.github.com/users/yaron-zehavi/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/yaron-zehavi",
+            "id": 159145437,
+            "login": "yaron-zehavi",
+            "node_id": "U_kgDOCXxd3Q",
+            "organizations_url": "https://api.github.com/users/yaron-zehavi/orgs",
+            "received_events_url": "https://api.github.com/users/yaron-zehavi/received_events",
+            "repos_url": "https://api.github.com/users/yaron-zehavi/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/yaron-zehavi/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/yaron-zehavi/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/yaron-zehavi",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "ID-JAG encodes “which OAuth client may redeem this grant” rather than “which delegated actor may act.” Those are practically related but semantically different.\nmay_act would have modeled the delegation more cleanly, while client_id optimizes for existing OAuth AS implementation and client policy machinery.\n\nWhy weren't RFC 8693 delegation semantics not used? e.g:\n\n- Name the approved delegated party using may_act, which could contain either a client_id (+ optional iss when not using CIMD), or a cnf claim referencing a public key the client controls, such as dpop key.\n```\n\"may_act\": {\n  \"client_id\": \"ras-client-id\",\n  \"iss\": \"https://ras.example.com\"\n}\n```\n\n```\n\"may_act\": {\n  \"cnf\": {\n    \"jkt\": \"...\"\n  }\n}\n```\n\n- Using cnf enables clients to exchange the JAG at the RAS while proving legitimate sender constraining but without having to be its client.",
+          "closed_at": null,
+          "comments": 7,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/comments",
+          "created_at": "2026-09-02T11:00:29Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/events",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/126",
+          "id": 5323030660,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOKv5r-s8AAAABPUcAhA",
+          "number": 126,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/timeline",
+          "title": "Client delegation semantics",
+          "type": null,
+          "updated_at": "2026-09-03T20:05:35Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/159145437?v=4",
+            "events_url": "https://api.github.com/users/yaron-zehavi/events{/privacy}",
+            "followers_url": "https://api.github.com/users/yaron-zehavi/followers",
+            "following_url": "https://api.github.com/users/yaron-zehavi/following{/other_user}",
+            "gists_url": "https://api.github.com/users/yaron-zehavi/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/yaron-zehavi",
+            "id": 159145437,
+            "login": "yaron-zehavi",
+            "node_id": "U_kgDOCXxd3Q",
+            "organizations_url": "https://api.github.com/users/yaron-zehavi/orgs",
+            "received_events_url": "https://api.github.com/users/yaron-zehavi/received_events",
+            "repos_url": "https://api.github.com/users/yaron-zehavi/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/yaron-zehavi/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/yaron-zehavi/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/yaron-zehavi",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-09-03T09:11:19Z",
+      "id": "19914291777",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "e9a7efb1fa2d4047d87ce8f5b69559aac1062f48",
+        "head": "dc0ff9c0ad644f8811b7a6a52d8817d6433dcf86",
+        "push_id": 42407848591,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 631317608
+      },
+      "public": true,
+      "repo": {
+        "id": 631317608,
+        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/1944352?",
+        "display_login": "mcguinness",
+        "gravatar_id": "",
+        "id": 1944352,
+        "login": "mcguinness",
+        "url": "https://api.github.com/users/mcguinness"
+      },
+      "created_at": "2026-09-03T18:30:58Z",
+      "id": "14383538540",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "I think `client_id` is still the right semantic starting point and aligns with RFC 8693, where it identifies the OAuth client that requested the token.\n\nID-JAG requires continuity of the same **logical client**, not delegation to another actor. Because the IdP and RAS are different trust domains, the same client may have different local registrations or identifiers, so yes, the IdP needs to know that mapping (see Cross-Domain Client ID Handling) unless CIMD gives both sides the same identifier.\n\nThis is what distinguishes ID-JAG from generic identity chaining: the IdP is the SSO trust anchor for both the client and the RAS, so it can assert client continuity across the boundary the same way it already maps subject identifiers. `client_id` still identifies the requesting client, just expressed in the audience's namespace since the RAS consumes the claim. `may_act` seems less appropriate because it expresses authorization for another party to become the actor, whereas this is continuity of the same client across namespaces.",
+          "created_at": "2026-09-03T18:30:58Z",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/126#issuecomment-5530315322",
+          "id": 5530315322,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126",
+          "minimized": null,
+          "node_id": "IC_kwDOKv5r-s8AAAABSaHqOg",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/5530315322/reactions"
+          },
+          "updated_at": "2026-09-03T18:30:58Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/5530315322",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
+            "events_url": "https://api.github.com/users/mcguinness/events{/privacy}",
+            "followers_url": "https://api.github.com/users/mcguinness/followers",
+            "following_url": "https://api.github.com/users/mcguinness/following{/other_user}",
+            "gists_url": "https://api.github.com/users/mcguinness/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/mcguinness",
+            "id": 1944352,
+            "login": "mcguinness",
+            "node_id": "MDQ6VXNlcjE5NDQzNTI=",
+            "organizations_url": "https://api.github.com/users/mcguinness/orgs",
+            "received_events_url": "https://api.github.com/users/mcguinness/received_events",
+            "repos_url": "https://api.github.com/users/mcguinness/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/mcguinness/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/mcguinness/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/mcguinness",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "ID-JAG encodes “which OAuth client may redeem this grant” rather than “which delegated actor may act.” Those are practically related but semantically different.\nmay_act would have modeled the delegation more cleanly, while client_id optimizes for existing OAuth AS implementation and client policy machinery.\n\nWhy weren't RFC 8693 delegation semantics not used? e.g:\n\n- Name the approved delegated party using may_act, which could contain either a client_id (+ optional iss when not using CIMD), or a cnf claim referencing a public key the client controls, such as dpop key.\n```\n\"may_act\": {\n  \"client_id\": \"ras-client-id\",\n  \"iss\": \"https://ras.example.com\"\n}\n```\n\n```\n\"may_act\": {\n  \"cnf\": {\n    \"jkt\": \"...\"\n  }\n}\n```\n\n- Using cnf enables clients to exchange the JAG at the RAS while proving legitimate sender constraining but without having to be its client.",
+          "closed_at": null,
+          "comments": 7,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/comments",
+          "created_at": "2026-09-02T11:00:29Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/events",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/126",
+          "id": 5323030660,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOKv5r-s8AAAABPUcAhA",
+          "number": 126,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/timeline",
+          "title": "Client delegation semantics",
+          "type": null,
+          "updated_at": "2026-09-03T20:05:35Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/159145437?v=4",
+            "events_url": "https://api.github.com/users/yaron-zehavi/events{/privacy}",
+            "followers_url": "https://api.github.com/users/yaron-zehavi/followers",
+            "following_url": "https://api.github.com/users/yaron-zehavi/following{/other_user}",
+            "gists_url": "https://api.github.com/users/yaron-zehavi/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/yaron-zehavi",
+            "id": 159145437,
+            "login": "yaron-zehavi",
+            "node_id": "U_kgDOCXxd3Q",
+            "organizations_url": "https://api.github.com/users/yaron-zehavi/orgs",
+            "received_events_url": "https://api.github.com/users/yaron-zehavi/received_events",
+            "repos_url": "https://api.github.com/users/yaron-zehavi/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/yaron-zehavi/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/yaron-zehavi/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/yaron-zehavi",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/159145437?",
+        "display_login": "yaron-zehavi",
+        "gravatar_id": "",
+        "id": 159145437,
+        "login": "yaron-zehavi",
+        "url": "https://api.github.com/users/yaron-zehavi"
+      },
+      "created_at": "2026-09-03T12:53:41Z",
+      "id": "14362166783",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "Another question, client_id in JAG is an overloading of its original meaning, in the sense that it's provided by IdP but doesn't describe a client in its namespace but an external client.\nHave you considered a different claim name (avoids confusion at the cost of diminished interoperability) such as ext_client_id or ras_client_id?",
+          "created_at": "2026-09-03T12:53:41Z",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/126#issuecomment-5526075543",
+          "id": 5526075543,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126",
+          "minimized": null,
+          "node_id": "IC_kwDOKv5r-s8AAAABSWE4lw",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/5526075543/reactions"
+          },
+          "updated_at": "2026-09-03T12:53:41Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/5526075543",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/159145437?v=4",
+            "events_url": "https://api.github.com/users/yaron-zehavi/events{/privacy}",
+            "followers_url": "https://api.github.com/users/yaron-zehavi/followers",
+            "following_url": "https://api.github.com/users/yaron-zehavi/following{/other_user}",
+            "gists_url": "https://api.github.com/users/yaron-zehavi/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/yaron-zehavi",
+            "id": 159145437,
+            "login": "yaron-zehavi",
+            "node_id": "U_kgDOCXxd3Q",
+            "organizations_url": "https://api.github.com/users/yaron-zehavi/orgs",
+            "received_events_url": "https://api.github.com/users/yaron-zehavi/received_events",
+            "repos_url": "https://api.github.com/users/yaron-zehavi/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/yaron-zehavi/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/yaron-zehavi/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/yaron-zehavi",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "ID-JAG encodes “which OAuth client may redeem this grant” rather than “which delegated actor may act.” Those are practically related but semantically different.\nmay_act would have modeled the delegation more cleanly, while client_id optimizes for existing OAuth AS implementation and client policy machinery.\n\nWhy weren't RFC 8693 delegation semantics not used? e.g:\n\n- Name the approved delegated party using may_act, which could contain either a client_id (+ optional iss when not using CIMD), or a cnf claim referencing a public key the client controls, such as dpop key.\n```\n\"may_act\": {\n  \"client_id\": \"ras-client-id\",\n  \"iss\": \"https://ras.example.com\"\n}\n```\n\n```\n\"may_act\": {\n  \"cnf\": {\n    \"jkt\": \"...\"\n  }\n}\n```\n\n- Using cnf enables clients to exchange the JAG at the RAS while proving legitimate sender constraining but without having to be its client.",
+          "closed_at": null,
+          "comments": 7,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/comments",
+          "created_at": "2026-09-02T11:00:29Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/events",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/126",
+          "id": 5323030660,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOKv5r-s8AAAABPUcAhA",
+          "number": 126,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/timeline",
+          "title": "Client delegation semantics",
+          "type": null,
+          "updated_at": "2026-09-03T20:05:35Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/159145437?v=4",
+            "events_url": "https://api.github.com/users/yaron-zehavi/events{/privacy}",
+            "followers_url": "https://api.github.com/users/yaron-zehavi/followers",
+            "following_url": "https://api.github.com/users/yaron-zehavi/following{/other_user}",
+            "gists_url": "https://api.github.com/users/yaron-zehavi/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/yaron-zehavi",
+            "id": 159145437,
+            "login": "yaron-zehavi",
+            "node_id": "U_kgDOCXxd3Q",
+            "organizations_url": "https://api.github.com/users/yaron-zehavi/orgs",
+            "received_events_url": "https://api.github.com/users/yaron-zehavi/received_events",
+            "repos_url": "https://api.github.com/users/yaron-zehavi/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/yaron-zehavi/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/yaron-zehavi/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/yaron-zehavi",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-09-03T00:21:46Z",
+      "id": "19869170980",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "5196fa1807f20c92e62d2ca1f96a92f820dd6cca",
+        "head": "1680b752ed076bfd15539495d71f2eed7673ea88",
+        "push_id": 42354667255,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 239594214
+      },
+      "public": true,
+      "repo": {
+        "id": 239594214,
+        "name": "oauth-wg/oauth-v2-1",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
       "created_at": "2026-09-02T08:53:33Z",
       "id": "19867172880",
       "org": {
@@ -48832,7 +49543,7 @@
           "assignees": [],
           "body": "ID-JAG encodes “which OAuth client may redeem this grant” rather than “which delegated actor may act.” Those are practically related but semantically different.\nmay_act would have modeled the delegation more cleanly, while client_id optimizes for existing OAuth AS implementation and client policy machinery.\n\nWhy weren't RFC 8693 delegation semantics not used? e.g:\n\n- Name the approved delegated party using may_act, which could contain either a client_id (+ optional iss when not using CIMD), or a cnf claim referencing a public key the client controls, such as dpop key.\n```\n\"may_act\": {\n  \"client_id\": \"ras-client-id\",\n  \"iss\": \"https://ras.example.com\"\n}\n```\n\n```\n\"may_act\": {\n  \"cnf\": {\n    \"jkt\": \"...\"\n  }\n}\n```\n\n- Using cnf enables clients to exchange the JAG at the RAS while proving legitimate sender constraining but without having to be its client.",
           "closed_at": null,
-          "comments": 4,
+          "comments": 7,
           "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/comments",
           "created_at": "2026-09-02T11:00:29Z",
           "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/events",
@@ -48876,7 +49587,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/timeline",
           "title": "Client delegation semantics",
           "type": null,
-          "updated_at": "2026-09-03T06:23:19Z",
+          "updated_at": "2026-09-03T20:05:35Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/159145437?v=4",
@@ -50711,7 +51422,7 @@
           "assignees": [],
           "body": "ID-JAG encodes “which OAuth client may redeem this grant” rather than “which delegated actor may act.” Those are practically related but semantically different.\nmay_act would have modeled the delegation more cleanly, while client_id optimizes for existing OAuth AS implementation and client policy machinery.\n\nWhy weren't RFC 8693 delegation semantics not used? e.g:\n\n- Name the approved delegated party using may_act, which could contain either a client_id (+ optional iss when not using CIMD), or a cnf claim referencing a public key the client controls, such as dpop key.\n```\n\"may_act\": {\n  \"client_id\": \"ras-client-id\",\n  \"iss\": \"https://ras.example.com\"\n}\n```\n\n```\n\"may_act\": {\n  \"cnf\": {\n    \"jkt\": \"...\"\n  }\n}\n```\n\n- Using cnf enables clients to exchange the JAG at the RAS while proving legitimate sender constraining but without having to be its client.",
           "closed_at": null,
-          "comments": 4,
+          "comments": 7,
           "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/comments",
           "created_at": "2026-09-02T11:00:29Z",
           "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/events",
@@ -50755,7 +51466,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/timeline",
           "title": "Client delegation semantics",
           "type": null,
-          "updated_at": "2026-09-03T06:23:19Z",
+          "updated_at": "2026-09-03T20:05:35Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/159145437?v=4",
@@ -50860,7 +51571,7 @@
           "assignees": [],
           "body": "ID-JAG encodes “which OAuth client may redeem this grant” rather than “which delegated actor may act.” Those are practically related but semantically different.\nmay_act would have modeled the delegation more cleanly, while client_id optimizes for existing OAuth AS implementation and client policy machinery.\n\nWhy weren't RFC 8693 delegation semantics not used? e.g:\n\n- Name the approved delegated party using may_act, which could contain either a client_id (+ optional iss when not using CIMD), or a cnf claim referencing a public key the client controls, such as dpop key.\n```\n\"may_act\": {\n  \"client_id\": \"ras-client-id\",\n  \"iss\": \"https://ras.example.com\"\n}\n```\n\n```\n\"may_act\": {\n  \"cnf\": {\n    \"jkt\": \"...\"\n  }\n}\n```\n\n- Using cnf enables clients to exchange the JAG at the RAS while proving legitimate sender constraining but without having to be its client.",
           "closed_at": null,
-          "comments": 4,
+          "comments": 7,
           "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/comments",
           "created_at": "2026-09-02T11:00:29Z",
           "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/events",
@@ -50904,7 +51615,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/timeline",
           "title": "Client delegation semantics",
           "type": null,
-          "updated_at": "2026-09-03T06:23:19Z",
+          "updated_at": "2026-09-03T20:05:35Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/159145437?v=4",
@@ -51200,7 +51911,7 @@
           "assignees": [],
           "body": "ID-JAG encodes “which OAuth client may redeem this grant” rather than “which delegated actor may act.” Those are practically related but semantically different.\nmay_act would have modeled the delegation more cleanly, while client_id optimizes for existing OAuth AS implementation and client policy machinery.\n\nWhy weren't RFC 8693 delegation semantics not used? e.g:\n\n- Name the approved delegated party using may_act, which could contain either a client_id (+ optional iss when not using CIMD), or a cnf claim referencing a public key the client controls, such as dpop key.\n```\n\"may_act\": {\n  \"client_id\": \"ras-client-id\",\n  \"iss\": \"https://ras.example.com\"\n}\n```\n\n```\n\"may_act\": {\n  \"cnf\": {\n    \"jkt\": \"...\"\n  }\n}\n```\n\n- Using cnf enables clients to exchange the JAG at the RAS while proving legitimate sender constraining but without having to be its client.",
           "closed_at": null,
-          "comments": 4,
+          "comments": 7,
           "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/comments",
           "created_at": "2026-09-02T11:00:29Z",
           "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/events",
@@ -51244,7 +51955,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/timeline",
           "title": "Client delegation semantics",
           "type": null,
-          "updated_at": "2026-09-03T06:23:19Z",
+          "updated_at": "2026-09-03T20:05:35Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/159145437?v=4",
@@ -51303,7 +52014,7 @@
           "assignees": [],
           "body": "ID-JAG encodes “which OAuth client may redeem this grant” rather than “which delegated actor may act.” Those are practically related but semantically different.\nmay_act would have modeled the delegation more cleanly, while client_id optimizes for existing OAuth AS implementation and client policy machinery.\n\nWhy weren't RFC 8693 delegation semantics not used? e.g:\n\n- Name the approved delegated party using may_act, which could contain either a client_id (+ optional iss when not using CIMD), or a cnf claim referencing a public key the client controls, such as dpop key.\n```\n\"may_act\": {\n  \"client_id\": \"ras-client-id\",\n  \"iss\": \"https://ras.example.com\"\n}\n```\n\n```\n\"may_act\": {\n  \"cnf\": {\n    \"jkt\": \"...\"\n  }\n}\n```\n\n- Using cnf enables clients to exchange the JAG at the RAS while proving legitimate sender constraining but without having to be its client.",
           "closed_at": null,
-          "comments": 4,
+          "comments": 7,
           "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/comments",
           "created_at": "2026-09-02T11:00:29Z",
           "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/events",
@@ -51347,7 +52058,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126/timeline",
           "title": "Client delegation semantics",
           "type": null,
-          "updated_at": "2026-09-03T06:23:19Z",
+          "updated_at": "2026-09-03T20:05:35Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/126",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/159145437?v=4",
@@ -55473,362 +56184,6 @@
         "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
       },
       "type": "PullRequestEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-08-23T00:22:37Z",
-      "id": "18558340906",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "1fb8a159f54623523fc910b1891aa56aadb9bf54",
-        "head": "5aa3c7fb8ce7cadb2d590450eb077865131006df",
-        "push_id": 40883837051,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 632636053
-      },
-      "public": true,
-      "repo": {
-        "id": 632636053,
-        "name": "oauth-wg/oauth-sd-jwt-vc",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-08-23T00:09:09Z",
-      "id": "18557553066",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "7cc63077d7bad933b68b916dcbd398e8565ebe65",
-        "head": "b9c3071986dfaf32c389826487f7dccaefd9aacb",
-        "push_id": 40883048313,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 631317608
-      },
-      "public": true,
-      "repo": {
-        "id": 631317608,
-        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-08-23T00:07:39Z",
-      "id": "18557466873",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "2ca7bebc60ec8e58d777b0bf17f6eb24d157b242",
-        "head": "0c4eceb4be3dbe67daf96a3424d62d101f9b6122",
-        "push_id": 40882961975,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 979990744
-      },
-      "public": true,
-      "repo": {
-        "id": 979990744,
-        "name": "oauth-wg/oauth-spiffe-client-authentication",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-spiffe-client-authentication"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-08-23T00:02:59Z",
-      "id": "18557187455",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "e9610d02ea302fdd6673029189300a7376888772",
-        "head": "d87e29482ebdf24dc61773f6ea251992fc50280c",
-        "push_id": 40882682328,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 721316858
-      },
-      "public": true,
-      "repo": {
-        "id": 721316858,
-        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
-        "display_login": "yaronf",
-        "gravatar_id": "",
-        "id": 1265636,
-        "login": "yaronf",
-        "url": "https://api.github.com/users/yaronf"
-      },
-      "created_at": "2026-08-22T10:35:18Z",
-      "id": "18505146381",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "full_ref": "refs/heads/mbj-aaron",
-        "pusher_type": "user",
-        "ref": "mbj-aaron",
-        "ref_type": "branch"
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "DeleteEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
-        "display_login": "yaronf",
-        "gravatar_id": "",
-        "id": 1265636,
-        "login": "yaronf",
-        "url": "https://api.github.com/users/yaronf"
-      },
-      "created_at": "2026-08-22T10:35:15Z",
-      "id": "18505142406",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "full_ref": "refs/heads/Mitigation-for-Compression-DoS-#3",
-        "pusher_type": "user",
-        "ref": "Mitigation-for-Compression-DoS-#3",
-        "ref_type": "branch"
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "DeleteEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
-        "display_login": "yaronf",
-        "gravatar_id": "",
-        "id": 1265636,
-        "login": "yaronf",
-        "url": "https://api.github.com/users/yaronf"
-      },
-      "created_at": "2026-08-22T10:34:26Z",
-      "id": "18505079976",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "full_ref": "refs/heads/ys-20",
-        "pusher_type": "user",
-        "ref": "ys-20",
-        "ref_type": "branch"
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "DeleteEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
-        "display_login": "yaronf",
-        "gravatar_id": "",
-        "id": 1265636,
-        "login": "yaronf",
-        "url": "https://api.github.com/users/yaronf"
-      },
-      "created_at": "2026-08-22T10:34:08Z",
-      "id": "18505055581",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "full_ref": "refs/heads/ys-9864",
-        "pusher_type": "user",
-        "ref": "ys-9864",
-        "ref_type": "branch"
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "DeleteEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
-        "display_login": "yaronf",
-        "gravatar_id": "",
-        "id": 1265636,
-        "login": "yaronf",
-        "url": "https://api.github.com/users/yaronf"
-      },
-      "created_at": "2026-08-22T10:35:23Z",
-      "id": "18498874061",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "full_ref": "refs/heads/mbj-compression",
-        "pusher_type": "user",
-        "ref": "mbj-compression",
-        "ref_type": "branch"
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "DeleteEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
-        "display_login": "yaronf",
-        "gravatar_id": "",
-        "id": 1265636,
-        "login": "yaronf",
-        "url": "https://api.github.com/users/yaronf"
-      },
-      "created_at": "2026-08-22T10:35:22Z",
-      "id": "18498872714",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "full_ref": "refs/heads/mbj-alg-none",
-        "pusher_type": "user",
-        "ref": "mbj-alg-none",
-        "ref_type": "branch"
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "DeleteEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1265636?",
-        "display_login": "yaronf",
-        "gravatar_id": "",
-        "id": 1265636,
-        "login": "yaronf",
-        "url": "https://api.github.com/users/yaronf"
-      },
-      "created_at": "2026-08-22T10:35:21Z",
-      "id": "18498870860",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "full_ref": "refs/heads/mbj-explicit-typing",
-        "pusher_type": "user",
-        "ref": "mbj-explicit-typing",
-        "ref_type": "branch"
-      },
-      "public": true,
-      "repo": {
-        "id": 906747170,
-        "name": "oauth-wg/draft-ietf-oauth-rfc8725bis",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-rfc8725bis"
-      },
-      "type": "DeleteEvent"
     }
   ],
   "prs": {
@@ -66079,7 +66434,7 @@
         "labels_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/249/labels{/name}",
         "locked": false,
         "milestone": {
-          "closed_at": null,
+          "closed_at": "2026-09-03T15:49:35Z",
           "closed_issues": 6,
           "created_at": "2026-03-02T18:54:40Z",
           "creator": {
@@ -66111,9 +66466,9 @@
           "node_id": "MI_kwDODkfq5s4A5L-9",
           "number": 11,
           "open_issues": 0,
-          "state": "open",
+          "state": "closed",
           "title": "Version -16",
-          "updated_at": "2026-09-03T00:10:59Z",
+          "updated_at": "2026-09-03T15:49:35Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/milestones/11"
         },
         "node_id": "PR_kwDODkfq5s7YM7rX",
@@ -66188,7 +66543,7 @@
         "labels_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/issues/247/labels{/name}",
         "locked": false,
         "milestone": {
-          "closed_at": null,
+          "closed_at": "2026-09-03T15:49:35Z",
           "closed_issues": 6,
           "created_at": "2026-03-02T18:54:40Z",
           "creator": {
@@ -66220,9 +66575,9 @@
           "node_id": "MI_kwDODkfq5s4A5L-9",
           "number": 11,
           "open_issues": 0,
-          "state": "open",
+          "state": "closed",
           "title": "Version -16",
-          "updated_at": "2026-09-03T00:10:59Z",
+          "updated_at": "2026-09-03T15:49:35Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/milestones/11"
         },
         "node_id": "PR_kwDODkfq5s7YLHmm",
@@ -96120,5 +96475,5 @@
       "web_commit_signoff_required": false
     }
   ],
-  "snapshot_date": "2026-09-03"
+  "snapshot_date": "2026-09-04"
 }
