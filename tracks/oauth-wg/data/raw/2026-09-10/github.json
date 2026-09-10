@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-09-09T11:00:08+00:00",
+  "collected_at": "2026-09-10T10:57:00+00:00",
   "issues": {
     "error": null,
     "items": [
@@ -10,7 +10,7 @@
         "author_association": "COLLABORATOR",
         "body": "## Problem\n\nReaders frequently ask why they can't use an access token as `subject_token`. The current parameter definition (Section 4.3) enumerates supported types (ID Token, SAML 2.0 Assertion, Refresh Token) but does not explain the underlying design principle: token selection is by function at the IdP Authorization Server, not by OAuth token type. The exclusion rationale needs to be documented explicitly.\n\n## Proposal\n\nAdd a new subsection `### Subject Token Type Selection` to the Token Exchange section (§4.3), after the parameter definitions and before Processing Rules.\n\n## Draft text\n\n> ID-JAG selects `subject_token` by function at the IdP Authorization Server, not by OAuth token type:\n>\n> * **Identity Assertion**: conveys the authenticated subject directly (ID Token, SAML 2.0 assertion).\n> * **Identity Continuity**: lets the IdP Authorization Server issue a fresh identity assertion from an existing authorization grant (Refresh Token).\n> * **Resource Authorization**: authorizes access to a protected resource (access token).\n>\n> This profile supports identity assertion and identity continuity credentials.\n>\n> An access token may carry identity claims ([RFC 9068 §2.2.2](https://www.rfc-editor.org/rfc/rfc9068.html#name-identity-claims)) and authentication context claims such as `auth_time`, `acr`, and `amr` ([RFC 9068 §2.2.1](https://www.rfc-editor.org/rfc/rfc9068.html#name-authentication-information-)). The RFC permits both so that resource servers can consume them directly for their own authorization decisions, without introspection or UserInfo round-trips, particularly in same-entity / same-solution scenarios such as first-party clients invoking their own backend API. These claims are for resource-server-side consumption, not for identity assertion to a third party. An access token is not an identity assertion for the client, and its primary contract is authorization to a resource. OIDC introduced the ID Token because OAuth access tokens were intentionally not suitable as a portable authentication artifact.\n>\n> The exclusion applies in three scenarios:\n>\n> **IdP-issued access tokens.** The token was issued for presentation to a specific protected resource (typically identified by an `aud` claim), not for identity brokering. When encrypted for that resource, the token may not be decryptable by the client or other parties, reinforcing that it was constructed for that resource. Using it as a `subject_token` expands the credential's purpose beyond the authorization context it was issued for, regardless of the Authorization Server's ability to introspect. **UserInfo access tokens are excluded on the same grounds**: they authorize access to an identity resource but remain resource authorization credentials, and the ID Token already covers identity assertion to the client.\n>\n> **IdP-issued access tokens for a first-party resource acting as an ID-JAG client.** The resource is same-entity with the IdP, so the RFC 9068 rationale for including these claims most naturally applies. The exclusion still holds. The claims exist for the resource's own authorization decisions, not to be brokered onward. When such a resource needs to obtain an ID-JAG on behalf of a user, the base profile assumes an identity assertion or identity continuity credential is available. Bridging from an access-token-only starting point is a separable design question; a complementary profile would need to define how identity and authentication claims are extracted from the access token, how policy is re-evaluated for the ID-JAG audience, and how the access token's scope and consent align with the ID-JAG's requested authorization.\n>\n> **Externally-issued access tokens with the IdP as intended recipient.** Accepting these as identity-bearing input would establish a federation model in which the external issuer authorizes identity brokering through the IdP Authorization Server. That is a substantive federation trust decision beyond the base ID-JAG profile.\n>\n> Restricting identity exchange to identity assertion and identity continuity credentials keeps identity establishment and resource authorization separate, which is what lets IdP and Resource Authorization Server implementations converge on interoperable identity semantics without coupling to any specific access-token structure or introspection contract.\n\nHappy to open a PR if the direction lands.",
         "closed_at": null,
-        "comments": 1,
+        "comments": 2,
         "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/115/comments",
         "created_at": "2026-07-25T07:23:40Z",
         "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/115/events",
@@ -55,7 +55,7 @@
         "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/115/timeline",
         "title": "Add rationale for `subject_token` type selection (function vs OAuth token type)",
         "type": null,
-        "updated_at": "2026-09-09T08:21:32Z",
+        "updated_at": "2026-09-09T20:00:56Z",
         "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/115",
         "user": {
           "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
@@ -48040,6 +48040,388 @@
   "org_events": [
     {
       "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-09-10T00:04:35Z",
+      "id": "20649543214",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "bb4ab42e05aa4b10896b640b5dc7617e7df29b99",
+        "head": "f005ee7ae0770e5a42facc65eeac2528bf8a1e35",
+        "push_id": 43149131649,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 721316858
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/307826212?",
+        "display_login": "meskhidzeg4-create",
+        "gravatar_id": "",
+        "id": 307826212,
+        "login": "meskhidzeg4-create",
+        "url": "https://api.github.com/users/meskhidzeg4-create"
+      },
+      "created_at": "2026-09-10T04:15:24Z",
+      "id": "14758450042",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "forked",
+        "forkee": {
+          "allow_forking": true,
+          "archive_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/{archive_format}{/ref}",
+          "archived": false,
+          "assignees_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/assignees{/user}",
+          "blobs_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/git/blobs{/sha}",
+          "branches_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/branches{/branch}",
+          "clone_url": "https://github.com/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document.git",
+          "collaborators_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/collaborators{/collaborator}",
+          "comments_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/comments{/number}",
+          "commits_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/commits{/sha}",
+          "compare_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/compare/{base}...{head}",
+          "contents_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/contents/{+path}",
+          "contributors_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/contributors",
+          "created_at": "2026-09-10T04:15:24Z",
+          "default_branch": "main",
+          "deployments_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/deployments",
+          "description": null,
+          "disabled": false,
+          "downloads_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/downloads",
+          "events_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/events",
+          "fork": true,
+          "forks": 0,
+          "forks_count": 0,
+          "forks_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/forks",
+          "full_name": "meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document",
+          "git_commits_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/git/commits{/sha}",
+          "git_refs_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/git/refs{/sha}",
+          "git_tags_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/git/tags{/sha}",
+          "git_url": "git://github.com/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document.git",
+          "has_discussions": false,
+          "has_downloads": false,
+          "has_issues": false,
+          "has_pages": false,
+          "has_projects": true,
+          "has_pull_requests": true,
+          "has_wiki": false,
+          "homepage": null,
+          "hooks_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/hooks",
+          "html_url": "https://github.com/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document",
+          "id": 1363505807,
+          "is_template": false,
+          "issue_comment_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/issues/comments{/number}",
+          "issue_events_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/issues/events{/number}",
+          "issues_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/issues{/number}",
+          "keys_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/keys{/key_id}",
+          "labels_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/labels{/name}",
+          "language": null,
+          "languages_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/languages",
+          "license": {
+            "key": "other",
+            "name": "Other",
+            "node_id": "MDc6TGljZW5zZTA=",
+            "spdx_id": "NOASSERTION",
+            "url": null
+          },
+          "merges_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/merges",
+          "milestones_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/milestones{/number}",
+          "mirror_url": null,
+          "name": "draft-ietf-oauth-client-id-metadata-document",
+          "node_id": "R_kgDOUUVyjw",
+          "notifications_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/notifications{?since,all,participating}",
+          "open_issues": 0,
+          "open_issues_count": 0,
+          "owner": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/307826212?v=4",
+            "events_url": "https://api.github.com/users/meskhidzeg4-create/events{/privacy}",
+            "followers_url": "https://api.github.com/users/meskhidzeg4-create/followers",
+            "following_url": "https://api.github.com/users/meskhidzeg4-create/following{/other_user}",
+            "gists_url": "https://api.github.com/users/meskhidzeg4-create/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/meskhidzeg4-create",
+            "id": 307826212,
+            "login": "meskhidzeg4-create",
+            "node_id": "U_kgDOElkOJA",
+            "organizations_url": "https://api.github.com/users/meskhidzeg4-create/orgs",
+            "received_events_url": "https://api.github.com/users/meskhidzeg4-create/received_events",
+            "repos_url": "https://api.github.com/users/meskhidzeg4-create/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/meskhidzeg4-create/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/meskhidzeg4-create/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/meskhidzeg4-create",
+            "user_view_type": "public"
+          },
+          "private": false,
+          "pull_request_creation_policy": "all",
+          "pulls_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/pulls{/number}",
+          "pushed_at": "2026-09-10T00:00:36Z",
+          "releases_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/releases{/id}",
+          "size": 562,
+          "ssh_url": "git@github.com:meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document.git",
+          "stargazers_count": 0,
+          "stargazers_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/stargazers",
+          "statuses_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/statuses/{sha}",
+          "subscribers_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/subscribers",
+          "subscription_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/subscription",
+          "svn_url": "https://github.com/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document",
+          "tags_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/tags",
+          "teams_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/teams",
+          "topics": [],
+          "trees_url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document/git/trees{/sha}",
+          "updated_at": "2026-09-10T04:15:24Z",
+          "url": "https://api.github.com/repos/meskhidzeg4-create/draft-ietf-oauth-client-id-metadata-document",
+          "visibility": "public",
+          "watchers": 0,
+          "watchers_count": 0,
+          "web_commit_signoff_required": false
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 804642494,
+        "name": "oauth-wg/draft-ietf-oauth-client-id-metadata-document",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document"
+      },
+      "type": "ForkEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-09-10T00:00:37Z",
+      "id": "20637681349",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "12bd2f6ec6ef3c28e8ffd73d6e529ba51f374518",
+        "head": "920cca324b8bf94de21e94bdf5ff018e4ee91fef",
+        "push_id": 43148881530,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 804642494
+      },
+      "public": true,
+      "repo": {
+        "id": 804642494,
+        "name": "oauth-wg/draft-ietf-oauth-client-id-metadata-document",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/1944352?",
+        "display_login": "mcguinness",
+        "gravatar_id": "",
+        "id": 1944352,
+        "login": "mcguinness",
+        "url": "https://api.github.com/users/mcguinness"
+      },
+      "created_at": "2026-09-09T20:00:56Z",
+      "id": "14737532652",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "## Access-token claims do not imply identity continuation\n\nAn RFC 9068 access token can carry `sub`, `client_id`, `auth_time`, `acr`, `amr`, and `act`, but without an explicit issuer declaration those claims do not say that the token may be used to establish identity continuity.\n\n- `client_id` identifies the client associated with the authorization. It does not imply continuation.\n- `act` gives us provenance. It does not authorize another identity hop.\n- `sub` identifies a subject in the issuer's namespace. It does not make the token an identity grant.\n- `auth_time`, `acr`, and `amr` describe an authentication event. They do not make the token a continuation credential.\n\nYour `meta.exchange_token` addresses the missing declaration, but I don't think `scope` is the right carrier. More importantly, the originating client should not need to know continuation will happen. From its perspective, the gateway is the resource server. Whether the gateway later calls another resource is behind that boundary. Continuation should come from issuer/IdP policy, not a special `scope` the client must anticipate.\n\nAs you note, condition 3 still applies. Making a token eligible for continuation is not the same as deciding that this actor may continue the identity to the requested target.\n\nThis is the distinction I was getting at in [Continuity Is Not One Thing](https://notes.karlmcguinness.com/notes/continuity-is-not-one-thing/). **Provenance, identity continuity, authorization continuity, and continuing work are different things.** An access token can carry evidence relevant to several of these without collapsing them into a single continuity decision. The next authority still has to make that decision from evidence it trusts.\n\n## Cross-client identity exchange\n\nIf the **same client** is doing the exchange, it already has the ID Token/identity assertion and can use that. The case where the access token becomes the only identity-bearing artifact available to the presenter is when a **different client or gateway** performs the exchange.\n\nThat's the cross-client identity exchange problem discussed in [#114](https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/114).\n\nSo excluding access tokens from §4.3 costs us little in the same-client case. Where it matters is exactly where we need to define how identity authority crosses a client boundary, rather than infer that authority from possession of an access token.\n\n## Where Identity Continuation Assertion fits\n\nThe problem changes once the access token is issued by a RAS AS or we have multiple downstream hops. After a gateway exchanges an ID-JAG at a RAS, the resulting access token is normally issued by the **RAS AS, not the IdP**. Its `sub`, `aud`, and sender constraint belong to that authorization domain.\n\nThe [Identity Continuation Assertion (ICA)](https://datatracker.ietf.org/doc/draft-mcguinness-oauth-id-continuation-assertion/) provides a repeatable continuation mechanism without requiring each RAS access token to become a federated identity credential understood by the IdP.\n\nThe key property is **revocation-at-depth**. Before minting the next ID-JAG, the IdP needs current evidence that the authorization established from the prior ID-JAG remains active and continuation-eligible. The RAS that accepted that ID-JAG is the authority that knows this. ICA lets it assert those facts, identifies the authenticated current actor, and is sender-constrained to that actor, while the IdP remains authoritative for identity and the next mint. ([IETF Datatracker](https://datatracker.ietf.org/doc/draft-mcguinness-oauth-id-continuation-assertion/))\n\n```text\nIdP\n  ↓ ID-JAG\nRAS A\n  ↓ Access Token\nWorkload A\n  ↓ ICA\nIdP\n  ↓ ID-JAG\nRAS B\n  ↓ Access Token\nWorkload B\n  ↓ ICA\nIdP\n  ↓ ID-JAG\nRAS C\n```\n\nEach RAS keeps its access token local to its authorization domain. ICA is the narrow bridge back to the IdP and does not make the RAS authoritative for `sub`, `auth_time`, `acr`, or `amr`.\n\nIt also handles re-subjecting. As described in [Re-Subjecting Is a Mint, Not an Attenuation](https://notes.karlmcguinness.com/notes/re-subjecting-is-a-mint-not-an-attenuation/), the RAS cannot derive a pairwise `sub` it was never given. The IdP correlates ICA to the identity chain it already knows and mints the appropriate binding for the next RAS. That requires IdP correlation state, but avoids requiring the IdP to federate access-token semantics and correlate subjects with every intermediate access-token issuer.\n\nThis is **not the scenario 3 case** here. The RAS is not minting a new identity assertion from an access token. It is already a trusted relying party for the prior ID-JAG and is asserting fresh facts about the authorization state it created from that grant.\n\nSo I would keep this issue narrow and proceed with the proposed §4.3 exclusion/rationale. The same-client case already has the identity assertion, and the cross-client case belongs in #114.\n\nIf an access-token construction is explored there, I think it needs to preserve these invariants:\n\n- **Continuation is not client-requested.** The client treats the gateway as its resource server. Continuation eligibility comes from issuer/IdP policy, not a special `scope`.\n- **Exchangeability is explicit.** The issuer establishes it; it is not inferred from claim shape.\n- **The receiver is constrained.** The token must identify who may receive it for continuation. `aud` does not by itself authorize presentation back to its `iss`; if return-to-issuer is allowed, that needs explicit protocol semantics. The token must not become generally portable identity evidence.\n- **The presenter is constrained.** The permitted actor is explicitly identified, for example through `may_act` or equivalent semantics.\n- **Sender constraint is preserved.** An authorized cross-client handoff must define how the existing binding is validated and how continuation is bound to the actual presenter. A `cnf`/DPoP-bound token cannot silently become bearer authority.\n- **Condition 3 still applies.** The IdP evaluates the originating client, current actor, and requested target under current policy.\n- **Subjects are not assumed portable.** Crossing issuers or subject namespaces requires explicit federation and re-subjecting. A foreign access token's `sub` cannot simply become the next grant's `sub`.\n\nICA shows how the same properties can be preserved downstream once the access-token issuer is no longer the IdP.",
+          "created_at": "2026-09-09T20:00:56Z",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/115#issuecomment-5607932074",
+          "id": 5607932074,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/115",
+          "minimized": null,
+          "node_id": "IC_kwDOKv5r-s8AAAABTkJAqg",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/5607932074/reactions"
+          },
+          "updated_at": "2026-09-09T20:00:56Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/5607932074",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
+            "events_url": "https://api.github.com/users/mcguinness/events{/privacy}",
+            "followers_url": "https://api.github.com/users/mcguinness/followers",
+            "following_url": "https://api.github.com/users/mcguinness/following{/other_user}",
+            "gists_url": "https://api.github.com/users/mcguinness/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/mcguinness",
+            "id": 1944352,
+            "login": "mcguinness",
+            "node_id": "MDQ6VXNlcjE5NDQzNTI=",
+            "organizations_url": "https://api.github.com/users/mcguinness/orgs",
+            "received_events_url": "https://api.github.com/users/mcguinness/received_events",
+            "repos_url": "https://api.github.com/users/mcguinness/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/mcguinness/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/mcguinness/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/mcguinness",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "## Problem\n\nReaders frequently ask why they can't use an access token as `subject_token`. The current parameter definition (Section 4.3) enumerates supported types (ID Token, SAML 2.0 Assertion, Refresh Token) but does not explain the underlying design principle: token selection is by function at the IdP Authorization Server, not by OAuth token type. The exclusion rationale needs to be documented explicitly.\n\n## Proposal\n\nAdd a new subsection `### Subject Token Type Selection` to the Token Exchange section (§4.3), after the parameter definitions and before Processing Rules.\n\n## Draft text\n\n> ID-JAG selects `subject_token` by function at the IdP Authorization Server, not by OAuth token type:\n>\n> * **Identity Assertion**: conveys the authenticated subject directly (ID Token, SAML 2.0 assertion).\n> * **Identity Continuity**: lets the IdP Authorization Server issue a fresh identity assertion from an existing authorization grant (Refresh Token).\n> * **Resource Authorization**: authorizes access to a protected resource (access token).\n>\n> This profile supports identity assertion and identity continuity credentials.\n>\n> An access token may carry identity claims ([RFC 9068 §2.2.2](https://www.rfc-editor.org/rfc/rfc9068.html#name-identity-claims)) and authentication context claims such as `auth_time`, `acr`, and `amr` ([RFC 9068 §2.2.1](https://www.rfc-editor.org/rfc/rfc9068.html#name-authentication-information-)). The RFC permits both so that resource servers can consume them directly for their own authorization decisions, without introspection or UserInfo round-trips, particularly in same-entity / same-solution scenarios such as first-party clients invoking their own backend API. These claims are for resource-server-side consumption, not for identity assertion to a third party. An access token is not an identity assertion for the client, and its primary contract is authorization to a resource. OIDC introduced the ID Token because OAuth access tokens were intentionally not suitable as a portable authentication artifact.\n>\n> The exclusion applies in three scenarios:\n>\n> **IdP-issued access tokens.** The token was issued for presentation to a specific protected resource (typically identified by an `aud` claim), not for identity brokering. When encrypted for that resource, the token may not be decryptable by the client or other parties, reinforcing that it was constructed for that resource. Using it as a `subject_token` expands the credential's purpose beyond the authorization context it was issued for, regardless of the Authorization Server's ability to introspect. **UserInfo access tokens are excluded on the same grounds**: they authorize access to an identity resource but remain resource authorization credentials, and the ID Token already covers identity assertion to the client.\n>\n> **IdP-issued access tokens for a first-party resource acting as an ID-JAG client.** The resource is same-entity with the IdP, so the RFC 9068 rationale for including these claims most naturally applies. The exclusion still holds. The claims exist for the resource's own authorization decisions, not to be brokered onward. When such a resource needs to obtain an ID-JAG on behalf of a user, the base profile assumes an identity assertion or identity continuity credential is available. Bridging from an access-token-only starting point is a separable design question; a complementary profile would need to define how identity and authentication claims are extracted from the access token, how policy is re-evaluated for the ID-JAG audience, and how the access token's scope and consent align with the ID-JAG's requested authorization.\n>\n> **Externally-issued access tokens with the IdP as intended recipient.** Accepting these as identity-bearing input would establish a federation model in which the external issuer authorizes identity brokering through the IdP Authorization Server. That is a substantive federation trust decision beyond the base ID-JAG profile.\n>\n> Restricting identity exchange to identity assertion and identity continuity credentials keeps identity establishment and resource authorization separate, which is what lets IdP and Resource Authorization Server implementations converge on interoperable identity semantics without coupling to any specific access-token structure or introspection contract.\n\nHappy to open a PR if the direction lands.",
+          "closed_at": null,
+          "comments": 2,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/115/comments",
+          "created_at": "2026-07-25T07:23:40Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/115/events",
+          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/115",
+          "id": 4974756574,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/115/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOKv5r-s8AAAABKITC3g",
+          "number": 115,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 1,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 1,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/115/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/115/timeline",
+          "title": "Add rationale for `subject_token` type selection (function vs OAuth token type)",
+          "type": null,
+          "updated_at": "2026-09-09T20:00:56Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/115",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
+            "events_url": "https://api.github.com/users/mcguinness/events{/privacy}",
+            "followers_url": "https://api.github.com/users/mcguinness/followers",
+            "following_url": "https://api.github.com/users/mcguinness/following{/other_user}",
+            "gists_url": "https://api.github.com/users/mcguinness/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/mcguinness",
+            "id": 1944352,
+            "login": "mcguinness",
+            "node_id": "MDQ6VXNlcjE5NDQzNTI=",
+            "organizations_url": "https://api.github.com/users/mcguinness/orgs",
+            "received_events_url": "https://api.github.com/users/mcguinness/received_events",
+            "repos_url": "https://api.github.com/users/mcguinness/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/mcguinness/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/mcguinness/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/mcguinness",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/564113?",
+        "display_login": "tarebyte",
+        "gravatar_id": "",
+        "id": 564113,
+        "login": "tarebyte",
+        "url": "https://api.github.com/users/tarebyte"
+      },
+      "created_at": "2026-09-09T14:50:18Z",
+      "id": "14718446602",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "started"
+      },
+      "public": true,
+      "repo": {
+        "id": 721316858,
+        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
+      },
+      "type": "WatchEvent"
+    },
+    {
+      "actor": {
         "avatar_url": "https://avatars.githubusercontent.com/u/107487965?",
         "display_login": "barakshelef-oasis",
         "gravatar_id": "",
@@ -48110,7 +48492,7 @@
           "assignees": [],
           "body": "## Problem\n\nReaders frequently ask why they can't use an access token as `subject_token`. The current parameter definition (Section 4.3) enumerates supported types (ID Token, SAML 2.0 Assertion, Refresh Token) but does not explain the underlying design principle: token selection is by function at the IdP Authorization Server, not by OAuth token type. The exclusion rationale needs to be documented explicitly.\n\n## Proposal\n\nAdd a new subsection `### Subject Token Type Selection` to the Token Exchange section (§4.3), after the parameter definitions and before Processing Rules.\n\n## Draft text\n\n> ID-JAG selects `subject_token` by function at the IdP Authorization Server, not by OAuth token type:\n>\n> * **Identity Assertion**: conveys the authenticated subject directly (ID Token, SAML 2.0 assertion).\n> * **Identity Continuity**: lets the IdP Authorization Server issue a fresh identity assertion from an existing authorization grant (Refresh Token).\n> * **Resource Authorization**: authorizes access to a protected resource (access token).\n>\n> This profile supports identity assertion and identity continuity credentials.\n>\n> An access token may carry identity claims ([RFC 9068 §2.2.2](https://www.rfc-editor.org/rfc/rfc9068.html#name-identity-claims)) and authentication context claims such as `auth_time`, `acr`, and `amr` ([RFC 9068 §2.2.1](https://www.rfc-editor.org/rfc/rfc9068.html#name-authentication-information-)). The RFC permits both so that resource servers can consume them directly for their own authorization decisions, without introspection or UserInfo round-trips, particularly in same-entity / same-solution scenarios such as first-party clients invoking their own backend API. These claims are for resource-server-side consumption, not for identity assertion to a third party. An access token is not an identity assertion for the client, and its primary contract is authorization to a resource. OIDC introduced the ID Token because OAuth access tokens were intentionally not suitable as a portable authentication artifact.\n>\n> The exclusion applies in three scenarios:\n>\n> **IdP-issued access tokens.** The token was issued for presentation to a specific protected resource (typically identified by an `aud` claim), not for identity brokering. When encrypted for that resource, the token may not be decryptable by the client or other parties, reinforcing that it was constructed for that resource. Using it as a `subject_token` expands the credential's purpose beyond the authorization context it was issued for, regardless of the Authorization Server's ability to introspect. **UserInfo access tokens are excluded on the same grounds**: they authorize access to an identity resource but remain resource authorization credentials, and the ID Token already covers identity assertion to the client.\n>\n> **IdP-issued access tokens for a first-party resource acting as an ID-JAG client.** The resource is same-entity with the IdP, so the RFC 9068 rationale for including these claims most naturally applies. The exclusion still holds. The claims exist for the resource's own authorization decisions, not to be brokered onward. When such a resource needs to obtain an ID-JAG on behalf of a user, the base profile assumes an identity assertion or identity continuity credential is available. Bridging from an access-token-only starting point is a separable design question; a complementary profile would need to define how identity and authentication claims are extracted from the access token, how policy is re-evaluated for the ID-JAG audience, and how the access token's scope and consent align with the ID-JAG's requested authorization.\n>\n> **Externally-issued access tokens with the IdP as intended recipient.** Accepting these as identity-bearing input would establish a federation model in which the external issuer authorizes identity brokering through the IdP Authorization Server. That is a substantive federation trust decision beyond the base ID-JAG profile.\n>\n> Restricting identity exchange to identity assertion and identity continuity credentials keeps identity establishment and resource authorization separate, which is what lets IdP and Resource Authorization Server implementations converge on interoperable identity semantics without coupling to any specific access-token structure or introspection contract.\n\nHappy to open a PR if the direction lands.",
           "closed_at": null,
-          "comments": 1,
+          "comments": 2,
           "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/115/comments",
           "created_at": "2026-07-25T07:23:40Z",
           "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/115/events",
@@ -48154,7 +48536,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/115/timeline",
           "title": "Add rationale for `subject_token` type selection (function vs OAuth token type)",
           "type": null,
-          "updated_at": "2026-09-09T08:21:32Z",
+          "updated_at": "2026-09-09T20:00:56Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/115",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
@@ -55584,172 +55966,6 @@
         "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
       },
       "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-09-01T00:05:26Z",
-      "id": "19623609477",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "d54f02b83c23782502f33eade8db22cb2f5ef696",
-        "head": "f705c04dae4cad9563f577cfb5cb45006ac65b9f",
-        "push_id": 42020661679,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 721316858
-      },
-      "public": true,
-      "repo": {
-        "id": 721316858,
-        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-09-01T01:01:44Z",
-      "id": "19616349054",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "07579008fee1d1f59c2e92465f2c436c36eaf535",
-        "head": "1d7fcd7802210afbd34212bcaa91a78cd9f457b5",
-        "push_id": 42025357971,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 632636053
-      },
-      "public": true,
-      "repo": {
-        "id": 632636053,
-        "name": "oauth-wg/oauth-sd-jwt-vc",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
-        "display_login": "bc-pi",
-        "gravatar_id": "",
-        "id": 71398439,
-        "login": "bc-pi",
-        "url": "https://api.github.com/users/bc-pi"
-      },
-      "created_at": "2026-08-31T20:46:12Z",
-      "id": "19598614061",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "3611342cb7c35a140abcc1c383239ef34c94a526",
-        "head": "0ed157f3d8357914e114a92a8a46978e1f0052ab",
-        "push_id": 42002216444,
-        "ref": "refs/heads/main",
-        "repository_id": 632636053
-      },
-      "public": true,
-      "repo": {
-        "id": 632636053,
-        "name": "oauth-wg/oauth-sd-jwt-vc",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-08-31T20:46:39Z",
-      "id": "19590212482",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "c3065f87d7395e60d6a8ae8179b792bd40b36c01",
-        "head": "a92b9f82b44d259c2d6592941a82c2b8d6d33988",
-        "push_id": 42002262227,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 632636053
-      },
-      "public": true,
-      "repo": {
-        "id": 632636053,
-        "name": "oauth-wg/oauth-sd-jwt-vc",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
-        "display_login": "bc-pi",
-        "gravatar_id": "",
-        "id": 71398439,
-        "login": "bc-pi",
-        "url": "https://api.github.com/users/bc-pi"
-      },
-      "created_at": "2026-08-31T20:53:54Z",
-      "id": "19588434408",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "description": "SD-JWT-based Verifiable Credentials (SD-JWT VC)",
-        "full_ref": "refs/heads/forgotten-history",
-        "master_branch": "main",
-        "pusher_type": "user",
-        "ref": "forgotten-history",
-        "ref_type": "branch"
-      },
-      "public": true,
-      "repo": {
-        "id": 632636053,
-        "name": "oauth-wg/oauth-sd-jwt-vc",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
-      },
-      "type": "CreateEvent"
     }
   ],
   "prs": {
@@ -94025,9 +94241,9 @@
       "private": false,
       "pull_request_creation_policy": "all",
       "pulls_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/pulls{/number}",
-      "pushed_at": "2026-09-09T04:44:15Z",
+      "pushed_at": "2026-09-10T00:19:19Z",
       "releases_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/releases{/id}",
-      "size": 4409,
+      "size": 4596,
       "ssh_url": "git@github.com:oauth-wg/oauth-v2-1.git",
       "stargazers_count": 103,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/oauth-v2-1/stargazers",
@@ -95434,11 +95650,11 @@
       "private": false,
       "pull_request_creation_policy": "all",
       "pulls_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/pulls{/number}",
-      "pushed_at": "2026-09-09T03:54:07Z",
+      "pushed_at": "2026-09-10T00:04:34Z",
       "releases_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/releases{/id}",
-      "size": 3776,
+      "size": 3809,
       "ssh_url": "git@github.com:oauth-wg/oauth-identity-assertion-authz-grant.git",
-      "stargazers_count": 8,
+      "stargazers_count": 9,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/stargazers",
       "statuses_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/statuses/{sha}",
       "subscribers_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/subscribers",
@@ -95448,11 +95664,11 @@
       "teams_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/teams",
       "topics": [],
       "trees_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/git/trees{/sha}",
-      "updated_at": "2026-06-18T20:48:06Z",
+      "updated_at": "2026-09-09T14:50:18Z",
       "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
       "visibility": "public",
-      "watchers": 8,
-      "watchers_count": 8,
+      "watchers": 9,
+      "watchers_count": 9,
       "web_commit_signoff_required": false
     },
     {
@@ -95478,8 +95694,8 @@
       "downloads_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/downloads",
       "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/events",
       "fork": false,
-      "forks": 11,
-      "forks_count": 11,
+      "forks": 12,
+      "forks_count": 12,
       "forks_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/forks",
       "full_name": "oauth-wg/draft-ietf-oauth-client-id-metadata-document",
       "git_commits_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/git/commits{/sha}",
@@ -95551,9 +95767,9 @@
       "private": false,
       "pull_request_creation_policy": "all",
       "pulls_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pulls{/number}",
-      "pushed_at": "2026-09-06T00:00:27Z",
+      "pushed_at": "2026-09-10T00:00:36Z",
       "releases_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/releases{/id}",
-      "size": 431,
+      "size": 562,
       "ssh_url": "git@github.com:oauth-wg/draft-ietf-oauth-client-id-metadata-document.git",
       "stargazers_count": 15,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/stargazers",
@@ -96041,5 +96257,5 @@
       "web_commit_signoff_required": false
     }
   ],
-  "snapshot_date": "2026-09-09"
+  "snapshot_date": "2026-09-10"
 }
