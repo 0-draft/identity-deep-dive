@@ -1,8 +1,84 @@
 {
-  "collected_at": "2026-09-15T11:24:54+00:00",
+  "collected_at": "2026-09-16T11:10:15+00:00",
   "issues": {
     "error": null,
     "items": [
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "NONE",
+        "body": "I sent this to `last-call@ietf.org` during IETF Last Call on draft-19, but it has not appeared in the archive, so I am filing it here as well rather than let it go unrecorded. Apologies if it reaches you twice.\n\nI maintain a relying-party verifier listed by the OpenID Foundation as certified on 11 September 2026 to the OID4VP-1.0+HAIP-1.0 Verifier `sd_jwt_vc direct_post.jwt` and `iso_mdl direct_post.jwt` profiles. The points below came out of verifying live PIDs from the European Commission's EUDI Wallet reference deployment.\n\n### The evidence\n\nA PID captured from the EC reference wallet on 5 September 2026:\n\n```\nheader: {\"alg\":\"ES256\",\"typ\":\"dc+sd-jwt\",\"x5c\":[<one certificate>]}\niss:    \"https://backend.issuer.eudiw.dev\"\nvct:    \"urn:eudi:pid:1\"\n```\n\nThe `x5c` array has exactly one entry. That certificate's subject is `CN=PID DS - 002, O=EUDI Wallet Reference Implementation, C=UT`, and **it has no subjectAltName extension**. The extensions present are basicConstraints, authorityKeyIdentifier, authorityInfoAccess, certificatePolicies, extendedKeyUsage, cRLDistributionPoints, subjectKeyIdentifier, keyUsage and qcStatements.\n\nSo `iss` is an HTTPS URI that appears nowhere in the certificate.\n\n### The problem\n\nSection 2.2.2.3 says `iss` \"explicitly indicates the Issuer of the Verifiable Digital Credential when it is not conveyed by other means (e.g., the subject of the end-entity certificate of an x5c header)\". I read that as: with `x5c` present, `iss` is redundant and carries no weight.\n\nSection 7.3 pushes the other way. It says it is \"critical that those rules maintain the integrity of the relationship between the iss value of the SD-JWT, if present, and the public keys of the Issuer.\" That reads as: `iss` still means something, even alongside `x5c`.\n\nSection 2.5 says nothing about the case where both are present, which is the shape of every EU reference credential I have seen.\n\nThis is not theoretical. Credo (credo-ts) v0.7.0 `SdJwtVcService.assertValidX5cJwtIssuer` requires `iss` to match a SAN-URI entry in the end-entity certificate, or its domain to match a SAN-DNS entry, and rejects the credential otherwise. Against the EC reference issuer that rejects everything, because there is no SAN to match. We carry a local patch to relax it. Someone reading the same text has clearly reached the opposite conclusion from mine.\n\n### Suggested resolution\n\nOne sentence in Section 2.5, whichever reflects working group intent. Either:\n\n> \"When the x5c parameter is present, the iss claim is not used for key discovery and MUST NOT be required to correspond to any name in the end-entity certificate.\"\n\nor a statement of whatever matching rule is intended. I do not mind which. I would like the document to pick one.\n",
+        "closed_at": null,
+        "comments": 1,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433/comments",
+        "created_at": "2026-09-15T05:31:08Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433/events",
+        "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/433",
+        "id": 5457953109,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOJbVClc8AAAABRVHBVQ",
+        "number": 433,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433/timeline",
+        "title": "Section 2.5: relationship between `iss` and the x5c end-entity certificate is unspecified",
+        "type": null,
+        "updated_at": "2026-09-15T22:13:09Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/59632614?v=4",
+          "events_url": "https://api.github.com/users/Nas2020/events{/privacy}",
+          "followers_url": "https://api.github.com/users/Nas2020/followers",
+          "following_url": "https://api.github.com/users/Nas2020/following{/other_user}",
+          "gists_url": "https://api.github.com/users/Nas2020/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/Nas2020",
+          "id": 59632614,
+          "login": "Nas2020",
+          "node_id": "MDQ6VXNlcjU5NjMyNjE0",
+          "organizations_url": "https://api.github.com/users/Nas2020/orgs",
+          "received_events_url": "https://api.github.com/users/Nas2020/received_events",
+          "repos_url": "https://api.github.com/users/Nas2020/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/Nas2020/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/Nas2020/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/Nas2020",
+          "user_view_type": "public"
+        }
+      },
       {
         "active_lock_reason": null,
         "assignee": null,
@@ -209,82 +285,6 @@
         "type": null,
         "updated_at": "2026-09-15T05:31:22Z",
         "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/434",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/59632614?v=4",
-          "events_url": "https://api.github.com/users/Nas2020/events{/privacy}",
-          "followers_url": "https://api.github.com/users/Nas2020/followers",
-          "following_url": "https://api.github.com/users/Nas2020/following{/other_user}",
-          "gists_url": "https://api.github.com/users/Nas2020/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/Nas2020",
-          "id": 59632614,
-          "login": "Nas2020",
-          "node_id": "MDQ6VXNlcjU5NjMyNjE0",
-          "organizations_url": "https://api.github.com/users/Nas2020/orgs",
-          "received_events_url": "https://api.github.com/users/Nas2020/received_events",
-          "repos_url": "https://api.github.com/users/Nas2020/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/Nas2020/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/Nas2020/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/Nas2020",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "NONE",
-        "body": "I sent this to `last-call@ietf.org` during IETF Last Call on draft-19, but it has not appeared in the archive, so I am filing it here as well rather than let it go unrecorded. Apologies if it reaches you twice.\n\nI maintain a relying-party verifier listed by the OpenID Foundation as certified on 11 September 2026 to the OID4VP-1.0+HAIP-1.0 Verifier `sd_jwt_vc direct_post.jwt` and `iso_mdl direct_post.jwt` profiles. The points below came out of verifying live PIDs from the European Commission's EUDI Wallet reference deployment.\n\n### The evidence\n\nA PID captured from the EC reference wallet on 5 September 2026:\n\n```\nheader: {\"alg\":\"ES256\",\"typ\":\"dc+sd-jwt\",\"x5c\":[<one certificate>]}\niss:    \"https://backend.issuer.eudiw.dev\"\nvct:    \"urn:eudi:pid:1\"\n```\n\nThe `x5c` array has exactly one entry. That certificate's subject is `CN=PID DS - 002, O=EUDI Wallet Reference Implementation, C=UT`, and **it has no subjectAltName extension**. The extensions present are basicConstraints, authorityKeyIdentifier, authorityInfoAccess, certificatePolicies, extendedKeyUsage, cRLDistributionPoints, subjectKeyIdentifier, keyUsage and qcStatements.\n\nSo `iss` is an HTTPS URI that appears nowhere in the certificate.\n\n### The problem\n\nSection 2.2.2.3 says `iss` \"explicitly indicates the Issuer of the Verifiable Digital Credential when it is not conveyed by other means (e.g., the subject of the end-entity certificate of an x5c header)\". I read that as: with `x5c` present, `iss` is redundant and carries no weight.\n\nSection 7.3 pushes the other way. It says it is \"critical that those rules maintain the integrity of the relationship between the iss value of the SD-JWT, if present, and the public keys of the Issuer.\" That reads as: `iss` still means something, even alongside `x5c`.\n\nSection 2.5 says nothing about the case where both are present, which is the shape of every EU reference credential I have seen.\n\nThis is not theoretical. Credo (credo-ts) v0.7.0 `SdJwtVcService.assertValidX5cJwtIssuer` requires `iss` to match a SAN-URI entry in the end-entity certificate, or its domain to match a SAN-DNS entry, and rejects the credential otherwise. Against the EC reference issuer that rejects everything, because there is no SAN to match. We carry a local patch to relax it. Someone reading the same text has clearly reached the opposite conclusion from mine.\n\n### Suggested resolution\n\nOne sentence in Section 2.5, whichever reflects working group intent. Either:\n\n> \"When the x5c parameter is present, the iss claim is not used for key discovery and MUST NOT be required to correspond to any name in the end-entity certificate.\"\n\nor a statement of whatever matching rule is intended. I do not mind which. I would like the document to pick one.\n",
-        "closed_at": null,
-        "comments": 0,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433/comments",
-        "created_at": "2026-09-15T05:31:08Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433/events",
-        "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/433",
-        "id": 5457953109,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOJbVClc8AAAABRVHBVQ",
-        "number": 433,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
-        "score": 1.0,
-        "state": "open",
-        "state_reason": null,
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433/timeline",
-        "title": "Section 2.5: relationship between `iss` and the x5c end-entity certificate is unspecified",
-        "type": null,
-        "updated_at": "2026-09-15T05:31:08Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433",
         "user": {
           "avatar_url": "https://avatars.githubusercontent.com/u/59632614?v=4",
           "events_url": "https://api.github.com/users/Nas2020/events{/privacy}",
@@ -48193,6 +48193,155 @@
   "org_events": [
     {
       "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/16320000?",
+        "display_login": "paulbastian",
+        "gravatar_id": "",
+        "id": 16320000,
+        "login": "paulbastian",
+        "url": "https://api.github.com/users/paulbastian"
+      },
+      "created_at": "2026-09-15T21:25:15Z",
+      "id": "15101962244",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "I support this, see similar discussion on WIA: https://github.com/openid/OpenID4VC-HAIP/issues/352\n\nEdit: as I see this, iss is already optional, but it should be discouraged. ",
+          "created_at": "2026-09-15T21:25:15Z",
+          "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/433#issuecomment-5688304894",
+          "id": 5688304894,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433",
+          "minimized": null,
+          "node_id": "IC_kwDOJbVClc8AAAABUwyk_g",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/comments/5688304894/reactions"
+          },
+          "updated_at": "2026-09-15T22:13:09Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/comments/5688304894",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/16320000?v=4",
+            "events_url": "https://api.github.com/users/paulbastian/events{/privacy}",
+            "followers_url": "https://api.github.com/users/paulbastian/followers",
+            "following_url": "https://api.github.com/users/paulbastian/following{/other_user}",
+            "gists_url": "https://api.github.com/users/paulbastian/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/paulbastian",
+            "id": 16320000,
+            "login": "paulbastian",
+            "node_id": "MDQ6VXNlcjE2MzIwMDAw",
+            "organizations_url": "https://api.github.com/users/paulbastian/orgs",
+            "received_events_url": "https://api.github.com/users/paulbastian/received_events",
+            "repos_url": "https://api.github.com/users/paulbastian/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/paulbastian/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/paulbastian/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/paulbastian",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "I sent this to `last-call@ietf.org` during IETF Last Call on draft-19, but it has not appeared in the archive, so I am filing it here as well rather than let it go unrecorded. Apologies if it reaches you twice.\n\nI maintain a relying-party verifier listed by the OpenID Foundation as certified on 11 September 2026 to the OID4VP-1.0+HAIP-1.0 Verifier `sd_jwt_vc direct_post.jwt` and `iso_mdl direct_post.jwt` profiles. The points below came out of verifying live PIDs from the European Commission's EUDI Wallet reference deployment.\n\n### The evidence\n\nA PID captured from the EC reference wallet on 5 September 2026:\n\n```\nheader: {\"alg\":\"ES256\",\"typ\":\"dc+sd-jwt\",\"x5c\":[<one certificate>]}\niss:    \"https://backend.issuer.eudiw.dev\"\nvct:    \"urn:eudi:pid:1\"\n```\n\nThe `x5c` array has exactly one entry. That certificate's subject is `CN=PID DS - 002, O=EUDI Wallet Reference Implementation, C=UT`, and **it has no subjectAltName extension**. The extensions present are basicConstraints, authorityKeyIdentifier, authorityInfoAccess, certificatePolicies, extendedKeyUsage, cRLDistributionPoints, subjectKeyIdentifier, keyUsage and qcStatements.\n\nSo `iss` is an HTTPS URI that appears nowhere in the certificate.\n\n### The problem\n\nSection 2.2.2.3 says `iss` \"explicitly indicates the Issuer of the Verifiable Digital Credential when it is not conveyed by other means (e.g., the subject of the end-entity certificate of an x5c header)\". I read that as: with `x5c` present, `iss` is redundant and carries no weight.\n\nSection 7.3 pushes the other way. It says it is \"critical that those rules maintain the integrity of the relationship between the iss value of the SD-JWT, if present, and the public keys of the Issuer.\" That reads as: `iss` still means something, even alongside `x5c`.\n\nSection 2.5 says nothing about the case where both are present, which is the shape of every EU reference credential I have seen.\n\nThis is not theoretical. Credo (credo-ts) v0.7.0 `SdJwtVcService.assertValidX5cJwtIssuer` requires `iss` to match a SAN-URI entry in the end-entity certificate, or its domain to match a SAN-DNS entry, and rejects the credential otherwise. Against the EC reference issuer that rejects everything, because there is no SAN to match. We carry a local patch to relax it. Someone reading the same text has clearly reached the opposite conclusion from mine.\n\n### Suggested resolution\n\nOne sentence in Section 2.5, whichever reflects working group intent. Either:\n\n> \"When the x5c parameter is present, the iss claim is not used for key discovery and MUST NOT be required to correspond to any name in the end-entity certificate.\"\n\nor a statement of whatever matching rule is intended. I do not mind which. I would like the document to pick one.\n",
+          "closed_at": null,
+          "comments": 1,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433/comments",
+          "created_at": "2026-09-15T05:31:08Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433/events",
+          "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/433",
+          "id": 5457953109,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJbVClc8AAAABRVHBVQ",
+          "number": 433,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433/timeline",
+          "title": "Section 2.5: relationship between `iss` and the x5c end-entity certificate is unspecified",
+          "type": null,
+          "updated_at": "2026-09-15T22:13:09Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/59632614?v=4",
+            "events_url": "https://api.github.com/users/Nas2020/events{/privacy}",
+            "followers_url": "https://api.github.com/users/Nas2020/followers",
+            "following_url": "https://api.github.com/users/Nas2020/following{/other_user}",
+            "gists_url": "https://api.github.com/users/Nas2020/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/Nas2020",
+            "id": 59632614,
+            "login": "Nas2020",
+            "node_id": "MDQ6VXNlcjU5NjMyNjE0",
+            "organizations_url": "https://api.github.com/users/Nas2020/orgs",
+            "received_events_url": "https://api.github.com/users/Nas2020/received_events",
+            "repos_url": "https://api.github.com/users/Nas2020/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/Nas2020/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/Nas2020/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/Nas2020",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 632636053,
+        "name": "oauth-wg/oauth-sd-jwt-vc",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
         "avatar_url": "https://avatars.githubusercontent.com/u/8774236?",
         "display_login": "c2bo",
         "gravatar_id": "",
@@ -48824,7 +48973,7 @@
           "assignees": [],
           "body": "I sent this to `last-call@ietf.org` during IETF Last Call on draft-19, but it has not appeared in the archive, so I am filing it here as well rather than let it go unrecorded. Apologies if it reaches you twice.\n\nI maintain a relying-party verifier listed by the OpenID Foundation as certified on 11 September 2026 to the OID4VP-1.0+HAIP-1.0 Verifier `sd_jwt_vc direct_post.jwt` and `iso_mdl direct_post.jwt` profiles. The points below came out of verifying live PIDs from the European Commission's EUDI Wallet reference deployment.\n\n### The evidence\n\nA PID captured from the EC reference wallet on 5 September 2026:\n\n```\nheader: {\"alg\":\"ES256\",\"typ\":\"dc+sd-jwt\",\"x5c\":[<one certificate>]}\niss:    \"https://backend.issuer.eudiw.dev\"\nvct:    \"urn:eudi:pid:1\"\n```\n\nThe `x5c` array has exactly one entry. That certificate's subject is `CN=PID DS - 002, O=EUDI Wallet Reference Implementation, C=UT`, and **it has no subjectAltName extension**. The extensions present are basicConstraints, authorityKeyIdentifier, authorityInfoAccess, certificatePolicies, extendedKeyUsage, cRLDistributionPoints, subjectKeyIdentifier, keyUsage and qcStatements.\n\nSo `iss` is an HTTPS URI that appears nowhere in the certificate.\n\n### The problem\n\nSection 2.2.2.3 says `iss` \"explicitly indicates the Issuer of the Verifiable Digital Credential when it is not conveyed by other means (e.g., the subject of the end-entity certificate of an x5c header)\". I read that as: with `x5c` present, `iss` is redundant and carries no weight.\n\nSection 7.3 pushes the other way. It says it is \"critical that those rules maintain the integrity of the relationship between the iss value of the SD-JWT, if present, and the public keys of the Issuer.\" That reads as: `iss` still means something, even alongside `x5c`.\n\nSection 2.5 says nothing about the case where both are present, which is the shape of every EU reference credential I have seen.\n\nThis is not theoretical. Credo (credo-ts) v0.7.0 `SdJwtVcService.assertValidX5cJwtIssuer` requires `iss` to match a SAN-URI entry in the end-entity certificate, or its domain to match a SAN-DNS entry, and rejects the credential otherwise. Against the EC reference issuer that rejects everything, because there is no SAN to match. We carry a local patch to relax it. Someone reading the same text has clearly reached the opposite conclusion from mine.\n\n### Suggested resolution\n\nOne sentence in Section 2.5, whichever reflects working group intent. Either:\n\n> \"When the x5c parameter is present, the iss claim is not used for key discovery and MUST NOT be required to correspond to any name in the end-entity certificate.\"\n\nor a statement of whatever matching rule is intended. I do not mind which. I would like the document to pick one.\n",
           "closed_at": null,
-          "comments": 0,
+          "comments": 1,
           "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433/comments",
           "created_at": "2026-09-15T05:31:08Z",
           "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433/events",
@@ -48868,7 +49017,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433/timeline",
           "title": "Section 2.5: relationship between `iss` and the x5c end-entity certificate is unspecified",
           "type": null,
-          "updated_at": "2026-09-15T05:31:08Z",
+          "updated_at": "2026-09-15T22:13:09Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/433",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/59632614?v=4",
@@ -55312,39 +55461,6 @@
         "id": 631317608,
         "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
         "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/113001?",
-        "display_login": "aaronpk",
-        "gravatar_id": "",
-        "id": 113001,
-        "login": "aaronpk",
-        "url": "https://api.github.com/users/aaronpk"
-      },
-      "created_at": "2026-09-03T00:03:47Z",
-      "id": "19928794398",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "fbb6a3f2cbf84bc55ddd15172800e61dd6a3e0db",
-        "head": "d04b368313c8835a930a2e55a68ef547312b7b32",
-        "push_id": 42353247914,
-        "ref": "refs/heads/main",
-        "repository_id": 239594214
-      },
-      "public": true,
-      "repo": {
-        "id": 239594214,
-        "name": "oauth-wg/oauth-v2-1",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-v2-1"
       },
       "type": "PushEvent"
     }
@@ -95720,5 +95836,5 @@
       "web_commit_signoff_required": false
     }
   ],
-  "snapshot_date": "2026-09-15"
+  "snapshot_date": "2026-09-16"
 }
