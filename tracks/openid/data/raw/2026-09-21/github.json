@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-09-21T12:24:34+00:00",
+  "collected_at": "2026-09-21T14:36:34+00:00",
   "merged_prs_30d": {
     "error": null,
     "incomplete_results": false,
@@ -14370,7 +14370,7 @@
         "author_association": "NONE",
         "body": "I’m working through an MCP authorization scenario where policy needs to evaluate both:\n\n* the human principal on whose behalf an operation is being performed, and\n* the specific agent/client performing that operation.\n\nThis seems adjacent to #492 and #483, but I think the question here is specifically about the **trust semantics** of the acting-agent identity rather than whether that identity should be represented.\n\nCOAZ-MCP models the two identities cleanly:\n\n* `subject.id` represents the principal on whose behalf access is requested.\n* `context.agent` represents the acting agent/client and may be populated from `$token.?client_id`.\n\nFor example, a declared mapping could contain:\n\n```json\n{\n  \"subject\": {\n    \"type\": \"identity\",\n    \"id\": \"$token.sub\"\n  },\n  \"context\": {\n    \"agent\": \"$token.?client_id\"\n  }\n}\n```\n\nMy understanding of the current trust model is:\n\n* `subject.id` is the trust-anchored field in the COAZ-MCP binding.\n* For a declared mapping, `action`, `resource`, `context`, and subject attributes other than verified `subject.id` are not authoritative for identity or privilege unless independently established by the PDP/PEP.\n\nThat leaves me unsure about the intended handling of `context.agent`.\n\nSuppose the PEP has validated the access token and `context.agent` is derived specifically from the validated token’s `client_id`.\n\nShould a PDP be able to use that value authoritatively for a policy such as:\n\n> Allow this user to perform the operation only when the acting agent/client is X.\n\nOr is `context.agent` intentionally still considered untrusted under the declared-mapping model, requiring the PDP to obtain the agent/client identity independently from another trusted source?\n\nThe COAZ Framework appears to allow a binding to designate multiple trust-anchored fields. If the intent is for policies to reason about both principal identity and acting-agent identity, would it make sense for COAZ-MCP to trust-anchor `context.agent` when it is derived from an agreed validated-token claim such as `client_id`, with the PEP verifying or substituting it similarly to `subject.id`?\n\nThe distinction seems important for zero-trust agent authorization because the policy question can be:\n\n> May Alice perform this action?\n\nand separately:\n\n> May Alice perform this action through this particular acting agent/client?\n\nI may be missing an existing mechanism or intended pattern here, so clarification would be helpful before assuming that an additional trust anchor is needed.\n",
         "closed_at": null,
-        "comments": 14,
+        "comments": 15,
         "comments_url": "https://api.github.com/repos/openid/authzen/issues/612/comments",
         "created_at": "2026-08-09T05:44:48Z",
         "events_url": "https://api.github.com/repos/openid/authzen/issues/612/events",
@@ -14427,7 +14427,7 @@
         "timeline_url": "https://api.github.com/repos/openid/authzen/issues/612/timeline",
         "title": "Should `context.agent` be trust-anchored when derived from the validated token?",
         "type": null,
-        "updated_at": "2026-09-20T04:10:11Z",
+        "updated_at": "2026-09-21T12:53:00Z",
         "url": "https://api.github.com/repos/openid/authzen/issues/612",
         "user": {
           "avatar_url": "https://avatars.githubusercontent.com/u/4277792?v=4",
@@ -124080,7 +124080,7 @@
       "pulls_url": "https://api.github.com/repos/openid/dchp/pulls{/number}",
       "pushed_at": "2026-09-21T12:22:42Z",
       "releases_url": "https://api.github.com/repos/openid/dchp/releases{/id}",
-      "size": 330,
+      "size": 352,
       "ssh_url": "git@github.com:openid/dchp.git",
       "stargazers_count": 19,
       "stargazers_url": "https://api.github.com/repos/openid/dchp/stargazers",
