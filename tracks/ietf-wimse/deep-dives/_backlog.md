@@ -1,16 +1,17 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-09-21T14:36:19+00:00
+Generated at: 2026-09-22T11:14:51+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
-| 1 | 9 | Investigate mailing-list trend: ai-agent | topic=ai-agent count=4 |
-| 2 | 9 | Investigate mailing-list trend: http-signature | topic=http-signature count=4 |
-| 3 | 7 | Diff active WG draft: draft-ietf-wimse-aims-00 | draft-ietf-wimse-aims-00 (2026-09-15) |
-| 4 | 7 | Diff active WG draft: draft-ietf-wimse-http-signature-07 | draft-ietf-wimse-http-signature-07 (2026-09-20) |
-| 5 | 7 | Diff active WG draft: draft-ietf-wimse-wpt-02 | draft-ietf-wimse-wpt-02 (2026-08-27) |
-| 6 | 6 | Review related draft: draft-asor-wimse-agent-delegation-chain-01 | draft-asor-wimse-agent-delegation-chain-01 (2026-09-03) |
-| 7 | 6 | Review related draft: draft-reddy-wimse-aggregate-signatures-00 | draft-reddy-wimse-aggregate-signatures-00 (2026-09-08) |
-| 8 | 6 | Review related draft: draft-reece-wimse-cross-org-delegation-02 | draft-reece-wimse-cross-org-delegation-02 (2026-08-31) |
-| 9 | 6 | Review related draft: draft-seymour-wimse-connected-flight-00 | draft-seymour-wimse-connected-flight-00 (2026-09-18) |
-| 10 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-06 | draft-ietf-wimse-workload-identity-practices-06 (2026-08-11) |
+| 1 | 7 | Diff active WG draft: draft-ietf-wimse-aims-00 | draft-ietf-wimse-aims-00 (2026-09-15) |
+| 2 | 7 | Diff active WG draft: draft-ietf-wimse-http-signature-07 | draft-ietf-wimse-http-signature-07 (2026-09-20) |
+| 3 | 7 | Diff active WG draft: draft-ietf-wimse-wpt-02 | draft-ietf-wimse-wpt-02 (2026-08-27) |
+| 4 | 6 | Review related draft: draft-asor-wimse-agent-delegation-chain-01 | draft-asor-wimse-agent-delegation-chain-01 (2026-09-03) |
+| 5 | 6 | Review related draft: draft-atakora-wimse-sadp-delegation-01 | draft-atakora-wimse-sadp-delegation-01 (2026-09-21) |
+| 6 | 6 | Review related draft: draft-gilda-wimse-agent-audit-record-00 | draft-gilda-wimse-agent-audit-record-00 (2026-09-21) |
+| 7 | 6 | Review related draft: draft-jackson-wimse-evaluation-00 | draft-jackson-wimse-evaluation-00 (2026-09-21) |
+| 8 | 6 | Review related draft: draft-reddy-wimse-aggregate-signatures-00 | draft-reddy-wimse-aggregate-signatures-00 (2026-09-08) |
+| 9 | 6 | Review related draft: draft-reece-wimse-cross-org-delegation-02 | draft-reece-wimse-cross-org-delegation-02 (2026-08-31) |
+| 10 | 6 | Review related draft: draft-seymour-wimse-connected-flight-00 | draft-seymour-wimse-connected-flight-00 (2026-09-18) |
+| 11 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-06 | draft-ietf-wimse-workload-identity-practices-06 (2026-08-11) |
