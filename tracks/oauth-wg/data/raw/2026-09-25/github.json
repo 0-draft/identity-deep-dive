@@ -1,8 +1,84 @@
 {
-  "collected_at": "2026-09-24T11:24:11+00:00",
+  "collected_at": "2026-09-25T11:30:03+00:00",
   "issues": {
     "error": null,
     "items": [
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "MEMBER",
+        "body": "> I support publication of this document.\n> I have implemented the newest draft version (without the DPoP combined mode) and have plans to use it in production deployments.\n> \n> Some comments based on my implementation experience:\n> - As written, the spec does not normatively require replay protection for PoPs to actually be implemented by the verifier. Is this intentional?\n> - Even though trust management is explicitly out of scope, I think there should be a normative statement that an AS which trusts multiple attesters must somehow scope the accepted client_ids to each attester to prevent multiple attesters from asserting the same client_id.\n> - I think there might be a kind of mild \"downgrade\" attack allowing a mode switch from \"normal\" to \"combined\" by removing the PoP header. The severity of this is probably pretty limited, but it feels fragile to signal combined mode only by the absence of the OAuth-Client-Attestation-PoP header.\n> - I think iat should be REQUIRED. Otherwise, the AS cannot actually determine how fresh an attestation is, and has to exclusively rely on the exp from the attester which the AS does not control.\n> - I didn't implement combined mode, but I think that there should be a line explicitly saying that a server implementing combined mode SHOULD also provide DPoP nonces (which are optional in RFC 9449).\n> - The text is not currently clear on the fact that a client instance needs to remember which client instance key each instance-bound protocol artifact (i.e. refresh tokens) is actually bound to. If it doesn't do this, changing client instance keys will result in bad user experiences (potentially unbounded retries). Usually the client instance key rotation is not the choice of the client instance, but is something the platform does for your e.g. when biometrics are reset/updated, so this is something that will happen to most implementations. Guidance would be helpful.\n> - It would be helpful for interoperability to define the status codes that should be used for use_fresh_attestation and invalid_client_attestation errors.\n> - I disagree with Denis' comment #1 about revocation. A revocation status check would allow the attester to learn which AS the client is talking to which goes against the core design goal for the wallet use case. The expiration is enough and aligned with how DPoP and private_key_jwt works.\n> - Regarding Denis' comment #2, I think the current text is clear enough and that the proposed text introduces unnecessary redundancy.\n> - I disagree with Denis' comment #5 about sub correlation. The sub generally identifies the client software (via client_id), not the instance. It therefore does not let two servers determine that they saw the same instance, only that they saw instances of the same software. The point about revocation is also not correct, as the sub does not identify specific instances.\n> - I agree in principle with Denis' comment #7 about trust in additionally attested claims, though I think the framing about liability is inappropriate in an IETF document.\n> \n> Nits (line numbers in .txt version linked in Rifaat's message):\n> - Heading capitalization seems a bit random\n> - Inconsistent use of OAuth 2 and OAuth 2.0.\n> - Inconsistent use of \"use case\" and \"use-case\"\n> - The steps listed for validation in section 7.3 are not really written as steps. The sentence should probably be rewritten to match the \"conditions and rules\" framing in section 7.2.\n> - The \"applications using this media type\" field in the IANA registration for oauth-client-attestation-pop+jwt looks wrong. I would expect it to say something like \"applications that use this spec to convey a client attestation with PoP\" but the text currently mentions token status information.\n> - The document history for version 11 has a duplicate bullet about removing the duplication challenge verification.\n> - Section 10.5 mentions size limits \"as of 2024\" which should probably be updated to the current limits.\n> - The HTTP syntax uses token68 which I think is supposed to be deprecated (see section 16.4.2 of RFC 9110). I'm also not sure it is compatible with defining the HTTP field types as \"Item\".\n> - Line 753 says \"an use_attestation_challenge\" instead of \"a use_attestation_challenge\"\n> - Line 830 says \"a HTTP header-based\" instead of \"an HTTP header-based\"\n> - Line 1444 says that cryptographic operations need to be constructed, where I think you mean that they need to be performed\n> - Line 1522 says \"and or\" instead of \"and/or\"\n> - Line 1524: what is \"the HTTP\"? Just HTTP or is there a missing word here?\n> - Lines 1670 and 1692 say \"Details how ... is given in ...\" instead of \"Details how ... are given in ...\"\n> - Line 2559 says \"Verifivation\" instead of \"Verification\"\n> - Line 2567 does not really make sense as a sentence\n> - Line 2664 says \"it's own top\" instead of \"its own top\"\n> - Line 2766 calls the header Oauth-Client-Attestation instead of OAuth-Client-Attestation\n> - I think the document could generally benefit from a grammar pass.\n> \n> Cheers,\n> Frederik",
+        "closed_at": null,
+        "comments": 2,
+        "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225/comments",
+        "created_at": "2026-09-21T20:08:12Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225/events",
+        "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225",
+        "id": 5531914693,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOJaEkaM8AAAABSbpRxQ",
+        "number": 225,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225/timeline",
+        "title": "Frederik's feedback from WGLC",
+        "type": null,
+        "updated_at": "2026-09-24T20:10:24Z",
+        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/8774236?v=4",
+          "events_url": "https://api.github.com/users/c2bo/events{/privacy}",
+          "followers_url": "https://api.github.com/users/c2bo/followers",
+          "following_url": "https://api.github.com/users/c2bo/following{/other_user}",
+          "gists_url": "https://api.github.com/users/c2bo/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/c2bo",
+          "id": 8774236,
+          "login": "c2bo",
+          "node_id": "MDQ6VXNlcjg3NzQyMzY=",
+          "organizations_url": "https://api.github.com/users/c2bo/orgs",
+          "received_events_url": "https://api.github.com/users/c2bo/received_events",
+          "repos_url": "https://api.github.com/users/c2bo/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/c2bo/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/c2bo/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/c2bo",
+          "user_view_type": "public"
+        }
+      },
       {
         "active_lock_reason": null,
         "assignee": null,
@@ -76,82 +152,6 @@
           "subscriptions_url": "https://api.github.com/users/dlozlla/subscriptions",
           "type": "User",
           "url": "https://api.github.com/users/dlozlla",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "MEMBER",
-        "body": "> I support publication of this document.\n> I have implemented the newest draft version (without the DPoP combined mode) and have plans to use it in production deployments.\n> \n> Some comments based on my implementation experience:\n> - As written, the spec does not normatively require replay protection for PoPs to actually be implemented by the verifier. Is this intentional?\n> - Even though trust management is explicitly out of scope, I think there should be a normative statement that an AS which trusts multiple attesters must somehow scope the accepted client_ids to each attester to prevent multiple attesters from asserting the same client_id.\n> - I think there might be a kind of mild \"downgrade\" attack allowing a mode switch from \"normal\" to \"combined\" by removing the PoP header. The severity of this is probably pretty limited, but it feels fragile to signal combined mode only by the absence of the OAuth-Client-Attestation-PoP header.\n> - I think iat should be REQUIRED. Otherwise, the AS cannot actually determine how fresh an attestation is, and has to exclusively rely on the exp from the attester which the AS does not control.\n> - I didn't implement combined mode, but I think that there should be a line explicitly saying that a server implementing combined mode SHOULD also provide DPoP nonces (which are optional in RFC 9449).\n> - The text is not currently clear on the fact that a client instance needs to remember which client instance key each instance-bound protocol artifact (i.e. refresh tokens) is actually bound to. If it doesn't do this, changing client instance keys will result in bad user experiences (potentially unbounded retries). Usually the client instance key rotation is not the choice of the client instance, but is something the platform does for your e.g. when biometrics are reset/updated, so this is something that will happen to most implementations. Guidance would be helpful.\n> - It would be helpful for interoperability to define the status codes that should be used for use_fresh_attestation and invalid_client_attestation errors.\n> - I disagree with Denis' comment #1 about revocation. A revocation status check would allow the attester to learn which AS the client is talking to which goes against the core design goal for the wallet use case. The expiration is enough and aligned with how DPoP and private_key_jwt works.\n> - Regarding Denis' comment #2, I think the current text is clear enough and that the proposed text introduces unnecessary redundancy.\n> - I disagree with Denis' comment #5 about sub correlation. The sub generally identifies the client software (via client_id), not the instance. It therefore does not let two servers determine that they saw the same instance, only that they saw instances of the same software. The point about revocation is also not correct, as the sub does not identify specific instances.\n> - I agree in principle with Denis' comment #7 about trust in additionally attested claims, though I think the framing about liability is inappropriate in an IETF document.\n> \n> Nits (line numbers in .txt version linked in Rifaat's message):\n> - Heading capitalization seems a bit random\n> - Inconsistent use of OAuth 2 and OAuth 2.0.\n> - Inconsistent use of \"use case\" and \"use-case\"\n> - The steps listed for validation in section 7.3 are not really written as steps. The sentence should probably be rewritten to match the \"conditions and rules\" framing in section 7.2.\n> - The \"applications using this media type\" field in the IANA registration for oauth-client-attestation-pop+jwt looks wrong. I would expect it to say something like \"applications that use this spec to convey a client attestation with PoP\" but the text currently mentions token status information.\n> - The document history for version 11 has a duplicate bullet about removing the duplication challenge verification.\n> - Section 10.5 mentions size limits \"as of 2024\" which should probably be updated to the current limits.\n> - The HTTP syntax uses token68 which I think is supposed to be deprecated (see section 16.4.2 of RFC 9110). I'm also not sure it is compatible with defining the HTTP field types as \"Item\".\n> - Line 753 says \"an use_attestation_challenge\" instead of \"a use_attestation_challenge\"\n> - Line 830 says \"a HTTP header-based\" instead of \"an HTTP header-based\"\n> - Line 1444 says that cryptographic operations need to be constructed, where I think you mean that they need to be performed\n> - Line 1522 says \"and or\" instead of \"and/or\"\n> - Line 1524: what is \"the HTTP\"? Just HTTP or is there a missing word here?\n> - Lines 1670 and 1692 say \"Details how ... is given in ...\" instead of \"Details how ... are given in ...\"\n> - Line 2559 says \"Verifivation\" instead of \"Verification\"\n> - Line 2567 does not really make sense as a sentence\n> - Line 2664 says \"it's own top\" instead of \"its own top\"\n> - Line 2766 calls the header Oauth-Client-Attestation instead of OAuth-Client-Attestation\n> - I think the document could generally benefit from a grammar pass.\n> \n> Cheers,\n> Frederik",
-        "closed_at": null,
-        "comments": 2,
-        "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225/comments",
-        "created_at": "2026-09-21T20:08:12Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225/events",
-        "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225",
-        "id": 5531914693,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOJaEkaM8AAAABSbpRxQ",
-        "number": 225,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
-        "score": 1.0,
-        "state": "open",
-        "state_reason": null,
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225/timeline",
-        "title": "Frederik's feedback from WGLC",
-        "type": null,
-        "updated_at": "2026-09-22T09:16:08Z",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/8774236?v=4",
-          "events_url": "https://api.github.com/users/c2bo/events{/privacy}",
-          "followers_url": "https://api.github.com/users/c2bo/followers",
-          "following_url": "https://api.github.com/users/c2bo/following{/other_user}",
-          "gists_url": "https://api.github.com/users/c2bo/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/c2bo",
-          "id": 8774236,
-          "login": "c2bo",
-          "node_id": "MDQ6VXNlcjg3NzQyMzY=",
-          "organizations_url": "https://api.github.com/users/c2bo/orgs",
-          "received_events_url": "https://api.github.com/users/c2bo/received_events",
-          "repos_url": "https://api.github.com/users/c2bo/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/c2bo/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/c2bo/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/c2bo",
           "user_view_type": "public"
         }
       },
@@ -47619,6 +47619,35 @@
   "org_events": [
     {
       "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/256954193?",
+        "display_login": "janujanuscreations-afk",
+        "gravatar_id": "",
+        "id": 256954193,
+        "login": "janujanuscreations-afk",
+        "url": "https://api.github.com/users/janujanuscreations-afk"
+      },
+      "created_at": "2026-09-25T10:01:55Z",
+      "id": "15742208307",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "started"
+      },
+      "public": true,
+      "repo": {
+        "id": 632636053,
+        "name": "oauth-wg/oauth-sd-jwt-vc",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+      },
+      "type": "WatchEvent"
+    },
+    {
+      "actor": {
         "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
         "display_login": "github-actions",
         "gravatar_id": "",
@@ -49123,7 +49152,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225/timeline",
           "title": "Frederik's feedback from WGLC",
           "type": null,
-          "updated_at": "2026-09-22T09:16:08Z",
+          "updated_at": "2026-09-24T20:10:24Z",
           "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/8774236?v=4",
@@ -51149,7 +51178,7 @@
       "payload": {
         "action": "created",
         "comment": {
-          "body": "> As written, the spec does not normatively require replay protection for PoPs to actually be implemented by the verifier. Is this intentional?\n\nThat is intentional and mirrors DPoP's design by giving the server the freedom to choose to cache previously seen values (e.g., jti) or not. We are recommending Replay detection in this draft, but do not want to mandate it to give deployments the freedom.\n\n> Even though trust management is explicitly out of scope, I think there should be a normative statement that an AS which trusts multiple attesters must somehow scope the accepted client_ids to each attester to prevent multiple attesters from asserting the same client_id.\n\nThat sounds like a requirement with a rather specific deployment in mind. Given that a client attestation requires special integration with the client and the communication is out of scope of this document, we do believe it makes sense to keep the client attester relationship out of scope as well and as something that gets defined for specific use-cases.\n\n> I think there might be a kind of mild \"downgrade\" attack allowing a mode switch from \"normal\" to \"combined\" by removing the PoP header. The severity of this is probably pretty limited, but it feels fragile to signal combined mode only by the absence of the OAuth-Client-Attestation-PoP header.\n\nIt doesn't really change the security posture of the situation since it is only valid if DPoP is bound to the same public key. \n\n> I think iat should be REQUIRED. Otherwise, the AS cannot actually determine how fresh an attestation is, and has to exclusively rely on the exp from the attester which the AS does not control.\n\nDepends on specific deployment requirements, but might be worth it to switch from OPTIONAL to REQUIRED to always allow the consuming server to make their own policy decision. This would also match better with the`use_fresh_attestation` error. \n\n> I didn't implement combined mode, but I think that there should be a line explicitly saying that a server implementing combined mode SHOULD also provide DPoP nonces (which are optional in RFC 9449).\n\nWe currently do not have a recommendation that challenges should be used, leaving the server the decision to either use challenges or rely purely on `jti`. Given that we are not recommending challenges, we should not recommend nonces.\n\n> The text is not currently clear on the fact that a client instance needs to remember which client instance key each instance-bound protocol artifact (i.e. refresh tokens) is actually bound to. If it doesn't do this, changing client instance keys will result in bad user experiences (potentially unbounded retries). Usually the client instance key rotation is not the choice of the client instance, but is something the platform does for your e.g. when biometrics are reset/updated, so this is something that will happen to most implementations. Guidance would be helpful.\n\nProposal to add a note / implementation consideration that clients should manage what artefacts are bound to what keys.\n\n> It would be helpful for interoperability to define the status codes that should be used for use_fresh_attestation and invalid_client_attestation errors.\n\nError responses in OAuth default (mostly) to status code 400. It might be beneficial to make this explicit and define specific codes like 400 for use_fresh_attestation and 401 for invalid_client_attestation?",
+          "body": "> As written, the spec does not normatively require replay protection for PoPs to actually be implemented by the verifier. Is this intentional?\n\nThat is intentional and mirrors DPoP's design by giving the server the freedom to choose to cache previously seen values (e.g., jti) or not. We are recommending Replay detection in this draft, but do not want to mandate it to give deployments the freedom.\n\n> Even though trust management is explicitly out of scope, I think there should be a normative statement that an AS which trusts multiple attesters must somehow scope the accepted client_ids to each attester to prevent multiple attesters from asserting the same client_id.\n\nThat sounds like a requirement with a rather specific deployment in mind. Given that a client attestation requires special integration with the client and the communication is out of scope of this document, we do believe it makes sense to keep the client attester relationship out of scope as well and as something that gets defined for specific use-cases.\n\n> I think there might be a kind of mild \"downgrade\" attack allowing a mode switch from \"normal\" to \"combined\" by removing the PoP header. The severity of this is probably pretty limited, but it feels fragile to signal combined mode only by the absence of the OAuth-Client-Attestation-PoP header.\n\nIt doesn't really change the security posture of the situation since it is only valid if DPoP is bound to the same public key. \n\n> I think iat should be REQUIRED. Otherwise, the AS cannot actually determine how fresh an attestation is, and has to exclusively rely on the exp from the attester which the AS does not control.\n\nDepends on specific deployment requirements, but might be worth it to switch from OPTIONAL to REQUIRED to always allow the consuming server to make their own policy decision. This would also match better with the`use_fresh_attestation` error. \n\n> I didn't implement combined mode, but I think that there should be a line explicitly saying that a server implementing combined mode SHOULD also provide DPoP nonces (which are optional in RFC 9449).\n\nWe currently do not have a recommendation that challenges should be used, leaving the server the decision to either use challenges or rely purely on `jti`. Given that we are not recommending challenges, we should not recommend nonces.\n\n> The text is not currently clear on the fact that a client instance needs to remember which client instance key each instance-bound protocol artifact (i.e. refresh tokens) is actually bound to. If it doesn't do this, changing client instance keys will result in bad user experiences (potentially unbounded retries). Usually the client instance key rotation is not the choice of the client instance, but is something the platform does for your e.g. when biometrics are reset/updated, so this is something that will happen to most implementations. Guidance would be helpful.\n\nProposal to add a note / implementation consideration that clients should manage what artefacts are bound to what keys.\n\n> It would be helpful for interoperability to define the status codes that should be used for use_fresh_attestation and invalid_client_attestation errors.\n\nError responses in OAuth default (mostly) to status code 400. It might be beneficial to make this explicit and define specific codes like 400 for use_fresh_attestation and 401 for invalid_client_attestation? We'll propose text for this",
           "created_at": "2026-09-22T06:37:59Z",
           "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225#issuecomment-5772232461",
           "id": 5772232461,
@@ -51170,7 +51199,7 @@
             "total_count": 0,
             "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/comments/5772232461/reactions"
           },
-          "updated_at": "2026-09-22T06:37:59Z",
+          "updated_at": "2026-09-24T20:10:24Z",
           "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/comments/5772232461",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/8774236?v=4",
@@ -51244,7 +51273,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225/timeline",
           "title": "Frederik's feedback from WGLC",
           "type": null,
-          "updated_at": "2026-09-22T09:16:08Z",
+          "updated_at": "2026-09-24T20:10:24Z",
           "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/8774236?v=4",
@@ -51446,7 +51475,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225/timeline",
           "title": "Frederik's feedback from WGLC",
           "type": null,
-          "updated_at": "2026-09-22T09:16:08Z",
+          "updated_at": "2026-09-24T20:10:24Z",
           "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/8774236?v=4",
@@ -55499,109 +55528,6 @@
       },
       "payload": {
         "action": "closed",
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "Last Call comment on [draft-ietf-oauth-attestation-based-client-auth-11, Section 13](https://www.ietf.org/ietf-ftp/internet-drafts/draft-ietf-oauth-attestation-based-client-auth-11.html#section-13): please explicitly state that profiles may add registered claims to the Client Attestation JWT.\n\nSection 13 currently allows profiles to redefine the `typ` value, the `sub`/`client_id` mapping, and refresh-token binding, while retaining all other requirements. It does not explicitly cover adding claims while keeping the base `typ`, subject mapping, and proof requirements.\n\nThe [July 28 editors' call summary in #211](https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/211#issuecomment-5100678129) records the IETF 126 intent to leave room for a future `client_instance_id` and to provide a profiling/extension section. Explicit claims extensibility would complete that intent without defining an instance identifier in the base specification.\n\nSuggested sentence in Section 13, before its final paragraph:\n\n> A profile MAY define additional claims in the Client Attestation JWT, registered in the IANA \"JSON Web Token Claims\" registry, and specify their syntax, semantics, and processing requirements.\n\nThe motivating case is [Client Instance Identification for Attestation-Based Client Authentication](https://github.com/mcguinness/draft-mcguinness-oauth-client-instance-id), which proposes registration of `client_instance_id` while retaining `typ=oauth-client-attestation+jwt` and `sub=client_id`. The requested sentence permits that form of extension; it does not approve any particular claim or relax the existing proof, profile-selection, or refresh-token-binding requirements.\n",
-          "closed_at": "2026-09-15T05:20:01Z",
-          "comments": 0,
-          "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/222/comments",
-          "created_at": "2026-09-15T05:16:23Z",
-          "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/222/events",
-          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/222",
-          "id": 5457850732,
-          "issue_dependencies_summary": {
-            "blocked_by": 0,
-            "blocking": 0,
-            "total_blocked_by": 0,
-            "total_blocking": 0
-          },
-          "issue_field_values": [],
-          "labels": [],
-          "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/222/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "I_kwDOJaEkaM8AAAABRVAxbA",
-          "number": 222,
-          "performed_via_github_app": null,
-          "pinned_comment": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/222/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
-          "state": "closed",
-          "state_reason": "completed",
-          "sub_issues_summary": {
-            "completed": 0,
-            "percent_completed": 0,
-            "total": 0
-          },
-          "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/222/timeline",
-          "title": "Last Call: Section 13 should explicitly permit profiles to add registered claims",
-          "type": null,
-          "updated_at": "2026-09-15T05:20:01Z",
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/222",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
-            "events_url": "https://api.github.com/users/mcguinness/events{/privacy}",
-            "followers_url": "https://api.github.com/users/mcguinness/followers",
-            "following_url": "https://api.github.com/users/mcguinness/following{/other_user}",
-            "gists_url": "https://api.github.com/users/mcguinness/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/mcguinness",
-            "id": 1944352,
-            "login": "mcguinness",
-            "node_id": "MDQ6VXNlcjE5NDQzNTI=",
-            "organizations_url": "https://api.github.com/users/mcguinness/orgs",
-            "received_events_url": "https://api.github.com/users/mcguinness/received_events",
-            "repos_url": "https://api.github.com/users/mcguinness/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/mcguinness/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/mcguinness/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/mcguinness",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 631317608,
-        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
-      },
-      "type": "IssuesEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1944352?",
-        "display_login": "mcguinness",
-        "gravatar_id": "",
-        "id": 1944352,
-        "login": "mcguinness",
-        "url": "https://api.github.com/users/mcguinness"
-      },
-      "created_at": "2026-09-15T05:16:24Z",
-      "id": "15043747820",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "opened",
         "issue": {
           "active_lock_reason": null,
           "assignee": null,
@@ -94865,7 +94791,7 @@
       "releases_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/releases{/id}",
       "size": 5045,
       "ssh_url": "git@github.com:oauth-wg/oauth-sd-jwt-vc.git",
-      "stargazers_count": 30,
+      "stargazers_count": 31,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/stargazers",
       "statuses_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/statuses/{sha}",
       "subscribers_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/subscribers",
@@ -94877,11 +94803,11 @@
         "ietf-specification"
       ],
       "trees_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/git/trees{/sha}",
-      "updated_at": "2026-09-18T03:54:44Z",
+      "updated_at": "2026-09-25T10:01:55Z",
       "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
       "visibility": "public",
-      "watchers": 30,
-      "watchers_count": 30,
+      "watchers": 31,
+      "watchers_count": 31,
       "web_commit_signoff_required": false
     },
     {
@@ -96174,5 +96100,5 @@
       "web_commit_signoff_required": false
     }
   ],
-  "snapshot_date": "2026-09-24"
+  "snapshot_date": "2026-09-25"
 }
