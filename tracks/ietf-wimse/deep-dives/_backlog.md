@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-09-28T16:07:59+00:00
+Generated at: 2026-09-29T12:27:10+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -14,4 +14,5 @@ Generated at: 2026-09-28T16:07:59+00:00
 | 8 | 6 | Review related draft: draft-reddy-wimse-aggregate-signatures-01 | draft-reddy-wimse-aggregate-signatures-01 (2026-09-28) |
 | 9 | 6 | Review related draft: draft-reece-wimse-cross-org-delegation-02 | draft-reece-wimse-cross-org-delegation-02 (2026-08-31) |
 | 10 | 6 | Review related draft: draft-seymour-wimse-connected-flight-05 | draft-seymour-wimse-connected-flight-05 (2026-09-26) |
-| 11 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-07 | draft-ietf-wimse-workload-identity-practices-07 (2026-09-22) |
+| 11 | 6 | Review related draft: draft-uppalapati-wimse-pq-agent-identity-00 | draft-uppalapati-wimse-pq-agent-identity-00 (2026-09-28) |
+| 12 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-07 | draft-ietf-wimse-workload-identity-practices-07 (2026-09-22) |
