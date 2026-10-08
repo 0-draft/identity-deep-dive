@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-10-07T12:58:07+00:00",
+  "collected_at": "2026-10-08T13:06:09+00:00",
   "issues": {
     "error": null,
     "items": [
@@ -8,8 +8,84 @@
         "assignee": null,
         "assignees": [],
         "author_association": "NONE",
-        "body": "I sent this to `last-call@ietf.org` during IETF Last Call on draft-19, but it has not appeared in the archive, so I am filing it here as well. Apologies if it reaches you twice. Context and the credential this refers to are in the companion issue on `iss` and `x5c`.\n\n### The problem\n\nSection 7.3 says:\n\n> \"A Verifier MUST ensure that for any given iss value, an attacker cannot influence the type of verification process used.\"\n\nI agree with the requirement. My problem is that Section 2.5 gives me no way to satisfy it for the two mechanisms this document itself defines.\n\nThe EU reference credential triggers both at once: `iss` is an HTTPS URI, and `x5c` is present. Section 2.5 lists the two without precedence, and the rejection rule at the end of 2.5 is satisfied by \"a permitted key discovery and validation mechanism\" — any one of them.\n\nThey are not equivalent. Under `x5c` I end up at a key whose certificate chains to an anchor I already hold, which in the EU case was put on a trusted list by a third party. Under JWT VC Issuer Metadata I end up at whatever key is served at the `iss` URL, and `iss` is a value the credential asserts about itself. Anyone can mint a credential, point `iss` at a domain they control, publish a key there and pass. I dropped the metadata path from my verifier for that reason.\n\nSection 2.4's \"permitted for the Issuer according to policy\" is the hook for making that choice, and I used it. But a verifier built from this document with no policy layer will accept both, which is the situation 7.3 says must not arise.\n\n### Suggested resolution\n\nSay in Section 2.5 that when `x5c` is present the recipient MUST use the `x5c` mechanism and MUST NOT fall back to JWT VC Issuer Metadata for the same credential.\n\nIf the working group would rather leave it to policy, then say that the choice MUST be fixed by policy per Issuer and MUST NOT be driven by what the credential presents.\n",
+        "body": "I sent this to `last-call@ietf.org` during IETF Last Call on draft-19, but it has not appeared in the archive, so I am filing it here as well. Apologies if it reaches you twice. Context and the credential this refers to are in the companion issue on `iss` and `x5c`.\n\n### The problem\n\nSection 2.5 says the recipient \"validates the X.509 certificate chain accordingly\". The document does not say what that means, and **there is no reference to RFC 5280 anywhere in it**. \"Trust anchoring systems\" appears twice in 2.5, but nothing requires the recipient to hold a trust anchor.\n\nRead literally, checking that the certificates in `x5c` are internally consistent satisfies \"validates the chain\". That establishes nothing, because the credential supplied those certificates.\n\nAgain not theoretical: the EU reference credential ships one certificate. There is no chain in it. Everything above the end-entity certificate has to come from my own configuration, and if I hold no applicable anchor the right answer is to refuse.\n\n### Suggested resolution\n\nAfter \"validates the X.509 certificate chain accordingly\", add:\n\n> \"Chain validation is performed as described in [RFC5280] and MUST terminate at a trust anchor that the recipient obtained out of band and that is permitted for the Issuer according to policy. Certificates conveyed in the x5c parameter MUST NOT be treated as trust anchors. A recipient with no applicable trust anchor MUST reject the SD-JWT VC.\"\n",
         "closed_at": null,
+        "comments": 5,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/comments",
+        "created_at": "2026-09-15T05:31:36Z",
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/events",
+        "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/435",
+        "id": 5457956091,
+        "issue_dependencies_summary": {
+          "blocked_by": 0,
+          "blocking": 0,
+          "total_blocked_by": 0,
+          "total_blocking": 0
+        },
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "I_kwDOJbVClc8AAAABRVHM-w",
+        "number": 435,
+        "performed_via_github_app": null,
+        "pinned_comment": null,
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "sub_issues_summary": {
+          "completed": 0,
+          "percent_completed": 0,
+          "total": 0
+        },
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/timeline",
+        "title": "Section 2.5: \"validates the X.509 certificate chain accordingly\" names no trust anchor and no RFC 5280",
+        "type": null,
+        "updated_at": "2026-10-07T21:31:56Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/59632614?v=4",
+          "events_url": "https://api.github.com/users/Nas2020/events{/privacy}",
+          "followers_url": "https://api.github.com/users/Nas2020/followers",
+          "following_url": "https://api.github.com/users/Nas2020/following{/other_user}",
+          "gists_url": "https://api.github.com/users/Nas2020/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/Nas2020",
+          "id": 59632614,
+          "login": "Nas2020",
+          "node_id": "MDQ6VXNlcjU5NjMyNjE0",
+          "organizations_url": "https://api.github.com/users/Nas2020/orgs",
+          "received_events_url": "https://api.github.com/users/Nas2020/received_events",
+          "repos_url": "https://api.github.com/users/Nas2020/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/Nas2020/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/Nas2020/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/Nas2020",
+          "user_view_type": "public"
+        }
+      },
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "NONE",
+        "body": "I sent this to `last-call@ietf.org` during IETF Last Call on draft-19, but it has not appeared in the archive, so I am filing it here as well. Apologies if it reaches you twice. Context and the credential this refers to are in the companion issue on `iss` and `x5c`.\n\n### The problem\n\nSection 7.3 says:\n\n> \"A Verifier MUST ensure that for any given iss value, an attacker cannot influence the type of verification process used.\"\n\nI agree with the requirement. My problem is that Section 2.5 gives me no way to satisfy it for the two mechanisms this document itself defines.\n\nThe EU reference credential triggers both at once: `iss` is an HTTPS URI, and `x5c` is present. Section 2.5 lists the two without precedence, and the rejection rule at the end of 2.5 is satisfied by \"a permitted key discovery and validation mechanism\" — any one of them.\n\nThey are not equivalent. Under `x5c` I end up at a key whose certificate chains to an anchor I already hold, which in the EU case was put on a trusted list by a third party. Under JWT VC Issuer Metadata I end up at whatever key is served at the `iss` URL, and `iss` is a value the credential asserts about itself. Anyone can mint a credential, point `iss` at a domain they control, publish a key there and pass. I dropped the metadata path from my verifier for that reason.\n\nSection 2.4's \"permitted for the Issuer according to policy\" is the hook for making that choice, and I used it. But a verifier built from this document with no policy layer will accept both, which is the situation 7.3 says must not arise.\n\n### Suggested resolution\n\nSay in Section 2.5 that when `x5c` is present the recipient MUST use the `x5c` mechanism and MUST NOT fall back to JWT VC Issuer Metadata for the same credential.\n\nIf the working group would rather leave it to policy, then say that the choice MUST be fixed by policy per Issuer and MUST NOT be driven by what the credential presents.\n",
+        "closed_at": "2026-10-07T19:12:07Z",
         "comments": 2,
         "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/434/comments",
         "created_at": "2026-09-15T05:31:22Z",
@@ -45,8 +121,8 @@
         },
         "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
         "score": 1.0,
-        "state": "open",
-        "state_reason": null,
+        "state": "closed",
+        "state_reason": "completed",
         "sub_issues_summary": {
           "completed": 0,
           "percent_completed": 0,
@@ -55,7 +131,7 @@
         "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/434/timeline",
         "title": "Section 2.5: no precedence rule when both key discovery mechanisms apply",
         "type": null,
-        "updated_at": "2026-10-07T00:13:23Z",
+        "updated_at": "2026-10-07T19:12:08Z",
         "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/434",
         "user": {
           "avatar_url": "https://avatars.githubusercontent.com/u/59632614?v=4",
@@ -1563,82 +1639,6 @@
           "subscriptions_url": "https://api.github.com/users/adeinega/subscriptions",
           "type": "User",
           "url": "https://api.github.com/users/adeinega",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "NONE",
-        "body": "I sent this to `last-call@ietf.org` during IETF Last Call on draft-19, but it has not appeared in the archive, so I am filing it here as well. Apologies if it reaches you twice. Context and the credential this refers to are in the companion issue on `iss` and `x5c`.\n\n### The problem\n\nSection 2.5 says the recipient \"validates the X.509 certificate chain accordingly\". The document does not say what that means, and **there is no reference to RFC 5280 anywhere in it**. \"Trust anchoring systems\" appears twice in 2.5, but nothing requires the recipient to hold a trust anchor.\n\nRead literally, checking that the certificates in `x5c` are internally consistent satisfies \"validates the chain\". That establishes nothing, because the credential supplied those certificates.\n\nAgain not theoretical: the EU reference credential ships one certificate. There is no chain in it. Everything above the end-entity certificate has to come from my own configuration, and if I hold no applicable anchor the right answer is to refuse.\n\n### Suggested resolution\n\nAfter \"validates the X.509 certificate chain accordingly\", add:\n\n> \"Chain validation is performed as described in [RFC5280] and MUST terminate at a trust anchor that the recipient obtained out of band and that is permitted for the Issuer according to policy. Certificates conveyed in the x5c parameter MUST NOT be treated as trust anchors. A recipient with no applicable trust anchor MUST reject the SD-JWT VC.\"\n",
-        "closed_at": null,
-        "comments": 0,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/comments",
-        "created_at": "2026-09-15T05:31:36Z",
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/events",
-        "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/435",
-        "id": 5457956091,
-        "issue_dependencies_summary": {
-          "blocked_by": 0,
-          "blocking": 0,
-          "total_blocked_by": 0,
-          "total_blocking": 0
-        },
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "I_kwDOJbVClc8AAAABRVHM-w",
-        "number": 435,
-        "performed_via_github_app": null,
-        "pinned_comment": null,
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
-        "score": 1.0,
-        "state": "open",
-        "state_reason": null,
-        "sub_issues_summary": {
-          "completed": 0,
-          "percent_completed": 0,
-          "total": 0
-        },
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/timeline",
-        "title": "Section 2.5: \"validates the X.509 certificate chain accordingly\" names no trust anchor and no RFC 5280",
-        "type": null,
-        "updated_at": "2026-09-15T05:31:36Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/59632614?v=4",
-          "events_url": "https://api.github.com/users/Nas2020/events{/privacy}",
-          "followers_url": "https://api.github.com/users/Nas2020/followers",
-          "following_url": "https://api.github.com/users/Nas2020/following{/other_user}",
-          "gists_url": "https://api.github.com/users/Nas2020/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/Nas2020",
-          "id": 59632614,
-          "login": "Nas2020",
-          "node_id": "MDQ6VXNlcjU5NjMyNjE0",
-          "organizations_url": "https://api.github.com/users/Nas2020/orgs",
-          "received_events_url": "https://api.github.com/users/Nas2020/received_events",
-          "repos_url": "https://api.github.com/users/Nas2020/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/Nas2020/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/Nas2020/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/Nas2020",
           "user_view_type": "public"
         }
       },
@@ -47584,6 +47584,1331 @@
   "org_events": [
     {
       "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-10-07T20:41:11Z",
+      "id": "23369679221",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "deea78c9e984127f84af19ca31daf86bda382418",
+        "head": "737613969ea9537857839819d433649b33b3dfae",
+        "push_id": 45776858084,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 632636053
+      },
+      "public": true,
+      "repo": {
+        "id": 632636053,
+        "name": "oauth-wg/oauth-sd-jwt-vc",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-10-07T21:47:55Z",
+      "id": "23324811588",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "93787d95b8756753bda060fc6c820b31711fde8c",
+        "head": "52889d2550755eeda39d34ca281be2c8071b76e6",
+        "push_id": 45782272471,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 632636053
+      },
+      "public": true,
+      "repo": {
+        "id": 632636053,
+        "name": "oauth-wg/oauth-sd-jwt-vc",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
+        "display_login": "bc-pi",
+        "gravatar_id": "",
+        "id": 71398439,
+        "login": "bc-pi",
+        "url": "https://api.github.com/users/bc-pi"
+      },
+      "created_at": "2026-10-07T21:47:16Z",
+      "id": "23318258173",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "c61da15a2e30825d90616d8855684d1902e30b1f",
+        "head": "e2c2382bfe7a427065204abac36670e662d6fd0d",
+        "push_id": 45782224873,
+        "ref": "refs/heads/mile-high-reference",
+        "repository_id": 632636053
+      },
+      "public": true,
+      "repo": {
+        "id": 632636053,
+        "name": "oauth-wg/oauth-sd-jwt-vc",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-10-07T21:24:48Z",
+      "id": "23316428177",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "737613969ea9537857839819d433649b33b3dfae",
+        "head": "93787d95b8756753bda060fc6c820b31711fde8c",
+        "push_id": 45780501321,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 632636053
+      },
+      "public": true,
+      "repo": {
+        "id": 632636053,
+        "name": "oauth-wg/oauth-sd-jwt-vc",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
+        "display_login": "github-actions",
+        "gravatar_id": "",
+        "id": 41898282,
+        "login": "github-actions[bot]",
+        "url": "https://api.github.com/users/github-actions[bot]"
+      },
+      "created_at": "2026-10-06T22:17:50Z",
+      "id": "23314206286",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "before": "ccb78d347425afb7eb4eb6549274d56b3193e9f2",
+        "head": "deea78c9e984127f84af19ca31daf86bda382418",
+        "push_id": 45669623737,
+        "ref": "refs/heads/gh-pages",
+        "repository_id": 632636053
+      },
+      "public": true,
+      "repo": {
+        "id": 632636053,
+        "name": "oauth-wg/oauth-sd-jwt-vc",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+      },
+      "type": "PushEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
+        "display_login": "bc-pi",
+        "gravatar_id": "",
+        "id": 71398439,
+        "login": "bc-pi",
+        "url": "https://api.github.com/users/bc-pi"
+      },
+      "created_at": "2026-10-07T21:47:02Z",
+      "id": "16681354012",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "pull_request": {
+          "base": {
+            "ref": "main",
+            "repo": {
+              "id": 632636053,
+              "name": "oauth-sd-jwt-vc",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+            },
+            "sha": "8eb3109d4fcdba538c6d14e33c479beff56b13c5"
+          },
+          "head": {
+            "ref": "mile-high-reference",
+            "repo": {
+              "id": 632636053,
+              "name": "oauth-sd-jwt-vc",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+            },
+            "sha": "e2c2382bfe7a427065204abac36670e662d6fd0d"
+          },
+          "id": 4778230392,
+          "number": 437,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/pulls/437"
+        },
+        "review": {
+          "_links": {
+            "html": {
+              "href": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/437#pullrequestreview-5448772115"
+            },
+            "pull_request": {
+              "href": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/pulls/437"
+            }
+          },
+          "body": null,
+          "commit_id": "c61da15a2e30825d90616d8855684d1902e30b1f",
+          "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/437#pullrequestreview-5448772115",
+          "id": 5448772115,
+          "node_id": "PRR_kwDOJbVClc8AAAABRMWqEw",
+          "pull_request_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/pulls/437",
+          "state": "commented",
+          "submitted_at": "2026-10-07T21:46:59Z",
+          "updated_at": "2026-10-07T21:46:59Z",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
+            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
+            "followers_url": "https://api.github.com/users/bc-pi/followers",
+            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
+            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/bc-pi",
+            "id": 71398439,
+            "login": "bc-pi",
+            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
+            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
+            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
+            "repos_url": "https://api.github.com/users/bc-pi/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/bc-pi",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 632636053,
+        "name": "oauth-wg/oauth-sd-jwt-vc",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+      },
+      "type": "PullRequestReviewEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
+        "display_login": "bc-pi",
+        "gravatar_id": "",
+        "id": 71398439,
+        "login": "bc-pi",
+        "url": "https://api.github.com/users/bc-pi"
+      },
+      "created_at": "2026-10-07T21:46:59Z",
+      "id": "16681351750",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "_links": {
+            "html": {
+              "href": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/437#discussion_r4212334458"
+            },
+            "pull_request": {
+              "href": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/pulls/437"
+            },
+            "self": {
+              "href": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/pulls/comments/4212334458"
+            }
+          },
+          "body": "```suggestion\n* clarify that x5c is from RFC7515 and has to be validated against a policy-permitted trust anchor\n```",
+          "commit_id": "c61da15a2e30825d90616d8855684d1902e30b1f",
+          "created_at": "2026-10-07T21:46:59Z",
+          "diff_hunk": "@@ -1958,6 +1958,7 @@ for their contributions (some of which substantial) to this draft and to the ini\n * Fix a couple of example hash values\n * Type Metadata identity: attempt to clarify value checking on retrieval of Type Metadata\n * add 'or the Subject' to a sentence in Verifiable Digital Credential Type Identifier section to better reflect that the holder need not be the subject\n+* clarify that x5c is from RFC7515 and has to validated against a policy-permitted trust anchor",
+          "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/437#discussion_r4212334458",
+          "id": 4212334458,
+          "node_id": "PRRC_kwDOJbVClc77Ex96",
+          "original_commit_id": "c61da15a2e30825d90616d8855684d1902e30b1f",
+          "original_position": 13,
+          "path": "draft-ietf-oauth-sd-jwt-vc.md",
+          "position": 1,
+          "pull_request_review_id": 5448772115,
+          "pull_request_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/pulls/437",
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/pulls/comments/4212334458/reactions"
+          },
+          "subject_type": "line",
+          "updated_at": "2026-10-07T21:46:59Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/pulls/comments/4212334458",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
+            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
+            "followers_url": "https://api.github.com/users/bc-pi/followers",
+            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
+            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/bc-pi",
+            "id": 71398439,
+            "login": "bc-pi",
+            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
+            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
+            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
+            "repos_url": "https://api.github.com/users/bc-pi/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/bc-pi",
+            "user_view_type": "public"
+          }
+        },
+        "pull_request": {
+          "base": {
+            "ref": "main",
+            "repo": {
+              "id": 632636053,
+              "name": "oauth-sd-jwt-vc",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+            },
+            "sha": "8eb3109d4fcdba538c6d14e33c479beff56b13c5"
+          },
+          "head": {
+            "ref": "mile-high-reference",
+            "repo": {
+              "id": 632636053,
+              "name": "oauth-sd-jwt-vc",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+            },
+            "sha": "e2c2382bfe7a427065204abac36670e662d6fd0d"
+          },
+          "id": 4778230392,
+          "number": 437,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/pulls/437"
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 632636053,
+        "name": "oauth-wg/oauth-sd-jwt-vc",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+      },
+      "type": "PullRequestReviewCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/59632614?",
+        "display_login": "Nas2020",
+        "gravatar_id": "",
+        "id": 59632614,
+        "login": "Nas2020",
+        "url": "https://api.github.com/users/Nas2020"
+      },
+      "created_at": "2026-10-07T21:31:56Z",
+      "id": "16680385430",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "Thanks Brian, and point taken. RFC 7515 4.1.6 already carries the MUST to validate the chain per RFC 5280, and 5280 then makes the anchor an out-of-band input, so the requirement was there by reference. I should have followed that hop before writing that it was missing, and sorry the issue read harsher than I meant. It came out of our own first implementation.\n\nWhat #437 adds is what I was actually missing in the text: that \"accordingly\" means the RFC 7515 validation, and that the anchor is the one the recipient's policy permits for the Issuer, not anything the credential carries. That resolves this for me. That resolves this for me; happy for it to close with the PR.",
+          "created_at": "2026-10-07T21:31:56Z",
+          "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/435#issuecomment-6047261942",
+          "id": 6047261942,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435",
+          "minimized": null,
+          "node_id": "IC_kwDOJbVClc8AAAABaHHk9g",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 1,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 1,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/comments/6047261942/reactions"
+          },
+          "updated_at": "2026-10-07T21:31:56Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/comments/6047261942",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/59632614?v=4",
+            "events_url": "https://api.github.com/users/Nas2020/events{/privacy}",
+            "followers_url": "https://api.github.com/users/Nas2020/followers",
+            "following_url": "https://api.github.com/users/Nas2020/following{/other_user}",
+            "gists_url": "https://api.github.com/users/Nas2020/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/Nas2020",
+            "id": 59632614,
+            "login": "Nas2020",
+            "node_id": "MDQ6VXNlcjU5NjMyNjE0",
+            "organizations_url": "https://api.github.com/users/Nas2020/orgs",
+            "received_events_url": "https://api.github.com/users/Nas2020/received_events",
+            "repos_url": "https://api.github.com/users/Nas2020/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/Nas2020/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/Nas2020/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/Nas2020",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "I sent this to `last-call@ietf.org` during IETF Last Call on draft-19, but it has not appeared in the archive, so I am filing it here as well. Apologies if it reaches you twice. Context and the credential this refers to are in the companion issue on `iss` and `x5c`.\n\n### The problem\n\nSection 2.5 says the recipient \"validates the X.509 certificate chain accordingly\". The document does not say what that means, and **there is no reference to RFC 5280 anywhere in it**. \"Trust anchoring systems\" appears twice in 2.5, but nothing requires the recipient to hold a trust anchor.\n\nRead literally, checking that the certificates in `x5c` are internally consistent satisfies \"validates the chain\". That establishes nothing, because the credential supplied those certificates.\n\nAgain not theoretical: the EU reference credential ships one certificate. There is no chain in it. Everything above the end-entity certificate has to come from my own configuration, and if I hold no applicable anchor the right answer is to refuse.\n\n### Suggested resolution\n\nAfter \"validates the X.509 certificate chain accordingly\", add:\n\n> \"Chain validation is performed as described in [RFC5280] and MUST terminate at a trust anchor that the recipient obtained out of band and that is permitted for the Issuer according to policy. Certificates conveyed in the x5c parameter MUST NOT be treated as trust anchors. A recipient with no applicable trust anchor MUST reject the SD-JWT VC.\"\n",
+          "closed_at": null,
+          "comments": 5,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/comments",
+          "created_at": "2026-09-15T05:31:36Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/events",
+          "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/435",
+          "id": 5457956091,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJbVClc8AAAABRVHM-w",
+          "number": 435,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/timeline",
+          "title": "Section 2.5: \"validates the X.509 certificate chain accordingly\" names no trust anchor and no RFC 5280",
+          "type": null,
+          "updated_at": "2026-10-07T21:31:56Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/59632614?v=4",
+            "events_url": "https://api.github.com/users/Nas2020/events{/privacy}",
+            "followers_url": "https://api.github.com/users/Nas2020/followers",
+            "following_url": "https://api.github.com/users/Nas2020/following{/other_user}",
+            "gists_url": "https://api.github.com/users/Nas2020/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/Nas2020",
+            "id": 59632614,
+            "login": "Nas2020",
+            "node_id": "MDQ6VXNlcjU5NjMyNjE0",
+            "organizations_url": "https://api.github.com/users/Nas2020/orgs",
+            "received_events_url": "https://api.github.com/users/Nas2020/received_events",
+            "repos_url": "https://api.github.com/users/Nas2020/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/Nas2020/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/Nas2020/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/Nas2020",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 632636053,
+        "name": "oauth-wg/oauth-sd-jwt-vc",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
+        "display_login": "bc-pi",
+        "gravatar_id": "",
+        "id": 71398439,
+        "login": "bc-pi",
+        "url": "https://api.github.com/users/bc-pi"
+      },
+      "created_at": "2026-10-07T21:26:28Z",
+      "id": "16680027998",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "opened",
+        "number": 438,
+        "pull_request": {
+          "base": {
+            "ref": "main",
+            "repo": {
+              "id": 632636053,
+              "name": "oauth-sd-jwt-vc",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+            },
+            "sha": "8eb3109d4fcdba538c6d14e33c479beff56b13c5"
+          },
+          "head": {
+            "ref": "remove-a-few-superfluous-section-headings",
+            "repo": {
+              "id": 632636053,
+              "name": "oauth-sd-jwt-vc",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+            },
+            "sha": "35cc22c207003f8dc304ff7797f294861e55edda"
+          },
+          "id": 4778683428,
+          "number": 438,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/pulls/438"
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 632636053,
+        "name": "oauth-wg/oauth-sd-jwt-vc",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+      },
+      "type": "PullRequestEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
+        "display_login": "bc-pi",
+        "gravatar_id": "",
+        "id": 71398439,
+        "login": "bc-pi",
+        "url": "https://api.github.com/users/bc-pi"
+      },
+      "created_at": "2026-10-07T20:46:47Z",
+      "id": "16677288261",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "Despite some admitted frustration at the content and tone of this, I am somewhat sympathetic to the underlying issue (as I perceive it anyway). #437 has some proposed changes as such. Please take a look and validate accordingly.",
+          "created_at": "2026-10-07T20:46:47Z",
+          "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/435#issuecomment-6046541851",
+          "id": 6046541851,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435",
+          "minimized": null,
+          "node_id": "IC_kwDOJbVClc8AAAABaGboGw",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/comments/6046541851/reactions"
+          },
+          "updated_at": "2026-10-07T20:46:47Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/comments/6046541851",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
+            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
+            "followers_url": "https://api.github.com/users/bc-pi/followers",
+            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
+            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/bc-pi",
+            "id": 71398439,
+            "login": "bc-pi",
+            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
+            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
+            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
+            "repos_url": "https://api.github.com/users/bc-pi/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/bc-pi",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "I sent this to `last-call@ietf.org` during IETF Last Call on draft-19, but it has not appeared in the archive, so I am filing it here as well. Apologies if it reaches you twice. Context and the credential this refers to are in the companion issue on `iss` and `x5c`.\n\n### The problem\n\nSection 2.5 says the recipient \"validates the X.509 certificate chain accordingly\". The document does not say what that means, and **there is no reference to RFC 5280 anywhere in it**. \"Trust anchoring systems\" appears twice in 2.5, but nothing requires the recipient to hold a trust anchor.\n\nRead literally, checking that the certificates in `x5c` are internally consistent satisfies \"validates the chain\". That establishes nothing, because the credential supplied those certificates.\n\nAgain not theoretical: the EU reference credential ships one certificate. There is no chain in it. Everything above the end-entity certificate has to come from my own configuration, and if I hold no applicable anchor the right answer is to refuse.\n\n### Suggested resolution\n\nAfter \"validates the X.509 certificate chain accordingly\", add:\n\n> \"Chain validation is performed as described in [RFC5280] and MUST terminate at a trust anchor that the recipient obtained out of band and that is permitted for the Issuer according to policy. Certificates conveyed in the x5c parameter MUST NOT be treated as trust anchors. A recipient with no applicable trust anchor MUST reject the SD-JWT VC.\"\n",
+          "closed_at": null,
+          "comments": 5,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/comments",
+          "created_at": "2026-09-15T05:31:36Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/events",
+          "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/435",
+          "id": 5457956091,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJbVClc8AAAABRVHM-w",
+          "number": 435,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/timeline",
+          "title": "Section 2.5: \"validates the X.509 certificate chain accordingly\" names no trust anchor and no RFC 5280",
+          "type": null,
+          "updated_at": "2026-10-07T21:31:56Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/59632614?v=4",
+            "events_url": "https://api.github.com/users/Nas2020/events{/privacy}",
+            "followers_url": "https://api.github.com/users/Nas2020/followers",
+            "following_url": "https://api.github.com/users/Nas2020/following{/other_user}",
+            "gists_url": "https://api.github.com/users/Nas2020/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/Nas2020",
+            "id": 59632614,
+            "login": "Nas2020",
+            "node_id": "MDQ6VXNlcjU5NjMyNjE0",
+            "organizations_url": "https://api.github.com/users/Nas2020/orgs",
+            "received_events_url": "https://api.github.com/users/Nas2020/received_events",
+            "repos_url": "https://api.github.com/users/Nas2020/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/Nas2020/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/Nas2020/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/Nas2020",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 632636053,
+        "name": "oauth-wg/oauth-sd-jwt-vc",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
+        "display_login": "bc-pi",
+        "gravatar_id": "",
+        "id": 71398439,
+        "login": "bc-pi",
+        "url": "https://api.github.com/users/bc-pi"
+      },
+      "created_at": "2026-10-07T20:41:45Z",
+      "id": "16676918361",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "opened",
+        "number": 437,
+        "pull_request": {
+          "base": {
+            "ref": "main",
+            "repo": {
+              "id": 632636053,
+              "name": "oauth-sd-jwt-vc",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+            },
+            "sha": "8eb3109d4fcdba538c6d14e33c479beff56b13c5"
+          },
+          "head": {
+            "ref": "mile-high-reference",
+            "repo": {
+              "id": 632636053,
+              "name": "oauth-sd-jwt-vc",
+              "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+            },
+            "sha": "e2c2382bfe7a427065204abac36670e662d6fd0d"
+          },
+          "id": 4778230392,
+          "number": 437,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/pulls/437"
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 632636053,
+        "name": "oauth-wg/oauth-sd-jwt-vc",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+      },
+      "type": "PullRequestEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
+        "display_login": "bc-pi",
+        "gravatar_id": "",
+        "id": 71398439,
+        "login": "bc-pi",
+        "url": "https://api.github.com/users/bc-pi"
+      },
+      "created_at": "2026-10-07T19:12:08Z",
+      "id": "16670265299",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "closed",
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "I sent this to `last-call@ietf.org` during IETF Last Call on draft-19, but it has not appeared in the archive, so I am filing it here as well. Apologies if it reaches you twice. Context and the credential this refers to are in the companion issue on `iss` and `x5c`.\n\n### The problem\n\nSection 7.3 says:\n\n> \"A Verifier MUST ensure that for any given iss value, an attacker cannot influence the type of verification process used.\"\n\nI agree with the requirement. My problem is that Section 2.5 gives me no way to satisfy it for the two mechanisms this document itself defines.\n\nThe EU reference credential triggers both at once: `iss` is an HTTPS URI, and `x5c` is present. Section 2.5 lists the two without precedence, and the rejection rule at the end of 2.5 is satisfied by \"a permitted key discovery and validation mechanism\" — any one of them.\n\nThey are not equivalent. Under `x5c` I end up at a key whose certificate chains to an anchor I already hold, which in the EU case was put on a trusted list by a third party. Under JWT VC Issuer Metadata I end up at whatever key is served at the `iss` URL, and `iss` is a value the credential asserts about itself. Anyone can mint a credential, point `iss` at a domain they control, publish a key there and pass. I dropped the metadata path from my verifier for that reason.\n\nSection 2.4's \"permitted for the Issuer according to policy\" is the hook for making that choice, and I used it. But a verifier built from this document with no policy layer will accept both, which is the situation 7.3 says must not arise.\n\n### Suggested resolution\n\nSay in Section 2.5 that when `x5c` is present the recipient MUST use the `x5c` mechanism and MUST NOT fall back to JWT VC Issuer Metadata for the same credential.\n\nIf the working group would rather leave it to policy, then say that the choice MUST be fixed by policy per Issuer and MUST NOT be driven by what the credential presents.\n",
+          "closed_at": "2026-10-07T19:12:07Z",
+          "comments": 2,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/434/comments",
+          "created_at": "2026-09-15T05:31:22Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/434/events",
+          "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/434",
+          "id": 5457954613,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/434/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJbVClc8AAAABRVHHNQ",
+          "number": 434,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/434/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
+          "state": "closed",
+          "state_reason": "completed",
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/434/timeline",
+          "title": "Section 2.5: no precedence rule when both key discovery mechanisms apply",
+          "type": null,
+          "updated_at": "2026-10-07T19:12:08Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/434",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/59632614?v=4",
+            "events_url": "https://api.github.com/users/Nas2020/events{/privacy}",
+            "followers_url": "https://api.github.com/users/Nas2020/followers",
+            "following_url": "https://api.github.com/users/Nas2020/following{/other_user}",
+            "gists_url": "https://api.github.com/users/Nas2020/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/Nas2020",
+            "id": 59632614,
+            "login": "Nas2020",
+            "node_id": "MDQ6VXNlcjU5NjMyNjE0",
+            "organizations_url": "https://api.github.com/users/Nas2020/orgs",
+            "received_events_url": "https://api.github.com/users/Nas2020/received_events",
+            "repos_url": "https://api.github.com/users/Nas2020/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/Nas2020/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/Nas2020/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/Nas2020",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 632636053,
+        "name": "oauth-wg/oauth-sd-jwt-vc",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+      },
+      "type": "IssuesEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
+        "display_login": "bc-pi",
+        "gravatar_id": "",
+        "id": 71398439,
+        "login": "bc-pi",
+        "url": "https://api.github.com/users/bc-pi"
+      },
+      "created_at": "2026-10-07T19:09:34Z",
+      "id": "16670080304",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "> Again not theoretical: the EU reference credential ships one certificate. \n\nMaybe pedantic but a credential does not ship a certificate. ",
+          "created_at": "2026-10-07T19:09:34Z",
+          "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/435#issuecomment-6044932200",
+          "id": 6044932200,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435",
+          "minimized": null,
+          "node_id": "IC_kwDOJbVClc8AAAABaE5YaA",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/comments/6044932200/reactions"
+          },
+          "updated_at": "2026-10-07T19:09:34Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/comments/6044932200",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
+            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
+            "followers_url": "https://api.github.com/users/bc-pi/followers",
+            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
+            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/bc-pi",
+            "id": 71398439,
+            "login": "bc-pi",
+            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
+            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
+            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
+            "repos_url": "https://api.github.com/users/bc-pi/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/bc-pi",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "I sent this to `last-call@ietf.org` during IETF Last Call on draft-19, but it has not appeared in the archive, so I am filing it here as well. Apologies if it reaches you twice. Context and the credential this refers to are in the companion issue on `iss` and `x5c`.\n\n### The problem\n\nSection 2.5 says the recipient \"validates the X.509 certificate chain accordingly\". The document does not say what that means, and **there is no reference to RFC 5280 anywhere in it**. \"Trust anchoring systems\" appears twice in 2.5, but nothing requires the recipient to hold a trust anchor.\n\nRead literally, checking that the certificates in `x5c` are internally consistent satisfies \"validates the chain\". That establishes nothing, because the credential supplied those certificates.\n\nAgain not theoretical: the EU reference credential ships one certificate. There is no chain in it. Everything above the end-entity certificate has to come from my own configuration, and if I hold no applicable anchor the right answer is to refuse.\n\n### Suggested resolution\n\nAfter \"validates the X.509 certificate chain accordingly\", add:\n\n> \"Chain validation is performed as described in [RFC5280] and MUST terminate at a trust anchor that the recipient obtained out of band and that is permitted for the Issuer according to policy. Certificates conveyed in the x5c parameter MUST NOT be treated as trust anchors. A recipient with no applicable trust anchor MUST reject the SD-JWT VC.\"\n",
+          "closed_at": null,
+          "comments": 5,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/comments",
+          "created_at": "2026-09-15T05:31:36Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/events",
+          "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/435",
+          "id": 5457956091,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJbVClc8AAAABRVHM-w",
+          "number": 435,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/timeline",
+          "title": "Section 2.5: \"validates the X.509 certificate chain accordingly\" names no trust anchor and no RFC 5280",
+          "type": null,
+          "updated_at": "2026-10-07T21:31:56Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/59632614?v=4",
+            "events_url": "https://api.github.com/users/Nas2020/events{/privacy}",
+            "followers_url": "https://api.github.com/users/Nas2020/followers",
+            "following_url": "https://api.github.com/users/Nas2020/following{/other_user}",
+            "gists_url": "https://api.github.com/users/Nas2020/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/Nas2020",
+            "id": 59632614,
+            "login": "Nas2020",
+            "node_id": "MDQ6VXNlcjU5NjMyNjE0",
+            "organizations_url": "https://api.github.com/users/Nas2020/orgs",
+            "received_events_url": "https://api.github.com/users/Nas2020/received_events",
+            "repos_url": "https://api.github.com/users/Nas2020/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/Nas2020/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/Nas2020/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/Nas2020",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 632636053,
+        "name": "oauth-wg/oauth-sd-jwt-vc",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
+        "display_login": "bc-pi",
+        "gravatar_id": "",
+        "id": 71398439,
+        "login": "bc-pi",
+        "url": "https://api.github.com/users/bc-pi"
+      },
+      "created_at": "2026-10-07T19:04:43Z",
+      "id": "16669715120",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "> Read literally, checking that the certificates in x5c are internally consistent satisfies \"validates the chain\". \n\nThat would be an incorrect reading, literal or otherwise.",
+          "created_at": "2026-10-07T19:04:43Z",
+          "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/435#issuecomment-6044850732",
+          "id": 6044850732,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435",
+          "minimized": null,
+          "node_id": "IC_kwDOJbVClc8AAAABaE0aLA",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/comments/6044850732/reactions"
+          },
+          "updated_at": "2026-10-07T20:51:23Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/comments/6044850732",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
+            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
+            "followers_url": "https://api.github.com/users/bc-pi/followers",
+            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
+            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/bc-pi",
+            "id": 71398439,
+            "login": "bc-pi",
+            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
+            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
+            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
+            "repos_url": "https://api.github.com/users/bc-pi/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/bc-pi",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "I sent this to `last-call@ietf.org` during IETF Last Call on draft-19, but it has not appeared in the archive, so I am filing it here as well. Apologies if it reaches you twice. Context and the credential this refers to are in the companion issue on `iss` and `x5c`.\n\n### The problem\n\nSection 2.5 says the recipient \"validates the X.509 certificate chain accordingly\". The document does not say what that means, and **there is no reference to RFC 5280 anywhere in it**. \"Trust anchoring systems\" appears twice in 2.5, but nothing requires the recipient to hold a trust anchor.\n\nRead literally, checking that the certificates in `x5c` are internally consistent satisfies \"validates the chain\". That establishes nothing, because the credential supplied those certificates.\n\nAgain not theoretical: the EU reference credential ships one certificate. There is no chain in it. Everything above the end-entity certificate has to come from my own configuration, and if I hold no applicable anchor the right answer is to refuse.\n\n### Suggested resolution\n\nAfter \"validates the X.509 certificate chain accordingly\", add:\n\n> \"Chain validation is performed as described in [RFC5280] and MUST terminate at a trust anchor that the recipient obtained out of band and that is permitted for the Issuer according to policy. Certificates conveyed in the x5c parameter MUST NOT be treated as trust anchors. A recipient with no applicable trust anchor MUST reject the SD-JWT VC.\"\n",
+          "closed_at": null,
+          "comments": 5,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/comments",
+          "created_at": "2026-09-15T05:31:36Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/events",
+          "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/435",
+          "id": 5457956091,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJbVClc8AAAABRVHM-w",
+          "number": 435,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/timeline",
+          "title": "Section 2.5: \"validates the X.509 certificate chain accordingly\" names no trust anchor and no RFC 5280",
+          "type": null,
+          "updated_at": "2026-10-07T21:31:56Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/59632614?v=4",
+            "events_url": "https://api.github.com/users/Nas2020/events{/privacy}",
+            "followers_url": "https://api.github.com/users/Nas2020/followers",
+            "following_url": "https://api.github.com/users/Nas2020/following{/other_user}",
+            "gists_url": "https://api.github.com/users/Nas2020/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/Nas2020",
+            "id": 59632614,
+            "login": "Nas2020",
+            "node_id": "MDQ6VXNlcjU5NjMyNjE0",
+            "organizations_url": "https://api.github.com/users/Nas2020/orgs",
+            "received_events_url": "https://api.github.com/users/Nas2020/received_events",
+            "repos_url": "https://api.github.com/users/Nas2020/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/Nas2020/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/Nas2020/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/Nas2020",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 632636053,
+        "name": "oauth-wg/oauth-sd-jwt-vc",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/71398439?",
+        "display_login": "bc-pi",
+        "gravatar_id": "",
+        "id": 71398439,
+        "login": "bc-pi",
+        "url": "https://api.github.com/users/bc-pi"
+      },
+      "created_at": "2026-10-07T19:02:32Z",
+      "id": "16669549563",
+      "org": {
+        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
+        "gravatar_id": "",
+        "id": 111596788,
+        "login": "oauth-wg",
+        "url": "https://api.github.com/orgs/oauth-wg"
+      },
+      "payload": {
+        "action": "created",
+        "comment": {
+          "body": "There is a [normative reference](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-sd-jwt-vc-19#name-normative-references) to RFC 7515 where the \"x5c\" header is defined **has a reference to RFC 5280 somewhere in it**. \n\nhttps://datatracker.ietf.org/doc/html/rfc7515#section-4.1.6\n> **[4.1.6](https://datatracker.ietf.org/doc/html/rfc7515#section-4.1.6).  \"x5c\" (X.509 Certificate Chain) Header Parameter**\n> \n>    The \"x5c\" (X.509 certificate chain) Header Parameter contains the\n>    X.509 public key certificate or certificate chain [[RFC5280](https://datatracker.ietf.org/doc/html/rfc5280)]\n>    corresponding to the key used to digitally sign the JWS.  The\n>    certificate or certificate chain is represented as a JSON array of\n> \n> \n> \n> Jones, et al.                Standards Track                   [Page 11]\n> \n> [RFC 7515](https://datatracker.ietf.org/doc/html/rfc7515)                JSON Web Signature (JWS)                May 2015\n> \n> \n>    certificate value strings.  Each string in the array is a\n>    base64-encoded ([Section 4 of [RFC4648]](https://datatracker.ietf.org/doc/html/rfc4648#section-4) -- not base64url-encoded) DER\n>    [[ITU.X690.2008](https://datatracker.ietf.org/doc/html/rfc7515#ref-ITU.X690.2008)] PKIX certificate value.  The certificate containing\n>    the public key corresponding to the key used to digitally sign the\n>    JWS MUST be the first certificate.  This MAY be followed by\n>    additional certificates, with each subsequent certificate being the\n>    one used to certify the previous one.  The recipient MUST validate\n>    the certificate chain according to [RFC 5280](https://datatracker.ietf.org/doc/html/rfc5280) [[RFC5280](https://datatracker.ietf.org/doc/html/rfc5280)] and consider\n>    the certificate or certificate chain to be invalid if any validation\n>    failure occurs.  Use of this Header Parameter is OPTIONAL.\n",
+          "created_at": "2026-10-07T19:02:32Z",
+          "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/435#issuecomment-6044808787",
+          "id": 6044808787,
+          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435",
+          "minimized": null,
+          "node_id": "IC_kwDOJbVClc8AAAABaEx2Uw",
+          "performed_via_github_app": null,
+          "pin": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/comments/6044808787/reactions"
+          },
+          "updated_at": "2026-10-07T19:03:03Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/comments/6044808787",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
+            "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
+            "followers_url": "https://api.github.com/users/bc-pi/followers",
+            "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
+            "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/bc-pi",
+            "id": 71398439,
+            "login": "bc-pi",
+            "node_id": "MDQ6VXNlcjcxMzk4NDM5",
+            "organizations_url": "https://api.github.com/users/bc-pi/orgs",
+            "received_events_url": "https://api.github.com/users/bc-pi/received_events",
+            "repos_url": "https://api.github.com/users/bc-pi/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/bc-pi",
+            "user_view_type": "public"
+          }
+        },
+        "issue": {
+          "active_lock_reason": null,
+          "assignee": null,
+          "assignees": [],
+          "body": "I sent this to `last-call@ietf.org` during IETF Last Call on draft-19, but it has not appeared in the archive, so I am filing it here as well. Apologies if it reaches you twice. Context and the credential this refers to are in the companion issue on `iss` and `x5c`.\n\n### The problem\n\nSection 2.5 says the recipient \"validates the X.509 certificate chain accordingly\". The document does not say what that means, and **there is no reference to RFC 5280 anywhere in it**. \"Trust anchoring systems\" appears twice in 2.5, but nothing requires the recipient to hold a trust anchor.\n\nRead literally, checking that the certificates in `x5c` are internally consistent satisfies \"validates the chain\". That establishes nothing, because the credential supplied those certificates.\n\nAgain not theoretical: the EU reference credential ships one certificate. There is no chain in it. Everything above the end-entity certificate has to come from my own configuration, and if I hold no applicable anchor the right answer is to refuse.\n\n### Suggested resolution\n\nAfter \"validates the X.509 certificate chain accordingly\", add:\n\n> \"Chain validation is performed as described in [RFC5280] and MUST terminate at a trust anchor that the recipient obtained out of band and that is permitted for the Issuer according to policy. Certificates conveyed in the x5c parameter MUST NOT be treated as trust anchors. A recipient with no applicable trust anchor MUST reject the SD-JWT VC.\"\n",
+          "closed_at": null,
+          "comments": 5,
+          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/comments",
+          "created_at": "2026-09-15T05:31:36Z",
+          "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/events",
+          "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/issues/435",
+          "id": 5457956091,
+          "issue_dependencies_summary": {
+            "blocked_by": 0,
+            "blocking": 0,
+            "total_blocked_by": 0,
+            "total_blocking": 0
+          },
+          "issue_field_values": [],
+          "labels": [],
+          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/labels{/name}",
+          "locked": false,
+          "milestone": null,
+          "node_id": "I_kwDOJbVClc8AAAABRVHM-w",
+          "number": 435,
+          "performed_via_github_app": null,
+          "pinned_comment": null,
+          "reactions": {
+            "+1": 0,
+            "-1": 0,
+            "confused": 0,
+            "eyes": 0,
+            "heart": 0,
+            "hooray": 0,
+            "laugh": 0,
+            "rocket": 0,
+            "total_count": 0,
+            "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/reactions"
+          },
+          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
+          "state": "open",
+          "state_reason": null,
+          "sub_issues_summary": {
+            "completed": 0,
+            "percent_completed": 0,
+            "total": 0
+          },
+          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435/timeline",
+          "title": "Section 2.5: \"validates the X.509 certificate chain accordingly\" names no trust anchor and no RFC 5280",
+          "type": null,
+          "updated_at": "2026-10-07T21:31:56Z",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/435",
+          "user": {
+            "avatar_url": "https://avatars.githubusercontent.com/u/59632614?v=4",
+            "events_url": "https://api.github.com/users/Nas2020/events{/privacy}",
+            "followers_url": "https://api.github.com/users/Nas2020/followers",
+            "following_url": "https://api.github.com/users/Nas2020/following{/other_user}",
+            "gists_url": "https://api.github.com/users/Nas2020/gists{/gist_id}",
+            "gravatar_id": "",
+            "html_url": "https://github.com/Nas2020",
+            "id": 59632614,
+            "login": "Nas2020",
+            "node_id": "MDQ6VXNlcjU5NjMyNjE0",
+            "organizations_url": "https://api.github.com/users/Nas2020/orgs",
+            "received_events_url": "https://api.github.com/users/Nas2020/received_events",
+            "repos_url": "https://api.github.com/users/Nas2020/repos",
+            "site_admin": false,
+            "starred_url": "https://api.github.com/users/Nas2020/starred{/owner}{/repo}",
+            "subscriptions_url": "https://api.github.com/users/Nas2020/subscriptions",
+            "type": "User",
+            "url": "https://api.github.com/users/Nas2020",
+            "user_view_type": "public"
+          }
+        }
+      },
+      "public": true,
+      "repo": {
+        "id": 632636053,
+        "name": "oauth-wg/oauth-sd-jwt-vc",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc"
+      },
+      "type": "IssueCommentEvent"
+    },
+    {
+      "actor": {
         "avatar_url": "https://avatars.githubusercontent.com/u/8774236?",
         "display_login": "c2bo",
         "gravatar_id": "",
@@ -47749,7 +49074,7 @@
           "assignee": null,
           "assignees": [],
           "body": "I sent this to `last-call@ietf.org` during IETF Last Call on draft-19, but it has not appeared in the archive, so I am filing it here as well. Apologies if it reaches you twice. Context and the credential this refers to are in the companion issue on `iss` and `x5c`.\n\n### The problem\n\nSection 7.3 says:\n\n> \"A Verifier MUST ensure that for any given iss value, an attacker cannot influence the type of verification process used.\"\n\nI agree with the requirement. My problem is that Section 2.5 gives me no way to satisfy it for the two mechanisms this document itself defines.\n\nThe EU reference credential triggers both at once: `iss` is an HTTPS URI, and `x5c` is present. Section 2.5 lists the two without precedence, and the rejection rule at the end of 2.5 is satisfied by \"a permitted key discovery and validation mechanism\" — any one of them.\n\nThey are not equivalent. Under `x5c` I end up at a key whose certificate chains to an anchor I already hold, which in the EU case was put on a trusted list by a third party. Under JWT VC Issuer Metadata I end up at whatever key is served at the `iss` URL, and `iss` is a value the credential asserts about itself. Anyone can mint a credential, point `iss` at a domain they control, publish a key there and pass. I dropped the metadata path from my verifier for that reason.\n\nSection 2.4's \"permitted for the Issuer according to policy\" is the hook for making that choice, and I used it. But a verifier built from this document with no policy layer will accept both, which is the situation 7.3 says must not arise.\n\n### Suggested resolution\n\nSay in Section 2.5 that when `x5c` is present the recipient MUST use the `x5c` mechanism and MUST NOT fall back to JWT VC Issuer Metadata for the same credential.\n\nIf the working group would rather leave it to policy, then say that the choice MUST be fixed by policy per Issuer and MUST NOT be driven by what the credential presents.\n",
-          "closed_at": null,
+          "closed_at": "2026-10-07T19:12:07Z",
           "comments": 2,
           "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/434/comments",
           "created_at": "2026-09-15T05:31:22Z",
@@ -47784,8 +49109,8 @@
             "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/434/reactions"
           },
           "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
-          "state": "open",
-          "state_reason": null,
+          "state": "closed",
+          "state_reason": "completed",
           "sub_issues_summary": {
             "completed": 0,
             "percent_completed": 0,
@@ -47794,7 +49119,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/434/timeline",
           "title": "Section 2.5: no precedence rule when both key discovery mechanisms apply",
           "type": null,
-          "updated_at": "2026-10-07T00:13:23Z",
+          "updated_at": "2026-10-07T19:12:08Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/434",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/59632614?v=4",
@@ -48100,7 +49425,7 @@
           "assignee": null,
           "assignees": [],
           "body": "I sent this to `last-call@ietf.org` during IETF Last Call on draft-19, but it has not appeared in the archive, so I am filing it here as well. Apologies if it reaches you twice. Context and the credential this refers to are in the companion issue on `iss` and `x5c`.\n\n### The problem\n\nSection 7.3 says:\n\n> \"A Verifier MUST ensure that for any given iss value, an attacker cannot influence the type of verification process used.\"\n\nI agree with the requirement. My problem is that Section 2.5 gives me no way to satisfy it for the two mechanisms this document itself defines.\n\nThe EU reference credential triggers both at once: `iss` is an HTTPS URI, and `x5c` is present. Section 2.5 lists the two without precedence, and the rejection rule at the end of 2.5 is satisfied by \"a permitted key discovery and validation mechanism\" — any one of them.\n\nThey are not equivalent. Under `x5c` I end up at a key whose certificate chains to an anchor I already hold, which in the EU case was put on a trusted list by a third party. Under JWT VC Issuer Metadata I end up at whatever key is served at the `iss` URL, and `iss` is a value the credential asserts about itself. Anyone can mint a credential, point `iss` at a domain they control, publish a key there and pass. I dropped the metadata path from my verifier for that reason.\n\nSection 2.4's \"permitted for the Issuer according to policy\" is the hook for making that choice, and I used it. But a verifier built from this document with no policy layer will accept both, which is the situation 7.3 says must not arise.\n\n### Suggested resolution\n\nSay in Section 2.5 that when `x5c` is present the recipient MUST use the `x5c` mechanism and MUST NOT fall back to JWT VC Issuer Metadata for the same credential.\n\nIf the working group would rather leave it to policy, then say that the choice MUST be fixed by policy per Issuer and MUST NOT be driven by what the credential presents.\n",
-          "closed_at": null,
+          "closed_at": "2026-10-07T19:12:07Z",
           "comments": 2,
           "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/434/comments",
           "created_at": "2026-09-15T05:31:22Z",
@@ -48135,8 +49460,8 @@
             "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/434/reactions"
           },
           "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
-          "state": "open",
-          "state_reason": null,
+          "state": "closed",
+          "state_reason": "completed",
           "sub_issues_summary": {
             "completed": 0,
             "percent_completed": 0,
@@ -48145,7 +49470,7 @@
           "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/434/timeline",
           "title": "Section 2.5: no precedence rule when both key discovery mechanisms apply",
           "type": null,
-          "updated_at": "2026-10-07T00:13:23Z",
+          "updated_at": "2026-10-07T19:12:08Z",
           "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/434",
           "user": {
             "avatar_url": "https://avatars.githubusercontent.com/u/59632614?v=4",
@@ -53576,1348 +54901,155 @@
         "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
       },
       "type": "IssueCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/554402?",
-        "display_login": "gniero",
-        "gravatar_id": "",
-        "id": 554402,
-        "login": "gniero",
-        "url": "https://api.github.com/users/gniero"
-      },
-      "created_at": "2026-09-29T19:03:55Z",
-      "id": "22540421924",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "a6e02fa086737c96d4e0b3f085224670f92f75ad",
-        "head": "f39fb131ad232cd84af7057e84465f96f79210f0",
-        "push_id": 44957518000,
-        "ref": "refs/heads/workflow-illustration-update",
-        "repository_id": 1240078076
-      },
-      "public": true,
-      "repo": {
-        "id": 1240078076,
-        "name": "oauth-wg/oauth-deferred-token-response",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/554402?",
-        "display_login": "gniero",
-        "gravatar_id": "",
-        "id": 554402,
-        "login": "gniero",
-        "url": "https://api.github.com/users/gniero"
-      },
-      "created_at": "2026-09-29T20:24:51Z",
-      "id": "16044123433",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "comment": {
-          "body": "PR #69 is already merged, so I assume it is safe to close this issue now",
-          "created_at": "2026-09-29T20:24:51Z",
-          "html_url": "https://github.com/oauth-wg/oauth-deferred-token-response/issues/63#issuecomment-5898125765",
-          "id": 5898125765,
-          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/63",
-          "minimized": null,
-          "node_id": "IC_kwDOSeoW_M8AAAABX45BxQ",
-          "performed_via_github_app": null,
-          "pin": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/comments/5898125765/reactions"
-          },
-          "updated_at": "2026-09-29T20:24:51Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/comments/5898125765",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/554402?v=4",
-            "events_url": "https://api.github.com/users/gniero/events{/privacy}",
-            "followers_url": "https://api.github.com/users/gniero/followers",
-            "following_url": "https://api.github.com/users/gniero/following{/other_user}",
-            "gists_url": "https://api.github.com/users/gniero/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/gniero",
-            "id": 554402,
-            "login": "gniero",
-            "node_id": "MDQ6VXNlcjU1NDQwMg==",
-            "organizations_url": "https://api.github.com/users/gniero/orgs",
-            "received_events_url": "https://api.github.com/users/gniero/received_events",
-            "repos_url": "https://api.github.com/users/gniero/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/gniero/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/gniero/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/gniero",
-            "user_view_type": "public"
-          }
-        },
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "Add use cases and example usage covering the [JAG-IR scenarios](https://datatracker.ietf.org/doc/html/draft-parecki-oauth-jwt-grant-interaction-response-00#name-use-cases)",
-          "closed_at": "2026-09-29T20:24:51Z",
-          "comments": 2,
-          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/63/comments",
-          "created_at": "2026-08-10T07:23:08Z",
-          "events_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/63/events",
-          "html_url": "https://github.com/oauth-wg/oauth-deferred-token-response/issues/63",
-          "id": 5107671756,
-          "issue_dependencies_summary": {
-            "blocked_by": 0,
-            "blocking": 0,
-            "total_blocked_by": 0,
-            "total_blocking": 0
-          },
-          "issue_field_values": [],
-          "labels": [],
-          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/63/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "I_kwDOSeoW_M8AAAABMHDizA",
-          "number": 63,
-          "performed_via_github_app": null,
-          "pinned_comment": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/63/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response",
-          "state": "closed",
-          "state_reason": "completed",
-          "sub_issues_summary": {
-            "completed": 0,
-            "percent_completed": 0,
-            "total": 0
-          },
-          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/63/timeline",
-          "title": "Add use cases and example usage for interaction mode",
-          "type": null,
-          "updated_at": "2026-09-29T20:24:51Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/63",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/1561630?v=4",
-            "events_url": "https://api.github.com/users/maxpassion/events{/privacy}",
-            "followers_url": "https://api.github.com/users/maxpassion/followers",
-            "following_url": "https://api.github.com/users/maxpassion/following{/other_user}",
-            "gists_url": "https://api.github.com/users/maxpassion/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/maxpassion",
-            "id": 1561630,
-            "login": "maxpassion",
-            "node_id": "MDQ6VXNlcjE1NjE2MzA=",
-            "organizations_url": "https://api.github.com/users/maxpassion/orgs",
-            "received_events_url": "https://api.github.com/users/maxpassion/received_events",
-            "repos_url": "https://api.github.com/users/maxpassion/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/maxpassion/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/maxpassion/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/maxpassion",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 1240078076,
-        "name": "oauth-wg/oauth-deferred-token-response",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response"
-      },
-      "type": "IssueCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/554402?",
-        "display_login": "gniero",
-        "gravatar_id": "",
-        "id": 554402,
-        "login": "gniero",
-        "url": "https://api.github.com/users/gniero"
-      },
-      "created_at": "2026-09-29T20:24:52Z",
-      "id": "16044122190",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "closed",
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "Add use cases and example usage covering the [JAG-IR scenarios](https://datatracker.ietf.org/doc/html/draft-parecki-oauth-jwt-grant-interaction-response-00#name-use-cases)",
-          "closed_at": "2026-09-29T20:24:51Z",
-          "comments": 2,
-          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/63/comments",
-          "created_at": "2026-08-10T07:23:08Z",
-          "events_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/63/events",
-          "html_url": "https://github.com/oauth-wg/oauth-deferred-token-response/issues/63",
-          "id": 5107671756,
-          "issue_dependencies_summary": {
-            "blocked_by": 0,
-            "blocking": 0,
-            "total_blocked_by": 0,
-            "total_blocking": 0
-          },
-          "issue_field_values": [],
-          "labels": [],
-          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/63/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "I_kwDOSeoW_M8AAAABMHDizA",
-          "number": 63,
-          "performed_via_github_app": null,
-          "pinned_comment": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/63/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response",
-          "state": "closed",
-          "state_reason": "completed",
-          "sub_issues_summary": {
-            "completed": 0,
-            "percent_completed": 0,
-            "total": 0
-          },
-          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/63/timeline",
-          "title": "Add use cases and example usage for interaction mode",
-          "type": null,
-          "updated_at": "2026-09-29T20:24:51Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/63",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/1561630?v=4",
-            "events_url": "https://api.github.com/users/maxpassion/events{/privacy}",
-            "followers_url": "https://api.github.com/users/maxpassion/followers",
-            "following_url": "https://api.github.com/users/maxpassion/following{/other_user}",
-            "gists_url": "https://api.github.com/users/maxpassion/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/maxpassion",
-            "id": 1561630,
-            "login": "maxpassion",
-            "node_id": "MDQ6VXNlcjE1NjE2MzA=",
-            "organizations_url": "https://api.github.com/users/maxpassion/orgs",
-            "received_events_url": "https://api.github.com/users/maxpassion/received_events",
-            "repos_url": "https://api.github.com/users/maxpassion/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/maxpassion/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/maxpassion/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/maxpassion",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 1240078076,
-        "name": "oauth-wg/oauth-deferred-token-response",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response"
-      },
-      "type": "IssuesEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-09-29T00:00:58Z",
-      "id": "22512225606",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "f23ab5691600bcca96e937e8f71f9ff1dc67e337",
-        "head": "f739e9046d38a72cb0df346c2a88125f09ee9ba5",
-        "push_id": 44865296818,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 804642494
-      },
-      "public": true,
-      "repo": {
-        "id": 804642494,
-        "name": "oauth-wg/draft-ietf-oauth-client-id-metadata-document",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-09-29T19:01:43Z",
-      "id": "16038200750",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 1240078076,
-              "name": "oauth-deferred-token-response",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response"
-            },
-            "sha": "173bdf074b8d016503119c6e0e963370ce302acb"
-          },
-          "head": {
-            "ref": "workflow-illustration-update",
-            "repo": {
-              "id": 1240078076,
-              "name": "oauth-deferred-token-response",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response"
-            },
-            "sha": "e88385c7d61837405059fdbd929b353799860cc6"
-          },
-          "id": 4681335673,
-          "number": 74,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/pulls/74"
-        },
-        "review": {
-          "_links": {
-            "html": {
-              "href": "https://github.com/oauth-wg/oauth-deferred-token-response/pull/74#pullrequestreview-5357091308"
-            },
-            "pull_request": {
-              "href": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/pulls/74"
-            }
-          },
-          "body": "",
-          "commit_id": "a6e02fa086737c96d4e0b3f085224670f92f75ad",
-          "html_url": "https://github.com/oauth-wg/oauth-deferred-token-response/pull/74#pullrequestreview-5357091308",
-          "id": 5357091308,
-          "node_id": "PRR_kwDOSeoW_M8AAAABP0657A",
-          "pull_request_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/pulls/74",
-          "state": "commented",
-          "submitted_at": "2026-09-29T19:01:40Z",
-          "updated_at": "2026-09-29T19:01:40Z",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/in/15368?v=4",
-            "events_url": "https://api.github.com/users/github-actions%5Bbot%5D/events{/privacy}",
-            "followers_url": "https://api.github.com/users/github-actions%5Bbot%5D/followers",
-            "following_url": "https://api.github.com/users/github-actions%5Bbot%5D/following{/other_user}",
-            "gists_url": "https://api.github.com/users/github-actions%5Bbot%5D/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/apps/github-actions",
-            "id": 41898282,
-            "login": "github-actions[bot]",
-            "node_id": "MDM6Qm90NDE4OTgyODI=",
-            "organizations_url": "https://api.github.com/users/github-actions%5Bbot%5D/orgs",
-            "received_events_url": "https://api.github.com/users/github-actions%5Bbot%5D/received_events",
-            "repos_url": "https://api.github.com/users/github-actions%5Bbot%5D/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/github-actions%5Bbot%5D/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/github-actions%5Bbot%5D/subscriptions",
-            "type": "Bot",
-            "url": "https://api.github.com/users/github-actions%5Bbot%5D",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 1240078076,
-        "name": "oauth-wg/oauth-deferred-token-response",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response"
-      },
-      "type": "PullRequestReviewEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-09-29T19:01:40Z",
-      "id": "16038197886",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "comment": {
-          "_links": {
-            "html": {
-              "href": "https://github.com/oauth-wg/oauth-deferred-token-response/pull/74#discussion_r4137228949"
-            },
-            "pull_request": {
-              "href": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/pulls/74"
-            },
-            "self": {
-              "href": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/pulls/comments/4137228949"
-            }
-          },
-          "body": "````suggestion\n   to require interaction, inform a pending interaction by the\n   end-user or return a deferred response in place of the normal\n````",
-          "commit_id": "f39fb131ad232cd84af7057e84465f96f79210f0",
-          "created_at": "2026-09-29T19:01:40Z",
-          "diff_hunk": "@@ -210,12 +210,13 @@ The flow proceeds entirely through the originating grant's existing\n endpoints. A grant becomes deferred when:\n \n 1. The client signals willingness to accept a deferred response by\n-   including `deferred` among the values of the `completion_mode`\n+   including one of the supported values of the `completion_mode`\n    parameter on the originating grant's token endpoint request.\n 2. The authorization server elects, on that token endpoint request,\n-   to return a deferred response in place of the normal token\n-   response. The deferred response carries a `deferral_code` instead\n-   of an access token.\n+   to require interaction, inform a pending interaction by the \n+   end-user or return a deferred response in place of the normal ",
-          "html_url": "https://github.com/oauth-wg/oauth-deferred-token-response/pull/74#discussion_r4137228949",
-          "id": 4137228949,
-          "node_id": "PRRC_kwDOSeoW_M72mRqV",
-          "original_commit_id": "a6e02fa086737c96d4e0b3f085224670f92f75ad",
-          "original_position": 12,
-          "path": "draft-ietf-oauth-deferred-token-response.md",
-          "position": 1,
-          "pull_request_review_id": 5357091308,
-          "pull_request_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/pulls/74",
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/pulls/comments/4137228949/reactions"
-          },
-          "subject_type": "line",
-          "updated_at": "2026-09-29T19:01:40Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/pulls/comments/4137228949",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/in/15368?v=4",
-            "events_url": "https://api.github.com/users/github-actions%5Bbot%5D/events{/privacy}",
-            "followers_url": "https://api.github.com/users/github-actions%5Bbot%5D/followers",
-            "following_url": "https://api.github.com/users/github-actions%5Bbot%5D/following{/other_user}",
-            "gists_url": "https://api.github.com/users/github-actions%5Bbot%5D/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/apps/github-actions",
-            "id": 41898282,
-            "login": "github-actions[bot]",
-            "node_id": "MDM6Qm90NDE4OTgyODI=",
-            "organizations_url": "https://api.github.com/users/github-actions%5Bbot%5D/orgs",
-            "received_events_url": "https://api.github.com/users/github-actions%5Bbot%5D/received_events",
-            "repos_url": "https://api.github.com/users/github-actions%5Bbot%5D/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/github-actions%5Bbot%5D/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/github-actions%5Bbot%5D/subscriptions",
-            "type": "Bot",
-            "url": "https://api.github.com/users/github-actions%5Bbot%5D",
-            "user_view_type": "public"
-          }
-        },
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 1240078076,
-              "name": "oauth-deferred-token-response",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response"
-            },
-            "sha": "173bdf074b8d016503119c6e0e963370ce302acb"
-          },
-          "head": {
-            "ref": "workflow-illustration-update",
-            "repo": {
-              "id": 1240078076,
-              "name": "oauth-deferred-token-response",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response"
-            },
-            "sha": "e88385c7d61837405059fdbd929b353799860cc6"
-          },
-          "id": 4681335673,
-          "number": 74,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/pulls/74"
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 1240078076,
-        "name": "oauth-wg/oauth-deferred-token-response",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response"
-      },
-      "type": "PullRequestReviewCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/554402?",
-        "display_login": "gniero",
-        "gravatar_id": "",
-        "id": 554402,
-        "login": "gniero",
-        "url": "https://api.github.com/users/gniero"
-      },
-      "created_at": "2026-09-29T19:01:09Z",
-      "id": "16038159877",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "opened",
-        "number": 74,
-        "pull_request": {
-          "base": {
-            "ref": "main",
-            "repo": {
-              "id": 1240078076,
-              "name": "oauth-deferred-token-response",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response"
-            },
-            "sha": "173bdf074b8d016503119c6e0e963370ce302acb"
-          },
-          "head": {
-            "ref": "workflow-illustration-update",
-            "repo": {
-              "id": 1240078076,
-              "name": "oauth-deferred-token-response",
-              "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response"
-            },
-            "sha": "e88385c7d61837405059fdbd929b353799860cc6"
-          },
-          "id": 4681335673,
-          "number": 74,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/pulls/74"
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 1240078076,
-        "name": "oauth-wg/oauth-deferred-token-response",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response"
-      },
-      "type": "PullRequestEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/1944352?",
-        "display_login": "mcguinness",
-        "gravatar_id": "",
-        "id": 1944352,
-        "login": "mcguinness",
-        "url": "https://api.github.com/users/mcguinness"
-      },
-      "created_at": "2026-09-29T17:27:33Z",
-      "id": "16031379110",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "comment": {
-          "body": "Thanks @dlozlla. Here's the problem as I understand it:\n\nA client such as Claude signs the user in with the enterprise IdP and needs access tokens for MCP servers. What matters is the authorization server in each server's Protected Resource Metadata, not who runs the server:\n\n1. **The IdP's own issuer**, including third-party MCP servers that simply accept the IdP's access tokens.\n2. **A separate authorization server that trusts the IdP for SSO**, usually the vendor's. This is what ID-JAG (and EMA) is for.\n\nA different tenant of the same IdP product is already cross-domain and allowed today (#84).\n\nYou'd like to use ID-JAG for both, but Section 9.3 of -04 blocks the first case with a MUST NOT (not a recommendation), so today the client needs a second path. Let me know if I've got that wrong.\n\n### The security concern\n\nThe MUST NOT in Section 9.3 came from #6, which pointed out that an identity assertion does not, by itself, establish the permissions granted to the client for the requested API. A client granted narrow access at sign-in can exchange its identity assertion for an ID-JAG addressed to the IdP and redeem it there for whatever scopes the IdP's policy allows, so access can expand without anyone intending it. Your first case is exactly that round trip.\n\nFor a refresh token as the `subject_token`, the draft already constrains the exchange to the token's authorization context (Section 4.3.3). How that context covers XAA audiences and permissions deserves clarification, and the safeguards below should apply regardless of subject-token type.\n\nThat's an authorization-policy risk, though, not proof that self-redemption (the IdP accepting an ID-JAG it issued itself) is inherently unsafe. Issue #6 also raised the possibility of obtaining broader access through a second domain, and noted that in enterprise deployments scope comes from IdP policy. Direct issuance raises the same question (may this client access this resource with these scopes?), and policy that answers it safely there can answer it for an ID-JAG too. One practical risk: an IdP that already accepts ID-JAGs from other tenants could accept its own by mistake; explicit enablement guards against that.\n\n### My recommendation\n\nI'd support relaxing the rule, though that's my view and it needs WG discussion. Concretely, I'd replace the unconditional MUST NOT with a conditional one:\n\n- The IdP MUST NOT issue access tokens in response to an ID-JAG it issued itself in the same domain unless an administrator has explicitly enabled it.\n- When enabled, the IdP MUST enforce authorization policy for the client, subject, target resource, and requested permissions, including any applicable consent and authentication requirements. Its own signature on the ID-JAG MUST NOT establish that authorization by itself.\n- The existing guidance against returning a refresh token (Section 4.4.3) still applies.\n\nThis would be a limited extension of the supported deployment models. Cross-domain access would remain the profile's primary purpose, but the applicability text would need to permit this exception explicitly: besides 9.3, the ID-JAG definition and the `audience` parameter both say \"another trust domain\". The IdP would fill both authorization-server roles and enforce the requirements for each.\n\nDeployments that enable self-redemption can use the same ID-JAG flow for both of your cases. It would also help if an IdP that doesn't allow it rejected the ID-JAG request up front (for example with `invalid_target`, RFC 8693 Section 2.2.2), so the client fails before redemption. Otherwise the client still needs another path: token exchange at the IdP for an access token, a refresh with `resource` (where IdP policy permits the resource and the required scopes are already granted), or the regular authorization code flow.\n\nCould you share a concrete example of your first case, including whether the MCP server's authorization server is the IdP's own issuer or a separate one in the IdP product?",
-          "created_at": "2026-09-29T17:27:33Z",
-          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/131#issuecomment-5895262848",
-          "id": 5895262848,
-          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/131",
-          "minimized": null,
-          "node_id": "IC_kwDOKv5r-s8AAAABX2KSgA",
-          "performed_via_github_app": null,
-          "pin": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/5895262848/reactions"
-          },
-          "updated_at": "2026-09-29T17:27:33Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/comments/5895262848",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/1944352?v=4",
-            "events_url": "https://api.github.com/users/mcguinness/events{/privacy}",
-            "followers_url": "https://api.github.com/users/mcguinness/followers",
-            "following_url": "https://api.github.com/users/mcguinness/following{/other_user}",
-            "gists_url": "https://api.github.com/users/mcguinness/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/mcguinness",
-            "id": 1944352,
-            "login": "mcguinness",
-            "node_id": "MDQ6VXNlcjE5NDQzNTI=",
-            "organizations_url": "https://api.github.com/users/mcguinness/orgs",
-            "received_events_url": "https://api.github.com/users/mcguinness/received_events",
-            "repos_url": "https://api.github.com/users/mcguinness/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/mcguinness/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/mcguinness/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/mcguinness",
-            "user_view_type": "public"
-          }
-        },
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "The spec currently states that [id-jags are for cross-domain use cases](https://www.ietf.org/archive/id/draft-ietf-oauth-identity-assertion-authz-grant-04.html#name-cross-domain-use) only, but we are starting to see cases where the same external requesting App (e.g. Claude) needs to get access to both 1) MCP servers protected by the same IdP issuing the id-jag and 2) MCP server protected by external authorization servers. It seems much simpler in those cases to always stick to using XAA (i.e. EMA in the scope for MCP)\n\nAre there specific security issues identified to forbid this behaviour? Should we relax the recommendation for an IdP to reject id-jags issued by itself in the same domain?",
-          "closed_at": null,
-          "comments": 5,
-          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/131/comments",
-          "created_at": "2026-09-28T15:07:36Z",
-          "events_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/131/events",
-          "html_url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/issues/131",
-          "id": 5616771606,
-          "issue_dependencies_summary": {
-            "blocked_by": 0,
-            "blocking": 0,
-            "total_blocked_by": 0,
-            "total_blocking": 0
-          },
-          "issue_field_values": [],
-          "labels": [],
-          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/131/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "I_kwDOKv5r-s8AAAABTskiFg",
-          "number": 131,
-          "performed_via_github_app": null,
-          "pinned_comment": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/131/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant",
-          "state": "open",
-          "state_reason": null,
-          "sub_issues_summary": {
-            "completed": 0,
-            "percent_completed": 0,
-            "total": 0
-          },
-          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/131/timeline",
-          "title": "Cross-domain use",
-          "type": null,
-          "updated_at": "2026-10-01T16:40:44Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/issues/131",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/4090187?v=4",
-            "events_url": "https://api.github.com/users/dlozlla/events{/privacy}",
-            "followers_url": "https://api.github.com/users/dlozlla/followers",
-            "following_url": "https://api.github.com/users/dlozlla/following{/other_user}",
-            "gists_url": "https://api.github.com/users/dlozlla/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/dlozlla",
-            "id": 4090187,
-            "login": "dlozlla",
-            "node_id": "MDQ6VXNlcjQwOTAxODc=",
-            "organizations_url": "https://api.github.com/users/dlozlla/orgs",
-            "received_events_url": "https://api.github.com/users/dlozlla/received_events",
-            "repos_url": "https://api.github.com/users/dlozlla/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/dlozlla/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/dlozlla/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/dlozlla",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 721316858,
-        "name": "oauth-wg/oauth-identity-assertion-authz-grant",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant"
-      },
-      "type": "IssueCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/864131?",
-        "display_login": "fkj",
-        "gravatar_id": "",
-        "id": 864131,
-        "login": "fkj",
-        "url": "https://api.github.com/users/fkj"
-      },
-      "created_at": "2026-09-29T13:42:10Z",
-      "id": "16013786964",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "comment": {
-          "body": "> > As written, the spec does not normatively require replay protection for PoPs to actually be implemented by the verifier. Is this intentional?\n> \n> That is intentional and mirrors DPoP's design by giving the server the freedom to choose to cache previously seen values (e.g., jti) or not. We are recommending Replay detection in this draft, but do not want to mandate it to give deployments the freedom.\n\nOK. I just wanted to check that this was an intentional choice.\n\n> > Even though trust management is explicitly out of scope, I think there should be a normative statement that an AS which trusts multiple attesters must somehow scope the accepted client_ids to each attester to prevent multiple attesters from asserting the same client_id.\n> \n> That sounds like a requirement with a rather specific deployment in mind. Given that a client attestation requires special integration with the client and the communication is out of scope of this document, we do believe it makes sense to keep the client attester relationship out of scope as well and as something that gets defined for specific use-cases.\n\nFair enough. I think this is a pretty important security consideration for any kind of multi-tenancy setup.\n\n> > I think there might be a kind of mild \"downgrade\" attack allowing a mode switch from \"normal\" to \"combined\" by removing the PoP header. The severity of this is probably pretty limited, but it feels fragile to signal combined mode only by the absence of the OAuth-Client-Attestation-PoP header.\n> \n> It doesn't really change the security posture of the situation since it is only valid if DPoP is bound to the same public key.\n\nAgreed.\n\n> > I think iat should be REQUIRED. Otherwise, the AS cannot actually determine how fresh an attestation is, and has to exclusively rely on the exp from the attester which the AS does not control.\n> \n> Depends on specific deployment requirements, but might be worth it to switch from OPTIONAL to REQUIRED to always allow the consuming server to make their own policy decision. This would also match better with the`use_fresh_attestation` error.\n\n> Part of the reason to not mandate it is that it doesn't in all cases guarantee to AS or RS a measure of freshness for an attestation pop as the clients time can often be manipulated. Its does however prevent the mis-use of client attestation pop that was generated by a genuine client instance and is stolen by an attacker via a MITM attack and for that reason we could consider making it required.\n\nI think this consideration would be useful in the spec itself, along with any other details about the relationships and guarantees between the actors.\n\n> > I didn't implement combined mode, but I think that there should be a line explicitly saying that a server implementing combined mode SHOULD also provide DPoP nonces (which are optional in RFC 9449).\n> \n> We currently do not have a recommendation that challenges should be used, leaving the server the decision to either use challenges or rely purely on `jti`. Given that we are not recommending challenges, we should not recommend nonces.\n\nFair enough.\n\n> > The text is not currently clear on the fact that a client instance needs to remember which client instance key each instance-bound protocol artifact (i.e. refresh tokens) is actually bound to. If it doesn't do this, changing client instance keys will result in bad user experiences (potentially unbounded retries). Usually the client instance key rotation is not the choice of the client instance, but is something the platform does for your e.g. when biometrics are reset/updated, so this is something that will happen to most implementations. Guidance would be helpful.\n> \n> Proposal to add a note / implementation consideration that clients should manage what artefacts are bound to what keys.\n\nNice, thanks. I think the fact that client instance key rotation is usually managed by the platform and the downstream effects of that is the main thing to consider.\n\n> > It would be helpful for interoperability to define the status codes that should be used for use_fresh_attestation and invalid_client_attestation errors.\n> \n> Error responses in OAuth default (mostly) to status code 400. It might be beneficial to make this explicit and define specific codes like 400 for use_fresh_attestation and 401 for invalid_client_attestation? We'll propose text for this\n\nI don't think there's any reason not to be explicit about this. I think your proposed codes sound good.\n",
-          "created_at": "2026-09-29T13:42:10Z",
-          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225#issuecomment-5891513391",
-          "id": 5891513391,
-          "issue_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225",
-          "minimized": null,
-          "node_id": "IC_kwDOJaEkaM8AAAABXylcLw",
-          "performed_via_github_app": null,
-          "pin": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/comments/5891513391/reactions"
-          },
-          "updated_at": "2026-09-29T13:42:10Z",
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/comments/5891513391",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/864131?v=4",
-            "events_url": "https://api.github.com/users/fkj/events{/privacy}",
-            "followers_url": "https://api.github.com/users/fkj/followers",
-            "following_url": "https://api.github.com/users/fkj/following{/other_user}",
-            "gists_url": "https://api.github.com/users/fkj/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/fkj",
-            "id": 864131,
-            "login": "fkj",
-            "node_id": "MDQ6VXNlcjg2NDEzMQ==",
-            "organizations_url": "https://api.github.com/users/fkj/orgs",
-            "received_events_url": "https://api.github.com/users/fkj/received_events",
-            "repos_url": "https://api.github.com/users/fkj/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/fkj/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/fkj/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/fkj",
-            "user_view_type": "public"
-          }
-        },
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/8774236?v=4",
-            "events_url": "https://api.github.com/users/c2bo/events{/privacy}",
-            "followers_url": "https://api.github.com/users/c2bo/followers",
-            "following_url": "https://api.github.com/users/c2bo/following{/other_user}",
-            "gists_url": "https://api.github.com/users/c2bo/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/c2bo",
-            "id": 8774236,
-            "login": "c2bo",
-            "node_id": "MDQ6VXNlcjg3NzQyMzY=",
-            "organizations_url": "https://api.github.com/users/c2bo/orgs",
-            "received_events_url": "https://api.github.com/users/c2bo/received_events",
-            "repos_url": "https://api.github.com/users/c2bo/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/c2bo/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/c2bo/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/c2bo",
-            "user_view_type": "public"
-          },
-          "assignees": [
-            {
-              "avatar_url": "https://avatars.githubusercontent.com/u/8774236?v=4",
-              "events_url": "https://api.github.com/users/c2bo/events{/privacy}",
-              "followers_url": "https://api.github.com/users/c2bo/followers",
-              "following_url": "https://api.github.com/users/c2bo/following{/other_user}",
-              "gists_url": "https://api.github.com/users/c2bo/gists{/gist_id}",
-              "gravatar_id": "",
-              "html_url": "https://github.com/c2bo",
-              "id": 8774236,
-              "login": "c2bo",
-              "node_id": "MDQ6VXNlcjg3NzQyMzY=",
-              "organizations_url": "https://api.github.com/users/c2bo/orgs",
-              "received_events_url": "https://api.github.com/users/c2bo/received_events",
-              "repos_url": "https://api.github.com/users/c2bo/repos",
-              "site_admin": false,
-              "starred_url": "https://api.github.com/users/c2bo/starred{/owner}{/repo}",
-              "subscriptions_url": "https://api.github.com/users/c2bo/subscriptions",
-              "type": "User",
-              "url": "https://api.github.com/users/c2bo",
-              "user_view_type": "public"
-            }
-          ],
-          "body": "> I support publication of this document.\n> I have implemented the newest draft version (without the DPoP combined mode) and have plans to use it in production deployments.\n> \n> Some comments based on my implementation experience:\n> - As written, the spec does not normatively require replay protection for PoPs to actually be implemented by the verifier. Is this intentional?\n> - Even though trust management is explicitly out of scope, I think there should be a normative statement that an AS which trusts multiple attesters must somehow scope the accepted client_ids to each attester to prevent multiple attesters from asserting the same client_id.\n> - I think there might be a kind of mild \"downgrade\" attack allowing a mode switch from \"normal\" to \"combined\" by removing the PoP header. The severity of this is probably pretty limited, but it feels fragile to signal combined mode only by the absence of the OAuth-Client-Attestation-PoP header.\n> - I think iat should be REQUIRED. Otherwise, the AS cannot actually determine how fresh an attestation is, and has to exclusively rely on the exp from the attester which the AS does not control.\n> - I didn't implement combined mode, but I think that there should be a line explicitly saying that a server implementing combined mode SHOULD also provide DPoP nonces (which are optional in RFC 9449).\n> - The text is not currently clear on the fact that a client instance needs to remember which client instance key each instance-bound protocol artifact (i.e. refresh tokens) is actually bound to. If it doesn't do this, changing client instance keys will result in bad user experiences (potentially unbounded retries). Usually the client instance key rotation is not the choice of the client instance, but is something the platform does for your e.g. when biometrics are reset/updated, so this is something that will happen to most implementations. Guidance would be helpful.\n> - It would be helpful for interoperability to define the status codes that should be used for use_fresh_attestation and invalid_client_attestation errors.\n> - I disagree with Denis' comment #1 about revocation. A revocation status check would allow the attester to learn which AS the client is talking to which goes against the core design goal for the wallet use case. The expiration is enough and aligned with how DPoP and private_key_jwt works.\n> - Regarding Denis' comment #2, I think the current text is clear enough and that the proposed text introduces unnecessary redundancy.\n> - I disagree with Denis' comment #5 about sub correlation. The sub generally identifies the client software (via client_id), not the instance. It therefore does not let two servers determine that they saw the same instance, only that they saw instances of the same software. The point about revocation is also not correct, as the sub does not identify specific instances.\n> - I agree in principle with Denis' comment #7 about trust in additionally attested claims, though I think the framing about liability is inappropriate in an IETF document.\n> \n> Nits (line numbers in .txt version linked in Rifaat's message):\n> - Heading capitalization seems a bit random\n> - Inconsistent use of OAuth 2 and OAuth 2.0.\n> - Inconsistent use of \"use case\" and \"use-case\"\n> - The steps listed for validation in section 7.3 are not really written as steps. The sentence should probably be rewritten to match the \"conditions and rules\" framing in section 7.2.\n> - The \"applications using this media type\" field in the IANA registration for oauth-client-attestation-pop+jwt looks wrong. I would expect it to say something like \"applications that use this spec to convey a client attestation with PoP\" but the text currently mentions token status information.\n> - The document history for version 11 has a duplicate bullet about removing the duplication challenge verification.\n> - Section 10.5 mentions size limits \"as of 2024\" which should probably be updated to the current limits.\n> - The HTTP syntax uses token68 which I think is supposed to be deprecated (see section 16.4.2 of RFC 9110). I'm also not sure it is compatible with defining the HTTP field types as \"Item\".\n> - Line 753 says \"an use_attestation_challenge\" instead of \"a use_attestation_challenge\"\n> - Line 830 says \"a HTTP header-based\" instead of \"an HTTP header-based\"\n> - Line 1444 says that cryptographic operations need to be constructed, where I think you mean that they need to be performed\n> - Line 1522 says \"and or\" instead of \"and/or\"\n> - Line 1524: what is \"the HTTP\"? Just HTTP or is there a missing word here?\n> - Lines 1670 and 1692 say \"Details how ... is given in ...\" instead of \"Details how ... are given in ...\"\n> - Line 2559 says \"Verifivation\" instead of \"Verification\"\n> - Line 2567 does not really make sense as a sentence\n> - Line 2664 says \"it's own top\" instead of \"its own top\"\n> - Line 2766 calls the header Oauth-Client-Attestation instead of OAuth-Client-Attestation\n> - I think the document could generally benefit from a grammar pass.\n> \n> Cheers,\n> Frederik",
-          "closed_at": null,
-          "comments": 5,
-          "comments_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225/comments",
-          "created_at": "2026-09-21T20:08:12Z",
-          "events_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225/events",
-          "html_url": "https://github.com/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225",
-          "id": 5531914693,
-          "issue_dependencies_summary": {
-            "blocked_by": 0,
-            "blocking": 0,
-            "total_blocked_by": 0,
-            "total_blocking": 0
-          },
-          "issue_field_values": [],
-          "labels": [],
-          "labels_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "I_kwDOJaEkaM8AAAABSbpRxQ",
-          "number": 225,
-          "performed_via_github_app": null,
-          "pinned_comment": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
-          "state": "open",
-          "state_reason": null,
-          "sub_issues_summary": {
-            "completed": 0,
-            "percent_completed": 0,
-            "total": 0
-          },
-          "timeline_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225/timeline",
-          "title": "Frederik's feedback from WGLC",
-          "type": null,
-          "updated_at": "2026-09-30T12:18:29Z",
-          "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/issues/225",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/8774236?v=4",
-            "events_url": "https://api.github.com/users/c2bo/events{/privacy}",
-            "followers_url": "https://api.github.com/users/c2bo/followers",
-            "following_url": "https://api.github.com/users/c2bo/following{/other_user}",
-            "gists_url": "https://api.github.com/users/c2bo/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/c2bo",
-            "id": 8774236,
-            "login": "c2bo",
-            "node_id": "MDQ6VXNlcjg3NzQyMzY=",
-            "organizations_url": "https://api.github.com/users/c2bo/orgs",
-            "received_events_url": "https://api.github.com/users/c2bo/received_events",
-            "repos_url": "https://api.github.com/users/c2bo/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/c2bo/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/c2bo/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/c2bo",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 631317608,
-        "name": "oauth-wg/draft-ietf-oauth-attestation-based-client-auth",
-        "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth"
-      },
-      "type": "IssueCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-09-29T13:43:35Z",
-      "id": "22485071238",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "ecf5f794ede2555ac72f7b11633d0d08fede6247",
-        "head": "7acf6ef2e0d7166d60f5fbbd61f562bf6ea85b83",
-        "push_id": 44927287076,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 1240078076
-      },
-      "public": true,
-      "repo": {
-        "id": 1240078076,
-        "name": "oauth-wg/oauth-deferred-token-response",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/554402?",
-        "display_login": "gniero",
-        "gravatar_id": "",
-        "id": 554402,
-        "login": "gniero",
-        "url": "https://api.github.com/users/gniero"
-      },
-      "created_at": "2026-09-29T13:23:57Z",
-      "id": "22483658438",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "1d7884134e933b37e8af67eba5cbe3ef89181ab2",
-        "head": "f9ce170a6753ed2887c632157e52f3356af9a15d",
-        "push_id": 44925292268,
-        "ref": "refs/heads/impl-consideration-entropy",
-        "repository_id": 1240078076
-      },
-      "public": true,
-      "repo": {
-        "id": 1240078076,
-        "name": "oauth-wg/oauth-deferred-token-response",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/864131?",
-        "display_login": "fkj",
-        "gravatar_id": "",
-        "id": 864131,
-        "login": "fkj",
-        "url": "https://api.github.com/users/fkj"
-      },
-      "created_at": "2026-09-29T13:24:50Z",
-      "id": "16011798635",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "comment": {
-          "body": "> We still have this:\r\n> \r\n> https://github.com/oauth-wg/oauth-deferred-token-response/blob/173bdf074b8d016503119c6e0e963370ce302acb/draft-ietf-oauth-deferred-token-response.md?plain=1#L664-L666\r\n> \r\n> It's not feasible for the AS to validate entropy of a received client_notification_token, so I think it should be removed\r\n\r\nI agree.",
-          "created_at": "2026-09-29T13:24:50Z",
-          "html_url": "https://github.com/oauth-wg/oauth-deferred-token-response/pull/70#issuecomment-5891217229",
-          "id": 5891217229,
-          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/70",
-          "minimized": null,
-          "node_id": "IC_kwDOSeoW_M8AAAABXyTXTQ",
-          "performed_via_github_app": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/comments/5891217229/reactions"
-          },
-          "updated_at": "2026-09-29T13:24:50Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/comments/5891217229",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/864131?v=4",
-            "events_url": "https://api.github.com/users/fkj/events{/privacy}",
-            "followers_url": "https://api.github.com/users/fkj/followers",
-            "following_url": "https://api.github.com/users/fkj/following{/other_user}",
-            "gists_url": "https://api.github.com/users/fkj/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/fkj",
-            "id": 864131,
-            "login": "fkj",
-            "node_id": "MDQ6VXNlcjg2NDEzMQ==",
-            "organizations_url": "https://api.github.com/users/fkj/orgs",
-            "received_events_url": "https://api.github.com/users/fkj/received_events",
-            "repos_url": "https://api.github.com/users/fkj/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/fkj/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/fkj/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/fkj",
-            "user_view_type": "public"
-          }
-        },
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "## Problem\r\n\r\nWe addressed the examples of deferral codes and client notification tokens in #65, and raised the discussion whether we should include an implementation/security consideration regarding UUIDs not meeting 128-bit randomness requirement.\r\n\r\n## Changes\r\n\r\n- Adds an Implementation Consideration clarifying that 128 bits of length is not the same of 128 bits of randomness - length can be achieved by encoding, which doesn't mean that our requirement is correctly addressed. It also explains that client notification token entropy is the client's responsibility, and attempts to validate entropy on the AS's side may lead to inconsistent / imprecise checks as the AS won't know what is the client's approach to generate them. UUIDs are explicitly mentioned since they're historically present in related specs with similar requirements.\r\n- Adds references of the Implementation Consideration to the sections where the affected parameters are introduced\r\n\r\nThis being an issue originally raised by @mcguinness, I'd appreciate a review on this",
-          "closed_at": "2026-09-30T17:07:41Z",
-          "comments": 3,
-          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/70/comments",
-          "created_at": "2026-08-26T17:26:24Z",
-          "draft": false,
-          "events_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/70/events",
-          "html_url": "https://github.com/oauth-wg/oauth-deferred-token-response/pull/70",
-          "id": 5259725074,
-          "issue_field_values": [],
-          "labels": [],
-          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/70/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "PR_kwDOSeoW_M8AAAABBG5QeQ",
-          "number": 70,
-          "performed_via_github_app": null,
-          "pull_request": {
-            "diff_url": "https://github.com/oauth-wg/oauth-deferred-token-response/pull/70.diff",
-            "html_url": "https://github.com/oauth-wg/oauth-deferred-token-response/pull/70",
-            "merged_at": "2026-09-30T17:07:41Z",
-            "patch_url": "https://github.com/oauth-wg/oauth-deferred-token-response/pull/70.patch",
-            "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/pulls/70"
-          },
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/70/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response",
-          "state": "closed",
-          "state_reason": null,
-          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/70/timeline",
-          "title": "Adds Implementation Consideration on 128-bit entropy",
-          "type": null,
-          "updated_at": "2026-09-30T17:07:42Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/70",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/554402?v=4",
-            "events_url": "https://api.github.com/users/gniero/events{/privacy}",
-            "followers_url": "https://api.github.com/users/gniero/followers",
-            "following_url": "https://api.github.com/users/gniero/following{/other_user}",
-            "gists_url": "https://api.github.com/users/gniero/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/gniero",
-            "id": 554402,
-            "login": "gniero",
-            "node_id": "MDQ6VXNlcjU1NDQwMg==",
-            "organizations_url": "https://api.github.com/users/gniero/orgs",
-            "received_events_url": "https://api.github.com/users/gniero/received_events",
-            "repos_url": "https://api.github.com/users/gniero/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/gniero/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/gniero/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/gniero",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 1240078076,
-        "name": "oauth-wg/oauth-deferred-token-response",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response"
-      },
-      "type": "IssueCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/554402?",
-        "display_login": "gniero",
-        "gravatar_id": "",
-        "id": 554402,
-        "login": "gniero",
-        "url": "https://api.github.com/users/gniero"
-      },
-      "created_at": "2026-09-29T13:20:09Z",
-      "id": "16011405628",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "action": "created",
-        "comment": {
-          "body": "I removed normative words in this non-normative section, since they're already expressed where the attributes that demand them are introduced:`deferral_code` in [token response](https://github.com/oauth-wg/oauth-deferred-token-response/blob/173bdf074b8d016503119c6e0e963370ce302acb/draft-ietf-oauth-deferred-token-response.md?plain=1#L694) and `client_notification_token` in [token endpoint](https://github.com/oauth-wg/oauth-deferred-token-response/blob/173bdf074b8d016503119c6e0e963370ce302acb/draft-ietf-oauth-deferred-token-response.md?plain=1#L610). \r\n\r\nWe still have this:\r\nhttps://github.com/oauth-wg/oauth-deferred-token-response/blob/173bdf074b8d016503119c6e0e963370ce302acb/draft-ietf-oauth-deferred-token-response.md?plain=1#L664-L666\r\n\r\nIt's not feasible for the AS to validate entropy of a received client_notification_token, so I think it should be removed",
-          "created_at": "2026-09-29T13:20:09Z",
-          "html_url": "https://github.com/oauth-wg/oauth-deferred-token-response/pull/70#issuecomment-5891138901",
-          "id": 5891138901,
-          "issue_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/70",
-          "minimized": null,
-          "node_id": "IC_kwDOSeoW_M8AAAABXyOlVQ",
-          "performed_via_github_app": null,
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/comments/5891138901/reactions"
-          },
-          "updated_at": "2026-09-29T13:21:52Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/comments/5891138901",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/554402?v=4",
-            "events_url": "https://api.github.com/users/gniero/events{/privacy}",
-            "followers_url": "https://api.github.com/users/gniero/followers",
-            "following_url": "https://api.github.com/users/gniero/following{/other_user}",
-            "gists_url": "https://api.github.com/users/gniero/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/gniero",
-            "id": 554402,
-            "login": "gniero",
-            "node_id": "MDQ6VXNlcjU1NDQwMg==",
-            "organizations_url": "https://api.github.com/users/gniero/orgs",
-            "received_events_url": "https://api.github.com/users/gniero/received_events",
-            "repos_url": "https://api.github.com/users/gniero/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/gniero/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/gniero/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/gniero",
-            "user_view_type": "public"
-          }
-        },
-        "issue": {
-          "active_lock_reason": null,
-          "assignee": null,
-          "assignees": [],
-          "body": "## Problem\r\n\r\nWe addressed the examples of deferral codes and client notification tokens in #65, and raised the discussion whether we should include an implementation/security consideration regarding UUIDs not meeting 128-bit randomness requirement.\r\n\r\n## Changes\r\n\r\n- Adds an Implementation Consideration clarifying that 128 bits of length is not the same of 128 bits of randomness - length can be achieved by encoding, which doesn't mean that our requirement is correctly addressed. It also explains that client notification token entropy is the client's responsibility, and attempts to validate entropy on the AS's side may lead to inconsistent / imprecise checks as the AS won't know what is the client's approach to generate them. UUIDs are explicitly mentioned since they're historically present in related specs with similar requirements.\r\n- Adds references of the Implementation Consideration to the sections where the affected parameters are introduced\r\n\r\nThis being an issue originally raised by @mcguinness, I'd appreciate a review on this",
-          "closed_at": "2026-09-30T17:07:41Z",
-          "comments": 3,
-          "comments_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/70/comments",
-          "created_at": "2026-08-26T17:26:24Z",
-          "draft": false,
-          "events_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/70/events",
-          "html_url": "https://github.com/oauth-wg/oauth-deferred-token-response/pull/70",
-          "id": 5259725074,
-          "issue_field_values": [],
-          "labels": [],
-          "labels_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/70/labels{/name}",
-          "locked": false,
-          "milestone": null,
-          "node_id": "PR_kwDOSeoW_M8AAAABBG5QeQ",
-          "number": 70,
-          "performed_via_github_app": null,
-          "pull_request": {
-            "diff_url": "https://github.com/oauth-wg/oauth-deferred-token-response/pull/70.diff",
-            "html_url": "https://github.com/oauth-wg/oauth-deferred-token-response/pull/70",
-            "merged_at": "2026-09-30T17:07:41Z",
-            "patch_url": "https://github.com/oauth-wg/oauth-deferred-token-response/pull/70.patch",
-            "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/pulls/70"
-          },
-          "reactions": {
-            "+1": 0,
-            "-1": 0,
-            "confused": 0,
-            "eyes": 0,
-            "heart": 0,
-            "hooray": 0,
-            "laugh": 0,
-            "rocket": 0,
-            "total_count": 0,
-            "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/70/reactions"
-          },
-          "repository_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response",
-          "state": "closed",
-          "state_reason": null,
-          "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/70/timeline",
-          "title": "Adds Implementation Consideration on 128-bit entropy",
-          "type": null,
-          "updated_at": "2026-09-30T17:07:42Z",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response/issues/70",
-          "user": {
-            "avatar_url": "https://avatars.githubusercontent.com/u/554402?v=4",
-            "events_url": "https://api.github.com/users/gniero/events{/privacy}",
-            "followers_url": "https://api.github.com/users/gniero/followers",
-            "following_url": "https://api.github.com/users/gniero/following{/other_user}",
-            "gists_url": "https://api.github.com/users/gniero/gists{/gist_id}",
-            "gravatar_id": "",
-            "html_url": "https://github.com/gniero",
-            "id": 554402,
-            "login": "gniero",
-            "node_id": "MDQ6VXNlcjU1NDQwMg==",
-            "organizations_url": "https://api.github.com/users/gniero/orgs",
-            "received_events_url": "https://api.github.com/users/gniero/received_events",
-            "repos_url": "https://api.github.com/users/gniero/repos",
-            "site_admin": false,
-            "starred_url": "https://api.github.com/users/gniero/starred{/owner}{/repo}",
-            "subscriptions_url": "https://api.github.com/users/gniero/subscriptions",
-            "type": "User",
-            "url": "https://api.github.com/users/gniero",
-            "user_view_type": "public"
-          }
-        }
-      },
-      "public": true,
-      "repo": {
-        "id": 1240078076,
-        "name": "oauth-wg/oauth-deferred-token-response",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response"
-      },
-      "type": "IssueCommentEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/41898282?",
-        "display_login": "github-actions",
-        "gravatar_id": "",
-        "id": 41898282,
-        "login": "github-actions[bot]",
-        "url": "https://api.github.com/users/github-actions[bot]"
-      },
-      "created_at": "2026-09-29T13:04:46Z",
-      "id": "22482133853",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "ff22971e03013161d96d6abbeb19c1139f5c4fe5",
-        "head": "5050e626ceb03f4b324f35e495073bf6912ded84",
-        "push_id": 44923410377,
-        "ref": "refs/heads/gh-pages",
-        "repository_id": 1240078076
-      },
-      "public": true,
-      "repo": {
-        "id": 1240078076,
-        "name": "oauth-wg/oauth-deferred-token-response",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response"
-      },
-      "type": "PushEvent"
-    },
-    {
-      "actor": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/554402?",
-        "display_login": "gniero",
-        "gravatar_id": "",
-        "id": 554402,
-        "login": "gniero",
-        "url": "https://api.github.com/users/gniero"
-      },
-      "created_at": "2026-09-29T13:04:17Z",
-      "id": "22482073541",
-      "org": {
-        "avatar_url": "https://avatars.githubusercontent.com/u/111596788?",
-        "gravatar_id": "",
-        "id": 111596788,
-        "login": "oauth-wg",
-        "url": "https://api.github.com/orgs/oauth-wg"
-      },
-      "payload": {
-        "before": "0c456e8ac16104a4eb9b88e74b5c5c7591090ecb",
-        "head": "1d7884134e933b37e8af67eba5cbe3ef89181ab2",
-        "push_id": 44923363702,
-        "ref": "refs/heads/impl-consideration-entropy",
-        "repository_id": 1240078076
-      },
-      "public": true,
-      "repo": {
-        "id": 1240078076,
-        "name": "oauth-wg/oauth-deferred-token-response",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-deferred-token-response"
-      },
-      "type": "PushEvent"
     }
   ],
   "prs": {
     "error": null,
     "items": [
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "COLLABORATOR",
+        "body": "for #435",
+        "closed_at": null,
+        "comments": 0,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/437/comments",
+        "created_at": "2026-10-07T20:41:45Z",
+        "draft": false,
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/437/events",
+        "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/437",
+        "id": 5751576288,
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/437/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "PR_kwDOJbVClc8AAAABHM4CeA",
+        "number": 437,
+        "performed_via_github_app": null,
+        "pull_request": {
+          "diff_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/437.diff",
+          "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/437",
+          "merged_at": null,
+          "patch_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/437.patch",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/pulls/437"
+        },
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/437/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/437/timeline",
+        "title": " clarify that x5c is from RFC7515 and has validate against a policy-permitted trust anchor",
+        "type": null,
+        "updated_at": "2026-10-07T21:47:15Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/437",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
+          "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
+          "followers_url": "https://api.github.com/users/bc-pi/followers",
+          "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
+          "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/bc-pi",
+          "id": 71398439,
+          "login": "bc-pi",
+          "node_id": "MDQ6VXNlcjcxMzk4NDM5",
+          "organizations_url": "https://api.github.com/users/bc-pi/orgs",
+          "received_events_url": "https://api.github.com/users/bc-pi/received_events",
+          "repos_url": "https://api.github.com/users/bc-pi/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/bc-pi",
+          "user_view_type": "public"
+        }
+      },
+      {
+        "active_lock_reason": null,
+        "assignee": null,
+        "assignees": [],
+        "author_association": "COLLABORATOR",
+        "body": "for consistency per https://mailarchive.ietf.org/arch/msg/jwt-reg-review/793fl_zNXo2zCfajzzU_QfZJER4/ but in the other direction ",
+        "closed_at": null,
+        "comments": 0,
+        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/438/comments",
+        "created_at": "2026-10-07T21:26:28Z",
+        "draft": false,
+        "events_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/438/events",
+        "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/438",
+        "id": 5752113935,
+        "issue_field_values": [],
+        "labels": [],
+        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/438/labels{/name}",
+        "locked": false,
+        "milestone": null,
+        "node_id": "PR_kwDOJbVClc8AAAABHNTsJA",
+        "number": 438,
+        "performed_via_github_app": null,
+        "pull_request": {
+          "diff_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/438.diff",
+          "html_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/438",
+          "merged_at": null,
+          "patch_url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/438.patch",
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/pulls/438"
+        },
+        "reactions": {
+          "+1": 0,
+          "-1": 0,
+          "confused": 0,
+          "eyes": 0,
+          "heart": 0,
+          "hooray": 0,
+          "laugh": 0,
+          "rocket": 0,
+          "total_count": 0,
+          "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/438/reactions"
+        },
+        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc",
+        "score": 1.0,
+        "state": "open",
+        "state_reason": null,
+        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/438/timeline",
+        "title": "remove a few superfluous subsection headings from the IANA Considerations",
+        "type": null,
+        "updated_at": "2026-10-07T21:26:29Z",
+        "url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/issues/438",
+        "user": {
+          "avatar_url": "https://avatars.githubusercontent.com/u/71398439?v=4",
+          "events_url": "https://api.github.com/users/bc-pi/events{/privacy}",
+          "followers_url": "https://api.github.com/users/bc-pi/followers",
+          "following_url": "https://api.github.com/users/bc-pi/following{/other_user}",
+          "gists_url": "https://api.github.com/users/bc-pi/gists{/gist_id}",
+          "gravatar_id": "",
+          "html_url": "https://github.com/bc-pi",
+          "id": 71398439,
+          "login": "bc-pi",
+          "node_id": "MDQ6VXNlcjcxMzk4NDM5",
+          "organizations_url": "https://api.github.com/users/bc-pi/orgs",
+          "received_events_url": "https://api.github.com/users/bc-pi/received_events",
+          "repos_url": "https://api.github.com/users/bc-pi/repos",
+          "site_admin": false,
+          "starred_url": "https://api.github.com/users/bc-pi/starred{/owner}{/repo}",
+          "subscriptions_url": "https://api.github.com/users/bc-pi/subscriptions",
+          "type": "User",
+          "url": "https://api.github.com/users/bc-pi",
+          "user_view_type": "public"
+        }
+      },
       {
         "active_lock_reason": null,
         "assignee": null,
@@ -56076,7 +56208,7 @@
           "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pulls/99"
         },
         "reactions": {
-          "+1": 0,
+          "+1": 1,
           "-1": 0,
           "confused": 0,
           "eyes": 0,
@@ -56084,7 +56216,7 @@
           "hooray": 0,
           "laugh": 0,
           "rocket": 0,
-          "total_count": 0,
+          "total_count": 1,
           "url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/99/reactions"
         },
         "repository_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-client-id-metadata-document",
@@ -92908,153 +93040,9 @@
           "url": "https://api.github.com/users/panva",
           "user_view_type": "public"
         }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "COLLABORATOR",
-        "body": "See #202",
-        "closed_at": "2025-10-06T23:41:44Z",
-        "comments": 0,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/259/comments",
-        "created_at": "2025-10-01T13:21:35Z",
-        "draft": false,
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/259/events",
-        "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/259",
-        "id": 3473551067,
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/259/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "PR_kwDOJt_WwM6rjlRF",
-        "number": 259,
-        "performed_via_github_app": null,
-        "pull_request": {
-          "diff_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/259.diff",
-          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/259",
-          "merged_at": "2025-10-06T23:41:44Z",
-          "patch_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/259.patch",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/259"
-        },
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/259/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
-        "score": 1.0,
-        "state": "closed",
-        "state_reason": null,
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/259/timeline",
-        "title": "Remove prohibition on returning expires_in and scope",
-        "type": null,
-        "updated_at": "2025-10-06T23:41:46Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/259",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
-          "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
-          "followers_url": "https://api.github.com/users/PieterKas/followers",
-          "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
-          "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/PieterKas",
-          "id": 90690777,
-          "login": "PieterKas",
-          "node_id": "MDQ6VXNlcjkwNjkwNzc3",
-          "organizations_url": "https://api.github.com/users/PieterKas/orgs",
-          "received_events_url": "https://api.github.com/users/PieterKas/received_events",
-          "repos_url": "https://api.github.com/users/PieterKas/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/PieterKas",
-          "user_view_type": "public"
-        }
-      },
-      {
-        "active_lock_reason": null,
-        "assignee": null,
-        "assignees": [],
-        "author_association": "COLLABORATOR",
-        "body": "See #189",
-        "closed_at": "2025-10-06T23:40:27Z",
-        "comments": 1,
-        "comments_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/254/comments",
-        "created_at": "2025-09-18T11:35:06Z",
-        "draft": false,
-        "events_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/254/events",
-        "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/254",
-        "id": 3429955453,
-        "issue_field_values": [],
-        "labels": [],
-        "labels_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/254/labels{/name}",
-        "locked": false,
-        "milestone": null,
-        "node_id": "PR_kwDOJt_WwM6pRTdb",
-        "number": 254,
-        "performed_via_github_app": null,
-        "pull_request": {
-          "diff_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/254.diff",
-          "html_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/254",
-          "merged_at": "2025-10-06T23:40:27Z",
-          "patch_url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/254.patch",
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/pulls/254"
-        },
-        "reactions": {
-          "+1": 0,
-          "-1": 0,
-          "confused": 0,
-          "eyes": 0,
-          "heart": 0,
-          "hooray": 0,
-          "laugh": 0,
-          "rocket": 0,
-          "total_count": 0,
-          "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/254/reactions"
-        },
-        "repository_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens",
-        "score": 1.0,
-        "state": "closed",
-        "state_reason": null,
-        "timeline_url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/254/timeline",
-        "title": "Allow for alternatives to RFC8693",
-        "type": null,
-        "updated_at": "2025-10-06T23:40:29Z",
-        "url": "https://api.github.com/repos/oauth-wg/oauth-transaction-tokens/issues/254",
-        "user": {
-          "avatar_url": "https://avatars.githubusercontent.com/u/90690777?v=4",
-          "events_url": "https://api.github.com/users/PieterKas/events{/privacy}",
-          "followers_url": "https://api.github.com/users/PieterKas/followers",
-          "following_url": "https://api.github.com/users/PieterKas/following{/other_user}",
-          "gists_url": "https://api.github.com/users/PieterKas/gists{/gist_id}",
-          "gravatar_id": "",
-          "html_url": "https://github.com/PieterKas",
-          "id": 90690777,
-          "login": "PieterKas",
-          "node_id": "MDQ6VXNlcjkwNjkwNzc3",
-          "organizations_url": "https://api.github.com/users/PieterKas/orgs",
-          "received_events_url": "https://api.github.com/users/PieterKas/received_events",
-          "repos_url": "https://api.github.com/users/PieterKas/repos",
-          "site_admin": false,
-          "starred_url": "https://api.github.com/users/PieterKas/starred{/owner}{/repo}",
-          "subscriptions_url": "https://api.github.com/users/PieterKas/subscriptions",
-          "type": "User",
-          "url": "https://api.github.com/users/PieterKas",
-          "user_view_type": "public"
-        }
       }
     ],
-    "total_count": 1671
+    "total_count": 1673
   },
   "repos": [
     {
@@ -93973,9 +93961,9 @@
       "private": false,
       "pull_request_creation_policy": "all",
       "pulls_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/pulls{/number}",
-      "pushed_at": "2026-10-06T05:36:00Z",
+      "pushed_at": "2026-10-08T00:19:59Z",
       "releases_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/releases{/id}",
-      "size": 3566,
+      "size": 3585,
       "ssh_url": "git@github.com:oauth-wg/draft-ietf-oauth-attestation-based-client-auth.git",
       "stargazers_count": 20,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/draft-ietf-oauth-attestation-based-client-auth/stargazers",
@@ -94057,8 +94045,8 @@
       "name": "oauth-sd-jwt-vc",
       "node_id": "R_kgDOJbVClQ",
       "notifications_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/notifications{?since,all,participating}",
-      "open_issues": 4,
-      "open_issues_count": 4,
+      "open_issues": 5,
+      "open_issues_count": 5,
       "owner": {
         "avatar_url": "https://avatars.githubusercontent.com/u/111596788?v=4",
         "events_url": "https://api.github.com/users/oauth-wg/events{/privacy}",
@@ -94090,9 +94078,9 @@
       "private": false,
       "pull_request_creation_policy": "all",
       "pulls_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/pulls{/number}",
-      "pushed_at": "2026-10-06T22:17:50Z",
+      "pushed_at": "2026-10-08T00:56:17Z",
       "releases_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/releases{/id}",
-      "size": 5997,
+      "size": 6255,
       "ssh_url": "git@github.com:oauth-wg/oauth-sd-jwt-vc.git",
       "stargazers_count": 31,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/oauth-sd-jwt-vc/stargazers",
@@ -94679,9 +94667,9 @@
       "private": false,
       "pull_request_creation_policy": "all",
       "pulls_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/pulls{/number}",
-      "pushed_at": "2026-10-04T00:49:45Z",
+      "pushed_at": "2026-10-08T00:04:46Z",
       "releases_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/releases{/id}",
-      "size": 1681,
+      "size": 1886,
       "ssh_url": "git@github.com:oauth-wg/oauth-identity-assertion-authz-grant.git",
       "stargazers_count": 9,
       "stargazers_url": "https://api.github.com/repos/oauth-wg/oauth-identity-assertion-authz-grant/stargazers",
@@ -95403,5 +95391,5 @@
       "web_commit_signoff_required": false
     }
   ],
-  "snapshot_date": "2026-10-07"
+  "snapshot_date": "2026-10-08"
 }
