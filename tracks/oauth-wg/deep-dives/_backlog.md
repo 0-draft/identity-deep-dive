@@ -1,11 +1,11 @@
-# OAuth WG Backlog (2026-10-08)
+# OAuth WG Backlog (2026-10-09)
 
-- generated_at_utc: `2026-10-08T13:06:09+00:00`
+- generated_at_utc: `2026-10-09T12:52:34+00:00`
 
-- [ ] `draft-ietf-oauth-attestation-based-client-auth` score=108 updated=2026-09-08T12:09:41Z
-- [ ] `draft-ietf-oauth-rfc7523bis` score=83 updated=2026-09-30T17:49:30Z
+- [ ] `draft-ietf-oauth-attestation-based-client-auth` score=100 updated=2026-09-08T12:09:41Z
 - [ ] `draft-ietf-oauth-sd-jwt-vc` score=83 updated=2026-09-15T07:13:01Z
 - [ ] `draft-ietf-oauth-status-list` score=81 updated=2026-08-13T20:11:32Z
+- [ ] `draft-ietf-oauth-rfc7523bis` score=73 updated=2026-09-30T17:49:30Z
 - [ ] `draft-ietf-oauth-deferred-token-response` score=66 updated=2026-09-23T12:23:20Z
 - [ ] `draft-ietf-oauth-rfc8725bis` score=65 updated=2026-08-31T18:37:20Z
 - [ ] `draft-ietf-oauth-identity-chaining` score=65 updated=2026-08-21T20:25:31Z
