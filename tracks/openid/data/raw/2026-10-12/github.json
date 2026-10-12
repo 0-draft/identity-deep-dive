@@ -1,5 +1,5 @@
 {
-  "collected_at": "2026-10-12T14:53:52+00:00",
+  "collected_at": "2026-10-12T17:04:03+00:00",
   "merged_prs_30d": {
     "error": null,
     "incomplete_results": false,
@@ -8111,7 +8111,7 @@
         "author_association": "COLLABORATOR",
         "body": "It's possible to have a single credential that answer multiple CredentialQueries. e.g. if one queries says 'I want your address, from a DocType' and another says 'I want your first name, last name' from an DocType'. Lets say, in different scenario sets. \n\nI would then use the same CredentialItem (signed and containing both first name/last name and address) in the response. So the credential response Enveope would look like: \n\n\n{\n  credentials: { address_query_id => { my_big_credential}, name_query_id => { my_big_credential } }\n  scenarios: { address_scenario_id => [ address_query_id], name_scenario_id => [name_query_id] }\n}\n\nThis is the same as what OpenID4VP does, but we can do better if we just do: \n(rename CredentialRef => QueryRef as it is a reference to a *query* not a credential)\n\n```cddl\nEnvelope: {\n  credentials: 1 => { +CredentialRef => CredentialItem} \n  queries: 2 => { +QueryRef => CredentialRef }\n  scenarios: 3=> { + ScenarioRef => [ QueryRef ] } \n}\n\nCredentialRef = int\n\n```\n\nNow we would be able to return the above as: \n{\n  credentials: { cr_1 => { my_big_credential}  }\n  queries: { address_query_id => { cr_1}, name_query_id => { cr_1 } }\n  scenarios: { address_scenario_id => [ address_query_id], name_scenario_id => [name_query_id] }\n}\n\nwhich avoids duplicating it (at the cost of having to id-trace). \n\nAn alternative option would be to allow CredentialItem to be polymorphic, and able to return a 'CredentialRef' instead of the exact value, indicating which query the credential will be found in. \n\n",
         "closed_at": null,
-        "comments": 1,
+        "comments": 2,
         "comments_url": "https://api.github.com/repos/openid/dchp/issues/69/comments",
         "created_at": "2026-10-07T22:16:37Z",
         "events_url": "https://api.github.com/repos/openid/dchp/issues/69/events",
@@ -8156,7 +8156,7 @@
         "timeline_url": "https://api.github.com/repos/openid/dchp/issues/69/timeline",
         "title": "Avoid duplication of CredentialItem when it answers multiple different CredentialQueries",
         "type": null,
-        "updated_at": "2026-10-08T10:09:12Z",
+        "updated_at": "2026-10-12T15:38:24Z",
         "url": "https://api.github.com/repos/openid/dchp/issues/69",
         "user": {
           "avatar_url": "https://avatars.githubusercontent.com/u/7751147?v=4",
@@ -114594,7 +114594,7 @@
         "timeline_url": "https://api.github.com/repos/openid/OpenID4VP/issues/800/timeline",
         "title": "Add support for age_over_nn claims matching",
         "type": null,
-        "updated_at": "2026-10-09T12:56:47Z",
+        "updated_at": "2026-10-12T16:01:07Z",
         "url": "https://api.github.com/repos/openid/OpenID4VP/issues/800",
         "user": {
           "avatar_url": "https://avatars.githubusercontent.com/u/8774236?v=4",
@@ -117259,7 +117259,7 @@
         "author_association": "MEMBER",
         "body": "Resolves #38",
         "closed_at": null,
-        "comments": 1,
+        "comments": 2,
         "comments_url": "https://api.github.com/repos/openid/federation-entity-collection/issues/54/comments",
         "created_at": "2026-04-29T11:43:56Z",
         "draft": false,
@@ -117300,7 +117300,7 @@
         "timeline_url": "https://api.github.com/repos/openid/federation-entity-collection/issues/54/timeline",
         "title": "add a locale parameter to filter ui claims for languages",
         "type": null,
-        "updated_at": "2026-10-08T05:08:48Z",
+        "updated_at": "2026-10-12T15:09:42Z",
         "url": "https://api.github.com/repos/openid/federation-entity-collection/issues/54",
         "user": {
           "avatar_url": "https://avatars.githubusercontent.com/u/18414445?v=4",
