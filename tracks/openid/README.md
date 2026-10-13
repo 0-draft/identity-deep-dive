@@ -18,7 +18,7 @@ Configured in `config/sources.yaml` (priority repos with weights). All other pub
 
 ```text
 config/                              sources.yaml + scoring.yaml
-data/raw/<YYYY-MM-DD>/github.json    Raw GitHub API JSON (latest only — pruned)
+data/raw/<YYYY-MM-DD>/github.json    Raw GitHub API JSON (local only, gitignored)
 data/normalized/github.json          Per-source normalized (latest collect)
 data/normalized/state.json           Merged state (input to score)
 data/normalized/candidates.json      Scored repos (input to report)

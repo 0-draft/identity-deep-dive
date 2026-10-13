@@ -20,7 +20,7 @@ Source endpoints live in `config/sources.yaml`. Repo→draft alias mapping lives
 
 ```text
 config/                            sources.yaml + scoring.yaml + draft_aliases.json
-data/raw/<YYYY-MM-DD>/             Per-day raw fetches (datatracker/github/mailarchive json)
+data/raw/<YYYY-MM-DD>/             Raw fetches (local only, gitignored)
 data/normalized/                   datatracker.json / github.json / mailarchive.json /
                                    state.json / candidates.json
 data/snapshots/<YYYY-MM-DD>/       Daily snapshot of state.json + candidates.json

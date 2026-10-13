@@ -20,7 +20,7 @@ Configured in `config/sources.yaml`:
 
 ```text
 config/                      sources.yaml + scoring.yaml
-data/raw/<YYYY-MM-DD>/       Per-source audit JSON (latest only — pruned)
+data/raw/<YYYY-MM-DD>/       Per-source audit JSON (local only, gitignored)
 data/normalized/             datatracker.json / mailarchive.json / github.json /
                              state.json / candidates.json
 data/snapshots/<YYYY-MM-DD>/ Snapshot of normalized state

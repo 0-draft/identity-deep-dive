@@ -82,6 +82,10 @@ To wire a new track in, add its directory name to `matrix.track` in both workflo
 
 - **Configuration-driven**: All sources, weights, and thresholds live in YAML configs.
 - **Transparent scoring**: Every score is explainable; tune weights per track.
-- **Historical traceability**: Generated files are committed for audit and trend analysis.
+- **Historical traceability**: Normalized data, snapshots, and reports are committed for audit and trend analysis; raw API dumps stay local.
 - **Template-first**: New tracks and deep dives start from proven scaffolds.
 - **Automation-friendly**: Every step is scriptable and CI-ready.
+
+## License
+
+[MIT](LICENSE)
