@@ -85,3 +85,7 @@ To wire a new track in, add its directory name to `matrix.track` in both workflo
 - **Historical traceability**: Generated files are committed for audit and trend analysis.
 - **Template-first**: New tracks and deep dives start from proven scaffolds.
 - **Automation-friendly**: Every step is scriptable and CI-ready.
+
+## License
+
+[MIT](LICENSE)
