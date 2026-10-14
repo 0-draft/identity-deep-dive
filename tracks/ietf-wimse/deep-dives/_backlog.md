@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-10-13T13:52:09+00:00
+Generated at: 2026-10-14T11:29:30+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -16,5 +16,6 @@ Generated at: 2026-10-13T13:52:09+00:00
 | 10 | 6 | Review related draft: draft-reddy-wimse-aggregate-signatures-01 | draft-reddy-wimse-aggregate-signatures-01 (2026-09-28) |
 | 11 | 6 | Review related draft: draft-reece-wimse-cross-org-delegation-02 | draft-reece-wimse-cross-org-delegation-02 (2026-08-31) |
 | 12 | 6 | Review related draft: draft-seymour-wimse-connected-flight-06 | draft-seymour-wimse-connected-flight-06 (2026-10-01) |
-| 13 | 6 | Review related draft: draft-uppalapati-wimse-pq-agent-identity-00 | draft-uppalapati-wimse-pq-agent-identity-00 (2026-09-28) |
-| 14 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-07 | draft-ietf-wimse-workload-identity-practices-07 (2026-09-22) |
+| 13 | 6 | Review related draft: draft-sweeney-wimse-credential-delegation-01 | draft-sweeney-wimse-credential-delegation-01 (2026-10-13) |
+| 14 | 6 | Review related draft: draft-uppalapati-wimse-pq-agent-identity-00 | draft-uppalapati-wimse-pq-agent-identity-00 (2026-09-28) |
+| 15 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-07 | draft-ietf-wimse-workload-identity-practices-07 (2026-09-22) |
