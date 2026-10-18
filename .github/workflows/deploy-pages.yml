@@ -8,6 +8,12 @@ on:
       - "tracks/**/data/normalized/**"
       - "web/**"
       - ".github/workflows/deploy-pages.yml"
+  # The collectors push with GITHUB_TOKEN, and a GITHUB_TOKEN push never fires
+  # `push` workflows, so without this the site only moved on human commits.
+  workflow_run:
+    workflows: ["Daily Update (All Tracks)", "Weekly Digest (All Tracks)"]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -21,6 +27,7 @@ concurrency:
 
 jobs:
   build:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     defaults:
       run:
