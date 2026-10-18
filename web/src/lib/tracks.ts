@@ -105,19 +105,15 @@ export function topCandidates(id: TrackId, limit = 10): Candidate[] {
   }
   if (id === "oauth-wg") {
     const data = readJsonOrNull<{ candidates: Candidate[] }>(
-      path.join(dir, "backlog.json"),
+      path.join(dir, "candidates.json"),
     );
     return (data?.candidates ?? []).slice(0, limit);
   }
   if (id === "openid") {
-    const latest = readJsonOrNull<{ snapshot_date?: string }>(
-      path.join(dir, "latest.json"),
+    const data = readJsonOrNull<{ candidates: any[] }>(
+      path.join(dir, "candidates.json"),
     );
-    const date = latest?.snapshot_date;
-    const top = date
-      ? readJsonOrNull<{ repos: any[] }>(path.join(dir, `top-${date}.json`))
-      : null;
-    return (top?.repos ?? []).slice(0, limit).map((r: any) => ({
+    return (data?.candidates ?? []).slice(0, limit).map((r: any) => ({
       title: r.full_name ?? r.name,
       score: Math.round((r.score ?? 0) * 10) / 10,
       reasons: [
