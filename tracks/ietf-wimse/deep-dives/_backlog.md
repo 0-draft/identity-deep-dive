@@ -1,10 +1,10 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-10-18T10:39:58+00:00
+Generated at: 2026-10-19T12:38:26+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
-| 1 | 10 | Investigate mailing-list trend: ai-agent | topic=ai-agent count=10 |
+| 1 | 10 | Investigate mailing-list trend: ai-agent | topic=ai-agent count=8 |
 | 2 | 7 | Diff active WG draft: draft-ietf-wimse-aims-00 | draft-ietf-wimse-aims-00 (2026-09-15) |
 | 3 | 7 | Diff active WG draft: draft-ietf-wimse-http-signature-07 | draft-ietf-wimse-http-signature-07 (2026-09-20) |
 | 4 | 6 | Review related draft: draft-asor-wimse-agent-delegation-chain-02 | draft-asor-wimse-agent-delegation-chain-02 (2026-10-15) |
@@ -15,6 +15,7 @@ Generated at: 2026-10-18T10:39:58+00:00
 | 9 | 6 | Review related draft: draft-reddy-wimse-aggregate-signatures-01 | draft-reddy-wimse-aggregate-signatures-01 (2026-09-28) |
 | 10 | 6 | Review related draft: draft-seymour-wimse-connected-flight-06 | draft-seymour-wimse-connected-flight-06 (2026-10-01) |
 | 11 | 6 | Review related draft: draft-sweeney-wimse-credential-delegation-01 | draft-sweeney-wimse-credential-delegation-01 (2026-10-13) |
-| 12 | 6 | Review related draft: draft-uppalapati-wimse-pq-agent-identity-00 | draft-uppalapati-wimse-pq-agent-identity-00 (2026-09-28) |
-| 13 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-07 | draft-ietf-wimse-workload-identity-practices-07 (2026-09-22) |
-| 14 | 4 | Review related draft: draft-heigh-wimse-workload-identity-metadata-00 | draft-heigh-wimse-workload-identity-metadata-00 (2026-10-16) |
+| 12 | 6 | Review related draft: draft-thaha-wimse-agent-evidence-binding-00 | draft-thaha-wimse-agent-evidence-binding-00 (2026-10-19) |
+| 13 | 6 | Review related draft: draft-uppalapati-wimse-pq-agent-identity-00 | draft-uppalapati-wimse-pq-agent-identity-00 (2026-09-28) |
+| 14 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-07 | draft-ietf-wimse-workload-identity-practices-07 (2026-09-22) |
+| 15 | 4 | Review related draft: draft-heigh-wimse-workload-identity-metadata-00 | draft-heigh-wimse-workload-identity-metadata-00 (2026-10-16) |
