@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-10-23T11:16:31+00:00
+Generated at: 2026-10-24T10:35:52+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -8,13 +8,15 @@ Generated at: 2026-10-23T11:16:31+00:00
 | 2 | 7 | Diff active WG draft: draft-ietf-wimse-http-signature-08 | draft-ietf-wimse-http-signature-08 (2026-10-20) |
 | 3 | 6 | Review related draft: draft-asor-wimse-agent-delegation-chain-02 | draft-asor-wimse-agent-delegation-chain-02 (2026-10-15) |
 | 4 | 6 | Review related draft: draft-atakora-wimse-sadp-delegation-01 | draft-atakora-wimse-sadp-delegation-01 (2026-09-21) |
-| 5 | 6 | Review related draft: draft-jackson-wimse-evaluation-04 | draft-jackson-wimse-evaluation-04 (2026-10-10) |
-| 6 | 6 | Review related draft: draft-lee-wimse-local-tool-call-proof-01 | draft-lee-wimse-local-tool-call-proof-01 (2026-10-11) |
-| 7 | 6 | Review related draft: draft-ni-wimse-ai-agent-identity-03 | draft-ni-wimse-ai-agent-identity-03 (2026-09-30) |
-| 8 | 6 | Review related draft: draft-reddy-wimse-aggregate-signatures-01 | draft-reddy-wimse-aggregate-signatures-01 (2026-09-28) |
-| 9 | 6 | Review related draft: draft-seymour-wimse-connected-flight-06 | draft-seymour-wimse-connected-flight-06 (2026-10-01) |
-| 10 | 6 | Review related draft: draft-sweeney-wimse-credential-delegation-01 | draft-sweeney-wimse-credential-delegation-01 (2026-10-13) |
-| 11 | 6 | Review related draft: draft-thaha-wimse-agent-evidence-binding-00 | draft-thaha-wimse-agent-evidence-binding-00 (2026-10-19) |
-| 12 | 6 | Review related draft: draft-uppalapati-wimse-pq-agent-identity-00 | draft-uppalapati-wimse-pq-agent-identity-00 (2026-09-28) |
-| 13 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-07 | draft-ietf-wimse-workload-identity-practices-07 (2026-09-22) |
-| 14 | 4 | Review related draft: draft-heigh-wimse-workload-identity-metadata-00 | draft-heigh-wimse-workload-identity-metadata-00 (2026-10-16) |
+| 5 | 6 | Review related draft: draft-hulea-wimse-agent-mandate-00 | draft-hulea-wimse-agent-mandate-00 (2026-10-23) |
+| 6 | 6 | Review related draft: draft-jackson-wimse-evaluation-04 | draft-jackson-wimse-evaluation-04 (2026-10-10) |
+| 7 | 6 | Review related draft: draft-lee-wimse-local-tool-call-proof-01 | draft-lee-wimse-local-tool-call-proof-01 (2026-10-11) |
+| 8 | 6 | Review related draft: draft-ni-wimse-ai-agent-identity-03 | draft-ni-wimse-ai-agent-identity-03 (2026-09-30) |
+| 9 | 6 | Review related draft: draft-reddy-wimse-aggregate-signatures-01 | draft-reddy-wimse-aggregate-signatures-01 (2026-09-28) |
+| 10 | 6 | Review related draft: draft-seymour-wimse-connected-flight-06 | draft-seymour-wimse-connected-flight-06 (2026-10-01) |
+| 11 | 6 | Review related draft: draft-sweeney-wimse-credential-delegation-01 | draft-sweeney-wimse-credential-delegation-01 (2026-10-13) |
+| 12 | 6 | Review related draft: draft-thaha-wimse-agent-evidence-binding-00 | draft-thaha-wimse-agent-evidence-binding-00 (2026-10-19) |
+| 13 | 6 | Review related draft: draft-uppalapati-wimse-pq-agent-identity-00 | draft-uppalapati-wimse-pq-agent-identity-00 (2026-09-28) |
+| 14 | 5 | Diff active WG draft: draft-ietf-wimse-identifier-04 | draft-ietf-wimse-identifier-04 (2026-10-23) |
+| 15 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-07 | draft-ietf-wimse-workload-identity-practices-07 (2026-09-22) |
+| 16 | 4 | Review related draft: draft-heigh-wimse-workload-identity-metadata-00 | draft-heigh-wimse-workload-identity-metadata-00 (2026-10-16) |
