@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-10-28T12:25:21+00:00
+Generated at: 2026-10-29T12:35:01+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -10,7 +10,7 @@ Generated at: 2026-10-28T12:25:21+00:00
 | 4 | 6 | Review related draft: draft-asor-wimse-agent-delegation-chain-03 | draft-asor-wimse-agent-delegation-chain-03 (2026-10-27) |
 | 5 | 6 | Review related draft: draft-atakora-wimse-sadp-delegation-01 | draft-atakora-wimse-sadp-delegation-01 (2026-09-21) |
 | 6 | 6 | Review related draft: draft-hulea-wimse-agent-mandate-00 | draft-hulea-wimse-agent-mandate-00 (2026-10-23) |
-| 7 | 6 | Review related draft: draft-jackson-wimse-evaluation-04 | draft-jackson-wimse-evaluation-04 (2026-10-10) |
+| 7 | 6 | Review related draft: draft-jackson-wimse-evaluation-05 | draft-jackson-wimse-evaluation-05 (2026-10-28) |
 | 8 | 6 | Review related draft: draft-lee-wimse-local-tool-call-proof-01 | draft-lee-wimse-local-tool-call-proof-01 (2026-10-11) |
 | 9 | 6 | Review related draft: draft-ni-wimse-ai-agent-identity-04 | draft-ni-wimse-ai-agent-identity-04 (2026-10-27) |
 | 10 | 6 | Review related draft: draft-reddy-wimse-aggregate-signatures-01 | draft-reddy-wimse-aggregate-signatures-01 (2026-09-28) |
