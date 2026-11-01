@@ -83,8 +83,8 @@ const STRINGS = {
     ja: "OAuth、OpenID、ワークロードアイデンティティ、クレデンシャルの仕様をレイヤー別に並べた。各仕様の進捗、土台にしている仕様、対応を公式に文書化している製品をまとめている。",
   },
   mapAdoptionRule: {
-    en: "Adoption lists only support stated on the vendor's or project's own documentation, and a weekly check confirms the cited phrase is still on that page.",
-    ja: "利用状況には、ベンダーやプロジェクト自身のドキュメントに対応が明記されているものだけを載せている。引用した文言がそのページにまだあるかは毎週確認している。",
+    en: "Adoption lists only support stated in official documentation (the vendor's or project's own, or a standards body's page naming it), and a weekly check confirms the cited phrase is still on that page.",
+    ja: "利用状況には、公式のドキュメント（ベンダーやプロジェクト自身のもの、または標準化団体がその名前を挙げているページ）に対応が明記されているものだけを載せている。引用した文言がそのページにまだあるかは毎週確認している。",
   },
   mapChecked: { en: "Statuses and sources checked", ja: "状態と出典の確認日時" },
   mapRelations: { en: "Relations diagram", ja: "関係図" },

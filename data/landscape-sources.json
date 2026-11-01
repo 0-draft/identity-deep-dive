@@ -162,10 +162,10 @@
       "spec": "mtls",
       "who": "Auth0",
       "kind": "idp",
-      "what": "mTLS client authentication and certificate-bound tokens",
+      "what": "mTLS token binding (certificate-bound tokens), advertised in its discovery document",
       "url": "https://auth0.com/docs/get-started/authentication-and-authorization-flow/authenticate-with-mtls",
       "evidence": "If mTLS Token Binding is enabled, the OIDC discovery document sets the",
-      "what_ja": "mTLS によるクライアント認証と証明書に束縛されたトークン"
+      "what_ja": "mTLS のトークンバインディング（証明書に束縛されたトークン）。ディスカバリードキュメントで告知"
     },
     {
       "spec": "mtls",
@@ -271,10 +271,10 @@
       "spec": "rar",
       "who": "PingFederate",
       "kind": "idp",
-      "what": "authorization_details across code, client credentials, device and CIBA flows",
+      "what": "Supports OAuth rich authorization requests",
       "url": "https://docs.pingidentity.com/pingfederate/13.1/administrators_reference_guide/pf_oauth_rich_authorization_requests.html",
       "evidence": "PingFederate supports OAuth rich authorization requests.",
-      "what_ja": "認可コード、クライアントクレデンシャル、デバイス、CIBA の各フローでの authorization_details"
+      "what_ja": "OAuth の Rich Authorization Requests に対応"
     },
     {
       "spec": "rar",
@@ -302,10 +302,10 @@
       "spec": "token-exchange",
       "who": "Google Cloud",
       "kind": "cloud",
-      "what": "Security Token Service exchanges external credentials for Google tokens",
+      "what": "Security Token Service implements the standard OAuth 2.0 token exchange",
       "url": "https://docs.cloud.google.com/iam/docs/reference/sts/rest/v1/TopLevel/token",
       "evidence": "the standard OAuth 2.0 token exchange",
-      "what_ja": "Security Token Service が外部の資格情報を Google のトークンに交換する"
+      "what_ja": "Security Token Service が標準の OAuth 2.0 トークン交換を実装"
     },
     {
       "spec": "token-exchange",
@@ -320,10 +320,13 @@
       "spec": "device-grant",
       "who": "Microsoft Entra ID",
       "kind": "idp",
-      "what": "Device authorization grant at the devicecode endpoint",
+      "what": "Supports the device authorization grant",
       "url": "https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-device-code",
-      "evidence": "The Microsoft identity platform supports the",
-      "what_ja": "devicecode エンドポイントでのデバイス認可グラント"
+      "evidence": [
+        "The Microsoft identity platform supports the",
+        "device authorization grant"
+      ],
+      "what_ja": "デバイス認可グラントに対応"
     },
     {
       "spec": "device-grant",
@@ -366,28 +369,28 @@
       "spec": "prm",
       "who": "Model Context Protocol",
       "kind": "spec",
-      "what": "MCP authorization spec (2025-11-25): servers MUST implement RFC 9728, clients MUST use it to find the authorization server",
+      "what": "MCP authorization spec (2025-11-25) uses RFC 9728 Protected Resource Metadata to discover the authorization server",
       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization",
       "evidence": "use OAuth 2.0 Protected Resource Metadata for authorization server discovery",
-      "what_ja": "MCP の認可仕様（2025-11-25）。サーバーは RFC 9728 の実装が必須で、クライアントは認可サーバーの発見にこれを使う必要がある"
+      "what_ja": "MCP の認可仕様（2025-11-25）が、認可サーバーの発見に RFC 9728 の Protected Resource Metadata を使う"
     },
     {
       "spec": "as-metadata",
       "who": "Model Context Protocol",
       "kind": "spec",
-      "what": "MCP authorization spec: authorization servers provide RFC 8414 or OIDC Discovery, and clients probe the RFC 8414 well-known paths",
+      "what": "MCP authorization spec uses RFC 8414 Authorization Server Metadata, with path insertion",
       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization",
       "evidence": "OAuth 2.0 Authorization Server Metadata with path insertion",
-      "what_ja": "MCP の認可仕様。認可サーバーは RFC 8414 か OIDC Discovery を提供し、クライアントは RFC 8414 の well-known パスを確認する"
+      "what_ja": "MCP の認可仕様が RFC 8414 の Authorization Server Metadata（パス挿入あり）を使う"
     },
     {
       "spec": "cimd",
       "who": "Model Context Protocol",
       "kind": "spec",
-      "what": "MCP authorization spec: clients and authorization servers SHOULD support CIMD, which is the preferred way to register when client and server have no prior relationship",
+      "what": "MCP authorization spec has clients use Client ID Metadata Documents when the authorization server indicates support",
       "url": "https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization",
       "evidence": "Use Client ID Metadata Documents if the Authorization Server indicates",
-      "what_ja": "MCP の認可仕様。クライアントと認可サーバーは CIMD に対応すべき（SHOULD）とされ、事前の関係がない場合の推奨の登録方法になっている"
+      "what_ja": "MCP の認可仕様が、認可サーバーが対応を示す場合に Client ID Metadata Documents を使うよう定める"
     },
     {
       "spec": "id-jag",
@@ -411,10 +414,10 @@
       "spec": "id-jag",
       "who": "Ping Identity (PingFederate 13.1)",
       "kind": "idp",
-      "what": "PingFederate 13.1 issues ID-JAGs through token exchange and accepts them in JWT-bearer grants",
+      "what": "PingFederate 13.1 issues ID-JAGs through OAuth token exchange",
       "url": "https://docs.pingidentity.com/pingfederate/13.1/release_notes/pf_release_notes_131.html",
       "evidence": "PingFederate can now issue ID-JAG tokens through OAuth token exchange",
-      "what_ja": "PingFederate 13.1 がトークン交換で ID-JAG を発行し、JWT bearer グラントで受け付ける"
+      "what_ja": "PingFederate 13.1 が OAuth のトークン交換で ID-JAG を発行する"
     },
     {
       "spec": "id-jag",
@@ -459,7 +462,7 @@
     },
     {
       "spec": "prm",
-      "who": "Kong Gateway (OpenID Connect plugin v3.16+)",
+      "who": "Kong Gateway (OpenID Connect plugin)",
       "kind": "product",
       "what": "The OIDC plugin advertises an upstream API as an RFC 9728 protected resource",
       "url": "https://developer.konghq.com/plugins/openid-connect/examples/protected-resource-metadata/",
@@ -470,28 +473,28 @@
       "spec": "txn-tokens",
       "who": "IBM Verify",
       "kind": "idp",
-      "what": "Issues transaction tokens based on draft-ietf-oauth-transaction-tokens, using OAuth token exchange",
+      "what": "Issues transaction tokens based on draft-ietf-oauth-transaction-tokens",
       "url": "https://www.ibm.com/docs/en/SSCT62/concepts/c_transaction_token.html",
       "evidence": "Based on the IETF draft specification (draft-ietf-oauth-transaction-tokens)",
-      "what_ja": "OAuth のトークン交換を使い、draft-ietf-oauth-transaction-tokens に基づくトランザクショントークンを発行する"
+      "what_ja": "draft-ietf-oauth-transaction-tokens に基づくトランザクショントークンを発行する"
     },
     {
       "spec": "spiffe",
       "who": "Istio",
       "kind": "product",
-      "what": "Istio integrates with SPIRE and requires a specific SPIFFE ID format for workloads",
+      "what": "Its SPIRE integration guide sets the SPIFFE ID format workloads must use",
       "url": "https://istio.io/latest/docs/ops/integrations/spire/",
       "evidence": "Istio currently requires a specific SPIFFE ID format for workloads.",
-      "what_ja": "Istio は SPIRE と連携し、ワークロードに特定形式の SPIFFE ID を求める"
+      "what_ja": "SPIRE 連携ガイドで、ワークロードが使う SPIFFE ID の形式を定めている"
     },
     {
       "spec": "spiffe",
       "who": "Google Cloud",
       "kind": "cloud",
-      "what": "Managed workload identities (Compute Engine, GKE) are based on SPIFFE and issue spiffe:// IDs",
+      "what": "Managed workload identities are based on SPIFFE",
       "url": "https://docs.cloud.google.com/iam/docs/managed-workload-identity",
       "evidence": "is based on Secure Production Identity Framework For Everyone (SPIFFE)",
-      "what_ja": "マネージドなワークロードアイデンティティ（Compute Engine、GKE）が SPIFFE に基づき、spiffe:// の ID を発行する"
+      "what_ja": "マネージドなワークロードアイデンティティが SPIFFE に基づいている"
     },
     {
       "spec": "spiffe",
@@ -515,10 +518,10 @@
       "spec": "wimse-creds",
       "who": "SPIFFE",
       "kind": "spec",
-      "what": "The WIT-SVID spec (incubating) profiles the WIMSE Workload Identity Token",
+      "what": "The WIT-SVID spec defines every WIT-SVID as a WIMSE Workload Identity Token",
       "url": "https://github.com/spiffe/spiffe/blob/main/standards/WIT-SVID.md",
       "evidence": "all WIT-SVIDs are WIMSE WITs",
-      "what_ja": "WIT-SVID 仕様（incubating）が WIMSE の Workload Identity Token をプロファイルしている"
+      "what_ja": "WIT-SVID 仕様が、すべての WIT-SVID を WIMSE の Workload Identity Token と定めている"
     },
     {
       "spec": "wimse-creds",
@@ -542,10 +545,10 @@
       "spec": "openid4vci",
       "who": "EU Digital Identity Wallet reference implementation",
       "kind": "government",
-      "what": "The European Commission's reference wallet library implements the wallet side of OpenID4VCI",
+      "what": "Reference library implementing OpenID4VCI",
       "url": "https://github.com/eu-digital-identity-wallet/eudi-lib-jvm-openid4vci-kt",
       "evidence": "Implementation of OpenID for Verifiable Credential Issuance protocol",
-      "what_ja": "欧州委員会のリファレンスウォレットのライブラリが、OpenID4VCI のウォレット側を実装している"
+      "what_ja": "OpenID4VCI を実装したリファレンスライブラリ"
     },
     {
       "spec": "authzen",
@@ -575,19 +578,19 @@
       "spec": "caep",
       "who": "Okta Identity Threat Protection",
       "kind": "idp",
-      "what": "Receives CAEP Security Event Tokens as an SSF receiver",
+      "what": "Receives CAEP-compliant Security Event Tokens",
       "url": "https://help.okta.com/oie/en-us/content/topics/itp/configure-shared-signal-provider.htm",
       "evidence": "Okta receives Security Event Tokens (SETs) that comply with the CAEP",
-      "what_ja": "SSF の受信側として CAEP の Security Event Token を受け取る"
+      "what_ja": "CAEP に準拠した Security Event Token を受け取る"
     },
     {
       "spec": "caep",
       "who": "Jamf",
       "kind": "product",
-      "what": "Emits CAEP device-posture signals as an SSF transmitter",
+      "what": "Emits CAEP-compliant signals as an SSF transmitter",
       "url": "https://developer.jamf.com/jamf-security/docs/shared-signals-framework-and-continuous-access-evaluation-protocol",
       "evidence": "Jamf acts as an SSF Transmitter, built to emit CAEP-compliant signals",
-      "what_ja": "SSF の送信側として CAEP のデバイス状態のシグナルを送る"
+      "what_ja": "SSF の送信側として CAEP 準拠のシグナルを送る"
     },
     {
       "spec": "ssf",
@@ -597,7 +600,8 @@
       "url": "https://developers.google.com/workspace/shared-signals/api/ssf-api",
       "evidence": [
         "Google Workspace is implementing a SSF Receiver to ingest",
-        "now available in Closed Beta"
+        "now available in Closed Beta",
+        "supports the Session Revocation event signal"
       ],
       "what_ja": "CAEP のセッション失効を受け取る SSF 受信側（クローズドベータ）"
     },
@@ -605,28 +609,28 @@
       "spec": "risc",
       "who": "Google Cross-Account Protection",
       "kind": "idp",
-      "what": "Sends account security events to relying parties, built on RISC",
+      "what": "Cross-Account Protection is based on RISC",
       "url": "https://developers.google.com/identity/protocols/risc",
       "evidence": "Cross-Account Protection is based on the RISC standard",
-      "what_ja": "RISC に基づき、アカウントのセキュリティイベントをリライングパーティに送る"
+      "what_ja": "Cross-Account Protection が RISC に基づいている"
     },
     {
       "spec": "fapi2",
       "who": "ConnectID (Australia)",
       "kind": "product",
-      "what": "Australian digital identity ecosystem that adopted FAPI 2.0",
+      "what": "Adopted FAPI 2.0 for its ecosystem (stated by the OpenID FAPI working group)",
       "url": "https://openid.net/wg/fapi/",
       "evidence": "who adopted FAPI 2.0 for their ecosystem",
-      "what_ja": "FAPI 2.0 を採用したオーストラリアのデジタルアイデンティティのエコシステム"
+      "what_ja": "エコシステムに FAPI 2.0 を採用（OpenID FAPI WG のページによる）"
     },
     {
       "spec": "fapi2",
       "who": "yes.com",
       "kind": "product",
-      "what": "Qualified electronic signature service built on FAPI 2.0",
+      "what": "Its qualified electronic signature (QES) service is based on FAPI 2.0 Baseline (stated by the OpenID FAPI working group)",
       "url": "https://openid.net/wg/fapi/",
       "evidence": "QES service is based on FAPI 2.0 Baseline",
-      "what_ja": "FAPI 2.0 の上に作られた適格電子署名サービス"
+      "what_ja": "適格電子署名（QES）サービスが FAPI 2.0 Baseline に基づく（OpenID FAPI WG のページによる）"
     },
     {
       "spec": "fapi2",
