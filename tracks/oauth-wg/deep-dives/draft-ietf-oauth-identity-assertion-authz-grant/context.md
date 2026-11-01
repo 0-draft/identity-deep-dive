@@ -10,7 +10,7 @@ ID-JAG, informally Cross-App Access (XAA), moves the decision to broker app-to-a
 
 ## Open Questions
 
-- Which of the Document History items listed under -05 appear in the -05 body text and which were first written into the body at -06? The staged diff covers only -05 to -06 and is marked truncated.
+- Settled by comparing the texts: the IdP client-authentication rule, the single-audience rule and Privacy Considerations entered the body in -05 (none is in -04). -06 completed the Document History and changed the subject-token error code.
 - How should clients tell the two error endpoints apart in retry logic, given `invalid_request` at the IdP and `invalid_grant` at the Resource Authorization Server for expired inputs (Sections 4.3.4.3 and 4.4.3)?
-- What are the "remaining open issues" the author plans to discuss at IETF 127? The staged material does not list them.
+- Which of the 20 open issues in the working group repository (for example #141, #142, #145, #129 and #114) the author will bring to IETF 127. The announcement does not say.
 - Whether the draft's reliance on two Work in Progress drafts (Identity Chaining and the DPoP JWT grant) will cause changes here as they move.
