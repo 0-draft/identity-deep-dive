@@ -124,7 +124,9 @@ def ietf_status(ietf: dict) -> dict:
     doc = get_json(f"{API}/doc/document/{name}/?format=json")
     labels = [state_name(u) for u in doc.get("states", [])]
     labels = [l for l in labels if l]
-    stage = next((s for s, names in STAGE_STATES if names & set(labels)), "wg")
+    # Only draft-ietf-* names are working-group documents; anything else that
+    # has not reached the IESG is an individual submission.
+    stage = next((s for s, names in STAGE_STATES if names & set(labels)), "wg" if name.startswith("draft-ietf-") else "individual")
     if "Expired" in labels or "Dead" in labels:
         stage = "expired"
     return {

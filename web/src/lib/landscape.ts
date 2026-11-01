@@ -98,12 +98,13 @@ export function landscape(): Landscape {
 }
 
 /** Status groups for colour and legend, in lifecycle order. */
-export type StatusGroup = "rfc" | "near" | "draft" | "openid-final" | "openid-draft" | "other";
+export type StatusGroup = "rfc" | "near" | "draft" | "draft-inactive" | "openid-final" | "openid-draft" | "other";
 
 export function statusGroup(s: SpecStatus): StatusGroup {
   if (s.stage === "rfc") return "rfc";
   if (s.stage === "rfced" || s.stage === "iesg") return "near";
-  if (s.stage === "wg" || s.stage === "wglc" || s.stage === "expired") return "draft";
+  if (s.stage === "wg" || s.stage === "wglc") return "draft";
+  if (s.stage === "individual" || s.stage === "expired") return "draft-inactive";
   if (s.stage === "openid-final") return "openid-final";
   if (s.stage.startsWith("openid-")) return "openid-draft";
   return "other";
@@ -113,6 +114,7 @@ export const STATUS_GROUP_LABEL: Record<StatusGroup, Record<Lang, string>> = {
   rfc: { en: "IETF RFC", ja: "IETF RFC" },
   near: { en: "IETF, with the IESG or RFC Editor", ja: "IETF、IESG 審査中または RFC Editor 待ち" },
   draft: { en: "IETF working-group draft", ja: "IETF WG ドラフト" },
+  "draft-inactive": { en: "IETF individual or expired draft", ja: "IETF 個人ドラフト・失効ドラフト" },
   "openid-final": { en: "OpenID Final", ja: "OpenID Final" },
   "openid-draft": { en: "OpenID draft", ja: "OpenID ドラフト" },
   other: { en: "Other body", ja: "その他の団体" },
@@ -124,6 +126,7 @@ export const STAGE_DETAIL: Record<string, Record<Lang, string>> = {
   iesg: { en: "With the IESG", ja: "IESG 審査中" },
   wglc: { en: "WG last call or write-up", ja: "WG ラストコール・取りまとめ" },
   wg: { en: "Working-group draft", ja: "WG ドラフト" },
+  individual: { en: "Individual draft, not adopted by a WG", ja: "個人ドラフト（WG 未採択）" },
   expired: { en: "Expired draft", ja: "失効したドラフト" },
   external: { en: "Outside the IETF and OpenID", ja: "IETF・OpenID 以外" },
   unknown: { en: "Status unknown", ja: "状態不明" },
