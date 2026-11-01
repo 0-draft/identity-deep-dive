@@ -177,7 +177,7 @@ def main() -> int:
         "",
         "## Why this subject",
         "",
-        f"- Top candidate in `tracks/{subject['track']}/data/normalized/candidates.json` without a deep dive: `{subject['candidate']}`",
+        f"- Top candidate in `tracks/{subject['track']}/data/normalized/candidates.json` without a deep dive: `{subject['candidate'].replace('`', "'")}`",
     ]
     if subject.get("ai_note"):
         body.append(f"- Triage note: {clean(subject['ai_note']).strip()}")
