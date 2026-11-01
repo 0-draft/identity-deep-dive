@@ -8,6 +8,7 @@ from bs4 import BeautifulSoup
 from _common import (
     ROOT,
     compact_whitespace,
+    fetch_json,
     fetch_text,
     iso_now,
     load_yaml,
@@ -128,6 +129,32 @@ def parse_history(lines: list[str]) -> list[dict[str, str]]:
     return events
 
 
+STATE_URI_RE = re.compile(r"/doc/state/(\d+)/")
+
+
+def lifecycle_states(src: dict[str, Any]) -> dict[str, list[str]]:
+    """Datatracker state names per WG draft. Empty when the API is unreachable:
+    the page scrape above still produces the draft list."""
+    if not src.get("drafts_api_url") or not src.get("states_url"):
+        return {}
+    try:
+        states = fetch_json(src["states_url"])
+        docs = fetch_json(src["drafts_api_url"])
+    except Exception as exc:  # noqa: BLE001 - lifecycle is optional enrichment
+        print(f"datatracker: lifecycle states unavailable ({exc})")
+        return {}
+    names = {o.get("id"): o.get("name", "") for o in states.get("objects", [])}
+    out: dict[str, list[str]] = {}
+    for doc in docs.get("objects", []):
+        labels = []
+        for uri in doc.get("states", []):
+            m = STATE_URI_RE.search(uri or "")
+            if m and int(m.group(1)) in names:
+                labels.append(names[int(m.group(1))])
+        out[doc.get("name", "")] = labels
+    return out
+
+
 def as_text(html: str) -> str:
     soup = BeautifulSoup(html, "html.parser")
     return soup.get_text("\n")
@@ -149,6 +176,10 @@ def main() -> None:
     related_drafts = parse_drafts(document_lines, "Related Internet-Drafts and RFCs", "Atom feed")
     meetings = parse_meetings(meetings_lines)
     ad_history = parse_history(history_lines)
+    states = lifecycle_states(src)
+    for draft in active_drafts:
+        if draft.get("name") in states:
+            draft["state_labels"] = states[draft["name"]]
 
     normalized = {
         "collected_at": iso_now(),

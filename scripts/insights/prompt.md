@@ -30,4 +30,14 @@ Then:
 - `brief`: one or two sentences on the whole run. Lead with the most significant item. If nothing substantive happened, say that.
 - `triage`: for candidates in `context.md` that today's material gives you a real reason to move, `high` or `low` with a one-line reason tied to that material, or `normal` to clear an earlier `high` or `low` that the material no longer supports. Leave the rest out. An empty list is fine.
 
-Write in English. Prefer being plainly incomplete to being confidently wrong.
+Write the main fields in English. Prefer being plainly incomplete to being confidently wrong.
+
+## Japanese
+
+The site has a Japanese edition. Every text field has a `_ja` twin (`brief_ja`, `headline_ja`, `summary_ja`, `use_cases_ja`, `note_ja`, `reason_ja`) that says the same thing in Japanese:
+
+- Same content as the English field: nothing added, nothing dropped. `use_cases_ja` has the same items in the same order.
+- Plain technical Japanese in the である/だ style used in Japanese standards writing. Not colloquial, not translationese: write the sentence a Japanese engineer would write, not a word-for-word mapping.
+- Keep protocol names, draft names, claim names, header names, error codes and RFC numbers in their original form (`invalid_grant`, `cnf`, `RFC 9901`, `draft-ietf-oauth-v2-1`). Common terms may stay in English where Japanese engineers use them that way (トークン, クライアント, 認可サーバー are fine).
+- `headline_ja` is one line, like the English headline: 「要するに〜」で始めない。
+- Spell out terms instead of abbreviating them ("the list" is メーリングリスト, never ML), and prefer the phrasing a Japanese engineer would use over a literal gloss (for example "single writer" as 書き込み元を一つにする, not 単一の書き手).

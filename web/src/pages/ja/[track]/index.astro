@@ -1,0 +1,10 @@
+---
+import TrackPage from "../../../views/TrackPage.astro";
+import { TRACKS, type TrackId } from "../../../lib/tracks";
+
+export function getStaticPaths() {
+  return TRACKS.map((t) => ({ params: { track: t.id } }));
+}
+---
+
+<TrackPage lang="ja" track={Astro.params.track as TrackId} />

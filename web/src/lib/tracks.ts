@@ -7,6 +7,7 @@ export interface TrackMeta {
   id: TrackId;
   name: string;
   scope: string;
+  scope_ja: string;
   org: string;
   href?: string;
 }
@@ -16,6 +17,7 @@ export const TRACKS: TrackMeta[] = [
     id: "ietf-wimse",
     name: "IETF WIMSE",
     scope: "Workload Identity in Multi-System Environments",
+    scope_ja: "マルチシステム環境におけるワークロードアイデンティティ",
     org: "IETF Working Group",
     href: "https://datatracker.ietf.org/wg/wimse/",
   },
@@ -23,6 +25,7 @@ export const TRACKS: TrackMeta[] = [
     id: "oauth-wg",
     name: "OAuth WG",
     scope: "OAuth Working Group drafts and implementations",
+    scope_ja: "OAuth WG の draft と実装",
     org: "IETF Working Group",
     href: "https://datatracker.ietf.org/wg/oauth/",
   },
@@ -30,6 +33,7 @@ export const TRACKS: TrackMeta[] = [
     id: "openid",
     name: "OpenID",
     scope: "OpenID Foundation specifications and repositories",
+    scope_ja: "OpenID Foundation の仕様とリポジトリ",
     org: "OpenID Foundation",
     href: "https://github.com/openid",
   },
@@ -88,6 +92,7 @@ export interface Candidate {
   url?: string;
   ai_priority?: "high" | "normal" | "low";
   ai_note?: string;
+  ai_note_ja?: string;
 }
 
 function readJsonOrNull<T = unknown>(p: string): T | null {
@@ -123,19 +128,23 @@ export function topCandidates(id: TrackId, limit = 12): Candidate[] {
     // Only the two values that move a candidate are shown; anything else in
     // the data is treated as untriaged.
     ...(c.ai_priority === "high" || c.ai_priority === "low"
-      ? { ai_priority: c.ai_priority, ai_note: c.ai_note ? plain(c.ai_note) : "" }
+      ? {
+          ai_priority: c.ai_priority,
+          ai_note: c.ai_note ? plain(c.ai_note) : "",
+          ai_note_ja: c.ai_note_ja ? plain(c.ai_note_ja) : "",
+        }
       : {}),
   }));
 }
 
 export type Significance = "substantive" | "new-proposal" | "discussion" | "editorial" | "routine";
 
-export const SIGNIFICANCE_LABEL: Record<Significance, string> = {
-  substantive: "Substantive change",
-  "new-proposal": "New proposal",
-  discussion: "Discussion",
-  editorial: "Editorial",
-  routine: "Routine",
+export const SIGNIFICANCE_LABEL: Record<Significance, { en: string; ja: string }> = {
+  substantive: { en: "Substantive change", ja: "実質的な変更" },
+  "new-proposal": { en: "New proposal", ja: "新しい提案" },
+  discussion: { en: "Discussion", ja: "議論" },
+  editorial: { en: "Editorial", ja: "編集上の変更" },
+  routine: { en: "Routine", ja: "定例" },
 };
 
 export const SIGNIFICANCE_RANK: Record<Significance, number> = {
@@ -155,16 +164,24 @@ export interface Insight {
   first_seen: string;
   updated_at: string;
   headline: string;
+  headline_ja?: string;
   summary: string;
+  summary_ja?: string;
   significance: Significance;
   use_cases: string[];
+  use_cases_ja?: string[];
   diagram: string;
-  related: { track: TrackId; name: string; note: string }[];
+  related: { track: TrackId; name: string; note: string; note_ja?: string }[];
 }
 
 export interface TrackBriefing {
-  brief: { at: string; text: string } | null;
+  brief: { at: string; text: string; text_ja?: string } | null;
   items: Insight[];
+}
+
+/** An HTML id for an explanation, used as the anchor picks and the board link to. */
+export function anchorId(insightId: string): string {
+  return "x-" + insightId.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
 // apply.py escapes text for Markdown (HTML entities, \[ \]). Astro escapes on
@@ -185,24 +202,30 @@ function byDateThenSignificance(a: Insight, b: Insight): number {
 export function briefing(id: TrackId): TrackBriefing {
   const data = readJsonOrNull<{
     items?: Record<string, Omit<Insight, "track">>;
-    briefs?: { at: string; text: string }[];
+    briefs?: { at: string; text: string; text_ja?: string }[];
   }>(path.join(trackDir(id), "data/normalized/insights.json"));
   const items = Object.values(data?.items ?? {}).map((i) => ({
     ...i,
     track: id,
     headline: plain(i.headline).replace(/^in short,\s*/i, "").replace(/^./, (c) => c.toUpperCase()),
+    headline_ja: i.headline_ja ? plain(i.headline_ja) : undefined,
     summary: plain(i.summary),
+    summary_ja: i.summary_ja ? plain(i.summary_ja) : undefined,
     // title is stored as collected (apply.py does not escape it), so it is
     // not run through plain().
     url: safeUrl(i.url),
     use_cases: (i.use_cases ?? []).map(plain),
-    related: (i.related ?? []).map((r) => ({ ...r, note: plain(r.note) })),
+    use_cases_ja: (i.use_cases_ja ?? []).map(plain),
+    related: (i.related ?? []).map((r) => ({ ...r, note: plain(r.note), note_ja: r.note_ja ? plain(r.note_ja) : undefined })),
     significance: (i.significance in SIGNIFICANCE_RANK ? i.significance : "routine") as Significance,
   }));
   items.sort(byDateThenSignificance);
   const briefs = data?.briefs ?? [];
   const last = briefs[briefs.length - 1];
-  return { brief: last ? { at: last.at, text: plain(last.text) } : null, items };
+  return {
+    brief: last ? { at: last.at, text: plain(last.text), text_ja: last.text_ja ? plain(last.text_ja) : undefined } : null,
+    items,
+  };
 }
 
 export function allInsights(): Insight[] {
@@ -211,4 +234,62 @@ export function allInsights(): Insight[] {
 
 export function trackName(id: TrackId): string {
   return TRACKS.find((t) => t.id === id)?.name ?? id;
+}
+
+export function readTrackState(id: TrackId): any | null {
+  return readJsonOrNull(path.join(trackDir(id), "data/normalized/state.json"));
+}
+
+/** Draft name -> anchor of its most recent explanation from the last seven days. */
+export function recentInsightIds(id: TrackId): Map<string, string> {
+  const cutoff = new Date(Date.now() - 7 * 864e5).toISOString().slice(0, 10);
+  const out = new Map<string, string>();
+  for (const i of briefing(id).items) {
+    const m = /^draft:(draft-[a-z0-9-]+?)-\d{2}$/.exec(i.id);
+    if (m && i.first_seen >= cutoff && !out.has(m[1])) out.set(m[1], anchorId(i.id));
+  }
+  return out;
+}
+
+export interface Pick {
+  insight: Insight;
+  why: string;
+  why_ja?: string;
+}
+
+export interface Topic {
+  id: string;
+  name: string;
+  name_ja?: string;
+  summary: string;
+  summary_ja?: string;
+  members: { track: TrackId; name: string }[];
+  related: string[];
+}
+
+export interface Synthesis {
+  generatedAt: string | null;
+  picks: Pick[];
+  topics: Topic[];
+}
+
+/** data/synthesis.json, with picks resolved to explanations that still exist. */
+export function synthesis(): Synthesis {
+  const data = readJsonOrNull<any>(path.join(REPO_ROOT, "data/synthesis.json"));
+  if (!data) return { generatedAt: null, picks: [], topics: [] };
+  const byId = new Map(allInsights().map((i) => [i.id, i]));
+  const picks = (data.picks ?? [])
+    .filter((p: any) => byId.has(p.id))
+    .map((p: any) => ({ insight: byId.get(p.id)!, why: String(p.why ?? ""), why_ja: p.why_ja || undefined }));
+  const valid = new Set(TRACKS.map((t) => t.id));
+  const topics = (data.topics ?? []).map((t: any) => ({
+    id: String(t.id),
+    name: String(t.name ?? ""),
+    name_ja: t.name_ja || undefined,
+    summary: String(t.summary ?? ""),
+    summary_ja: t.summary_ja || undefined,
+    members: (t.members ?? []).filter((m: any) => valid.has(m.track)),
+    related: (t.related ?? []).map(String),
+  }));
+  return { generatedAt: data.generated_at ?? null, picks, topics };
 }

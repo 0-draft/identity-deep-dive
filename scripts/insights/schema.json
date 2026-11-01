@@ -1,12 +1,22 @@
 {
   "type": "object",
   "additionalProperties": false,
-  "required": ["brief", "items", "triage"],
+  "required": [
+    "brief",
+    "brief_ja",
+    "items",
+    "triage"
+  ],
   "properties": {
     "brief": {
       "type": "string",
       "maxLength": 400,
       "description": "One or two sentences: what moved in this track since the last run, and the one thing a reader should take away."
+    },
+    "brief_ja": {
+      "type": "string",
+      "maxLength": 400,
+      "description": "brief in Japanese."
     },
     "items": {
       "type": "array",
@@ -14,28 +24,70 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "headline", "summary", "significance", "use_cases", "diagram", "related"],
+        "required": [
+          "id",
+          "headline",
+          "headline_ja",
+          "summary",
+          "summary_ja",
+          "significance",
+          "use_cases",
+          "use_cases_ja",
+          "diagram",
+          "related"
+        ],
         "properties": {
-          "id": { "type": "string", "description": "Exact id from changes.json." },
+          "id": {
+            "type": "string",
+            "description": "Exact id from changes.json."
+          },
           "headline": {
             "type": "string",
             "maxLength": 160,
             "description": "One line in plain words, as in: In short, this ... No hype."
+          },
+          "headline_ja": {
+            "type": "string",
+            "maxLength": 160,
+            "description": "headline in Japanese."
           },
           "summary": {
             "type": "string",
             "maxLength": 1200,
             "description": "What actually changed or was said, grounded only in the file for this item."
           },
+          "summary_ja": {
+            "type": "string",
+            "maxLength": 1200,
+            "description": "summary in Japanese."
+          },
           "significance": {
             "type": "string",
-            "enum": ["substantive", "editorial", "new-proposal", "discussion", "routine"]
+            "enum": [
+              "substantive",
+              "editorial",
+              "new-proposal",
+              "discussion",
+              "routine"
+            ]
           },
           "use_cases": {
             "type": "array",
             "maxItems": 3,
-            "items": { "type": "string", "maxLength": 300 },
+            "items": {
+              "type": "string",
+              "maxLength": 300
+            },
             "description": "Concrete situations where an implementer would care. Empty for editorial or routine items."
+          },
+          "use_cases_ja": {
+            "type": "array",
+            "maxItems": 3,
+            "items": {
+              "type": "string",
+              "maxLength": 300
+            },
+            "description": "use_cases in Japanese, same order."
           },
           "diagram": {
             "type": "string",
@@ -48,11 +100,33 @@
             "items": {
               "type": "object",
               "additionalProperties": false,
-              "required": ["track", "name", "note"],
+              "required": [
+                "track",
+                "name",
+                "note",
+                "note_ja"
+              ],
               "properties": {
-                "track": { "type": "string", "enum": ["ietf-wimse", "oauth-wg", "openid"] },
-                "name": { "type": "string", "description": "Draft or repository name exactly as in context.md." },
-                "note": { "type": "string", "maxLength": 240 }
+                "track": {
+                  "type": "string",
+                  "enum": [
+                    "ietf-wimse",
+                    "oauth-wg",
+                    "openid"
+                  ]
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Draft or repository name exactly as in context.md."
+                },
+                "note": {
+                  "type": "string",
+                  "maxLength": 240
+                },
+                "note_ja": {
+                  "type": "string",
+                  "maxLength": 240
+                }
               }
             }
           }
@@ -65,11 +139,33 @@
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["candidate", "priority", "reason"],
+        "required": [
+          "candidate",
+          "priority",
+          "reason",
+          "reason_ja"
+        ],
         "properties": {
-          "candidate": { "type": "string", "description": "Exact candidate key from context.md." },
-          "priority": { "type": "string", "enum": ["high", "normal", "low"] },
-          "reason": { "type": "string", "maxLength": 300 }
+          "candidate": {
+            "type": "string",
+            "description": "Exact candidate key from context.md."
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "high",
+              "normal",
+              "low"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "maxLength": 300
+          },
+          "reason_ja": {
+            "type": "string",
+            "maxLength": 300
+          }
         }
       }
     }
