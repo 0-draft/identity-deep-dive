@@ -43,7 +43,7 @@ TAG = re.compile(r"<(?!https?://)(?=[A-Za-z/!?])")
 SIGNATURE = re.compile(r"^\s*(\W\s*)?(generated (with|by) (claude|ai)\b|co-authored-by:)", re.IGNORECASE)
 BARE_URL = re.compile(r"(?<![(<\[])\bhttps?://[^\s)>\]]+")
 # Inline links may point at http(s), an anchor, or a relative Markdown file.
-UNSAFE_LINK = re.compile(r"\]\(\s*(?!https?://|#|(?:\.{1,2}/)?[\w./-]+\.md\b)[^)]*\)")
+UNSAFE_LINK = re.compile(r"\]\(\s*(?!https?://|#|(?:\.{1,2}/)?(?!/)[\w./-]+\.md\b)[^)]*\)")
 # Reference definitions ("[1]: target") must point at http(s) too.
 UNSAFE_REF = re.compile(r"^ {0,3}\[[^\]]+\]:\s*(?!https?://)")
 # A code span is a run of N backticks closed by a run of exactly N.

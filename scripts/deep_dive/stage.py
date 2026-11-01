@@ -114,10 +114,13 @@ def stage_draft(subject: dict, state: dict, out: Path) -> list[str]:
         (out / "diff.txt").write_text(UNTRUSTED_HEADER + draft_material(name, rev, prev, diff_cap=DIFF_CAP), encoding="utf-8")
         files.append("diff.txt")
 
+    # The exact draft, with or without a revision: draft-x and draft-x-22,
+    # never draft-x-extra.
+    mentions = re.compile(rf"(?<![\w-]){re.escape(name)}(?:-\d{{2}})?(?![\w-])")
     mails = [
         m
         for m in state.get("mail_posts", []) + state.get("mail_messages", [])
-        if name in (m.get("subject") or "") and (m.get("url") or "").startswith("https://mailarchive.ietf.org/")
+        if mentions.search(m.get("subject") or "") and (m.get("url") or "").startswith("https://mailarchive.ietf.org/")
     ]
     if mails:
         parts = [f"Message: {m.get('subject', '')}\n{m['url']}\n\n{mail_material(m['url'])}" for m in mails[:MAILS]]
