@@ -165,6 +165,10 @@ def main() -> int:
     target.mkdir(parents=True)
     for key, fname in FILES.items():
         (target / fname).write_text(clean(str(result[key])), encoding="utf-8")
+        # Japanese edition beside it, for the site's /ja/ pages.
+        ja = str(result.get(f"{key}_ja", "")).strip()
+        if ja:
+            (target / fname.replace(".md", ".ja.md")).write_text(clean(ja), encoding="utf-8")
     shutil.copy(TEMPLATE / "hands-on-log.md", target / "hands-on-log.md")
 
     one_liner = clean(str(result.get("one_liner", ""))).strip()
@@ -186,6 +190,8 @@ def main() -> int:
         "## Files",
         "",
         *[f"- `{rel}/{f}`" for f in [*FILES.values(), "hands-on-log.md"]],
+        "",
+        "Each file except `hands-on-log.md` has a Japanese edition beside it (`*.ja.md`) for the site.",
         "",
         "`hands-on-log.md` is the empty template: experiments are for a person to run.",
         "",
