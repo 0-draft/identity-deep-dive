@@ -120,8 +120,11 @@ export function topCandidates(id: TrackId, limit = 12): Candidate[] {
     state_labels: c.state_labels,
     draft_name: c.draft_name,
     url: safeUrl(c.html_url ?? c.url),
-    ai_priority: c.ai_priority,
-    ai_note: c.ai_note ? plain(c.ai_note) : undefined,
+    // Only the two values that move a candidate are shown; anything else in
+    // the data is treated as untriaged.
+    ...(c.ai_priority === "high" || c.ai_priority === "low"
+      ? { ai_priority: c.ai_priority, ai_note: c.ai_note ? plain(c.ai_note) : "" }
+      : {}),
   }));
 }
 
