@@ -39,7 +39,7 @@ sequenceDiagram
 ## Why This Matters Now
 
 - **Trigger**: revision 03 of a core WIMSE working group draft (Datatracker states: Active, I-D Exists, WG Document) reorganised its structure, tightened trust-anchor binding, added a proof-audience section and removed the standalone paragraph on several identifiers per runtime. The working group chair asked the list to flag any substantive change that needs more discussion.
-- **Source evidence**: Section A.1 of the draft lists the changes with issue numbers (#173, #175, #256, #269, #270, #290, #294, #303, #370, #393, #395, #402, #411). The mail archive shows the author announcement and the chair's request for review, with no visible technical objection in the staged messages.
+- **Source evidence**: Section A.1 of the draft lists the changes with issue numbers (#173, #175, #256, #269, #270, #290, #294, #303, #370, #393, #395, #402, #411). The mail archive shows the author announcement and the chair's request for review (30 October 2026, 18:29 UTC; both linked under Sources). As of 1 November 2026 the list had no replies to either.
 - **Expected impact**: implementers of the companion documents (mutual TLS, WPT, HTTP signatures) and of identity servers get a concrete recipient checklist and clearer rules on revocation, audience and key handling. Anyone who cited the old section numbers, or built the access-path-to-identifier mapping API that revision 02 required, has to re-check against 03.
 
 ## What Changed
@@ -92,7 +92,7 @@ sequenceDiagram
 - Section 5.3 allows 401 with `WWW-Authenticate` "when an acceptable HTTP authentication mechanism exists". The draft does not name such a mechanism for WITs, and Section 5.1 says the WIT is not for the `Authorization` header.
 - Section 9.3.1 makes `jti` mandatory for deployments that run a deny-list or token status list, while Section 5.1 keeps `jti` OPTIONAL. A validator cannot tell from the token whether the issuer operated such a mechanism.
 - Section 9.5 allows key reuse across credentials when the key is hardware-bound and non-exportable, but says verifiers cannot infer this from the credential. How a verifier learns it is left to deployment profiles.
-- The mailing list material shows only announcements and the chair's call for review. Which changes, if any, the working group considers substantive is not visible.
+- As of 1 November 2026 the WIMSE list had only the announcement and the chair's call for review, with no replies. Which changes, if any, the working group considers substantive is not yet known.
 
 ## Experiments
 

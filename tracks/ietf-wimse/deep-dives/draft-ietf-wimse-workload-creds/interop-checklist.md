@@ -26,4 +26,4 @@
 - [ ] During a bearer-to-WIT transition, revalidate the caller identity after the authentication step when both token types are accepted (Section 5.4).
 - [ ] Check WIT and WIC lifetimes are short (WITs on the order of hours, Sections 5.1 and 9.3.1) and that existing credentials are rejected after expiry even when issuance has stopped (Section 9.2; WIC lifetime in Section 9.4.1).
 - [ ] Check that keys are not reused after credential expiry and are regenerated for each credential unless they are non-exportable and hardware-bound, and that verifiers do not infer key protection from the credential (Section 9.5).
-- [ ] Check references to this draft from other documents for old section numbers, for example former Sections 1.3, 5.1.3 (`iss` note) and 9.2.x.
+- [ ] Check references to this draft from other documents for old section numbers, for example former Section 1.3 (now 1.2), former Section 5.1.3 (the `iss` note, removed) and former Sections 9.2.1 to 9.2.5 (now 9.3.1 to 9.3.5).
