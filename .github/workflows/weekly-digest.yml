@@ -8,8 +8,9 @@ on:
 permissions:
   contents: write
 
-# Shared with the daily update: both commit track state, and the daily run
-# uses the last commit as its baseline.
+# Shared with the daily update: both commit the same track files, and runs
+# that overlap would push over each other. (What the daily run diffs against is
+# insights_baseline.json, which this workflow never advances.)
 concurrency:
   group: track-update
   cancel-in-progress: false

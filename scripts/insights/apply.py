@@ -23,7 +23,6 @@ import datetime as dt
 import html
 import json
 import re
-import shutil
 import sys
 from pathlib import Path
 from typing import Any
@@ -31,6 +30,7 @@ from typing import Any
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from changes import TRACKS, baseline_path, candidate_key, track_index  # noqa: E402
+from guard import REFUSED_MARKER, contains_secret  # noqa: E402
 
 RETENTION_DAYS = 7
 REPORT_DAYS = 3
@@ -42,8 +42,9 @@ MERMAID_FORBIDDEN = ("```", "%%{", "click ", "javascript:", "href", "callback", 
 # Anything that reads as an HTML tag or comment. Mermaid arrows (-->, ->>,
 # <-->) never put a letter, "/", "!" or "?" right after "<".
 HTML_LIKE = re.compile(r"<[A-Za-z/!?]")
-# Credentials an injected source might talk the model into echoing back.
-SECRET = re.compile(r"(gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-ant-[A-Za-z0-9_-]{20,})")
+# After this many runs that could not explain the same staged changes, move
+# past them anyway (listed as not explained) instead of stalling the track.
+MAX_ATTEMPTS = 3
 SECTION_START = "<!-- insights:start -->"
 SECTION_END = "<!-- insights:end -->"
 
@@ -211,11 +212,17 @@ def render(track: str, store: dict, today: dt.date) -> str:
     return "\n".join(lines) + "\n"
 
 
+# Markers only count on a line of their own. The section cannot contain one
+# (its text is HTML-escaped and diagrams may not mention "insights:"), and a
+# third-party title elsewhere in the report sits inside a table row or list
+# item, never alone on a line.
+SECTION_RE = re.compile(
+    r"^" + re.escape(SECTION_START) + r"$.*?^" + re.escape(SECTION_END) + r"$\n{0,2}", re.S | re.M
+)
+
+
 def write_section(report: Path, section: str) -> None:
-    body = report.read_text(encoding="utf-8")
-    # Greedy to the last end marker, so a marker smuggled into the section
-    # cannot leave a tail of it behind.
-    body = re.sub(re.escape(SECTION_START) + r".*" + re.escape(SECTION_END) + r"\n{0,2}", "", body, flags=re.S)
+    body = SECTION_RE.sub("", report.read_text(encoding="utf-8"))
     # After the title and the metadata lines, before the first section.
     idx = body.find("\n## ")
     if idx == -1:
@@ -223,6 +230,34 @@ def write_section(report: Path, section: str) -> None:
     else:
         body = body[: idx + 1] + section + "\n" + body[idx + 1 :]
     report.write_text(body, encoding="utf-8")
+
+
+def advance_baseline(state_path: Path, base: Path, old_base: dict | None, held: list[str]) -> None:
+    """Make the current state the baseline, except for held categories.
+
+    A held category was not compared this run (its collector failed on one
+    side). Keeping its old baseline value means the next clean run still
+    diffs against the last clean list, so nothing that arrived meanwhile is
+    lost.
+    """
+    state = json.loads(state_path.read_text(encoding="utf-8"))
+    if old_base and held:
+        errors = dict(state.get("fetch_errors") or {})
+        old_errors = old_base.get("fetch_errors") or {}
+        old_since = old_base.get("_held_since") or {}
+        held_since = {}
+        for key in held:
+            if key in old_base:
+                state[key] = old_base[key]
+            errors[key] = old_errors.get(key)
+            # The cut-off for "opened after the baseline" stays with the old
+            # list too (changes.py reads it before sources.github).
+            held_since[key] = (
+                old_since.get(key) or (old_base.get("sources") or {}).get("github") or old_base.get("generated_at")
+            )
+        state["fetch_errors"] = errors
+        state["_held_since"] = held_since
+    dump_json(base, state)
 
 
 def main() -> int:
@@ -240,13 +275,17 @@ def main() -> int:
     today = now_dt.date()
 
     changes = load_json(args.changes, None) if args.changes else None
-    merged, refused = False, False
+    merged = False
     result: dict = {}
     raw = args.result.read_text(encoding="utf-8").strip() if args.result and args.result.exists() else ""
-    if raw and SECRET.search(raw):
+    # guard.py already emptied the result in the model's job if it matched;
+    # its marker says so. Check again here in case it did not run.
+    refused = bool(args.result and (args.result.parent / REFUSED_MARKER).exists())
+    if raw and contains_secret(raw):
+        refused, raw = True, ""
+    if refused:
         # Fail closed: publish nothing from this run, and make the run red.
-        print("::error::insights: Claude output contains something shaped like a credential; discarding it")
-        refused = True
+        print("::error::insights: Claude output contained something shaped like a credential and was discarded")
     elif raw and changes is not None:
         try:
             result = json.loads(raw)
@@ -259,23 +298,38 @@ def main() -> int:
             merged = True
 
     # Move the baseline only past changes that were explained, or when there
-    # were none. A failed or skipped Claude pass leaves it, so the next run
-    # picks the same changes up again.
+    # were none. A failed, refused or skipped pass leaves it, so the next run
+    # stages the same changes again, up to MAX_ATTEMPTS times.
     state_path = norm / "state.json"
     base = baseline_path(args.track)
-    nothing_new = changes is not None and not changes.get("items")
-    if state_path.exists() and (merged or nothing_new or not base.exists()):
-        shutil.copyfile(state_path, base)
-        if merged or nothing_new:
+    staged = (changes or {}).get("items", [])
+    nothing_new = changes is not None and not staged
+    gave_up = False
+    if changes is not None and staged and not merged:
+        key = ",".join(sorted(i.get("id", "") for i in staged))
+        prev_attempt = store.get("attempts", {})
+        count = prev_attempt.get("count", 0) + 1 if prev_attempt.get("key") == key else 1
+        store["attempts"] = {"key": key, "count": count}
+        gave_up = count >= MAX_ATTEMPTS
+        if gave_up:
+            print(f"::warning::insights: {len(staged)} change(s) failed to be explained {count} times; moving past them")
+    else:
+        store.pop("attempts", None)
+
+    if state_path.exists() and (merged or nothing_new or gave_up or not base.exists()):
+        old_base = load_json(base, None)
+        advance_baseline(state_path, base, old_base, (changes or {}).get("held", []))
+        if merged or nothing_new or gave_up:
             # The baseline moves past these too, so list them rather than lose
             # them: items over the per-run cap, and staged items the model
             # returned nothing for.
             explained = {i.get("id") for i in result.get("items", [])} if merged else set()
-            missed = [i for i in (changes or {}).get("items", []) if i.get("id") not in explained] if merged else []
+            missed = [i for i in staged if i.get("id") not in explained]
             store["overflow"] = [
                 {"title": o.get("title", ""), "url": o.get("url", "")}
                 for o in (missed + (changes or {}).get("skipped", []))[:20]
             ]
+            store.pop("attempts", None)
 
     prune(store, today)
     dump_json(store_path, store)

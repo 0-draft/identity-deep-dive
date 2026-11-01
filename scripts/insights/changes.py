@@ -2,9 +2,9 @@
 """Find what is new in a track since the last committed state, and stage the
 source material Claude needs to explain it.
 
-The baseline is the state.json committed before this run (the workflow copies
-it aside before the collectors overwrite it), so "new" means "new since the
-last run" whatever the cadence is.
+The baseline is insights_baseline.json, the state as of the last run whose
+changes were explained (apply.py advances it), so "new" means "not explained
+yet" whatever the cadence is and however many runs failed in between.
 
 Everything fetched here is written as plain files under --out. Claude only
 gets read tools over that directory: it never fetches anything itself, and the
@@ -12,7 +12,7 @@ material it reads is labelled as untrusted data. Network access stays in this
 script, where it is deterministic and reviewable.
 
 Usage:
-  changes.py --track ietf-wimse --prev /path/prev_state.json --out insights-work/ietf-wimse
+  changes.py --track ietf-wimse --out insights-work/ietf-wimse
 """
 from __future__ import annotations
 
@@ -236,31 +236,36 @@ def _mail_items(cur: list[dict], prev: list[dict]) -> list[dict[str, Any]]:
     return items
 
 
-def comparable(cur: dict, prev: dict, *keys: str) -> bool:
+def comparable(cur: dict, prev: dict, held: list[str], *keys: str, also: tuple[str, ...] = ()) -> bool:
     """Whether a category can be diffed at all.
+
+    `keys` must be non-empty and error-free on both sides; `also` are keys
+    diffed together with them (allowed to be empty) and held along with them.
 
     A collector that failed writes an empty or partial list and records the
     failure in fetch_errors. Diffing against that would report everything as
-    new on the next good run, so such a category is skipped until both sides
-    are clean.
+    new on the next good run, so such a category is skipped, and its keys go
+    into `held`: apply.py keeps the old baseline values for them, so what
+    arrived meanwhile is still found once the collector recovers.
     """
     for state in (cur, prev):
         errors = state.get("fetch_errors") or {}
         for key in keys:
             if not state.get(key) or errors.get(key):
+                held.extend(k for k in (*keys, *also) if k not in held)
                 return False
     return True
 
 
-def extract_wimse(cur: dict, prev: dict) -> list[dict[str, Any]]:
+def extract_wimse(cur: dict, prev: dict, held: list[str]) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
-    if comparable(cur, prev, "active_drafts"):
+    if comparable(cur, prev, held, "active_drafts", also=("related_drafts",)):
         drafts_cur = cur.get("active_drafts", []) + cur.get("related_drafts", [])
         drafts_prev = prev.get("active_drafts", []) + prev.get("related_drafts", [])
         items += _draft_items(drafts_cur, drafts_prev, "revision")
-    if comparable(cur, prev, "mail_posts"):
+    if comparable(cur, prev, held, "mail_posts"):
         items += _mail_items(cur.get("mail_posts", []), prev.get("mail_posts", []))
-    if not comparable(cur, prev, "github_repos"):
+    if not comparable(cur, prev, held, "github_repos"):
         return items
 
     prev_shas = {c.get("sha") for r in prev.get("github_repos", []) for c in r.get("recent_commits", [])}
@@ -281,19 +286,26 @@ def extract_wimse(cur: dict, prev: dict) -> list[dict[str, Any]]:
     return items
 
 
-def extract_oauth(cur: dict, prev: dict) -> list[dict[str, Any]]:
+def extract_oauth(cur: dict, prev: dict, held: list[str]) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
-    if comparable(cur, prev, "drafts"):
+    if comparable(cur, prev, held, "drafts"):
         items += _draft_items(cur.get("drafts", []), prev.get("drafts", []), "rev")
-    if comparable(cur, prev, "mail_messages"):
+    if comparable(cur, prev, held, "mail_messages"):
         items += _mail_items(cur.get("mail_messages", []), prev.get("mail_messages", []))
-    if not comparable(cur, prev, "prs"):
+    if not comparable(cur, prev, held, "prs"):
         return items
 
     # prs is a window of the most recently updated PRs, so an old PR that is
     # touched again re-enters it. Only PRs opened after the baseline are new.
     seen = {p.get("html_url") for p in prev.get("prs", [])}
-    since = prev.get("generated_at") or ""
+    # When the baseline's PRs were fetched, not when it was normalized: a PR
+    # opened in between is in neither list otherwise.
+    since = (
+        (prev.get("_held_since") or {}).get("prs")
+        or (prev.get("sources") or {}).get("github")
+        or prev.get("generated_at")
+        or ""
+    )
     for pr in cur.get("prs", []):
         url = pr.get("html_url", "")
         if not url or url in seen or (pr.get("created_at") or "") <= since:
@@ -313,8 +325,8 @@ def extract_oauth(cur: dict, prev: dict) -> list[dict[str, Any]]:
     return items
 
 
-def extract_openid(cur: dict, prev: dict) -> list[dict[str, Any]]:
-    if not comparable(cur, prev, "github_repos"):
+def extract_openid(cur: dict, prev: dict, held: list[str]) -> list[dict[str, Any]]:
+    if not comparable(cur, prev, held, "github_repos"):
         return []
     prev_push = {r.get("full_name"): r.get("pushed_at") for r in prev.get("github_repos", [])}
     items = []
@@ -345,7 +357,7 @@ def extract_openid(cur: dict, prev: dict) -> list[dict[str, Any]]:
     return items
 
 
-EXTRACTORS: dict[str, Callable[[dict, dict], list[dict[str, Any]]]] = {
+EXTRACTORS: dict[str, Callable[[dict, dict, list[str]], list[dict[str, Any]]]] = {
     "ietf-wimse": extract_wimse,
     "oauth-wg": extract_oauth,
     "openid": extract_openid,
@@ -412,9 +424,10 @@ def main() -> int:
         # from scratch is not what a run is for, so report nothing.
         print("changes: no baseline state, skipping", file=sys.stderr)
         items: list[dict[str, Any]] = []
-    else:
+    held: list[str] = []
+    if prev_path.exists():
         prev = json.loads(prev_path.read_text(encoding="utf-8"))
-        items = EXTRACTORS[args.track](cur, prev)
+        items = EXTRACTORS[args.track](cur, prev, held)
 
     items.sort(key=lambda i: PRIORITY.get(i["kind"], 9))
     kept, skipped = items[:MAX_ITEMS], items[MAX_ITEMS:]
@@ -448,6 +461,7 @@ def main() -> int:
         "items": manifest,
         "skipped": [{k: i[k] for k in ("id", "kind", "title", "url")} for i in skipped],
         "candidate_keys": keys,
+        "held": held,
     }
     (out / "changes.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 

@@ -99,8 +99,12 @@ jobs:
             Read scripts/insights/prompt.md and follow it. Then read changes.json
             and context.md in the material directory, and every file that
             changes.json lists.
+          # allowedTools pre-approves; disallowedTools is the hard deny. Reads
+          # of process and runner internals are denied as well, and guard.py
+          # still checks the output before it leaves this job.
           claude_args: |
             --allowedTools "Read,Glob,Grep"
+            --disallowedTools "Bash,Edit,Write,MultiEdit,NotebookEdit,WebFetch,WebSearch,Task,Read(//proc/**),Read(//sys/**),Read(//home/runner/work/_temp/**),Read(//home/runner/.claude/**),Read(//home/runner/.config/**)"
             --max-turns 60
             --json-schema '${{ steps.schema.outputs.json }}'
 
@@ -113,14 +117,22 @@ jobs:
         run: |
           mkdir -p "$WORK"
           printf '%s' "$RESULT" > "$WORK/result.json"
+          python ../../scripts/insights/guard.py "$WORK/result.json"
 
+      # Only what the pipeline writes is handed on: data and reports, never
+      # code or config, so nothing this job produced can change a script that
+      # a later job runs with write access.
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: ${{ !cancelled() && steps.update.outcome == 'success' }}
         with:
           name: track-${{ matrix.track }}
           path: |
-            tracks/${{ matrix.track }}
+            tracks/${{ matrix.track }}/data/normalized
+            tracks/${{ matrix.track }}/data/snapshots
+            tracks/${{ matrix.track }}/reports
+            tracks/${{ matrix.track }}/deep-dives/_backlog.md
             insights-work/${{ matrix.track }}
+          include-hidden-files: true
           retention-days: 3
           if-no-files-found: error
 
@@ -156,11 +168,21 @@ jobs:
           for dir in "$COLLECTED"/track-*; do
             [ -d "$dir/tracks" ] || continue
             track="${dir##*/track-}"
-            rm -rf "tracks/$track"
-            cp -R "$dir/tracks/$track" "tracks/$track"
+            case "$track" in ietf-wimse|oauth-wg|openid) ;; *) echo "::error::unexpected artifact $dir"; exit 1 ;; esac
+            # Replace only the pipeline-written paths.
+            for sub in data/normalized data/snapshots reports; do
+              rm -rf "tracks/$track/$sub"
+              [ -d "$dir/tracks/$track/$sub" ] && cp -R "$dir/tracks/$track/$sub" "tracks/$track/$sub"
+            done
+            [ -f "$dir/tracks/$track/deep-dives/_backlog.md" ] && cp "$dir/tracks/$track/deep-dives/_backlog.md" "tracks/$track/deep-dives/_backlog.md"
             work="$dir/insights-work/$track"
             python scripts/insights/apply.py --track "$track" --changes "$work/changes.json" --result "$work/result.json" || status=1
             git add -A "tracks/$track"
+            # Belt and braces: refuse to commit anything outside those paths.
+            outside=$(git diff --cached --name-only | grep -vE "^tracks/$track/(data/normalized|data/snapshots|reports)/|^tracks/$track/deep-dives/_backlog\.md$" || true)
+            if [ -n "$outside" ]; then
+              echo "::error::$track: refusing to commit paths outside the pipeline output:"; echo "$outside"; exit 1
+            fi
             git diff --cached --quiet && { echo "$track: no changes"; continue; }
             git commit -m "chore($track): update $(date -u +%Y-%m-%dT%H:%MZ)"
           done
