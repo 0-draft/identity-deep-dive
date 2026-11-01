@@ -13,7 +13,8 @@ name: Daily Update (All Tracks)
 # The material Claude reads is written by third parties (drafts, mail, PRs).
 # It gets read tools only, and its output is checked by apply.py before any of
 # it is committed. Without the token, or when Claude fails, the data still
-# commits and the next run explains the same changes again.
+# commits and the next runs try the same changes again; after three failed
+# attempts they are listed as not explained and the baseline moves on.
 
 on:
   schedule:

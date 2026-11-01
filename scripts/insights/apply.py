@@ -134,6 +134,10 @@ def merge(store: dict, result: dict, changes: dict, track: str, today: str, now:
         if key not in keys or pri not in PRIORITIES:
             warnings.append(f"dropped triage for {str(key)[:80]}")
             continue
+        if pri == "normal":
+            # "normal" clears an earlier high or low.
+            store.setdefault("triage", {}).pop(key, None)
+            continue
         store.setdefault("triage", {})[key] = {
             "priority": pri,
             "reason": text(t.get("reason"), 300, oneline=True),
@@ -169,6 +173,42 @@ def annotate_candidates(track: str, store: dict, path: Path) -> None:
             c["rank"] = i
     data["candidates"] = cands
     dump_json(path, data)
+
+
+BACKLOG_START = "<!-- triage:start -->"
+BACKLOG_END = "<!-- triage:end -->"
+BACKLOG_RE = re.compile(
+    r"\n*^" + re.escape(BACKLOG_START) + r"$.*?^" + re.escape(BACKLOG_END) + r"$\n?", re.S | re.M
+)
+
+
+def write_backlog_triage(backlog: Path, store: dict) -> None:
+    """Append the current triage to the queue file score.py wrote.
+
+    score.py renders the backlog in heuristic order before triage exists, so
+    the order change is stated here rather than silently differing from
+    candidates.json.
+    """
+    if not backlog.exists():
+        return
+    body = BACKLOG_RE.sub("", backlog.read_text(encoding="utf-8")).rstrip("\n") + "\n"
+    flagged = sorted(
+        ((k, v) for k, v in store.get("triage", {}).items() if v["priority"] != "normal"),
+        key=lambda kv: (PRIORITIES[kv[1]["priority"]], kv[0]),
+    )
+    if flagged:
+        lines = [
+            "",
+            BACKLOG_START,
+            "## Triage",
+            "",
+            "Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.",
+            "",
+        ]
+        lines += [f"- **{v['priority']}** `{text(k, 200, oneline=True)}`: {v['reason']}" for k, v in flagged]
+        lines += ["", BACKLOG_END]
+        body += "\n".join(lines) + "\n"
+    backlog.write_text(body, encoding="utf-8")
 
 
 def render(track: str, store: dict, today: dt.date) -> str:
@@ -334,6 +374,7 @@ def main() -> int:
     prune(store, today)
     dump_json(store_path, store)
     annotate_candidates(args.track, store, norm / "candidates.json")
+    write_backlog_triage(track_dir / "deep-dives" / "_backlog.md", store)
 
     dailies = sorted((track_dir / "reports" / "daily").glob("*.md"))
     if dailies:

@@ -28,6 +28,6 @@ For every item in `changes.json`, one entry with the same `id`:
 Then:
 
 - `brief`: one or two sentences on the whole run. Lead with the most significant item. If nothing substantive happened, say that.
-- `triage`: for candidates in `context.md` that today's material gives you a real reason to move, `high` or `low` with a one-line reason tied to that material. Leave the rest out. An empty list is fine.
+- `triage`: for candidates in `context.md` that today's material gives you a real reason to move, `high` or `low` with a one-line reason tied to that material, or `normal` to clear an earlier `high` or `low` that the material no longer supports. Leave the rest out. An empty list is fine.
 
 Write in English. Prefer being plainly incomplete to being confidently wrong.

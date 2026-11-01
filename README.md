@@ -24,7 +24,7 @@ Collect  ->  Normalize  ->  Score  ->  Report  ->  Explain
 2. **Normalize** — Transform raw data into a consistent JSON schema per track.
 3. **Score** — Rank items by lifecycle state, recency, and activity to surface what matters now.
 4. **Report** — Generate daily and weekly markdown reports with prioritized tables.
-5. **Explain** — In CI, find what is new since the last committed state (draft revisions, new drafts, mailing-list threads, PRs, repository activity), fetch the source material, and have Claude explain each item: a one-line headline, a summary grounded in the diff or message, a mermaid diagram of the mechanism, use cases, and links to related items in the other tracks. Claude also flags deep-dive candidates to move up or down. The result lands in a "Briefing" section at the top of the daily report and in `data/normalized/insights.json` (a rolling seven-day window). See `scripts/insights/`.
+5. **Explain** — In CI, find what is new since the last explained state (draft revisions, new drafts, mailing-list threads, PRs, repository activity), fetch the source material, and have Claude explain each item: a one-line headline, a summary grounded in the diff or message, a mermaid diagram of the mechanism, use cases, and links to related items in the other tracks. Claude also flags deep-dive candidates to move up or down: `candidates.json` and the site list raised candidates first, and a "Triage" section is appended to `deep-dives/_backlog.md`. The result lands in a "Briefing" section at the top of the daily report and in `data/normalized/insights.json` (a rolling seven-day window). See `scripts/insights/`.
 
 ## Repository Layout
 
@@ -74,7 +74,7 @@ cp -R templates/deep-dive tracks/<track>/deep-dives/<topic-name>
 
 Two repo-root workflows in `.github/workflows/` fan out across all tracks via a `matrix.track` list:
 
-- `daily-update.yml` — every six hours. A read-only `collect` job per track runs `make install && make update`, stages what is new since the last explained state (`data/normalized/insights_baseline.json`), and has Claude explain it with read-only tools and structured output. A separate `publish` job, with no model in it, validates the result with `scripts/insights/apply.py`, commits per track and pushes. Without the `CLAUDE_CODE_OAUTH_TOKEN` secret, or when Claude fails, the data still commits and the next run explains the same changes again.
+- `daily-update.yml` — every six hours. A read-only `collect` job per track runs `make install && make update`, stages what is new since the last explained state (`data/normalized/insights_baseline.json`), and has Claude explain it with read-only tools and structured output. A separate `publish` job, with no model in it, validates the result with `scripts/insights/apply.py`, commits per track and pushes. Without the `CLAUDE_CODE_OAUTH_TOKEN` secret, or when Claude fails, the data still commits and the next runs try the same changes again; after three failed attempts they are listed as not explained and the baseline moves on.
 - `weekly-digest.yml` — runs `make install && make weekly` per track on Mondays 08:00 UTC.
 
 To wire a new track in, add its directory name to `matrix.track` in `daily-update.yml` and `weekly-digest.yml`, add it to `TRACKS` and add an extractor for it in `scripts/insights/changes.py`, and add it to the `track` enum in `scripts/insights/schema.json`. The publish job reads its allowlist from `TRACKS`.
