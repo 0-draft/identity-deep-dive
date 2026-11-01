@@ -17,8 +17,18 @@ Output (written by CI, no model involved):
 A claim whose evidence disappears is kept but marked, so the site can say
 "not re-verified since" instead of silently showing stale adoption.
 
+Evidence is one phrase or a list of phrases, all of which must be on the page
+(case- and whitespace-insensitive). With "evidence_in_order": true they must
+also appear in that order, which ties a list entry to the section around it
+(for example, between a "Supported features" heading and the next one).
+
 Usage:
-  refresh.py [--offline]   (--offline skips network checks, for tests)
+  refresh.py           refresh and write data/landscape-status.json
+  refresh.py --check   check only; exit 1 if any OpenID status, external status
+                       or claim is not verified (PR check). Writes nothing
+                       unless --out is given.
+  --out PATH           write the result to PATH instead of
+                       data/landscape-status.json
 """
 from __future__ import annotations
 
@@ -117,28 +127,50 @@ def ietf_status(ietf: dict) -> dict:
     }
 
 
-def page_text(url: str) -> str:
+def page_text(url: str) -> tuple[str, str]:
     r = SESSION.get(url, timeout=TIMEOUT)
     r.raise_for_status()
     raw = r.text
     text = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", raw, flags=re.S | re.I)
     text = html.unescape(re.sub(r"<[^>]+>", " ", text))
-    return re.sub(r"\s+", " ", text) + " " + re.sub(r"\s+", " ", html.unescape(raw))
+    return text, html.unescape(raw)
 
 
-def evidence_found(url: str, phrase: str) -> tuple[bool, str]:
-    """Whether the exact phrase (case- and whitespace-insensitive) is on the page."""
+def norm(s: str) -> str:
+    return re.sub(r"\s+", " ", s).strip().lower()
+
+
+def phrases_found(haystack: str, phrases: list[str], in_order: bool) -> bool:
+    pos = 0
+    for p in map(norm, phrases):
+        i = haystack.find(p, pos if in_order else 0)
+        if i < 0:
+            return False
+        pos = i + len(p)
+    return True
+
+
+def evidence_found(url: str, evidence: str | list[str], in_order: bool = False) -> tuple[bool, str]:
+    """Whether every evidence phrase is on the page, in order if asked.
+
+    The rendered text and the raw HTML are searched separately, so an ordered
+    match never straddles the two.
+    """
+    phrases = [evidence] if isinstance(evidence, str) else list(evidence)
+    if not phrases or not all(p.strip() for p in phrases):
+        return False, "empty evidence"
     try:
-        text = page_text(url)
+        text, raw = page_text(url)
     except requests.RequestException as exc:
         return False, f"fetch failed: {type(exc).__name__}"
-    norm = lambda s: re.sub(r"\s+", " ", s).strip().lower()  # noqa: E731
-    return (norm(phrase) in norm(text)), ""
+    ok = any(phrases_found(norm(h), phrases, in_order) for h in (text, raw))
+    return ok, "" if ok else "evidence not found"
 
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--offline", action="store_true")
+    ap.add_argument("--check", action="store_true", help="verify only; write nothing, exit 1 on any failure")
+    ap.add_argument("--out", type=Path, help="where to write the result (default: data/landscape-status.json)")
     args = ap.parse_args()
 
     catalogue = json.loads((DATA / "landscape.json").read_text(encoding="utf-8"))
@@ -153,8 +185,6 @@ def main() -> int:
     for spec in catalogue["specs"]:
         sid = spec["id"]
         try:
-            if args.offline:
-                raise RuntimeError("offline")
             if "ietf" in spec:
                 statuses[sid] = ietf_status(spec["ietf"])
             elif spec.get("openid"):
@@ -162,7 +192,7 @@ def main() -> int:
                 if not src:
                     statuses[sid] = {"stage": "unknown", "label": ""}
                     continue
-                ok, err = evidence_found(src["url"], src["evidence"])
+                ok, err = evidence_found(src["url"], src["evidence"], src.get("evidence_in_order", False))
                 statuses[sid] = {
                     "stage": "openid-" + src["status"].lower().replace("'", "").replace(" ", "-"),
                     "label": src["status"],
@@ -174,8 +204,14 @@ def main() -> int:
                 }
             elif "external" in spec:
                 ext = spec["external"]
-                ok, err = evidence_found(ext["url"], ext["evidence"])
-                statuses[sid] = {"stage": "external", "label": ext.get("label", ""), "url": ext["url"], "verified": ok}
+                ok, err = evidence_found(ext["url"], ext["evidence"], ext.get("evidence_in_order", False))
+                statuses[sid] = {
+                    "stage": "external",
+                    "label": ext.get("label", ""),
+                    "url": ext["url"],
+                    "verified": ok,
+                    **({"error": err} if err else {}),
+                }
         except Exception as exc:  # noqa: BLE001 - keep the last good status
             old = previous.get("specs", {}).get(sid)
             statuses[sid] = (old or {"stage": "unknown", "label": ""}) | {"stale": True, "error": str(exc)[:120]}
@@ -183,10 +219,7 @@ def main() -> int:
 
     adoption = []
     for claim in sources["adoption"]:
-        if args.offline:
-            ok, err = True, ""
-        else:
-            ok, err = evidence_found(claim["url"], claim["evidence"])
+        ok, err = evidence_found(claim["url"], claim["evidence"], claim.get("evidence_in_order", False))
         old = next(
             (a for a in previous.get("adoption", []) if a.get("url") == claim["url"] and a.get("spec") == claim["spec"]),
             {},
@@ -202,14 +235,19 @@ def main() -> int:
         )
         time.sleep(0.2)
 
-    out = {"generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(), "specs": statuses, "adoption": adoption}
-    prev_path.write_text(json.dumps(out, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    bad_status = {k: v for k, v in statuses.items() if v.get("stale") or v.get("verified") is False}
     bad = [a for a in adoption if not a["verified"]]
-    print(f"landscape: {len(statuses)} specs, {len(adoption)} claims, {len(bad)} not verified")
+    print(f"landscape: {len(statuses)} specs, {len(adoption)} claims, {len(bad_status)} statuses and {len(bad)} claims not verified")
+    for k, v in bad_status.items():
+        print(f"  status not verified: {k}: {v.get('url', '')} {v.get('error', '')}")
     for a in bad:
-        print(f"  not verified: {a['spec']} / {a['who']}: {a['url']} {a.get('error', '')}")
+        print(f"  claim not verified: {a['spec']} / {a['who']}: {a['url']} {a.get('error', '')}")
+    out = {"generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(), "specs": statuses, "adoption": adoption}
+    if args.out or not args.check:
+        (args.out or prev_path).write_text(json.dumps(out, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    if args.check:
+        return 1 if (bad or bad_status) else 0
     return 0
-
 
 if __name__ == "__main__":
     sys.exit(main())
