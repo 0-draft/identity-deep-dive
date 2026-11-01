@@ -16,11 +16,11 @@
 sequenceDiagram
     participant A as Workload A (caller)
     participant B as Workload B (callee)
-    A->>B: 1. TLS connection, server authentication of B, optional mTLS with A's WIC
-    A->>B: 2. Request with Workload-Identity-Token header (WIT) and proof of possession
-    B->>B: 2. Validate WIT against preconfigured trust anchors, verify PoP audience
-    B->>B: 3. Authorize A and the call
-    B-->>A: 4. Success response or error response
+    A->>B: TLS connection, server authentication of B, optional mTLS with A's WIC
+    A->>B: Request with Workload-Identity-Token header (WIT) and proof of possession
+    B->>B: Validate WIT against preconfigured trust anchors, verify PoP audience
+    B->>B: Authorize A and the call
+    B-->>A: Success response or error response
 ```
 
 1. A transport connection is established with TLS server authentication of Workload B. Mutual TLS using Workload A's WIC is optional (Section 1.1, step 1).
@@ -39,7 +39,7 @@ sequenceDiagram
 ## Why This Matters Now
 
 - **Trigger**: revision 03 of a core WIMSE working group draft (Datatracker states: Active, I-D Exists, WG Document) reorganised its structure, tightened trust-anchor binding, added a proof-audience section and removed the standalone paragraph on several identifiers per runtime. The working group chair asked the list to flag any substantive change that needs more discussion.
-- **Source evidence**: Section A.1 of the draft lists the changes with issue numbers (#173, #175, #256, #269, #270, #290, #294, #303, #370, #393, #395, #402, #411). The mail archive shows the author announcement and the chair's request for review (30 October 2026, 18:29 UTC; both linked under Sources). As of 1 November 2026 the list had no replies to either.
+- **Source evidence**: Appendix A.1 of the draft lists the changes with issue numbers (#173, #175, #256, #269, #270, #290, #294, #303, #370, #393, #395, #402, #411). The mail archive shows the author announcement and the chair's request for review (30 October 2026, 18:29 UTC; both linked under Sources). As of 1 November 2026 the list had no replies to either.
 - **Expected impact**: implementers of the companion documents (mutual TLS, WPT, HTTP signatures) and of identity servers get a concrete recipient checklist and clearer rules on revocation, audience and key handling. Anyone who cited the old section numbers, or built the access-path-to-identifier mapping API that revision 02 required, has to re-check against 03.
 
 ## What Changed
