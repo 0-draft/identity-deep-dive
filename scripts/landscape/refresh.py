@@ -230,7 +230,10 @@ def main() -> int:
 
     adoption = []
     for claim in sources["adoption"]:
-        ok, err = evidence_found(claim["url"], claim["evidence"], claim.get("evidence_in_order", False))
+        try:
+            ok, err = evidence_found(claim["url"], claim["evidence"], claim.get("evidence_in_order", False))
+        except Exception as exc:  # noqa: BLE001 - mark the claim, keep the run going
+            ok, err = False, f"check failed: {type(exc).__name__}"
         old = next(
             (a for a in previous.get("adoption", []) if a.get("url") == claim["url"] and a.get("spec") == claim["spec"]),
             {},
