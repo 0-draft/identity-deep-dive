@@ -130,9 +130,9 @@ export const STAGE_DETAIL: Record<string, Record<Lang, string>> = {
 };
 
 export const RELATION_LABEL: Record<RelationKind, Record<Lang, string>> = {
-  "builds-on": { en: "Builds on", ja: "土台" },
-  profiles: { en: "Profiles", ja: "プロファイル元" },
-  extends: { en: "Extends", ja: "拡張元" },
+  "builds-on": { en: "Builds on", ja: "土台とする仕様" },
+  profiles: { en: "Profiles", ja: "プロファイル対象" },
+  extends: { en: "Extends", ja: "拡張対象" },
   replaces: { en: "Replaces", ja: "置き換え対象" },
   alternative: { en: "Alternative to", ja: "代替" },
   complements: { en: "Works with", ja: "組み合わせ" },
