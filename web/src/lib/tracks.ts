@@ -54,9 +54,10 @@ export interface ReportFile {
 
 // The briefing block apply.py writes into the daily report is rendered from
 // insights.json instead, so it is cut out of the Markdown here.
-// Greedy to the last end marker, matching apply.py, so a marker smuggled into
-// the section cannot leave part of it behind.
-const BRIEFING_BLOCK = /<!-- insights:start -->[\s\S]*<!-- insights:end -->\n*/;
+// Markers count only on a line of their own, matching apply.py: the section
+// cannot contain one, and a third-party title that does sits inside a table
+// row or list item, so it can neither end the cut early nor hide report text.
+const BRIEFING_BLOCK = /^<!-- insights:start -->$[\s\S]*?^<!-- insights:end -->$\n*/m;
 
 function readLatestMarkdown(dir: string): ReportFile | null {
   const files = listDir(dir).filter((f) => f.endsWith(".md"));
