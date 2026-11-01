@@ -21,7 +21,9 @@ export function renderMarkdown(src: string): string {
   return sanitizeHtml(marked.parse(src, { async: false }) as string, ALLOWED);
 }
 
-const MERMAID_FENCE = /^```mermaid\n([\s\S]*?)^```$/gm;
+// A mermaid fence, indented up to three spaces (inside a list item, say),
+// closed by a fence of the same indent.
+const MERMAID_FENCE = /^( {0,3})```mermaid[ \t]*\n([\s\S]*?)^\1```[ \t]*$/gm;
 
 function escapeHtml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -31,16 +33,18 @@ function escapeHtml(s: string): string {
  * Markdown with mermaid diagrams, for deep dives. Diagram sources are lifted
  * out before marked runs, the HTML is sanitized, and each diagram goes back
  * in as escaped text inside the same disclosure the rest of the site uses,
- * where the page script renders it.
+ * where the page script renders it. The placeholder carries a random token,
+ * so text in the document cannot pose as one.
  */
 export function renderDocument(src: string, diagramLabel: string): string {
+  const token = `MERMAID${crypto.randomUUID().replace(/-/g, "")}X`;
   const diagrams: string[] = [];
-  const lifted = src.replace(MERMAID_FENCE, (_, body: string) => {
-    diagrams.push(body.trimEnd());
-    return `\n\nMERMAIDPLACEHOLDER${diagrams.length - 1}\n\n`;
+  const lifted = src.replace(/\r\n?/g, "\n").replace(MERMAID_FENCE, (_, _indent: string, body: string) => {
+    diagrams.push(body.replace(/^ {0,3}/gm, "").trimEnd());
+    return `\n\n${token}${diagrams.length - 1}\n\n`;
   });
   const html = renderMarkdown(lifted);
-  return html.replace(/<p>MERMAIDPLACEHOLDER(\d+)<\/p>/g, (_, i: string) => {
+  return html.replace(new RegExp(`<p>${token}(\\d+)</p>`, "g"), (_, i: string) => {
     const body = diagrams[Number(i)] ?? "";
     return `<details class="disclosure my-4" data-diagram open><summary>${escapeHtml(diagramLabel)}</summary><div class="diagram-frame"><pre class="mermaid">${escapeHtml(body)}</pre></div></details>`;
   });

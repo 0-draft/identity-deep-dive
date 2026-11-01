@@ -63,7 +63,7 @@ const STRINGS = {
   },
   raised: { en: "Raised", ja: "優先度を上げた" },
   lowered: { en: "Lowered", ja: "優先度を下げた" },
-  noCandidates: { en: "Nothing scores above the threshold right now.", ja: "いまは閾値を超える候補がない。" },
+  noCandidates: { en: "Nothing scores above the threshold right now.", ja: "現在、閾値を超える候補はない。" },
   dailyReport: { en: "Full daily report for", ja: "日次レポート全文" },
   weeklyDigest: { en: "Weekly digest", ja: "週次ダイジェスト" },
   updated: { en: "Updated", ja: "更新" },

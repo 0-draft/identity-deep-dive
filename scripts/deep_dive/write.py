@@ -70,6 +70,13 @@ UNSAFE_REF = re.compile(r"^ {0,3}\[[^\]]+\]:\s*(?!https?://)")
 CODE_SPAN = re.compile(r"(?<!`)(`+)(?!`)(.+?)(?<!`)\1(?!`)")
 
 
+def closes(fence: str, m: re.Match[str], line: str) -> bool:
+    """Whether a fence line closes the open fence: same character, at least
+    as long, nothing after it (CommonMark)."""
+    run = m.group(1)
+    return run[0] == fence[0] and len(run) >= len(fence) and not line.strip()[len(run):]
+
+
 def _prose(segment: str) -> str:
     segment = TAG.sub("&lt;", segment)
     segment = UNSAFE_LINK.sub("]", segment)
@@ -92,7 +99,7 @@ def clean(markdown: str) -> str:
             out.append(line.rstrip())
             continue
         if fence is not None:
-            if m and m.group(1)[0] == fence[0] and len(m.group(1)) >= len(fence) and not line.strip()[len(m.group(1)):]:
+            if m and closes(fence, m, line):
                 fence = None
             out.append(line.rstrip())
             continue
@@ -140,11 +147,11 @@ def structure(markdown: str) -> dict:
     fence = None
     for line in markdown.splitlines():
         m = FENCE.match(line)
-        if m:
-            if fence is None:
-                fence, fences = m.group(1), fences + 1
-            elif m.group(1)[0] == fence[0]:
-                fence = None
+        if m and fence is None:
+            fence, fences = m.group(1), fences + 1
+            continue
+        if m and closes(fence, m, line):
+            fence = None
             continue
         if fence is None:
             headings += bool(re.match(r"^#{1,6} ", line))

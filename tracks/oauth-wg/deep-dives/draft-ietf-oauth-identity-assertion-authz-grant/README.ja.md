@@ -35,7 +35,7 @@ sequenceDiagram
 - エンタープライズの SaaS 間連携: ある SaaS アプリケーションが、対話的な同意フローなしにユーザーのためにサードパーティ SaaS の API へのアクセストークンを取得する。どのクライアントがどのアプリケーションに到達できるかはエンタープライズの IdP が決める (Appendix A.1)。
 - カスタマーアイデンティティ (CIAM): ファーストパーティの顧客向けアプリケーションが、サインイン中の顧客のためにサードパーティ開発者の SaaS コンポーネントを呼び出す。CIAM プラットフォームが IdP の役割を担う (Appendix A.2)。
 - メールおよびカレンダーのクライアント: IdP にも Resource Authorization Server にも事前登録された OAuth クライアントを持たないクライアントが、Client ID Metadata Document で自身を識別し、たとえば private_key_jwt を使って秘密鍵で認証する (Appendix A.3)。
-- 外部ツールを呼び出す AI エージェント: エージェントは Protected Resource Metadata を通じてツールの認可サーバーを発見し、`id-jag` グラントプロファイルの有無を確認し、まずサイレントな ID-JAG の経路を試し、だめなら対話的な認可コードフローにフォールバックする (Appendix A.4)。
+- 外部ツールを呼び出す AI エージェント: エージェントは Protected Resource Metadata を通じてツールの認可サーバーを発見し、`id-jag` グラントプロファイルの有無を確認し、まずサイレントな ID-JAG の経路を試し、利用できない場合は対話的な認可コードフローにフォールバックする (Appendix A.4)。
 - SAML ベースの SSO 環境: SSO に SAML を使うクライアントは、アサーションを IdP の Refresh Token に交換し、そのトークンを subject token として使って ID-JAG を取得する (Section 4.5)。
 
 ## 今これが重要な理由
