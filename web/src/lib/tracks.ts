@@ -246,7 +246,9 @@ export function recentInsightIds(id: TrackId): Map<string, string> {
   const out = new Map<string, string>();
   for (const i of briefing(id).items) {
     const m = /^draft:(draft-[a-z0-9-]+?)-\d{2}$/.exec(i.id);
-    if (m && i.first_seen >= cutoff && !out.has(m[1])) out.set(m[1], anchorId(i.id));
+    // Minor items are folded without an anchor on the track page, so the
+    // board does not highlight or link them.
+    if (m && i.significance !== "routine" && i.first_seen >= cutoff && !out.has(m[1])) out.set(m[1], anchorId(i.id));
   }
   return out;
 }
