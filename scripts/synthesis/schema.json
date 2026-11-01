@@ -1,0 +1,58 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["picks", "topics"],
+  "properties": {
+    "picks": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 5,
+      "description": "The three to five explanations an identity engineer should read this week, most important first.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "why", "why_ja"],
+        "properties": {
+          "id": { "type": "string", "description": "Exact explanation id from insights.md." },
+          "why": { "type": "string", "maxLength": 280, "description": "Why it matters, beyond what the headline says, in one or two sentences." },
+          "why_ja": { "type": "string", "maxLength": 280, "description": "why in Japanese." }
+        }
+      }
+    },
+    "topics": {
+      "type": "array",
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "name", "name_ja", "summary", "summary_ja", "members", "related"],
+        "properties": {
+          "id": { "type": "string", "description": "Short kebab-case id; reuse the id from previous.json for a topic that still exists." },
+          "name": { "type": "string", "maxLength": 60 },
+          "name_ja": { "type": "string", "maxLength": 60 },
+          "summary": { "type": "string", "maxLength": 400, "description": "What the topic is about and where it stands, in two or three sentences." },
+          "summary_ja": { "type": "string", "maxLength": 400 },
+          "members": {
+            "type": "array",
+            "maxItems": 30,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["track", "name"],
+              "properties": {
+                "track": { "type": "string", "enum": ["ietf-wimse", "oauth-wg", "openid"] },
+                "name": { "type": "string", "description": "Draft or repository name exactly as in index.md." }
+              }
+            }
+          },
+          "related": {
+            "type": "array",
+            "maxItems": 6,
+            "items": { "type": "string" },
+            "description": "Ids of other topics in this output that build on, compete with or depend on this one."
+          }
+        }
+      }
+    }
+  }
+}
