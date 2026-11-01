@@ -58,7 +58,7 @@ sequenceDiagram
   - 例と参照文献: 例の `cnf.jwk.alg` は `EdDSA` から `Ed25519` に変わった（[RFC9864]）。WIT の例は再署名された。[RFC8725] は [I-D.ietf-oauth-rfc8725bis] に置き換えられ、[RFC8414] は削除された。[RFC9525]、[RFC6960]、[RFC9864]、[I-D.ietf-oauth-status-list] が新たに参照されている。実装状況に wimsey が追加された。旧 Section 1.1（「Use In Other Protocols」）は削除され、アーキテクチャ図から Identity Server、PEP、PDP が除かれた。
 - 互換性・移行上の懸念:
   - セクション番号が変わったため（例: 旧 Section 1.3 は 1.2 に、旧 Section 9.2 は 9.3 に）、番号で参照している外部文書は更新が必要である。すでに食い違いが 1 つある。[draft-ietf-wimse-http-signature-08](https://www.ietf.org/archive/id/draft-ietf-wimse-http-signature-08.txt)（Section 3、3.6）は、受信側に本ドラフトの「Section 5.1.4」に従って WIT を検証するよう求めているが、Section 5.1.4 は -02 にも -03 にも存在しない。-03 で WIT の検証を定めているのは Section 5.1.3 である。
-  - `EdDSA` は禁止されていない。Section 5.1 の `alg` の規則は、`none` と対称鍵のアルゴリズムを除き、IANA の JOSE レジストリにある署名アルゴリズムを引き続き認めている。[RFC9864] はこのレジストリで `EdDSA` を Deprecated とし、例は完全に指定された `Ed25519` に移った。新しい識別子しか受け付けない検証者は、従来の `EdDSA` の鍵を拒否する。
+  - `EdDSA` は禁止されていない。Section 5.1 の `alg` の規則は、`none`、対称鍵のアルゴリズム、暗号化アルゴリズムを除き、IANA の JOSE レジストリにある署名アルゴリズムを引き続き認めている。[RFC9864] はこのレジストリで `EdDSA` を Deprecated とし、例は完全に指定された `Ed25519` に移った。新しい識別子しか受け付けない検証者は、従来の `EdDSA` の鍵を拒否する。
   - `iss` による鍵の発見に依存していたデプロイメントは、事前設定済みトラストアンカーへ移行する必要がある。
   - リビジョン 02 のアクセスパス対応付けフックを公開していた実装には、期待される被呼び出し側の識別子をどう与えるかについて、規範的な指針がなくなった。
 
