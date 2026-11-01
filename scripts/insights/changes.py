@@ -12,7 +12,7 @@ material it reads is labelled as untrusted data. Network access stays in this
 script, where it is deterministic and reviewable.
 
 Usage:
-  changes.py --track ietf-wimse --prev /path/prev_state.json --out .insights-work/ietf-wimse
+  changes.py --track ietf-wimse --prev /path/prev_state.json --out insights-work/ietf-wimse
 """
 from __future__ import annotations
 
@@ -236,11 +236,32 @@ def _mail_items(cur: list[dict], prev: list[dict]) -> list[dict[str, Any]]:
     return items
 
 
+def comparable(cur: dict, prev: dict, *keys: str) -> bool:
+    """Whether a category can be diffed at all.
+
+    A collector that failed writes an empty or partial list and records the
+    failure in fetch_errors. Diffing against that would report everything as
+    new on the next good run, so such a category is skipped until both sides
+    are clean.
+    """
+    for state in (cur, prev):
+        errors = state.get("fetch_errors") or {}
+        for key in keys:
+            if not state.get(key) or errors.get(key):
+                return False
+    return True
+
+
 def extract_wimse(cur: dict, prev: dict) -> list[dict[str, Any]]:
-    drafts_cur = cur.get("active_drafts", []) + cur.get("related_drafts", [])
-    drafts_prev = prev.get("active_drafts", []) + prev.get("related_drafts", [])
-    items = _draft_items(drafts_cur, drafts_prev, "revision")
-    items += _mail_items(cur.get("mail_posts", []), prev.get("mail_posts", []))
+    items: list[dict[str, Any]] = []
+    if comparable(cur, prev, "active_drafts"):
+        drafts_cur = cur.get("active_drafts", []) + cur.get("related_drafts", [])
+        drafts_prev = prev.get("active_drafts", []) + prev.get("related_drafts", [])
+        items += _draft_items(drafts_cur, drafts_prev, "revision")
+    if comparable(cur, prev, "mail_posts"):
+        items += _mail_items(cur.get("mail_posts", []), prev.get("mail_posts", []))
+    if not comparable(cur, prev, "github_repos"):
+        return items
 
     prev_shas = {c.get("sha") for r in prev.get("github_repos", []) for c in r.get("recent_commits", [])}
     for repo in cur.get("github_repos", []):
@@ -261,13 +282,21 @@ def extract_wimse(cur: dict, prev: dict) -> list[dict[str, Any]]:
 
 
 def extract_oauth(cur: dict, prev: dict) -> list[dict[str, Any]]:
-    items = _draft_items(cur.get("drafts", []), prev.get("drafts", []), "rev")
-    items += _mail_items(cur.get("mail_messages", []), prev.get("mail_messages", []))
+    items: list[dict[str, Any]] = []
+    if comparable(cur, prev, "drafts"):
+        items += _draft_items(cur.get("drafts", []), prev.get("drafts", []), "rev")
+    if comparable(cur, prev, "mail_messages"):
+        items += _mail_items(cur.get("mail_messages", []), prev.get("mail_messages", []))
+    if not comparable(cur, prev, "prs"):
+        return items
 
+    # prs is a window of the most recently updated PRs, so an old PR that is
+    # touched again re-enters it. Only PRs opened after the baseline are new.
     seen = {p.get("html_url") for p in prev.get("prs", [])}
+    since = prev.get("generated_at") or ""
     for pr in cur.get("prs", []):
         url = pr.get("html_url", "")
-        if not url or url in seen:
+        if not url or url in seen or (pr.get("created_at") or "") <= since:
             continue
         repo, number = pr.get("repo_full_name", ""), pr.get("number")
         items.append(
@@ -285,6 +314,8 @@ def extract_oauth(cur: dict, prev: dict) -> list[dict[str, Any]]:
 
 
 def extract_openid(cur: dict, prev: dict) -> list[dict[str, Any]]:
+    if not comparable(cur, prev, "github_repos"):
+        return []
     prev_push = {r.get("full_name"): r.get("pushed_at") for r in prev.get("github_repos", [])}
     items = []
     for repo in cur.get("github_repos", []):
@@ -327,6 +358,16 @@ EXTRACTORS: dict[str, Callable[[dict, dict], list[dict[str, Any]]]] = {
 # ---------------------------------------------------------------------------
 
 
+def baseline_path(track: str) -> Path:
+    """State as of the last run whose changes were explained (or had none).
+
+    Not the last committed state.json: the weekly digest and runs where Claude
+    failed commit state too, and diffing against those would drop whatever
+    arrived in between.
+    """
+    return REPO_ROOT / "tracks" / track / "data" / "normalized" / "insights_baseline.json"
+
+
 def candidate_key(track: str, cand: dict) -> str:
     if track == "openid":
         return cand.get("full_name") or cand.get("name") or ""
@@ -352,7 +393,11 @@ def track_index(track: str) -> list[str]:
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--track", choices=TRACKS, required=True)
-    ap.add_argument("--prev", type=Path, required=True)
+    ap.add_argument(
+        "--prev",
+        type=Path,
+        help="Baseline state (default: the track's insights_baseline.json, which apply.py advances)",
+    )
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args()
 
@@ -360,14 +405,15 @@ def main() -> int:
     cur = json.loads((track_dir / "data" / "normalized" / "state.json").read_text(encoding="utf-8"))
     out = args.out
     (out / "items").mkdir(parents=True, exist_ok=True)
+    prev_path = args.prev or baseline_path(args.track)
 
-    if not args.prev.exists():
+    if not prev_path.exists():
         # No baseline means everything looks new. Explaining the whole track
         # from scratch is not what a run is for, so report nothing.
         print("changes: no baseline state, skipping", file=sys.stderr)
         items: list[dict[str, Any]] = []
     else:
-        prev = json.loads(args.prev.read_text(encoding="utf-8"))
+        prev = json.loads(prev_path.read_text(encoding="utf-8"))
         items = EXTRACTORS[args.track](cur, prev)
 
     items.sort(key=lambda i: PRIORITY.get(i["kind"], 9))

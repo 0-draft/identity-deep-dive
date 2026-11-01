@@ -23,13 +23,14 @@ import datetime as dt
 import html
 import json
 import re
+import shutil
 import sys
 from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from changes import TRACKS, candidate_key, track_index  # noqa: E402
+from changes import TRACKS, baseline_path, candidate_key, track_index  # noqa: E402
 
 RETENTION_DAYS = 7
 REPORT_DAYS = 3
@@ -37,7 +38,12 @@ REPORT_MAX_ITEMS = 12
 SIGNIFICANCE = {"substantive", "editorial", "new-proposal", "discussion", "routine"}
 PRIORITIES = {"high": 0, "normal": 1, "low": 2}
 MERMAID_START = re.compile(r"^(flowchart|graph|sequenceDiagram)\b")
-MERMAID_FORBIDDEN = ("```", "%%{", "click ", "<script", "javascript:", "href", "callback")
+MERMAID_FORBIDDEN = ("```", "%%{", "click ", "javascript:", "href", "callback", "insights:")
+# Anything that reads as an HTML tag or comment. Mermaid arrows (-->, ->>,
+# <-->) never put a letter, "/", "!" or "?" right after "<".
+HTML_LIKE = re.compile(r"<[A-Za-z/!?]")
+# Credentials an injected source might talk the model into echoing back.
+SECRET = re.compile(r"(gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}|sk-ant-[A-Za-z0-9_-]{20,})")
 SECTION_START = "<!-- insights:start -->"
 SECTION_END = "<!-- insights:end -->"
 
@@ -58,7 +64,7 @@ def mermaid(src: Any) -> str:
     if not MERMAID_START.match(s):
         return ""
     lowered = s.lower()
-    if any(bad in lowered for bad in MERMAID_FORBIDDEN):
+    if any(bad in lowered for bad in MERMAID_FORBIDDEN) or HTML_LIKE.search(s):
         return ""
     # Mermaid ends a statement at ";" and reads "#" as the start of an entity
     # code, so either one inside a label breaks the whole diagram.
@@ -191,6 +197,11 @@ def render(track: str, store: dict, today: dt.date) -> str:
             lines += ["**Related in other tracks**", ""]
             lines += [f"- `{r['track']}` / `{r['name']}`: {r['note']}" for r in i["related"]] + [""]
 
+    overflow = store.get("overflow", [])
+    if overflow:
+        lines += ["### Also changed, not explained", ""]
+        lines += [f"- [{text(o['title'], 300, oneline=True)}]({o['url']})" for o in overflow] + [""]
+
     triage = store.get("triage", {})
     flagged = sorted(((k, v) for k, v in triage.items() if v["priority"] != "normal"), key=lambda kv: (PRIORITIES[kv[1]["priority"]], kv[0]))
     if flagged:
@@ -202,7 +213,9 @@ def render(track: str, store: dict, today: dt.date) -> str:
 
 def write_section(report: Path, section: str) -> None:
     body = report.read_text(encoding="utf-8")
-    body = re.sub(re.escape(SECTION_START) + r".*?" + re.escape(SECTION_END) + r"\n{0,2}", "", body, flags=re.S)
+    # Greedy to the last end marker, so a marker smuggled into the section
+    # cannot leave a tail of it behind.
+    body = re.sub(re.escape(SECTION_START) + r".*" + re.escape(SECTION_END) + r"\n{0,2}", "", body, flags=re.S)
     # After the title and the metadata lines, before the first section.
     idx = body.find("\n## ")
     if idx == -1:
@@ -226,16 +239,43 @@ def main() -> int:
     now_dt = dt.datetime.now(dt.timezone.utc).replace(microsecond=0)
     today = now_dt.date()
 
-    if args.result and args.result.exists() and args.result.read_text(encoding="utf-8").strip():
+    changes = load_json(args.changes, None) if args.changes else None
+    merged, refused = False, False
+    result: dict = {}
+    raw = args.result.read_text(encoding="utf-8").strip() if args.result and args.result.exists() else ""
+    if raw and SECRET.search(raw):
+        # Fail closed: publish nothing from this run, and make the run red.
+        print("::error::insights: Claude output contains something shaped like a credential; discarding it")
+        refused = True
+    elif raw and changes is not None:
         try:
-            result = json.loads(args.result.read_text(encoding="utf-8"))
+            result = json.loads(raw)
         except json.JSONDecodeError as exc:
             print(f"::warning::insights: Claude output is not JSON ({exc}); keeping previous insights")
             result = None
         if isinstance(result, dict):
-            changes = load_json(args.changes, {}) if args.changes else {}
             for w in merge(store, result, changes, args.track, today.isoformat(), now_dt.isoformat()):
                 print(f"::warning::insights: {w}")
+            merged = True
+
+    # Move the baseline only past changes that were explained, or when there
+    # were none. A failed or skipped Claude pass leaves it, so the next run
+    # picks the same changes up again.
+    state_path = norm / "state.json"
+    base = baseline_path(args.track)
+    nothing_new = changes is not None and not changes.get("items")
+    if state_path.exists() and (merged or nothing_new or not base.exists()):
+        shutil.copyfile(state_path, base)
+        if merged or nothing_new:
+            # The baseline moves past these too, so list them rather than lose
+            # them: items over the per-run cap, and staged items the model
+            # returned nothing for.
+            explained = {i.get("id") for i in result.get("items", [])} if merged else set()
+            missed = [i for i in (changes or {}).get("items", []) if i.get("id") not in explained] if merged else []
+            store["overflow"] = [
+                {"title": o.get("title", ""), "url": o.get("url", "")}
+                for o in (missed + (changes or {}).get("skipped", []))[:20]
+            ]
 
     prune(store, today)
     dump_json(store_path, store)
@@ -245,7 +285,7 @@ def main() -> int:
     if dailies:
         write_section(dailies[-1], render(args.track, store, today))
     print(f"insights: {len(store['items'])} item(s) in window, {len(store['triage'])} triage note(s)")
-    return 0
+    return 1 if refused else 0
 
 
 if __name__ == "__main__":

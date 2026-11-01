@@ -74,7 +74,7 @@ cp -R templates/deep-dive tracks/<track>/deep-dives/<topic-name>
 
 Two repo-root workflows in `.github/workflows/` fan out across all tracks via a `matrix.track` list:
 
-- `daily-update.yml` — every six hours, runs `make install && make update` per track, then the Explain step. Claude runs only when something is new, gets read-only tools over the staged material, and returns structured output that `scripts/insights/apply.py` validates before anything is written. Without the `CLAUDE_CODE_OAUTH_TOKEN` secret, or when Claude fails, the data update still commits.
+- `daily-update.yml` — every six hours. A read-only `collect` job per track runs `make install && make update`, stages what is new since the last explained state (`data/normalized/insights_baseline.json`), and has Claude explain it with read-only tools and structured output. A separate `publish` job, with no model in it, validates the result with `scripts/insights/apply.py`, commits per track and pushes. Without the `CLAUDE_CODE_OAUTH_TOKEN` secret, or when Claude fails, the data still commits and the next run explains the same changes again.
 - `weekly-digest.yml` — runs `make install && make weekly` per track on Mondays 08:00 UTC.
 
 To wire a new track in, add its directory name to `matrix.track` in both workflows, and add an extractor for it to `scripts/insights/changes.py`.
