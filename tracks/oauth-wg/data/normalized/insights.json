@@ -1,12 +1,14 @@
 {
-  "attempts": {
-    "count": 1
-  },
   "briefs": [
     {
       "at": "2026-11-01T10:12:31+00:00",
       "text": "The biggest movement is the ID-JAG draft jumping to -06 with new normative rules (client authentication at the IdP, invalid_request for bad subject tokens, mTLS binding), alongside a substantially reworked Deferred Token Response -01 and the first WG-named Delegate SD-JWT draft. OAuth 2.1 -17 and SD-JWT VC -23 are mostly editorial or restructuring.",
       "text_ja": "最大の動きは、ID-JAG ドラフトが新しい規範的規則 (IdP でのクライアント認証、不正な subject token に対する invalid_request、mTLS バインディング) を伴って -06 に進んだことである。あわせて、Deferred Token Response -01 が大幅に作り直され、WG 名を冠した最初の Delegate SD-JWT ドラフトが出た。OAuth 2.1 -17 と SD-JWT VC -23 は主に編集上の変更または構成の組み替えである。"
+    },
+    {
+      "at": "2026-11-01T22:07:05+00:00",
+      "text": "The most notable activity is on AI-agent authorization: a second AAuth draft proposing a new OAuth grant, and AAT's -02 follow-up exposing an off-by-one difference in `del_max_depth` between agent-delegation drafts. The oauth-spiffe-client-authentication repo also saw a batch of PRs, mostly clarifications, plus a new multi-valued auth-method metadata approach.",
+      "text_ja": "最も目立つのはAIエージェント認可の動きである。新しいOAuthグラントを提案する2つ目のAAuthドラフトが出され、AAT -02の議論ではエージェント委任ドラフト間で `del_max_depth` の解釈が1ホップずれることが判明した。oauth-spiffe-client-authenticationリポジトリでも多数のPRがあり、大半は明確化だが、複数値の認証方式メタデータの扱いが新たに加わった。"
     }
   ],
   "items": {
@@ -175,6 +177,23 @@
         "IdP とライブラリのメンテナーは、Token Exchange のエラー処理を新しい invalid_request の挙動に照らして確認し直すべきである。"
       ]
     },
+    "mail:43bHbkS7BIlDj3GsRotAmOFJCbU": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "Weekly digest: a burst of OAuth 2.1 issue triage, and a new implementation report on transaction tokens",
+      "headline_ja": "週次ダイジェスト: OAuth 2.1のissue整理が集中し、transaction tokensに実装報告が1件追加",
+      "id": "mail:43bHbkS7BIlDj3GsRotAmOFJCbU",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "The digest, truncated in the source, shows oauth-v2-1 with 7 new issues, 31 closed and 15 comments, several tagged ietf-127. New issues include whether §3.2.3 should use MUST as RFC 9700 does, the PKCE exemption in §4.1.3, the private-use redirect URI exception, access_token syntax versus the Bearer token68 syntax, and defining invalid_client for authorization error responses. Also, oauth-transaction-tokens received an implementation report (#373) comparing an existing act-as lane with the Transaction Token shape. No spec text is shown here.",
+      "summary_ja": "ダイジェストは原文が途中で切れているが、oauth-v2-1で新規issueが7件、クローズが31件、コメントが15件あり、いくつかはietf-127ラベルが付いている。新規issueには、§3.2.3をRFC 9700と同様にMUSTにすべきか、§4.1.3でのPKCE免除の扱い、プライベートURIスキームのリダイレクト例外の明記、access_tokenの構文とBearerのtoken68構文の不一致、認可エラーレスポンスにおけるinvalid_clientの定義などがある。また、oauth-transaction-tokensには既存のact-asの仕組みとTransaction Tokenの形を比較する実装報告（#373）が出た。仕様本文の変更はここには示されていない。",
+      "title": "Weekly github digest (OAuth Activity Summary)",
+      "updated_at": "2026-11-01T22:07:05+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/43bHbkS7BIlDj3GsRotAmOFJCbU/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "mail:4L4EamXpvnEXs13ZL8dnPPj-YRc": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -194,6 +213,59 @@
       ],
       "use_cases_ja": [
         "token68 以外の文字を含むアクセストークンを発行する実装者は、許可される文字集合を狭める #273 を注視すべきである。"
+      ]
+    },
+    "mail:8_QkCb-jVUZyII6ex6eB6H63rhE": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "Mission approval artifacts converge on three commitments and a fail-closed pairwise correspondence",
+      "headline_ja": "Missionの承認アーティファクトは、3つのコミットメントと失敗側に倒すペアワイズの対応付けに収束している",
+      "id": "mail:8_QkCb-jVUZyII6ex6eB6H63rhE",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-sweeney-wimse-credential-delegation",
+          "note": "Its receipt chains are cited as the same split of offline narrowing proof and server-side current authority.",
+          "note_ja": "受領チェーンが、オフラインの縮小証明とサーバー側の現在の権限という同じ分担の例として挙げられている。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Participants agree that the approval artifact carries three commitments: the amb digest of each declaration the approval was evaluated against, per-field commitments (#1019), and a committed join reference in each evidence record. The authoritative join field is part of the resource server's declaration, reached through the amb digest, so the issuer signs which declaration was used and the RS defines what it means. For comparing values across declarations, correspondence is pairwise per Mission entry, signed, scoped to the Mission and names only the join key and compared quantities. Missing or unresolvable correspondence evaluates to indeterminate. Joint outcome stays out of scope of the base document. Text is to be posted on issue #1051.",
+      "summary_ja": "承認アーティファクトは、承認の評価に用いた各宣言のamb digest、フィールドごとのコミットメント（#1019）、各証跡レコード内のコミット済み結合参照の3つを持つ点で合意している。結合に使う権威あるフィールドはリソースサーバーの宣言に含まれ、amb digest経由で参照されるため、発行者はどの宣言を使ったかに署名し、意味はリソースサーバーが定める。宣言間の値の比較には、Missionエントリごとのペアワイズで署名付き、Missionにスコープされ、結合キーと比較対象の量だけを名指す対応付けを使う。対応付けが欠落または解決不能な場合は indeterminate と評価する。複合結果は基本文書の範囲外である。文面はissue #1051に投稿される予定である。",
+      "title": "Call for interest: fine-grained authorization in OAuth (IETF 126 follow-up)",
+      "updated_at": "2026-11-01T22:07:05+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/8_QkCb-jVUZyII6ex6eB6H63rhE/",
+      "use_cases": [
+        "A verifier checking offline that a charge record corresponds to a reservation approved under a Mission.",
+        "A resource server publishing authority metadata that approval artifacts must reference."
+      ],
+      "use_cases_ja": [
+        "課金レコードがMissionの下で承認された予約に対応することを、オフラインで検証する検証者。",
+        "承認アーティファクトから参照される権限メタデータを公開するリソースサーバー。"
+      ]
+    },
+    "mail:Bb7y4lt7mBY568b460IyNhM4H3o": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "KYAPay token audience rules change, and a reviewer questions how path-based tenants are checked",
+      "headline_ja": "KYAPayトークンのaudience規則が変更され、パスでテナントを分ける場合の検証方法に疑問が出ている",
+      "id": "mail:Bb7y4lt7mBY568b460IyNhM4H3o",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "A review of draft-skyfire-oauth-using-kyapay-tokens-01 raised concerns including personal and payment data in a bearer JWT, bot managers admitting requests without challenge, jti replay detection versus reuse, and lack of account binding. The authors are tracking points in a GitHub issue. One change goes beyond the review: in the KYAPay Token draft, `aud` now identifies the identities the issuer holds for the Target and `tsi` becomes REQUIRED. Onboarded recipients check `aud` and `tsi`, while others check `tdm`, which names the Target's host. A follow-up notes the PR text says registrable domain, so a `tdm` of app.beel.es/api would pass for anything under beel.es, and asks for a host plus path-prefix comparison.",
+      "summary_ja": "draft-skyfire-oauth-using-kyapay-tokens-01 のレビューでは、ベアラーJWTに個人情報や決済情報が含まれること、ボット管理が検証なしで通すこと、jtiのリプレイ検出と再利用の矛盾、アカウント紐付けの欠如などが指摘された。著者はGitHubのissueで対応を追跡している。レビューの要求を超える変更として、KYAPay Tokenドラフトで `aud` が発行者の保持するTargetのIDの組み合わせを示すようになり、`tsi` が必須になる。オンボード済みの受信者は `aud` と `tsi` を、それ以外は Target のホストを示す `tdm` を検証する。続くメールは、PRの文面が登録可能ドメインとなっているため、`tdm` が app.beel.es/api でも beel.es 配下の任意のサービスに通ってしまうと指摘し、ホストとパス接頭辞の比較を求めている。",
+      "title": "Review of draft-skyfire-oauth-using-kyapay-tokens-01 (2 new messages)",
+      "updated_at": "2026-11-01T22:07:05+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/Bb7y4lt7mBY568b460IyNhM4H3o/",
+      "use_cases": [
+        "A multi-tenant API that keeps tenants on URL paths under one host and receives KYAPay tokens via intermediaries.",
+        "A CDN or bot manager deciding how to validate audience without being the token's recipient."
+      ],
+      "use_cases_ja": [
+        "1つのホストの下でテナントをURLパスで分けており、中継経由でKYAPayトークンを受け取るマルチテナントAPI。",
+        "トークンの受信者ではない立場で、audienceの検証方法を決めるCDNやボット管理。"
       ]
     },
     "mail:BjF_dwq7lhDLYi6gDms38n2KM80": {
@@ -312,6 +384,48 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "mail:JVPELSKXNkSfFl8ghAjmH4SI5og": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "Two AI-agent authorization proposals: a Mission-to-OAuth mapping, and a new AAuth grant-flow draft",
+      "headline_ja": "AIエージェント認可の2提案: MissionのOAuthへの対応付けと、新しいAAuthグラントフローのドラフト",
+      "id": "mail:JVPELSKXNkSfFl8ghAjmH4SI5og",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-wimse-aims",
+          "note": "The mail cites AIMS as a similar compositional approach that assembles existing standards.",
+          "note_ja": "メールは、既存標準を組み合わせるAIMSを同様の構成的アプローチとして挙げている。",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "openid/sharedsignals",
+          "note": "Shared Signals Framework is listed as a substrate for Mission lifecycle signals.",
+          "note_ja": "Shared Signals FrameworkがMissionのライフサイクルシグナルの基盤として挙げられている。",
+          "track": "openid"
+        },
+        {
+          "name": "openid/authzen",
+          "note": "AuthZEN Authorization API is listed for runtime oversight.",
+          "note_ja": "実行時の監督用にAuthZEN Authorization APIが挙げられている。",
+          "track": "openid"
+        }
+      ],
+      "significance": "new-proposal",
+      "summary": "One message maps the Mission-bound authorization drafts onto existing OAuth mechanisms (attestation-based client auth, PAR/RAR, DTR, status lists, token exchange, identity chaining, ID-JAG, transaction tokens, DPoP/mTLS). The stated rule is to profile an existing OAuth mechanism rather than invent a Mission-specific one, keeping the companion drafts thin. A second message announces draft-rosenberg-oauth-aauth-02, which realises AAuth as an OAuth grant flow instead of a new protocol, includes a comparison with Dick Hardt's AAuth document, and asks whether the community is interested.",
+      "summary_ja": "1通目は、Mission-bound authorizationの各ドラフトを既存のOAuth機構（attestation-based client auth、PAR/RAR、DTR、status list、token exchange、identity chaining、ID-JAG、transaction tokens、DPoP/mTLS）に対応付けている。方針は、Mission固有の機構を作らず既存のOAuth機構をプロファイルし、補助ドラフトを薄く保つことである。2通目は draft-rosenberg-oauth-aauth-02 の公表で、AAuthを新プロトコルではなくOAuthのグラントフローとして実現し、Dick Hardt氏の文書との比較節を含む。コミュニティの関心を問うている。",
+      "title": "New I-D on AAuth - a new OAuth grant flow for AI Agents (2 new messages)",
+      "updated_at": "2026-11-01T22:07:05+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/JVPELSKXNkSfFl8ghAjmH4SI5og/",
+      "use_cases": [
+        "An AS vendor deciding whether agent authorization should be a new OAuth grant or a profile of PAR/RAR plus deferred responses.",
+        "A team building long-running agent tasks that wants approved-work boundaries expressed with existing OAuth building blocks."
+      ],
+      "use_cases_ja": [
+        "エージェント認可を新しいOAuthグラントにするか、PAR/RARと遅延応答のプロファイルにするかを検討する認可サーバーのベンダー。",
+        "長時間動作するエージェントタスクの承認済み作業範囲を、既存のOAuth部品で表現したいチーム。"
+      ]
+    },
     "mail:MDAs2JISpkI8GPkxxqSeiwHFmd4": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -331,6 +445,48 @@
       ],
       "use_cases_ja": [
         "ID-JAG を発行する前に同意ステップを設けたいコンシューマー向け IdP は、組み込みの仕組みを期待するのではなく DTR を検討するとよい。"
+      ]
+    },
+    "mail:NphFqty5NRjMoX6x3IEW5gVsR5s": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "AAT author and a delegation-server author agree on layering, but find `del_max_depth` is off by one between drafts",
+      "headline_ja": "AATの著者と委任サーバー側の著者が役割分担で合意した一方、ドラフト間で `del_max_depth` が1ホップずれていることが判明",
+      "id": "mail:NphFqty5NRjMoX6x3IEW5gVsR5s",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-asor-wimse-agent-delegation-chain",
+          "note": "Its -03 rejects a leaf at del_depth equal to del_max_depth, unlike AAT.",
+          "note_ja": "-03では `del_depth` が `del_max_depth` と等しい末端を拒否し、AATと異なる。",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "draft-sweeney-wimse-credential-delegation",
+          "note": "Server-side counterpart argued to compose with offline attenuation.",
+          "note_ja": "オフライン縮小と組み合わせられるサーバー側の対応として議論されている。",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "draft-hulea-wimse-agent-mandate",
+          "note": "Third offline attenuation format with typed constraints.",
+          "note_ja": "型付き制約を持つ3つ目のオフライン縮小フォーマット。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "The thread covers AAT -02, which adds step-by-step chain verification (Section 8) with 229 test vectors, and notes twelve drafts citing it. In the reply, the AAT author agrees chain-wide budgets need a single writer and belong in a layer above core AAT. For revocation, they argue the enforcement point already sees the whole chain, so rejecting any chain containing a revoked token also cuts off derived tokens, with details left to a companion document. They found that with `del_max_depth` 8, AAT accepts a leaf at `del_depth` 8 while asor -03 rejects it. They propose comparing constraint subsumption rules across the three drafts before IETF 127.",
+      "summary_ja": "AAT -02ではチェーン検証の手順（第8節）が追加され、229件のテストベクターが付属し、12のドラフトが引用していると述べられている。返信でAAT著者は、チェーン全体の予算は単一の書き込み元が必要で、コアAATの上位層に置くべきだとする。失効については、実施点が毎回チェーン全体を見るため、失効済みトークンを含むチェーンを拒否すれば派生トークンも止まると主張し、詳細は補助文書に委ねている。`del_max_depth` が8のとき、AATは `del_depth` 8の末端を受理し、asor -03は拒否するという差異も見つかった。IETF 127までに3ドラフトの制約の包含規則を比較することを提案している。",
+      "title": "New version: Attenuating Authorization Tokens (draft-niyikiza-oauth-attenuating-agent-tokens-02)",
+      "updated_at": "2026-11-01T22:07:05+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/NphFqty5NRjMoX6x3IEW5gVsR5s/",
+      "use_cases": [
+        "A verifier that must accept chains from more than one offline-attenuation format and needs consistent depth-limit behaviour.",
+        "An agent platform deciding between offline attenuation and a server in the call path for budgets and revocation."
+      ],
+      "use_cases_ja": [
+        "複数のオフライン縮小フォーマットのチェーンを受け入れ、深さ制限の挙動を揃える必要がある検証者。",
+        "予算や失効の扱いについて、オフライン縮小と呼び出し経路上のサーバーのどちらを使うか検討するエージェント基盤。"
       ]
     },
     "mail:Zuab1PpQZx_nWOimouWjczGiYOI": {
@@ -391,9 +547,211 @@
         "サブエージェントにより狭いサブトークンをオフラインで発行し、相互運用可能な検証を望むエージェントフレームワーク。",
         "そうしなければ形式ごとに同じ制約比較を別々に実装することになる検証者。"
       ]
+    },
+    "pr:oauth-wg/oauth-spiffe-client-authentication#57": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "PR adds a section on JWT-SVID replay and guidance on the jti claim",
+      "headline_ja": "JWT-SVIDのリプレイに関する節とjtiの指針を追加するPR",
+      "id": "pr:oauth-wg/oauth-spiffe-client-authentication#57",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "substantive",
+      "summary": "The PR adds a section on replay of JWT-SVIDs and guidance on the jti parameter (issue #20). The body does not say whether the guidance is normative or what the recommended handling is.",
+      "summary_ja": "JWT-SVIDのリプレイに関する節を追加し、jtiパラメーターの指針を示すPRである（issue #20）。指針が規範的かどうか、推奨される扱いが何かは本文からは分からない。",
+      "title": "oauth-wg/oauth-spiffe-client-authentication#57: Enhance JWT-SVID replay detection guidance",
+      "updated_at": "2026-11-01T22:07:05+00:00",
+      "url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/57",
+      "use_cases": [
+        "An authorization server accepting JWT-SVIDs as client assertions that must decide how to detect replays."
+      ],
+      "use_cases_ja": [
+        "JWT-SVIDをクライアントアサーションとして受け付け、リプレイの検出方法を決める必要がある認可サーバー。"
+      ]
+    },
+    "pr:oauth-wg/oauth-spiffe-client-authentication#59": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "PR clarifies client authentication steps and authorization server certificate requirements",
+      "headline_ja": "クライアント認証の手順と認可サーバーの証明書要件を明確化するPR",
+      "id": "pr:oauth-wg/oauth-spiffe-client-authentication#59",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The PR clarifies the client authentication process and the requirements on the authorization server's certificate (issue #26). The body does not say what the requirements are.",
+      "summary_ja": "クライアント認証の手順と、認可サーバーの証明書に対する要件を明確化するPRである（issue #26）。要件の内容は本文にない。",
+      "title": "oauth-wg/oauth-spiffe-client-authentication#59: Update X.509-SVID authentication and server certificate details",
+      "updated_at": "2026-11-01T22:07:05+00:00",
+      "url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/59",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "pr:oauth-wg/oauth-spiffe-client-authentication#60": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "PR registers spiffe_jwt, spiffe_x509 and spiffe_wit as token endpoint auth methods",
+      "headline_ja": "spiffe_jwt、spiffe_x509、spiffe_witをトークンエンドポイント認証方式として登録するPR",
+      "id": "pr:oauth-wg/oauth-spiffe-client-authentication#60",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "substantive",
+      "summary": "The PR adds spiffe_jwt, spiffe_x509 and spiffe_wit to the OAuth Token Endpoint Authentication Methods registry and updates section headings (issue #48). The body's note on heading renames is garbled and conflicts with PR #61's X509-SVID naming, so the final form is unclear.",
+      "summary_ja": "OAuth Token Endpoint Authentication Methodsレジストリに spiffe_jwt、spiffe_x509、spiffe_wit を追加し、節見出しを更新するPRである（issue #48）。見出しの改名に関する本文の記述は不明瞭で、PR #61のX509-SVID表記と食い違うため、最終形は不明である。",
+      "title": "oauth-wg/oauth-spiffe-client-authentication#60: Refactor section headings and register authentication methods",
+      "updated_at": "2026-11-01T22:07:05+00:00",
+      "url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/60",
+      "use_cases": [
+        "A client registering or advertising a SPIFFE-based token_endpoint_auth_method value.",
+        "An AS implementer adding recognised SPIFFE method identifiers."
+      ],
+      "use_cases_ja": [
+        "SPIFFEベースの token_endpoint_auth_method の値を登録または通知するクライアント。",
+        "SPIFFEの方式識別子を認識するよう実装する認可サーバーの開発者。"
+      ]
+    },
+    "pr:oauth-wg/oauth-spiffe-client-authentication#61": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "PR renames X.509-SVID to X509-SVID to match SPIFFE spec naming",
+      "headline_ja": "SPIFFE仕様の表記に合わせ、X.509-SVIDをX509-SVIDに改めるPR",
+      "id": "pr:oauth-wg/oauth-spiffe-client-authentication#61",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The PR aligns terminology on X509-SVID, since SPIFFE specs use X.509 SVID or X509-SVID but never X.509-SVID, and makes related consistency adjustments (issue #45).",
+      "summary_ja": "SPIFFE仕様は X.509 SVID または X509-SVID を使い、X.509-SVID は使わないため、表記をX509-SVIDに揃えるPRである（issue #45）。関連する一貫性の調整も含む。",
+      "title": "oauth-wg/oauth-spiffe-client-authentication#61: Refine terminology and consistency for SVIDs",
+      "updated_at": "2026-11-01T22:07:05+00:00",
+      "url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/61",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "pr:oauth-wg/oauth-spiffe-client-authentication#62": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "PR clarifies how X509-SVID client authentication is selected and when client_id is required",
+      "headline_ja": "X509-SVIDクライアント認証の選択方法とclient_idの要件を明確化するPR",
+      "id": "pr:oauth-wg/oauth-spiffe-client-authentication#62",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The PR clarifies client authentication method selection and requirements for the client_id parameter (issue #31). The body gives no detail on the new rules.",
+      "summary_ja": "クライアント認証方式の選択と、client_idパラメーターの要件を明確化するPRである（issue #31）。新しい規則の詳細は本文にない。",
+      "title": "oauth-wg/oauth-spiffe-client-authentication#62: Update X.509-SVID client authentication details",
+      "updated_at": "2026-11-01T22:07:05+00:00",
+      "url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/62",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "pr:oauth-wg/oauth-spiffe-client-authentication#63": {
+      "diagram": "flowchart LR\n  C[Client metadata] -->|methods_supported lists SPIFFE methods| AS[Authorization server]\n  C -->|auth_method gives preferred one| AS\n  AS -->|selects from either parameter| X[X509-SVID client authentication]",
+      "first_seen": "2026-11-01",
+      "headline": "PR lets clients list several SPIFFE auth methods via token_endpoint_auth_methods_supported",
+      "headline_ja": "クライアントが token_endpoint_auth_methods_supported で複数のSPIFFE認証方式を示せるようにするPR",
+      "id": "pr:oauth-wg/oauth-spiffe-client-authentication#63",
+      "kind": "pull-request",
+      "related": [
+        {
+          "name": "openid/connect",
+          "note": "The multi-valued parameter comes from OpenID Connect RP Metadata Choices.",
+          "note_ja": "複数値パラメーターはOpenID Connect RP Metadata Choicesに由来する。",
+          "track": "openid"
+        }
+      ],
+      "significance": "substantive",
+      "summary": "RFC 7591's token_endpoint_auth_method holds one value, so clients cannot declare multiple SPIFFE methods. The PR uses the multi-valued token_endpoint_auth_methods_supported parameter from OpenID Connect RP Metadata Choices, already in the IANA registry and so usable by Client ID Metadata Documents. Clients list methods there and SHOULD also send token_endpoint_auth_method with a preferred one, so RFC 7591-only servers do not default to client_secret_basic. The AS selects X509-SVID authentication from either parameter. No new parameters are defined; the reference is informative.",
+      "summary_ja": "RFC 7591の token_endpoint_auth_method は単一値のため、クライアントは複数のSPIFFE方式を宣言できない。このPRは、OpenID Connect RP Metadata Choicesの複数値パラメーター token_endpoint_auth_methods_supported を使う。これはIANAレジストリに登録済みで、Client ID Metadata Documentsでも利用できる。クライアントはここに方式を列挙し、RFC 7591のみ実装する認可サーバーが client_secret_basic に落ちないよう、希望する方式を token_endpoint_auth_method にも送るべき（SHOULD）とされる。認可サーバーは両パラメーターからX509-SVID認証を選択する。新規パラメーターは定義せず、参照は参考文献扱いである。",
+      "title": "oauth-wg/oauth-spiffe-client-authentication#63: Enhance metadata and interoperability for SPIFFE client auth",
+      "updated_at": "2026-11-01T22:07:05+00:00",
+      "url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/63",
+      "use_cases": [
+        "A workload using a CIMD that supports both X509-SVID and JWT-SVID client authentication.",
+        "An AS that implements only RFC 7591 and must avoid falling back to client_secret_basic."
+      ],
+      "use_cases_ja": [
+        "X509-SVIDとJWT-SVIDの両方のクライアント認証に対応する、CIMDを使うワークロード。",
+        "RFC 7591のみ実装し、client_secret_basic への既定動作を避けたい認可サーバー。"
+      ]
+    },
+    "pr:oauth-wg/oauth-spiffe-client-authentication#64": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "PR points client certificate validation to the X509-SVID validation rules",
+      "headline_ja": "クライアント証明書の検証をX509-SVIDの検証規則の参照に改めるPR",
+      "id": "pr:oauth-wg/oauth-spiffe-client-authentication#64",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The PR references the X509-SVID validation rules for clarity and consistency in client certificate validation (issue #52). It appears to defer to existing SPIFFE rules rather than define new ones, though no diff is provided.",
+      "summary_ja": "クライアント証明書の検証について、明確さと一貫性のためX509-SVIDの検証規則を参照するPRである（issue #52）。新規の規則を定めるのではなく既存のSPIFFEの規則に委ねるように読めるが、差分はない。",
+      "title": "oauth-wg/oauth-spiffe-client-authentication#64: Update client certificate validation rules",
+      "updated_at": "2026-11-01T22:07:05+00:00",
+      "url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/64",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "pr:oauth-wg/oauth-spiffe-client-authentication#65": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "PR clarifies the trust model for Client ID Metadata Documents and bundle endpoint configuration",
+      "headline_ja": "Client ID Metadata Documentsの信頼モデルとバンドルエンドポイント設定を明確化するPR",
+      "id": "pr:oauth-wg/oauth-spiffe-client-authentication#65",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The PR clarifies the trust model when Client ID Metadata Documents are used and updates bundle endpoint configuration details (issue #55). The body gives no specifics on the new text.",
+      "summary_ja": "Client ID Metadata Documentsを使う場合の信頼モデルを明確化し、バンドルエンドポイント設定の詳細を更新するPRである（issue #55）。新しい文面の詳細は本文にない。",
+      "title": "oauth-wg/oauth-spiffe-client-authentication#65: Update trust model and bundle endpoint configuration",
+      "updated_at": "2026-11-01T22:07:05+00:00",
+      "url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/65",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "pr:oauth-wg/oauth-spiffe-client-authentication#66": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "PR tidies client_id usage and examples and adjusts SPIFFE ID validation requirements",
+      "headline_ja": "client_idの使い方と例を整理し、SPIFFE IDの検証要件を調整するPR",
+      "id": "pr:oauth-wg/oauth-spiffe-client-authentication#66",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The PR updates client_id references and examples for consistency and adjusts validation requirements for SPIFFE IDs in client authentication (issue #50). The body notes the examples were generated by an AI tool. Without the diff, the actual validation change cannot be stated.",
+      "summary_ja": "client_idの参照と例を一貫させ、クライアント認証におけるSPIFFE IDの検証要件を調整するPRである（issue #50）。本文には、例はAIツールで生成したと記載されている。差分がないため、検証要件の具体的な変更は述べられない。",
+      "title": "oauth-wg/oauth-spiffe-client-authentication#66: Refactor client_id usage and examples in draft",
+      "updated_at": "2026-11-01T22:07:05+00:00",
+      "url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/66",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "pr:oauth-wg/oauth-spiffe-client-authentication#68": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "Nits PR updating the consensus status and wording in the SPIFFE client auth draft",
+      "headline_ja": "SPIFFEクライアント認証ドラフトの合意状況と文言を整えるnit修正のPR",
+      "id": "pr:oauth-wg/oauth-spiffe-client-authentication#68",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The PR body says it updates the consensus status, clarifies terminology and descriptions, and fixes nits for consistency in client authentication requirements (issue #67). No diff is available, so the exact changes are unknown.",
+      "summary_ja": "PR本文によると、合意状況の更新、用語や記述の明確化、クライアント認証要件の一貫性に関するnit修正を行う（issue #67）。差分は提供されておらず、具体的な変更内容は不明である。",
+      "title": "oauth-wg/oauth-spiffe-client-authentication#68: Address Nits",
+      "updated_at": "2026-11-01T22:07:05+00:00",
+      "url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/68",
+      "use_cases": [],
+      "use_cases_ja": []
     }
   },
-  "overflow": [],
+  "overflow": [
+    {
+      "title": "oauth-wg/oauth-spiffe-client-authentication#58: Update SPIFFE bundle endpoint authentication details",
+      "url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/58"
+    },
+    {
+      "title": "oauth-wg/oauth-spiffe-client-authentication#56: Enhance SPIFFE client authentication guidance",
+      "url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/56"
+    }
+  ],
   "triage": {
     "draft-ietf-oauth-deferred-token-response": {
       "date": "2026-11-01",
@@ -414,6 +772,24 @@
       "date": "2026-11-01",
       "priority": "low",
       "reason": "-23 is only minor editorial fixes and regenerated examples."
+    },
+    "draft-ietf-oauth-spiffe-client-auth": {
+      "date": "2026-11-01",
+      "priority": "high",
+      "reason": "A batch of PRs (#57-#68) changes replay guidance, auth method registration, and multi-method metadata.",
+      "reason_ja": "PR #57〜#68でリプレイ指針、認証方式の登録、複数方式のメタデータが変更されている。"
+    },
+    "draft-ietf-oauth-transaction-tokens": {
+      "date": "2026-11-01",
+      "priority": "low",
+      "reason": "Only a new implementation-report issue (#373) with one comment; no text change.",
+      "reason_ja": "実装報告のissue（#373）が1件あるのみで、文面の変更はない。"
+    },
+    "draft-ietf-oauth-v2-1": {
+      "date": "2026-11-01",
+      "priority": "high",
+      "reason": "Seven new issues and 31 closed, several tagged ietf-127, including MUST vs SHOULD in §3.2.3 and invalid_client.",
+      "reason_ja": "新規issue 7件、クローズ31件で、ietf-127ラベル付きのものもあり、§3.2.3のMUST/SHOULDやinvalid_clientを含む。"
     }
   }
 }

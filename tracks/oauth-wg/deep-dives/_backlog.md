@@ -1,6 +1,6 @@
 # OAuth WG Backlog (2026-11-01)
 
-- generated_at_utc: `2026-11-01T17:56:53+00:00`
+- generated_at_utc: `2026-11-01T22:05:00+00:00`
 
 - [ ] `draft-ietf-oauth-sd-jwt-vc` score=125 updated=2026-10-31T18:37:09Z
 - [ ] `draft-ietf-oauth-identity-assertion-authz-grant` score=90 updated=2026-10-31T00:32:39Z
@@ -28,6 +28,9 @@ Moved by this week's material. candidates.json and the site list raised candidat
 - **high** `draft-ietf-oauth-deferred-token-response`: -01 restructures the draft with substrate invariants, a new deferred_interactive mode and new editors; also cited as the answer to ID-JAG consent.
 - **high** `draft-ietf-oauth-delegate-sd-jwt`: New WG draft defining a delegation chain format for agents; being used as a base by others.
 - **high** `draft-ietf-oauth-identity-assertion-authz-grant`: -06 adds new normative behaviour (client auth at IdP, invalid_request, mTLS binding, new metadata) and a large rewrite.
+- **high** `draft-ietf-oauth-spiffe-client-auth`: A batch of PRs (#57-#68) changes replay guidance, auth method registration, and multi-method metadata.
+- **high** `draft-ietf-oauth-v2-1`: Seven new issues and 31 closed, several tagged ietf-127, including MUST vs SHOULD in §3.2.3 and invalid_client.
 - **low** `draft-ietf-oauth-sd-jwt-vc`: -23 is only minor editorial fixes and regenerated examples.
+- **low** `draft-ietf-oauth-transaction-tokens`: Only a new implementation-report issue (#373) with one comment; no text change.
 
 <!-- triage:end -->
