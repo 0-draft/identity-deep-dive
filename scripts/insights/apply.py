@@ -42,8 +42,8 @@ MERMAID_FORBIDDEN = ("```", "%%{", "click ", "javascript:", "href", "callback", 
 # Anything that reads as an HTML tag or comment. Mermaid arrows (-->, ->>,
 # <-->) never put a letter, "/", "!" or "?" right after "<".
 HTML_LIKE = re.compile(r"<[A-Za-z/!?]")
-# After this many runs that could not explain the same staged changes, move
-# past them anyway (listed as not explained) instead of stalling the track.
+# After this many consecutive runs that staged changes but could not explain
+# them, move past them anyway (listed as not explained) instead of stalling.
 MAX_ATTEMPTS = 3
 SECTION_START = "<!-- insights:start -->"
 SECTION_END = "<!-- insights:end -->"
