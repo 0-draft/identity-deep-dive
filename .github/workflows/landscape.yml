@@ -28,6 +28,7 @@ jobs:
       - run: pip install requests
       - name: Refresh statuses and re-verify claims
         run: python scripts/landscape/refresh.py | tee -a "$GITHUB_STEP_SUMMARY"
+        shell: bash
       - name: Commit and push (rebase-retry)
         run: |
           git config user.name "github-actions[bot]"
