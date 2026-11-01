@@ -26,8 +26,15 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install requests
+      # The refresh exits 1 when anything was not verified. The file is still
+      # written (failed claims are marked, not dropped), so commit it first and
+      # fail the run afterwards.
       - name: Refresh statuses and re-verify claims
-        run: python scripts/landscape/refresh.py | tee -a "$GITHUB_STEP_SUMMARY"
+        id: refresh
+        run: |
+          set +e
+          python scripts/landscape/refresh.py | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "rc=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
         shell: bash
       - name: Commit and push (rebase-retry)
         run: |
@@ -42,4 +49,9 @@ jobs:
             sleep $((RANDOM % 10 + 5))
           done
           echo "push failed after 5 attempts"
+          exit 1
+      - name: Fail if anything was not verified
+        if: steps.refresh.outputs.rc != '0'
+        run: |
+          echo "::error::Some statuses or claims were not verified; see the job summary."
           exit 1
