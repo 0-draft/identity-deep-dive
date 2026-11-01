@@ -76,6 +76,28 @@ const STRINGS = {
   },
   footerCadence: { en: "Collected every 6 hours. Weekly digest on Mondays.", ja: "6 時間ごとに収集。週次ダイジェストは月曜。" },
   switchLang: { en: "日本語", ja: "English" },
+  navMap: { en: "Spec map", ja: "仕様マップ" },
+  mapTitle: { en: "The identity spec map", ja: "アイデンティティ仕様マップ" },
+  mapIntro: {
+    en: "OAuth, OpenID, workload identity and credential specifications by layer: where each one stands, what it builds on, and who documents support for it.",
+    ja: "OAuth、OpenID、ワークロードアイデンティティ、クレデンシャルの仕様をレイヤー別に並べた。各仕様の進捗、土台にしている仕様、対応を公式に文書化している製品をまとめている。",
+  },
+  mapAdoptionRule: {
+    en: "Adoption lists only support stated on the vendor's or project's own documentation, and a weekly check confirms the cited phrase is still on that page.",
+    ja: "利用状況には、ベンダーやプロジェクト自身のドキュメントに対応が明記されているものだけを載せている。引用した文言がそのページにまだあるかは毎週確認している。",
+  },
+  mapChecked: { en: "Statuses and sources checked", ja: "状態と出典の確認日時" },
+  mapRelations: { en: "Relations diagram", ja: "関係図" },
+  mapAdopters: { en: "documented adopters", ja: "件の公式な対応" },
+  mapAdoption: { en: "Documented support", ja: "公式に文書化された対応" },
+  mapNoAdoption: {
+    en: "No sourced support entries collected yet. This says nothing about how widely it is used.",
+    ja: "出典付きの対応情報はまだ集めていない。普及していないという意味ではない。",
+  },
+  mapNotReverified: { en: "Not re-verified at the last check", ja: "前回の確認で再確認できなかった" },
+  mapVerifiedOn: { en: "verified", ja: "確認" },
+  mapSource: { en: "source", ja: "出典" },
+  mapDetails: { en: "Every spec", ja: "仕様ごとの詳細" },
   deepDives: { en: "Deep dives", ja: "ディープダイブ" },
   deepDivesNote: {
     en: "Longer write-ups of one draft or repository: how it works, who it affects, what changed and what is still open.",
