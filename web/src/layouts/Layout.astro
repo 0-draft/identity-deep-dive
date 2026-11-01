@@ -4,15 +4,19 @@ import "../styles/global.css";
 interface Props {
   title: string;
   description?: string;
+  current?: string;
 }
-const { title, description = "Identity Deep Dive — daily and weekly reports across IETF WIMSE, OAuth WG, and OpenID." } = Astro.props;
+const {
+  title,
+  description = "What changed this week in IETF WIMSE, the OAuth WG and the OpenID Foundation, explained in a line, a diagram and the use cases it touches.",
+  current = "",
+} = Astro.props;
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const navLinks = [
-  { href: `${base}/`, label: "Overview" },
-  { href: `${base}/ietf-wimse/`, label: "IETF WIMSE" },
-  { href: `${base}/oauth-wg/`, label: "OAuth WG" },
-  { href: `${base}/openid/`, label: "OpenID" },
+  { id: "ietf-wimse", href: `${base}/ietf-wimse/`, label: "WIMSE" },
+  { id: "oauth-wg", href: `${base}/oauth-wg/`, label: "OAuth WG" },
+  { id: "openid", href: `${base}/openid/`, label: "OpenID" },
 ];
 ---
 
@@ -24,25 +28,28 @@ const navLinks = [
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap"
       rel="stylesheet"
     />
     <meta name="description" content={description} />
     <title>{title}</title>
   </head>
   <body>
-    <div class="min-h-screen flex flex-col">
-      <header class="bg-white/80 backdrop-blur sticky top-0 z-30 border-b border-slate-200">
-        <div class="mx-auto max-w-6xl px-6 py-4 flex flex-wrap items-center justify-between gap-4">
-          <a href={`${base}/`} class="flex items-center gap-2 text-slate-900 font-semibold tracking-tight">
-            <span class="inline-block w-2.5 h-2.5 rounded-full bg-blue-600"></span>
+    <div class="flex min-h-screen flex-col">
+      <header class="border-b border-rule bg-surface">
+        <div class="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-3 sm:px-6">
+          <a href={`${base}/`} class="headline text-lg text-ink no-underline hover:no-underline">
             Identity Deep Dive
           </a>
-          <nav class="flex flex-wrap gap-1 text-sm font-medium">
+          <nav aria-label="Tracks" class="flex flex-wrap gap-1 text-sm">
             {navLinks.map((l) => (
               <a
                 href={l.href}
-                class="px-3 py-1.5 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100"
+                aria-current={current === l.id ? "page" : undefined}
+                class:list={[
+                  "rounded px-2.5 py-1 no-underline hover:bg-paper hover:no-underline",
+                  current === l.id ? "bg-paper font-semibold text-ink" : "text-muted",
+                ]}
               >
                 {l.label}
               </a>
@@ -50,18 +57,72 @@ const navLinks = [
           </nav>
         </div>
       </header>
-      <main class="flex-1 mx-auto max-w-6xl w-full px-6 py-10">
+      <main class="mx-auto w-full max-w-6xl flex-1 px-4 py-8 sm:px-6 sm:py-12">
         <slot />
       </main>
-      <footer class="border-t border-slate-200 bg-white">
-        <div class="mx-auto max-w-6xl px-6 py-6 text-xs text-slate-500 flex flex-wrap items-center justify-between gap-2">
+      <footer class="border-t border-rule bg-surface">
+        <div class="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-5 text-sm text-muted sm:px-6">
           <span>
-            Auto-generated from
-            <a class="text-blue-600 hover:underline" href="https://github.com/0-draft/identity-deep-dive">0-draft/identity-deep-dive</a>.
+            Built from <a href="https://github.com/0-draft/identity-deep-dive">0-draft/identity-deep-dive</a>. Explanations are machine-drafted from the linked sources, which stay authoritative.
           </span>
-          <span>Reports refresh every 6 hours · weekly Mon 08:00 UTC.</span>
+          <span>Collected every 6 hours. Weekly digest on Mondays.</span>
         </div>
       </footer>
     </div>
+
+    <script>
+      // Diagrams render when their disclosure opens, so closed ones cost nothing
+      // and mermaid measures them at their real width.
+      const frames = document.querySelectorAll<HTMLDetailsElement>("details[data-diagram]");
+      if (frames.length) {
+        let ready: Promise<typeof import("mermaid").default> | null = null;
+        const load = () =>
+          (ready ??= import("mermaid").then(({ default: mermaid }) => {
+            mermaid.initialize({
+              startOnLoad: false,
+              securityLevel: "strict",
+              theme: "base",
+              fontFamily: "Public Sans, system-ui, sans-serif",
+              // Natural size, scrolled sideways on a phone. Shrunk to fit,
+              // a sequence diagram's labels become unreadable.
+              sequence: { useMaxWidth: false },
+              flowchart: { useMaxWidth: false },
+              themeVariables: {
+                primaryColor: "#ffffff",
+                primaryBorderColor: "#586274",
+                primaryTextColor: "#1a2230",
+                lineColor: "#586274",
+                actorBkg: "#ffffff",
+                actorBorder: "#1a2230",
+                noteBkgColor: "#eef3f1",
+                noteBorderColor: "#0b6e60",
+                signalColor: "#1a2230",
+                signalTextColor: "#1a2230",
+              },
+            });
+            return mermaid;
+          }));
+        const render = async (frame: HTMLDetailsElement) => {
+          const nodes = Array.from(frame.querySelectorAll<HTMLElement>("pre.mermaid:not([data-processed])"));
+          if (!nodes.length) return;
+          const mermaid = await load();
+          for (const node of nodes) {
+            const source = node.textContent ?? "";
+            try {
+              await mermaid.parse(source);
+              await mermaid.run({ nodes: [node] });
+            } catch {
+              // Keep the source as text: still readable, unlike an error image.
+              node.textContent = source;
+              node.setAttribute("data-processed", "failed");
+            }
+          }
+        };
+        frames.forEach((frame) => {
+          if (frame.open) render(frame);
+          frame.addEventListener("toggle", () => frame.open && render(frame));
+        });
+      }
+    </script>
   </body>
 </html>

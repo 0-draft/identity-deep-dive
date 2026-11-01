@@ -1,8 +1,10 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import CandidateList from "../../components/CandidateList.astro";
+import InsightItem from "../../components/InsightItem.astro";
 import {
   TRACKS,
+  briefing,
   latestDaily,
   latestWeekly,
   topCandidates,
@@ -18,88 +20,64 @@ const { track } = Astro.params;
 const trackId = track as TrackId;
 const meta = TRACKS.find((t) => t.id === trackId)!;
 
-const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const daily = latestDaily(trackId);
 const weekly = latestWeekly(trackId);
 const candidates = topCandidates(trackId, 12);
+const { brief, items } = briefing(trackId);
+const updated = brief
+  ? new Date(brief.at).toLocaleString("en-GB", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "UTC" }) + " UTC"
+  : null;
 ---
 
-<Layout title={`${meta.name} — Identity Deep Dive`}>
-  <nav class="text-xs text-slate-500 mb-4">
-    <a class="hover:text-blue-600" href={`${base}/`}>Overview</a>
-    <span class="mx-1.5">/</span>
-    <span>{meta.name}</span>
-  </nav>
-
-  <header class="mb-10">
-    <div class="flex flex-wrap items-end justify-between gap-3">
-      <div>
-        <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
-          {meta.name}
-        </h1>
-        <p class="mt-2 text-slate-600">{meta.scope}</p>
-      </div>
-      <div class="flex flex-wrap gap-2 text-xs">
-        {meta.href && (
-          <a
-            class="px-3 py-1.5 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200"
-            href={meta.href}
-            target="_blank"
-            rel="noreferrer"
-          >
-            ↗ Source
-          </a>
-        )}
-        <a
-          class="px-3 py-1.5 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200"
-          href={`https://github.com/0-draft/identity-deep-dive/tree/main/tracks/${trackId}`}
-          target="_blank"
-          rel="noreferrer"
-        >
-          ↗ Track repo
-        </a>
-      </div>
-    </div>
+<Layout title={`${meta.name}: Identity Deep Dive`} current={trackId}>
+  <header class="mb-10 max-w-[70ch]">
+    <h1 class="headline text-3xl sm:text-4xl">{meta.name}</h1>
+    <p class="mt-2 text-muted">{meta.scope}.</p>
+    <p class="mt-1 flex flex-wrap gap-x-5 text-sm">
+      {meta.href && <a href={meta.href} rel="noreferrer">{meta.org} page</a>}
+      <a href={`https://github.com/0-draft/identity-deep-dive/tree/main/tracks/${trackId}`} rel="noreferrer">Collected data on GitHub</a>
+    </p>
+    {brief && (
+      <blockquote class="mt-6 border-l-[3px] border-ink pl-5">
+        <p class="headline text-[1.15rem] font-medium sm:text-[1.35rem]">{brief.text}</p>
+        <p class="mt-2 text-sm text-muted">Updated {updated}</p>
+      </blockquote>
+    )}
   </header>
 
-  <div class="grid gap-8 lg:grid-cols-3">
-    <div class="lg:col-span-2 space-y-8">
-      {daily && (
-        <section class="rounded-xl border border-slate-200 bg-white p-6 sm:p-8">
-          <div class="flex items-baseline justify-between gap-3 mb-4">
-            <h2 class="text-base font-semibold text-slate-900">
-              Daily Report
-              <span class="ml-2 text-xs font-mono font-normal text-slate-500">{daily.name.replace(/\.md$/, "")}</span>
-            </h2>
-          </div>
-          <article class="prose-report" set:html={renderMarkdown(daily.body)} />
-        </section>
+  <div class="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_21rem]">
+    <section aria-labelledby="changes">
+      <h2 id="changes" class="headline text-xl">What changed</h2>
+      {items.length === 0 ? (
+        <p class="mt-3 max-w-[60ch] text-muted">
+          No explanations in the last seven days. The tables below still show the latest collected state.
+        </p>
+      ) : (
+        <div class="mt-4 space-y-3">
+          {items.map((item, i) => <InsightItem item={item} openDiagram={i === 0} />)}
+        </div>
       )}
 
-      {weekly && (
-        <section class="rounded-xl border border-slate-200 bg-white p-6 sm:p-8">
-          <div class="flex items-baseline justify-between gap-3 mb-4">
-            <h2 class="text-base font-semibold text-slate-900">
-              Weekly Digest
-              <span class="ml-2 text-xs font-mono font-normal text-slate-500">{weekly.name.replace(/\.md$/, "")}</span>
-            </h2>
-          </div>
-          <article class="prose-report" set:html={renderMarkdown(weekly.body)} />
-        </section>
-      )}
+      <div class="mt-12 space-y-4">
+        {daily && (
+          <details class="disclosure rounded-md border border-rule bg-surface px-5 py-4">
+            <summary>Full daily report for {daily.name.replace(/\.md$/, "")}</summary>
+            <article class="prose-report mt-4" set:html={renderMarkdown(daily.body)} />
+          </details>
+        )}
+        {weekly && (
+          <details class="disclosure rounded-md border border-rule bg-surface px-5 py-4">
+            <summary>Weekly digest {weekly.name.replace(/\.md$/, "")}</summary>
+            <article class="prose-report mt-4" set:html={renderMarkdown(weekly.body)} />
+          </details>
+        )}
+      </div>
+    </section>
 
-      {!daily && !weekly && (
-        <section class="rounded-xl border border-dashed border-slate-300 bg-white p-8 text-center text-sm text-slate-500">
-          No reports generated yet.
-        </section>
-      )}
-    </div>
-
-    <aside class="space-y-6 lg:sticky lg:top-24 self-start">
-      <section>
-        <h2 class="text-base font-semibold text-slate-900 mb-3">Top Deep-Dive Candidates</h2>
-        <CandidateList candidates={candidates} />
-      </section>
+    <aside aria-labelledby="queue" class="self-start lg:sticky lg:top-6">
+      <h2 id="queue" class="headline text-xl">Deep-dive queue</h2>
+      <p class="mt-1 mb-4 text-sm text-muted">Ranked by activity and lifecycle. Raised or lowered where this week's material gave a reason.</p>
+      <CandidateList candidates={candidates} />
     </aside>
   </div>
 </Layout>

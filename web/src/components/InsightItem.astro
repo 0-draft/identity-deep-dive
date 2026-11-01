@@ -1,0 +1,92 @@
+---
+import { SIGNIFICANCE_LABEL, trackName, type Insight } from "../lib/tracks";
+
+interface Props {
+  item: Insight;
+  /** "lead": the one item the home page opens with, everything shown.
+   *  "full": a track page entry, summary shown, extras behind disclosures.
+   *  "compact": a feed row, only the line and the source until opened. */
+  variant?: "lead" | "full" | "compact";
+  showTrack?: boolean;
+  openDiagram?: boolean;
+}
+const { item, variant = "full", showTrack = false, openDiagram = false } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const hasAffects = item.use_cases.length > 0 || item.related.length > 0;
+const headingSize = { lead: "text-[1.75rem] sm:text-[2.1rem]", full: "text-[1.3rem]", compact: "text-[1.15rem]" }[variant];
+---
+
+<article class="item bg-surface px-5 py-5 sm:px-6" data-sig={item.significance}>
+  <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
+    <span class="sig">{SIGNIFICANCE_LABEL[item.significance]}</span>
+    {showTrack && <a class="text-[13px] text-muted" href={`${base}/${item.track}/`}>{trackName(item.track)}</a>}
+  </div>
+
+  <h3 class:list={["headline mt-2 text-ink", headingSize]}>{item.headline || item.title}</h3>
+
+  {variant !== "compact" && (
+    <p class:list={["mt-3 max-w-[68ch] text-muted", variant === "lead" ? "text-[17px]" : "text-[15px]"]}>{item.summary}</p>
+  )}
+
+  <p class="mt-2.5 text-sm">
+    <a href={item.url} rel="noreferrer">{item.title}</a>
+  </p>
+
+  {variant === "compact" ? (
+    <details class="disclosure mt-3" data-diagram={item.diagram ? "" : undefined}>
+      <summary>Read the explanation</summary>
+      <p class="mt-3 max-w-[68ch] text-[15px] text-muted">{item.summary}</p>
+      {item.diagram && (
+        <div class="diagram-frame">
+          <pre class="mermaid">{item.diagram}</pre>
+        </div>
+      )}
+      {item.use_cases.length > 0 && (
+        <ul class="mt-3 max-w-[68ch] list-disc space-y-1.5 pl-5 text-[15px]">
+          {item.use_cases.map((u) => <li>{u}</li>)}
+        </ul>
+      )}
+      {item.related.length > 0 && (
+        <ul class="mt-3 max-w-[68ch] space-y-1.5 text-[15px]">
+          {item.related.map((r) => (
+            <li>
+              Related in <a href={`${base}/${r.track}/`}>{trackName(r.track)}</a>: <code class="text-[13px]">{r.name}</code>. {r.note}
+            </li>
+          ))}
+        </ul>
+      )}
+    </details>
+  ) : (
+    <>
+      {item.diagram && (
+        <details class="disclosure mt-4" data-diagram open={openDiagram}>
+          <summary>How it works</summary>
+          <div class="diagram-frame">
+            <pre class="mermaid">{item.diagram}</pre>
+          </div>
+        </details>
+      )}
+      {hasAffects && (
+        <details class="disclosure mt-3" open={variant === "lead"}>
+          <summary>Who this affects</summary>
+          <div class="mt-3 max-w-[68ch] space-y-3 text-[15px]">
+            {item.use_cases.length > 0 && (
+              <ul class="list-disc space-y-1.5 pl-5">
+                {item.use_cases.map((u) => <li>{u}</li>)}
+              </ul>
+            )}
+            {item.related.length > 0 && (
+              <ul class="space-y-1.5">
+                {item.related.map((r) => (
+                  <li>
+                    Related in <a href={`${base}/${r.track}/`}>{trackName(r.track)}</a>: <code class="text-[13px]">{r.name}</code>. {r.note}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </details>
+      )}
+    </>
+  )}
+</article>
