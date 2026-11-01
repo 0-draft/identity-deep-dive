@@ -22,7 +22,7 @@ Informative references listed in Section 12.2:
 - Structure: the section "Use In Other Protocols" is removed, Sections 5 and 6 are retitled "Application-Layer Credentials" and "Transport-Layer Credentials", a Section 5.2 on audience and a Section 5.1.3 on WIT validation are added, and the Security Considerations are renumbered (new Section 9.2).
 - Section 1.2: the mapping API requirement is replaced by caller and callee conditions and a reference to RFC 9525 for server identity.
 - Section 3: validation only against anchors bound to the trust domain in the Workload Identifier; the issuer must be known and preconfigured; the explicit prohibition on `iss`-based key lookup is removed in favour of Section 9.1 and the removal of `iss`-based key distribution.
-- Section 4: the paragraph about several labels for one runtime is removed; exactly one identifier per credential is kept.
+- Section 4: the paragraph on deployments with several labels for one runtime (a stable service identity and an instance, say) is removed. It put the identity used for the access decision in the one credential and forbade encoding a second identifier for correlation. Exactly one identifier per credential is kept.
 - Section 5.1: `sub` and `jti` definitions reworded, `jti` tied to deny-list or status list deployments, `typ` guidance now cites the RFC 8725 successor draft.
 - Section 5.3: HTTP 401 allowed when a `WWW-Authenticate` mechanism exists.
 - Section 9: revocation stance for WIT and WIC, exposure after deprovisioning, key-protection wording, and the clarification that WIT and PoP are not used for mutual TLS.
