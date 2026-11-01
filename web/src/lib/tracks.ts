@@ -144,7 +144,9 @@ export const SIGNIFICANCE_LABEL: Record<Significance, { en: string; ja: string }
   "new-proposal": { en: "New proposal", ja: "新しい提案" },
   discussion: { en: "Discussion", ja: "議論" },
   editorial: { en: "Editorial", ja: "編集上の変更" },
-  routine: { en: "Minor", ja: "軽微な変更" },
+  // "routine" covers editorial-level items and ones whose material was too
+  // thin to explain (a failed fetch), so the label says both.
+  routine: { en: "Minor or unclear", ja: "軽微・詳細不明" },
 };
 
 export const SIGNIFICANCE_RANK: Record<Significance, number> = {

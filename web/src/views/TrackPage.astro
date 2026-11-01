@@ -21,7 +21,9 @@ const { brief, items: allItems } = briefing(track);
 const ITEM_LIMIT = 30;
 const items = allItems.filter((i) => i.significance !== "routine").slice(0, ITEM_LIMIT);
 // Minor items are listed last, folded, so they do not end the page.
-const minor = allItems.filter((i) => i.significance === "routine");
+const MINOR_LIMIT = 20;
+const minorAll = allItems.filter((i) => i.significance === "routine");
+const minor = minorAll.slice(0, MINOR_LIMIT);
 const isIetf = track !== "openid";
 ---
 
@@ -61,10 +63,13 @@ const isIetf = track !== "openid";
       )}
       {minor.length > 0 && (
         <details class="disclosure mt-6">
-          <summary>{t(lang, "minorChanges")} ({minor.length})</summary>
+          <summary>{t(lang, "minorChanges")} ({minorAll.length})</summary>
           <div class="mt-3 space-y-3">
             {minor.map((item) => <InsightItem item={item} lang={lang} variant="compact" />)}
           </div>
+          {minorAll.length > MINOR_LIMIT && (
+            <p class="mt-3 text-sm text-muted">+{minorAll.length - MINOR_LIMIT} {t(lang, "andMore")}</p>
+          )}
         </details>
       )}
 
