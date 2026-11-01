@@ -111,6 +111,27 @@ def clean(markdown: str) -> str:
     return text + "\n"
 
 
+SUBJECT_URL = re.compile(r"https://(datatracker\.ietf\.org/doc/[a-z0-9-]+/\d{2}/|github\.com/openid/[A-Za-z0-9._-]+)")
+SUBJECT_NAME = re.compile(r"draft-[a-z0-9-]+|openid/[A-Za-z0-9._-]+")
+
+
+def valid_subject(subject: dict) -> bool:
+    """Every field of subject.json that reaches a path, git or the PR body."""
+    track, slug = subject.get("track"), str(subject.get("slug", ""))
+    rev = subject.get("rev")
+    return (
+        track in TRACKS
+        and is_safe_slug(slug)
+        and subject.get("branch") == f"deep-dive/{track}/{slug}"
+        and bool(SUBJECT_NAME.fullmatch(str(subject.get("name", ""))))
+        and bool(SUBJECT_URL.fullmatch(str(subject.get("url", ""))))
+        and (rev is None or bool(re.fullmatch(r"\d{2}", str(rev))))
+        and isinstance(subject.get("candidate", ""), str)
+        and len(subject.get("candidate", "")) <= 300
+        and "\n" not in subject.get("candidate", "")
+    )
+
+
 def no_mentions(text: str) -> str:
     """Keep "@name" in a PR body from notifying a real account."""
     return re.sub(r"(?<![\w.])@(?=[A-Za-z0-9])", "@\u200b", text)
@@ -126,11 +147,7 @@ def main() -> int:
     subject = json.loads((args.work / "subject.json").read_text(encoding="utf-8"))
     # subject.json crosses from the job that ran the model; check it again
     # before any of it becomes a path, a branch name or a git argument.
-    if (
-        subject.get("track") not in TRACKS
-        or not is_safe_slug(str(subject.get("slug", "")))
-        or subject.get("branch") != f"deep-dive/{subject.get('track')}/{subject.get('slug')}"
-    ):
+    if not valid_subject(subject):
         raise SystemExit("write: subject.json does not describe a valid subject")
     raw = args.result.read_text(encoding="utf-8").strip()
     if not raw:

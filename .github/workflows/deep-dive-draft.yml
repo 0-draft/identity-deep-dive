@@ -212,7 +212,8 @@ jobs:
             echo "branch=$(jq -r .branch "$WORK/subject.json")"
           } >> "$GITHUB_OUTPUT"
 
-      # The token only reaches the two commands that need it.
+      # The token lives only in this step's environment. git gets it through
+      # GIT_CONFIG_* (never argv or the remote URL); gh reads GH_TOKEN.
       - name: Push the branch and open the pull request
         if: steps.subject.outputs.found == 'true'
         env:

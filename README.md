@@ -72,7 +72,7 @@ cp -R templates/deep-dive tracks/<track>/deep-dives/<topic-name>
 
 ## Automation
 
-Three repo-root workflows in `.github/workflows/` fan out across all tracks:
+Three of the workflows in `.github/workflows/` run the tracks (the others build the site, run PR checks and review pull requests):
 
 - `daily-update.yml` — every six hours. A read-only `collect` job per track runs `make install && make update`, stages what is new since the last explained state (`data/normalized/insights_baseline.json`), and has Claude explain it with read-only tools and structured output. A separate `publish` job, with no model in it, validates the result with `scripts/insights/apply.py`, commits per track and pushes. Without the `CLAUDE_CODE_OAUTH_TOKEN` secret, or when Claude fails, the data still commits and the next runs try the same changes again; after three failed attempts they are listed as not explained and the baseline moves on.
 - `weekly-digest.yml` — runs `make install && make weekly` per track on Mondays 08:00 UTC.
