@@ -1,0 +1,38 @@
+name: Spec Map Evidence
+
+# Every OpenID status, external status and adoption claim on the spec map must
+# still have its evidence on its cited page. This fetches about 60 third-party
+# pages, so it runs only when the map's data or script changes; the weekly
+# refresh (landscape.yml) reports drift otherwise. The result is uploaded so a
+# PR that edits the curated sources can commit the matching status file.
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "data/landscape*.json"
+      - "scripts/landscape/**"
+      - ".github/workflows/landscape-check.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  landscape-evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      - name: Verify statuses and claims
+        run: python scripts/landscape/refresh.py --check --out "$RUNNER_TEMP/landscape-status.json" | tee -a "$GITHUB_STEP_SUMMARY"
+        shell: bash
+      - if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: landscape-status
+          path: ${{ runner.temp }}/landscape-status.json
+          if-no-files-found: ignore
