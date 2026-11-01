@@ -99,6 +99,18 @@ function readJsonOrNull<T = unknown>(p: string): T | null {
   }
 }
 
+// URLs come from collected data, not from the model, but they still end up in
+// href attributes: only http(s) gets through.
+export function safeUrl(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:" ? url.href : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
 export function topCandidates(id: TrackId, limit = 12): Candidate[] {
   const data = readJsonOrNull<{ candidates: any[] }>(path.join(trackDir(id), "data/normalized/candidates.json"));
   return (data?.candidates ?? []).slice(0, limit).map((c: any) => ({
@@ -107,7 +119,7 @@ export function topCandidates(id: TrackId, limit = 12): Candidate[] {
     score: id === "openid" ? Math.round((c.score ?? 0) * 10) / 10 : c.score,
     state_labels: c.state_labels,
     draft_name: c.draft_name,
-    url: c.html_url ?? c.url,
+    url: safeUrl(c.html_url ?? c.url),
     ai_priority: c.ai_priority,
     ai_note: c.ai_note ? plain(c.ai_note) : undefined,
   }));
@@ -136,7 +148,7 @@ export interface Insight {
   track: TrackId;
   kind: string;
   title: string;
-  url: string;
+  url?: string;
   first_seen: string;
   updated_at: string;
   headline: string;
@@ -178,6 +190,7 @@ export function briefing(id: TrackId): TrackBriefing {
     headline: plain(i.headline).replace(/^in short,\s*/i, "").replace(/^./, (c) => c.toUpperCase()),
     summary: plain(i.summary),
     title: plain(i.title),
+    url: safeUrl(i.url),
     use_cases: (i.use_cases ?? []).map(plain),
     related: (i.related ?? []).map((r) => ({ ...r, note: plain(r.note) })),
     significance: (i.significance in SIGNIFICANCE_RANK ? i.significance : "routine") as Significance,
