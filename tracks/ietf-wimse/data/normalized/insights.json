@@ -1,7 +1,4 @@
 {
-  "attempts": {
-    "count": 1
-  },
   "briefs": [
     {
       "at": "2026-11-01T10:12:31+00:00",
@@ -11,6 +8,11 @@
       "at": "2026-11-01T11:50:41+00:00",
       "text": "The only change is draft-thaha-wimse-agent-evidence-binding-02. It changes admission so a serving party uses only the current actor, as RFC 8693 Section 4.1 requires, and treats the Actor Chain as attribution, not authority.",
       "text_ja": "変更は draft-thaha-wimse-agent-evidence-binding-02 のみである。サービス提供側は RFC 8693 の 4.1 節に従い現在のアクターだけで受け入れ判断を行い、Actor Chain は権限ではなく帰属情報として扱うことになった。"
+    },
+    {
+      "at": "2026-11-01T22:07:04+00:00",
+      "text": "The most significant item is the IESG Last Call on draft-ietf-wimse-workload-identity-practices-08 (comments due 2026-11-13). A first review proposes making sidecar-held keys and proof of possession explicit. The rest is mostly pre-IETF 127 list discussion on agent delegation and audit records, with no WG draft text changes.",
+      "text_ja": "最も重要なのは draft-ietf-wimse-workload-identity-practices-08 の IESG Last Call（コメント期限は 2026-11-13）で、サイドカーによる鍵保持と proof of possession を明記する修正案が最初のレビューとして出た。残りは IETF 127 に向けたエージェント委任と監査記録に関するメーリングリストの議論が中心で、WG ドラフトの本文変更はない。"
     }
   ],
   "items": {
@@ -278,6 +280,96 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "mail:91TeMxN3w_c1-rqionvYSDjph4w": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "The practices draft is in IESG Last Call, and the first review asks to make sidecar-held keys and proof of possession explicit.",
+      "headline_ja": "practices ドラフトが IESG Last Call に入り、最初のレビューでサイドカーによる鍵保持と proof of possession の明記が提案された。",
+      "id": "mail:91TeMxN3w_c1-rqionvYSDjph4w",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The IESG started a Last Call on draft-ietf-wimse-workload-identity-practices-08 as an Informational RFC, with comments due 2026-11-13. A reviewer proposes three text changes. Section 5.6 would say that the workload or a trusted infrastructure component acting for it performs proof of possession. Section 5.1.5 would treat credential locations and signing capability as security boundaries, noting that a compromised workload can still misuse an authorized signing capability. Section 4.5 would mention that a sidecar can manage keys and generate request-bound proofs for outbound HTTP requests. The reviewer says these changes do not weaken the workload-instance binding requirement.",
+      "summary_ja": "IESG が draft-ietf-wimse-workload-identity-practices-08 を Informational RFC として Last Call にかけており、コメント期限は 2026-11-13 である。レビュー担当者は本文に三つの変更を提案している。5.6 節では、proof of possession を行うのはワークロード自身またはその代理を務める信頼できるインフラ構成要素であると明記する。5.1.5 節では、認証情報の場所と署名機能をセキュリティ境界として扱い、侵害されたワークロードは許可済みの署名機能を悪用し得ると記す。4.5 節では、サイドカーが鍵を管理し、送信 HTTP リクエストに束縛された証明を生成できる構成に触れる。提案者は、ワークロードインスタンスへの束縛要件は弱まらないとしている。",
+      "title": "Last Call: <draft-ietf-wimse-workload-identity-practices-08.txt> (Workload Identity Practices) to Informational RFC",
+      "updated_at": "2026-11-01T22:07:04+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/91TeMxN3w_c1-rqionvYSDjph4w/",
+      "use_cases": [
+        "A service mesh operator whose sidecar holds the workload key and signs HTTP request proofs wants the practices RFC to describe that model.",
+        "A platform team deciding how to restrict a signing agent by audience or token type can cite the proposed Section 5.1.5 text."
+      ],
+      "use_cases_ja": [
+        "サイドカーがワークロードの鍵を保持して HTTP リクエストの証明に署名するサービスメッシュの運用者は、このモデルが practices RFC に記述されることを望む。",
+        "署名エージェントをオーディエンスやトークン種別で制限する方法を検討するプラットフォームチームは、提案された 5.1.5 節の文面を参照できる。"
+      ]
+    },
+    "mail:EDu91EnPTVXXCO4bgtlrUknXLi4": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "A new individual draft proposes a cryptographic witness that separates untrusted data context from control-plane tool calls by AI agents.",
+      "headline_ja": "AI エージェントのツール呼び出しについて、信頼できないデータ文脈と制御プレーンを分離する暗号学的な証跡を提案する新規個人ドラフト。",
+      "id": "mail:EDu91EnPTVXXCO4bgtlrUknXLi4",
+      "kind": "mail",
+      "related": [],
+      "significance": "new-proposal",
+      "summary": "The author announces draft-durga-wimse-ctx-isolation-00 and draft-durga-agenttrust-trace-verification-00. The argument is that authenticated workloads can still be confused deputies when an agent builds tool parameters from untrusted retrieved content, third-party MCP outputs or peer A2A messages. The proposed ctx_isolation_witness structure and policy-epoch binding (policy_manifest_sha256) would provide a taint-lineage witness. The author asks for list review and a possible 5-minute lightning slot at IETF 127 (Nov 14-20, 2026), and cites a benchmark dataset. The message gives no protocol details beyond these names.",
+      "summary_ja": "著者が draft-durga-wimse-ctx-isolation-00 と draft-durga-agenttrust-trace-verification-00 を公表した。エージェントが取得コンテンツ、第三者の MCP 出力、ピアの A2A メッセージといった信頼できない入力からツール呼び出しのパラメーターを組み立てる場合、認証済みのワークロードであっても confused deputy になり得るという主張である。提案される ctx_isolation_witness 構造とポリシーエポックへの束縛（policy_manifest_sha256）が、汚染の系譜を示す証跡を与えるとされる。著者はメーリングリストでのレビューと、IETF 127（2026 年 11 月 14〜20 日）での 5 分間のライトニングスロットを求め、ベンチマークデータセットを挙げている。メッセージには、これらの名称以上のプロトコル詳細は含まれていない。",
+      "title": "New Internet-Drafts & IETF 127 Lightning Slot Request: draft-durga-wimse-ctx-isolation-00 & draft-durga-agenttrust-trace-verification-00",
+      "updated_at": "2026-11-01T22:07:04+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/EDu91EnPTVXXCO4bgtlrUknXLi4/",
+      "use_cases": [
+        "An agent platform worried about indirect prompt injection through MCP tool output wants evidence that a tool call came from trusted intent."
+      ],
+      "use_cases_ja": [
+        "MCP ツール出力経由の間接プロンプトインジェクションを懸念するエージェント基盤は、ツール呼び出しが信頼できる意図に由来することの証拠を求める。"
+      ]
+    },
+    "mail:Ooa0pZ_4spGEUpI4m2qZUNo36hI": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "The AER-1 mapping author agrees to add a committed decision_reason so audit records can tell a denial from a decision never evaluated.",
+      "headline_ja": "AER-1 マッピングの著者が、拒否と未評価を監査記録上で区別できるよう、コミット対象の decision_reason を追加することに同意した。",
+      "id": "mail:Ooa0pZ_4spGEUpI4m2qZUNo36hI",
+      "kind": "mail",
+      "related": [],
+      "significance": "substantive",
+      "summary": "Girish noted that a rejection receipt commits only to the request and the error returned, so a denial and a failed policy lookup produce the same receipt. This blocks the reconstruction that AIMS Section 11 asks for. The author of draft-zambo-aer1-wimse-mapping agrees and has posted -02. Section 3 now requires authorization decision records to carry a committed decision_reason in the receipt metadata, either 'denied' or 'not_evaluated', plus a decision_reason_detail naming the input that could not be reached. The reason stays in the record and is not returned to the caller, who still gets the uniform error, so the error does not become an oracle. The author asks Girish to check whether this separates the two cases.",
+      "summary_ja": "Girish は、拒否レシートが要求と返されたエラーにしかコミットしないため、拒否とポリシー参照の失敗で同一のレシートになり、AIMS 第 11 節が求める再構成ができないと指摘した。draft-zambo-aer1-wimse-mapping の著者はこれに同意し、-02 を公開した。第 3 節は、認可判断の記録がレシートのメタデータにコミット対象の decision_reason を持つことを要求する。値は 'denied' または 'not_evaluated' で、到達できなかった入力を示す decision_reason_detail が付く。理由は記録に残り、呼び出し元には返されないため、呼び出し元は従来どおり統一されたエラーを受け取り、エラーがオラクルにならない。著者は、この定義で二つの場合を区別できるか確認を求めている。",
+      "title": "draft-zambo-aer1-wimse-mapping-01: AER-1 as a candidate format for AIMS Section 11 audit records",
+      "updated_at": "2026-11-01T22:07:04+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/Ooa0pZ_4spGEUpI4m2qZUNo36hI/",
+      "use_cases": [
+        "An AI agent platform that must reconstruct why a tool call was blocked can distinguish policy denial from an unreachable policy source.",
+        "A security team auditing agent tool calls wants tamper-evident records without exposing denial reasons to callers."
+      ],
+      "use_cases_ja": [
+        "ツール呼び出しが遮断された理由を再構成する必要がある AI エージェント基盤は、ポリシーによる拒否とポリシー参照先に到達できなかった場合を区別できる。",
+        "エージェントのツール呼び出しを監査するセキュリティチームは、拒否理由を呼び出し元に見せずに改ざん検知可能な記録を得られる。"
+      ]
+    },
+    "mail:PFXzXvEHjFoCH3UGewCNy_rKyJo": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "A proposal to classify a withdrawn principal as a permanent deny and to align the age boundary between two audit drafts.",
+      "headline_ja": "撤回された主体を恒久的な deny に分類し、二つの監査ドラフト間で経過時間の境界を揃える提案。",
+      "id": "mail:PFXzXvEHjFoCH3UGewCNy_rKyJo",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Girish replies on the principal-standing-source name in the draft-gilda-audit-agent-audit-record closed set. He notes that an unestablishable principal standing is already transient in evaluation-05, recorded as not-evaluated, but a withdrawn principal has no class. He suggests adding 'or a principal' to the permanent-refusal list and the disclosure rule so a withdrawn principal is recorded as evaluated with deny. He also points out a boundary conflict. At exactly the as-of time plus maximum age with the source not answering, evaluation-05 refuses as transient, but Section 5.4 of the audit draft -03 counts age equal to maxAge as fresh, so the record does not validate. He asks both drafts to use one boundary with a test vector on it. Sankalp's quoted message says the new name needs a new record-type URI.",
+      "summary_ja": "Girish が draft-gilda-audit-agent-audit-record の閉じた集合における principal-standing-source という名前について返信している。evaluation-05 では、主体の有効性を確立できない場合は一時的として not-evaluated と記録されるが、撤回された主体には分類がない。そこで恒久拒否の一覧と開示規則に「または主体」を加え、撤回された主体を evaluated、deny として記録することを提案している。さらに境界の食い違いも指摘している。基準時刻に最大経過時間を加えた時点ちょうどでソースが応答しない場合、evaluation-05 は一時的として拒否するが、監査ドラフト -03 の 5.4 節は経過時間が maxAge に等しい場合を新鮮とみなすため、記録が検証を通らない。両ドラフトで境界を一つにし、その境界上のテストベクターを置くよう求めている。引用された Sankalp の文面によれば、新しい名前の追加にはレコード型の新しい URI が必要である。",
+      "title": "A principal-standing name for the 5.4 closed set",
+      "updated_at": "2026-11-01T22:07:04+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/PFXzXvEHjFoCH3UGewCNy_rKyJo/",
+      "use_cases": [
+        "An implementer of an agent audit record producer needs to know whether a withdrawn principal is deny or not-evaluated.",
+        "A verifier testing the exact maxAge boundary needs both drafts to agree on whether age equal to the limit is fresh."
+      ],
+      "use_cases_ja": [
+        "エージェント監査記録の生成側を実装する者は、撤回された主体が deny か not-evaluated かを知る必要がある。",
+        "maxAge ちょうどの境界を試験する検証者は、経過時間が上限と等しい場合を新鮮とするかについて、両ドラフトが一致している必要がある。"
+      ]
+    },
     "mail:PGRWtqrXrpqNzeH1So6NEUDQqv4": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -294,6 +386,65 @@
       "url": "https://mailarchive.ietf.org/arch/msg/wimse/PGRWtqrXrpqNzeH1So6NEUDQqv4/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:QjzqPuUR1hf-qA0sOQ6yvrzi74w": {
+      "diagram": "sequenceDiagram\n participant H as Holder\n participant EP as Enforcement point\n participant DS as Delegation server\n H->>H: attenuate token offline\n H->>EP: invoke with token chain\n EP->>EP: verify chain and refuse revoked tokens\n EP->>DS: report exercise for chain-wide budget\n DS-->>EP: budget decision",
+      "first_seen": "2026-11-01",
+      "headline": "The AAT and credential-delegation authors agree offline attenuation and a server in the path are complementary, and find a del_max_depth mismatch.",
+      "headline_ja": "AAT と credential-delegation の著者は、オフライン減衰とパス上のサーバーが相補的であることで一致し、del_max_depth の 1 ホップの食い違いを見つけた。",
+      "id": "mail:QjzqPuUR1hf-qA0sOQ6yvrzi74w",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-transaction-tokens",
+          "note": "The AAT announcement says Section 1.3 describes how AATs complement transaction tokens.",
+          "note_ja": "AAT の告知では、1.3 節で AAT がトランザクショントークンを補完する関係が説明されているとされている。",
+          "track": "oauth-wg"
+        },
+        {
+          "name": "draft-ietf-oauth-identity-chaining",
+          "note": "Likewise named in the announcement as complemented by AATs.",
+          "note_ja": "同じく告知の中で AAT が補完する対象として挙げられている。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "This message is a reply on the announcement of draft-niyikiza-oauth-attenuating-agent-tokens-02, which adds a step-by-step chain verification section (Section 8) and 229 public test vectors. The author agrees that chain-wide budgets need a single writer and belong in a layer or profile above core AAT. On revocation, the author argues the enforcement point already sees the whole chain, so it can refuse any chain containing a revoked token. The author found that under a root with del_max_depth 8, AAT accepts a leaf at del_depth 8 while draft-asor-wimse-agent-delegation-chain-03 rejects it, and asks for one meaning. Three drafts (AAT, asor, hulea) use typed constraints with differing subsumption rules, and the author offers to compare constraint types before IETF 127.",
+      "summary_ja": "draft-niyikiza-oauth-attenuating-agent-tokens-02 の告知への返信である。-02 では、チェーン検証を段階的に定める第 8 節と 229 件の公開テストベクターが加わっている。著者は、チェーン全体の予算には書き込み元を一つにする仕組みが必要であり、AAT のコアではなくその上の層またはプロファイルに置くべきだとする。失効については、強制ポイントが毎回チェーン全体を見るため、失効済みトークンを含むチェーンを拒否できると主張する。また、ルートの del_max_depth が 8 のとき、AAT は del_depth 8 のリーフを受理するが draft-asor-wimse-agent-delegation-chain-03 は拒否するという差を見つけ、意味を一つにすることを求めている。型付き制約を持つ三つのドラフト（AAT、asor、hulea）は包含規則が異なり、著者は IETF 127 までに制約型ごとの比較を行うことを申し出ている。",
+      "title": "New version: Attenuating Authorization Tokens (draft-niyikiza-oauth-attenuating-agent-tokens-02)",
+      "updated_at": "2026-11-01T22:07:04+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/QjzqPuUR1hf-qA0sOQ6yvrzi74w/",
+      "use_cases": [
+        "A verifier implementing offline chain checks for agent delegation must decide whether depth equal to the maximum is allowed.",
+        "A deployment needing cumulative spend limits across several enforcement points would pair attenuated tokens with a delegation server."
+      ],
+      "use_cases_ja": [
+        "エージェント委任のオフラインチェーン検証を実装する検証者は、深さが最大値に等しい場合を許可するかどうかを決める必要がある。",
+        "複数の強制ポイントにまたがる累積的な利用上限が必要なデプロイでは、減衰トークンと委任サーバーを組み合わせることになる。"
+      ]
+    },
+    "mail:Zhvxkeil5YLJZNzJblEXfK7bLno": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "The evaluation draft's author accepts two fixes: the staleness bound is the pinned maximum age, and a missing proof counts as a withdrawal.",
+      "headline_ja": "evaluation ドラフトの著者が二つの修正を受け入れた。古さの上限は固定された最大経過時間であり、証明の欠落は撤回と同じ扱いになる。",
+      "id": "mail:Zhvxkeil5YLJZNzJblEXfK7bLno",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "In reply to Girish, the author of draft-jackson-wimse-evaluation-05 agrees to two changes to Section 3.6. First, the bound on how long a withdrawal can keep conferring authority is the pinned maximum age, not the publication cadence. A presenter can use any commitment the relying party accepts, and a relying party wanting a shorter bound fetches the newest commitment itself and requires the proof against it. Second, a missing proof, or one that does not verify against an accepted commitment, is not an unavailable input. It is refused like a withdrawal, and toward an unauthenticated caller the two cannot be told apart. The audit record would show evaluated, deny. The author also suggests the wording 'the token with what accompanies it'.",
+      "summary_ja": "draft-jackson-wimse-evaluation-05 の著者が、Girish への返信で 3.6 節に対する二つの変更を受け入れた。第一に、撤回後も権限を与え続け得る期間の上限は、公開の頻度ではなく固定された最大経過時間である。提示者は依存当事者が受け入れる任意のコミットメントを使えるため、より短い上限が必要な依存当事者は最新のコミットメントを自ら取得し、それに対する証明を要求する。第二に、証明の欠落、または受理済みコミットメントに対して検証できない証明は、利用不能な入力ではなく、撤回と同様に拒否される。認証されていない呼び出し元に対しては両者を区別できない。監査記録は evaluated、deny となる。著者はさらに、「同じトークンの再試行は成功しない」という文を「そのトークンとそれに付随するもの」に直すことを提案している。",
+      "title": "draft-jackson-wimse-evaluation-05, Section 3.6: principal standing without an identifier join",
+      "updated_at": "2026-11-01T22:07:04+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/Zhvxkeil5YLJZNzJblEXfK7bLno/",
+      "use_cases": [
+        "A relying party that checks principal standing against a published commitment needs to know how stale a withdrawal can be.",
+        "An audit pipeline must record a missing proof as deny rather than not-evaluated."
+      ],
+      "use_cases_ja": [
+        "公開されたコミットメントに対して主体の有効性を確認する依存当事者は、撤回がどれだけ古い状態まで有効になり得るかを知る必要がある。",
+        "監査パイプラインは、証明の欠落を not-evaluated ではなく deny として記録する必要がある。"
+      ]
     },
     "mail:a0VMWgZk9S0JV6qDmlvqpqY73dg": {
       "diagram": "",
@@ -315,6 +466,23 @@
       "use_cases_ja": [
         "3 つの権限縮小形式に直面する検証者の実装者は、3 通りの実装ではなく共通の制約比較ロジックを望むだろう。"
       ]
+    },
+    "mail:izZnltSogYmO_6SbKFzCk9iPXOU": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "The weekly GitHub digest shows several s2s-protocol issues closed and new pull requests, but no text of the changes.",
+      "headline_ja": "週次 GitHub ダイジェストでは、s2s-protocol の複数の issue が閉じられ新しい PR が出ているが、変更内容の本文は含まれない。",
+      "id": "mail:izZnltSogYmO_6SbKFzCk9iPXOU",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "The digest lists one closed architecture issue (defining issuer, trust anchor and trust domain). In the s2s-protocol repository it lists five closed issues tagged workload-creds, including #370 on trust domains sharing or overlapping trust roots and #394 on where TLS server name validation sits in the mutual-tls document. It also lists a new issue #414 on coexistence. New pull requests appear in practices (one), arch (four) and s2s-protocol (four). PR titles and bodies are empty in the digest, so what they change is unknown.",
+      "summary_ja": "ダイジェストには、アーキテクチャの issue が 1 件（issuer、トラストアンカー、トラストドメインの定義）閉じられたことが載っている。s2s-protocol リポジトリでは、workload-creds ラベルの付いた issue が 5 件閉じられ、トラストルートを共有または重複するトラストドメインに関する #370 や、mutual-tls ドキュメント内での TLS サーバー名検証の位置に関する #394 が含まれる。共存に関する新しい issue #414 も作成された。新しい PR は practices に 1 件、arch に 4 件、s2s-protocol に 4 件ある。ダイジェストでは PR の題名と本文が空であり、変更内容は分からない。",
+      "title": "Weekly github digest (WIMSE Weekly GitHub Activity Summary)",
+      "updated_at": "2026-11-01T22:07:04+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/izZnltSogYmO_6SbKFzCk9iPXOU/",
+      "use_cases": [],
+      "use_cases_ja": []
     },
     "mail:lZ1_efh-DULGLvG7PXYdNd42zxs": {
       "diagram": "",
@@ -390,22 +558,38 @@
     "Diff active WG draft: draft-ietf-wimse-workload-creds-03": {
       "date": "2026-11-01",
       "priority": "high",
-      "reason": "Reorganised structure, stricter trust-anchor binding, new proof-audience section and dropped single-identifier rule, all in a core WG draft."
+      "reason": "Five issues tagged workload-creds were closed this week, including two on trust domains and server name validation.",
+      "reason_ja": "今週、workload-creds ラベルの issue が 5 件閉じられ、トラストドメインとサーバー名検証に関するものも含まれる。"
     },
     "Diff active WG draft: draft-ietf-wimse-workload-identity-practices-08": {
       "date": "2026-11-01",
-      "priority": "low",
-      "reason": "-08 is mostly typo fixes and rewording after AD feedback, with no new requirements visible."
+      "priority": "high",
+      "reason": "It is in IESG Last Call until 2026-11-13 and a reviewer proposed concrete text changes to Sections 4.5, 5.1.5 and 5.6.",
+      "reason_ja": "2026-11-13 まで IESG Last Call 中であり、レビュー担当者が 4.5、5.1.5、5.6 節に具体的な修正案を出している。"
+    },
+    "Review related draft: draft-asor-wimse-agent-delegation-chain-03": {
+      "date": "2026-11-01",
+      "priority": "high",
+      "reason": "A list reply shows its del_max_depth semantics differ by one hop from AAT, so a depth-8 leaf is rejected.",
+      "reason_ja": "メーリングリストの返信で、del_max_depth の意味が AAT と 1 ホップ異なり、深さ 8 のリーフが拒否されることが示された。"
     },
     "Review related draft: draft-durga-wimse-ctx-isolation-00": {
       "date": "2026-11-01",
-      "priority": "low",
-      "reason": "Very short -00 with a self-asserted taint level and no stated link to WIMSE credentials."
+      "priority": "high",
+      "reason": "It was newly announced to the list with a request for review and a lightning slot at IETF 127.",
+      "reason_ja": "メーリングリストに新規告知され、レビューと IETF 127 でのライトニングスロットが求められている。"
     },
     "Review related draft: draft-hulea-wimse-agent-mandate-01": {
       "date": "2026-11-01",
       "priority": "high",
-      "reason": "-01 makes validation deterministic with a Trust Anchor Set, status codes and a Validation Profile, and the author's post lists what is still open."
+      "reason": "It is named as one of three offline attenuation formats whose subsumption rules may be compared before IETF 127.",
+      "reason_ja": "IETF 127 までに包含規則が比較され得る三つのオフライン減衰形式の一つとして名前が挙がっている。"
+    },
+    "Review related draft: draft-jackson-wimse-evaluation-05": {
+      "date": "2026-11-01",
+      "priority": "high",
+      "reason": "The author accepted two concrete changes to Section 3.6 on the staleness bound and missing proofs.",
+      "reason_ja": "著者が 3.6 節の古さの上限と証明の欠落について二つの具体的な変更を受け入れた。"
     },
     "Review related draft: draft-reddy-wimse-oauth-dialog-binding-00": {
       "date": "2026-11-01",
@@ -415,7 +599,8 @@
     "Review related draft: draft-sweeney-wimse-credential-delegation-02": {
       "date": "2026-11-01",
       "priority": "high",
-      "reason": "Adds a chain-verifiable profile adopting the asor format and new sub-delegation and security sections."
+      "reason": "Its author argued the server-side half composes with AATs and that the three attenuation drafts need one subsumption rule per constraint type.",
+      "reason_ja": "著者が、サーバー側の仕組みは AAT と組み合わせられ、三つの減衰ドラフトは制約型ごとに包含規則を一つにすべきだと述べた。"
     },
     "Review related draft: draft-thaha-wimse-agent-evidence-binding-02": {
       "date": "2026-11-01",
