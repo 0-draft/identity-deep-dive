@@ -84,6 +84,11 @@ def already_proposed(branch: str) -> bool:
     )
     if res.returncode == 0:
         return True
+    if res.returncode != 2:
+        # 2 is "no such ref"; anything else (network, auth) is unknown, and
+        # like the gh check below, unknown means skip.
+        print(f"stage: could not check origin for {branch}: {res.stderr.decode(errors='replace').strip()}", file=sys.stderr)
+        return True
     res = subprocess.run(
         ["gh", "pr", "list", "--state", "closed", "--head", branch, "--json", "number", "--jq", "length"],
         cwd=REPO_ROOT,

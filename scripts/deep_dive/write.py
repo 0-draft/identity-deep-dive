@@ -46,18 +46,24 @@ BARE_URL = re.compile(r"(?<![(<\[])\bhttps?://[^\s)>\]]+")
 # The relative branch is anchored to the closing parenthesis, so "a.md:x" or
 # "a.md.evil" do not slip through on the prefix.
 UNSAFE_LINK = re.compile(r"\]\(\s*(?!https?://|#|(?:\.{1,2}/)?(?!/)[\w./-]+\.md(?:#[\w-]*)?\s*\))[^)]*\)")
-# Headings templates/deep-dive/README.md has; the prompt asks for all of them.
-README_HEADINGS = (
-    "## What this is",
-    "## How it works",
-    "## Use cases",
-    "## Why This Matters Now",
-    "## What Changed",
-    "## Technical Analysis",
-    "## Open Questions",
-    "## Experiments",
-    "## Sources",
-)
+# Headings of the templates in templates/deep-dive/, which the prompt asks
+# the model to keep. Missing ones are listed in the PR body for the reviewer.
+TEMPLATE_HEADINGS = {
+    "README.md": (
+        "## What this is",
+        "## How it works",
+        "## Use cases",
+        "## Why This Matters Now",
+        "## What Changed",
+        "## Technical Analysis",
+        "## Open Questions",
+        "## Experiments",
+        "## Sources",
+    ),
+    "context.md": ("# Context", "## Trigger", "## Why This Matters", "## Open Questions"),
+    "spec-notes.md": ("# Spec Notes", "## References", "## Key Changes", "## Impact Analysis"),
+    "interop-checklist.md": ("# Interop Checklist",),
+}
 # Reference definitions ("[1]: target") must point at http(s) too.
 UNSAFE_REF = re.compile(r"^ {0,3}\[[^\]]+\]:\s*(?!https?://)")
 # A code span is a run of N backticks closed by a run of exactly N.
@@ -172,12 +178,17 @@ def main() -> int:
         "",
         "## Check before merging",
         "",
-        "Drafted only from the staged sources: the draft text or repository README, the latest revision diff, mailing-list messages, Datatracker states and earlier briefings from this repository. Read it against the sources, fix what is wrong, and merge when it is something you would stand behind.",
+        "Drafted from the staged sources (the draft text or repository README, the latest revision diff, mailing-list messages, Datatracker states and earlier briefings from this repository). The model was told to use nothing else, but nothing enforces that: read it against the sources, fix what is wrong, and merge when it is something you would stand behind.",
         "",
     ]
-    missing = [h for h in README_HEADINGS if h not in (target / "README.md").read_text(encoding="utf-8").splitlines()]
+    missing = [
+        f"{fname}: `{h}`"
+        for fname, headings in TEMPLATE_HEADINGS.items()
+        for h in headings
+        if h not in (target / fname).read_text(encoding="utf-8").splitlines()
+    ]
     if missing:
-        body += ["README.md is missing these template headings:", ""] + [f"- [ ] `{h}`" for h in missing] + [""]
+        body += ["Template headings missing:", ""] + [f"- [ ] {m}" for m in missing] + [""]
     if unverified:
         body += ["Statements the drafter could not fully support from the material:", ""]
         body += [f"- [ ] {u}" for u in unverified] + [""]
