@@ -1,11 +1,17 @@
 import type { Lang } from "./i18n";
 
 /*
-  The daily and weekly reports are Markdown that the track scripts write in
-  English. Their prose is fixed: headings, table headers, labels and a
-  handful of sentences, around data (draft names, titles, numbers) that stays
-  as written. For the Japanese site those fixed parts are swapped line by
-  line; anything not listed here is shown as is.
+  The daily and weekly reports are Markdown that the track scripts
+  (tracks/<track>/scripts/report.py) write in English. Their prose is fixed:
+  headings, table headers, labels and a handful of sentences, around data
+  (draft names, titles, numbers) that stays as written. For the Japanese site
+  those fixed parts are swapped line by line; anything not listed here is
+  shown as is.
+
+  scripts/insights/apply.py adds a briefing block between insights:start/end
+  markers. The site cuts that block (tracks.ts) and renders the same content
+  from insights.json instead, so its strings need no entry here; the few
+  listed below only matter for the raw Markdown.
 */
 
 const TITLES: [RegExp, string][] = [
