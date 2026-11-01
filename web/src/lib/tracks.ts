@@ -144,7 +144,9 @@ export const SIGNIFICANCE_LABEL: Record<Significance, { en: string; ja: string }
   "new-proposal": { en: "New proposal", ja: "新しい提案" },
   discussion: { en: "Discussion", ja: "議論" },
   editorial: { en: "Editorial", ja: "編集上の変更" },
-  routine: { en: "Routine", ja: "定例" },
+  // "routine" covers editorial-level items and ones whose material was too
+  // thin to explain (a failed fetch), so the label says both.
+  routine: { en: "Minor or unclear", ja: "軽微・詳細不明" },
 };
 
 export const SIGNIFICANCE_RANK: Record<Significance, number> = {
@@ -246,7 +248,9 @@ export function recentInsightIds(id: TrackId): Map<string, string> {
   const out = new Map<string, string>();
   for (const i of briefing(id).items) {
     const m = /^draft:(draft-[a-z0-9-]+?)-\d{2}$/.exec(i.id);
-    if (m && i.first_seen >= cutoff && !out.has(m[1])) out.set(m[1], anchorId(i.id));
+    // Minor items are folded without an anchor on the track page, so the
+    // board does not highlight or link them.
+    if (m && i.significance !== "routine" && i.first_seen >= cutoff && !out.has(m[1])) out.set(m[1], anchorId(i.id));
   }
   return out;
 }

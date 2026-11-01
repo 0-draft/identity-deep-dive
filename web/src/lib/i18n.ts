@@ -46,6 +46,7 @@ const STRINGS = {
     ja: "解説はまだない。次の収集 run で draft の改版・メーリングリストのスレッド・PR が見つかると表示される。",
   },
   whatChanged: { en: "What changed", ja: "変化の解説" },
+  minorChanges: { en: "Minor or unclear changes", ja: "軽微・詳細不明の変化" },
   noTrackExplanations: {
     en: "No explanations in the last seven days. The board and reports below still show the latest collected state.",
     ja: "この 7 日間の解説はない。下のボードとレポートは最新の収集結果を表示している。",
