@@ -7,7 +7,7 @@ open deep-dive branch. Source material is fetched here, as plain files, so the
 Claude pass that writes the deep dive only needs read tools.
 
 Usage:
-  stage.py --track oauth-wg --out .deep-dive-work [--candidate draft-ietf-oauth-sd-jwt-vc]
+  stage.py --track oauth-wg --out deep-dive-work [--candidate draft-ietf-oauth-sd-jwt-vc]
 """
 from __future__ import annotations
 
@@ -59,7 +59,8 @@ def subject_for(track: str, cand: dict, state: dict) -> dict[str, Any] | None:
         name, rev = m.group(1), m.group(2)
     if not rev:
         return None
-    labels = next((d.get("state_labels") for d in state.get("drafts", []) if d.get("name") == name), None)
+    all_drafts = state.get("drafts", []) + state.get("active_drafts", []) + state.get("related_drafts", [])
+    labels = next((d.get("state_labels") for d in all_drafts if d.get("name") == name), None)
     return {
         "datatracker_states": labels or [],
         "kind": "draft",
@@ -70,13 +71,30 @@ def subject_for(track: str, cand: dict, state: dict) -> dict[str, Any] | None:
     }
 
 
-def branch_exists(branch: str) -> bool:
+def already_proposed(branch: str) -> bool:
+    """A branch is still open, or a PR from it was closed (merged or rejected).
+
+    A merged deep dive also has its directory on main; a rejected one does
+    not, and without this check it would be drafted again every week.
+    """
     res = subprocess.run(
         ["git", "ls-remote", "--exit-code", "--heads", "origin", branch],
         cwd=REPO_ROOT,
         capture_output=True,
     )
-    return res.returncode == 0
+    if res.returncode == 0:
+        return True
+    res = subprocess.run(
+        ["gh", "pr", "list", "--state", "closed", "--head", branch, "--json", "number", "--jq", "length"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+    )
+    if res.returncode != 0:
+        # Cannot tell: better to skip a subject than to re-propose a rejected one.
+        print(f"stage: could not list closed PRs for {branch}: {res.stderr.strip()}", file=sys.stderr)
+        return True
+    return res.stdout.strip() not in ("", "0")
 
 
 def stage_draft(subject: dict, state: dict, out: Path) -> list[str]:
@@ -141,7 +159,10 @@ def insights_for(track_dir: Path, name: str) -> str:
     if not path.exists():
         return ""
     items = json.loads(path.read_text(encoding="utf-8")).get("items", {}).values()
-    hits = [i for i in items if name in i.get("id", "") or name in i.get("title", "")]
+    # Exact subject only: draft-x must not pick up draft-x-vc, nor
+    # openid/authzen pick up openid/authzen-foo.
+    draft_id = re.compile(rf"^draft:{re.escape(name)}-\d{{2}}$")
+    hits = [i for i in items if draft_id.match(i.get("id", "")) or i.get("id", "").startswith(f"repo:{name}:")]
     return "\n\n".join(f"## {i['title']}\n\n{i['headline']}\n\n{i['summary']}" for i in hits)
 
 
@@ -167,7 +188,7 @@ def main() -> int:
         if not s or not SAFE_SLUG.fullmatch(s["slug"]):
             continue
         s["branch"] = f"deep-dive/{args.track}/{s['slug']}"
-        if (track_dir / "deep-dives" / s["slug"]).exists() or branch_exists(s["branch"]):
+        if (track_dir / "deep-dives" / s["slug"]).exists() or already_proposed(s["branch"]):
             continue
         s["candidate"] = candidate_key(args.track, cand)
         s["ai_note"] = cand.get("ai_note", "")

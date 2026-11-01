@@ -1,15 +1,22 @@
 name: Deep-dive draft
 
 # Once a week, per track, take the top deep-dive candidate that has no deep
-# dive yet, have Claude draft one from the source text, and open it as a pull
-# request. Nothing lands on main without a person merging it.
+# dive yet, have Claude draft one from the source text, and open it as a draft
+# pull request. Nothing lands on main without a person merging it.
+#
+# Two jobs, so the model never shares a job with a token that can write:
+#
+#   draft  (contents: read)                     stage sources, run Claude,
+#                                               upload the result
+#   open   (contents + pull-requests: write)    no model; write the files,
+#                                               push a branch, open the PR
 #
 # A pull request opened with GITHUB_TOKEN does not trigger other workflows, so
 # PR checks and the Claude review stay silent on it. Set DEEP_DIVE_PR_TOKEN (a
 # fine-grained token with contents and pull-requests write on this repository)
-# to open the pull request as that identity instead, which does trigger them.
-# Without it, a person marking the draft ready for review starts the Claude
-# review, and closing and reopening it runs PR checks.
+# to open it as that identity instead, which does trigger them. Without it, a
+# person marking the draft ready for review starts the Claude review, and
+# closing and reopening it runs PR checks.
 
 on:
   schedule:
@@ -38,15 +45,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
+      pull-requests: read  # stage.py skips subjects whose PR was closed
     env:
       TRACK: ${{ matrix.track }}
-      WORK: ${{ github.workspace }}/.deep-dive-work
+      WORK: ${{ github.workspace }}/deep-dive-work
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          token: ${{ secrets.DEEP_DIVE_PR_TOKEN || github.token }}
+          persist-credentials: false
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.12"
@@ -67,6 +74,7 @@ jobs:
         id: stage
         env:
           GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
           CANDIDATE: ${{ inputs.candidate }}
         run: python scripts/deep_dive/stage.py --track "$TRACK" --out "$WORK" --candidate "${CANDIDATE:-}"
 
@@ -75,8 +83,6 @@ jobs:
         if: steps.stage.outputs.found == 'true'
         run: echo "json=$(jq -c . scripts/deep_dive/schema.json)" >> "$GITHUB_OUTPUT"
 
-      # Read tools only, over staged files. The draft comes back as structured
-      # output and write.py turns it into files.
       - name: Draft the deep dive
         id: claude
         if: steps.stage.outputs.found == 'true'
@@ -86,7 +92,7 @@ jobs:
           github_token: ${{ github.token }}
           display_report: "false"
           prompt: |
-            Material directory: .deep-dive-work
+            Material directory: deep-dive-work
 
             Read scripts/deep_dive/prompt.md and follow it. Then read every
             file in the material directory; source.txt is long, so read all
@@ -96,31 +102,81 @@ jobs:
             --max-turns 80
             --json-schema '${{ steps.schema.outputs.json }}'
 
-      - name: Write the files
+      - name: Save the result
         if: steps.stage.outputs.found == 'true'
         env:
           RESULT: ${{ steps.claude.outputs.structured_output }}
-        run: |
-          printf '%s' "$RESULT" > "$RUNNER_TEMP/result.json"
-          python scripts/deep_dive/write.py --work "$WORK" --result "$RUNNER_TEMP/result.json" --pr-body "$RUNNER_TEMP/pr-body.md"
+        run: printf '%s' "$RESULT" > "$WORK/result.json"
 
-      - name: Open the pull request
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: steps.stage.outputs.found == 'true'
+        with:
+          name: deep-dive-${{ matrix.track }}
+          path: deep-dive-work
+          retention-days: 3
+          if-no-files-found: error
+
+  open:
+    needs: draft
+    if: ${{ !cancelled() }}
+    strategy:
+      fail-fast: false
+      matrix:
+        track: ${{ (github.event_name == 'schedule' || inputs.track == 'all') && fromJSON('["ietf-wimse","oauth-wg","openid"]') || fromJSON(format('["{0}"]', inputs.track)) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      WORK: ${{ github.workspace }}/deep-dive-work  # gitignored, never committed
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+
+      # No artifact means the draft job found no subject or failed.
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        id: download
+        continue-on-error: true
+        with:
+          name: deep-dive-${{ matrix.track }}
+          path: deep-dive-work
+
+      - name: Write the files
+        id: write
+        if: steps.download.outcome == 'success'
+        run: |
+          python scripts/deep_dive/write.py --work "$WORK" --result "$WORK/result.json" --pr-body "$RUNNER_TEMP/pr-body.md"
+          {
+            echo "track=$(jq -r .track "$WORK/subject.json")"
+            echo "slug=$(jq -r .slug "$WORK/subject.json")"
+            echo "branch=$(jq -r .branch "$WORK/subject.json")"
+          } >> "$GITHUB_OUTPUT"
+
+      # The token only reaches the two commands that need it.
+      - name: Push the branch and open the pull request
+        if: steps.download.outcome == 'success'
         env:
           GH_TOKEN: ${{ secrets.DEEP_DIVE_PR_TOKEN || github.token }}
-          BRANCH: ${{ steps.stage.outputs.branch }}
-          SLUG: ${{ steps.stage.outputs.slug }}
           HAS_PR_TOKEN: ${{ secrets.DEEP_DIVE_PR_TOKEN != '' }}
+          REPO: ${{ github.repository }}
+          TRACK: ${{ steps.write.outputs.track }}
+          SLUG: ${{ steps.write.outputs.slug }}
+          BRANCH: ${{ steps.write.outputs.branch }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git switch -c "$BRANCH"
           git add "tracks/$TRACK/deep-dives/$SLUG"
           git commit -m "docs($TRACK): draft deep dive for $SLUG"
-          git push origin "$BRANCH"
+          git push "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" "$BRANCH"
           if [ "$HAS_PR_TOKEN" != "true" ]; then
             printf '\n%s\n' "Opened with GITHUB_TOKEN, so no other workflow started. Marking it ready for review starts the Claude review; close and reopen it to run PR checks as well." >> "$RUNNER_TEMP/pr-body.md"
           fi
-          gh pr create --base main --head "$BRANCH" --draft \
+          gh pr create --repo "$REPO" --base main --head "$BRANCH" --draft \
             --title "docs($TRACK): deep dive on $SLUG" \
             --body-file "$RUNNER_TEMP/pr-body.md"
