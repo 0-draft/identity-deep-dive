@@ -1,0 +1,350 @@
+{
+  "briefs": [
+    {
+      "at": "2026-11-01T10:12:31+00:00",
+      "text": "The most substantive item is workload-creds-03, which reorganises the WIT/WIC draft: trust-anchor binding is stricter, a new audience section for proofs appears, and the rule against a second workload identifier in one credential is dropped. The rest is mostly agent-delegation drafts converging on the asor chain format, plus a new dialog-binding draft that extends the WIMSE HTTP signature profile."
+    }
+  ],
+  "items": {
+    "draft:draft-durga-wimse-ctx-isolation-00": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, a new individual draft proposes a signed taint attestation header on every agent tool call so relying parties reject tainted state-changing calls.",
+      "id": "draft:draft-durga-wimse-ctx-isolation-00",
+      "kind": "new-draft",
+      "related": [],
+      "significance": "new-proposal",
+      "summary": "The draft defines a Context Taint Attestation, a JCS-serialised object with a taint level (TRUSTED_ONLY, MIXED_TAINT, UNTRUSTED_INGESTED), a tool effect class, a Merkle root over context chunks, and an optional step-up receipt hash, signed with Ed25519. It travels in an Agent-Ctx-Isolation header or MCP _meta. A relying party must reject a STATE_MUTATING or PRIVILEGED_ACTUATE call that is not TRUSTED_ONLY unless a valid step-up receipt from an independent policy engine or human is attached. It is a very short draft (about five pages). The signer is the agent runtime, so the taint level is self-asserted. The draft says nothing about how the key is bound to a WIMSE identity, and it defines no composition with the WIT or WPT.",
+      "title": "draft-durga-wimse-ctx-isolation-00: Cryptographic Separation of Untrusted Data-Plane Context from Control-Plane Tool Invocations in Autonomous AI Agents",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://datatracker.ietf.org/doc/draft-durga-wimse-ctx-isolation/00/",
+      "use_cases": [
+        "An MCP gateway that wants to block state-changing tool calls triggered after untrusted data entered the model context."
+      ]
+    },
+    "draft:draft-hulea-wimse-agent-mandate-01": {
+      "diagram": "flowchart TD\n A[Status List Tokens in inputs] --> B{subject stage}\n B -->|none left| U[status_unavailable]\n B --> C{anchor stage}\n C -->|none left| T[status_untrusted]\n C --> D{time stage}\n D -->|none left| S[status_stale]\n D --> E[eligible tokens]\n E --> F{latest iat candidates agree}\n F -->|no| G[status_conflict]\n F -->|yes| H[select token and read status value]",
+      "first_seen": "2026-11-01",
+      "headline": "In short, agent-mandate-01 makes validation deterministic: a digest-fixed Trust Anchor Set, split status error codes and stricter claim typing.",
+      "id": "draft:draft-hulea-wimse-agent-mandate-01",
+      "kind": "draft-revision",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-status-list",
+          "note": "The status evidence procedure in step 7 is built on Status List Tokens.",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "substantive",
+      "summary": "This is a repair revision. The Trust Anchor Set becomes a JSON document identified by URI and digest, with roles, iss, keys and frameworks, and the role_mismatch and signature_invalid rules are spelled out. Status List Token handling is filtered in three ordered stages, giving the codes status_unavailable, status_untrusted and status_stale, plus status_conflict and status_unrecognized. The Validation Profile gains an issuer, optional signing, self_schemes, and max_validity keyed by typ (replacing max_lifetime). The references in a root's authority are alternatives, and disclosures in an SD-JWT never affect the result. The WIT must carry iss and iat under this profile, which the workload-creds draft does not require. Constraint value types, chain-length handling and the Links step are defined more precisely. The diff is truncated, so later sections are not visible.",
+      "title": "draft-hulea-wimse-agent-mandate-01: Verifiable Mandates for Agents Acting Across Administrative Domains",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-hulea-wimse-agent-mandate-00&url2=draft-hulea-wimse-agent-mandate-01",
+      "use_cases": [
+        "A relying party that accepts agent mandates across domains needs two validators to return the same result, which this revision targets.",
+        "An implementer building a status-list-backed revocation check can use the staged filtering and error codes."
+      ]
+    },
+    "draft:draft-ietf-wimse-workload-creds-03": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, workload-creds-03 restructures the WIT/WIC draft, tightens trust-anchor binding and adds a section on the audience of proofs of possession.",
+      "id": "draft:draft-ietf-wimse-workload-creds-03",
+      "kind": "draft-revision",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-rfc8725bis",
+          "note": "The WIT typ requirement now cites rfc8725bis instead of RFC 8725.",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "substantive",
+      "summary": "The diff (truncated at 30000 characters, so later sections are not visible) renames and reorders sections and rewrites the architecture flow in 1.1 around TLS server auth, optional mTLS with a WIC, then an application-layer WIT and proof. It states that a WIT presented over TLS is not a transport-layer credential. Section 3 now requires a credential to be validated only against anchors bound to the trust domain named in its Workload Identifier, and drops the explicit prohibition on using iss to fetch a JWKS. New sections appear for validating the WIT (5.1.3), the audience of application-layer proofs (5.2) and trust domain membership (9.2). Section 4 drops the paragraph forbidding a second workload identifier in one WIT/WIC and says only that credentials of the same identifier may be told apart by jti. The jti text now ties it to token status or deny-list mechanisms. iss stays optional, and the example now uses alg Ed25519 instead of EdDSA.",
+      "title": "draft-ietf-wimse-workload-creds-03: WIMSE Workload Credentials",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-ietf-wimse-workload-creds-02&url2=draft-ietf-wimse-workload-creds-03",
+      "use_cases": [
+        "A WIT validator implementer needs to re-check how issuer and trust-anchor lookup is specified, because the text on iss and JWKS discovery changed.",
+        "An mTLS or HTTP-signature binding author should check the new audience requirement in 5.2 and the 1.2 rule that a callee must verify a request is meant for it."
+      ]
+    },
+    "draft:draft-ietf-wimse-workload-identity-practices-08": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, practices-08 is a small follow-up to AD feedback that clarifies the exceptions to narrow credential scoping and where compensating controls apply.",
+      "id": "draft:draft-ietf-wimse-workload-identity-practices-08",
+      "kind": "draft-revision",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The history says -08 addresses additional AD feedback. The diff mostly fixes typos (a missing 'are', 'than' for 'as') and extends the expiry date. Section 5.1.1 now states up front that narrow scoping applies unless the platform issues a single credential per workload or does not let the workload influence the audience. The proof-of-possession text is split so that the MUST for compensating controls (short lifetimes, narrow audience, network controls such as IP allowlisting or mTLS) applies when PoP is not supported, rather than being tied to the preceding sentence. Lists are reformatted. The requirements themselves do not look materially different.",
+      "title": "draft-ietf-wimse-workload-identity-practices-08: Workload Identity Practices",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-ietf-wimse-workload-identity-practices-07&url2=draft-ietf-wimse-workload-identity-practices-08",
+      "use_cases": []
+    },
+    "draft:draft-reddy-wimse-oauth-dialog-binding-00": {
+      "diagram": "sequenceDiagram\n participant A1 as Agent A1 (initiator)\n participant A2 as Agent A2\n participant T as Tool\n A1->>A2: request with Dialog-Context dlg=D1, signed by A1\n A2->>T: request with Dialog-Context, Txn-Token tctx.dlg=D1, signed by A2 WIT key\n T->>T: verify signature covers dialog-context\n T->>T: check tctx.dlg equals dlg\n T->>T: check initiator via earlier hop proofs",
+      "first_seen": "2026-11-01",
+      "headline": "In short, a new draft extends the WIMSE HTTP signature and WPT to cover a Dialog-Context field and records the dialog id in transaction tokens.",
+      "id": "draft:draft-reddy-wimse-oauth-dialog-binding-00",
+      "kind": "new-draft",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-transaction-tokens",
+          "note": "Adds a dlg member to the tctx claim.",
+          "track": "oauth-wg"
+        },
+        {
+          "name": "draft-ietf-oauth-identity-chaining",
+          "note": "A new dialog at a trust boundary is aligned with identity chaining.",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "new-proposal",
+      "summary": "The draft assumes an agent communication protocol that carries a Dialog-Context field with a dialog id and initiator. It requires the WIMSE HTTP signature to cover that field in requests and in signed responses, extends the WPT to cover it for requests, and adds a dlg member to the transaction token tctx. Receivers check that the token's dlg equals the field's. Earlier hops' proofs travel with the message so a distant receiver can verify who initiated the dialog. At a trust boundary the sender starts a linked dialog and authorization moves through identity chaining. Dialog-Context is a placeholder name. The text is truncated after Section 7.",
+      "title": "draft-reddy-wimse-oauth-dialog-binding-00: Binding Agent Dialogs to WIMSE and OAuth Credentials",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://datatracker.ietf.org/doc/draft-reddy-wimse-oauth-dialog-binding/00/",
+      "use_cases": [
+        "A multi-agent deployment where a tool must confirm that a transaction token belongs to the dialog the request claims.",
+        "A gateway that terminates TLS but must still let the receiver verify the sending workload."
+      ]
+    },
+    "draft:draft-sweeney-wimse-credential-delegation-02": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, credential-delegation-02 adds a chain-verifiable profile that adopts the asor token format, plus sub-delegation exchange and new security sections.",
+      "id": "draft:draft-sweeney-wimse-credential-delegation-02",
+      "kind": "draft-revision",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-delegate-sd-jwt",
+          "note": "The draft now says the OAuth WG adopted Delegate SD-JWT on 16 October 2026 and compares chain rules with it.",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "substantive",
+      "summary": "The table of contents adds 5.4.1 Sub-Delegation Exchange, 5.5 Chain-Verifiable Profile, and security sections on long-term evidence (10.8) and the trusted delegation server (10.9). Section 5.5 adopts the asor agent-delegation-chain format unchanged for tokens verified away from the Delegation Server. The ceiling claim is renamed from constraints to delegation_constraints. Agents may use ML-DSA where a did:key encoding exists, and every verifier must hold a local algorithm allow-list. The WAG identity must no longer be carried inside act. The 'credentials are never possessed' claim is narrowed: it protects against agent exfiltration, not the DS itself. The draft cites asor -03, notes that it no longer registers del_depth, del_max_depth and par_hash, and updates the Delegate SD-JWT status to adopted. The agent_checksum claim is removed. The diff is truncated, so sections 5.4 to 10 are only partly visible.",
+      "title": "draft-sweeney-wimse-credential-delegation-02: Credential Delegation Protocol for AI Agents in Multi-System Environments",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-sweeney-wimse-credential-delegation-01&url2=draft-sweeney-wimse-credential-delegation-02",
+      "use_cases": [
+        "An agent platform that holds upstream credentials server-side and also wants offline-verifiable delegation chains can follow the 5.5 profile.",
+        "A verifier implementer can plan to reuse one subsumption implementation for both this draft and asor."
+      ]
+    },
+    "draft:draft-thaha-wimse-agent-evidence-binding-01": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, evidence-binding-01 makes token-carried assurance status depend on when it was checked, and ties the caller reference to a per-call digest.",
+      "id": "draft:draft-thaha-wimse-agent-evidence-binding-01",
+      "kind": "draft-revision",
+      "related": [],
+      "significance": "substantive",
+      "summary": "A new signed status_checked_at (CBOR key 10) is required whenever assurance_level and assurance_status are present. A serving party may rely on those values only if the observation is recent enough for its policy, regardless of the token's remaining lifetime. AEE-Caller-Ref gains a cd member carrying the caller's call_digest. The serving party computes its own digest over the request it received, refuses a mismatch, and refuses a caller reference already admitted. The admission receipt records the digest and the status observation time. The security text now lists the failure modes (E_CALLER_REF, E_CALL_MISMATCH, E_SERVING_HOST). The reference to the audit record draft is renamed to draft-gilda-audit-agent-audit-record, and EP-AEC is added as a reference. Note that item 08 says an -02 is already posted, so -01 is superseded.",
+      "title": "draft-thaha-wimse-agent-evidence-binding-01: Evidence Binding for AI Agent Credentials",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-thaha-wimse-agent-evidence-binding-00&url2=draft-thaha-wimse-agent-evidence-binding-01",
+      "use_cases": [
+        "A service accepting agent tokens that embed cached assurance status needs a signed observation time to judge freshness.",
+        "A gateway admitting agent calls can bind the caller's receipt to the exact request it received."
+      ]
+    },
+    "mail:0lww5-4hYs09TJJd1YxwlH0aWsk": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, a reviewer proposes letting principal standing be proved against a signed, published commitment instead of an identifier lookup.",
+      "id": "mail:0lww5-4hYs09TJJd1YxwlH0aWsk",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The comment on Section 3.6 of the evaluation draft says looking up standing by identifier reveals to the source which principal is evaluated, by whom and when, and needs an identifier stable across relying parties. The proposal is a signed standing commitment published by the source. The presenter proves standing against it, and the relying party pins the publisher and a maximum age. Revocation then takes effect within the maximum age plus skew and publication lag. Proposed text is included, along with a suggestion for the audit record's principal-standing-source. The sender says they run this form with zero-knowledge proofs.",
+      "title": "draft-jackson-wimse-evaluation-05, Section 3.6: principal standing without an identifier join",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/0lww5-4hYs09TJJd1YxwlH0aWsk/",
+      "use_cases": [
+        "A relying party that checks the standing of a delegating principal but should not tell the status source who it is evaluating."
+      ]
+    },
+    "mail:14leMcljsbd1hdqCebK3Mmddcxo": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, a request for a 15-minute joint WIMSE/OAuth slot at IETF 127 on keeping delegated user authority distinct from workload authentication.",
+      "id": "mail:14leMcljsbd1hdqCebK3Mmddcxo",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "openid/authzen",
+          "note": "The message cites the AuthZEN decision on issue #612 and the closed COAZ-MCP PR.",
+          "track": "openid"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "The request describes a discussion with no new draft. It cites an open, unmerged WIMSE architecture PR (#140) on identity requirements for AI intermediaries. It also cites an AuthZEN decision on 8 October that COAZ-MCP will not define a trust-anchored context.agent field, so policies reason over validated token claims such as client_id and act. The broader mapping gap moves to a separate OAuth mapping profile. It also lists executable A2A-to-MCP authority-boundary test cases. The sender is available in person on 14 to 16 November.",
+      "title": "Agenda request for IETF 127: \"Authenticated Is Not Authorized: Delegated Authority Across Workload and Agent Boundaries\" (joint WIMSE/OAuth session)",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/14leMcljsbd1hdqCebK3Mmddcxo/",
+      "use_cases": []
+    },
+    "mail:PGRWtqrXrpqNzeH1So6NEUDQqv4": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, the author of an AER-1 mapping draft asks the list for written feedback on using AER-1 receipts as AIMS Section 11 audit records.",
+      "id": "mail:PGRWtqrXrpqNzeH1So6NEUDQqv4",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The mapping draft maps the AER-1 execution receipt onto the seven minimum audit fields and execution chain reconstruction in the AIMS framework, which deliberately specifies no record format. The author asks where the mapping fails Section 11 and what a record format would need. They explicitly do not ask for agenda time or for WIMSE to adopt AER-1, and they say they filed a companion data-model draft for the AUDIT BoF.",
+      "title": "draft-zambo-aer1-wimse-mapping-01: AER-1 as a candidate format for AIMS Section 11 audit records",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/PGRWtqrXrpqNzeH1So6NEUDQqv4/",
+      "use_cases": []
+    },
+    "mail:a0VMWgZk9S0JV6qDmlvqpqY73dg": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, the credential-delegation author asks the three offline attenuation formats to share one subsumption rule per constraint type.",
+      "id": "mail:a0VMWgZk9S0JV6qDmlvqpqY73dg",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The quoted announcement says AATs -02 is cited by twelve drafts, has 229 test vectors, and gives step-by-step chain verification in Section 8. In the reply, Sweeney argues offline attenuation and a server in the call path compose. Chain-wide cumulative budgets need a single writer, and revocation finer than the root needs a party in the path. They note three offline formats with typed constraints now exist (AATs, asor and hulea mandate), that asor reuses AAT claim names with different del_max_depth semantics, and ask for one subsumption rule per constraint type across all three.",
+      "title": "New version: Attenuating Authorization Tokens (draft-niyikiza-oauth-attenuating-agent-tokens-02)",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/a0VMWgZk9S0JV6qDmlvqpqY73dg/",
+      "use_cases": [
+        "A verifier implementer facing three attenuation formats would want shared constraint comparison logic rather than three versions."
+      ]
+    },
+    "mail:lZ1_efh-DULGLvG7PXYdNd42zxs": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, the mandate thread settles that a mandate should carry root entitlement as an Authority Assertion and renames max_lifetime to max_validity.",
+      "id": "mail:lZ1_efh-DULGLvG7PXYdNd42zxs",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Quoted messages show Sweeney arguing that the chain carries narrowing while the Authority Assertion carries the root's entitlement, with both checked against current records by whoever is in the path at use. He advises adopting the asor chain and typed ceilings. Hulea agrees, renames max_lifetime to max_validity to avoid a clash with the asor ceiling, and says the chain move waits for -02. He notes that window, sum_max (a total over a calendar period) and cosign_above (an obligation, not permit or deny) have no asor type and asks asor's author whether the registry would accept them. Sweeney's closing note says a sum_max total can be known only where the running total is held. The text is truncated.",
+      "title": "draft-hulea-wimse-agent-mandate-00: evidence that the delegator was entitled to delegate",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/lZ1_efh-DULGLvG7PXYdNd42zxs/",
+      "use_cases": []
+    },
+    "mail:mqgChd0K-6qLQ4geaOzD4ANpEUU": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, the authors announce an -02 that supersedes the -01 on the Datatracker, with changes from list feedback.",
+      "id": "mail:mqgChd0K-6qLQ4geaOzD4ANpEUU",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The post says -02 is posted with the companion SCITT draft -02, replacing a -01 that was uploaded from an earlier commit. Admission follows RFC 8693 Section 4.1: only top-level claims and the current actor decide admission, and prior actors are audit history. AEE-Caller-Ref binds one call and must not be carried in a token usable across calls. The audit-record reference is gilda-audit -02. Admission that depends on the full actor history is an open issue for IETF 127. The subject line still says -00, and the item 05 diff covers -00 to -01 only.",
+      "title": "New I-D: draft-thaha-wimse-agent-evidence-binding-00 (evidence binding for AIMS audit)",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/mqgChd0K-6qLQ4geaOzD4ANpEUU/",
+      "use_cases": []
+    },
+    "mail:vauc1h3gao6R7YAlJH5ffDxEOwo": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, the author announces -01 of the agent-mandate draft as a repair revision and says the decision record moves to -02.",
+      "id": "mail:vauc1h3gao6R7YAlJH5ffDxEOwo",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The post says -01 closes places where -00 left a choice to the implementer, so that two conforming validators give the same result. It lists changes from list feedback: the authority references are alternatives, separate status codes, max_lifetime renamed to max_validity, and a note that a sum_max total is known only where the running total is held. It adds the freshness of status evidence, a digest-fixed Trust Anchor Set and a profile issuer. The author says plainly that the decision record, its binding outside the relying party's control, and retention of the result bytes are not done and move to -02. The earlier plan to carry a result digest in the access token was dropped because the token is single-use and short-lived. Appendix B now has 49 cases.",
+      "title": "draft-hulea-wimse-agent-mandate-01",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/vauc1h3gao6R7YAlJH5ffDxEOwo/",
+      "use_cases": []
+    },
+    "mail:xbUeYqEY5MByus-eGwpSVvGNr8U": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, the draft-le-agent-passport author asks for an IETF 127 slot and replies to a review with planned fixes for revocation, caching and transport binding.",
+      "id": "mail:xbUeYqEY5MByus-eGwpSVvGNr8U",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The second message in the thread requests 10 minutes for a draft that defines a JWT agent passport tied to build and configuration digests, plus an attenuating delegation chain. It asks whether this is in scope for WIMSE, input to it, or separate. The first message, a reply to a reviewer, accepts four points. Unresolvable revocation status should be treated as revoked. The default cache bound for controller documents will be cut and a worst-case exposure formula stated. HTTPS with TLS 1.2 or later is required, with intermediary rules for signed components. Build assertion text will be strengthened. The next revision comes after IETF 127.",
+      "title": "Agenda slot request for IETF 127 — draft-le-agent-passport-00 (2 new messages)",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/xbUeYqEY5MByus-eGwpSVvGNr8U/",
+      "use_cases": []
+    }
+  },
+  "overflow": [
+    {
+      "title": "Agent Transfer Protocol (AGTP) draft family updated",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/aG12FPBUiHcReCwnOEW42xCRqRY/"
+    },
+    {
+      "title": "A principal-standing name for the 5.4 closed set",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/2Booef4RPGIEMpGjU7D48YViB7s/"
+    },
+    {
+      "title": "Last Call: <draft-ietf-wimse-workload-identity-practices-08.txt> (Workload Identity Practices) to Informational RFC",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/jZbeY6w6OdXAHmfPmO5QFvUNVSw/"
+    },
+    {
+      "title": "AD evaluation: draft-ietf-wimse-workload-identity-practices-05",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/CyXbKBW2oZgfyd8MwJBdh4VjwPE/"
+    },
+    {
+      "title": "Trust-anchor provenance (draft-asor-wimse-agent-delegation-chain-02, Section 6.4)",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/4dzSMkcJBVtYsa4nvN7z1WpDCXM/"
+    },
+    {
+      "title": "Three questions on cross-domain authority evidence and decision-time verification",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/irkcuQvYtr10PCmqPpZ68nC3DKU/"
+    },
+    {
+      "title": "Use case input: signed per-hop handoff context",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/xJUmuUFwRBj4JxW0wWrvfxzbEYg/"
+    },
+    {
+      "title": "9 new commit(s) in ietf-wg-wimse/draft-ietf-wimse-arch",
+      "url": "https://github.com/ietf-wg-wimse/draft-ietf-wimse-arch"
+    },
+    {
+      "title": "5 new commit(s) in ietf-wg-wimse/draft-ietf-wimse-s2s-protocol",
+      "url": "https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol"
+    },
+    {
+      "title": "4 new commit(s) in ietf-wg-wimse/draft-ietf-wimse-workload-identity-practices",
+      "url": "https://github.com/ietf-wg-wimse/draft-ietf-wimse-workload-identity-practices"
+    }
+  ],
+  "triage": {
+    "Diff active WG draft: draft-ietf-wimse-workload-creds-03": {
+      "date": "2026-11-01",
+      "priority": "high",
+      "reason": "Reorganised structure, stricter trust-anchor binding, new proof-audience section and dropped single-identifier rule, all in a core WG draft."
+    },
+    "Diff active WG draft: draft-ietf-wimse-workload-identity-practices-08": {
+      "date": "2026-11-01",
+      "priority": "low",
+      "reason": "-08 is mostly typo fixes and rewording after AD feedback, with no new requirements visible."
+    },
+    "Review related draft: draft-durga-wimse-ctx-isolation-00": {
+      "date": "2026-11-01",
+      "priority": "low",
+      "reason": "Very short -00 with a self-asserted taint level and no stated link to WIMSE credentials."
+    },
+    "Review related draft: draft-hulea-wimse-agent-mandate-01": {
+      "date": "2026-11-01",
+      "priority": "high",
+      "reason": "-01 makes validation deterministic with a Trust Anchor Set, status codes and a Validation Profile, and the author's post lists what is still open."
+    },
+    "Review related draft: draft-reddy-wimse-oauth-dialog-binding-00": {
+      "date": "2026-11-01",
+      "priority": "high",
+      "reason": "New draft that extends the WIMSE HTTP signature and WPT and adds a tctx.dlg member."
+    },
+    "Review related draft: draft-sweeney-wimse-credential-delegation-02": {
+      "date": "2026-11-01",
+      "priority": "high",
+      "reason": "Adds a chain-verifiable profile adopting the asor format and new sub-delegation and security sections."
+    }
+  }
+}

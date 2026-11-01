@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-10-31T11:55:44+00:00
+Generated at: 2026-11-01T10:10:17+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -10,7 +10,7 @@ Generated at: 2026-10-31T11:55:44+00:00
 | 4 | 6 | Review related draft: draft-asor-wimse-agent-delegation-chain-03 | draft-asor-wimse-agent-delegation-chain-03 (2026-10-27) |
 | 5 | 6 | Review related draft: draft-atakora-wimse-sadp-delegation-01 | draft-atakora-wimse-sadp-delegation-01 (2026-09-21) |
 | 6 | 6 | Review related draft: draft-durga-wimse-ctx-isolation-00 | draft-durga-wimse-ctx-isolation-00 (2026-10-29) |
-| 7 | 6 | Review related draft: draft-hulea-wimse-agent-mandate-00 | draft-hulea-wimse-agent-mandate-00 (2026-10-23) |
+| 7 | 6 | Review related draft: draft-hulea-wimse-agent-mandate-01 | draft-hulea-wimse-agent-mandate-01 (2026-11-01) |
 | 8 | 6 | Review related draft: draft-jackson-wimse-evaluation-05 | draft-jackson-wimse-evaluation-05 (2026-10-28) |
 | 9 | 6 | Review related draft: draft-lee-wimse-local-tool-call-proof-01 | draft-lee-wimse-local-tool-call-proof-01 (2026-10-11) |
 | 10 | 6 | Review related draft: draft-ni-wimse-ai-agent-identity-04 | draft-ni-wimse-ai-agent-identity-04 (2026-10-27) |
@@ -23,3 +23,17 @@ Generated at: 2026-10-31T11:55:44+00:00
 | 17 | 5 | Diff active WG draft: draft-ietf-wimse-identifier-04 | draft-ietf-wimse-identifier-04 (2026-10-23) |
 | 18 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-08 | draft-ietf-wimse-workload-identity-practices-08 (2026-10-30) |
 | 19 | 4 | Review related draft: draft-heigh-wimse-workload-identity-metadata-00 | draft-heigh-wimse-workload-identity-metadata-00 (2026-10-16) |
+
+<!-- triage:start -->
+## Triage
+
+Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.
+
+- **high** `Diff active WG draft: draft-ietf-wimse-workload-creds-03`: Reorganised structure, stricter trust-anchor binding, new proof-audience section and dropped single-identifier rule, all in a core WG draft.
+- **high** `Review related draft: draft-hulea-wimse-agent-mandate-01`: -01 makes validation deterministic with a Trust Anchor Set, status codes and a Validation Profile, and the author's post lists what is still open.
+- **high** `Review related draft: draft-reddy-wimse-oauth-dialog-binding-00`: New draft that extends the WIMSE HTTP signature and WPT and adds a tctx.dlg member.
+- **high** `Review related draft: draft-sweeney-wimse-credential-delegation-02`: Adds a chain-verifiable profile adopting the asor format and new sub-delegation and security sections.
+- **low** `Diff active WG draft: draft-ietf-wimse-workload-identity-practices-08`: -08 is mostly typo fixes and rewording after AD feedback, with no new requirements visible.
+- **low** `Review related draft: draft-durga-wimse-ctx-isolation-00`: Very short -00 with a self-asserted taint level and no stated link to WIMSE credentials.
+
+<!-- triage:end -->
