@@ -20,15 +20,18 @@ Return the structured output the schema asks for. Do not write files. Every clai
 
 ### `readme` (README.md)
 
-Use this outline:
+Follow the repository template, `templates/deep-dive/README.md`, heading for heading:
 
-1. `# <name>`, then a one-line blockquote: "In one line: ...".
+1. `# Deep Dive: <name>`, then a one-line blockquote: "In one line: ...".
 2. `## What this is`: the problem and the mechanism in plain words, three to six sentences.
-3. `## How it works`: a mermaid `sequenceDiagram` or `flowchart` of the main flow, with only parties and steps that the material shows, then a short walk-through of the steps.
+3. `## How it works`: a mermaid `sequenceDiagram` or `flowchart` of the main flow, with only parties and steps that the material shows, then a short numbered walk-through.
 4. `## Use cases`: three to five concrete situations where an implementer or deployer would use or meet this.
-5. `## What changed in the latest revision` (when `diff.txt` exists): the substantive changes, not the editorial ones.
-6. `## Open questions`: what is unresolved, contested or underspecified, with section references.
-7. `## Sources`: the URLs from `subject.json` and `mail.txt` that you used.
+5. `## Why This Matters Now`: `- **Trigger**:` (from `subject.json`), `- **Source evidence**:` and `- **Expected impact**:`.
+6. `## What Changed`: the substantive changes in the latest revision when `diff.txt` exists, not the editorial ones; otherwise what the draft or repository introduces. Include compatibility or migration concerns.
+7. `## Technical Analysis`: threat model, protocol flow and interop implications, each grounded in a section of the source.
+8. `## Open Questions`: what is unresolved, contested or underspecified, with section references.
+9. `## Experiments`: two or three unchecked `- [ ]` labs a person could run to test the mechanism.
+10. `## Sources`: the URLs from `subject.json` and `mail.txt` that you used.
 
 ### `context` (context.md)
 

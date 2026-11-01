@@ -36,12 +36,37 @@ on:
 permissions: {}
 
 jobs:
+  # The track list comes from scripts/insights/tracks.py. The dispatch choice
+  # above has to repeat it: workflow inputs cannot be computed.
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      tracks: ${{ steps.tracks.outputs.json }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - id: tracks
+        env:
+          WANTED: ${{ github.event_name == 'schedule' && 'all' || inputs.track }}
+        run: |
+          all=$(python3 scripts/insights/tracks.py)
+          if [ "$WANTED" = "all" ]; then
+            echo "json=$all" >> "$GITHUB_OUTPUT"
+          else
+            echo "$all" | jq -e --arg t "$WANTED" 'index($t) != null' > /dev/null || { echo "::error::unknown track $WANTED"; exit 1; }
+            echo "json=$(jq -cn --arg t "$WANTED" '[$t]')" >> "$GITHUB_OUTPUT"
+          fi
+
   draft:
+    needs: plan
     strategy:
       fail-fast: false
       matrix:
-        # A choice input, so it can only be one of the listed track names.
-        track: ${{ (github.event_name == 'schedule' || inputs.track == 'all') && fromJSON('["ietf-wimse","oauth-wg","openid"]') || fromJSON(format('["{0}"]', inputs.track)) }}
+        track: ${{ fromJSON(needs.plan.outputs.tracks) }}
     runs-on: ubuntu-latest
     timeout-minutes: 40
     permissions:
@@ -123,12 +148,12 @@ jobs:
           if-no-files-found: error
 
   open:
-    needs: draft
-    if: ${{ !cancelled() }}
+    needs: [plan, draft]
+    if: ${{ !cancelled() && needs.plan.result == 'success' }}
     strategy:
       fail-fast: false
       matrix:
-        track: ${{ (github.event_name == 'schedule' || inputs.track == 'all') && fromJSON('["ietf-wimse","oauth-wg","openid"]') || fromJSON(format('["{0}"]', inputs.track)) }}
+        track: ${{ fromJSON(needs.plan.outputs.tracks) }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:

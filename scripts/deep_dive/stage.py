@@ -32,9 +32,9 @@ from changes import (  # noqa: E402
     get,
     mail_material,
 )
+from write import is_safe_slug  # noqa: E402
 
 DRAFT_RE = re.compile(r"\b(draft-[a-z0-9-]+?)-(\d{2})\b")
-SAFE_SLUG = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,99}")
 SOURCE_CAP = 250_000
 DIFF_CAP = 80_000
 MAILS = 6
@@ -180,12 +180,13 @@ def main() -> int:
     if args.candidate:
         cands = [c for c in cands if candidate_key(args.track, c) == args.candidate]
         if not cands:
-            raise SystemExit(f"stage: {args.candidate!r} is not a candidate in {args.track}")
+            # With track "all" the other tracks' legs land here; not an error.
+            print(f"::notice::stage: {args.candidate!r} is not a candidate in {args.track}; nothing to draft here")
 
     subject = None
     for cand in cands:
         s = subject_for(args.track, cand, state)
-        if not s or not SAFE_SLUG.fullmatch(s["slug"]):
+        if not s or not is_safe_slug(s["slug"]):
             continue
         s["branch"] = f"deep-dive/{args.track}/{s['slug']}"
         if (track_dir / "deep-dives" / s["slug"]).exists() or already_proposed(s["branch"]):

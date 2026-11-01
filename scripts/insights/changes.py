@@ -29,7 +29,8 @@ import requests
 from bs4 import BeautifulSoup
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-TRACKS = ("ietf-wimse", "oauth-wg", "openid")
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from tracks import TRACKS  # noqa: E402
 
 MAX_ITEMS = 15
 DRAFT_DIFF_CAP = 30_000

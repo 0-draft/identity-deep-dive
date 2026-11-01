@@ -16,7 +16,14 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO_ROOT / "scripts" / "insights"))
 from guard import contains_secret  # noqa: E402
-TRACKS = ("ietf-wimse", "oauth-wg", "openid")
+from tracks import TRACKS  # noqa: E402
+
+
+def is_safe_slug(slug: str) -> bool:
+    """A path segment that is also a valid git ref component."""
+    return bool(
+        SAFE_SLUG.fullmatch(slug) and ".." not in slug and not slug.endswith(".") and not slug.endswith(".lock")
+    )
 SAFE_SLUG = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,99}")
 TEMPLATE = REPO_ROOT / "templates" / "deep-dive"
 FILES = {
@@ -101,7 +108,7 @@ def main() -> int:
     # before any of it becomes a path, a branch name or a git argument.
     if (
         subject.get("track") not in TRACKS
-        or not SAFE_SLUG.fullmatch(str(subject.get("slug", "")))
+        or not is_safe_slug(str(subject.get("slug", "")))
         or subject.get("branch") != f"deep-dive/{subject.get('track')}/{subject.get('slug')}"
     ):
         raise SystemExit("write: subject.json does not describe a valid subject")
