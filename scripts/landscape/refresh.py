@@ -137,7 +137,12 @@ def page_text(url: str) -> tuple[str, str]:
     r.raise_for_status()
     body = re.sub(r"<!--.*?-->", " ", r.text, flags=re.S)
     body = re.sub(r"<(script|style|noscript|template)[^>]*>.*?</\1>", " ", body, flags=re.S | re.I)
-    strip = lambda h: html.unescape(re.sub(r"<[^>]+>", " ", h))  # noqa: E731
+    def strip(h: str) -> str:
+        # Inline tags vanish without a gap, so "(<a>RFC 9449</a>)." reads
+        # "(RFC 9449)."; every other tag separates words.
+        h = re.sub(r"</?(?:a|abbr|b|cite|code|em|i|kbd|mark|q|s|small|span|strong|sub|sup|time|u|var)\b[^>]*>", "", h, flags=re.I)
+        return html.unescape(re.sub(r"<[^>]+>", " ", h))
+
     with_hrefs = re.sub(r"""<a\b[^>]*?\bhref\s*=\s*["']([^"']*)["'][^>]*>""", r" \1 ", body, flags=re.I)
     return strip(body), strip(with_hrefs)
 
