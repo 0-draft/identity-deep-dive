@@ -15,7 +15,7 @@ Informative references listed in Section 12.2:
 
 ## Key Changes
 
-From the -05 to -06 diff (marked truncated in the staged material):
+From the -05 to -06 diff (<https://author-tools.ietf.org/iddiff?url1=draft-ietf-oauth-identity-assertion-authz-grant-05&url2=draft-ietf-oauth-identity-assertion-authz-grant-06>):
 
 - IdP error for a subject token that fails validation changed from `invalid_grant` to `invalid_request`, citing RFC 8693 Section 2.2.2. A Client that gets `invalid_request` for a request that previously succeeded can get a new subject token and retry (Section 4.3.4.3).
 - New explanation that `access_denied` is used instead of `invalid_target` when the Client or End-User is not authorized for the target, so the Client can distinguish a forbidden target from an unrecognized one.
