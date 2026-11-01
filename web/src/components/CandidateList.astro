@@ -20,7 +20,7 @@ const label = { high: "Raised", low: "Lowered" } as const;
           </p>
           <span class="shrink-0 text-sm tabular-nums text-muted" title="Heuristic score">{c.score}</span>
         </div>
-        {(c.draft_name || c.repo) && <p class="mt-0.5 font-mono text-xs text-muted">{c.draft_name ?? c.repo}</p>}
+        {c.draft_name && <p class="mt-0.5 font-mono text-xs text-muted">{c.draft_name}</p>}
         {c.ai_priority && c.ai_priority !== "normal" && (
           <p class="mt-1.5 text-[13px] leading-snug">
             <span class:list={["font-semibold", c.ai_priority === "high" ? "text-sig-substantive" : "text-muted"]}>

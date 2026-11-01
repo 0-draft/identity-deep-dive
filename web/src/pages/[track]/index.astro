@@ -22,8 +22,10 @@ const meta = TRACKS.find((t) => t.id === trackId)!;
 
 const daily = latestDaily(trackId);
 const weekly = latestWeekly(trackId);
-const candidates = topCandidates(trackId, 12);
-const { brief, items } = briefing(trackId);
+const candidates = topCandidates(trackId);
+const { brief, items: allItems } = briefing(trackId);
+const ITEM_LIMIT = 30;
+const items = allItems.slice(0, ITEM_LIMIT);
 const updated = brief
   ? new Date(brief.at).toLocaleString("en-GB", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit", timeZone: "UTC" }) + " UTC"
   : null;

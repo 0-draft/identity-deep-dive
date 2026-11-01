@@ -1,13 +1,17 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import InsightItem from "../components/InsightItem.astro";
-import { TRACKS, allInsights, briefing, type Insight } from "../lib/tracks";
+import { SIGNIFICANCE_RANK, TRACKS, allInsights, briefing, type Insight } from "../lib/tracks";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const items = allInsights();
-const RANK = { substantive: 0, "new-proposal": 1, discussion: 2, editorial: 3, routine: 4 } as const;
-const lead = [...items].sort((a, b) => RANK[a.significance] - RANK[b.significance] || (a.first_seen < b.first_seen ? 1 : -1))[0];
-const rest = items.filter((i) => i !== lead);
+// Up to four runs a day for seven days can add hundreds of items; the home
+// page shows the most recent, and each track page has the rest.
+const FEED_LIMIT = 40;
+const lead = [...items].sort(
+  (a, b) => SIGNIFICANCE_RANK[a.significance] - SIGNIFICANCE_RANK[b.significance] || (a.first_seen < b.first_seen ? 1 : -1),
+)[0];
+const rest = items.filter((i) => i !== lead).slice(0, FEED_LIMIT);
 
 const byDay = new Map<string, Insight[]>();
 for (const i of rest) byDay.set(i.first_seen, [...(byDay.get(i.first_seen) ?? []), i]);
