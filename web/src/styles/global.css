@@ -1,32 +1,131 @@
 @import "tailwindcss";
 
+/*
+  Identity Deep Dive. The page is a briefing desk: the memorable thing is the
+  one-line explanation of each change, set in a serif like a sentence spoken
+  to a colleague. Colour carries one meaning only, how much a change matters.
+*/
 @theme {
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  --color-ink: #0f172a;
-  --color-accent: #2563eb;
+  --font-sans: "Public Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-serif: "Source Serif 4", "Iowan Old Style", Georgia, serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --color-paper: #f4f6f8;
+  --color-surface: #ffffff;
+  --color-ink: #1a2230;
+  --color-muted: #586274;
+  --color-rule: #d8dee6;
+  --color-link: #24459e;
+
+  --color-sig-substantive: #0b6e60;
+  --color-sig-new-proposal: #5845c9;
+  --color-sig-discussion: #9a5a0c;
+  --color-sig-editorial: #6b7586;
+  --color-sig-routine: #8c95a3;
 }
 
 @layer base {
   html {
     font-family: var(--font-sans);
+    -webkit-text-size-adjust: 100%;
   }
   body {
-    @apply bg-slate-50 text-slate-900 antialiased;
+    @apply bg-paper text-ink antialiased;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+  a {
+    color: var(--color-link);
+    text-underline-offset: 0.18em;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-link);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation: none !important;
+      transition: none !important;
+    }
   }
 }
 
 @layer components {
+  /* One-line explanation: the voice of the site. */
+  .headline {
+    font-family: var(--font-serif);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.22;
+    text-wrap: balance;
+  }
+
+  /* Significance: a filled square and a word. The square is the only colour. */
+  .sig {
+    @apply inline-flex items-center gap-1.5 text-[13px] font-medium text-muted;
+  }
+  .sig::before {
+    content: "";
+    width: 0.62em;
+    height: 0.62em;
+    border-radius: 1px;
+    background: var(--sig, var(--color-sig-routine));
+  }
+  [data-sig="substantive"] { --sig: var(--color-sig-substantive); }
+  [data-sig="new-proposal"] { --sig: var(--color-sig-new-proposal); }
+  [data-sig="discussion"] { --sig: var(--color-sig-discussion); }
+  [data-sig="editorial"] { --sig: var(--color-sig-editorial); }
+  [data-sig="routine"] { --sig: var(--color-sig-routine); }
+
+  .item {
+    border-left: 3px solid var(--sig, var(--color-rule));
+  }
+
+  /* Disclosure rows: summary text with a plus/minus that answers the click. */
+  .disclosure > summary {
+    @apply flex cursor-pointer list-none items-center gap-2 text-sm font-medium text-link select-none;
+  }
+  .disclosure > summary::-webkit-details-marker {
+    display: none;
+  }
+  .disclosure > summary::before {
+    content: "+";
+    @apply inline-flex h-5 w-5 items-center justify-center rounded-sm border border-rule text-xs text-muted;
+    transition: transform 120ms ease;
+  }
+  .disclosure[open] > summary::before {
+    content: "\2212";
+  }
+
+  .diagram-frame {
+    @apply mt-3 overflow-x-auto rounded-md border border-rule bg-paper p-4;
+  }
+  .diagram-frame pre.mermaid {
+    @apply m-0 bg-transparent font-mono text-xs text-muted;
+    white-space: pre;
+  }
+  .diagram-frame pre.mermaid[data-processed]:not([data-processed="failed"]) {
+    white-space: normal;
+    width: max-content;
+    margin-inline: auto;
+  }
+
+  /* Rendered daily and weekly reports. */
   .prose-report {
-    @apply max-w-none text-[15px] leading-relaxed text-slate-800;
+    @apply max-w-none text-[15px] leading-relaxed text-ink;
   }
   .prose-report h1 {
-    @apply text-2xl font-semibold tracking-tight mt-0 mb-4 text-slate-900;
+    @apply mt-0 mb-4 text-xl font-semibold;
   }
   .prose-report h2 {
-    @apply text-xl font-semibold tracking-tight mt-8 mb-3 pb-1 border-b border-slate-200 text-slate-900;
+    @apply mt-8 mb-3 border-b border-rule pb-1 text-lg font-semibold;
   }
   .prose-report h3 {
-    @apply text-base font-semibold mt-6 mb-2 text-slate-800;
+    @apply mt-6 mb-2 text-base font-semibold;
   }
   .prose-report p {
     @apply my-3;
@@ -37,29 +136,27 @@
   .prose-report ol {
     @apply my-3 ml-5 list-decimal space-y-1;
   }
-  .prose-report a {
-    @apply text-blue-600 hover:underline;
-  }
   .prose-report code {
-    @apply rounded bg-slate-100 px-1.5 py-0.5 text-[0.85em] text-slate-800 font-mono;
+    @apply rounded bg-paper px-1.5 py-0.5 font-mono text-[0.85em];
   }
   .prose-report pre {
-    @apply my-4 overflow-x-auto rounded-lg bg-slate-900 p-4 text-[13px] leading-relaxed text-slate-100;
+    @apply my-4 overflow-x-auto rounded-md bg-ink p-4 text-[13px] leading-relaxed text-white;
   }
   .prose-report pre code {
-    @apply bg-transparent text-inherit p-0;
+    @apply bg-transparent p-0 text-inherit;
   }
   .prose-report table {
-    @apply my-4 w-full text-sm border-collapse;
+    @apply my-4 block w-full overflow-x-auto text-sm;
+    border-collapse: collapse;
   }
   .prose-report th,
   .prose-report td {
-    @apply border-b border-slate-200 px-3 py-2 text-left align-top;
+    @apply border-b border-rule px-3 py-2 text-left align-top;
   }
   .prose-report th {
-    @apply bg-slate-100 font-semibold;
+    @apply bg-paper font-semibold;
   }
   .prose-report blockquote {
-    @apply my-4 border-l-4 border-slate-300 pl-4 italic text-slate-600;
+    @apply my-4 border-l-4 border-rule pl-4 text-muted;
   }
 }

@@ -1,65 +1,75 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { TRACKS, summary } from "../lib/tracks";
+import InsightItem from "../components/InsightItem.astro";
+import { SIGNIFICANCE_RANK, TRACKS, allInsights, briefing, type Insight } from "../lib/tracks";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-const summaries = TRACKS.map((t) => summary(t.id));
+const items = allInsights();
+// Up to four runs a day for seven days can add hundreds of items; the home
+// page shows the most recent, and each track page has the rest.
+const FEED_LIMIT = 40;
+// The lead is the most significant change from the newest day, so the page
+// never opens with last week's news.
+const newest = items[0]?.first_seen;
+const lead = items
+  .filter((i) => i.first_seen === newest)
+  .sort(
+    (a, b) =>
+      SIGNIFICANCE_RANK[a.significance] - SIGNIFICANCE_RANK[b.significance] ||
+      // Equal weight: prefer one with a diagram, which the lead shows open.
+      Number(!!b.diagram) - Number(!!a.diagram),
+  )[0];
+const rest = items.filter((i) => i !== lead).slice(0, FEED_LIMIT);
+
+const byDay = new Map<string, Insight[]>();
+for (const i of rest) byDay.set(i.first_seen, [...(byDay.get(i.first_seen) ?? []), i]);
+const dayLabel = (d: string) =>
+  new Date(`${d}T00:00:00Z`).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" });
+
+const tracks = TRACKS.map((t) => ({ meta: t, b: briefing(t.id) }));
 ---
 
 <Layout title="Identity Deep Dive">
-  <section class="mb-12">
-    <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight text-slate-900">
-      Identity Deep Dive
+  <section aria-labelledby="lead" class="mb-12">
+    <h1 id="lead" class="max-w-[40ch] text-[15px] text-muted">
+      What changed in identity standards, explained in one line, a diagram and the people it affects.
     </h1>
-    <p class="mt-3 max-w-2xl text-slate-600 leading-relaxed">
-      Continuously monitors identity and security standards bodies. Each track
-      collects, normalizes, and scores activity, then publishes daily and
-      weekly Markdown reports.
-    </p>
+    {lead ? (
+      <div class="mt-5">
+        <InsightItem item={lead} variant="lead" showTrack openDiagram />
+      </div>
+    ) : (
+      <p class="mt-5 max-w-[60ch] text-muted">
+        No explanations yet. They appear after the next collection run finds a new draft revision, mailing-list thread or pull request.
+      </p>
+    )}
   </section>
 
-  <section>
-    <div class="flex items-baseline justify-between mb-4">
-      <h2 class="text-lg font-semibold text-slate-900">Tracks</h2>
-      <span class="text-xs text-slate-500">Latest snapshot per track</span>
-    </div>
-    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      {summaries.map((s) => (
-        <a
-          href={`${base}/${s.id}/`}
-          class="group block rounded-xl border border-slate-200 bg-white p-5 hover:border-blue-400 hover:shadow-sm transition"
-        >
-          <div class="flex items-start justify-between gap-3">
-            <div>
-              <h3 class="font-semibold text-slate-900 text-base group-hover:text-blue-600">
-                {s.meta.name}
-              </h3>
-              <p class="mt-1 text-xs text-slate-500">{s.meta.org}</p>
-            </div>
-            {s.topScore != null && (
-              <div class="text-right shrink-0">
-                <div class="text-lg font-bold text-slate-900 tabular-nums">{s.topScore}</div>
-                <div class="text-[10px] uppercase tracking-wider text-slate-400">top score</div>
-              </div>
-            )}
+  <div class="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,1fr)_20rem]">
+    <section aria-labelledby="feed">
+      <h2 id="feed" class="headline text-xl">Everything else from the last few days</h2>
+      {rest.length === 0 && <p class="mt-3 text-muted">Nothing else yet.</p>}
+      {[...byDay.entries()].map(([day, list]) => (
+        <div class="mt-6">
+          <h3 class="border-b border-rule pb-1.5 text-sm font-semibold text-muted">{dayLabel(day)}</h3>
+          <div class="mt-3 space-y-3">
+            {list.map((item) => <InsightItem item={item} variant="compact" showTrack />)}
           </div>
-          <p class="mt-3 text-sm text-slate-600 leading-snug">{s.meta.scope}</p>
-          <dl class="mt-4 grid grid-cols-3 gap-2 text-xs">
-            <div>
-              <dt class="text-slate-400 uppercase tracking-wider text-[10px]">Daily</dt>
-              <dd class="font-mono text-slate-700">{s.dailyName ?? "—"}</dd>
-            </div>
-            <div>
-              <dt class="text-slate-400 uppercase tracking-wider text-[10px]">Weekly</dt>
-              <dd class="font-mono text-slate-700">{s.weeklyName ?? "—"}</dd>
-            </div>
-            <div>
-              <dt class="text-slate-400 uppercase tracking-wider text-[10px]">Candidates</dt>
-              <dd class="font-mono text-slate-700">{s.candidateCount}</dd>
-            </div>
-          </dl>
-        </a>
+        </div>
       ))}
-    </div>
-  </section>
+    </section>
+
+    <aside aria-labelledby="tracks" class="self-start lg:sticky lg:top-6">
+      <h2 id="tracks" class="headline text-xl">Tracks</h2>
+      <ul class="mt-4 space-y-6">
+        {tracks.map(({ meta, b }) => (
+          <li>
+            <a class="text-[17px] font-semibold" href={`${base}/${meta.id}/`}>{meta.name}</a>
+            <p class="mt-0.5 text-sm text-muted">{meta.scope}</p>
+            {b.brief && <p class="mt-2 text-[15px] leading-snug">{b.brief.text}</p>}
+          </li>
+        ))}
+      </ul>
+    </aside>
+  </div>
 </Layout>
