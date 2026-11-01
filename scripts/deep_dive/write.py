@@ -43,7 +43,21 @@ TAG = re.compile(r"<(?!https?://)(?=[A-Za-z/!?])")
 SIGNATURE = re.compile(r"^\s*(\W\s*)?(generated (with|by) (claude|ai)\b|co-authored-by:)", re.IGNORECASE)
 BARE_URL = re.compile(r"(?<![(<\[])\bhttps?://[^\s)>\]]+")
 # Inline links may point at http(s), an anchor, or a relative Markdown file.
-UNSAFE_LINK = re.compile(r"\]\(\s*(?!https?://|#|(?:\.{1,2}/)?(?!/)[\w./-]+\.md\b)[^)]*\)")
+# The relative branch is anchored to the closing parenthesis, so "a.md:x" or
+# "a.md.evil" do not slip through on the prefix.
+UNSAFE_LINK = re.compile(r"\]\(\s*(?!https?://|#|(?:\.{1,2}/)?(?!/)[\w./-]+\.md(?:#[\w-]*)?\s*\))[^)]*\)")
+# Headings templates/deep-dive/README.md has; the prompt asks for all of them.
+README_HEADINGS = (
+    "## What this is",
+    "## How it works",
+    "## Use cases",
+    "## Why This Matters Now",
+    "## What Changed",
+    "## Technical Analysis",
+    "## Open Questions",
+    "## Experiments",
+    "## Sources",
+)
 # Reference definitions ("[1]: target") must point at http(s) too.
 UNSAFE_REF = re.compile(r"^ {0,3}\[[^\]]+\]:\s*(?!https?://)")
 # A code span is a run of N backticks closed by a run of exactly N.
@@ -158,9 +172,12 @@ def main() -> int:
         "",
         "## Check before merging",
         "",
-        "Everything here was drafted from the source text alone. Read it against the source, fix what is wrong, and merge when it is something you would stand behind.",
+        "Drafted only from the staged sources: the draft text or repository README, the latest revision diff, mailing-list messages, Datatracker states and earlier briefings from this repository. Read it against the sources, fix what is wrong, and merge when it is something you would stand behind.",
         "",
     ]
+    missing = [h for h in README_HEADINGS if h not in (target / "README.md").read_text(encoding="utf-8").splitlines()]
+    if missing:
+        body += ["README.md is missing these template headings:", ""] + [f"- [ ] `{h}`" for h in missing] + [""]
     if unverified:
         body += ["Statements the drafter could not fully support from the material:", ""]
         body += [f"- [ ] {u}" for u in unverified] + [""]

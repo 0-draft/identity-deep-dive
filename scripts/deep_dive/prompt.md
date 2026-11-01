@@ -47,7 +47,7 @@ Keep the template headings: `# Spec Notes`, `## References` (normative and infor
 
 ## Markdown rules
 
-The repository lints Markdown, so:
+Follow these Markdown rules (the repository owner lints with them; `write.py` checks only that the template headings are present):
 
 - Leave a blank line before and after every heading, list, table and code fence.
 - Every code fence has a language tag (`mermaid`, `json`, `http`, `text` ...).

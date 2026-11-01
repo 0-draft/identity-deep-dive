@@ -35,6 +35,11 @@ on:
 
 permissions: {}
 
+# A dispatch overlapping the Tuesday run could draft the same subject twice.
+concurrency:
+  group: deep-dive-draft
+  cancel-in-progress: false
+
 jobs:
   # The track list comes from scripts/insights/tracks.py. The dispatch choice
   # above has to repeat it: workflow inputs cannot be computed.
@@ -139,8 +144,10 @@ jobs:
           printf '%s' "$RESULT" > "$WORK/result.json"
           python scripts/insights/guard.py "$WORK/result.json"
 
+      # Uploaded whenever the steps above succeeded, with a "none" marker when
+      # there was nothing to draft, so a missing artifact always means a
+      # failure the open job should surface.
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        if: steps.stage.outputs.found == 'true'
         with:
           name: deep-dive-${{ matrix.track }}
           path: deep-dive-work
@@ -169,17 +176,24 @@ jobs:
         with:
           python-version: "3.12"
 
-      # No artifact means the draft job found no subject or failed.
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
-        id: download
-        continue-on-error: true
         with:
           name: deep-dive-${{ matrix.track }}
           path: deep-dive-work
 
+      - name: Check for a subject
+        id: subject
+        run: |
+          if [ -f "$WORK/none" ]; then
+            echo "Nothing to draft for ${{ matrix.track }}."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Write the files
         id: write
-        if: steps.download.outcome == 'success'
+        if: steps.subject.outputs.found == 'true'
         run: |
           python scripts/deep_dive/write.py --work "$WORK" --result "$WORK/result.json" --pr-body "$RUNNER_TEMP/pr-body.md"
           {
@@ -190,7 +204,7 @@ jobs:
 
       # The token only reaches the two commands that need it.
       - name: Push the branch and open the pull request
-        if: steps.download.outcome == 'success'
+        if: steps.subject.outputs.found == 'true'
         env:
           GH_TOKEN: ${{ secrets.DEEP_DIVE_PR_TOKEN || github.token }}
           HAS_PR_TOKEN: ${{ secrets.DEEP_DIVE_PR_TOKEN != '' }}

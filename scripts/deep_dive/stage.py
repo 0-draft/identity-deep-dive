@@ -202,6 +202,9 @@ def main() -> int:
     gh_out = os.environ.get("GITHUB_OUTPUT")
     if subject is None:
         print("stage: no candidate without a deep dive")
+        # A marker the publishing job can tell apart from a missing artifact.
+        args.out.mkdir(parents=True, exist_ok=True)
+        (args.out / "none").write_text("no candidate without a deep dive\n", encoding="utf-8")
         if gh_out:
             with open(gh_out, "a", encoding="utf-8") as fh:
                 fh.write("found=false\n")
