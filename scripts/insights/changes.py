@@ -75,6 +75,15 @@ PAGE_HEADER = re.compile(
 )
 
 
+def cut(text: str, limit: int) -> str:
+    """The "(truncated)" label, only when cap() will actually cut the text.
+
+    The label used to be printed unconditionally, and the model reported
+    complete diffs as truncated.
+    """
+    return " (truncated)" if len(text) > limit else ""
+
+
 def draft_txt(name: str, rev: str) -> str:
     """Draft text with page headers, footers and form feeds removed.
 
@@ -96,13 +105,13 @@ def draft_material(name: str, rev: str, prev_rev: str | None, diff_cap: int = DR
     except requests.RequestException as exc:
         return f"(could not fetch {name}-{rev}: {exc})\n"
     if prev_rev is None:
-        return f"Full text of new draft {name}-{rev} (truncated):\n\n" + cap(cur, DRAFT_TEXT_CAP)
+        return f"Full text of new draft {name}-{rev}{cut(cur, DRAFT_TEXT_CAP)}:\n\n" + cap(cur, DRAFT_TEXT_CAP)
     try:
         old = draft_txt(name, prev_rev)
     except requests.RequestException as exc:
         return (
             f"(could not fetch previous revision {name}-{prev_rev}: {exc})\n"
-            f"Text of {name}-{rev} instead (truncated):\n\n" + cap(cur, DRAFT_TEXT_CAP)
+            f"Text of {name}-{rev} instead{cut(cur, DRAFT_TEXT_CAP)}:\n\n" + cap(cur, DRAFT_TEXT_CAP)
         )
     diff = "".join(
         difflib.unified_diff(
@@ -115,7 +124,7 @@ def draft_material(name: str, rev: str, prev_rev: str | None, diff_cap: int = DR
     )
     if not diff:
         return f"{name}-{prev_rev} and {name}-{rev} have identical text.\n"
-    return f"Unified diff {name}-{prev_rev} -> {name}-{rev} (truncated):\n\n" + cap(diff, diff_cap)
+    return f"Unified diff {name}-{prev_rev} -> {name}-{rev}{cut(diff, diff_cap)}:\n\n" + cap(diff, diff_cap)
 
 
 def mail_material(url: str) -> str:
