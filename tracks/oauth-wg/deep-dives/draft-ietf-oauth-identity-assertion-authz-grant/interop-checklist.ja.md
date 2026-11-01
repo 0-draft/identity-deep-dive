@@ -5,23 +5,23 @@
 - [ ] IdP は、subject token が期限切れ、不正な形式、audience の誤り、あるいは期限切れまたは失効した Refresh Token である場合に、`invalid_grant` ではなく `invalid_request` を返す (Section 4.3.4.3)。
 - [ ] IdP は、subject token は有効だがクライアントまたはエンドユーザーが対象に対して認可されていない場合に、`invalid_target` ではなく `access_denied` を返す (Section 4.3.4.3)。
 - [ ] IdP は、`subject_token` として提示されたアクセストークン、ID-JAG、クライアントアサーション、または別の目的で発行された SAML アサーションを拒否し、`typ` が別のトークン種別を示す JWT を拒否する (Section 4.3.3)。
-- [ ] Identity Assertion の場合、subject token の audience (ID Token の `aud` または SAML の Audience) はクライアント認証に使われた `client_id` と等しく、SAML の Audience は Client ID に対応付けられている (Sections 4.3.3 and 4.5)。
+- [ ] Identity Assertion の場合、subject token の audience (ID Token の `aud` または SAML の Audience) はクライアント認証に使われた `client_id` と等しく、SAML の Audience は Client ID に対応付けられている (Section 4.3.3、4.5)。
 - [ ] 許可された `resource` 値はクライアントが送ったとおりに正確にコピーされ、Simple String Comparison で比較され、1 つも許可されない場合や必要な `resource` がない場合は `invalid_target` が返る (Section 4.3.3)。
-- [ ] クライアントは、検証済みの Protected Resource Metadata にある `resource` 値をそのままリクエストに入れ、何かを送る前に RFC 8414 の `issuer` 値と RFC 9728 の `resource` 値を確認している (Sections 4.3, 9.5 and 9.6)。
+- [ ] クライアントは、検証済みの Protected Resource Metadata にある `resource` 値をそのままリクエストに入れ、何かを送る前に RFC 8414 の `issuer` 値と RFC 9728 の `resource` 値を確認している (Section 4.3、9.5、9.6)。
 - [ ] Token Exchange のレスポンスは、`issued_token_type` が `urn:ietf:params:oauth:token-type:id-jag`、`token_type` が `N_A` であり、`access_token` に ID-JAG を含み、リクエストと異なる場合は必ず `scope` を含む (Section 4.3.4)。
-- [ ] ID-JAG のヘッダーの `typ` は `oauth-id-jag+jwt` であり、必須クレーム `iss`、`sub`、`aud`、`client_id`、`jti`、`exp`、`iat` が存在し、RS256 が受け入れられ、`id_jag_signing_alg_values_supported` のリストを公開している場合は RS256 を含む (Sections 3, 3.1 and 7.1)。
+- [ ] ID-JAG のヘッダーの `typ` は `oauth-id-jag+jwt` であり、必須クレーム `iss`、`sub`、`aud`、`client_id`、`jti`、`exp`、`iat` が存在し、RS256 が受け入れられ、`id_jag_signing_alg_values_supported` のリストを公開している場合は RS256 を含む (Section 3、3.1、7.1)。
 - [ ] Resource Authorization Server は、自身の issuer と等しい文字列または要素 1 つの配列として `aud` を受け入れ、それ以外の配列や値は `invalid_grant` で拒否する (Section 4.4.1)。
 - [ ] Resource Authorization Server は、`client_id` クレームが認証済みのクライアントを示さない場合に `invalid_grant` で拒否し、クライアントが認証しない場合は有効な `cnf` の証明を要求する (Section 4.4.1)。
 - [ ] Resource Authorization Server は、クライアント認証も送信者制約付き ID-JAG もないリクエストを `invalid_client` で拒否する (Section 4.4)。
-- [ ] マルチテナントの発行者の場合、ID-JAG は `tenant` を含み、テナントがない場合、`iss` と `tenant` の組が信頼されていない場合、または受信側のテナントが曖昧な場合に、Resource Authorization Server はそれを `invalid_grant` で拒否する (クレームは Section 3、Sections 6.1 and 4.4.1)。
-- [ ] Resource Authorization Server は、`aud_tenant`、`aud_sub`、`client_id` を自身のテナントモデルと整合させ、同じエンドユーザーには、ある Resource Authorization Server と `aud_tenant` について、クライアントにかかわらず常に同じ `sub` を与える (クレームは Section 3、Sections 5.2, 6.2 and 6.3)。
+- [ ] マルチテナントの発行者の場合、ID-JAG は `tenant` を含み、テナントがない場合、`iss` と `tenant` の組が信頼されていない場合、または受信側のテナントが曖昧な場合に、Resource Authorization Server はそれを `invalid_grant` で拒否する (クレームは Section 3、Section 6.1、4.4.1)。
+- [ ] Resource Authorization Server は、`aud_tenant`、`aud_sub`、`client_id` を自身のテナントモデルと整合させ、同じエンドユーザーには、ある Resource Authorization Server と `aud_tenant` について、クライアントにかかわらず常に同じ `sub` を与える (クレームは Section 3、Section 5.2、6.2、6.3)。
 - [ ] `resource` クレーム内のすべての識別子は、正しいテナントについて Resource Authorization Server が管轄するものであり、そうでなければリクエストは `invalid_grant` で失敗し、発行されるアクセストークンはそれらのリソースに制限される (Section 4.4.1)。
-- [ ] サポートされていない `cnf` 確認方式を持つ ID-JAG、証明のない `cnf`、またはサムプリントの不一致は、`jkt` と `x5t#S256` のいずれについても `invalid_grant` で失敗する (Sections 9.11, 9.11.1.2 and 9.11.2.2)。
-- [ ] DPoP に束縛された ID-JAG はグラントタイプ `urn:ietf:params:oauth:grant-type:jwt-dpop` で引き換えられ、クライアントは返された ID-JAG に自身が要求した `cnf` があることを確認する (Sections 4.4 and 9.11.1.1)。
+- [ ] サポートされていない `cnf` 確認方式を持つ ID-JAG、証明のない `cnf`、またはサムプリントの不一致は、`jkt` と `x5t#S256` のいずれについても `invalid_grant` で失敗する (Section 9.11、9.11.1.2、9.11.2.2)。
+- [ ] DPoP に束縛された ID-JAG はグラントタイプ `urn:ietf:params:oauth:grant-type:jwt-dpop` で引き換えられ、クライアントは返された ID-JAG に自身が要求した `cnf` があることを確認する (Section 4.4、9.11.1.1)。
 - [ ] Token Exchange リクエストで DPoP 証明とクライアント証明書の両方が提示された場合、IdP は ID-JAG を 1 つの仕組みだけに束縛する (Section 9.11)。
-- [ ] SAML NameID の `sub_id` は transient な NameID を決して使わず、NameID がサービスプロバイダーにスコープされている場合は `sp_name_qualifier` を含み、Resource Authorization Server が使うすべてのメンバーで比較され、ID-JAG の発行者は `sub_id.issuer` ではなくローカル設定を通じて SAML の発行者と結び付けられる (Sections 3.2.2 and 9.8)。
+- [ ] SAML NameID の `sub_id` は transient な NameID を決して使わず、NameID がサービスプロバイダーにスコープされている場合は `sp_name_qualifier` を含み、Resource Authorization Server が使うすべてのメンバーで比較され、ID-JAG の発行者は `sub_id.issuer` ではなくローカル設定を通じて SAML の発行者と結び付けられる (Section 3.2.2、9.8)。
 - [ ] SAML NameID の `sub_id` を要求する Resource Authorization Server は、`sub_id` がない、`sub_id` の形式が不正、フォーマットがサポートされていない、または発行者が認可されていない ID-JAG を `invalid_grant` で拒否する (Section 3.2.2)。
-- [ ] クライアントの再試行ロジックは、IdP での `invalid_request` と Resource Authorization Server での `invalid_grant` を区別する。新しい ID-JAG で `invalid_grant` は解消しうるが `access_denied` は解消しないため、クライアントは `access_denied` の後に新しい ID-JAG を要求し続けるべきではない (Sections 4.3.4.3 and 4.4.3)。
-- [ ] `urn:ietf:params:oauth:grant-profile:id-jag` を広告する Resource Authorization Server は `grant_types_supported` に `urn:ietf:params:oauth:grant-type:jwt-bearer` も列挙し、それを広告するクライアントは token-exchange と jwt-bearer の両方のグラントタイプを列挙する (Sections 7.2 and 8)。
+- [ ] クライアントの再試行ロジックは、IdP での `invalid_request` と Resource Authorization Server での `invalid_grant` を区別する。新しい ID-JAG で `invalid_grant` は解消しうるが `access_denied` は解消しないため、クライアントは `access_denied` の後に新しい ID-JAG を要求し続けるべきではない (Section 4.3.4.3、4.4.3)。
+- [ ] `urn:ietf:params:oauth:grant-profile:id-jag` を広告する Resource Authorization Server は `grant_types_supported` に `urn:ietf:params:oauth:grant-type:jwt-bearer` も列挙し、それを広告するクライアントは token-exchange と jwt-bearer の両方のグラントタイプを列挙する (Section 7.2、8)。
 - [ ] 両方のサーバーでエラーの説明は、エンドユーザーがライセンスや権利を持っているかどうかを明かさない (Section 10)。
 - [ ] IdP は、明示的に設定されていない限り、自身が発行した ID-JAG に応じてアクセストークンを発行せず、同じ ID-JAG が別の下流の Resource Authorization Server へのグラントとして使われることは決してない (Section 9.4)。

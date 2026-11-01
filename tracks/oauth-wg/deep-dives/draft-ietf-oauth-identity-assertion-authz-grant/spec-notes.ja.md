@@ -27,7 +27,7 @@ Section 12.2 に挙げられている参考参照:
 - IdP でのクライアント認証の必須化と `invalid_client` (Section 4.3.3)。
 - 単一の `audience` 値、`invalid_target` の扱い、Simple String Comparison によるリソースの比較、Token Exchange リクエストでの `resource` の RECOMMENDED 化 (Section 4.3.3)。
 - DPoP と並ぶ mTLS の証明書束縛 (Section 9.11.2)。
-- `id_jag_signing_alg_values_supported` メタデータと、RS256 の実装必須化 (Sections 3 and 7.1)。
+- `id_jag_signing_alg_values_supported` メタデータと、RS256 の実装必須化 (Section 3、7.1)。
 - subject token の保管に関するガイダンス (Section 9.2)。
 - Privacy Considerations (Section 10)。
 

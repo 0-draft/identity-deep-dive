@@ -10,6 +10,6 @@ ID-JAG は、非公式には Cross-App Access (XAA) と呼ばれ、アプリケ�
 
 ## 未解決の論点
 
-- 期限切れの入力に対して IdP では `invalid_request`、Resource Authorization Server では `invalid_grant` が返ることを踏まえ、クライアントは再試行ロジックで 2 つのエラーのエンドポイントをどう区別すべきか (Sections 4.3.4.3 and 4.4.3)。
+- 期限切れの入力に対して IdP では `invalid_request`、Resource Authorization Server では `invalid_grant` が返ることを踏まえ、クライアントは再試行ロジックで 2 つのエラーのエンドポイントをどう区別すべきか (Section 4.3.4.3、4.4.3)。
 - ワーキンググループのリポジトリにある未解決の issue (たとえば README.md でリンクしている #141、#142、#145、#129、#114) のうち、どれを著者が IETF 127 に持ち込むのか。アナウンスには書かれていない。
 - 本ドラフトが 2 つの Work in Progress のドラフト (Identity Chaining と DPoP JWT グラント) に依存していることにより、それらの進展に伴ってここにも変更が生じるかどうか。

@@ -24,8 +24,9 @@ const LABEL: Record<string, StringKey> = {
   "hands-on/notes.md": "docHandsOnNotes",
 };
 const label = (name: string) => (LABEL[name] ? t(lang, LABEL[name]) : name);
-// The README's own H1 duplicates the page title.
-const body = (name: string, md: string) => (name === "README.md" ? md.replace(/^#\s+.+\n+/, "") : md);
+// A file's own H1 repeats the page title (README) or the section label
+// (the others), so it is dropped and the page keeps a single h1.
+const body = (_name: string, md: string) => md.replace(/^\s*#\s+.+\n+/, "");
 const untranslated = lang === "ja" && !doc.files.some((f) => f.translated);
 ---
 

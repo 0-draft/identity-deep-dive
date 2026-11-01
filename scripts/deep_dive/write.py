@@ -132,6 +132,19 @@ def valid_subject(subject: dict) -> bool:
     )
 
 
+def heading_count(markdown: str) -> int:
+    """ATX headings outside code fences (a "# comment" in a code block is not one)."""
+    count, fence = 0, None
+    for line in markdown.splitlines():
+        m = FENCE.match(line)
+        if m:
+            fence = None if fence and m.group(1)[0] == fence[0] else (fence or m.group(1))
+            continue
+        if fence is None and re.match(r"^#{1,6} ", line):
+            count += 1
+    return count
+
+
 def no_mentions(text: str) -> str:
     """Keep "@name" in a PR body from notifying a real account."""
     return re.sub(r"(?<![\w.])@(?=[A-Za-z0-9])", "@\u200b", text)
@@ -174,10 +187,11 @@ def main() -> int:
             ja_text = clean(ja)
             (target / fname.replace(".md", ".ja.md")).write_text(ja_text, encoding="utf-8")
             written_ja.append(fname)
-            # The Japanese should have the same sections; count headings.
-            count = lambda t: sum(1 for line in t.splitlines() if re.match(r"^#{1,6} ", line))
-            if count(en) != count(ja_text):
-                section_mismatch.append(f"{fname}: {count(en)} headings in English, {count(ja_text)} in Japanese")
+            # The Japanese should have the same sections.
+            if heading_count(en) != heading_count(ja_text):
+                section_mismatch.append(
+                    f"{fname}: {heading_count(en)} headings in English, {heading_count(ja_text)} in Japanese"
+                )
     shutil.copy(TEMPLATE / "hands-on-log.md", target / "hands-on-log.md")
 
     one_liner = clean(str(result.get("one_liner", ""))).strip()

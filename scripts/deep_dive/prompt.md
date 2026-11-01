@@ -64,5 +64,5 @@ Every Markdown field has a `_ja` twin (`one_liner_ja`, `readme_ja`, `context_ja`
 
 - Same content and structure as the English: the same sections in the same order, the same list items, the same diagram. Translate the headings (for example `## 仕組み` for `## How it works`) and the one-line blockquote (`> 一言で言うと: ...`).
 - Plain technical Japanese in the である/だ style. Not colloquial and not translationese. Spell terms out instead of abbreviating them.
-- Keep draft names, protocol names, claim and parameter names, error codes, section numbers and RFC numbers exactly as written. Keep mermaid diagrams and code unchanged except for translating labels inside the diagram.
+- Keep draft names, protocol names, claim and parameter names, error codes, section numbers and RFC numbers exactly as written. Write section references as `Section 4.4`, and several as `Section 4.4、4.4.1`, never "Sections ... and ...". Keep mermaid diagrams and code unchanged except for translating labels inside the diagram.
 - The same Markdown rules apply.

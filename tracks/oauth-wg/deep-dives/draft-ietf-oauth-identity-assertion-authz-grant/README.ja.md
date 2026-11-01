@@ -25,7 +25,7 @@ sequenceDiagram
 
 1. ユーザーは OpenID Connect または SAML を使って IdP でクライアントにサインインし、クライアントは Identity Assertion と、任意で Refresh Token を取得する (Section 4.2)。
 2. クライアントは IdP に Token Exchange リクエストを送る。リクエストには `requested_token_type=urn:ietf:params:oauth:token-type:id-jag`、ちょうど 1 つの `audience` (Resource Authorization Server)、推奨される `resource`、任意の `scope` または `authorization_details`、そして subject token を含める (Section 4.3)。
-3. IdP はクライアントを認証し、subject token を検証し、ポリシーを確認しなければならない (MUST)。そのうえで署名済みの ID-JAG をレスポンスの `access_token` フィールドに入れて返す (Sections 4.3.3 and 4.3.4)。
+3. IdP はクライアントを認証し、subject token を検証し、ポリシーを確認しなければならない (MUST)。そのうえで署名済みの ID-JAG をレスポンスの `access_token` フィールドに入れて返す (Section 4.3.3、4.3.4)。
 4. クライアントは ID-JAG を Resource Authorization Server のトークンエンドポイントに `urn:ietf:params:oauth:grant-type:jwt-bearer` (DPoP に束縛された ID-JAG の場合は `jwt-dpop`) として送信する。通常は登録済みのクレデンシャルで認証するが、送信者制約付きの ID-JAG はクライアント認証なしで引き換えてもよい (Section 4.4)。
 5. Resource Authorization Server は `typ`、`iss`、署名、`aud`、`client_id`、テナント、`cnf`、およびリソース、スコープ、認可詳細を検証し、そのうえでアクセストークンを発行する (Section 4.4.1)。
 6. クライアントはアクセストークンを使ってリソースサーバーを呼び出す。リソースサーバーが信頼するのは Resource Authorization Server だけであり、IdP は信頼しない (Section 2.1)。
@@ -56,18 +56,18 @@ sequenceDiagram
 
 - 脅威モデルへの影響:
   - subject token は価値が高い (Section 9.2): 1 つの subject token を多数の Resource Authorization Server 向けの ID-JAG に交換できるため、ドラフトは、クライアント認証だけに頼らないこと、クライアントの鍵を別の保護ドメインに置くこと、送信者制約と Refresh Token のローテーションを検討することを求めている。
-  - メタデータとディスカバリーへの攻撃 (Sections 9.5 and 9.6): RFC 8414 の issuer の確認や RFC 9728 の resource の確認を省いたクライアントは、攻撃者の認可サーバーに誘導されうる。その認可サーバーは ID-JAG とクライアントのクレデンシャルを中継する。ドラフトは issuer の確認を主たる防御と位置づけ、さらに 3 つの緩和策を挙げている。ID-JAG 内の `resource` の値、IdP による管轄の確認、送信者制約である。
+  - メタデータとディスカバリーへの攻撃 (Section 9.5、9.6): RFC 8414 の issuer の確認や RFC 9728 の resource の確認を省いたクライアントは、攻撃者の認可サーバーに誘導されうる。その認可サーバーは ID-JAG とクライアントのクレデンシャルを中継する。ドラフトは issuer の確認を主たる防御と位置づけ、さらに 3 つの緩和策を挙げている。ID-JAG 内の `resource` の値、IdP による管轄の確認、送信者制約である。
   - トークンの取り違え (Section 4.3.3): IdP は subject token が表明された種別のものであり、その目的のために発行されたことを確認し、Identity Assertion として提示されたアクセストークン、ID-JAG、クライアントアサーションを拒否し、別のトークン種別を示す `typ` を拒否しなければならない。ID Token には明示的な `typ` がないため、ドラフトは環境ごとの方法で ID Token を識別することを認めている。
   - audience の束縛: Resource Authorization Server は `aud` が自身の issuer (文字列または要素 1 つの配列) であることを確認し、`client_id` を認証済みのクライアントと照合しなければならない (Section 4.4.1)。
   - アイデンティティの信頼 (Section 9.8): `sub_id.issuer` によって ID-JAG の発行者への信頼を確立してはならず、`email` や `aud_sub` でユーザーを解決する Resource Authorization Server は、発行者側テナントの管理者に依存していることになる。
-  - 情報の開示 (Sections 9.9 and 10): ID-JAG はクライアントから見えるため、ペアワイズの `sub`、`sub_id`、`aud_sub` はクライアントに開示され、Resource Authorization Server をまたいで紐付けられうる。エラーの説明は、たとえばライセンスの状況を明かすべきではない (SHOULD NOT)。
+  - 情報の開示 (Section 9.9、10): ID-JAG はクライアントから見えるため、ペアワイズの `sub`、`sub_id`、`aud_sub` はクライアントに開示され、Resource Authorization Server をまたいで紐付けられうる。エラーの説明は、たとえばライセンスの状況を明かすべきではない (SHOULD NOT)。
 - プロトコルフローへの影響:
   - Token Exchange レスポンスの特殊な点: グラントは `access_token` に入り、`token_type` は `N_A` である (Section 4.3.4)。
-  - リソースの扱い: クレーム内の `resource` は単一の文字列、または重複のない文字列からなる空でない配列であり、Simple String Comparison で比較される (Sections 3.1 and 4.3)。IdP はその一部だけを許可してもよいが、許可した各識別子は送られたとおりに正確にコピーしなければならない。
+  - リソースの扱い: クレーム内の `resource` は単一の文字列、または重複のない文字列からなる空でない配列であり、Simple String Comparison で比較される (Section 3.1、4.3)。IdP はその一部だけを許可してもよいが、許可した各識別子は送られたとおりに正確にコピーしなければならない。
   - Resource Authorization Server での Refresh Token: Resource Authorization Server は Refresh Token を返すべきではなく (SHOULD NOT)、サーバーが `exp` を制限するか `jti` を追跡しない限り、クライアントは ID-JAG を有効期限まで再提出してよい (Section 4.4.4)。
   - 送信者制約 (Section 9.11): DPoP は `cnf` に `jkt` を入れ、`jwt-dpop` グラントタイプを必要とする。mTLS は `cnf` に `x5t#S256` を入れる。IdP は両方に束縛すべきではない (SHOULD NOT)。レスポンスには束縛が行われたかどうかが示されないため、クライアントは ID-JAG に期待した `cnf` があるかを確認すべきである (SHOULD)。これによりサイレントなダウングレードを防ぐ。
-  - クライアント認証の代替手段: Resource Authorization Server はクライアント認証を要求すべきである (SHOULD) が、未認証のクライアントからの送信者制約付き ID-JAG を受け入れてもよく、その場合は `cnf` の証明が `client_id` の確認の代わりとなる (Sections 4.4, 4.4.1 and 9.1)。
-  - テナンシー (クレームは Section 3、規則は Sections 6.1, 6.2 and 6.4、拒否は Section 4.4.1): 2 つの別々のクレームがある。OpenID Enterprise が定義する `tenant` は発行者側のテナントを示す。マルチテナントの発行者はこれを含めなければならず、Resource Authorization Server は `iss` と `tenant` の組を信頼しなければならない。本ドラフトが登録する `aud_tenant` は Resource Authorization Server 側のテナントを示し、`aud` + `aud_tenant` + `aud_sub` はそこで一意でなければならない。受信側のテナントを一意に決定できない場合、Resource Authorization Server は ID-JAG を `invalid_grant` で拒否しなければならない。
+  - クライアント認証の代替手段: Resource Authorization Server はクライアント認証を要求すべきである (SHOULD) が、未認証のクライアントからの送信者制約付き ID-JAG を受け入れてもよく、その場合は `cnf` の証明が `client_id` の確認の代わりとなる (Section 4.4、4.4.1、9.1)。
+  - テナンシー (クレームは Section 3、規則は Section 6.1、6.2、6.4、拒否は Section 4.4.1): 2 つの別々のクレームがある。OpenID Enterprise が定義する `tenant` は発行者側のテナントを示す。マルチテナントの発行者はこれを含めなければならず、Resource Authorization Server は `iss` と `tenant` の組を信頼しなければならない。本ドラフトが登録する `aud_tenant` は Resource Authorization Server 側のテナントを示し、`aud` + `aud_tenant` + `aud_sub` はそこで一意でなければならない。受信側のテナントを一意に決定できない場合、Resource Authorization Server は ID-JAG を `invalid_grant` で拒否しなければならない。
 - 相互運用上の懸念:
   - Client ID の対応付け (Section 5.1): IdP は Resource Authorization Server におけるクライアントの識別子を帯域外の記録によって把握していなければならない。あるいはクライアントが共通の名前空間として Client ID Metadata Document を使うこともできる。
   - Subject 識別子の対応付け (Section 5.2): `sub` は Resource Authorization Server 向けに選ばれるため、クライアント自身の ID Token 内の `sub` とは異なりうる。あるエンドユーザーとある Resource Authorization Server の組については、どのクライアントが要求しても同じ `sub` を使わなければならない。
@@ -84,13 +84,13 @@ sequenceDiagram
 - Section 4.3.3 は IdP によるリソース管轄の確認を SHOULD としているが、Section 9.5 はその確認を防御の 1 つとして前提にしている。また Section 4.3.3 は、Resource Authorization Server がどのリソースを管轄しているかを IdP がどう知るかは範囲外としている。
 - Section 4.4.4 は新しいアクセストークンのために ID-JAG を再利用することを認めているが、1 回限りの使用は `jti` による Resource Authorization Server のポリシーに委ねている。ドラフトは共通の規則を定めていないため、サーバーごとに挙動が異なりうる。
 - Section 7.2 は Resource Authorization Server が `authorization_grant_profiles_supported` を広告することを認めているが、Section 9.7 は発行者の許可リストを開示することを禁じている。そのため、任意の保護されたディスカバリーの仕組みを除けば、ある発行者が受け入れられるかどうかをクライアントが事前に知る標準的な方法はない。
-- Section 4.3.4.3 は IdP のプロファイル済みコードとして `invalid_request`、`access_denied`、`invalid_target` を挙げているが、Section 4.3.3 は `invalid_client` も要求している。Section 4.4.3 は "the following two codes" をプロファイルするとしているが、Sections 4.4 and 4.4.1 は `invalid_client` も使っている。完全なエラー表が求められているのかどうかは不明である。
+- Section 4.3.4.3 は IdP のプロファイル済みコードとして `invalid_request`、`access_denied`、`invalid_target` を挙げているが、Section 4.3.3 は `invalid_client` も要求している。Section 4.4.3 は "the following two codes" をプロファイルするとしているが、Section 4.4、4.4.1 は `invalid_client` も使っている。完全なエラー表が求められているのかどうかは不明である。
 
 ## 実験
 
 - [ ] Lab 1: ID-JAG の Token Exchange を受け付けるテスト用の IdP トークンエンドポイントを立て、不正なリクエストを 5 つ送り、そのレスポンスを -06 の規定および既存ライブラリの返す値と比較する。クライアント認証なし (`invalid_client`, Section 4.3.3)、2 つの `audience` 値 (`invalid_request`, Section 4.3.3)、`subject_token` としてのアクセストークン (Section 4.3.3 は受け入れを禁じているがコードを指定していない。subject token の検証失敗を `invalid_request` でプロファイルしている Section 4.3.4.3 から `invalid_request` と推定する)、期限切れの ID Token (`invalid_request`, Section 4.3.4.3)、`aud` が別のクライアントである ID Token (audience 不一致による `invalid_request`, Section 4.3.4.3) の 5 つである。
-- [ ] Lab 2: 有効な ID-JAG を 1 つ用意し、Section 4.4.1 が `invalid_grant` で失敗しなければならないとする改変 (Section 4.4.3) を加えて Resource Authorization Server に提示する。誤った `typ`、このサーバーを示さない `aud`、認証済みクライアントと一致しない `client_id`、サーバーが管轄しない `resource`、マルチテナントの発行者からの `tenant` の欠落、検証に通らない `cnf` の束縛である。次に、サーバーが権利を与えていないエンドユーザー向けの未改変の ID-JAG と、すべてのリソースがローカルポリシーで拒否される ID-JAG を提示する。どちらも `access_denied` を返すはずである (Sections 4.4.1 and 4.4.3)。2 つのコードを取り違えるサーバーがあれば記録する。
-- [ ] Lab 3: DPoP に束縛された ID-JAG と mTLS に束縛された ID-JAG を要求し、それぞれを Resource Authorization Server で引き換える。対応する鍵または証明書があれば成功し、DPoP の場合は `jwt-dpop` グラントタイプを使う (Sections 4.4 and 9.11.1.2.1)。異なる鍵または証明書では `invalid_grant` で失敗する (Sections 9.11.1.2.1 and 9.11.2.2)。DPoP 証明もクライアント証明書もない場合も `invalid_grant` で失敗する (Sections 9.11.1.2.2 and 9.11.2.2)。最後に、束縛されていない ID-JAG をクライアント認証なしで引き換える。これは `invalid_client` となるが、送信者制約付きの ID-JAG であればクライアント認証なしでも受け入れられうる (Section 4.4)。
+- [ ] Lab 2: 有効な ID-JAG を 1 つ用意し、Section 4.4.1 が `invalid_grant` で失敗しなければならないとする改変 (Section 4.4.3) を加えて Resource Authorization Server に提示する。誤った `typ`、このサーバーを示さない `aud`、認証済みクライアントと一致しない `client_id`、サーバーが管轄しない `resource`、マルチテナントの発行者からの `tenant` の欠落、検証に通らない `cnf` の束縛である。次に、サーバーが権利を与えていないエンドユーザー向けの未改変の ID-JAG と、すべてのリソースがローカルポリシーで拒否される ID-JAG を提示する。どちらも `access_denied` を返すはずである (Section 4.4.1、4.4.3)。2 つのコードを取り違えるサーバーがあれば記録する。
+- [ ] Lab 3: DPoP に束縛された ID-JAG と mTLS に束縛された ID-JAG を要求し、それぞれを Resource Authorization Server で引き換える。対応する鍵または証明書があれば成功し、DPoP の場合は `jwt-dpop` グラントタイプを使う (Section 4.4、9.11.1.2.1)。異なる鍵または証明書では `invalid_grant` で失敗する (Section 9.11.1.2.1、9.11.2.2)。DPoP 証明もクライアント証明書もない場合も `invalid_grant` で失敗する (Section 9.11.1.2.2、9.11.2.2)。最後に、束縛されていない ID-JAG をクライアント認証なしで引き換える。これは `invalid_client` となるが、送信者制約付きの ID-JAG であればクライアント認証なしでも受け入れられうる (Section 4.4)。
 
 ## 出典
 
