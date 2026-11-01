@@ -24,7 +24,7 @@ Follow the repository template, `templates/deep-dive/README.md`, heading for hea
 
 1. `# Deep Dive: <name>`, then a one-line blockquote: "In one line: ...".
 2. `## What this is`: the problem and the mechanism in plain words, three to six sentences.
-3. `## How it works`: a mermaid `sequenceDiagram` or `flowchart` of the main flow, with only parties and steps that the material shows, then a short numbered walk-through.
+3. `## How it works`: a mermaid `sequenceDiagram` or `flowchart` of the main flow, with only parties and steps that the material shows, then a short numbered walk-through. Do not number the diagram labels: the walk-through is the only numbering, so the two never disagree.
 4. `## Use cases`: three to five concrete situations where an implementer or deployer would use or meet this.
 5. `## Why This Matters Now`: `- **Trigger**:` (from `subject.json`), `- **Source evidence**:` and `- **Expected impact**:`.
 6. `## What Changed`: the substantive changes in the latest revision when `diff.txt` exists, not the editorial ones; otherwise what the draft or repository introduces. Include compatibility or migration concerns.
