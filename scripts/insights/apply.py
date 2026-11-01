@@ -58,6 +58,24 @@ def text(value: Any, limit: int, *, oneline: bool = False) -> str:
     return s.replace("[", "\\[").replace("]", "\\]")
 
 
+# Hosts the collectors link to. changes.json crosses from the model's job, so
+# its URLs are checked here like any other field before they become links.
+LINK_HOSTS = {"datatracker.ietf.org", "author-tools.ietf.org", "mailarchive.ietf.org", "www.ietf.org", "github.com"}
+
+
+def safe_link(value: Any) -> str:
+    """An https URL on a known host with nothing that could end a Markdown link."""
+    url = str(value or "")
+    if not url.startswith("https://") or re.search(r"[\s()<>\[\]`]", url):
+        return ""
+    host = url[len("https://") :].split("/", 1)[0].lower()
+    return url if host in LINK_HOSTS else ""
+
+
+def link(title: str, url: str) -> str:
+    return f"[{title}]({url})" if url else title
+
+
 def mermaid(src: Any) -> str:
     s = str(src or "").strip()
     if not s or len(s) > 2500 or len(s.splitlines()) > 40:
@@ -118,7 +136,7 @@ def merge(store: dict, result: dict, changes: dict, track: str, today: str, now:
             "id": iid,
             "kind": src["kind"],
             "title": src["title"],
-            "url": src["url"],
+            "url": safe_link(src.get("url")),
             "first_seen": store.get("items", {}).get(iid, {}).get("first_seen", today),
             "updated_at": now,
             "headline": text(raw.get("headline"), 160, oneline=True),
@@ -227,7 +245,7 @@ def render(track: str, store: dict, today: dt.date) -> str:
     for i in items:
         heading = (i["headline"] or text(i["title"], 300, oneline=True)).rstrip(".:;!?")
         lines += [f"### {heading}", ""]
-        lines += [f"`{i['kind']}` · `{i['significance']}` · first seen {i['first_seen']} · [{text(i['title'], 300, oneline=True)}]({i['url']})", ""]
+        lines += [f"`{i['kind']}` · `{i['significance']}` · first seen {i['first_seen']} · {link(text(i['title'], 300, oneline=True), safe_link(i.get('url')))}", ""]
         if i["summary"]:
             lines += [i["summary"], ""]
         if i["diagram"]:
@@ -241,7 +259,7 @@ def render(track: str, store: dict, today: dt.date) -> str:
     overflow = store.get("overflow", [])
     if overflow:
         lines += ["### Also changed, not explained", ""]
-        lines += [f"- [{text(o['title'], 300, oneline=True)}]({o['url']})" for o in overflow] + [""]
+        lines += [f"- {link(text(o['title'], 300, oneline=True), safe_link(o.get('url')))}" for o in overflow] + [""]
 
     triage = store.get("triage", {})
     flagged = sorted(((k, v) for k, v in triage.items() if v["priority"] != "normal"), key=lambda kv: (PRIORITIES[kv[1]["priority"]], kv[0]))
@@ -365,7 +383,7 @@ def main() -> int:
             explained = {i.get("id") for i in result.get("items", [])} if merged else set()
             missed = [i for i in staged if i.get("id") not in explained]
             store["overflow"] = [
-                {"title": o.get("title", ""), "url": o.get("url", "")}
+                {"title": o.get("title", ""), "url": safe_link(o.get("url"))}
                 for o in (missed + (changes or {}).get("skipped", []))[:20]
             ]
             store.pop("attempts", None)
