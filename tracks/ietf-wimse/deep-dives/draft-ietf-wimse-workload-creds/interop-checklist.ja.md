@@ -1,0 +1,29 @@
+# Interop Checklist
+
+- [ ] `typ` ヘッダーが `wit+jwt` でない WIT を拒否し、`alg` が `none` の WIT も拒否する（`typ` は Section 5.1.3、`alg` は Section 5.1）。
+- [ ] 単一の JWS コンパクト形式 JWT でない WIT（たとえば JSON 形式のシリアライズや、余分なセグメントを持つトークン）を拒否する（Section 5.1.3）。
+- [ ] `sub` がない WIT、または `sub` がちょうど 1 つの Workload Identifier でない WIT を拒否する（Section 4、Section 5.1.3）。
+- [ ] `sub` のトラストドメインからトラストアンカーを選び、別のトラストドメインの正しい鍵で署名された WIT が拒否されることを確認する（Section 3、Section 9.1）。
+- [ ] 検証器が `iss` 内の URL から鍵材料を取得しないこと、および `iss` のない WIT を引き続き受理することを確認する（Section 3、Section 5.1.2、Section 9.1）。
+- [ ] `iss` がある場合に、トラストドメインに設定された発行者と異なるとき実装がどう動作するかを確認する。ドラフトはこれを規定していない。
+- [ ] `kid` がある場合とない場合の署名鍵の選択を検証する。鍵のローテーション中で複数の鍵を持つトラストドメインも含める（Section 3）。
+- [ ] `cnf`、`cnf.jwk`、`cnf.jwk.alg` のいずれかがない WIT を拒否し、`alg` が `none`、対称鍵、暗号化アルゴリズムである値を拒否する（有無は Section 5.1.3、使えるアルゴリズムは Section 5.1）。
+- [ ] 提示された proof のアルゴリズムが `cnf.jwk.alg` と等しいことを確認し、汎用の実装で ES256 への対応を試験する（Section 5.1）。
+- [ ] `cnf.jwk.alg` が `Ed25519` の場合と `EdDSA` の場合を、自分の検証器と関連ドラフトの双方で試験する。どちらも Section 5.1 の `alg` の規則で認められている。`EdDSA` は [RFC9864] で Deprecated とされ、例は `Ed25519` に変わった（Appendix A.1）。
+- [ ] 期限切れの WIT を拒否し、時刻ずれの扱いを意図的に決める。Section 5.1.3 は `exp` を列挙せず Section 9.3.1 を参照している（Section 5.1.3、Section 9.3.1）。
+- [ ] WIT 内の未知のクレームを無視し、プライベートなクレーム名で失敗しないこと。独自のクレームには衝突耐性のある名前を使う（Section 5.1.2）。
+- [ ] WIT を `Workload-Identity-Token` ヘッダーで送り、3 つの base64url 部分からなる ABNF に合致させ、ヘッダー名は大文字小文字を区別せず値は区別するものとして扱い、`Authorization` には決して入れない（Section 5.1、Section 5.1.1）。
+- [ ] proof of possession の audience が、信頼できる設定から得た受信者を指していることを検証し、中継点が Host ヘッダーを書き換えたリクエストも試験する（Section 5.2）。
+- [ ] audience が別のワークロードを指す proof of possession と、取得した WIT と proof を 2 つ目の被呼び出し側へ再送する場合を試験する（Section 5.2、Section 9.3.3、Section 9.3.4）。
+- [ ] 有効期間外の proof of possession を拒否し、その寿命が分単位であることを確認する（Section 9.3.2）。
+- [ ] `jti` の拒否リストやトークンステータスリストを運用する場合は、発行されるすべての WIT が `jti` を持つことを確認し、そのような仕組みを使わない場合は `jti` のない WIT でも検証器が動作することを確認する（Section 5.1、Section 9.3.1）。
+- [ ] WIC に Workload Identifier を持つ URI SubjectAltName がちょうど 1 つあること、およびそのような URI を 2 つ持つ証明書が拒否されることを確認する（Section 4、Section 6.1）。
+- [ ] サーバー用の WIC には、ホスト名で検証するクライアントのために DNSName SAN を含め、RFC 9525 に従ってサーバー証明書を期待する Workload Identifier と比較するクライアントを試験する（Section 1.2、Section 6.1）。
+- [ ] WIC のチェーンは、URI SAN のトラストドメインのトラストアンカーに対してのみ検証し、識別子がそのドメインとアンカーの外にある証明書を拒否する（Section 3、Section 9.4）。
+- [ ] 認可ポリシーは、パスだけではなく、トラストドメインの範囲での完全な Workload Identifier で照合する（Section 7、Section 9.4）。
+- [ ] TLS 上で提示された WIT が相互 TLS のクライアント資格情報として扱われないこと、および相互 TLS の認証が WIC を使うことを確認する（Section 1、Section 9.3）。
+- [ ] WIT の検証エラーには 400 を返し、`WWW-Authenticate` の仕組みを提示できる場合に限り 401 を使う（Section 5.3）。
+- [ ] ベアラートークンから WIT への移行中に両方のトークンを受け入れる場合は、認証手順の後で呼び出し元のアイデンティティを再検証する（Section 5.4）。
+- [ ] WIT と WIC の寿命が短く（WIT は時間単位。Section 5.1、9.3.1）、発行が止まっていても期限後に既存の資格情報が拒否されることを確認する（Section 9.2。WIC の寿命は Section 9.4.1）。
+- [ ] 資格情報の期限後に鍵が再利用されないこと、およびエクスポート不可かつハードウェアに束縛されている場合を除き資格情報ごとに再生成されること、さらに検証者が資格情報から鍵の保護状態を推定しないことを確認する（Section 9.5）。
+- [ ] 他の文書からこのドラフトへの参照に旧セクション番号が残っていないか確認する。たとえば旧 Section 1.3（現 1.2）、旧 Section 5.1.3（`iss` の注記。削除）、旧 Section 9.2.1〜9.2.5（現 9.3.1〜9.3.5）が該当する。

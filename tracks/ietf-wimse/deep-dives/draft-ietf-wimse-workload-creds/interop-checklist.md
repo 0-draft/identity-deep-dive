@@ -1,0 +1,29 @@
+# Interop Checklist
+
+- [ ] Reject a WIT whose `typ` header is not `wit+jwt`, and reject one with `alg` set to `none` (Section 5.1.3 for `typ`, Section 5.1 for `alg`).
+- [ ] Reject a WIT that is not a single JWS compact serialization JWT, for example a JSON serialization or a token with extra segments (Section 5.1.3).
+- [ ] Reject a WIT with no `sub`, or with a `sub` that is not exactly one Workload Identifier (Section 4, Section 5.1.3).
+- [ ] Select trust anchors from the trust domain in `sub`, and confirm a WIT signed by the correct key of a different trust domain is rejected (Section 3, Section 9.1).
+- [ ] Confirm the validator never fetches key material from a URL in `iss`, and still accepts a WIT with no `iss` (Section 3, Section 5.1.2, Section 9.1).
+- [ ] If `iss` is present, check what your implementation does when it differs from the issuer configured for the trust domain; the draft does not specify this.
+- [ ] Verify signature key selection with and without `kid`, including a trust domain with several keys during rotation (Section 3).
+- [ ] Reject a WIT with no `cnf`, no `cnf.jwk`, or no `cnf.jwk.alg`; reject `alg` values that are `none`, symmetric or encryption algorithms (Section 5.1.3 for presence, Section 5.1 for the allowed algorithms).
+- [ ] Check the algorithm of the presented proof equals `cnf.jwk.alg`, and test ES256 support in a general purpose implementation (Section 5.1).
+- [ ] Test `cnf.jwk.alg` of `Ed25519` and of `EdDSA` against your verifier and the companion drafts. Both are allowed by the Section 5.1 `alg` rule; `EdDSA` is Deprecated by [RFC9864] and the examples now use `Ed25519` (Appendix A.1).
+- [ ] Reject an expired WIT and apply the clock skew policy on purpose, since Section 5.1.3 does not list `exp` and refers to Section 9.3.1 (Section 5.1.3, Section 9.3.1).
+- [ ] Ignore unknown claims in a WIT and do not fail on private claim names; use collision-resistant names for your own claims (Section 5.1.2).
+- [ ] Send the WIT in the `Workload-Identity-Token` header, match the ABNF of three base64url parts, treat the header name as case insensitive and the value as case sensitive, and never put it in `Authorization` (Section 5.1, Section 5.1.1).
+- [ ] Verify that the audience of the proof of possession names the recipient, taken from trusted configuration, and test a request whose Host header was rewritten by an intermediary (Section 5.2).
+- [ ] Test a proof of possession whose audience names another workload, and a replay of a captured WIT and proof to a second callee (Section 5.2, Section 9.3.3, Section 9.3.4).
+- [ ] Reject a proof of possession outside its validity time and check that its lifetime is on the order of minutes (Section 9.3.2).
+- [ ] If you operate a `jti` deny-list or token status list, check every issued WIT carries `jti`; confirm validators still work with a WIT that has no `jti` when no such mechanism is used (Section 5.1, Section 9.3.1).
+- [ ] Check that a WIC has exactly one URI SubjectAltName carrying the Workload Identifier, and that a certificate with two such URIs is rejected (Section 4, Section 6.1).
+- [ ] For a server WIC, include DNSName SANs for clients that validate by host name, and test a client that compares the server certificate to the expected Workload Identifier per RFC 9525 (Section 1.2, Section 6.1).
+- [ ] Validate a WIC chain only against the trust anchors of the trust domain in its URI SAN, and reject a certificate whose identifier is outside that domain and anchor (Section 3, Section 9.4).
+- [ ] Match authorization policy on the full Workload Identifier in the scope of its trust domain, not on the path alone (Section 7, Section 9.4).
+- [ ] Confirm a WIT presented over TLS is not treated as the mutual TLS client credential, and that mutual TLS authentication uses the WIC (Section 1, Section 9.3).
+- [ ] Return 400 for WIT validation errors and use 401 only when a `WWW-Authenticate` mechanism can be offered (Section 5.3).
+- [ ] During a bearer-to-WIT transition, revalidate the caller identity after the authentication step when both token types are accepted (Section 5.4).
+- [ ] Check WIT and WIC lifetimes are short (WITs on the order of hours, Sections 5.1 and 9.3.1) and that existing credentials are rejected after expiry even when issuance has stopped (Section 9.2; WIC lifetime in Section 9.4.1).
+- [ ] Check that keys are not reused after credential expiry and are regenerated for each credential unless they are non-exportable and hardware-bound, and that verifiers do not infer key protection from the credential (Section 9.5).
+- [ ] Check references to this draft from other documents for old section numbers, for example former Section 1.3 (now 1.2), former Section 5.1.3 (the `iss` note, removed) and former Sections 9.2.1 to 9.2.5 (now 9.3.1 to 9.3.5).
