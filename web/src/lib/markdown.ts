@@ -39,9 +39,11 @@ function escapeHtml(s: string): string {
 export function renderDocument(src: string, diagramLabel: string): string {
   const token = `MERMAID${crypto.randomUUID().replace(/-/g, "")}X`;
   const diagrams: string[] = [];
-  const lifted = src.replace(/\r\n?/g, "\n").replace(MERMAID_FENCE, (_, _indent: string, body: string) => {
-    diagrams.push(body.replace(/^ {0,3}/gm, "").trimEnd());
-    return `\n\n${token}${diagrams.length - 1}\n\n`;
+  const lifted = src.replace(/\r\n?/g, "\n").replace(MERMAID_FENCE, (_, indent: string, body: string) => {
+    diagrams.push(body.replace(new RegExp(`^${indent}`, "gm"), "").trimEnd());
+    // Same indent, blank lines around: inside a list item marked keeps it
+    // in the item as its own paragraph, so the list is not broken.
+    return `\n\n${indent}${token}${diagrams.length - 1}\n\n`;
   });
   const html = renderMarkdown(lifted);
   return html.replace(new RegExp(`<p>${token}(\\d+)</p>`, "g"), (_, i: string) => {
