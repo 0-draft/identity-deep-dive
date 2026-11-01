@@ -8,9 +8,17 @@ const items = allInsights();
 // Up to four runs a day for seven days can add hundreds of items; the home
 // page shows the most recent, and each track page has the rest.
 const FEED_LIMIT = 40;
-const lead = [...items].sort(
-  (a, b) => SIGNIFICANCE_RANK[a.significance] - SIGNIFICANCE_RANK[b.significance] || (a.first_seen < b.first_seen ? 1 : -1),
-)[0];
+// The lead is the most significant change from the newest day, so the page
+// never opens with last week's news.
+const newest = items[0]?.first_seen;
+const lead = items
+  .filter((i) => i.first_seen === newest)
+  .sort(
+    (a, b) =>
+      SIGNIFICANCE_RANK[a.significance] - SIGNIFICANCE_RANK[b.significance] ||
+      // Equal weight: prefer one with a diagram, which the lead shows open.
+      Number(!!b.diagram) - Number(!!a.diagram),
+  )[0];
 const rest = items.filter((i) => i !== lead).slice(0, FEED_LIMIT);
 
 const byDay = new Map<string, Insight[]>();

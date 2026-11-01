@@ -13,6 +13,7 @@ interface Props {
 const { item, variant = "full", showTrack = false, openDiagram = false } = Astro.props;
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
 const hasAffects = item.use_cases.length > 0 || item.related.length > 0;
+const seen = new Date(`${item.first_seen}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "long", timeZone: "UTC" });
 const headingSize = { lead: "text-[1.75rem] sm:text-[2.1rem]", full: "text-[1.3rem]", compact: "text-[1.15rem]" }[variant];
 ---
 
@@ -20,6 +21,7 @@ const headingSize = { lead: "text-[1.75rem] sm:text-[2.1rem]", full: "text-[1.3r
   <div class="flex flex-wrap items-center gap-x-4 gap-y-1">
     <span class="sig">{SIGNIFICANCE_LABEL[item.significance]}</span>
     {showTrack && <a class="text-[13px] text-muted" href={`${base}/${item.track}/`}>{trackName(item.track)}</a>}
+    {variant !== "compact" && <time class="text-[13px] text-muted" datetime={item.first_seen}>{seen}</time>}
   </div>
 
   <h3 class:list={["headline mt-2 text-ink", headingSize]}>{item.headline || item.title}</h3>

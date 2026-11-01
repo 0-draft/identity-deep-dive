@@ -189,7 +189,8 @@ export function briefing(id: TrackId): TrackBriefing {
     track: id,
     headline: plain(i.headline).replace(/^in short,\s*/i, "").replace(/^./, (c) => c.toUpperCase()),
     summary: plain(i.summary),
-    title: plain(i.title),
+    // title is stored as collected (apply.py does not escape it), so it is
+    // not run through plain().
     url: safeUrl(i.url),
     use_cases: (i.use_cases ?? []).map(plain),
     related: (i.related ?? []).map((r) => ({ ...r, note: plain(r.note) })),
