@@ -97,9 +97,10 @@ const STRINGS = {
   mapNotReverified: { en: "Not re-verified at the last check", ja: "前回の確認で再確認できなかった" },
   mapStatusNotReverifiedShort: { en: "not re-verified", ja: "未再確認" },
   mapStatusNotReverified: {
-    en: "status not re-verified at the last check; showing the last confirmed one",
-    ja: "前回の確認では状態を再確認できなかった。最後に確認できた状態を表示",
+    en: "this status could not be re-confirmed at the last check",
+    ja: "前回の確認でこの状態を再確認できなかった",
   },
+  mapLastVerified: { en: "last verified", ja: "最終確認" },
   mapVerifiedOn: { en: "verified", ja: "確認" },
   mapSource: { en: "source", ja: "出典" },
   mapDetails: { en: "Every spec", ja: "仕様ごとの詳細" },

@@ -150,7 +150,7 @@ const neighbourhood = (s: Spec) => {
                   )}
                   {s.unverified.length > 0 && (
                     <p class="mt-1.5 text-xs text-muted">
-                      {t(lang, "mapNotReverified")}: {s.unverified.map((c) => c.who).join(", ")}
+                      {t(lang, "mapNotReverified")}: {s.unverified.map((c) => (c.verified_on ? `${c.who} (${t(lang, "mapLastVerified")} ${c.verified_on})` : c.who)).join(", ")}
                     </p>
                   )}
                 </div>
