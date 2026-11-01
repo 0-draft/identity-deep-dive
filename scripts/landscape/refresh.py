@@ -17,16 +17,18 @@ Output (written by CI, no model involved):
 A claim whose evidence disappears is kept but marked, so the site can say
 "not re-verified since" instead of silently showing stale adoption.
 
-Evidence is one phrase or a list of phrases, all of which must be on the page
-(case- and whitespace-insensitive). With "evidence_in_order": true they must
+Evidence is one phrase or a list of phrases, all of which must be in the
+page's visible text (case- and whitespace-insensitive; a phrase may also cite
+a link's href). With "evidence_in_order": true they must
 also appear in that order, which ties a list entry to the section around it
 (for example, between a "Supported features" heading and the next one).
 
 Usage:
   refresh.py           refresh and write data/landscape-status.json
-  refresh.py --check   check only; exit 1 if any OpenID status, external status
-                       or claim is not verified (PR check). Writes nothing
-                       unless --out is given.
+  refresh.py --check   check only (PR check). Writes nothing unless --out is
+                       given.
+  Either way, the exit status is 1 if any OpenID status, external status or
+  claim is not verified, or any status fell back to the previous run.
   --out PATH           write the result to PATH instead of
                        data/landscape-status.json
 """
@@ -128,12 +130,16 @@ def ietf_status(ietf: dict) -> dict:
 
 
 def page_text(url: str) -> tuple[str, str]:
+    """The page's visible text, and the same text with each link's href
+    written out before the link text (so a phrase can cite a link target).
+    Scripts, styles, comments and other attributes are never searched."""
     r = SESSION.get(url, timeout=TIMEOUT)
     r.raise_for_status()
-    raw = r.text
-    text = re.sub(r"<(script|style)[^>]*>.*?</\1>", " ", raw, flags=re.S | re.I)
-    text = html.unescape(re.sub(r"<[^>]+>", " ", text))
-    return text, html.unescape(raw)
+    body = re.sub(r"<!--.*?-->", " ", r.text, flags=re.S)
+    body = re.sub(r"<(script|style|noscript|template)[^>]*>.*?</\1>", " ", body, flags=re.S | re.I)
+    strip = lambda h: html.unescape(re.sub(r"<[^>]+>", " ", h))  # noqa: E731
+    with_hrefs = re.sub(r"""<a\b[^>]*?\bhref\s*=\s*["']([^"']*)["'][^>]*>""", r" \1 ", body, flags=re.I)
+    return strip(body), strip(with_hrefs)
 
 
 def norm(s: str) -> str:
@@ -153,17 +159,17 @@ def phrases_found(haystack: str, phrases: list[str], in_order: bool) -> bool:
 def evidence_found(url: str, evidence: str | list[str], in_order: bool = False) -> tuple[bool, str]:
     """Whether every evidence phrase is on the page, in order if asked.
 
-    The rendered text and the raw HTML are searched separately, so an ordered
-    match never straddles the two.
+    The visible text and the text with hrefs inlined are searched separately,
+    and a match in either counts.
     """
     phrases = [evidence] if isinstance(evidence, str) else list(evidence)
     if not phrases or not all(p.strip() for p in phrases):
         return False, "empty evidence"
     try:
-        text, raw = page_text(url)
+        text, with_hrefs = page_text(url)
     except requests.RequestException as exc:
         return False, f"fetch failed: {type(exc).__name__}"
-    ok = any(phrases_found(norm(h), phrases, in_order) for h in (text, raw))
+    ok = any(phrases_found(norm(h), phrases, in_order) for h in (text, with_hrefs))
     return ok, "" if ok else "evidence not found"
 
 
@@ -245,9 +251,7 @@ def main() -> int:
     out = {"generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(), "specs": statuses, "adoption": adoption}
     if args.out or not args.check:
         (args.out or prev_path).write_text(json.dumps(out, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    if args.check:
-        return 1 if (bad or bad_status) else 0
-    return 0
+    return 1 if (bad or bad_status) else 0
 
 if __name__ == "__main__":
     sys.exit(main())
