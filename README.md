@@ -87,7 +87,7 @@ To wire a new track in: add it to `TRACKS` in `scripts/insights/tracks.py` (the 
 
 - The home page leads with the week's picks, then a board of every IETF draft by Datatracker state (individual, working group, WG last call, IESG, RFC Editor), the topic map, and the rest of the recent explanations.
 - Each track page has its briefing, its board, every explanation with its diagram and use cases, its deep dives, the deep-dive queue with triage, and the full reports.
-- Each deep dive has its own page at `/<track>/deep-dives/<slug>/`, with diagrams rendered. A file's Japanese edition is `<name>.ja.md` next to it, which the weekly deep-dive job writes along with the English.
+- Each deep dive has its own page at `/<track>/deep-dives/<slug>/`, with diagrams rendered. A file's Japanese edition is `<name>.ja.md` next to it. The weekly deep-dive job asks for one with every file and its PR lists which were written and any whose sections do not match the English; missing ones fall back to English on the site, marked as such.
 
 ## Design Principles
 

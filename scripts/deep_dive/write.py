@@ -163,21 +163,32 @@ def main() -> int:
     if target.exists():
         raise SystemExit(f"write: {target} already exists")
     target.mkdir(parents=True)
+    written_ja: list[str] = []
+    section_mismatch: list[str] = []
     for key, fname in FILES.items():
-        (target / fname).write_text(clean(str(result[key])), encoding="utf-8")
+        en = clean(str(result[key]))
+        (target / fname).write_text(en, encoding="utf-8")
         # Japanese edition beside it, for the site's /ja/ pages.
         ja = str(result.get(f"{key}_ja", "")).strip()
         if ja:
-            (target / fname.replace(".md", ".ja.md")).write_text(clean(ja), encoding="utf-8")
+            ja_text = clean(ja)
+            (target / fname.replace(".md", ".ja.md")).write_text(ja_text, encoding="utf-8")
+            written_ja.append(fname)
+            # The Japanese should have the same sections; count headings.
+            count = lambda t: sum(1 for line in t.splitlines() if re.match(r"^#{1,6} ", line))
+            if count(en) != count(ja_text):
+                section_mismatch.append(f"{fname}: {count(en)} headings in English, {count(ja_text)} in Japanese")
     shutil.copy(TEMPLATE / "hands-on-log.md", target / "hands-on-log.md")
 
     one_liner = clean(str(result.get("one_liner", ""))).strip()
+    one_liner_ja = clean(str(result.get("one_liner_ja", ""))).strip()
     unverified = [clean(str(u)).strip() for u in result.get("unverified", []) if str(u).strip()]
     rel = target.relative_to(REPO_ROOT)
     body = [
         f"Deep-dive draft for `{subject['name']}`{' revision ' + subject['rev'] if subject.get('rev') else ''} in `{subject['track']}`.",
         "",
         f"> {one_liner}",
+        *([">", f"> {one_liner_ja}"] if one_liner_ja else []),
         "",
         "## Why this subject",
         "",
@@ -191,7 +202,11 @@ def main() -> int:
         "",
         *[f"- `{rel}/{f}`" for f in [*FILES.values(), "hands-on-log.md"]],
         "",
-        "Each file except `hands-on-log.md` has a Japanese edition beside it (`*.ja.md`) for the site.",
+        (
+            "Japanese editions (`*.ja.md`) for the site: " + ", ".join(f"`{f}`" for f in written_ja) + "."
+            if written_ja
+            else "No Japanese editions were returned; the site shows these files in English."
+        ),
         "",
         "`hands-on-log.md` is the empty template: experiments are for a person to run.",
         "",
@@ -212,6 +227,9 @@ def main() -> int:
     ]
     if missing:
         body += ["Template headings missing:", ""] + [f"- [ ] {m}" for m in missing] + [""]
+    if section_mismatch:
+        body += ["Japanese edition whose sections do not match the English:", ""]
+        body += [f"- [ ] {m}" for m in section_mismatch] + [""]
     if unverified:
         body += ["Statements the drafter could not fully support from the material:", ""]
         body += [f"- [ ] {u}" for u in unverified] + [""]
