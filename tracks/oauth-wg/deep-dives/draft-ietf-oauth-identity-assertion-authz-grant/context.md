@@ -11,5 +11,5 @@ ID-JAG, informally Cross-App Access (XAA), moves the decision to broker app-to-a
 ## Open Questions
 
 - How should clients tell the two error endpoints apart in retry logic, given `invalid_request` at the IdP and `invalid_grant` at the Resource Authorization Server for expired inputs (Sections 4.3.4.3 and 4.4.3)?
-- Which of the 20 open issues in the working group repository (for example #141, #142, #145, #129 and #114) the author will bring to IETF 127. The announcement does not say.
+- Which of the open issues in the working group repository (for example #141, #142, #145, #129 and #114, linked in README.md) the author will bring to IETF 127. The announcement does not say.
 - Whether the draft's reliance on two Work in Progress drafts (Identity Chaining and the DPoP JWT grant) will cause changes here as they move.

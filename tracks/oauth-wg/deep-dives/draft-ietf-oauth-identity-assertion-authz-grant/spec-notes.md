@@ -15,14 +15,23 @@ Informative references listed in Section 12.2:
 
 ## Key Changes
 
-From the -05 to -06 diff (<https://author-tools.ietf.org/iddiff?url1=draft-ietf-oauth-identity-assertion-authz-grant-05&url2=draft-ietf-oauth-identity-assertion-authz-grant-06>):
+Changed in -06 (diff: <https://author-tools.ietf.org/iddiff?url1=draft-ietf-oauth-identity-assertion-authz-grant-05&url2=draft-ietf-oauth-identity-assertion-authz-grant-06>):
 
 - IdP error for a subject token that fails validation changed from `invalid_grant` to `invalid_request`, citing RFC 8693 Section 2.2.2. A Client that gets `invalid_request` for a request that previously succeeded can get a new subject token and retry (Section 4.3.4.3).
-- New explanation that `access_denied` is used instead of `invalid_target` when the Client or End-User is not authorized for the target, so the Client can distinguish a forbidden target from an unrecognized one.
-- The -05 Document History gained entries: client authentication required at the IdP, IdP metadata located per RFC 8414, key-bound ID-JAG usable in place of client authentication at the Resource Authorization Server, tenant context check, Privacy Considerations, and the Client ID Metadata Document email and calendaring use case.
+- New explanation that `access_denied` is used instead of `invalid_target` when the Client or End-User is not authorized for the target, so the Client can distinguish a forbidden target from an unrecognized one (Section 4.3.4.3).
+- Document History only: entries were added under -05 for changes whose text was already in the -05 body (listed below).
 - Dates and version strings moved to 31 October 2026 and an expiry of 4 May 2027.
 
-Items the announcement and Document History describe for -05 and -06 together: single `audience` value, `invalid_target` handling, resource comparison by Simple String Comparison, `resource` RECOMMENDED in the Token Exchange request, mTLS certificate binding alongside DPoP, the `jwt-dpop` grant type for DPoP-bound ID-JAGs, `id_jag_signing_alg_values_supported` metadata, RS256 mandatory to implement, SAML NameID stability and scope rules, and storage guidance for subject tokens.
+Introduced in -05 (absent from the -04 text, present in -05):
+
+- Client authentication required at the IdP, with `invalid_client` (Section 4.3.3).
+- A single `audience` value, `invalid_target` handling, resource comparison by Simple String Comparison, and `resource` RECOMMENDED in the Token Exchange request (Section 4.3.3).
+- mTLS certificate binding alongside DPoP (Section 9.11.2).
+- `id_jag_signing_alg_values_supported` metadata and RS256 mandatory to implement (Sections 3 and 7.1).
+- Storage guidance for subject tokens (Section 9.2).
+- Privacy Considerations (Section 10).
+
+Already in -04 and extended in -05: the `jwt-dpop` grant type for DPoP-bound ID-JAGs, the `saml-nameid` Subject Identifier Format with more NameID rules in -05, and the email and calendaring example, which -05 ties to the Client ID Metadata Document.
 
 ## Impact Analysis
 
