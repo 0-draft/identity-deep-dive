@@ -178,7 +178,8 @@ def render(track: str, store: dict, today: dt.date) -> str:
     if not items:
         lines += ["- Nothing new in the last few days that needed explaining.", ""]
     for i in items:
-        lines += [f"### {i['headline'] or text(i['title'], 300, oneline=True)}", ""]
+        heading = (i["headline"] or text(i["title"], 300, oneline=True)).rstrip(".:;!?")
+        lines += [f"### {heading}", ""]
         lines += [f"`{i['kind']}` · `{i['significance']}` · first seen {i['first_seen']} · [{text(i['title'], 300, oneline=True)}]({i['url']})", ""]
         if i["summary"]:
             lines += [i["summary"], ""]
