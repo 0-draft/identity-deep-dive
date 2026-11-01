@@ -102,6 +102,17 @@ const navLinks = [
             });
             return mermaid;
           }));
+        // Shrink a diagram wider than its frame, but not below 70%: smaller
+        // than that the labels stop being readable, so it scrolls instead.
+        const fit = (node: HTMLElement) => {
+          const svg = node.querySelector("svg");
+          const frame = node.closest<HTMLElement>(".diagram-frame");
+          if (!svg || !frame) return;
+          const natural = svg.viewBox.baseVal?.width || svg.getBoundingClientRect().width;
+          const room = frame.clientWidth - 32;
+          if (natural > room) svg.style.width = `${Math.max(room, natural * 0.7)}px`;
+          svg.style.height = "auto";
+        };
         const render = async (frame: HTMLDetailsElement) => {
           const nodes = Array.from(frame.querySelectorAll<HTMLElement>("pre.mermaid:not([data-processed])"));
           if (!nodes.length) return;
@@ -111,6 +122,7 @@ const navLinks = [
             try {
               await mermaid.parse(source);
               await mermaid.run({ nodes: [node] });
+              fit(node);
             } catch {
               // Keep the source as text: still readable, unlike an error image.
               node.textContent = source;
