@@ -2,7 +2,7 @@ import type { Lang } from "./i18n";
 
 /*
   The daily and weekly reports are Markdown that the track scripts
-  (tracks/*/scripts/report.py) write in English. Their prose is fixed:
+  (tracks/<track>/scripts/report.py) write in English. Their prose is fixed:
   headings, table headers, labels and a handful of sentences, around data
   (draft names, titles, numbers) that stays as written. For the Japanese site
   those fixed parts are swapped line by line; anything not listed here is
