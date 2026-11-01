@@ -1,0 +1,22 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["one_liner", "readme", "context", "spec_notes", "interop_checklist", "unverified"],
+  "properties": {
+    "one_liner": {
+      "type": "string",
+      "maxLength": 240,
+      "description": "The subject in one plain sentence, as you would say it to a colleague."
+    },
+    "readme": { "type": "string", "maxLength": 20000, "description": "Markdown for README.md." },
+    "context": { "type": "string", "maxLength": 8000, "description": "Markdown for context.md." },
+    "spec_notes": { "type": "string", "maxLength": 20000, "description": "Markdown for spec-notes.md." },
+    "interop_checklist": { "type": "string", "maxLength": 8000, "description": "Markdown for interop-checklist.md." },
+    "unverified": {
+      "type": "array",
+      "maxItems": 20,
+      "items": { "type": "string", "maxLength": 300 },
+      "description": "Statements in the deep dive that the staged material does not fully support and a reviewer should check."
+    }
+  }
+}

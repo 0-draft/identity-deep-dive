@@ -1,0 +1,248 @@
+name: Deep-dive draft
+
+# Once a week, per track, take the top deep-dive candidate that has no deep
+# dive yet, have Claude draft one from the source text, and open it as a draft
+# pull request. Nothing lands on main without a person merging it.
+#
+# Three jobs, so the model never shares a job with a token that can write:
+#
+#   plan   (contents: read)                     the track list, from tracks.py
+#   draft  (contents: read)                     stage sources, run Claude,
+#                                               upload the result
+#   open   (contents + pull-requests: write)    no model; write the files,
+#                                               push a branch, open the PR
+#
+# Without DEEP_DIVE_PR_TOKEN, opening the pull request with GITHUB_TOKEN needs
+# the repository setting "Allow GitHub Actions to create and approve pull
+# requests" (Settings > Actions > General). If the PR cannot be opened, the
+# pushed branch is deleted again, so the subject is retried next week.
+#
+# A pull request opened with GITHUB_TOKEN does not trigger other workflows, so
+# PR checks and the Claude review stay silent on it. Set DEEP_DIVE_PR_TOKEN (a
+# fine-grained token with contents and pull-requests write on this repository)
+# to open it as that identity instead, which does trigger them. Without it, a
+# person marking the draft ready for review starts the Claude review, and
+# closing and reopening it runs PR checks.
+
+on:
+  schedule:
+    - cron: "0 9 * * 2"  # Tuesday 09:00 UTC, the day after the weekly digest
+  workflow_dispatch:
+    inputs:
+      track:
+        description: "Track to draft for"
+        type: choice
+        options: [all, ietf-wimse, oauth-wg, openid]
+        default: all
+      candidate:
+        description: "Candidate key, as in candidates.json (top candidate when empty)"
+        type: string
+        default: ""
+
+permissions: {}
+
+# A dispatch overlapping the Tuesday run could draft the same subject twice.
+concurrency:
+  group: deep-dive-draft
+  cancel-in-progress: false
+
+jobs:
+  # The track list comes from scripts/insights/tracks.py. The dispatch choice
+  # above has to repeat it: workflow inputs cannot be computed.
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    outputs:
+      tracks: ${{ steps.tracks.outputs.json }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - id: tracks
+        env:
+          WANTED: ${{ github.event_name == 'schedule' && 'all' || inputs.track }}
+        run: |
+          all=$(python3 scripts/insights/tracks.py)
+          if [ "$WANTED" = "all" ]; then
+            echo "json=$all" >> "$GITHUB_OUTPUT"
+          else
+            echo "$all" | jq -e --arg t "$WANTED" 'index($t) != null' > /dev/null || { echo "::error::unknown track $WANTED"; exit 1; }
+            echo "json=$(jq -cn --arg t "$WANTED" '[$t]')" >> "$GITHUB_OUTPUT"
+          fi
+
+  draft:
+    needs: plan
+    strategy:
+      fail-fast: false
+      matrix:
+        track: ${{ fromJSON(needs.plan.outputs.tracks) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+      pull-requests: read  # stage.py skips subjects whose PR was closed
+    env:
+      TRACK: ${{ matrix.track }}
+      WORK: ${{ github.workspace }}/deep-dive-work
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - run: python -m pip install -r "tracks/$TRACK/requirements.txt"
+
+      - name: Require the Claude token
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          if [ -z "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+            echo "::error::CLAUDE_CODE_OAUTH_TOKEN is not set. Generate one with 'claude setup-token', then: gh secret set CLAUDE_CODE_OAUTH_TOKEN"
+            exit 1
+          fi
+
+      # The candidate input goes through env, never into the script text.
+      - name: Pick a subject and stage its sources
+        id: stage
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
+          CANDIDATE: ${{ inputs.candidate }}
+        run: python scripts/deep_dive/stage.py --track "$TRACK" --out "$WORK" --candidate "${CANDIDATE:-}"
+
+      - name: Load the output schema
+        id: schema
+        if: steps.stage.outputs.found == 'true'
+        # Spliced into single-quoted claude_args below: no apostrophes.
+        run: |
+          json=$(jq -c . scripts/deep_dive/schema.json)
+          case "$json" in *"'"*) echo "::error::schema.json must not contain a single quote"; exit 1 ;; esac
+          echo "json=$json" >> "$GITHUB_OUTPUT"
+
+      - name: Draft the deep dive
+        id: claude
+        if: steps.stage.outputs.found == 'true'
+        uses: anthropics/claude-code-action@16f9f71ab9c490faf367f94dd294897edc25be33 # v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          display_report: "false"
+          prompt: |
+            Material directory: deep-dive-work
+
+            Read scripts/deep_dive/prompt.md and follow it. Then read every
+            file in the material directory; source.txt is long, so read all
+            of it in parts.
+          # allowedTools pre-approves; disallowedTools is the hard deny.
+          claude_args: |
+            --allowedTools "Read,Glob,Grep"
+            --disallowedTools "Bash,Edit,Write,MultiEdit,NotebookEdit,WebFetch,WebSearch,Task,Read(//proc/**),Read(//sys/**),Read(//home/runner/work/_temp/**),Read(//home/runner/.claude/**),Read(//home/runner/.config/**)"
+            --max-turns 80
+            --json-schema '${{ steps.schema.outputs.json }}'
+
+      - name: Save the result
+        if: steps.stage.outputs.found == 'true'
+        env:
+          RESULT: ${{ steps.claude.outputs.structured_output }}
+        # guard.py fails the step on a credential-shaped string, which also
+        # skips the upload: nothing suspicious leaves this job.
+        run: |
+          printf '%s' "$RESULT" > "$WORK/result.json"
+          python scripts/insights/guard.py "$WORK/result.json"
+
+      # Uploaded whenever the steps above succeeded, with a "none" marker when
+      # there was nothing to draft, so a missing artifact always means a
+      # failure the open job should surface.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: deep-dive-${{ matrix.track }}
+          path: deep-dive-work
+          retention-days: 3
+          if-no-files-found: error
+
+  open:
+    needs: [plan, draft]
+    if: ${{ !cancelled() && needs.plan.result == 'success' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        track: ${{ fromJSON(needs.plan.outputs.tracks) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      WORK: ${{ github.workspace }}/deep-dive-work  # gitignored, never committed
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: deep-dive-${{ matrix.track }}
+          path: deep-dive-work
+
+      - name: Check for a subject
+        id: subject
+        run: |
+          if [ -f "$WORK/none" ]; then
+            echo "Nothing to draft for ${{ matrix.track }}."
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Write the files
+        id: write
+        if: steps.subject.outputs.found == 'true'
+        run: |
+          python scripts/deep_dive/write.py --work "$WORK" --result "$WORK/result.json" --pr-body "$RUNNER_TEMP/pr-body.md"
+          {
+            echo "track=$(jq -r .track "$WORK/subject.json")"
+            echo "slug=$(jq -r .slug "$WORK/subject.json")"
+            echo "branch=$(jq -r .branch "$WORK/subject.json")"
+          } >> "$GITHUB_OUTPUT"
+
+      # The token lives only in this step's environment. git gets it through
+      # GIT_CONFIG_* (never argv or the remote URL); gh reads GH_TOKEN.
+      - name: Push the branch and open the pull request
+        if: steps.subject.outputs.found == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.DEEP_DIVE_PR_TOKEN || github.token }}
+          HAS_PR_TOKEN: ${{ secrets.DEEP_DIVE_PR_TOKEN != '' }}
+          REPO: ${{ github.repository }}
+          TRACK: ${{ steps.write.outputs.track }}
+          SLUG: ${{ steps.write.outputs.slug }}
+          BRANCH: ${{ steps.write.outputs.branch }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          git add "tracks/$TRACK/deep-dives/$SLUG"
+          git commit -m "docs($TRACK): draft deep dive for $SLUG"
+          # The token goes to git through environment config, not argv.
+          export GIT_CONFIG_COUNT=1
+          export GIT_CONFIG_KEY_0="http.https://github.com/.extraheader"
+          GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          export GIT_CONFIG_VALUE_0
+          git push "https://github.com/${REPO}.git" "$BRANCH"
+          if [ "$HAS_PR_TOKEN" != "true" ]; then
+            printf '\n%s\n' "Opened with GITHUB_TOKEN, so no other workflow started. Marking it ready for review starts the Claude review; close and reopen it to run PR checks as well." >> "$RUNNER_TEMP/pr-body.md"
+          fi
+          if ! gh pr create --repo "$REPO" --base main --head "$BRANCH" --draft \
+            --title "docs($TRACK): deep dive on $SLUG" \
+            --body-file "$RUNNER_TEMP/pr-body.md"; then
+            # No orphan branch: without a PR it would only block the subject.
+            git push "https://github.com/${REPO}.git" --delete "$BRANCH" || true
+            echo "::error::Could not open the pull request. Without DEEP_DIVE_PR_TOKEN, enable 'Allow GitHub Actions to create and approve pull requests'."
+            exit 1
+          fi

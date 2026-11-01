@@ -29,7 +29,8 @@ import requests
 from bs4 import BeautifulSoup
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
-TRACKS = ("ietf-wimse", "oauth-wg", "openid")
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from tracks import TRACKS  # noqa: E402
 
 MAX_ITEMS = 15
 DRAFT_DIFF_CAP = 30_000
@@ -89,7 +90,7 @@ def draft_txt(name: str, rev: str) -> str:
     return re.sub(r"\n{3,}", "\n\n", "".join(lines))
 
 
-def draft_material(name: str, rev: str, prev_rev: str | None) -> str:
+def draft_material(name: str, rev: str, prev_rev: str | None, diff_cap: int = DRAFT_DIFF_CAP) -> str:
     try:
         cur = draft_txt(name, rev)
     except requests.RequestException as exc:
@@ -114,7 +115,7 @@ def draft_material(name: str, rev: str, prev_rev: str | None) -> str:
     )
     if not diff:
         return f"{name}-{prev_rev} and {name}-{rev} have identical text.\n"
-    return f"Unified diff {name}-{prev_rev} -> {name}-{rev} (truncated):\n\n" + cap(diff, DRAFT_DIFF_CAP)
+    return f"Unified diff {name}-{prev_rev} -> {name}-{rev} (truncated):\n\n" + cap(diff, diff_cap)
 
 
 def mail_material(url: str) -> str:
