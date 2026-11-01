@@ -1,46 +1,216 @@
 name: Daily Update (All Tracks)
 
+# The name is kept for deploy-pages.yml, which triggers on it. The schedule is
+# every six hours: "daily" is now the report granularity, not the cadence.
+#
+# Two jobs, so the model never shares a job with a token that can write:
+#
+#   collect  (contents: read)   collectors, stage what is new, ask Claude to
+#                               explain it; upload the track and the result
+#   publish  (contents: write)  no model; validate the result, fold it into
+#                               the track, commit and push
+#
+# The material Claude reads is written by third parties (drafts, mail, PRs).
+# It gets read tools only, and its output is checked by apply.py before any of
+# it is committed. Without the token, or when Claude fails, the data still
+# commits and the next runs try the same changes again; after three failed
+# attempts they are listed as not explained and the baseline moves on.
+
 on:
   schedule:
-    - cron: "0 6 * * *"  # 06:00 UTC daily
+    - cron: "17 */6 * * *"
   workflow_dispatch:
 
-permissions:
-  contents: write
+permissions: {}
+
+# Runs must not overlap: each one's baseline is the previous one's commit.
+concurrency:
+  group: track-update
+  cancel-in-progress: false
 
 jobs:
-  update:
+  collect:
     strategy:
       fail-fast: false
       matrix:
         track: [ietf-wimse, oauth-wg, openid]
     runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
     defaults:
       run:
         working-directory: tracks/${{ matrix.track }}
+    env:
+      TRACK: ${{ matrix.track }}
+      WORK: ${{ github.workspace }}/insights-work/${{ matrix.track }}
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.12"
           cache: "pip"
+
       - run: make install
       - run: make update
+        id: update
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Commit and push (rebase-retry)
+
+      - name: Stage what is new for Claude
+        id: changes
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python ../../scripts/insights/changes.py --track "$TRACK" --out "$WORK"
+
+      - name: Check for the Claude token
+        id: token
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: |
-          cd "$GITHUB_WORKSPACE"
+          if [ -n "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::CLAUDE_CODE_OAUTH_TOKEN is not set; committing data without a briefing."
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Load the output schema
+        id: schema
+        if: steps.changes.outcome == 'success' && steps.changes.outputs.count != '0' && steps.token.outputs.present == 'true'
+        # The schema is spliced into single-quoted claude_args below, so an
+        # apostrophe in it would break argument parsing.
+        run: |
+          json=$(jq -c . ../../scripts/insights/schema.json)
+          case "$json" in *"'"*) echo "::error::schema.json must not contain a single quote"; exit 1 ;; esac
+          echo "json=$json" >> "$GITHUB_OUTPUT"
+
+      - name: Explain the changes
+        id: claude
+        if: steps.changes.outcome == 'success' && steps.changes.outputs.count != '0' && steps.token.outputs.present == 'true'
+        continue-on-error: true
+        uses: anthropics/claude-code-action@16f9f71ab9c490faf367f94dd294897edc25be33 # v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          display_report: "false"
+          prompt: |
+            Track: ${{ matrix.track }}
+            Material directory: insights-work/${{ matrix.track }}
+
+            Read scripts/insights/prompt.md and follow it. Then read changes.json
+            and context.md in the material directory, and every file that
+            changes.json lists.
+          # allowedTools pre-approves; disallowedTools is the hard deny. Reads
+          # of process and runner internals are denied as well, and guard.py
+          # still checks the output before it leaves this job.
+          claude_args: |
+            --allowedTools "Read,Glob,Grep"
+            --disallowedTools "Bash,Edit,Write,MultiEdit,NotebookEdit,WebFetch,WebSearch,Task,Read(//proc/**),Read(//sys/**),Read(//home/runner/work/_temp/**),Read(//home/runner/.claude/**),Read(//home/runner/.config/**)"
+            --max-turns 60
+            --json-schema '${{ steps.schema.outputs.json }}'
+
+      # Only a track whose collectors finished is handed on: a half-updated
+      # track directory must not reach main.
+      - name: Save the result
+        if: ${{ !cancelled() && steps.update.outcome == 'success' }}
+        env:
+          RESULT: ${{ steps.claude.outputs.structured_output }}
+        run: |
+          mkdir -p "$WORK"
+          printf '%s' "$RESULT" > "$WORK/result.json"
+          python ../../scripts/insights/guard.py "$WORK/result.json"
+
+      # Only what the pipeline writes is handed on: data and reports, never
+      # code or config, so nothing this job produced can change a script that
+      # a later job runs with write access.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        if: ${{ !cancelled() && steps.update.outcome == 'success' }}
+        with:
+          name: track-${{ matrix.track }}
+          path: |
+            tracks/${{ matrix.track }}/data/normalized
+            tracks/${{ matrix.track }}/data/snapshots
+            tracks/${{ matrix.track }}/reports
+            tracks/${{ matrix.track }}/deep-dives/_backlog.md
+            insights-work/${{ matrix.track }}
+          include-hidden-files: true
+          retention-days: 3
+          if-no-files-found: error
+
+  publish:
+    needs: collect
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - run: python -m pip install -r tracks/ietf-wimse/requirements.txt
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: track-*
+          path: ${{ runner.temp }}/collected
+
+      # A track whose collect job failed has no artifact and is left as it is.
+      - name: Fold the results in and commit per track
+        id: fold
+        env:
+          COLLECTED: ${{ runner.temp }}/collected
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add tracks/${{ matrix.track }}/
-          git diff --cached --quiet && { echo "no changes"; exit 0; }
-          git commit -m "chore(${{ matrix.track }}): daily update $(date -u +%Y-%m-%d)"
+          status=0
+          # The allowlist of track names comes from changes.py, the one list.
+          known=" $(python -c 'import sys; sys.path.insert(0, "scripts/insights"); from changes import TRACKS; print(" ".join(TRACKS))') "
+          for dir in "$COLLECTED"/track-*; do
+            [ -d "$dir/tracks" ] || continue
+            track="${dir##*/track-}"
+            case "$known" in *" $track "*) ;; *) echo "::error::unexpected artifact $dir"; exit 1 ;; esac
+            # Replace only the pipeline-written paths.
+            for sub in data/normalized data/snapshots reports; do
+              rm -rf "tracks/$track/$sub"
+              [ -d "$dir/tracks/$track/$sub" ] && cp -R "$dir/tracks/$track/$sub" "tracks/$track/$sub"
+            done
+            [ -f "$dir/tracks/$track/deep-dives/_backlog.md" ] && cp "$dir/tracks/$track/deep-dives/_backlog.md" "tracks/$track/deep-dives/_backlog.md"
+            work="$dir/insights-work/$track"
+            python scripts/insights/apply.py --track "$track" --changes "$work/changes.json" --result "$work/result.json" || status=1
+            git add -A "tracks/$track"
+            # Belt and braces: refuse to commit anything outside those paths.
+            outside=$(git diff --cached --name-only | grep -vE "^tracks/$track/(data/normalized|data/snapshots|reports)/|^tracks/$track/deep-dives/_backlog\.md$" || true)
+            if [ -n "$outside" ]; then
+              echo "::error::$track: refusing to commit paths outside the pipeline output:"; echo "$outside"; exit 1
+            fi
+            git diff --cached --quiet && { echo "$track: no changes"; continue; }
+            git commit -m "chore($track): update $(date -u +%Y-%m-%dT%H:%MZ)"
+          done
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+
+      - name: Push (rebase-retry)
+        run: |
+          git log origin/main..HEAD --oneline | grep -q . || { echo "nothing to push"; exit 0; }
           for i in 1 2 3 4 5; do
             git pull --rebase origin main && git push && exit 0
             echo "push attempt $i failed, retrying after backoff..."
             sleep $((RANDOM % 10 + 5))
           done
           echo "push failed after 5 attempts"
+          exit 1
+
+      # apply.py exits non-zero when it refused Claude's output. The data is
+      # pushed regardless; this makes the run red so someone looks.
+      - name: Report a refused result
+        if: steps.fold.outputs.status != '0'
+        run: |
+          echo "::error::apply.py refused at least one track's Claude output; see the fold step log."
           exit 1

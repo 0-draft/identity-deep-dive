@@ -8,6 +8,14 @@ on:
 permissions:
   contents: write
 
+# Shared with the daily update: both commit the same track files, and runs
+# that overlap would push over each other. (What the daily run diffs against is
+# insights_baseline.json. This workflow only creates it when it is missing and
+# never advances an existing one.)
+concurrency:
+  group: track-update
+  cancel-in-progress: false
+
 jobs:
   weekly:
     strategy:
@@ -19,8 +27,8 @@ jobs:
       run:
         working-directory: tracks/${{ matrix.track }}
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.12"
           cache: "pip"
@@ -29,6 +37,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # score.py rewrote candidates.json, so put the stored triage back on it.
+      - name: Re-apply stored insights
+        run: python ../../scripts/insights/apply.py --track ${{ matrix.track }}
       - name: Commit and push (rebase-retry)
         run: |
           cd "$GITHUB_WORKSPACE"
