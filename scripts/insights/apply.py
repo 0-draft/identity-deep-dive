@@ -113,7 +113,9 @@ def merge(store: dict, result: dict, changes: dict, track: str, today: str, now:
 
     brief = text(result.get("brief"), 400, oneline=True)
     if brief:
-        store.setdefault("briefs", []).append({"at": now, "text": brief})
+        store.setdefault("briefs", []).append(
+            {"at": now, "text": brief, "text_ja": text(result.get("brief_ja"), 400, oneline=True)}
+        )
 
     for raw in result.get("items", []):
         iid = raw.get("id")
@@ -125,7 +127,14 @@ def merge(store: dict, result: dict, changes: dict, track: str, today: str, now:
         for r in raw.get("related", []) or []:
             rt, rn = r.get("track"), str(r.get("name", "")).strip()
             if rt in names and rt != track and rn in names[rt]:
-                related.append({"track": rt, "name": rn, "note": text(r.get("note"), 240, oneline=True)})
+                related.append(
+                    {
+                        "track": rt,
+                        "name": rn,
+                        "note": text(r.get("note"), 240, oneline=True),
+                        "note_ja": text(r.get("note_ja"), 240, oneline=True),
+                    }
+                )
             else:
                 warnings.append(f"dropped related link {rt}/{rn[:60]} on {iid}")
         diagram = mermaid(raw.get("diagram"))
@@ -140,9 +149,12 @@ def merge(store: dict, result: dict, changes: dict, track: str, today: str, now:
             "first_seen": store.get("items", {}).get(iid, {}).get("first_seen", today),
             "updated_at": now,
             "headline": text(raw.get("headline"), 160, oneline=True),
+            "headline_ja": text(raw.get("headline_ja"), 160, oneline=True),
             "summary": text(raw.get("summary"), 1200),
+            "summary_ja": text(raw.get("summary_ja"), 1200),
             "significance": sig if sig in SIGNIFICANCE else "routine",
             "use_cases": [text(u, 300, oneline=True) for u in (raw.get("use_cases") or [])[:3] if str(u).strip()],
+            "use_cases_ja": [text(u, 300, oneline=True) for u in (raw.get("use_cases_ja") or [])[:3] if str(u).strip()],
             "diagram": diagram,
             "related": related,
         }
@@ -159,6 +171,7 @@ def merge(store: dict, result: dict, changes: dict, track: str, today: str, now:
         store.setdefault("triage", {})[key] = {
             "priority": pri,
             "reason": text(t.get("reason"), 300, oneline=True),
+            "reason_ja": text(t.get("reason_ja"), 300, oneline=True),
             "date": today,
         }
     return warnings
@@ -178,12 +191,13 @@ def annotate_candidates(track: str, store: dict, path: Path) -> None:
     cands = data.get("candidates", [])
     triage = store.get("triage", {})
     for c in cands:
-        c.pop("ai_priority", None)
-        c.pop("ai_note", None)
+        for k in ("ai_priority", "ai_note", "ai_note_ja"):
+            c.pop(k, None)
         t = triage.get(candidate_key(track, c))
         if t:
             c["ai_priority"] = t["priority"]
             c["ai_note"] = t["reason"]
+            c["ai_note_ja"] = t.get("reason_ja", "")
     order = {id(c): i for i, c in enumerate(cands)}
     cands.sort(key=lambda c: (PRIORITIES.get(c.get("ai_priority", "normal"), 1), order[id(c)]))
     for i, c in enumerate(cands, start=1):
