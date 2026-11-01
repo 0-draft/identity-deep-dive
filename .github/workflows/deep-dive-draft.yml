@@ -97,8 +97,10 @@ jobs:
             Read scripts/deep_dive/prompt.md and follow it. Then read every
             file in the material directory; source.txt is long, so read all
             of it in parts.
+          # allowedTools pre-approves; disallowedTools is the hard deny.
           claude_args: |
             --allowedTools "Read,Glob,Grep"
+            --disallowedTools "Bash,Edit,Write,MultiEdit,NotebookEdit,WebFetch,WebSearch,Task,Read(//proc/**),Read(//sys/**),Read(//home/runner/work/_temp/**),Read(//home/runner/.claude/**),Read(//home/runner/.config/**)"
             --max-turns 80
             --json-schema '${{ steps.schema.outputs.json }}'
 
@@ -106,7 +108,11 @@ jobs:
         if: steps.stage.outputs.found == 'true'
         env:
           RESULT: ${{ steps.claude.outputs.structured_output }}
-        run: printf '%s' "$RESULT" > "$WORK/result.json"
+        # guard.py fails the step on a credential-shaped string, which also
+        # skips the upload: nothing suspicious leaves this job.
+        run: |
+          printf '%s' "$RESULT" > "$WORK/result.json"
+          python scripts/insights/guard.py "$WORK/result.json"
 
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         if: steps.stage.outputs.found == 'true'
