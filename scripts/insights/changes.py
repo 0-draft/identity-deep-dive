@@ -138,14 +138,15 @@ def github_pr_body(repo: str, number: int) -> str:
     return cap(data.get("body") or "", PR_BODY_CAP)
 
 
-def github_commits_since(repo: str, since: str) -> list[dict[str, str]]:
+def github_commits_since(repo: str, since: str) -> list[dict[str, str]] | None:
+    """Commits on the default branch since a time; None when the API failed."""
     try:
         data = get(
             f"https://api.github.com/repos/{repo}/commits?since={since}&per_page=15",
             github=True,
         ).json()
     except requests.RequestException:
-        return []
+        return None
     out = []
     for c in data if isinstance(data, list) else []:
         msg = (c.get("commit") or {}).get("message") or ""
@@ -337,9 +338,15 @@ def extract_openid(cur: dict, prev: dict, held: list[str]) -> list[dict[str, Any
         if not name or not pushed or not before or pushed <= before or repo.get("archived"):
             continue
 
-        def material(n=name, since=before, r=repo) -> str:
-            commits = github_commits_since(n, since)
-            body = "\n".join(f"- {c['sha']} {c['message']}" for c in commits) or "(no commits on the default branch)"
+        # pushed_at moves on any push, including PR branches. Only commits on
+        # the default branch are a change worth explaining; an API failure
+        # keeps the item so it is not silently lost.
+        commits = github_commits_since(name, before)
+        if commits == []:
+            continue
+
+        def material(n=name, since=before, r=repo, cs=commits) -> str:
+            body = "\n".join(f"- {c['sha']} {c['message']}" for c in cs) if cs else "(commits could not be fetched)"
             return (
                 f"Repository: {n} (category: {r.get('category')}, open PRs: {r.get('open_prs')}, "
                 f"merged PRs in 30d: {r.get('merged_prs_30d')})\n"
@@ -350,7 +357,9 @@ def extract_openid(cur: dict, prev: dict, held: list[str]) -> list[dict[str, Any
             {
                 "id": f"repo:{name}:{pushed}",
                 "kind": "repo-activity",
-                "title": f"New activity in {name}",
+                "title": f"{name}: {len(commits)} new commit{'s' if len(commits) != 1 else ''} on the default branch"
+                if commits
+                else f"{name}: new activity",
                 "url": repo.get("html_url", ""),
                 "material": material,
             }

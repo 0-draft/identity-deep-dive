@@ -17,8 +17,9 @@ const picked = new Set(picks.map((p) => p.insight.id));
 // Up to four runs a day for seven days can add hundreds of items; the home
 // page lists the most recent, and each track page has the rest.
 const FEED_LIMIT = 40;
+// Minor items (no behaviour change) stay on the track pages, not here.
 const rest = allInsights()
-  .filter((i) => !picked.has(i.id))
+  .filter((i) => !picked.has(i.id) && i.significance !== "routine")
   .slice(0, FEED_LIMIT);
 const byDay = new Map<string, Insight[]>();
 for (const i of rest) byDay.set(i.first_seen, [...(byDay.get(i.first_seen) ?? []), i]);

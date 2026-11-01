@@ -17,11 +17,10 @@ const link = (d: BoardItem) =>
   d.recentId ? `${href(lang, `${d.track}/`)}#${d.recentId}` : `https://datatracker.ietf.org/doc/${d.name}/`;
 ---
 
-<div class="overflow-x-auto pb-2">
-  <ol
-    class="grid gap-3"
-    style={`grid-template-columns: repeat(${visible.length}, minmax(13rem, 1fr)); min-width: ${visible.length * 13.5}rem`}
-  >
+<!-- Columns wrap onto a new row when the page is too narrow, so every
+     stage stays visible without sideways scrolling. -->
+<div>
+  <ol class="grid gap-3" style="grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr))">
     {visible.map((stage) => (
       <li class="rounded-md border border-rule bg-surface">
         <h3 class="flex items-baseline justify-between gap-2 border-b border-rule px-3 py-2 text-sm font-semibold">
