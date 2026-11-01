@@ -70,6 +70,13 @@ UNSAFE_REF = re.compile(r"^ {0,3}\[[^\]]+\]:\s*(?!https?://)")
 CODE_SPAN = re.compile(r"(?<!`)(`+)(?!`)(.+?)(?<!`)\1(?!`)")
 
 
+def closes(fence: str, m: re.Match[str], line: str) -> bool:
+    """Whether a fence line closes the open fence: same character, at least
+    as long, nothing after it (CommonMark)."""
+    run = m.group(1)
+    return run[0] == fence[0] and len(run) >= len(fence) and not line.strip()[len(run):]
+
+
 def _prose(segment: str) -> str:
     segment = TAG.sub("&lt;", segment)
     segment = UNSAFE_LINK.sub("]", segment)
@@ -92,7 +99,7 @@ def clean(markdown: str) -> str:
             out.append(line.rstrip())
             continue
         if fence is not None:
-            if m and m.group(1)[0] == fence[0] and len(m.group(1)) >= len(fence) and not line.strip()[len(m.group(1)):]:
+            if m and closes(fence, m, line):
                 fence = None
             out.append(line.rstrip())
             continue
@@ -132,6 +139,40 @@ def valid_subject(subject: dict) -> bool:
     )
 
 
+def structure(markdown: str) -> dict:
+    """What an edition in another language must keep: headings, list items
+    and code fences (counted outside fences, so a "# comment" in a code block
+    is not a heading), and every backticked identifier."""
+    headings = items = fences = 0
+    fence = None
+    for line in markdown.splitlines():
+        m = FENCE.match(line)
+        if m and fence is None:
+            fence, fences = m.group(1), fences + 1
+            continue
+        if m and closes(fence, m, line):
+            fence = None
+            continue
+        if fence is None:
+            headings += bool(re.match(r"^#{1,6} ", line))
+            items += bool(re.match(r"^\s*(?:[-*]|\d+\.)\s", line))
+    return {
+        "headings": headings,
+        "list items": items,
+        "code fences": fences,
+        "codes": set(re.findall(r"`([^`\n]+)`", markdown)),
+    }
+
+
+def structure_diff(en: str, ja: str) -> list[str]:
+    a, b = structure(en), structure(ja)
+    out = [f"{k}: {a[k]} in English, {b[k]} in Japanese" for k in ("headings", "list items", "code fences") if a[k] != b[k]]
+    missing = sorted(a["codes"] - b["codes"])
+    if missing:
+        out.append("identifiers missing in Japanese: " + ", ".join(f"`{c}`" for c in missing[:8]))
+    return out
+
+
 def no_mentions(text: str) -> str:
     """Keep "@name" in a PR body from notifying a real account."""
     return re.sub(r"(?<![\w.])@(?=[A-Za-z0-9])", "@\u200b", text)
@@ -163,17 +204,31 @@ def main() -> int:
     if target.exists():
         raise SystemExit(f"write: {target} already exists")
     target.mkdir(parents=True)
+    written_ja: list[str] = []
+    section_mismatch: list[str] = []
     for key, fname in FILES.items():
-        (target / fname).write_text(clean(str(result[key])), encoding="utf-8")
+        en = clean(str(result[key]))
+        (target / fname).write_text(en, encoding="utf-8")
+        # Japanese edition beside it, for the site's /ja/ pages.
+        ja = str(result.get(f"{key}_ja", "")).strip()
+        if ja:
+            ja_text = clean(ja)
+            (target / fname.replace(".md", ".ja.md")).write_text(ja_text, encoding="utf-8")
+            written_ja.append(fname)
+            # The Japanese should have the same structure and identifiers.
+            section_mismatch += [f"{fname}: {d}" for d in structure_diff(en, ja_text)]
     shutil.copy(TEMPLATE / "hands-on-log.md", target / "hands-on-log.md")
+    shutil.copy(TEMPLATE / "hands-on-log.ja.md", target / "hands-on-log.ja.md")
 
     one_liner = clean(str(result.get("one_liner", ""))).strip()
+    one_liner_ja = clean(str(result.get("one_liner_ja", ""))).strip()
     unverified = [clean(str(u)).strip() for u in result.get("unverified", []) if str(u).strip()]
     rel = target.relative_to(REPO_ROOT)
     body = [
         f"Deep-dive draft for `{subject['name']}`{' revision ' + subject['rev'] if subject.get('rev') else ''} in `{subject['track']}`.",
         "",
         f"> {one_liner}",
+        *([">", f"> {one_liner_ja}"] if one_liner_ja else []),
         "",
         "## Why this subject",
         "",
@@ -186,6 +241,12 @@ def main() -> int:
         "## Files",
         "",
         *[f"- `{rel}/{f}`" for f in [*FILES.values(), "hands-on-log.md"]],
+        "",
+        (
+            "Japanese editions (`*.ja.md`) for the site: " + ", ".join(f"`{f}`" for f in written_ja) + "."
+            if written_ja
+            else "No Japanese editions were returned; the site shows these files in English."
+        ),
         "",
         "`hands-on-log.md` is the empty template: experiments are for a person to run.",
         "",
@@ -206,6 +267,9 @@ def main() -> int:
     ]
     if missing:
         body += ["Template headings missing:", ""] + [f"- [ ] {m}" for m in missing] + [""]
+    if section_mismatch:
+        body += ["Japanese editions that differ from the English in structure or identifiers:", ""]
+        body += [f"- [ ] {m}" for m in section_mismatch] + [""]
     if unverified:
         body += ["Statements the drafter could not fully support from the material:", ""]
         body += [f"- [ ] {u}" for u in unverified] + [""]

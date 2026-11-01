@@ -3,8 +3,10 @@ import Layout from "../layouts/Layout.astro";
 import Board from "../components/Board.astro";
 import CandidateList from "../components/CandidateList.astro";
 import InsightItem from "../components/InsightItem.astro";
-import { formatDateTime, pick, t, type Lang } from "../lib/i18n";
+import { formatDateTime, href, pick, t, type Lang } from "../lib/i18n";
 import { renderMarkdown } from "../lib/markdown";
+import { localizeReport } from "../lib/report-i18n";
+import { deepDive, deepDiveSlugs } from "../lib/deepdives";
 import { TRACKS, briefing, latestDaily, latestWeekly, topCandidates, type TrackId } from "../lib/tracks";
 
 interface Props {
@@ -25,6 +27,7 @@ const MINOR_LIMIT = 20;
 const minorAll = allItems.filter((i) => i.significance === "routine");
 const minor = minorAll.slice(0, MINOR_LIMIT);
 const isIetf = track !== "openid";
+const dives = deepDiveSlugs(track).map((s) => deepDive(track, s, lang));
 ---
 
 <Layout title={`${meta.name}: ${t(lang, "siteTitle")}`} lang={lang} path={`${track}/`} current={track}>
@@ -76,20 +79,34 @@ const isIetf = track !== "openid";
       <div class="mt-12 space-y-4">
         {daily && (
           <details class="disclosure rounded-md border border-rule bg-surface px-5 py-4">
-            <summary>{t(lang, "dailyReport")} {daily.name.replace(/\.md$/, "")} {t(lang, "reportsInEnglish")}</summary>
-            <article class="prose-report mt-4" lang="en" set:html={renderMarkdown(daily.body)} />
+            <summary>{t(lang, "dailyReport")} {daily.name.replace(/\.md$/, "")} {t(lang, "reportDataEnglish")}</summary>
+            <article class="prose-report mt-4" set:html={renderMarkdown(localizeReport(daily.body, lang))} />
           </details>
         )}
         {weekly && (
           <details class="disclosure rounded-md border border-rule bg-surface px-5 py-4">
-            <summary>{t(lang, "weeklyDigest")} {weekly.name.replace(/\.md$/, "")} {t(lang, "reportsInEnglish")}</summary>
-            <article class="prose-report mt-4" lang="en" set:html={renderMarkdown(weekly.body)} />
+            <summary>{t(lang, "weeklyDigest")} {weekly.name.replace(/\.md$/, "")} {t(lang, "reportDataEnglish")}</summary>
+            <article class="prose-report mt-4" set:html={renderMarkdown(localizeReport(weekly.body, lang))} />
           </details>
         )}
       </div>
     </section>
 
     <aside aria-labelledby="queue" class="self-start lg:sticky lg:top-6">
+      {dives.length > 0 && (
+        <section aria-labelledby="dives" class="mb-10">
+          <h2 id="dives" class="headline text-xl">{t(lang, "deepDives")}</h2>
+          <p class="mt-1 mb-4 text-sm text-muted">{t(lang, "deepDivesNote")}</p>
+          <ul class="divide-y divide-rule border-y border-rule">
+            {dives.map((d) => (
+              <li class="py-3">
+                <a class="text-[15px] font-medium break-words" href={href(lang, `${track}/deep-dives/${d.slug}/`)}>{d.title}</a>
+                {d.oneLiner && <p class="mt-1 text-[13px] leading-snug text-muted">{d.oneLiner}</p>}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
       <h2 id="queue" class="headline text-xl">{t(lang, "queue")}</h2>
       <p class="mt-1 mb-4 text-sm text-muted">{t(lang, "queueNote")}</p>
       <CandidateList candidates={candidates} lang={lang} />
