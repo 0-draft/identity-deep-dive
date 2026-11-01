@@ -57,8 +57,8 @@ sequenceDiagram
   - Section 1 と 9.3: TLS 上で WIT を送ること、あるいは proof を TLS の性質に結び付けることは、WIT をトランスポート層の資格情報にはしない。相互 TLS は WIC を使う。
   - 例と参照文献: 例の `cnf.jwk.alg` は `EdDSA` から `Ed25519` に変わった（[RFC9864]）。WIT の例は再署名された。[RFC8725] は [I-D.ietf-oauth-rfc8725bis] に置き換えられ、[RFC8414] は削除された。[RFC9525]、[RFC6960]、[RFC9864]、[I-D.ietf-oauth-status-list] が新たに参照されている。実装状況に wimsey が追加された。旧 Section 1.1（「Use In Other Protocols」）は削除され、アーキテクチャ図から Identity Server、PEP、PDP が除かれた。
 - 互換性・移行上の懸念:
-  - セクション番号が変わったため（例: 旧 Section 1.3 は 1.2 に、旧 Section 9.2 は 9.3 に）、番号で参照している外部文書は更新が必要である。
-  - `cnf.jwk.alg` に `EdDSA` を出力する実装は、新しい例に従う検証者と一致しない可能性がある。`EdDSA` がなお受理されるかどうかは、ドラフトには書かれていない。
+  - セクション番号が変わったため（例: 旧 Section 1.3 は 1.2 に、旧 Section 9.2 は 9.3 に）、番号で参照している外部文書は更新が必要である。すでに食い違いが 1 つある。[draft-ietf-wimse-http-signature-08](https://www.ietf.org/archive/id/draft-ietf-wimse-http-signature-08.txt)（Section 3、3.6）は、受信側に本ドラフトの「Section 5.1.4」に従って WIT を検証するよう求めているが、Section 5.1.4 は -02 にも -03 にも存在しない。-03 で WIT の検証を定めているのは Section 5.1.3 である。
+  - `EdDSA` は禁止されていない。Section 5.1 の `alg` の規則は、`none` と対称鍵のアルゴリズムを除き、IANA の JOSE レジストリにある署名アルゴリズムを引き続き認めている。[RFC9864] はこのレジストリで `EdDSA` を Deprecated とし、例は完全に指定された `Ed25519` に移った。新しい識別子しか受け付けない検証者は、従来の `EdDSA` の鍵を拒否する。
   - `iss` による鍵の発見に依存していたデプロイメントは、事前設定済みトラストアンカーへ移行する必要がある。
   - リビジョン 02 のアクセスパス対応付けフックを公開していた実装には、期待される被呼び出し側の識別子をどう与えるかについて、規範的な指針がなくなった。
 
@@ -88,7 +88,7 @@ sequenceDiagram
 - Section 5.1 は `iss` を RECOMMENDED だが任意とし、詳細は Section 5.1.2 を見るよう述べている。Section 5.1.2 は「上で述べた監査・運用上の用途」に言及するが、改訂後の Section 5.1 の本文にはそれが明記されていない。
 - Section 3 は、トラストドメインごとに既知の事前設定済み発行者を求めるが、`iss` がある場合に受信側がそれをその発行者と比較しなければならないかどうかは書かれていない。
 - Section 4 は資格情報ごとに識別子を 1 つとする規則を維持する一方、安定したサービス識別子とインスタンス識別子についての指針を削除した。Section 9.2 は、識別子を共有するインスタンスは区別できないと警告している。短くなった文面で足りるかどうかは、議長が求める実質的変更のレビューの対象になり得る。
-- Section 1.2 と Section 5.2 は、被呼び出し側に audience の検証を、呼び出し側に期待する被呼び出し側の識別子の把握を求めるが、どちらの値も知る手段を示していない。audience を持たない proof の仕組みの場合にどうなるかも書かれていない。
+- Section 1.2 と Section 5.2 は、被呼び出し側に audience の検証を、呼び出し側に期待する被呼び出し側の識別子の把握を求めるが、どちらの値も知る手段を示していない。関連ドラフトでは、audience は WPT の `aud` クレーム（HTTP の対象 URI とすることが SHOULD。[draft-ietf-wimse-wpt-02](https://www.ietf.org/archive/id/draft-ietf-wimse-wpt-02.txt) Section 2、3.1.7）と、必須の `wimse-aud` 署名パラメータ（[draft-ietf-wimse-http-signature-08](https://www.ietf.org/archive/id/draft-ietf-wimse-http-signature-08.txt) Section 3.2）として運ばれる。audience を持たない proof の仕組みの場合にどうなるかも書かれていない。
 - Section 5.3 は、「適切な HTTP 認証方式が存在する場合」に `WWW-Authenticate` 付きの 401 を認めている。ドラフトは WIT 向けのそのような方式を挙げておらず、Section 5.1 は WIT を `Authorization` ヘッダーに使わないとしている。
 - Section 9.3.1 は、拒否リストやトークンステータスリストを運用するデプロイメントに `jti` を必須とするが、Section 5.1 は `jti` を OPTIONAL のままにしている。検証者は、発行者がそのような仕組みを運用しているかどうかを、トークンからは判別できない。
 - Section 9.5 は、鍵がハードウェアに束縛されエクスポート不可であれば資格情報間での鍵の再利用を認めるが、検証者はそれを資格情報から推定できないとする。検証者がそれをどう知るかは、デプロイメントのプロファイルに委ねられている。
@@ -103,6 +103,11 @@ sequenceDiagram
 ## 出典
 
 - [Datatracker 上の draft-ietf-wimse-workload-creds-03](https://datatracker.ietf.org/doc/draft-ietf-wimse-workload-creds/03/)
-- [リビジョン 02 と 03 の差分](https://author-tools.ietf.org/iddiff?url2=draft-ietf-wimse-workload-creds-03)
+- [リビジョン 02 と 03 の差分](https://author-tools.ietf.org/iddiff?url1=draft-ietf-wimse-workload-creds-02&url2=draft-ietf-wimse-workload-creds-03)
 - [WIMSE リスト: リビジョン 03 の I-D Action 告知](https://mailarchive.ietf.org/arch/msg/wimse/D0yp8C50a2LkaBERkKq2cYJmQ3o/)
 - [WIMSE リスト: 新版通知と議長のレビュー依頼](https://mailarchive.ietf.org/arch/msg/wimse/gAWR5Ocuquz_psAlNEcjyackx3E/)
+- [draft-ietf-wimse-workload-creds-02 本文](https://www.ietf.org/archive/id/draft-ietf-wimse-workload-creds-02.txt)
+- [draft-ietf-wimse-wpt-02 本文](https://www.ietf.org/archive/id/draft-ietf-wimse-wpt-02.txt)
+- [draft-ietf-wimse-http-signature-08 本文](https://www.ietf.org/archive/id/draft-ietf-wimse-http-signature-08.txt)
+- [RFC 9864](https://www.rfc-editor.org/rfc/rfc9864)
+- [wimsey（Section 8 に掲載の実装）](https://github.com/kanywst/wimsey)

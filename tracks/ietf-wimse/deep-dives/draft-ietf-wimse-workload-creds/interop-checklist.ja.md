@@ -9,7 +9,7 @@
 - [ ] `kid` がある場合とない場合の署名鍵の選択を検証する。鍵のローテーション中で複数の鍵を持つトラストドメインも含める（Section 3）。
 - [ ] `cnf`、`cnf.jwk`、`cnf.jwk.alg` のいずれかがない WIT を拒否し、`alg` が `none`、対称鍵、暗号化アルゴリズムである値を拒否する（Section 5.1、Section 5.1.3）。
 - [ ] 提示された proof のアルゴリズムが `cnf.jwk.alg` と等しいことを確認し、汎用の実装で ES256 への対応を試験する（Section 5.1）。
-- [ ] `cnf.jwk.alg` が `Ed25519` の場合と `EdDSA` の場合を、自分の検証器と関連ドラフトの双方で試験する。ドラフトの例は `Ed25519` を使っており、`EdDSA` がなお受理されるかどうかは書かれていない（Section 5.1、Appendix A.1）。
+- [ ] `cnf.jwk.alg` が `Ed25519` の場合と `EdDSA` の場合を、自分の検証器と関連ドラフトの双方で試験する。どちらも Section 5.1 の `alg` の規則で認められている。`EdDSA` は [RFC9864] で Deprecated とされ、例は `Ed25519` に変わった（Appendix A.1）。
 - [ ] 期限切れの WIT を拒否し、時刻ずれの扱いを意図的に決める。Section 5.1.3 は `exp` を列挙せず Section 9.3.1 を参照している（Section 5.1.3、Section 9.2）。
 - [ ] WIT 内の未知のクレームを無視し、プライベートなクレーム名で失敗しないこと。独自のクレームには衝突耐性のある名前を使う（Section 5.1.2）。
 - [ ] WIT を `Workload-Identity-Token` ヘッダーで送り、3 つの base64url 部分からなる ABNF に合致させ、ヘッダー名は大文字小文字を区別せず値は区別するものとして扱い、`Authorization` には決して入れない（Section 5.1、Section 5.1.1）。

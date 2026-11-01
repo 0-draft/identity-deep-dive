@@ -57,8 +57,8 @@ sequenceDiagram
   - Section 1 and 9.3: a WIT sent over TLS, or a proof bound to TLS properties, does not make the WIT a transport-layer credential; mutual TLS uses the WIC.
   - Examples and references: `cnf.jwk.alg` in the examples is now `Ed25519` instead of `EdDSA` ([RFC9864]); the WIT example was re-signed. [RFC8725] is replaced by [I-D.ietf-oauth-rfc8725bis] and [RFC8414] is dropped. New references are [RFC9525], [RFC6960], [RFC9864] and [I-D.ietf-oauth-status-list]. An implementation status entry for wimsey was added. Section 1.1 of the old document ("Use In Other Protocols") was removed and the Identity Server, PEP and PDP were dropped from the architecture figure.
 - Compatibility or migration concerns:
-  - Section numbers moved (for example former Section 1.3 is now 1.2, former Section 9.2 is now 9.3), so external references by number need updating.
-  - Implementations that emit `EdDSA` in `cnf.jwk.alg` may not match verifiers that follow the new examples. The draft does not state whether `EdDSA` is still accepted.
+  - Section numbers moved (for example former Section 1.3 is now 1.2, former Section 9.2 is now 9.3), so external references by number need updating. One is already wrong: [draft-ietf-wimse-http-signature-08](https://www.ietf.org/archive/id/draft-ietf-wimse-http-signature-08.txt) (Sections 3 and 3.6) tells recipients to validate the WIT "as specified in Section 5.1.4" of this draft, but neither -02 nor -03 has a Section 5.1.4. WIT validation is Section 5.1.3 in -03.
+  - `EdDSA` is not forbidden. The `alg` rule in Section 5.1 still allows any signature algorithm in the IANA JOSE registry except `none` and symmetric ones. [RFC9864] marks `EdDSA` as Deprecated in that registry, and the examples moved to the fully specified `Ed25519`. Verifiers that accept only the new identifier will reject older `EdDSA` keys.
   - Deployments that relied on `iss`-driven key discovery must move to preconfigured trust anchors.
   - Implementations that exposed the revision 02 access-path mapping hook get no normative guidance on how the expected callee identifier is supplied now.
 
@@ -88,7 +88,7 @@ sequenceDiagram
 - Section 5.1 says `iss` is RECOMMENDED but optional and points to Section 5.1.2 for details. Section 5.1.2 refers to "the auditing and operational uses described above", which the revised Section 5.1 text no longer spells out.
 - Section 3 requires a known, preconfigured issuer per trust domain, but the draft does not say whether a recipient must compare a present `iss` with that issuer.
 - Section 4 keeps exactly one identifier per credential but drops the guidance on stable service identity versus instance identity. Section 9.2 warns that instances sharing an identifier cannot be told apart. Whether the shorter text is enough is a question the chair's request for substantive-change review could cover.
-- Section 1.2 and Section 5.2 require the callee to verify the audience and the caller to know the expected callee identifier, but give no mechanism to learn either value. What happens with proof mechanisms that carry no audience is not stated.
+- Section 1.2 and Section 5.2 require the callee to verify the audience and the caller to know the expected callee identifier, but give no mechanism to learn either value. The companion drafts carry the audience as the WPT `aud` claim, which SHOULD be the HTTP target URI ([draft-ietf-wimse-wpt-02](https://www.ietf.org/archive/id/draft-ietf-wimse-wpt-02.txt) Sections 2 and 3.1.7), and as the mandatory `wimse-aud` signature parameter ([draft-ietf-wimse-http-signature-08](https://www.ietf.org/archive/id/draft-ietf-wimse-http-signature-08.txt) Section 3.2). What happens with proof mechanisms that carry no audience is not stated.
 - Section 5.3 allows 401 with `WWW-Authenticate` "when an acceptable HTTP authentication mechanism exists". The draft does not name such a mechanism for WITs, and Section 5.1 says the WIT is not for the `Authorization` header.
 - Section 9.3.1 makes `jti` mandatory for deployments that run a deny-list or token status list, while Section 5.1 keeps `jti` OPTIONAL. A validator cannot tell from the token whether the issuer operated such a mechanism.
 - Section 9.5 allows key reuse across credentials when the key is hardware-bound and non-exportable, but says verifiers cannot infer this from the credential. How a verifier learns it is left to deployment profiles.
@@ -103,6 +103,11 @@ sequenceDiagram
 ## Sources
 
 - [draft-ietf-wimse-workload-creds-03 on the Datatracker](https://datatracker.ietf.org/doc/draft-ietf-wimse-workload-creds/03/)
-- [Diff between revisions 02 and 03](https://author-tools.ietf.org/iddiff?url2=draft-ietf-wimse-workload-creds-03)
+- [Diff between revisions 02 and 03](https://author-tools.ietf.org/iddiff?url1=draft-ietf-wimse-workload-creds-02&url2=draft-ietf-wimse-workload-creds-03)
 - [WIMSE list: I-D Action announcement for revision 03](https://mailarchive.ietf.org/arch/msg/wimse/D0yp8C50a2LkaBERkKq2cYJmQ3o/)
 - [WIMSE list: new version notification and chair's request for review](https://mailarchive.ietf.org/arch/msg/wimse/gAWR5Ocuquz_psAlNEcjyackx3E/)
+- [draft-ietf-wimse-workload-creds-02 text](https://www.ietf.org/archive/id/draft-ietf-wimse-workload-creds-02.txt)
+- [draft-ietf-wimse-wpt-02 text](https://www.ietf.org/archive/id/draft-ietf-wimse-wpt-02.txt)
+- [draft-ietf-wimse-http-signature-08 text](https://www.ietf.org/archive/id/draft-ietf-wimse-http-signature-08.txt)
+- [RFC 9864](https://www.rfc-editor.org/rfc/rfc9864)
+- [wimsey, the implementation listed in Section 8](https://github.com/kanywst/wimsey)

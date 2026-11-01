@@ -13,5 +13,4 @@ The draft is the credential layer for the WIMSE companion documents on mutual TL
 - Does Section 5.1.3 give enough for interoperable validators without an explicit `exp`, algorithm or `iss` check?
 - Is the shorter Section 4 enough once the guidance on stable versus instance identities is gone?
 - How do callers and callees learn the expected callee identifier and their own audience value (Sections 1.2, 5.2)?
-- Is `EdDSA` still accepted in `cnf.jwk.alg` next to `Ed25519`? The draft does not say.
 - Which changes does the working group regard as substantive? The staged mail does not show any discussion beyond the announcement.
