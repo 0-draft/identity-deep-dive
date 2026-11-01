@@ -1,0 +1,60 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { href, t, type Lang, type StringKey } from "../lib/i18n";
+import { deepDive } from "../lib/deepdives";
+import { renderDocument } from "../lib/markdown";
+import { TRACKS, type TrackId } from "../lib/tracks";
+
+interface Props {
+  lang: Lang;
+  track: TrackId;
+  slug: string;
+}
+const { lang, track, slug } = Astro.props;
+const meta = TRACKS.find((m) => m.id === track)!;
+const doc = deepDive(track, slug, lang);
+
+const LABEL: Record<string, StringKey> = {
+  "README.md": "docOverview",
+  "context.md": "docContext",
+  "spec-notes.md": "docSpecNotes",
+  "interop-checklist.md": "docInterop",
+  "timeline.md": "docTimeline",
+  "hands-on-log.md": "docHandsOn",
+  "hands-on/notes.md": "docHandsOnNotes",
+};
+const label = (name: string) => (LABEL[name] ? t(lang, LABEL[name]) : name);
+// The README's own H1 duplicates the page title.
+const body = (name: string, md: string) => (name === "README.md" ? md.replace(/^#\s+.+\n+/, "") : md);
+const untranslated = lang === "ja" && !doc.files.some((f) => f.translated);
+---
+
+<Layout title={`${doc.title}: ${t(lang, "siteTitle")}`} lang={lang} path={`${track}/deep-dives/${slug}/`} current={track}>
+  <nav class="mb-4 text-sm text-muted">
+    <a href={href(lang, `${track}/`)}>{meta.name}</a> / {t(lang, "deepDives")}
+  </nav>
+  <header class="mb-8 max-w-[72ch]">
+    <h1 class="headline text-3xl break-words sm:text-4xl">{doc.title}</h1>
+    {untranslated && <p class="mt-3 rounded-md border border-rule bg-surface px-4 py-2 text-sm text-muted">{t(lang, "docUntranslated")}</p>}
+    <p class="mt-3 text-sm">
+      <a href={`https://github.com/0-draft/identity-deep-dive/tree/main/tracks/${track}/deep-dives/${slug}`} rel="noreferrer">{t(lang, "docSource")}</a>
+    </p>
+  </header>
+
+  {doc.files.length > 1 && (
+    <nav aria-label="Sections" class="mb-8 flex flex-wrap gap-2 text-sm">
+      {doc.files.map((f, i) => (
+        <a class="rounded border border-rule bg-surface px-2.5 py-1 no-underline hover:no-underline" href={`#doc-${i}`}>{label(f.name)}</a>
+      ))}
+    </nav>
+  )}
+
+  <div class="max-w-[80ch] space-y-10">
+    {doc.files.map((f, i) => (
+      <section id={`doc-${i}`} class="scroll-mt-6 rounded-md border border-rule bg-surface px-5 py-6 sm:px-8">
+        {f.name !== "README.md" && <p class="mb-2 text-sm font-semibold text-muted">{label(f.name)}</p>}
+        <article class="prose-report" lang={f.translated ? "ja" : "en"} set:html={renderDocument(body(f.name, f.body), t(lang, "diagram"))} />
+      </section>
+    ))}
+  </div>
+</Layout>

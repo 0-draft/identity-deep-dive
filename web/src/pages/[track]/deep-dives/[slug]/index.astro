@@ -1,0 +1,11 @@
+---
+import DeepDivePage from "../../../../views/DeepDivePage.astro";
+import { deepDiveSlugs } from "../../../../lib/deepdives";
+import { TRACKS, type TrackId } from "../../../../lib/tracks";
+
+export function getStaticPaths() {
+  return TRACKS.flatMap((t) => deepDiveSlugs(t.id).map((slug) => ({ params: { track: t.id, slug } })));
+}
+---
+
+<DeepDivePage lang="en" track={Astro.params.track as TrackId} slug={Astro.params.slug!} />

@@ -2,6 +2,7 @@
 import { formatDay, href, t, type Lang } from "../lib/i18n";
 import { STAGES, STAGE_LABEL, board, type BoardItem } from "../lib/lifecycle";
 import { trackName, type TrackId } from "../lib/tracks";
+import { deepDiveIndex } from "../lib/deepdives";
 
 interface Props {
   lang: Lang;
@@ -11,6 +12,7 @@ const { lang, only } = Astro.props;
 const columns = board(only);
 const visible = STAGES.filter((s) => columns[s].length > 0);
 const SHOWN = 8;
+const dives = { "ietf-wimse": deepDiveIndex("ietf-wimse"), "oauth-wg": deepDiveIndex("oauth-wg"), openid: new Set<string>() };
 
 const short = (name: string) => name.replace(/^draft-ietf-(wimse|oauth)-/, "").replace(/^draft-/, "");
 const link = (d: BoardItem) =>
@@ -46,6 +48,9 @@ const link = (d: BoardItem) =>
                   {d.blocked && <span class="font-medium text-sig-discussion">{t(lang, "blocked")}</span>}
                 </span>
               </a>
+              {dives[d.track].has(d.name) && (
+                <a class="mt-0.5 ml-2 inline-block text-xs" href={href(lang, `${d.track}/deep-dives/${d.name}/`)}>{t(lang, "deepDive")}</a>
+              )}
             </li>
           ))}
         </ul>

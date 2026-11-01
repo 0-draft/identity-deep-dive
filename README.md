@@ -83,10 +83,11 @@ To wire a new track in: add it to `TRACKS` in `scripts/insights/tracks.py` (the 
 
 ## Site
 
-`web/` builds the GitHub Pages site, in English at `/` and in Japanese at `/ja/` (untranslated items fall back to English; the daily and weekly report bodies are English only).
+`web/` builds the GitHub Pages site, in English at `/` and in Japanese at `/ja/`. Model-written text uses its Japanese twin and falls back to English when there is none. On Japanese pages, the report headings, labels and fixed sentences are translated; the data in them stays as written.
 
 - The home page leads with the week's picks, then a board of every IETF draft by Datatracker state (individual, working group, WG last call, IESG, RFC Editor), the topic map, and the rest of the recent explanations.
-- Each track page has its briefing, its board, every explanation with its diagram and use cases, the deep-dive queue with triage, and the full reports.
+- Each track page has its briefing, its board, every explanation with its diagram and use cases, its deep dives, the deep-dive queue with triage, and the full reports.
+- Each deep dive has its own page at `/<track>/deep-dives/<slug>/`, with diagrams rendered. A file's Japanese edition is `<name>.ja.md` next to it, which the weekly deep-dive job writes along with the English.
 
 ## Design Principles
 
