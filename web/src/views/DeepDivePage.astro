@@ -52,7 +52,12 @@ const untranslated = lang === "ja" && !doc.files.some((f) => f.translated);
   <div class="max-w-[80ch] space-y-10">
     {doc.files.map((f, i) => (
       <section id={`doc-${i}`} class="scroll-mt-6 rounded-md border border-rule bg-surface px-5 py-6 sm:px-8">
-        {f.name !== "README.md" && <p class="mb-2 text-sm font-semibold text-muted">{label(f.name)}</p>}
+        {(f.name !== "README.md" || (lang === "ja" && !f.translated && !untranslated)) && (
+          <p class="mb-2 flex flex-wrap gap-x-3 text-sm font-semibold text-muted">
+            {f.name !== "README.md" && <span>{label(f.name)}</span>}
+            {lang === "ja" && !f.translated && !untranslated && <span class="font-normal">{t(lang, "untranslated")}</span>}
+          </p>
+        )}
         <article class="prose-report" lang={f.translated ? "ja" : "en"} set:html={renderDocument(body(f.name, f.body), t(lang, "diagram"))} />
       </section>
     ))}

@@ -94,13 +94,13 @@ const LABELS: Record<string, string> = {
   "Snapshots available": "利用できるスナップショット",
   "Top list size per day": "1 日あたりの上位リスト件数",
   "Tracked GitHub repos": "追跡している GitHub リポジトリ",
-  "Added/updated active draft revisions": "追加・更新された WG draft の版",
-  "Removed/replaced active draft revisions": "削除・置き換えられた WG draft の版",
+  "Added/updated active draft revisions": "追加・更新されたアクティブな draft の版",
+  "Removed/replaced active draft revisions": "削除・置き換えられたアクティブな draft の版",
 };
 
 const SENTENCES: Record<string, string> = {
-  "No active drafts updated in the last 7 days.": "直近 7 日間に更新された WG draft はない。",
-  "No active-draft list change since previous snapshot.": "前回のスナップショットから WG draft の一覧に変化はない。",
+  "No active drafts updated in the last 7 days.": "直近 7 日間に更新されたアクティブな draft はない。",
+  "No active-draft list change since previous snapshot.": "前回のスナップショットからアクティブな draft の一覧に変化はない。",
   "No candidates above threshold today.": "今日は閾値を超える候補がない。",
   "No candidates above threshold.": "閾値を超える候補がない。",
   "No mailing-list topics extracted.": "メーリングリストからトピックは抽出されなかった。",
