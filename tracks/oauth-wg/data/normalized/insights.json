@@ -1,0 +1,415 @@
+{
+  "briefs": [
+    {
+      "at": "2026-11-01T10:12:31+00:00",
+      "text": "The biggest movement is the ID-JAG draft jumping to -06 with new normative rules (client authentication at the IdP, invalid_request for bad subject tokens, mTLS binding), alongside a substantially reworked Deferred Token Response -01 and the first WG-named Delegate SD-JWT draft. OAuth 2.1 -17 and SD-JWT VC -23 are mostly editorial or restructuring."
+    }
+  ],
+  "items": {
+    "draft:draft-ietf-oauth-deferred-token-response-01": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, Deferred Token Response -01 adds interaction-aware completion modes and a 'substrate invariants' section, and moves to new editors.",
+      "id": "draft:draft-ietf-oauth-deferred-token-response-01",
+      "kind": "draft-revision",
+      "related": [
+        {
+          "name": "openid/OpenID4VCI",
+          "note": "Both define deferred or pending completion of a credential or token request, though the material does not link them directly.",
+          "track": "openid"
+        }
+      ],
+      "significance": "substantive",
+      "summary": "The draft (diff truncated) now has new editors (Itaú, Alibaba) and lives under oauth-wg. It adds a Section 4 of substrate guarantees (no authorization expansion, continuation only via the token endpoint, sender-constraint continuity, immutable originating request, opaque deferral_code, polling always authoritative) and obligations for higher-layer profiles. completion_mode gains a second value, deferred_interactive, and the deferred response can signal interaction_required, interaction_pending or authorization_pending. Servers that don't support the parameter MUST NOT reject the request because of it, and supporting servers MUST publish deferred_token_response_supported=true. New sections cover generating deferral codes, a registered error entry, and three new use cases (AI agent with browser access, regulatory compliance, explicit consent).",
+      "title": "draft-ietf-oauth-deferred-token-response-01: Deferred Token Response",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-ietf-oauth-deferred-token-response-00&url2=draft-ietf-oauth-deferred-token-response-01",
+      "use_cases": [
+        "An AS that needs a human approval or step-up before issuing a token to an agent can return a deferral_code and let the client poll instead of blocking.",
+        "A client that can send the user to a URI can opt in with deferred_interactive and handle interaction_required.",
+        "Profile authors extending DTR must keep polling available and not relax the no-expansion guarantees."
+      ]
+    },
+    "draft:draft-ietf-oauth-delegate-sd-jwt-00": {
+      "diagram": "flowchart TD\n  I[Issuer] -->|SD-JWT and disclosures| H[Holder]\n  H -->|KB-SD-JWT with delegate payload| D[Delegate Holder]\n  D -->|dSD-JWT plus KB-JWT| V[Verifier]\n  V -->|verify chain via cnf keys| I",
+      "first_seen": "2026-11-01",
+      "headline": "In short, Delegate SD-JWT -00 lets a SD-JWT holder hand a presentation on to a delegate by making the key-binding JWT itself an SD-JWT.",
+      "id": "draft:draft-ietf-oauth-delegate-sd-jwt-00",
+      "kind": "new-draft",
+      "related": [
+        {
+          "name": "draft-asor-wimse-agent-delegation-chain",
+          "note": "Another offline delegation chain design for agents, discussed on the list alongside similar formats.",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "draft-hulea-wimse-agent-mandate",
+          "note": "Verifiable agent mandates that overlap in purpose with delegated SD-JWT chains.",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "openid/OpenID4VP",
+          "note": "The draft has a section on delegation using OpenID4VP presentation.",
+          "track": "openid"
+        }
+      ],
+      "significance": "new-proposal",
+      "summary": "The first WG-named revision (authors from Google and SPRIND) extends RFC 9901 so a KB-JWT can be a KB-SD-JWT carrying a selectively disclosable delegate payload, optionally with its own key binding and further chaining. Compact serialization uses a double tilde between chain elements; new typ values kb+sd-jwt and kb-sd-jwt+kb are defined; sd_hash or issuer_jwt_hash links each link to its predecessor; and verification walks the chain using each cnf key. The stated motivation is letting an AI agent prove authority to buy from a merchant without revealing other eligible merchants. The text is truncated, so the security and IANA sections were not seen.",
+      "title": "draft-ietf-oauth-delegate-sd-jwt-00: Delegate SD-JWT",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://datatracker.ietf.org/doc/draft-ietf-oauth-delegate-sd-jwt/00/",
+      "use_cases": [
+        "A user wallet delegating a purchase mandate to an AI agent that then presents to a merchant.",
+        "A verifier needing to validate a multi-hop chain back to the original issuer while preserving data minimisation."
+      ]
+    },
+    "draft:draft-ietf-oauth-identity-assertion-authz-grant-06": {
+      "diagram": "sequenceDiagram\n  participant C as Client\n  participant IdP as IdP Authorization Server\n  participant RAS as Resource Authorization Server\n  C->>IdP: Token exchange with subject token, audience, resource\n  IdP-->>C: ID-JAG\n  C->>RAS: JWT bearer grant with ID-JAG\n  RAS-->>C: Access token",
+      "first_seen": "2026-11-01",
+      "headline": "In short, ID-JAG -06 keeps the flow but tightens many rules, including mandatory client authentication at the IdP and mTLS as a binding option.",
+      "id": "draft:draft-ietf-oauth-identity-assertion-authz-grant-06",
+      "kind": "draft-revision",
+      "related": [
+        {
+          "name": "openid/connect",
+          "note": "The ID-JAG reuses ID Token style claims and the draft discusses scope semantics versus OpenID Connect scopes.",
+          "track": "openid"
+        }
+      ],
+      "significance": "substantive",
+      "summary": "Compared with -04, the diff (truncated) adds: RS256 mandatory to implement for IdP and Resource AS, ES256 SHOULD for the Resource AS; sub is the identifier selected for the audience Resource AS; stricter resource handling (string or non-empty array, Simple String Comparison, resource now RECOMMENDED in the token exchange); a single audience value; IdP MUST authenticate the client and reject otherwise with invalid_client; the subject token must be of the stated type and issued for that purpose; detailed SAML NameID rules (no transient NameIDs, pairwise scoping); Cache-Control: no-store in the example; plus new sections on subject token storage, metadata validation, DPoP and mTLS key binding, and privacy. The mailing-list announcement adds that invalid_request replaces invalid_grant for failed subject tokens, key-bound ID-JAGs can replace client authentication at the Resource AS, and id_jag_signing_alg_values_supported metadata is new.",
+      "title": "draft-ietf-oauth-identity-assertion-authz-grant-06: Identity Assertion JWT Authorization Grant",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-ietf-oauth-identity-assertion-authz-grant-04&url2=draft-ietf-oauth-identity-assertion-authz-grant-06",
+      "use_cases": [
+        "An IdP implementing the token exchange step needs to change error handling from invalid_grant to invalid_request and enforce client authentication.",
+        "A SAML-based SaaS Resource AS mapping users via NameID must reject transient NameIDs and use the SP-scoped value.",
+        "Deployments wanting certificate-bound ID-JAGs can use mTLS instead of DPoP."
+      ]
+    },
+    "draft:draft-ietf-oauth-sd-jwt-vc-23": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, SD-JWT VC -23 is a small clean-up release with no protocol change.",
+      "id": "draft:draft-ietf-oauth-sd-jwt-vc-23",
+      "kind": "draft-revision",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The diff shows regenerated example signatures and iat/sd_hash values in the examples, a refreshed expiry date, and a few typo and reference fixes (an RFC 8615 sentence, a trailing slash in an OWASP URL, a text_color wording fix). A contributor was added to the acknowledgments, and the document history says only 'some minor fixes'. No normative text changed in the visible portion of the diff.",
+      "title": "draft-ietf-oauth-sd-jwt-vc-23: SD-JWT-based Verifiable Digital Credentials (SD-JWT VC)",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-ietf-oauth-sd-jwt-vc-22&url2=draft-ietf-oauth-sd-jwt-vc-23",
+      "use_cases": []
+    },
+    "draft:draft-ietf-oauth-v2-1-17": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, OAuth 2.1 -17 mostly restructures and edits, adding a browser-based applications section and RFC 10017 references.",
+      "id": "draft:draft-ietf-oauth-v2-1-17",
+      "kind": "draft-revision",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The visible diff shows an expanded table of contents: section 9 now has subsections on Backend for Frontend, Token-Mediating Backend, browser-based clients, token storage and security considerations, and 7.3.2 is retitled for browser-based application impersonation. The draft now cites RFC 10017 in place of the browser-based apps draft, adds 'Obsoletes: 6749, 6750 (if approved)', and has many wording edits (end-user, cleartext, HTTP reference). The diff is truncated, so normative changes later in the document are not visible here.",
+      "title": "draft-ietf-oauth-v2-1-17: The OAuth 2.1 Authorization Framework",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-ietf-oauth-v2-1-16&url2=draft-ietf-oauth-v2-1-17",
+      "use_cases": [
+        "Teams tracking the OAuth 2.1 consolidation can see browser-based app guidance is now folded into the core document."
+      ]
+    },
+    "mail:-3eHjZkoYNz0qDpviERKkheVDbI": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, the editor announces ID-JAG -06 and flags the behaviour changes implementers should check.",
+      "id": "mail:-3eHjZkoYNz0qDpviERKkheVDbI",
+      "kind": "mail",
+      "related": [],
+      "significance": "substantive",
+      "summary": "The announcement says -05 and -06 bring implementation feedback back into the spec and that flow and design are unchanged. It lists clarifications (resource and audience comparison, sub selection, SAML NameID, refresh token as subject token, error codes) and new items: IdP client authentication, single audience, invalid_request instead of invalid_grant for bad subject tokens, key-bound ID-JAG in place of client authentication at the Resource AS, mTLS binding, id_jag_signing_alg_values_supported, and Privacy Considerations. Open issues are expected at IETF 127.",
+      "title": "draft-ietf-oauth-identity-assertion-authz-grant-06",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/-3eHjZkoYNz0qDpviERKkheVDbI/",
+      "use_cases": [
+        "IdP and library maintainers should re-check Token Exchange error handling against the new invalid_request behaviour."
+      ]
+    },
+    "mail:4L4EamXpvnEXs13ZL8dnPPj-YRc": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, the OAuth 2.1 editor announces -17 and asks for list feedback on four open issues before IETF 127.",
+      "id": "mail:4L4EamXpvnEXs13ZL8dnPPj-YRc",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The open issues are: #274, a conflict over access token characters versus HTTP header characters, proposed to be closed via PR #273 by restricting to token68; #266, adding invalid_client to authorization responses because the IANA registry already lists it; #265, consistency of 'apps' versus 'applications'; and #215, adopting a separate draft that adds a 'resource' token response parameter for reference.",
+      "title": "OAuth 2.1 draft 17: draft-ietf-oauth-v2-1-17",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/4L4EamXpvnEXs13ZL8dnPPj-YRc/",
+      "use_cases": [
+        "Implementers who issue access tokens with characters outside token68 should watch #273, which would narrow the allowed set."
+      ]
+    },
+    "mail:BjF_dwq7lhDLYi6gDms38n2KM80": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, a newcomer asks the chairs which drafts to join on agent delegation.",
+      "id": "mail:BjF_dwq7lhDLYi6gDms38n2KM80",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "An AI and security architect introduces themselves, lists experience in agent authorization boundaries, and asks for recommended active drafts. No technical content or proposal.",
+      "title": "Interest in Contributing to OAuth Agent Delegation and Authorization Security",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/BjF_dwq7lhDLYi6gDms38n2KM80/",
+      "use_cases": []
+    },
+    "mail:Ci_tGG-8lSZPMLOh20ZfJ7XDQP4": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, a contributor asks for 15 minutes in the IETF 127 joint WIMSE/OAuth session on authenticated versus authorized agent delegation.",
+      "id": "mail:Ci_tGG-8lSZPMLOh20ZfJ7XDQP4",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-wimse-arch",
+          "note": "The request cites a pending architecture PR on identity requirements for AI intermediaries.",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "openid/authzen",
+          "note": "The request describes an AuthZEN WG decision on trust-anchored agent context.",
+          "track": "openid"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "The request is a discussion slot with no new draft. It cites open WIMSE architecture PR #140, and an AuthZEN decision on Oct 8 not to define a trust-anchored context.agent field, with policies instead reasoning over validated token claims (client_id, act) and a separate OAuth mapping profile planned. It also cites A2A-to-MCP authority-boundary test cases and ties the topic to the OAuth 'Complex Delegation' work item.",
+      "title": "Agenda request for IETF 127: \"Authenticated Is Not Authorized: Delegated Authority Across Workload and Agent Boundaries\" (joint WIMSE/OAuth session)",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/Ci_tGG-8lSZPMLOh20ZfJ7XDQP4/",
+      "use_cases": []
+    },
+    "mail:DHy1-FaJmTYBotN-qztpTA9VnMY": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, feedback on an invoicing-agent mandate draft points its author toward Delegate SD-JWT and Deferred Token Response.",
+      "id": "mail:DHy1-FaJmTYBotN-qztpTA9VnMY",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-hulea-wimse-agent-mandate",
+          "note": "Another mandate-style design for agents, though the thread does not mention it.",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "The author of an invoice agent mandates draft asked about audience use, attenuated delegation and overlap with RAR or Token Exchange. Reviewers said the audience handling is vague, that attenuation rules need detail, that the parent-disclosure privacy issue could block adoption, and that reuse protection should rely on a stricter one-time mechanism. The author plans to rebuild delegation on Delegate SD-JWT for -01 and to consider DTR for human approval. A reply notes DTR will publish a -01 with substantial changes.",
+      "title": "Feedback request: SD-JWT VC as mandates for invoicing agents (5 new messages)",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/DHy1-FaJmTYBotN-qztpTA9VnMY/",
+      "use_cases": [
+        "Teams building agent mandates on SD-JWT VC can align with Delegate SD-JWT rather than inventing a new chain format."
+      ]
+    },
+    "mail:IDo5i8W0qxEgmmAZB5ITc0k0apw": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, a delegation-draft author proposes that every cumulative spend key declare whether it is delegate-tallied or single-writer exact.",
+      "id": "mail:IDo5i8W0qxEgmmAZB5ITc0k0apw",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-sweeney-wimse-credential-delegation",
+          "note": "The related thread on this list discusses a server in the call path to enforce cumulative budgets.",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "The post describes a delegate carrying a running tally of spend that verifiers cross-check and resolve toward denial. It distinguishes two modes, delegate-tally-with-distrust and single-writer-exact, and states that composed chains must declare the mode and no hop may enforce a bound under an undeclared mode. It then walks thirteen requirements under each mode, noting expiry is structural in mode one and local verifiability needs restating in mode two. The encoding is deferred to a later revision. The message is truncated after requirement nine.",
+      "title": "Issuance ceremony walkthrough — thirteen requirements, one ordinary Tuesday",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/IDo5i8W0qxEgmmAZB5ITc0k0apw/",
+      "use_cases": []
+    },
+    "mail:IS0jLWoohK789pk78DCfEndMEA0": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, review of the AMR values draft continues, with calls to separate 'sna' from the proposed 'bg' value.",
+      "id": "mail:IS0jLWoohK789pk78DCfEndMEA0",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Reviewers argue the proposed 'bg' value overlaps with 'sna' and is too broad, covering network verification, device recognition and location checks. Another suggests device identifier and geolocation as independent values and proposes an optional amr_details companion claim to express relationships between methods. The draft's authors replied that the editor's draft now describes the overlap between bg and sna. No decision is shown in the thread.",
+      "title": "Review of draft-skyfire-oauth-amr-values",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/IS0jLWoohK789pk78DCfEndMEA0/",
+      "use_cases": []
+    },
+    "mail:MDAs2JISpkI8GPkxxqSeiwHFmd4": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, the question of user consent for issuing ID-JAGs was closed with a pointer to Deferred Token Response.",
+      "id": "mail:MDAs2JISpkI8GPkxxqSeiwHFmd4",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "A participant had opened an issue arguing that issuing an ID-JAG conveys identity across organisational boundaries and might need user consent in consumer scenarios. The thread notes the issue was closed because Deferred Token Response would probably suffice if needed. The draft itself is not changed.",
+      "title": "Should we enable users to consent to issuing ID-JAGs?",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/MDAs2JISpkI8GPkxxqSeiwHFmd4/",
+      "use_cases": [
+        "Consumer-facing IdPs that want a consent step before issuing an ID-JAG could look at DTR rather than expecting a built-in mechanism."
+      ]
+    },
+    "mail:Zuab1PpQZx_nWOimouWjczGiYOI": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, a Delegate SD-JWT author asks for 5 minutes at IETF 127 to present next steps.",
+      "id": "mail:Zuab1PpQZx_nWOimouWjczGiYOI",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "A single short agenda request for a brief walkthrough of the intended direction of Delegate SD-JWT.",
+      "title": "OAuth IETF 127 Call for Agenda Items",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/Zuab1PpQZx_nWOimouWjczGiYOI/",
+      "use_cases": []
+    },
+    "mail:yYnrgM51pZuvm6s8z1lmcv5tHEU": {
+      "diagram": "",
+      "first_seen": "2026-11-01",
+      "headline": "In short, Attenuating Authorization Tokens -02 adds chain verification and test vectors, and a reply asks the competing formats to share subsumption rules.",
+      "id": "mail:yYnrgM51pZuvm6s8z1lmcv5tHEU",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-sweeney-wimse-credential-delegation",
+          "note": "Reply author's server-side companion design.",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "draft-asor-wimse-agent-delegation-chain",
+          "note": "Named as a competing offline attenuation format reusing chain claim names.",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "draft-hulea-wimse-agent-mandate",
+          "note": "Named as the third offline attenuation format.",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "new-proposal",
+      "summary": "The author says -02 specifies chain verification step by step with 229 public test vectors, three new implementations, and a section comparing AATs with transaction tokens, identity chaining, WIMSE AIMS, Macaroons, UCAN and others. A reply from the author of a credential delegation draft says cumulative budgets and sub-root revocation need a server in the path, and notes three offline attenuation formats (AATs, asor, hulea) with differing rules and reused claim names. They ask for one subsumption rule per constraint type across them.",
+      "title": "New version: Attenuating Authorization Tokens (draft-niyikiza-oauth-attenuating-agent-tokens-02)",
+      "updated_at": "2026-11-01T10:12:31+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/yYnrgM51pZuvm6s8z1lmcv5tHEU/",
+      "use_cases": [
+        "Agent frameworks that issue narrower sub-tokens to sub-agents offline and want interoperable verification.",
+        "Verifiers that would otherwise implement the same constraint comparison separately for each format."
+      ]
+    }
+  },
+  "overflow": [
+    {
+      "title": "oauth-wg/oauth-v2-1#273: Restrict access token values to the token68 syntax",
+      "url": "https://github.com/oauth-wg/oauth-v2-1/pull/273"
+    },
+    {
+      "title": "oauth-wg/draft-ietf-oauth-client-id-metadata-document#120: add language around concurrent first time discovery behavior",
+      "url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pull/120"
+    },
+    {
+      "title": "oauth-wg/draft-ietf-oauth-client-id-metadata-document#118: suggest authorization servers document a maximum Client Identifier URL length",
+      "url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pull/118"
+    },
+    {
+      "title": "oauth-wg/draft-ietf-oauth-client-id-metadata-document#125: Add paragraph for clients normalizing their Client Identifier URLs",
+      "url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pull/125"
+    },
+    {
+      "title": "oauth-wg/draft-ietf-oauth-client-id-metadata-document#124: Rename section to 'Client Identifier URL Confusion Attacks'",
+      "url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pull/124"
+    },
+    {
+      "title": "oauth-wg/draft-ietf-oauth-client-id-metadata-document#115: Update transient failure handling and caching guidelines",
+      "url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pull/115"
+    },
+    {
+      "title": "oauth-wg/draft-ietf-oauth-client-id-metadata-document#116: Clarify exception of loopback redirect URLs",
+      "url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pull/116"
+    },
+    {
+      "title": "oauth-wg/draft-ietf-oauth-client-id-metadata-document#123: Fix the mix-up reference in the Authorization Response section",
+      "url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pull/123"
+    },
+    {
+      "title": "oauth-wg/oauth-sd-jwt-vc#449: Update document history with minor fixes",
+      "url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/449"
+    },
+    {
+      "title": "oauth-wg/oauth-sd-jwt-vc#448: Fix a broken reference URL and two editorial nits",
+      "url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/448"
+    },
+    {
+      "title": "oauth-wg/oauth-v2-1#282: Change refresh token risk assessment requirement to MUST",
+      "url": "https://github.com/oauth-wg/oauth-v2-1/pull/282"
+    },
+    {
+      "title": "oauth-wg/oauth-identity-assertion-authz-grant#158: Fix the client authentication target in the Token Exchange section",
+      "url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/158"
+    },
+    {
+      "title": "oauth-wg/oauth-v2-1#276: Clarify resource owner interaction in client impersonation mitigation",
+      "url": "https://github.com/oauth-wg/oauth-v2-1/pull/276"
+    },
+    {
+      "title": "oauth-wg/oauth-v2-1#271: Reference RFC 10017 for choosing a CORS policy",
+      "url": "https://github.com/oauth-wg/oauth-v2-1/pull/271"
+    },
+    {
+      "title": "oauth-wg/oauth-v2-1#277: Add -17 contributors to the acknowledgements",
+      "url": "https://github.com/oauth-wg/oauth-v2-1/pull/277"
+    },
+    {
+      "title": "oauth-wg/oauth-v2-1#272: Clean up URL vs URI terminology and form-urlencoded references",
+      "url": "https://github.com/oauth-wg/oauth-v2-1/pull/272"
+    },
+    {
+      "title": "oauth-wg/oauth-v2-1#270: Align with the HTTP WG editorial style guide",
+      "url": "https://github.com/oauth-wg/oauth-v2-1/pull/270"
+    },
+    {
+      "title": "oauth-wg/oauth-v2-1#269: Note that access token privileges are not the only factor in access control",
+      "url": "https://github.com/oauth-wg/oauth-v2-1/pull/269"
+    },
+    {
+      "title": "oauth-wg/oauth-v2-1#275: Add examples of refresh token issuance policies",
+      "url": "https://github.com/oauth-wg/oauth-v2-1/pull/275"
+    },
+    {
+      "title": "oauth-wg/oauth-identity-assertion-authz-grant#157: Draft 06",
+      "url": "https://github.com/oauth-wg/oauth-identity-assertion-authz-grant/pull/157"
+    }
+  ],
+  "triage": {
+    "draft-ietf-oauth-deferred-token-response": {
+      "date": "2026-11-01",
+      "priority": "high",
+      "reason": "-01 restructures the draft with substrate invariants, a new deferred_interactive mode and new editors; also cited as the answer to ID-JAG consent."
+    },
+    "draft-ietf-oauth-delegate-sd-jwt": {
+      "date": "2026-11-01",
+      "priority": "high",
+      "reason": "New WG draft defining a delegation chain format for agents; being used as a base by others."
+    },
+    "draft-ietf-oauth-identity-assertion-authz-grant": {
+      "date": "2026-11-01",
+      "priority": "high",
+      "reason": "-06 adds new normative behaviour (client auth at IdP, invalid_request, mTLS binding, new metadata) and a large rewrite."
+    },
+    "draft-ietf-oauth-sd-jwt-vc": {
+      "date": "2026-11-01",
+      "priority": "low",
+      "reason": "-23 is only minor editorial fixes and regenerated examples."
+    }
+  }
+}
