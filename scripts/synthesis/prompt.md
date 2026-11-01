@@ -25,11 +25,13 @@ Three to five explanation ids from `insights.md`, most important first, for an e
 Group the subjects in `index.md` into six to twelve topics that an identity engineer would recognise (for example agent delegation and attenuation, workload credentials and proof of possession, verifiable credentials and SD-JWT, OAuth core and security BCPs, authorization APIs). A subject may belong to more than one topic, and not every subject needs a topic: leave out the ones with no clear home.
 
 - `members` use names exactly as in `index.md`.
-- `summary` says what the topic is about and where it stands now (what is near RFC, what is new, where drafts compete), grounded in the states and explanations you were given.
+- `summary` says what the topic is about and where it stands now (what is near RFC, what is new, where drafts compete), grounded in the states and explanations you were given. Explanations cover only the last seven days of collected changes, so a subject without one is not inactive: for repositories, `index.md` gives the last push and merged PRs. Never claim there was no activity unless those numbers show it.
 - `related` lists ids of other topics in this output that build on, compete with or depend on this one.
 
 ## Japanese
 
 `why_ja`, `name_ja` and `summary_ja` say the same as their English twins, in plain technical Japanese in the である/だ style. Not translationese. Keep draft names, protocol names and RFC numbers in their original form.
+
+- Spell out terms instead of abbreviating them ("the list" is メーリングリスト, never ML), and prefer the phrasing a Japanese engineer would use over a literal gloss (for example "single writer" as 書き込み元を一つにする, not 単一の書き手).
 
 Prefer being plainly incomplete to being confidently wrong.

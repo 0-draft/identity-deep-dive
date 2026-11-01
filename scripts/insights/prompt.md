@@ -40,3 +40,4 @@ The site has a Japanese edition. Every text field has a `_ja` twin (`brief_ja`, 
 - Plain technical Japanese in the である/だ style used in Japanese standards writing. Not colloquial, not translationese: write the sentence a Japanese engineer would write, not a word-for-word mapping.
 - Keep protocol names, draft names, claim names, header names, error codes and RFC numbers in their original form (`invalid_grant`, `cnf`, `RFC 9901`, `draft-ietf-oauth-v2-1`). Common terms may stay in English where Japanese engineers use them that way (トークン, クライアント, 認可サーバー are fine).
 - `headline_ja` is one line, like the English headline: 「要するに〜」で始めない。
+- Spell out terms instead of abbreviating them ("the list" is メーリングリスト, never ML), and prefer the phrasing a Japanese engineer would use over a literal gloss (for example "single writer" as 書き込み元を一つにする, not 単一の書き手).

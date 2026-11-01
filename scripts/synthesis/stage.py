@@ -51,9 +51,21 @@ def members(track: str, state: dict) -> list[dict]:
             for d in state.get("drafts", [])
         ]
     return [
-        {"name": r.get("full_name"), "title": r.get("watch_note") or r.get("category") or "", "kind": "repo", "states": []}
+        {
+            "name": r.get("full_name"),
+            "title": r.get("watch_note") or r.get("category") or "",
+            "kind": "repo",
+            # Activity, so "no explanation this week" is not read as "no activity".
+            "states": [
+                f"last push {r.get('days_since_push')} days ago",
+                f"{r.get('merged_prs_30d') or 0} PRs merged in 30 days",
+                f"{r.get('open_prs') or 0} open PRs",
+            ],
+        }
         for r in state.get("github_repos", [])
-        if not r.get("archived") and (r.get("days_since_push") or 9999) <= 180
+        # days_since_push is 0 for a repo pushed today: test for None, not
+        # falsiness, or the most active repos drop out.
+        if not r.get("archived") and (r.get("days_since_push") if r.get("days_since_push") is not None else 9999) <= 180
     ]
 
 
