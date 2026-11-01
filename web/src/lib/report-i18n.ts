@@ -135,37 +135,56 @@ const PREFIXES: [RegExp, string][] = [
 // Object.prototype.
 const has = (table: object, key: string) => Object.hasOwn(table, key);
 
-function translateTableRow(line: string, header: boolean): string {
-  const cells = line.split("|");
-  if (cells.length < 3) return line;
-  return cells
-    .map((c) => {
-      const key = c.trim();
-      // Header words are translated only in the header row, so a data cell
-      // that happens to read "Title" or "Score" stays as written.
-      if (header && has(TABLE_CELLS, key)) return c.replace(key, TABLE_CELLS[key]);
-      // Trend column of the OpenID report.
-      if (key === "same") return c.replace(key, "変化なし");
-      if (key === "new") return c.replace(key, "新規");
-      const m = /^(up|down) (\d+)$/.exec(key);
-      if (m) return c.replace(key, `${m[2]} 位${m[1] === "up" ? "上昇" : "下降"}`);
-      return c;
-    })
+function translateHeaderRow(line: string): string {
+  return line
+    .split("|")
+    .map((c) => (has(TABLE_CELLS, c.trim()) ? c.replace(c.trim(), TABLE_CELLS[c.trim()]) : c))
     .join("|");
 }
 
+// Only the OpenID report's Trend column holds words to translate; every
+// other data cell stays as written.
+function translateTrendCell(line: string, column: number): string {
+  const cells = line.split("|");
+  const key = (cells[column] ?? "").trim();
+  const m = /^(up|down) (\d+)$/.exec(key);
+  const to = key === "same" ? "変化なし" : key === "new" ? "新規" : m ? `${m[2]} 位${m[1] === "up" ? "上昇" : "下降"}` : null;
+  if (to === null) return line;
+  cells[column] = cells[column].replace(key, to);
+  return cells.join("|");
+}
+
+const FENCE_LINE = /^ {0,3}(`{3,}|~{3,})(.*)$/;
+
 export function localizeReport(markdown: string, lang: Lang): string {
   if (lang !== "ja") return markdown;
-  let inFence = false;
+  let fence: string | null = null;
+  let trendColumn = -1;
   const lines = markdown.split("\n");
   return lines
     .map((line, i) => {
-      if (/^\s*(```|~~~)/.test(line)) inFence = !inFence;
-      if (inFence) return line;
+      // CommonMark fences: closed by the same character, at least as long,
+      // with nothing after it.
+      const f = FENCE_LINE.exec(line);
+      if (fence === null && f) {
+        fence = f[1];
+        return line;
+      }
+      if (fence !== null) {
+        if (f && f[1][0] === fence[0] && f[1].length >= fence.length && !f[2].trim()) fence = null;
+        return line;
+      }
       for (const [re, to] of TITLES) if (re.test(line)) return line.replace(re, to);
       const h = /^(#{2,3}) (.+)$/.exec(line);
       if (h && has(HEADINGS, h[2])) return `${h[1]} ${HEADINGS[h[2]]}`;
-      if (line.startsWith("|")) return translateTableRow(line, /^\|[\s:|-]+\|$/.test(lines[i + 1] ?? ""));
+      if (line.startsWith("|")) {
+        if (/^\|[\s:|-]+\|$/.test(lines[i + 1] ?? "")) {
+          trendColumn = line.split("|").findIndex((c) => c.trim() === "Trend");
+          return translateHeaderRow(line);
+        }
+        return trendColumn > 0 ? translateTrendCell(line, trendColumn) : line;
+      }
+      trendColumn = -1;
       if (has(STEPS, line)) return STEPS[line];
       const s = /^- (.+)$/.exec(line);
       if (s && has(SENTENCES, s[1])) return `- ${SENTENCES[s[1]]}`;
