@@ -12,7 +12,7 @@
 sequenceDiagram
     participant A as Party A
     participant B as Party B
-    A->>B: Step 1
+    A->>B: Request
 ```
 
 ## Use cases
