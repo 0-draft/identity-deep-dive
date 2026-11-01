@@ -73,11 +73,12 @@ cp -R templates/deep-dive tracks/<track>/deep-dives/<topic-name>
 
 ## Automation
 
-Three of the workflows in `.github/workflows/` run the tracks (the others build the site, run PR checks and review pull requests):
+Three of the workflows in `.github/workflows/` run the tracks, and one refreshes the spec map (the others build the site, run PR checks and review pull requests):
 
 - `daily-update.yml` — every six hours. A read-only `collect` job per track runs `make install && make update`, stages what is new since the last explained state (`data/normalized/insights_baseline.json`), and has Claude explain it with read-only tools and structured output. A separate `publish` job, with no model in it, validates the result with `scripts/insights/apply.py`, commits per track and pushes. Without the `CLAUDE_CODE_OAUTH_TOKEN` secret, or when Claude fails, the data still commits and the next runs try the same changes again; after three failed attempts they are listed as not explained and the baseline moves on.
 - `weekly-digest.yml` — runs `make install && make weekly` per track on Mondays 08:00 UTC.
 - `deep-dive-draft.yml` — on Tuesdays (or on demand for one track or candidate), takes each track's highest-ranked candidate (after triage) that is a draft or an OpenID repository and has no deep dive, open branch or earlier pull request, has Claude draft `README.md`, `context.md`, `spec-notes.md` and `interop-checklist.md` from the staged source text (the draft, capped at 250,000 characters, with its latest revision diff and mailing-list messages; for an OpenID repository, its README and recent pull request titles), and opens a draft pull request listing the statements a reviewer should check. See `scripts/deep_dive/`.
+- `landscape.yml` — on Wednesdays, with no model, runs `scripts/landscape/refresh.py`: reads each IETF spec's state from the Datatracker, checks that every OpenID status and adoption claim's evidence phrase is still on its cited page, and commits `data/landscape-status.json`.
 
 To wire a new track in: add it to `TRACKS` in `scripts/insights/tracks.py` (the deep-dive matrix and the publish allowlist read it from there), to `matrix.track` in `daily-update.yml` and `weekly-digest.yml`, to the `track` choice of `deep-dive-draft.yml`, and to the `track` enum in `scripts/insights/schema.json`; then add an extractor for it in `scripts/insights/changes.py`.
 
@@ -87,6 +88,7 @@ To wire a new track in: add it to `TRACKS` in `scripts/insights/tracks.py` (the 
 
 - The home page leads with the week's picks, then a board of every IETF draft by Datatracker state (individual, working group, WG last call, IESG, RFC Editor), the topic map, and the rest of the recent explanations.
 - Each track page has its briefing, its board, every explanation with its diagram and use cases, its deep dives, the deep-dive queue with triage, and the full reports.
+- The spec map at `/map/` places OAuth, OpenID, workload-identity and credential specs by layer, with each one's status, what it builds on or replaces, and who documents support for it. The specs, relations and summaries are curated in `data/landscape.json`; OpenID statuses and adoption claims in `data/landscape-sources.json`, each with an official URL and a phrase quoted from that page. Only claims whose phrase was found at the last weekly check are listed as adoption.
 - Each deep dive has its own page at `/<track>/deep-dives/<slug>/`, with diagrams rendered. A file's Japanese edition is `<name>.ja.md` next to it. The weekly deep-dive job asks for one with every drafted file (the empty hands-on log comes from a Japanese template), and its PR lists which were written and any whose headings, list items, code fences or backticked identifiers differ from the English. Missing ones fall back to English on the site, marked as such.
 
 ## Design Principles
