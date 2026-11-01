@@ -82,7 +82,12 @@ jobs:
       - name: Load the output schema
         id: schema
         if: steps.changes.outcome == 'success' && steps.changes.outputs.count != '0' && steps.token.outputs.present == 'true'
-        run: echo "json=$(jq -c . ../../scripts/insights/schema.json)" >> "$GITHUB_OUTPUT"
+        # The schema is spliced into single-quoted claude_args below, so an
+        # apostrophe in it would break argument parsing.
+        run: |
+          json=$(jq -c . ../../scripts/insights/schema.json)
+          case "$json" in *"'"*) echo "::error::schema.json must not contain a single quote"; exit 1 ;; esac
+          echo "json=$json" >> "$GITHUB_OUTPUT"
 
       - name: Explain the changes
         id: claude
