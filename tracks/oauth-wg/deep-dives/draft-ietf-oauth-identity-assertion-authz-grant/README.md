@@ -14,13 +14,13 @@ sequenceDiagram
     participant I as IdP Authorization Server
     participant R as Resource Authorization Server
     participant S as Resource Server
-    C->>I: 1. User SSO (OpenID Connect or SAML)
+    C->>I: User SSO (OpenID Connect or SAML)
     I-->>C: ID Token or SAML assertion, optional Refresh Token
-    C->>I: 2. Token Exchange (subject_token, audience, resource, scope, client authentication)
+    C->>I: Token Exchange (subject_token, audience, resource, scope, client authentication)
     I-->>C: ID-JAG (issued_token_type id-jag, token_type N_A)
-    C->>R: 3. JWT bearer grant with the ID-JAG as assertion
+    C->>R: JWT bearer grant with the ID-JAG as assertion
     R-->>C: Access token
-    C->>S: 4. API request with access token
+    C->>S: API request with access token
 ```
 
 1. The user signs in to the Client at the IdP using OpenID Connect or SAML; the Client gets an Identity Assertion and optionally a Refresh Token (Section 4.2).
@@ -67,7 +67,7 @@ sequenceDiagram
   - Refresh tokens at the Resource Authorization Server: the Resource Authorization Server SHOULD NOT return one, and clients may resubmit the ID-JAG until it expires unless the server limits `exp` or tracks `jti` (Section 4.4.4).
   - Sender constraining (Section 9.11): DPoP puts `jkt` in `cnf` and requires the `jwt-dpop` grant type; mTLS puts `x5t#S256` in `cnf`. An IdP SHOULD NOT bind to both. Clients SHOULD inspect the ID-JAG for the expected `cnf` because the response does not say whether binding happened, which guards against silent downgrade.
   - Client authentication alternatives: the Resource Authorization Server SHOULD require client authentication, but a sender-constrained ID-JAG from an unauthenticated client may be accepted, and then the `cnf` proof takes the place of the `client_id` check (Sections 4.4, 4.4.1 and 9.1).
-  - Tenancy (Sections 3 and 4.4.1): two separate claims. `tenant`, defined by OpenID Enterprise, names the issuer's tenant; a multi-tenant issuer must include it, and the Resource Authorization Server must trust `iss` and `tenant` together. `aud_tenant`, registered by this draft, names the Resource Authorization Server's tenant, and `aud` + `aud_tenant` + `aud_sub` must be unique there. The Resource Authorization Server must reject the ID-JAG with `invalid_grant` if it cannot determine the recipient tenant unambiguously.
+  - Tenancy (claims in Section 3, rules in Sections 6.1, 6.2 and 6.4, rejection in Section 4.4.1): two separate claims. `tenant`, defined by OpenID Enterprise, names the issuer's tenant; a multi-tenant issuer must include it, and the Resource Authorization Server must trust `iss` and `tenant` together. `aud_tenant`, registered by this draft, names the Resource Authorization Server's tenant, and `aud` + `aud_tenant` + `aud_sub` must be unique there. The Resource Authorization Server must reject the ID-JAG with `invalid_grant` if it cannot determine the recipient tenant unambiguously.
 - Interop concerns:
   - Client ID mapping (Section 5.1): the IdP must know the client's identifier at the Resource Authorization Server by an out-of-band record, or clients can use Client ID Metadata Documents as a shared namespace.
   - Subject identifier mapping (Section 5.2): `sub` is chosen for the Resource Authorization Server, so it can differ from the `sub` in the Client's own ID Token. The same `sub` must be used for a given End-User and Resource Authorization Server regardless of which Client asks.
@@ -88,7 +88,7 @@ sequenceDiagram
 
 ## Experiments
 
-- [ ] Lab 1: Stand up a test IdP token endpoint that accepts the ID-JAG Token Exchange and send it five bad requests, then compare the responses with what -06 specifies and with what existing libraries return: no client authentication (`invalid_client`, Section 4.3.3); two `audience` values (`invalid_request`, Section 4.3.3); an access token as `subject_token` (Section 4.3.3 forbids accepting it, and Section 4.3.4.3 profiles subject-token validation failures as `invalid_request`); an expired ID Token (`invalid_request`, Section 4.3.4.3); and an ID Token whose `aud` is a different client (`invalid_request` for an audience mismatch, Section 4.3.4.3).
+- [ ] Lab 1: Stand up a test IdP token endpoint that accepts the ID-JAG Token Exchange and send it five bad requests, then compare the responses with what -06 specifies and with what existing libraries return: no client authentication (`invalid_client`, Section 4.3.3); two `audience` values (`invalid_request`, Section 4.3.3); an access token as `subject_token` (Section 4.3.3 forbids accepting it but names no code; `invalid_request` is inferred from Section 4.3.4.3, which profiles subject-token validation failures with it); an expired ID Token (`invalid_request`, Section 4.3.4.3); and an ID Token whose `aud` is a different client (`invalid_request` for an audience mismatch, Section 4.3.4.3).
 - [ ] Lab 2: Take one valid ID-JAG and present it to a Resource Authorization Server with mutations that Section 4.4.1 says must fail with `invalid_grant` (Section 4.4.3): wrong `typ`, `aud` that does not identify this server, a `client_id` that does not match the authenticated client, a `resource` the server does not govern, a missing `tenant` from a multi-tenant issuer, and a `cnf` binding that does not verify. Then present an unmodified ID-JAG for an End-User the server does not entitle, and one whose resources are all rejected by local policy; both should return `access_denied` (Sections 4.4.1 and 4.4.3). Record any server that mixes up the two codes.
 - [ ] Lab 3: Request a DPoP-bound and an mTLS-bound ID-JAG and redeem each at the Resource Authorization Server. With the matching key or certificate it succeeds, using the `jwt-dpop` grant type for DPoP (Sections 4.4 and 9.11.1.2.1). With a different key or certificate it fails with `invalid_grant` (Sections 9.11.1.2.1 and 9.11.2.2). With no DPoP proof or no client certificate it also fails with `invalid_grant` (Sections 9.11.1.2.2 and 9.11.2.2). Then redeem an unbound ID-JAG without client authentication: that is `invalid_client`, while a sender-constrained ID-JAG without client authentication may be accepted (Section 4.4).
 
