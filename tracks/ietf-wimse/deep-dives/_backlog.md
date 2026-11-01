@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-01T10:10:17+00:00
+Generated at: 2026-11-01T11:49:52+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -18,7 +18,7 @@ Generated at: 2026-11-01T10:10:17+00:00
 | 12 | 6 | Review related draft: draft-reddy-wimse-oauth-dialog-binding-00 | draft-reddy-wimse-oauth-dialog-binding-00 (2026-10-30) |
 | 13 | 6 | Review related draft: draft-seymour-wimse-connected-flight-06 | draft-seymour-wimse-connected-flight-06 (2026-10-01) |
 | 14 | 6 | Review related draft: draft-sweeney-wimse-credential-delegation-02 | draft-sweeney-wimse-credential-delegation-02 (2026-10-30) |
-| 15 | 6 | Review related draft: draft-thaha-wimse-agent-evidence-binding-01 | draft-thaha-wimse-agent-evidence-binding-01 (2026-10-29) |
+| 15 | 6 | Review related draft: draft-thaha-wimse-agent-evidence-binding-02 | draft-thaha-wimse-agent-evidence-binding-02 (2026-11-01) |
 | 16 | 6 | Review related draft: draft-uppalapati-wimse-pq-agent-identity-01 | draft-uppalapati-wimse-pq-agent-identity-01 (2026-10-27) |
 | 17 | 5 | Diff active WG draft: draft-ietf-wimse-identifier-04 | draft-ietf-wimse-identifier-04 (2026-10-23) |
 | 18 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-08 | draft-ietf-wimse-workload-identity-practices-08 (2026-10-30) |
@@ -33,6 +33,7 @@ Moved by this week's material. candidates.json and the site list raised candidat
 - **high** `Review related draft: draft-hulea-wimse-agent-mandate-01`: -01 makes validation deterministic with a Trust Anchor Set, status codes and a Validation Profile, and the author's post lists what is still open.
 - **high** `Review related draft: draft-reddy-wimse-oauth-dialog-binding-00`: New draft that extends the WIMSE HTTP signature and WPT and adds a tctx.dlg member.
 - **high** `Review related draft: draft-sweeney-wimse-credential-delegation-02`: Adds a chain-verifiable profile adopting the asor format and new sub-delegation and security sections.
+- **high** `Review related draft: draft-thaha-wimse-agent-evidence-binding-02`: The -02 changes the admission rule to current actor only and adds a new MUST NOT on caller references in reusable tokens.
 - **low** `Diff active WG draft: draft-ietf-wimse-workload-identity-practices-08`: -08 is mostly typo fixes and rewording after AD feedback, with no new requirements visible.
 - **low** `Review related draft: draft-durga-wimse-ctx-isolation-00`: Very short -00 with a self-asserted taint level and no stated link to WIMSE credentials.
 

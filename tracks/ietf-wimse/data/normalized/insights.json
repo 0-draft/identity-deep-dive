@@ -3,6 +3,11 @@
     {
       "at": "2026-11-01T10:12:31+00:00",
       "text": "The most substantive item is workload-creds-03, which reorganises the WIT/WIC draft: trust-anchor binding is stricter, a new audience section for proofs appears, and the rule against a second workload identifier in one credential is dropped. The rest is mostly agent-delegation drafts converging on the asor chain format, plus a new dialog-binding draft that extends the WIMSE HTTP signature profile."
+    },
+    {
+      "at": "2026-11-01T11:50:41+00:00",
+      "text": "The only change is draft-thaha-wimse-agent-evidence-binding-02. It changes admission so a serving party uses only the current actor, as RFC 8693 Section 4.1 requires, and treats the Actor Chain as attribution, not authority.",
+      "text_ja": "変更は draft-thaha-wimse-agent-evidence-binding-02 のみである。サービス提供側は RFC 8693 の 4.1 節に従い現在のアクターだけで受け入れ判断を行い、Actor Chain は権限ではなく帰属情報として扱うことになった。"
     }
   ],
   "items": {
@@ -150,6 +155,38 @@
         "A gateway admitting agent calls can bind the caller's receipt to the exact request it received."
       ]
     },
+    "draft:draft-thaha-wimse-agent-evidence-binding-02": {
+      "diagram": "sequenceDiagram\n  participant A as Agent\n  participant S as Serving Party\n  A->>S: request with access token and AEE-Caller-Ref\n  S->>S: check token top-level claims\n  S->>S: check current actor only (outermost act)\n  S->>S: recompute call_digest and compare\n  S-->>A: admit or refuse\n  Note over S: prior actors are audit history, not used for admission",
+      "first_seen": "2026-11-01",
+      "headline": "This revision limits admission decisions to the current actor and calls the Actor Chain attribution, not authority.",
+      "headline_ja": "受け入れ判断を現在のアクターだけに限定し、Actor Chain を権限ではなく帰属情報と位置付ける改訂である。",
+      "id": "draft:draft-thaha-wimse-agent-evidence-binding-02",
+      "kind": "draft-revision",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-identity-chaining",
+          "note": "Newly cited as an example of a delegation chain that gives per-hop signed evidence of authority across hops.",
+          "note_ja": "ホップをまたぐ権限のホップごとの署名付き証拠を与える委任チェーンの例として、新たに参照された。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "substantive",
+      "summary": "Admission step 4 now follows RFC 8693 Section 4.1. The access-control inputs are the token's top-level claims and the current actor (the outermost act). Prior actors are informational only and MUST NOT decide admission. The earlier wording that a Serving Party checks every Actor is removed. The Actor Chain is described as the token issuer's asserted history, neither complete nor proof that any hop held or narrowed authority. Authority across hops needs per-hop signed evidence, such as a delegation chain (draft-ietf-oauth-identity-chaining) or linked receipts. A new rule says AEE-Caller-Ref, which binds one call, MUST NOT be carried in a token that can be presented on more than one call. The draft now says it is a companion to AIMS, not proposed text for it. The audit-record section is renamed, and a pointer to an Execution Receipt or its SCITT Receipt no longer goes in correlation.externalAnchor, because it does not date the audit record. The -01 posted earlier lacked some of the -00 revisions, and this version includes them.",
+      "summary_ja": "受け入れ手順の4が RFC 8693 の 4.1 節に沿う形に改められた。アクセス制御の入力はトークンのトップレベルクレームと現在のアクター（最も外側の act）であり、過去のアクターは参考情報にとどまり、受け入れ判断に用いてはならない（MUST NOT）。全アクターを検査するという従来の記述は削除された。Actor Chain はトークン発行者が主張する履歴であり、完全ではなく、各ホップが権限を持っていた、または絞り込んだことの証拠でもないとされた。ホップをまたぐ権限には、委任チェーン（draft-ietf-oauth-identity-chaining）やリンクされたレシートのような、ホップごとの署名付き証拠が必要とされる。1回の呼び出しに結び付く AEE-Caller-Ref は、複数の呼び出しで提示され得るトークンに含めてはならない（MUST NOT）という規則も加わった。本ドラフトは AIMS への提案文ではなく補完文書だと明記された。監査レコードの節名が変更され、Execution Receipt やその SCITT Receipt への参照は、監査レコードの時刻を証明しないため correlation.externalAnchor に載せないこととされた。先に投稿された -01 は -00 での改訂の一部を欠いており、今回の版でそれが反映された。",
+      "title": "draft-thaha-wimse-agent-evidence-binding-02: Evidence Binding for AI Agent Credentials",
+      "updated_at": "2026-11-01T11:50:41+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-thaha-wimse-agent-evidence-binding-01&url2=draft-thaha-wimse-agent-evidence-binding-02",
+      "use_cases": [
+        "A service that admits agent calls with RFC 8693 delegated tokens, where it must decide whether prior actors in the chain affect its access-control decision.",
+        "A deployment that wants to carry a per-call binding (AEE-Caller-Ref) and must keep it out of reusable bearer-style tokens.",
+        "An auditor who correlates agent audit records with SCITT-registered Execution Receipts and needs to know which anchor claims are valid."
+      ],
+      "use_cases_ja": [
+        "RFC 8693 の委任トークンでエージェントの呼び出しを受け入れるサービスで、チェーン内の過去のアクターがアクセス制御判断に影響するかを決める場合。",
+        "呼び出しごとの結び付け（AEE-Caller-Ref）を運ぶ際に、再利用可能なトークンへ含めないようにしたい実装。",
+        "エージェントの監査レコードと SCITT に登録された Execution Receipt を突き合わせ、どのアンカー主張が有効かを知りたい監査担当者。"
+      ]
+    },
     "mail:0lww5-4hYs09TJJd1YxwlH0aWsk": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -273,48 +310,7 @@
       "use_cases": []
     }
   },
-  "overflow": [
-    {
-      "title": "Agent Transfer Protocol (AGTP) draft family updated",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/aG12FPBUiHcReCwnOEW42xCRqRY/"
-    },
-    {
-      "title": "A principal-standing name for the 5.4 closed set",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/2Booef4RPGIEMpGjU7D48YViB7s/"
-    },
-    {
-      "title": "Last Call: <draft-ietf-wimse-workload-identity-practices-08.txt> (Workload Identity Practices) to Informational RFC",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/jZbeY6w6OdXAHmfPmO5QFvUNVSw/"
-    },
-    {
-      "title": "AD evaluation: draft-ietf-wimse-workload-identity-practices-05",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/CyXbKBW2oZgfyd8MwJBdh4VjwPE/"
-    },
-    {
-      "title": "Trust-anchor provenance (draft-asor-wimse-agent-delegation-chain-02, Section 6.4)",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/4dzSMkcJBVtYsa4nvN7z1WpDCXM/"
-    },
-    {
-      "title": "Three questions on cross-domain authority evidence and decision-time verification",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/irkcuQvYtr10PCmqPpZ68nC3DKU/"
-    },
-    {
-      "title": "Use case input: signed per-hop handoff context",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/xJUmuUFwRBj4JxW0wWrvfxzbEYg/"
-    },
-    {
-      "title": "9 new commit(s) in ietf-wg-wimse/draft-ietf-wimse-arch",
-      "url": "https://github.com/ietf-wg-wimse/draft-ietf-wimse-arch"
-    },
-    {
-      "title": "5 new commit(s) in ietf-wg-wimse/draft-ietf-wimse-s2s-protocol",
-      "url": "https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol"
-    },
-    {
-      "title": "4 new commit(s) in ietf-wg-wimse/draft-ietf-wimse-workload-identity-practices",
-      "url": "https://github.com/ietf-wg-wimse/draft-ietf-wimse-workload-identity-practices"
-    }
-  ],
+  "overflow": [],
   "triage": {
     "Diff active WG draft: draft-ietf-wimse-workload-creds-03": {
       "date": "2026-11-01",
@@ -345,6 +341,12 @@
       "date": "2026-11-01",
       "priority": "high",
       "reason": "Adds a chain-verifiable profile adopting the asor format and new sub-delegation and security sections."
+    },
+    "Review related draft: draft-thaha-wimse-agent-evidence-binding-02": {
+      "date": "2026-11-01",
+      "priority": "high",
+      "reason": "The -02 changes the admission rule to current actor only and adds a new MUST NOT on caller references in reusable tokens.",
+      "reason_ja": "-02 で受け入れ規則が現在のアクターのみに変わり、再利用可能なトークンへの呼び出し参照を禁じる MUST NOT が加わったため。"
     }
   }
 }
