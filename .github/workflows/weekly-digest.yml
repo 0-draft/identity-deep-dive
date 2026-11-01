@@ -8,6 +8,12 @@ on:
 permissions:
   contents: write
 
+# Shared with the daily update: both commit track state, and the daily run
+# uses the last commit as its baseline.
+concurrency:
+  group: track-update
+  cancel-in-progress: false
+
 jobs:
   weekly:
     strategy:
@@ -29,6 +35,9 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # score.py rewrote candidates.json, so put the stored triage back on it.
+      - name: Re-apply stored insights
+        run: python ../../scripts/insights/apply.py --track ${{ matrix.track }}
       - name: Commit and push (rebase-retry)
         run: |
           cd "$GITHUB_WORKSPACE"

@@ -15,15 +15,16 @@ A unified repository for continuously monitoring identity and security standards
 Each track follows the same pipeline:
 
 ```text
-Collect  ->  Normalize  ->  Score  ->  Report
-  raw API       JSON         ranked      daily/weekly
-  snapshots     merge        backlog     markdown
+Collect  ->  Normalize  ->  Score  ->  Report  ->  Explain
+  raw API       JSON         ranked      daily/weekly   Claude briefing
+  snapshots     merge        backlog     markdown       + triage
 ```
 
 1. **Collect** — Fetch raw data from configured sources (GitHub API, IETF Datatracker, mailing lists).
 2. **Normalize** — Transform raw data into a consistent JSON schema per track.
 3. **Score** — Rank items by lifecycle state, recency, and activity to surface what matters now.
 4. **Report** — Generate daily and weekly markdown reports with prioritized tables.
+5. **Explain** — In CI, find what is new since the last committed state (draft revisions, new drafts, mailing-list threads, PRs, repository activity), fetch the source material, and have Claude explain each item: a one-line headline, a summary grounded in the diff or message, a mermaid diagram of the mechanism, use cases, and links to related items in the other tracks. Claude also flags deep-dive candidates to move up or down. The result lands in a "Briefing" section at the top of the daily report and in `data/normalized/insights.json` (a rolling seven-day window). See `scripts/insights/`.
 
 ## Repository Layout
 
@@ -73,10 +74,10 @@ cp -R templates/deep-dive tracks/<track>/deep-dives/<topic-name>
 
 Two repo-root workflows in `.github/workflows/` fan out across all tracks via a `matrix.track` list:
 
-- `daily-update.yml` — runs `make install && make update` per track at 06:00 UTC.
+- `daily-update.yml` — every six hours, runs `make install && make update` per track, then the Explain step. Claude runs only when something is new, gets read-only tools over the staged material, and returns structured output that `scripts/insights/apply.py` validates before anything is written. Without the `CLAUDE_CODE_OAUTH_TOKEN` secret, or when Claude fails, the data update still commits.
 - `weekly-digest.yml` — runs `make install && make weekly` per track on Mondays 08:00 UTC.
 
-To wire a new track in, add its directory name to `matrix.track` in both workflows.
+To wire a new track in, add its directory name to `matrix.track` in both workflows, and add an extractor for it to `scripts/insights/changes.py`.
 
 ## Design Principles
 

@@ -1,12 +1,25 @@
 name: Daily Update (All Tracks)
 
+# The name is kept for deploy-pages.yml, which triggers on it. The schedule is
+# every six hours: "daily" is now the report granularity, not the cadence.
+#
+# Each run collects, then asks Claude to explain whatever is new since the
+# state committed by the previous run. Claude is optional here: without the
+# token, or when it fails, the data update still commits, and the report keeps
+# the briefing from earlier runs.
+
 on:
   schedule:
-    - cron: "0 6 * * *"  # 06:00 UTC daily
+    - cron: "17 */6 * * *"
   workflow_dispatch:
 
 permissions:
   contents: write
+
+# Runs must not overlap: each one's baseline is the previous one's commit.
+concurrency:
+  group: track-update
+  cancel-in-progress: false
 
 jobs:
   update:
@@ -15,28 +28,93 @@ jobs:
       matrix:
         track: [ietf-wimse, oauth-wg, openid]
     runs-on: ubuntu-latest
+    timeout-minutes: 40
     defaults:
       run:
         working-directory: tracks/${{ matrix.track }}
+    env:
+      TRACK: ${{ matrix.track }}
+      WORK: ${{ github.workspace }}/.insights-work/${{ matrix.track }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.12"
           cache: "pip"
+
+      - name: Keep the previous state as the baseline
+        run: cp data/normalized/state.json "$RUNNER_TEMP/prev_state.json" || true
+
       - run: make install
       - run: make update
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Stage what is new for Claude
+        id: changes
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python ../../scripts/insights/changes.py --track "$TRACK" --prev "$RUNNER_TEMP/prev_state.json" --out "$WORK"
+
+      - name: Check for the Claude token
+        id: token
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          if [ -n "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::CLAUDE_CODE_OAUTH_TOKEN is not set; committing data without a briefing."
+            echo "present=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Load the output schema
+        id: schema
+        if: steps.changes.outcome == 'success' && steps.changes.outputs.count != '0' && steps.token.outputs.present == 'true'
+        run: echo "json=$(jq -c . ../../scripts/insights/schema.json)" >> "$GITHUB_OUTPUT"
+
+      # Claude gets read tools only, over files this job wrote. It cannot fetch,
+      # write, or run anything; what it returns is structured output that
+      # apply.py validates before any of it reaches the repository.
+      - name: Explain the changes
+        id: claude
+        if: steps.changes.outcome == 'success' && steps.changes.outputs.count != '0' && steps.token.outputs.present == 'true'
+        continue-on-error: true
+        uses: anthropics/claude-code-action@16f9f71ab9c490faf367f94dd294897edc25be33 # v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          display_report: "false"
+          prompt: |
+            Track: ${{ matrix.track }}
+            Material directory: .insights-work/${{ matrix.track }}
+
+            Read scripts/insights/prompt.md and follow it. Then read changes.json
+            and context.md in the material directory, and every file that
+            changes.json lists.
+          claude_args: |
+            --allowedTools "Read,Glob,Grep"
+            --max-turns 60
+            --json-schema '${{ steps.schema.outputs.json }}'
+
+      - name: Fold the briefing into the track
+        if: ${{ !cancelled() }}
+        env:
+          RESULT: ${{ steps.claude.outputs.structured_output }}
+        run: |
+          printf '%s' "$RESULT" > "$RUNNER_TEMP/result.json"
+          python ../../scripts/insights/apply.py --track "$TRACK" --changes "$WORK/changes.json" --result "$RUNNER_TEMP/result.json"
+
       - name: Commit and push (rebase-retry)
         run: |
           cd "$GITHUB_WORKSPACE"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add tracks/${{ matrix.track }}/
+          git add "tracks/$TRACK/"
           git diff --cached --quiet && { echo "no changes"; exit 0; }
-          git commit -m "chore(${{ matrix.track }}): daily update $(date -u +%Y-%m-%d)"
+          git commit -m "chore($TRACK): update $(date -u +%Y-%m-%dT%H:%MZ)"
           for i in 1 2 3 4 5; do
             git pull --rebase origin main && git push && exit 0
             echo "push attempt $i failed, retrying after backoff..."

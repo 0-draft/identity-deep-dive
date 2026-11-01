@@ -1,0 +1,77 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["brief", "items", "triage"],
+  "properties": {
+    "brief": {
+      "type": "string",
+      "maxLength": 400,
+      "description": "One or two sentences: what moved in this track since the last run, and the one thing a reader should take away."
+    },
+    "items": {
+      "type": "array",
+      "maxItems": 15,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "headline", "summary", "significance", "use_cases", "diagram", "related"],
+        "properties": {
+          "id": { "type": "string", "description": "Exact id from changes.json." },
+          "headline": {
+            "type": "string",
+            "maxLength": 160,
+            "description": "One line in plain words, as in: In short, this ... No hype."
+          },
+          "summary": {
+            "type": "string",
+            "maxLength": 1200,
+            "description": "What actually changed or was said, grounded only in the file for this item."
+          },
+          "significance": {
+            "type": "string",
+            "enum": ["substantive", "editorial", "new-proposal", "discussion", "routine"]
+          },
+          "use_cases": {
+            "type": "array",
+            "maxItems": 3,
+            "items": { "type": "string", "maxLength": 300 },
+            "description": "Concrete situations where an implementer would care. Empty for editorial or routine items."
+          },
+          "diagram": {
+            "type": "string",
+            "maxLength": 2500,
+            "description": "Mermaid source (flowchart or sequenceDiagram) showing the mechanism, or an empty string when a picture would add nothing."
+          },
+          "related": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["track", "name", "note"],
+              "properties": {
+                "track": { "type": "string", "enum": ["ietf-wimse", "oauth-wg", "openid"] },
+                "name": { "type": "string", "description": "Draft or repository name exactly as in context.md." },
+                "note": { "type": "string", "maxLength": 240 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "triage": {
+      "type": "array",
+      "maxItems": 25,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["candidate", "priority", "reason"],
+        "properties": {
+          "candidate": { "type": "string", "description": "Exact candidate key from context.md." },
+          "priority": { "type": "string", "enum": ["high", "normal", "low"] },
+          "reason": { "type": "string", "maxLength": 300 }
+        }
+      }
+    }
+  }
+}
