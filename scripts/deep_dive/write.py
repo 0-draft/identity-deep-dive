@@ -132,17 +132,38 @@ def valid_subject(subject: dict) -> bool:
     )
 
 
-def heading_count(markdown: str) -> int:
-    """ATX headings outside code fences (a "# comment" in a code block is not one)."""
-    count, fence = 0, None
+def structure(markdown: str) -> dict:
+    """What an edition in another language must keep: headings, list items
+    and code fences (counted outside fences, so a "# comment" in a code block
+    is not a heading), and every backticked identifier."""
+    headings = items = fences = 0
+    fence = None
     for line in markdown.splitlines():
         m = FENCE.match(line)
         if m:
-            fence = None if fence and m.group(1)[0] == fence[0] else (fence or m.group(1))
+            if fence is None:
+                fence, fences = m.group(1), fences + 1
+            elif m.group(1)[0] == fence[0]:
+                fence = None
             continue
-        if fence is None and re.match(r"^#{1,6} ", line):
-            count += 1
-    return count
+        if fence is None:
+            headings += bool(re.match(r"^#{1,6} ", line))
+            items += bool(re.match(r"^\s*(?:[-*]|\d+\.)\s", line))
+    return {
+        "headings": headings,
+        "list items": items,
+        "code fences": fences,
+        "codes": set(re.findall(r"`([^`\n]+)`", markdown)),
+    }
+
+
+def structure_diff(en: str, ja: str) -> list[str]:
+    a, b = structure(en), structure(ja)
+    out = [f"{k}: {a[k]} in English, {b[k]} in Japanese" for k in ("headings", "list items", "code fences") if a[k] != b[k]]
+    missing = sorted(a["codes"] - b["codes"])
+    if missing:
+        out.append("identifiers missing in Japanese: " + ", ".join(f"`{c}`" for c in missing[:8]))
+    return out
 
 
 def no_mentions(text: str) -> str:
@@ -187,12 +208,10 @@ def main() -> int:
             ja_text = clean(ja)
             (target / fname.replace(".md", ".ja.md")).write_text(ja_text, encoding="utf-8")
             written_ja.append(fname)
-            # The Japanese should have the same sections.
-            if heading_count(en) != heading_count(ja_text):
-                section_mismatch.append(
-                    f"{fname}: {heading_count(en)} headings in English, {heading_count(ja_text)} in Japanese"
-                )
+            # The Japanese should have the same structure and identifiers.
+            section_mismatch += [f"{fname}: {d}" for d in structure_diff(en, ja_text)]
     shutil.copy(TEMPLATE / "hands-on-log.md", target / "hands-on-log.md")
+    shutil.copy(TEMPLATE / "hands-on-log.ja.md", target / "hands-on-log.ja.md")
 
     one_liner = clean(str(result.get("one_liner", ""))).strip()
     one_liner_ja = clean(str(result.get("one_liner_ja", ""))).strip()
@@ -242,7 +261,7 @@ def main() -> int:
     if missing:
         body += ["Template headings missing:", ""] + [f"- [ ] {m}" for m in missing] + [""]
     if section_mismatch:
-        body += ["Japanese edition whose sections do not match the English:", ""]
+        body += ["Japanese editions that differ from the English in structure or identifiers:", ""]
         body += [f"- [ ] {m}" for m in section_mismatch] + [""]
     if unverified:
         body += ["Statements the drafter could not fully support from the material:", ""]

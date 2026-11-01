@@ -46,6 +46,9 @@ const HEADINGS: Record<string, string> = {
   "Top Focus": "注目の上位",
   "Top Priorities": "優先度の上位",
   Triage: "Triage",
+  Briefing: "ブリーフィング",
+  "Triage of the candidate queue": "候補キューの triage",
+  "Also changed, not explained": "その他の変化 (解説なし)",
 };
 
 const TABLE_CELLS: Record<string, string> = {
@@ -128,13 +131,19 @@ const PREFIXES: [RegExp, string][] = [
   [/^- Warning: /, "- 警告: "],
 ];
 
-function translateTableRow(line: string): string {
+// Own keys only: "constructor" or "toString" in a report must not match
+// Object.prototype.
+const has = (table: object, key: string) => Object.hasOwn(table, key);
+
+function translateTableRow(line: string, header: boolean): string {
   const cells = line.split("|");
   if (cells.length < 3) return line;
   return cells
     .map((c) => {
       const key = c.trim();
-      if (key in TABLE_CELLS) return c.replace(key, TABLE_CELLS[key]);
+      // Header words are translated only in the header row, so a data cell
+      // that happens to read "Title" or "Score" stays as written.
+      if (header && has(TABLE_CELLS, key)) return c.replace(key, TABLE_CELLS[key]);
       // Trend column of the OpenID report.
       if (key === "same") return c.replace(key, "変化なし");
       if (key === "new") return c.replace(key, "新規");
@@ -148,20 +157,20 @@ function translateTableRow(line: string): string {
 export function localizeReport(markdown: string, lang: Lang): string {
   if (lang !== "ja") return markdown;
   let inFence = false;
-  return markdown
-    .split("\n")
-    .map((line) => {
+  const lines = markdown.split("\n");
+  return lines
+    .map((line, i) => {
       if (/^\s*(```|~~~)/.test(line)) inFence = !inFence;
       if (inFence) return line;
       for (const [re, to] of TITLES) if (re.test(line)) return line.replace(re, to);
       const h = /^(#{2,3}) (.+)$/.exec(line);
-      if (h && h[2] in HEADINGS) return `${h[1]} ${HEADINGS[h[2]]}`;
-      if (line.startsWith("|")) return translateTableRow(line);
-      if (line in STEPS) return STEPS[line];
+      if (h && has(HEADINGS, h[2])) return `${h[1]} ${HEADINGS[h[2]]}`;
+      if (line.startsWith("|")) return translateTableRow(line, /^\|[\s:|-]+\|$/.test(lines[i + 1] ?? ""));
+      if (has(STEPS, line)) return STEPS[line];
       const s = /^- (.+)$/.exec(line);
-      if (s && s[1] in SENTENCES) return `- ${SENTENCES[s[1]]}`;
+      if (s && has(SENTENCES, s[1])) return `- ${SENTENCES[s[1]]}`;
       const l = /^- ([^:`]+):(.*)$/.exec(line);
-      if (l && l[1] in LABELS) return `- ${LABELS[l[1]]}:${l[2]}`;
+      if (l && has(LABELS, l[1])) return `- ${LABELS[l[1]]}:${l[2]}`;
       for (const [re, to] of PREFIXES) if (re.test(line)) return line.replace(re, to);
       return line;
     })

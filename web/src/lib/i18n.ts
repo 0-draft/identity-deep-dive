@@ -53,6 +53,7 @@ const STRINGS = {
   },
   howItWorks: { en: "How it works", ja: "仕組み" },
   diagram: { en: "Diagram", ja: "図" },
+  reportDataEnglish: { en: "", ja: "(見出しは日本語、データは原文の英語)" },
   whoAffects: { en: "Who this affects", ja: "影響を受ける人" },
   relatedIn: { en: "Related in", ja: "関連:" },
   queue: { en: "Deep-dive queue", ja: "ディープダイブ候補" },

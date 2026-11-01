@@ -79,13 +79,13 @@ const dives = deepDiveSlugs(track).map((s) => deepDive(track, s, lang));
       <div class="mt-12 space-y-4">
         {daily && (
           <details class="disclosure rounded-md border border-rule bg-surface px-5 py-4">
-            <summary>{t(lang, "dailyReport")} {daily.name.replace(/\.md$/, "")}</summary>
+            <summary>{t(lang, "dailyReport")} {daily.name.replace(/\.md$/, "")} {t(lang, "reportDataEnglish")}</summary>
             <article class="prose-report mt-4" set:html={renderMarkdown(localizeReport(daily.body, lang))} />
           </details>
         )}
         {weekly && (
           <details class="disclosure rounded-md border border-rule bg-surface px-5 py-4">
-            <summary>{t(lang, "weeklyDigest")} {weekly.name.replace(/\.md$/, "")}</summary>
+            <summary>{t(lang, "weeklyDigest")} {weekly.name.replace(/\.md$/, "")} {t(lang, "reportDataEnglish")}</summary>
             <article class="prose-report mt-4" set:html={renderMarkdown(localizeReport(weekly.body, lang))} />
           </details>
         )}
