@@ -25,6 +25,10 @@ const used = new Set(specs.map((s) => statusGroup(s.status)));
 const shortStatus = (s: Spec) =>
   s.status.stage === "rfc" ? s.status.label : s.status.stage.startsWith("openid-") ? `OpenID ${s.status.label}` : (STAGE_DETAIL[s.status.stage] ?? STAGE_DETAIL.unknown)[lang];
 
+// A status whose source page no longer showed its evidence, or that fell back
+// to the previous run's value after an error.
+const notReverified = (s: Spec) => s.status.stale === true || s.status.verified === false;
+
 // Each spec's direct neighbourhood as a small mermaid flowchart: what it
 // relates to, and what relates to it. One graph of every spec was too large
 // to read. Ids and labels come from the curated catalogue, with quotes and
@@ -80,6 +84,7 @@ const neighbourhood = (s: Spec) => {
                   <span class="mt-1 flex flex-wrap gap-x-2 text-xs text-muted">
                     <span class="st-dot" data-st={statusGroup(s.status)}>{shortStatus(s)}</span>
                     {s.adoption.length > 0 && <span>{s.adoption.length} {t(lang, "mapAdopters")}</span>}
+                    {notReverified(s) && <span>{t(lang, "mapStatusNotReverifiedShort")}</span>}
                   </span>
                 </a>
               </li>
@@ -106,6 +111,7 @@ const neighbourhood = (s: Spec) => {
                   {s.status.url && <a href={s.status.url} rel="noreferrer">{s.status.label || t(lang, "mapSource")}</a>}
                   {s.status.updated && <span>{s.status.updated}</span>}
                   {s.status.note && <span>{pick(lang, s.status.note, s.status.note_ja)}</span>}
+                  {notReverified(s) && <span class="font-medium text-ink">{t(lang, "mapStatusNotReverified")}</span>}
                 </p>
                 <p class="mt-2 text-[15px] leading-relaxed">{pick(lang, s.summary, s.summary_ja)}</p>
                 {s.relations.length > 0 && (
