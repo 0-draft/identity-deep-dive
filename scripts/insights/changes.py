@@ -138,17 +138,23 @@ def github_pr_body(repo: str, number: int) -> str:
     return cap(data.get("body") or "", PR_BODY_CAP)
 
 
+COMMITS_PAGE = 100
+
+
 def github_commits_since(repo: str, since: str) -> list[dict[str, str]] | None:
     """Commits on the default branch since a time; None when the API failed."""
     try:
         data = get(
-            f"https://api.github.com/repos/{repo}/commits?since={since}&per_page=15",
+            f"https://api.github.com/repos/{repo}/commits?since={since}&per_page={COMMITS_PAGE}",
             github=True,
         ).json()
     except requests.RequestException:
         return None
+    if not isinstance(data, list):
+        # An error body (rate limit, 404) is a failure too, not "no commits".
+        return None
     out = []
-    for c in data if isinstance(data, list) else []:
+    for c in data:
         msg = (c.get("commit") or {}).get("message") or ""
         out.append({"sha": (c.get("sha") or "")[:12], "message": msg.splitlines()[0] if msg else ""})
     return out
@@ -346,7 +352,9 @@ def extract_openid(cur: dict, prev: dict, held: list[str]) -> list[dict[str, Any
             continue
 
         def material(n=name, since=before, r=repo, cs=commits) -> str:
-            body = "\n".join(f"- {c['sha']} {c['message']}" for c in cs) if cs else "(commits could not be fetched)"
+            body = "\n".join(f"- {c['sha']} {c['message']}" for c in cs[:15]) if cs else "(commits could not be fetched)"
+            if cs and len(cs) > 15:
+                body += f"\n(and {len(cs) - 15} more)"
             return (
                 f"Repository: {n} (category: {r.get('category')}, open PRs: {r.get('open_prs')}, "
                 f"merged PRs in 30d: {r.get('merged_prs_30d')})\n"
@@ -357,7 +365,7 @@ def extract_openid(cur: dict, prev: dict, held: list[str]) -> list[dict[str, Any
             {
                 "id": f"repo:{name}:{pushed}",
                 "kind": "repo-activity",
-                "title": f"{name}: {len(commits)} new commit{'s' if len(commits) != 1 else ''} on the default branch"
+                "title": f"{name}: {len(commits)}{'+' if len(commits) == COMMITS_PAGE else ''} new commit{'s' if len(commits) != 1 else ''} on the default branch"
                 if commits
                 else f"{name}: new activity",
                 "url": repo.get("html_url", ""),
