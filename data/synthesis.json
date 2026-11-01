@@ -21,9 +21,9 @@
       "why_ja": "WG 文書になったことで、SD-JWT の holder が key binding を連鎖させて agent に権限を渡す標準的な方法ができた。請求書 agent の mandate draft は次版で委譲の仕組みをこれに載せ替える予定で、credential-delegation もこれを参照している。"
     },
     {
-      "id": "draft:draft-ietf-oauth-deferred-token-response-01",
-      "why": "Servers that support it must publish deferred_token_response_supported, and servers that don't must not reject the parameter. It is becoming the WG's default answer for human approval and consent: the ID-JAG consent issue was closed by pointing to it.",
-      "why_ja": "対応するサーバは deferred_token_response_supported を公開しなければならず、非対応のサーバもこのパラメータを理由にリクエストを拒否してはならない。人による承認や同意が必要な場面では WG の標準的な答えになりつつあり、ID-JAG の同意に関する issue もこれを指して閉じられた。"
+      "id": "draft:draft-thaha-wimse-agent-evidence-binding-02",
+      "why": "Serving parties should base admission only on top-level claims and the current actor, and treat earlier actors in an act chain as audit history, not authority. Authority across hops needs per-hop signed evidence. Admission on full actor history is an open issue for IETF 127.",
+      "why_ja": "受け入れ側は、token の最上位 claim と現在の actor だけで受け入れを判断し、act チェーン上の以前の actor は監査用の履歴として扱うべきだとされた。hop をまたぐ権限の証明には hop ごとの署名付き証跡が必要になる。actor 履歴全体に基づく受け入れは IETF 127 での未解決課題である。"
     }
   ],
   "topics": [
@@ -31,8 +31,8 @@
       "id": "workload-credentials",
       "name": "Workload credentials and proof of possession",
       "name_ja": "ワークロードクレデンシャルと proof of possession",
-      "summary": "WIMSE's base stack covers identifiers, WIT/WIC credentials, WPT and HTTP-signature proofs and mTLS, with individual drafts on attestation, discovery, metadata and post-quantum. workload-creds-03 ties validation to trust-domain anchors and adds a section on proof audience. practices-08 answers AD feedback. In OAuth, attestation-based client auth is waiting for write-up.",
-      "summary_ja": "WIMSE の基盤スタックで、識別子、WIT/WIC、WPT と HTTP Signature による証明、mTLS を扱う。attestation、discovery、metadata、耐量子暗号への対応は個人 draft として出ている。workload-creds-03 は検証を trust domain に紐づく anchor に限定し、proof の audience の節を追加した。practices-08 は Area Director のコメントへの対応版だ。OAuth 側では attestation-based client auth が write-up 待ちである。",
+      "summary": "WIMSE's base stack covers identifiers, WIT/WIC credentials, WPT and HTTP-signature proofs and mTLS; http-signature is with the IESG. Individual drafts add attestation, discovery, metadata and post-quantum. workload-creds-03 ties validation to trust-domain anchors and adds proof audience. In OAuth, attestation-based client auth awaits write-up.",
+      "summary_ja": "WIMSE の基盤スタックで、識別子、WIT/WIC、WPT と HTTP Signature による証明、mTLS を扱う。http-signature は IESG に提出済みで、attestation、discovery、metadata、耐量子暗号は個人 draft として出ている。workload-creds-03 は検証を trust domain に紐づく anchor に限定し、proof の audience の節を追加した。OAuth 側では attestation-based client auth が write-up 待ちである。",
       "members": [
         {
           "track": "ietf-wimse",
@@ -486,5 +486,5 @@
       ]
     }
   ],
-  "generated_at": "2026-11-01T11:47:23+00:00"
+  "generated_at": "2026-11-01T11:52:39+00:00"
 }
