@@ -28,7 +28,10 @@ Usage:
   refresh.py --check   check only (PR check). Writes nothing unless --out is
                        given.
   Either way, the exit status is 1 if any OpenID status, external status or
-  claim is not verified, or any status fell back to the previous run.
+  claim is not verified, any status fell back to the previous run, or the
+  catalogue is inconsistent (a spec without exactly one source kind, an
+  OpenID spec without a status entry, an unknown layer, or a relation, status
+  entry or claim that names an unknown spec id).
   --out PATH           write the result to PATH instead of
                        data/landscape-status.json
 """
@@ -74,16 +77,21 @@ STAGE_STATES = [
 ]
 
 
-def get_json(url: str) -> dict:
+def fetch(url: str) -> requests.Response:
+    """GET with the same backoff for every request, so one 429 or 503 does not
+    turn into an unverified claim."""
     for attempt in range(4):
         r = SESSION.get(url, timeout=TIMEOUT)
-        if r.status_code in (429, 500, 502, 503, 504):
+        if r.status_code in (429, 500, 502, 503, 504) and attempt < 3:
             time.sleep(2 * (attempt + 1))
             continue
         r.raise_for_status()
-        return r.json()
-    r.raise_for_status()
-    return {}
+        return r
+    raise AssertionError("unreachable")
+
+
+def get_json(url: str) -> dict:
+    return fetch(url).json()
 
 
 _state_names: dict[str, str] = {}
@@ -133,8 +141,7 @@ def page_text(url: str) -> tuple[str, str]:
     """The page's visible text, and the same text with each link's href
     written out before the link text (so a phrase can cite a link target).
     Scripts, styles, comments and other attributes are never searched."""
-    r = SESSION.get(url, timeout=TIMEOUT)
-    r.raise_for_status()
+    r = fetch(url)
     body = re.sub(r"<!--.*?-->", " ", r.text, flags=re.S)
     body = re.sub(r"<(script|style|noscript|template)[^>]*>.*?</\1>", " ", body, flags=re.S | re.I)
     def strip(h: str) -> str:
@@ -178,6 +185,34 @@ def evidence_found(url: str, evidence: str | list[str], in_order: bool = False) 
     return ok, "" if ok else "evidence not found"
 
 
+def validate(catalogue: dict, sources: dict) -> list[str]:
+    """Structural mistakes that would otherwise render silently wrong."""
+    errors = []
+    layers = {l["id"] for l in catalogue["layers"]}
+    ids = [s["id"] for s in catalogue["specs"]]
+    known = set(ids)
+    errors += [f"duplicate spec id: {i}" for i in sorted({i for i in ids if ids.count(i) > 1})]
+    for spec in catalogue["specs"]:
+        sid = spec["id"]
+        kinds = [k for k in ("ietf", "openid", "external") if spec.get(k)]
+        if len(kinds) != 1:
+            errors.append(f"{sid}: needs exactly one of ietf, openid, external (has {kinds or 'none'})")
+        if spec.get("openid") and sid not in sources["status"]:
+            errors.append(f"{sid}: openid spec with no entry in landscape-sources.json status")
+        if spec.get("layer") not in layers:
+            errors.append(f"{sid}: unknown layer {spec.get('layer')!r}")
+        for r in spec.get("relations", []):
+            if r.get("to") not in known:
+                errors.append(f"{sid}: relation to unknown spec {r.get('to')!r}")
+    for sid in sources["status"]:
+        if sid not in known:
+            errors.append(f"status entry for unknown spec {sid!r}")
+    for c in sources["adoption"]:
+        if c.get("spec") not in known:
+            errors.append(f"claim by {c.get('who')!r} points at unknown spec {c.get('spec')!r}")
+    return errors
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true", help="verify only; write nothing, exit 1 on any failure")
@@ -192,6 +227,10 @@ def main() -> int:
     if prev_path.exists():
         previous = json.loads(prev_path.read_text(encoding="utf-8"))
 
+    errors = validate(catalogue, sources)
+    for e in errors:
+        print(f"  catalogue error: {e}")
+
     statuses: dict[str, dict] = {}
     for spec in catalogue["specs"]:
         sid = spec["id"]
@@ -201,7 +240,7 @@ def main() -> int:
             elif spec.get("openid"):
                 src = sources["status"].get(sid)
                 if not src:
-                    statuses[sid] = {"stage": "unknown", "label": ""}
+                    statuses[sid] = {"stage": "unknown", "label": "", "verified": False, "error": "no source entry"}
                     continue
                 ok, err = evidence_found(src["url"], src["evidence"], src.get("evidence_in_order", False))
                 statuses[sid] = {
@@ -259,7 +298,7 @@ def main() -> int:
     out = {"generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(), "specs": statuses, "adoption": adoption}
     if args.out or not args.check:
         (args.out or prev_path).write_text(json.dumps(out, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-    return 1 if (bad or bad_status) else 0
+    return 1 if (bad or bad_status or errors) else 0
 
 if __name__ == "__main__":
     sys.exit(main())
