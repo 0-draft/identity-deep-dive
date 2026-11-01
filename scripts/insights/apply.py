@@ -60,7 +60,9 @@ def mermaid(src: Any) -> str:
     lowered = s.lower()
     if any(bad in lowered for bad in MERMAID_FORBIDDEN):
         return ""
-    return s
+    # Mermaid ends a statement at ";" and reads "#" as the start of an entity
+    # code, so either one inside a label breaks the whole diagram.
+    return s.replace(";", ",").replace("#", "no. ")
 
 
 def load_json(path: Path, default: Any) -> Any:
@@ -172,7 +174,7 @@ def render(track: str, store: dict, today: dt.date) -> str:
     lines = [SECTION_START, "## Briefing", ""]
     briefs = store.get("briefs", [])
     if briefs:
-        lines += [f"> {briefs[-1]['text']}", "", f"_Updated {briefs[-1]['at']} by Claude from the sources linked below._", ""]
+        lines += [f"> {briefs[-1]['text']}", "", f"_Updated {briefs[-1]['at']}. Machine-drafted from the sources linked below, which stay authoritative._", ""]
     if not items:
         lines += ["- Nothing new in the last few days that needed explaining.", ""]
     for i in items:
@@ -191,7 +193,7 @@ def render(track: str, store: dict, today: dt.date) -> str:
     triage = store.get("triage", {})
     flagged = sorted(((k, v) for k, v in triage.items() if v["priority"] != "normal"), key=lambda kv: (PRIORITIES[kv[1]["priority"]], kv[0]))
     if flagged:
-        lines += ["### Claude triage of the candidate queue", ""]
+        lines += ["### Triage of the candidate queue", ""]
         lines += [f"- **{v['priority']}** `{text(k, 200, oneline=True)}`: {v['reason']}" for k, v in flagged] + [""]
     lines.append(SECTION_END)
     return "\n".join(lines) + "\n"
