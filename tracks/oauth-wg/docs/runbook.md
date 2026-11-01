@@ -25,7 +25,7 @@ make report-daily  # render reports/daily/<date>.md + deep-dives/_backlog.md
 
 Repo-root workflows handle scheduling (no per-track workflows):
 
-- `.github/workflows/daily-update.yml` — 06:00 UTC matrix run, executes `make update` for each track and commits the result.
+- `.github/workflows/daily-update.yml` — every six hours (`17 */6 * * *`). A read-only `collect` job per track runs `make update` and the Claude explain step; a separate `publish` job validates the result, commits per track and pushes. See the README's Automation section.
 - `.github/workflows/weekly-digest.yml` — Mondays 08:00 UTC matrix run, executes `make weekly`.
 
 ## Failure Handling

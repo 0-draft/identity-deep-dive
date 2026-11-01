@@ -165,10 +165,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           status=0
+          # The allowlist of track names comes from changes.py, the one list.
+          known=" $(python -c 'import sys; sys.path.insert(0, "scripts/insights"); from changes import TRACKS; print(" ".join(TRACKS))') "
           for dir in "$COLLECTED"/track-*; do
             [ -d "$dir/tracks" ] || continue
             track="${dir##*/track-}"
-            case "$track" in ietf-wimse|oauth-wg|openid) ;; *) echo "::error::unexpected artifact $dir"; exit 1 ;; esac
+            case "$known" in *" $track "*) ;; *) echo "::error::unexpected artifact $dir"; exit 1 ;; esac
             # Replace only the pipeline-written paths.
             for sub in data/normalized data/snapshots reports; do
               rm -rf "tracks/$track/$sub"

@@ -10,7 +10,8 @@ permissions:
 
 # Shared with the daily update: both commit the same track files, and runs
 # that overlap would push over each other. (What the daily run diffs against is
-# insights_baseline.json, which this workflow never advances.)
+# insights_baseline.json. This workflow only creates it when it is missing and
+# never advances an existing one.)
 concurrency:
   group: track-update
   cancel-in-progress: false

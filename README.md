@@ -77,7 +77,7 @@ Two repo-root workflows in `.github/workflows/` fan out across all tracks via a 
 - `daily-update.yml` — every six hours. A read-only `collect` job per track runs `make install && make update`, stages what is new since the last explained state (`data/normalized/insights_baseline.json`), and has Claude explain it with read-only tools and structured output. A separate `publish` job, with no model in it, validates the result with `scripts/insights/apply.py`, commits per track and pushes. Without the `CLAUDE_CODE_OAUTH_TOKEN` secret, or when Claude fails, the data still commits and the next run explains the same changes again.
 - `weekly-digest.yml` — runs `make install && make weekly` per track on Mondays 08:00 UTC.
 
-To wire a new track in, add its directory name to `matrix.track` in both workflows, and add an extractor for it to `scripts/insights/changes.py`.
+To wire a new track in, add its directory name to `matrix.track` in `daily-update.yml` and `weekly-digest.yml`, add it to `TRACKS` and add an extractor for it in `scripts/insights/changes.py`, and add it to the `track` enum in `scripts/insights/schema.json`. The publish job reads its allowlist from `TRACKS`.
 
 ## Design Principles
 
