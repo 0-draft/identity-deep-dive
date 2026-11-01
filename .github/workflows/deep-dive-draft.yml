@@ -12,6 +12,11 @@ name: Deep-dive draft
 #   open   (contents + pull-requests: write)    no model; write the files,
 #                                               push a branch, open the PR
 #
+# Without DEEP_DIVE_PR_TOKEN, opening the pull request with GITHUB_TOKEN needs
+# the repository setting "Allow GitHub Actions to create and approve pull
+# requests" (Settings > Actions > General). If the PR cannot be opened, the
+# pushed branch is deleted again, so the subject is retried next week.
+#
 # A pull request opened with GITHUB_TOKEN does not trigger other workflows, so
 # PR checks and the Claude review stay silent on it. Set DEEP_DIVE_PR_TOKEN (a
 # fine-grained token with contents and pull-requests write on this repository)
@@ -112,7 +117,11 @@ jobs:
       - name: Load the output schema
         id: schema
         if: steps.stage.outputs.found == 'true'
-        run: echo "json=$(jq -c . scripts/deep_dive/schema.json)" >> "$GITHUB_OUTPUT"
+        # Spliced into single-quoted claude_args below: no apostrophes.
+        run: |
+          json=$(jq -c . scripts/deep_dive/schema.json)
+          case "$json" in *"'"*) echo "::error::schema.json must not contain a single quote"; exit 1 ;; esac
+          echo "json=$json" >> "$GITHUB_OUTPUT"
 
       - name: Draft the deep dive
         id: claude
@@ -219,10 +228,20 @@ jobs:
           git switch -c "$BRANCH"
           git add "tracks/$TRACK/deep-dives/$SLUG"
           git commit -m "docs($TRACK): draft deep dive for $SLUG"
-          git push "https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git" "$BRANCH"
+          # The token goes to git through environment config, not argv.
+          export GIT_CONFIG_COUNT=1
+          export GIT_CONFIG_KEY_0="http.https://github.com/.extraheader"
+          GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          export GIT_CONFIG_VALUE_0
+          git push "https://github.com/${REPO}.git" "$BRANCH"
           if [ "$HAS_PR_TOKEN" != "true" ]; then
             printf '\n%s\n' "Opened with GITHUB_TOKEN, so no other workflow started. Marking it ready for review starts the Claude review; close and reopen it to run PR checks as well." >> "$RUNNER_TEMP/pr-body.md"
           fi
-          gh pr create --repo "$REPO" --base main --head "$BRANCH" --draft \
+          if ! gh pr create --repo "$REPO" --base main --head "$BRANCH" --draft \
             --title "docs($TRACK): deep dive on $SLUG" \
-            --body-file "$RUNNER_TEMP/pr-body.md"
+            --body-file "$RUNNER_TEMP/pr-body.md"; then
+            # No orphan branch: without a PR it would only block the subject.
+            git push "https://github.com/${REPO}.git" --delete "$BRANCH" || true
+            echo "::error::Could not open the pull request. Without DEEP_DIVE_PR_TOKEN, enable 'Allow GitHub Actions to create and approve pull requests'."
+            exit 1
+          fi
