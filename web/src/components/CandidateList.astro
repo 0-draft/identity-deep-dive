@@ -1,15 +1,16 @@
 ---
+import { pick, t, type Lang } from "../lib/i18n";
 import type { Candidate } from "../lib/tracks";
 
 interface Props {
   candidates: Candidate[];
+  lang: Lang;
 }
-const { candidates } = Astro.props;
-const label = { high: "Raised", low: "Lowered" } as const;
+const { candidates, lang } = Astro.props;
 ---
 
 {candidates.length === 0 ? (
-  <p class="text-sm text-muted">Nothing scores above the threshold right now.</p>
+  <p class="text-sm text-muted">{t(lang, "noCandidates")}</p>
 ) : (
   <ol class="divide-y divide-rule border-y border-rule">
     {candidates.map((c) => (
@@ -24,14 +25,12 @@ const label = { high: "Raised", low: "Lowered" } as const;
         {(c.ai_priority === "high" || c.ai_priority === "low") && (
           <p class="mt-1.5 text-[13px] leading-snug">
             <span class:list={["font-semibold", c.ai_priority === "high" ? "text-sig-substantive" : "text-muted"]}>
-              {label[c.ai_priority]}
+              {t(lang, c.ai_priority === "high" ? "raised" : "lowered")}
             </span>
-            {c.ai_note && <span class="text-muted">: {c.ai_note}</span>}
+            {c.ai_note && <span class="text-muted">: {pick(lang, c.ai_note, c.ai_note_ja)}</span>}
           </p>
         )}
-        {c.state_labels?.length ? (
-          <p class="mt-1 text-xs text-muted">{c.state_labels.join(", ")}</p>
-        ) : null}
+        {c.state_labels?.length ? <p class="mt-1 text-xs text-muted">{c.state_labels.join(", ")}</p> : null}
       </li>
     ))}
   </ol>

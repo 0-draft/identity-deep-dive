@@ -1,0 +1,68 @@
+---
+import { formatDay, href, t, type Lang } from "../lib/i18n";
+import { STAGES, STAGE_LABEL, board, type BoardItem } from "../lib/lifecycle";
+import { trackName, type TrackId } from "../lib/tracks";
+
+interface Props {
+  lang: Lang;
+  only?: TrackId;
+}
+const { lang, only } = Astro.props;
+const columns = board(only);
+const visible = STAGES.filter((s) => columns[s].length > 0);
+const SHOWN = 8;
+
+const short = (name: string) => name.replace(/^draft-ietf-(wimse|oauth)-/, "").replace(/^draft-/, "");
+const link = (d: BoardItem) =>
+  d.recentId ? `${href(lang, `${d.track}/`)}#${d.recentId}` : `https://datatracker.ietf.org/doc/${d.name}/`;
+---
+
+<div class="overflow-x-auto pb-2">
+  <ol
+    class="grid gap-3"
+    style={`grid-template-columns: repeat(${visible.length}, minmax(13rem, 1fr)); min-width: ${visible.length * 13.5}rem`}
+  >
+    {visible.map((stage) => (
+      <li class="rounded-md border border-rule bg-surface">
+        <h3 class="flex items-baseline justify-between gap-2 border-b border-rule px-3 py-2 text-sm font-semibold">
+          <span>{STAGE_LABEL[stage][lang]}</span>
+          <span class="tabular-nums text-muted">{columns[stage].length}</span>
+        </h3>
+        <ul class="space-y-1.5 p-2">
+          {columns[stage].slice(0, SHOWN).map((d) => (
+            <li>
+              <a
+                href={link(d)}
+                rel={d.recentId ? undefined : "noreferrer"}
+                title={d.title}
+                class:list={[
+                  "block rounded px-2 py-1.5 text-[13px] leading-snug no-underline hover:no-underline",
+                  d.recentId ? "bg-[#e7f2ef] text-ink ring-1 ring-sig-substantive/40 hover:bg-[#d9ebe6]" : "text-ink hover:bg-paper",
+                ]}
+              >
+                <span class="block font-medium break-words">{short(d.name)}<span class="font-normal text-muted">-{d.rev}</span></span>
+                <span class="mt-0.5 flex flex-wrap gap-x-2 text-xs text-muted">
+                  {!only && <span>{trackName(d.track)}</span>}
+                  {d.updated && <span>{formatDay(lang, d.updated)}</span>}
+                  {d.blocked && <span class="font-medium text-sig-discussion">{t(lang, "blocked")}</span>}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+        {columns[stage].length > SHOWN && (
+          <details class="disclosure border-t border-rule px-3 py-2">
+            <summary>+{columns[stage].length - SHOWN} {t(lang, "andMore")}</summary>
+            <ul class="mt-2 space-y-1">
+              {columns[stage].slice(SHOWN).map((d) => (
+                <li class="text-[13px]">
+                  <a href={link(d)} rel={d.recentId ? undefined : "noreferrer"} title={d.title}>{short(d.name)}-{d.rev}</a>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
+      </li>
+    ))}
+  </ol>
+</div>

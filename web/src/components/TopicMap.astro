@@ -1,0 +1,82 @@
+---
+import { pick, t, type Lang } from "../lib/i18n";
+import { trackName, type Topic } from "../lib/tracks";
+
+interface Props {
+  topics: Topic[];
+  lang: Lang;
+}
+const { topics, lang } = Astro.props;
+
+// A plain mermaid flowchart of the topics and how they relate, built here
+// from validated data (ids are [a-z0-9-], labels have quotes and brackets
+// stripped), never from model text as-is.
+const label = (s: string) => s.replace(/["`<>\[\]{}()|#;]/g, " ").replace(/\s+/g, " ").trim();
+const node = (id: string) => "t_" + id.replace(/-/g, "_");
+const edges = new Set<string>();
+for (const tp of topics) {
+  for (const r of tp.related) {
+    if (!topics.some((o) => o.id === r)) continue;
+    edges.add([tp.id, r].sort().join("|"));
+  }
+}
+const diagram = [
+  "flowchart LR",
+  ...topics.map((tp) => `  ${node(tp.id)}["${label(pick(lang, tp.name, tp.name_ja))}"]`),
+  ...[...edges].map((e) => {
+    const [a, b] = e.split("|");
+    return `  ${node(a)} --- ${node(b)}`;
+  }),
+].join("\n");
+
+const memberLink = (m: { track: string; name: string }) =>
+  m.track === "openid" ? `https://github.com/${m.name}` : `https://datatracker.ietf.org/doc/${m.name}/`;
+const short = (name: string) => name.replace(/^draft-ietf-(wimse|oauth)-/, "").replace(/^draft-/, "").replace(/^openid\//, "");
+const nameOf = (id: string) => {
+  const tp = topics.find((o) => o.id === id);
+  return tp ? pick(lang, tp.name, tp.name_ja) : id;
+};
+---
+
+{edges.size > 0 && (
+  <details class="disclosure mb-5" data-diagram data-open-wide>
+    <summary>{t(lang, "topicMap")}</summary>
+    <div class="diagram-frame">
+      <pre class="mermaid">{diagram}</pre>
+    </div>
+  </details>
+)}
+
+<div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+  {topics.map((tp) => (
+    <section id={`topic-${tp.id}`} class="scroll-mt-6 rounded-md border border-rule bg-surface px-5 py-4">
+      <h3 class="headline text-[1.2rem]">{pick(lang, tp.name, tp.name_ja)}</h3>
+      <p class="mt-2 text-[15px] leading-relaxed text-muted">{pick(lang, tp.summary, tp.summary_ja)}</p>
+      <ul class="mt-3 flex flex-wrap gap-1.5">
+        {tp.members.map((m) => (
+          <li>
+            <a
+              href={memberLink(m)}
+              rel="noreferrer"
+              title={`${trackName(m.track as any)}: ${m.name}`}
+              class="inline-block rounded bg-paper px-2 py-0.5 text-[12px] text-ink no-underline hover:bg-rule hover:no-underline"
+            >
+              {short(m.name)}
+            </a>
+          </li>
+        ))}
+      </ul>
+      {tp.related.length > 0 && (
+        <p class="mt-3 text-[13px] text-muted">
+          {t(lang, "relatedTopics")}:{" "}
+          {tp.related.map((r, i) => (
+            <>
+              {i > 0 && ", "}
+              <a href={`#topic-${r}`}>{nameOf(r)}</a>
+            </>
+          ))}
+        </p>
+      )}
+    </section>
+  ))}
+</div>

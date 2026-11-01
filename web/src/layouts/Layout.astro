@@ -1,27 +1,27 @@
 ---
 import "../styles/global.css";
+import { href, t, type Lang } from "../lib/i18n";
 
 interface Props {
   title: string;
+  lang: Lang;
+  /** Path of this page without the language prefix, e.g. "" or "oauth-wg/". */
+  path: string;
   description?: string;
   current?: string;
 }
-const {
-  title,
-  description = "What changed this week in IETF WIMSE, the OAuth WG and the OpenID Foundation, explained in a line, a diagram and the use cases it touches.",
-  current = "",
-} = Astro.props;
+const { title, lang, path, description = t(lang, "siteDescription"), current = "" } = Astro.props;
 
-const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const other: Lang = lang === "en" ? "ja" : "en";
 const navLinks = [
-  { id: "ietf-wimse", href: `${base}/ietf-wimse/`, label: "WIMSE" },
-  { id: "oauth-wg", href: `${base}/oauth-wg/`, label: "OAuth WG" },
-  { id: "openid", href: `${base}/openid/`, label: "OpenID" },
+  { id: "ietf-wimse", href: href(lang, "ietf-wimse/"), label: "WIMSE" },
+  { id: "oauth-wg", href: href(lang, "oauth-wg/"), label: "OAuth WG" },
+  { id: "openid", href: href(lang, "openid/"), label: "OpenID" },
 ];
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -31,6 +31,14 @@ const navLinks = [
       href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,500;8..60,600&display=swap"
       rel="stylesheet"
     />
+    {lang === "ja" && (
+      <link
+        href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;600&family=Noto+Serif+JP:wght@500;600&display=swap"
+        rel="stylesheet"
+      />
+    )}
+    <link rel="alternate" hreflang="en" href={href("en", path)} />
+    <link rel="alternate" hreflang="ja" href={href("ja", path)} />
     <meta name="description" content={description} />
     <title>{title}</title>
   </head>
@@ -38,10 +46,10 @@ const navLinks = [
     <div class="flex min-h-screen flex-col">
       <header class="border-b border-rule bg-surface">
         <div class="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-3 sm:px-6">
-          <a href={`${base}/`} class="headline text-lg text-ink no-underline hover:no-underline">
-            Identity Deep Dive
+          <a href={href(lang)} class="headline text-lg text-ink no-underline hover:no-underline">
+            {t(lang, "siteTitle")}
           </a>
-          <nav aria-label="Tracks" class="flex flex-wrap gap-1 text-sm">
+          <nav aria-label="Tracks" class="flex flex-wrap items-center gap-1 text-sm">
             {navLinks.map((l) => (
               <a
                 href={l.href}
@@ -54,6 +62,14 @@ const navLinks = [
                 {l.label}
               </a>
             ))}
+            <a
+              href={href(other, path)}
+              hreflang={other}
+              lang={other}
+              class="ml-2 rounded border border-rule px-2.5 py-1 text-muted no-underline hover:bg-paper hover:no-underline"
+            >
+              {t(lang, "switchLang")}
+            </a>
           </nav>
         </div>
       </header>
@@ -63,9 +79,9 @@ const navLinks = [
       <footer class="border-t border-rule bg-surface">
         <div class="mx-auto flex w-full max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-5 text-sm text-muted sm:px-6">
           <span>
-            Built from <a href="https://github.com/0-draft/identity-deep-dive">0-draft/identity-deep-dive</a>. Explanations are machine-drafted from the linked sources, which stay authoritative.
+            {t(lang, "footerBuilt")} <a href="https://github.com/0-draft/identity-deep-dive">0-draft/identity-deep-dive</a>. {t(lang, "footerProvenance")}
           </span>
-          <span>Collected every 6 hours. Weekly digest on Mondays.</span>
+          <span>{t(lang, "footerCadence")}</span>
         </div>
       </footer>
     </div>
@@ -130,7 +146,10 @@ const navLinks = [
             }
           }
         };
+        // Opened only where there is room; on a phone the map is a tap away.
+        const wide = window.matchMedia("(min-width: 768px)").matches;
         frames.forEach((frame) => {
+          if (wide && frame.hasAttribute("data-open-wide")) frame.open = true;
           if (frame.open) render(frame);
           frame.addEventListener("toggle", () => frame.open && render(frame));
         });
