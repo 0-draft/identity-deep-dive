@@ -345,16 +345,15 @@ def main() -> int:
     staged = (changes or {}).get("items", [])
     nothing_new = changes is not None and not staged
     gave_up = False
+    # Count consecutive runs that staged changes but could not explain them,
+    # whatever the staged set was (new changes keep arriving on a busy
+    # track). Runs without changes.json (the weekly digest) leave the count.
     if changes is not None and staged and not merged:
-        key = ",".join(sorted(i.get("id", "") for i in staged))
-        prev_attempt = store.get("attempts", {})
-        count = prev_attempt.get("count", 0) + 1 if prev_attempt.get("key") == key else 1
-        store["attempts"] = {"key": key, "count": count}
+        count = store.get("attempts", {}).get("count", 0) + 1
+        store["attempts"] = {"count": count}
         gave_up = count >= MAX_ATTEMPTS
         if gave_up:
-            print(f"::warning::insights: {len(staged)} change(s) failed to be explained {count} times; moving past them")
-    else:
-        store.pop("attempts", None)
+            print(f"::warning::insights: {count} runs in a row could not explain the staged changes; moving past them")
 
     if state_path.exists() and (merged or nothing_new or gave_up or not base.exists()):
         old_base = load_json(base, None)
