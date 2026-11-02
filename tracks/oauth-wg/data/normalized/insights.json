@@ -14,6 +14,11 @@
       "at": "2026-11-02T06:12:16+00:00",
       "text": "A new individual draft, draft-nandakumar-agent-sd-card-00, proposes SD-JWT VC agent metadata. The other two items are agent-auth discussion: the KYAPay token review is still open, and a second, competing \"AAuth\" draft raises a name clash. No WG-adopted draft moved.",
       "text_ja": "個人ドラフト draft-nandakumar-agent-sd-card-00 が、SD-JWT VC によるエージェントメタデータを提案した。ほかの2件はエージェント認可に関する議論で、KYAPay トークンのレビューは継続中であり、競合する第二の「AAuth」ドラフトは名称の衝突を招いている。WG採択ドラフトに動きはない。"
+    },
+    {
+      "at": "2026-11-02T16:03:18+00:00",
+      "text": "The main activity is a cluster of agent-delegation threads. Sweeney and Niyikiza agreed on how offline attenuation (AAT) and a Delegation Server (DS) divide the work, and still disagree on one hop in del_max_depth. Nothing changed in a core OAuth WG draft today.",
+      "text_ja": "主な動きはエージェント委任に関する一連のスレッドである。Sweeney と Niyikiza は、オフラインの減衰（AAT）と Delegation Server（DS）の役割分担について合意した。一方、del_max_depth の1ホップの差は未解決のままである。OAuth WG の中核ドラフトに変更はなかった。"
     }
   ],
   "items": {
@@ -517,6 +522,36 @@
         "予算や失効の扱いについて、オフライン縮小と呼び出し経路上のサーバーのどちらを使うか検討するエージェント基盤。"
       ]
     },
+    "mail:S713sBvE-oFuIiBYAAE-hrlTWhQ": {
+      "diagram": "",
+      "first_seen": "2026-11-02",
+      "headline": "An independent implementer reports building verifiers for AAT and asor chains and finds ten points where AAT -02 allows more than one conforming behaviour.",
+      "headline_ja": "独立した実装者が AAT と asor のチェーン検証器を実装し、AAT -02 に複数の適合動作を許す箇所が10点あると報告した。",
+      "id": "mail:S713sBvE-oFuIiBYAAE-hrlTWhQ",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-asor-wimse-agent-delegation-chain",
+          "note": "One of the two drafts the report implements and models.",
+          "note_ja": "報告が実装しモデル化している2つのドラフトの一つである。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Azat Davliatshin posted draft-davliatshin-oauth-attenuation-chains-report-00, an individual implementation report in the shape of RFC 7942, not a proposal. A TypeScript verifier written from the text agrees with all 229 AAT vectors and the 35 attenu-guard vectors for asor-02. A ProVerif model of both chain structures checks the properties Neil Madden raised and isolates one difference: which key verifies a link below the root. The report records 25 observations on AAT -01 (19 decided by -02), ten points where -02 still leaves more than one conforming behaviour, and seven on asor-02, mainly that Section 6 names no key for a link below the root. The author asks the draft authors for corrections.",
+      "summary_ja": "Azat Davliatshin が draft-davliatshin-oauth-attenuation-chains-report-00 を公開した。これは RFC 7942 の形式による個人の実装報告であり、提案ではない。ドラフトの本文から書いた TypeScript の検証器は、AAT の229ベクターと asor-02 の35 の attenu-guard ベクターのすべてで一致した。両チェーン構造の ProVerif モデルは、Neil Madden が指摘した性質を検証し、ルートより下のリンクをどの鍵で検証するかという違いを切り分けている。報告には、AAT -01 についての25件の観察（うち19件は -02 で解決）、-02 でも複数の適合動作が残る10点、asor-02 についての7件（主に6節がルートより下のリンクの鍵を指定していないこと）が記されている。著者はドラフト著者からの訂正を求めている。",
+      "title": "Implementation report: attenuating delegation chains for agents (draft-niyikiza-oauth-attenuating-agent-tokens, draft-asor-wimse-agent-delegation-chain)",
+      "updated_at": "2026-11-02T16:03:18+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/S713sBvE-oFuIiBYAAE-hrlTWhQ/",
+      "use_cases": [
+        "An implementer writing an AAT verifier can use the ten underdetermined points to find where interoperability may fail.",
+        "The draft authors can use the ProVerif model to compare the guarantees of the two chain structures."
+      ],
+      "use_cases_ja": [
+        "AAT の検証器を実装する者は、相互運用性が損なわれ得る箇所を、仕様が一意に定めていない10点から把握できる。",
+        "ドラフト著者は、ProVerif モデルを使って2つのチェーン構造の保証を比較できる。"
+      ]
+    },
     "mail:Zuab1PpQZx_nWOimouWjczGiYOI": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -555,6 +590,94 @@
       "use_cases_ja": [
         "1つのホストの配下にパスごとにテナントを置く Target が、tdm をどの程度厳密に検証するか決める場合",
         "トークン発行者とのオンボーディング関係を持たない、Target 手前の CDN やボットマネージャーを運用する場合"
+      ]
+    },
+    "mail:pY7YK9NUnlAfWvpf-PhiQ_n53qE": {
+      "diagram": "sequenceDiagram\nparticipant U as User\nparticipant DS as Delegation Server\nparticipant A as Agent\nparticipant API as Upstream API\nU->>DS: deposit credential\nDS->>A: delegation token\nA->>DS: exercise with DPoP proof\nDS->>API: call with upstream credential\nAPI-->>DS: response\nDS-->>A: result",
+      "first_seen": "2026-11-02",
+      "headline": "Sweeney posted -02 of the Credential Delegation draft, adding cumulative bounds, a chain-verifiable profile and a revocation section.",
+      "headline_ja": "Sweeney が Credential Delegation ドラフトの -02 を公開し、累計上限、チェーン検証可能プロファイル、失効の節を追加した。",
+      "id": "mail:pY7YK9NUnlAfWvpf-PhiQ_n53qE",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-sweeney-wimse-credential-delegation",
+          "note": "This is the draft announced.",
+          "note_ja": "告知されたドラフトそのものである。",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "draft-asor-wimse-agent-delegation-chain",
+          "note": "Section 5.5 adopts its agent_delegation format unchanged.",
+          "note_ja": "5.5節がその agent_delegation 形式をそのまま採用している。",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "draft-ietf-wimse-aims",
+          "note": "The author wants to align the revocation wording with the revocation-admission bound discussion on the AIMS thread.",
+          "note_ja": "失効の文言を AIMS スレッドの失効後受理上限の議論に合わせたいとしている。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "new-proposal",
+      "summary": "In draft-sweeney-wimse-credential-delegation, a Delegation Server holds credentials a user deposits, and agents exercise them by proxy under a delegation token, so the agent never holds the upstream credential. The -02 changes are: a sub-delegation exchange in which client_id and act.sub both name the receiving agent (act is attribution only, never authority), rank order carried in the token, and a delegation_constraints claim with max_lifetime and max_subtree, where the DS is the single writer of the running total. For tokens verified away from the DS, it adopts the asor agent_delegation format unchanged. Section 7 says revoked_count is invalidation, not closure, that exchanged and offline tokens are only partially revoked until expiry, and that a 1-hour token cap bounds admission after revocation. The author asks for review of the cumulative-bound design, the revocation framing and the depth boundary, and notes that the SDK now requires a request-bound DPoP proof.",
+      "summary_ja": "draft-sweeney-wimse-credential-delegation では、Delegation Server がユーザーの預けた資格情報を保持し、エージェントは委任トークンのもとで代理実行するため、上流の資格情報をエージェント自身は持たない。-02 の変更点は次のとおりである。client_id と act.sub がともに受領側エージェントを指すサブ委任交換（act は帰属のみで権限ではない）、トークンに含めた順位、max_lifetime と max_subtree を持つ delegation_constraints クレーム（累計値の書き込み元は DS のみ）。DS から離れて検証されるトークンには asor の agent_delegation 形式をそのまま採用している。7節では、revoked_count は無効化であって閉鎖ではなく、交換済みやオフラインのトークンは期限切れまで部分的にしか失効せず、1時間のトークン上限が失効後の受理を抑えるとしている。著者は、累計上限の設計、失効の位置づけ、深度の境界についてレビューを求めている。また SDK はリクエストに束縛された DPoP 証明を必須にしたと述べている。",
+      "title": "draft-sweeney-wimse-credential-delegation-02",
+      "updated_at": "2026-11-02T16:03:18+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/pY7YK9NUnlAfWvpf-PhiQ_n53qE/",
+      "use_cases": [
+        "A platform lets agents call third-party APIs on a user's behalf without handing the agents the user's upstream credentials.",
+        "A multi-agent system needs a hard cap on the total lifetime or the number of sub-delegations in a subtree.",
+        "A resource server that verifies tokens away from the DS needs to know how long a revoked token may still be admitted."
+      ],
+      "use_cases_ja": [
+        "ユーザーの上流資格情報をエージェントに渡さずに、サードパーティ API をユーザーの代理として呼び出させるプラットフォーム。",
+        "サブツリー全体で総有効期間やサブ委任の数に上限を設ける必要があるマルチエージェント環境。",
+        "DS から離れてトークンを検証するリソースサーバーが、失効後のトークンがどの程度の間受理され得るかを知る必要がある場合。"
+      ]
+    },
+    "mail:thOF4kh9bZ3EyW2Q8TPA19sgBU8": {
+      "diagram": "flowchart LR\nH[Holder] -->|offline attenuation| C[AAT-style chain]\nC --> EP[Enforcement point]\nEP -->|exercise reported| DS[Delegation Server ledger]\nDS -->|running total in delegation_constraints| EP",
+      "first_seen": "2026-11-02",
+      "headline": "Two authors agree that AATs and a Delegation Server split by who holds state, but still differ by one hop on del_max_depth.",
+      "headline_ja": "AAT と Delegation Server は状態を誰が持つかで役割が分かれるという点で著者間が合意したが、del_max_depth の1ホップの差は残っている。",
+      "id": "mail:thOF4kh9bZ3EyW2Q8TPA19sgBU8",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-asor-wimse-agent-delegation-chain",
+          "note": "Its del_max_depth semantics differ by one hop from AAT, and Cred -02 adopts its format.",
+          "note_ja": "del_max_depth の意味論が AAT と1ホップ異なる。Cred -02 はその形式を採用している。",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "draft-sweeney-wimse-credential-delegation",
+          "note": "The DS-side draft discussed in this thread.",
+          "note_ja": "このスレッドで議論されている DS 側のドラフトである。",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "draft-hulea-wimse-agent-mandate",
+          "note": "Named as the third offline attenuation format with typed constraints.",
+          "note_ja": "型付き制約を持つ3つ目のオフライン減衰形式として挙げられている。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "This thread follows the AAT -02 announcement. Sweeney replies that chain-wide budgets such as max_lifetime and max_subtree need a single writer of the running total, which is the DS ledger carried as delegation_constraints. This layers on top of an AAT-style chain and does not replace it. On revocation, an enforcement point that refuses any chain containing a revoked token works only as far as it has current revocation state. For tokens verified away from the DS, revocation is partial until expiry, so Sweeney asks the companion document for AAT Section 9.8 to state a freshness bound. On del_max_depth, a leaf at del_depth equal to the root maximum is accepted by AAT (vector J.10.f) and rejected by asor -03. Sweeney leans toward the Asor semantics but cares more that the vectors are reconciled. Niyikiza proposes comparing constraint types across the three drafts before IETF 127. The message is truncated, so the rest of the -02 announcement is not covered.",
+      "summary_ja": "AAT -02 の告知に続くスレッドである。Sweeney は、max_lifetime や max_subtree のようなチェーン全体の予算には累計値の書き込み元を一つにする必要があり、それが delegation_constraints で運ばれる DS の台帳だと述べている。これは AAT 型のチェーンの上に重ねるもので、置き換えるものではない。失効については、失効済みトークンを含むチェーンを拒否する方式は、執行点が最新の失効状態を持つ範囲でのみ機能する。DS から離れて検証されるトークンは期限切れまで部分的にしか失効しないため、AAT 9.8 節の補足文書に鮮度の上限を明記するよう求めている。del_max_depth では、del_depth がルートの最大値に等しい葉を AAT（ベクター J.10.f）は受理し、asor -03 は拒否する。Sweeney は Asor の意味論に傾くが、ベクターが整合することをより重視している。Niyikiza は IETF 127 までに3つのドラフトで制約タイプを比較することを提案している。メッセージは途中で切れているため、-02 告知の残りは扱っていない。",
+      "title": "AAT -02 announcement",
+      "updated_at": "2026-11-02T16:03:18+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/thOF4kh9bZ3EyW2Q8TPA19sgBU8/",
+      "use_cases": [
+        "A verifier implementing both AAT and asor chains has to decide whether a leaf at the maximum depth is valid.",
+        "A deployment that needs cumulative spend or fan-out limits across several enforcement points needs a DS-style single writer, which offline attenuation cannot provide.",
+        "An enforcement point that relies on chain inspection for revocation needs to know how fresh its revocation data has to be."
+      ],
+      "use_cases_ja": [
+        "AAT と asor の両方のチェーンを実装する検証者は、最大深度の葉を有効とするかどうかを決める必要がある。",
+        "複数の執行点にまたがる累計の利用額や分岐数の上限が必要な環境では、オフラインの減衰だけでは足りず、DS のように書き込み元を一つにする仕組みが要る。",
+        "チェーン検査で失効を扱う執行点は、失効情報をどの程度新しく保つべきかを知る必要がある。"
       ]
     },
     "mail:tpSpJCZZOQMvlE_EC0q4DNsz0R4": {
@@ -621,6 +744,23 @@
         "サブエージェントにより狭いサブトークンをオフラインで発行し、相互運用可能な検証を望むエージェントフレームワーク。",
         "そうしなければ形式ごとに同じ制約比較を別々に実装することになる検証者。"
       ]
+    },
+    "pr:oauth-wg/oauth-delegate-sd-jwt#14": {
+      "diagram": "",
+      "first_seen": "2026-11-02",
+      "headline": "A pull request adds a worked, reproducible dSD-JWT example with a generator script to the delegate-sd-jwt draft.",
+      "headline_ja": "delegate-sd-jwt ドラフトに、再現可能な dSD-JWT の具体例と生成スクリプトを加えるプルリクエストである。",
+      "id": "pr:oauth-wg/oauth-delegate-sd-jwt#14",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The PR adds an Examples subsection at the end of Formats, with one delegation (SD-JWT ~~ KB-SD-JWT+KB ~~ KB-SD-JWT) shown at three stages: issuance, delegation, and presentation to two Verifiers. It shows typ as kb-sd-jwt+kb, sd_hash covering the SD-JWT including its disclosure, _sd_alg staying in the KB-SD-JWT payload, and cnf in the Delegate Payload. Each terminal KB-SD-JWT's sd_hash covers the preceding element as serialized for that Verifier, so a chain built for one Verifier does not verify at another. A generator, examples/generate.py, self-verifies and uses deterministic ECDSA, so output is reproducible byte for byte. The PR body is truncated in the source.",
+      "summary_ja": "このPRは Formats の末尾に Examples 小節を追加する。1つの委任（SD-JWT ~~ KB-SD-JWT+KB ~~ KB-SD-JWT）を、発行、委任、2つの Verifier への提示の3段階で示す。typ が kb-sd-jwt+kb であること、sd_hash が開示を含む SD-JWT を対象とすること、_sd_alg が KB-SD-JWT のペイロードに残ること、cnf が Delegate Payload に置かれることが確認できる。末尾の各 KB-SD-JWT の sd_hash は、その Verifier 向けにシリアライズされた直前の要素を対象とするため、ある Verifier 向けのチェーンは別の Verifier では検証に通らない。生成スクリプト examples/generate.py は自己検証を行い、決定的 ECDSA を使うため出力はバイト単位で再現できる。PR本文は途中で切れている。",
+      "title": "oauth-wg/oauth-delegate-sd-jwt#14: doc(examples)-Add worked dSD-JWT example with generator",
+      "updated_at": "2026-11-02T16:03:18+00:00",
+      "url": "https://github.com/oauth-wg/oauth-delegate-sd-jwt/pull/14",
+      "use_cases": [],
+      "use_cases_ja": []
     },
     "pr:oauth-wg/oauth-spiffe-client-authentication#57": {
       "diagram": "",
@@ -824,9 +964,10 @@
       "reason": "-01 restructures the draft with substrate invariants, a new deferred_interactive mode and new editors; also cited as the answer to ID-JAG consent."
     },
     "draft-ietf-oauth-delegate-sd-jwt": {
-      "date": "2026-11-01",
-      "priority": "high",
-      "reason": "New WG draft defining a delegation chain format for agents; being used as a base by others."
+      "date": "2026-11-02",
+      "priority": "low",
+      "reason": "PR #14 adds a worked example and generator, so implementers can check their output against it.",
+      "reason_ja": "PR #14 が具体例と生成スクリプトを追加しており、実装者が出力を照合できるが、仕様の挙動は変わらない。"
     },
     "draft-ietf-oauth-identity-assertion-authz-grant": {
       "date": "2026-11-01",
