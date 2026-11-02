@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-02T06:10:44+00:00
+Generated at: 2026-11-02T15:59:27+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -18,7 +18,7 @@ Generated at: 2026-11-02T06:10:44+00:00
 | 12 | 6 | Review related draft: draft-reddy-wimse-oauth-dialog-binding-00 | draft-reddy-wimse-oauth-dialog-binding-00 (2026-10-30) |
 | 13 | 6 | Review related draft: draft-seymour-wimse-connected-flight-06 | draft-seymour-wimse-connected-flight-06 (2026-10-01) |
 | 14 | 6 | Review related draft: draft-sweeney-wimse-credential-delegation-02 | draft-sweeney-wimse-credential-delegation-02 (2026-10-30) |
-| 15 | 6 | Review related draft: draft-thaha-wimse-agent-evidence-binding-02 | draft-thaha-wimse-agent-evidence-binding-02 (2026-11-01) |
+| 15 | 6 | Review related draft: draft-thaha-wimse-agent-evidence-binding-03 | draft-thaha-wimse-agent-evidence-binding-03 (2026-11-01) |
 | 16 | 6 | Review related draft: draft-uppalapati-wimse-pq-agent-identity-01 | draft-uppalapati-wimse-pq-agent-identity-01 (2026-10-27) |
 | 17 | 5 | Diff active WG draft: draft-ietf-wimse-identifier-04 | draft-ietf-wimse-identifier-04 (2026-10-23) |
 | 18 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-08 | draft-ietf-wimse-workload-identity-practices-08 (2026-10-30) |
@@ -31,12 +31,12 @@ Moved by this week's material. candidates.json and the site list raised candidat
 
 - **high** `Diff active WG draft: draft-ietf-wimse-workload-creds-03`: Five issues tagged workload-creds were closed this week, including two on trust domains and server name validation.
 - **high** `Diff active WG draft: draft-ietf-wimse-workload-identity-practices-08`: It is in IESG Last Call until 2026-11-13 and a reviewer proposed concrete text changes to Sections 4.5, 5.1.5 and 5.6.
-- **high** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: A list reply shows its del_max_depth semantics differ by one hop from AAT, so a depth-8 leaf is rejected.
+- **high** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: Its del_max_depth semantics differ from AAT by one hop and an implementation report lists asor-02 gaps.
 - **high** `Review related draft: draft-durga-wimse-ctx-isolation-00`: It was newly announced to the list with a request for review and a lightning slot at IETF 127.
 - **high** `Review related draft: draft-hulea-wimse-agent-mandate-01`: It is named as one of three offline attenuation formats whose subsumption rules may be compared before IETF 127.
-- **high** `Review related draft: draft-jackson-wimse-evaluation-05`: Author confirmed a new commitment-based Section 3.6 form and an open boundary conflict with the audit-record draft, both for -06.
+- **high** `Review related draft: draft-jackson-wimse-evaluation-05`: Open boundary conflict with AIMS and a new commitment-based standing form planned for -06.
 - **high** `Review related draft: draft-reddy-wimse-oauth-dialog-binding-00`: New draft that extends the WIMSE HTTP signature and WPT and adds a tctx.dlg member.
-- **high** `Review related draft: draft-sweeney-wimse-credential-delegation-02`: Its author argued the server-side half composes with AATs and that the three attenuation drafts need one subsumption rule per constraint type.
+- **high** `Review related draft: draft-sweeney-wimse-credential-delegation-02`: -02 announced with sub-delegation, cumulative bounds, chain profile and revocation, with specific review requests.
 - **high** `Review related draft: draft-thaha-wimse-agent-evidence-binding-02`: The -02 changes the admission rule to current actor only and adds a new MUST NOT on caller references in reusable tokens.
 
 <!-- triage:end -->

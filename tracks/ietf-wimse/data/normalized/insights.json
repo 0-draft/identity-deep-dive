@@ -18,6 +18,11 @@
       "at": "2026-11-02T06:12:15+00:00",
       "text": "Two threads on draft-jackson-wimse-evaluation-05 Section 3.6 moved: the author will add a commitment-based principal-standing form in -06 and is trying to settle a freshness-boundary conflict with the audit-record draft. No normative text changed yet.",
       "text_ja": "draft-jackson-wimse-evaluation-05 の Section 3.6 に関する議論が二件進んだ。作者は -06 でコミットメント方式の principal standing を第三の形として追加する予定で、監査レコードのドラフトとの鮮度境界の食い違いも調整中である。規範的な本文の変更はまだない。"
+    },
+    {
+      "at": "2026-11-02T16:03:18+00:00",
+      "text": "The main activity is the agent-delegation cluster on the WIMSE list: draft-sweeney-wimse-credential-delegation-02 and the AAT, asor and Cred drafts are converging on one del_max_depth meaning, with the vectors to be reconciled before IETF 127. No WG draft changed. The thaha -03 revision is a one-paragraph caveat.",
+      "text_ja": "最も重要なのは、WIMSEのメーリングリスト上でのエージェント委任ドラフト群の動きである。draft-sweeney-wimse-credential-delegation-02、AAT、asor、Credが del_max_depth の意味を一つに揃える方向で、IETF 127までにテストベクターを突き合わせる予定である。WGドラフトの変更はなく、thaha -03 は注意書き一段落の追加にとどまる。"
     }
   ],
   "items": {
@@ -240,6 +245,27 @@
         "エージェントの監査レコードと SCITT に登録された Execution Receipt を突き合わせ、どのアンカー主張が有効かを知りたい監査担当者。"
       ]
     },
+    "draft:draft-thaha-wimse-agent-evidence-binding-03": {
+      "diagram": "",
+      "first_seen": "2026-11-02",
+      "headline": "The -03 revision adds one caveat: behind a shared gateway host, a replayed caller reference can still pass.",
+      "headline_ja": "-03 は注意書きを一つ追加し、共有ゲートウェイ配下では再送された呼び出し元参照が通り得ると明記した。",
+      "id": "draft:draft-thaha-wimse-agent-evidence-binding-03",
+      "kind": "draft-revision",
+      "related": [],
+      "significance": "substantive",
+      "summary": "The only substantive text change is in the replay-detection paragraph. A replayed field is still refused by the Serving Party that already admitted it and detected by Linked Verification at another. The new text adds an exception: behind a shared gateway host, a wrong-backend admission can still pass when only that admission is in the Linked Bundle. It points to the Security Considerations of the SCITT agent execution evidence draft and credits Iman Schrock. The rest of the diff is table-of-contents page numbers, a Changes since -02 section and a stray blank line.",
+      "summary_ja": "実質的な変更は再送検知の段落のみである。再送されたフィールドは、すでに受理したServing Partyが拒否し、別のServing PartyではLinked Verificationが検知するという記述は維持された。新たに、共有ゲートウェイホストの背後では、Linked Bundleにその受理のみが含まれる場合、誤ったバックエンドでの受理が通り得るという例外が加わった。参照先はSCITTのagent execution evidenceドラフトのSecurity Considerationsであり、指摘者としてIman Schrockが挙げられている。それ以外は目次のページ番号、Changes since -02 節、空行の変更である。",
+      "title": "draft-thaha-wimse-agent-evidence-binding-03: Evidence Binding for AI Agent Credentials",
+      "updated_at": "2026-11-02T16:03:18+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-thaha-wimse-agent-evidence-binding-02&url2=draft-thaha-wimse-agent-evidence-binding-03",
+      "use_cases": [
+        "A deployment that fronts several agent backends with one gateway and relies on Linked Verification to catch replayed caller references."
+      ],
+      "use_cases_ja": [
+        "複数のエージェントバックエンドを一つのゲートウェイで束ね、再送された呼び出し元参照の検知をLinked Verificationに頼る構成。"
+      ]
+    },
     "mail:0lww5-4hYs09TJJd1YxwlH0aWsk": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -350,6 +376,29 @@
       ],
       "use_cases_ja": [
         "MCP ツール出力経由の間接プロンプトインジェクションを懸念するエージェント基盤は、ツール呼び出しが信頼できる意図に由来することの証拠を求める。"
+      ]
+    },
+    "mail:Hrs5zoD0NhilOMFW0vi2CEWd-8g": {
+      "diagram": "",
+      "first_seen": "2026-11-02",
+      "headline": "A deployment gives revocation bounds of 185, 245 and 395 seconds for principal standing, and evaluation -06 will add a commitment-based form.",
+      "headline_ja": "ある運用事例が主体の資格状態について具体的な失効上限(185秒、245秒、395秒)を示し、Wes Jacksonはevaluation -06にコミットメント方式を加える。",
+      "id": "mail:Hrs5zoD0NhilOMFW0vi2CEWd-8g",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Marc Miro i Rierola states the withdrawal bounds of his deployment, each with a start event and defined as the latest moment every conforming verifier refuses. Issuer withdrawal is 185 s (180 maximum commitment age plus 5 clock tolerance). Holder withdrawal is 245 s, adding a 60 s fold grace. Cascade is 395 s, with 7 publication intervals of 30 s. An emergency commitment takes effect in the block that records it. Wes Jackson says the commitment form fits Section 3.6 and will be a third form in -06 with credit. Publication cadence does not shorten the bound, and a missing or non-verifying proof is a withdrawal-style refusal rather than an unavailable input. He suggests principal-standing-source should name the commitment publisher and as-of time.",
+      "summary_ja": "Marc Miro i Rierola氏は自らの運用の失効上限を、起点となる事象とともに示した。上限は、すべての適合検証器が拒否する最も遅い時点と定義される。発行者による撤回は185秒(コミットメント最大年齢180秒に時計許容5秒)、保持者による撤回は猶予60秒を加えた245秒、連鎖的撤回は30秒間隔の公開7回を含む395秒である。緊急コミットメントはそれを記録するブロックで有効になる。Wes Jacksonは、コミットメント方式は第3.6節に適合するとして、謝辞付きで-06に三つ目の形として取り込むと述べた。公開間隔は上限を短縮せず、証明がない、または検証できない場合は利用不能な入力ではなく撤回と同じ拒否になる。また、principal-standing-sourceにはコミットメントの公開者とas-of時刻を示すべきだとした。",
+      "title": "draft-jackson-wimse-evaluation-05, Section 3.6: principal standing without an identifier join",
+      "updated_at": "2026-11-02T16:03:18+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/Hrs5zoD0NhilOMFW0vi2CEWd-8g/",
+      "use_cases": [
+        "A relying party choosing a pinned maximum commitment age and wanting to know the resulting revocation latency.",
+        "An operator documenting worst-case admission time after an issuer or holder withdraws a credential."
+      ],
+      "use_cases_ja": [
+        "コミットメントの最大年齢を固定する際に、結果として生じる失効遅延を知りたい検証側。",
+        "発行者や保持者が資格情報を撤回した後の最悪の受理時間を文書化する運用者。"
       ]
     },
     "mail:Ooa0pZ_4spGEUpI4m2qZUNo36hI": {
@@ -512,6 +561,29 @@
         "3 つの権限縮小形式に直面する検証者の実装者は、3 通りの実装ではなく共通の制約比較ロジックを望むだろう。"
       ]
     },
+    "mail:blYoMmYTJ2UlnspmOCEIJHGRyck": {
+      "diagram": "sequenceDiagram\n  participant U as User\n  participant DS as Delegation Server\n  participant A as Agent\n  participant R as Upstream API\n  U->>DS: deposit credential\n  DS->>A: delegation token\n  A->>DS: exercise by proxy with DPoP proof\n  DS->>R: call with upstream credential\n  R-->>DS: response\n  DS-->>A: result",
+      "first_seen": "2026-11-02",
+      "headline": "draft-sweeney-wimse-credential-delegation-02 adds sub-delegation, cumulative bounds, a chain-verifiable profile and a revocation section.",
+      "headline_ja": "draft-sweeney-wimse-credential-delegation-02は、サブ委任、累計上限、チェーン検証プロファイル、失効の節を追加した。",
+      "id": "mail:blYoMmYTJ2UlnspmOCEIJHGRyck",
+      "kind": "mail",
+      "related": [],
+      "significance": "substantive",
+      "summary": "The announcement describes a Delegation Server (DS) that holds user-deposited credentials, while agents exercise them by proxy under a delegation token, so the agent never holds the upstream credential. Main changes: a two-step sub-delegation exchange where act is attribution only; rank order carried in the token; a delegation_constraints claim with max_lifetime and max_subtree, the DS being single writer of the running total; and a chain-verifiable profile adopting the asor agent_delegation format unchanged for tokens verified away from the DS. Section 7 frames revoked_count as invalidation, not closure, with a 1-hour token cap bounding admission after revocation. The author asks for review on cumulative-bound mode (DS ledger or delegate-held tally), the revocation framing, the del_max_depth one-hop difference with AAT, and user-minted root composition for -03.",
+      "summary_ja": "告知によれば、Delegation Server(DS)はユーザーが預けた資格情報を保持し、エージェントは委任トークンの下で代理実行するため、上流の資格情報を持たない。主な変更は、actを帰属のみとする二段階のサブ委任交換、トークンに含めた順位、max_lifetimeとmax_subtreeを持つdelegation_constraintsクレーム(累計の書き込み元はDS一つ)、DSの外で検証されるトークン向けにasorのagent_delegation形式をそのまま採用するチェーン検証プロファイルである。第7節はrevoked_countを閉鎖ではなく無効化と位置づけ、1時間のトークン上限が失効後の受理を抑える。著者は、累計上限の方式(DS台帳か委任先保持の集計か)、失効の位置づけ、AATとのdel_max_depthの一段の差、-03でのユーザー発行ルートの合成について意見を求めている。",
+      "title": "draft-sweeney-wimse-credential-delegation-02",
+      "updated_at": "2026-11-02T16:03:18+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/blYoMmYTJ2UlnspmOCEIJHGRyck/",
+      "use_cases": [
+        "An agent platform that wants agents to call upstream APIs without ever holding the user's credential.",
+        "A deployer needing a cap on the total lifetime or number of sub-delegations across a delegation tree."
+      ],
+      "use_cases_ja": [
+        "エージェントがユーザーの資格情報を保持せずに上流APIを呼び出す構成を求めるエージェント基盤。",
+        "委任ツリー全体の合計存続時間やサブ委任数に上限を設けたい運用者。"
+      ]
+    },
     "mail:izZnltSogYmO_6SbKFzCk9iPXOU": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -563,6 +635,29 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "mail:nfY2R8M_90Rr-eJ19HWfLPKSjI8": {
+      "diagram": "",
+      "first_seen": "2026-11-02",
+      "headline": "The evaluation -05 and AIMS multi-hop drafts disagree on whether an age equal to the maximum is fresh, and Wes Jackson leaves the choice open.",
+      "headline_ja": "evaluation -05とAIMS multi-hopは、年齢が最大値と等しい場合を新鮮とみなすかで食い違っており、Wes Jacksonは選択を保留している。",
+      "id": "mail:nfY2R8M_90Rr-eJ19HWfLPKSjI8",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Kieran asks that all three documents share one horizon boundary. The AIMS boundary vectors (21 of 21 confirmed on 28 October) use inclusive limits: an age equal to the maximum is fresh and a permit is usable at its expiry. That is the -03 reading (FR2), while -05 refuses at or past the horizon. He leans toward -05 adopting at-most and wants evaluation instant versus decision.reportedAt stated as a normative rule. Wes confirms that an unavailable principal-standing lookup is a transient refusal recorded as not-evaluated with principal-standing-source. He has filed test records, including Vector B as an open conflict at exactly maxAge. He accepts Girish's wording so a withdrawn principal records as evaluated, deny, to be decided in -06. A joint profile waits until the boundary settles.",
+      "summary_ja": "Kieranは三つの文書で地平の境界を一つに揃えることを求めた。AIMSの境界ベクター(10月28日に21件中21件を確認)は上限を含む扱いで、年齢が最大値と等しければ新鮮、許可は失効時点でも使える。これは-03(FR2)の読みで、-05は地平に達した時点以降を拒否する。Kieranは-05がat-most側に寄ることを支持し、評価時刻とdecision.reportedAtのどちらを使うかを規範的規則として明記するよう求めた。Wesは、principal-standingの照会ができない場合は一時的な拒否で、principal-standing-sourceとともにnot-evaluatedと記録されると確認した。maxAge丁度の場合を未解決の衝突としてVector Bを含むテスト記録を提出済みである。Girishの文言案は採用の方向で、撤回されたプリンシパルはevaluated、denyと記録され、-06で決める。共同プロファイルは境界が決まるまで保留する。",
+      "title": "A principal-standing name for the 5.4 closed set",
+      "updated_at": "2026-11-02T16:03:18+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/nfY2R8M_90Rr-eJ19HWfLPKSjI8/",
+      "use_cases": [
+        "A verifier implementer who must decide whether an input aged exactly maxAge is fresh or refused.",
+        "An audit-record producer that must choose between evaluation time and decision.reportedAt when measuring age."
+      ],
+      "use_cases_ja": [
+        "年齢がmaxAge丁度の入力を新鮮とみなすか拒否するかを決める必要がある検証器の実装者。",
+        "年齢の計測で評価時刻とdecision.reportedAtのどちらを使うか決める必要がある監査記録の作成者。"
+      ]
+    },
     "mail:pfPpZFDrdqavOQg7eSMesHJroYA": {
       "diagram": "",
       "first_seen": "2026-11-02",
@@ -584,6 +679,65 @@
       "use_cases_ja": [
         "監査レコードの実装者は、最大経過時間ちょうどのレコードが有効か不正かを知る必要がある。",
         "判断点は、年齢を評価時点で判定するか報告時点で判定するかを選ぶ必要がある。"
+      ]
+    },
+    "mail:r-o9td1ZckYXYkvUGcny7fMrkJs": {
+      "diagram": "",
+      "first_seen": "2026-11-02",
+      "headline": "Sweeney and Niyikiza agree that AAT-style offline attenuation and a Delegation Server are complementary, and that del_max_depth needs one meaning.",
+      "headline_ja": "SweeneyとNiyikizaは、AAT型のオフライン減衰とDelegation Serverは補完関係にあり、del_max_depthの意味は一つにすべきだと一致した。",
+      "id": "mail:r-o9td1ZckYXYkvUGcny7fMrkJs",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-transaction-tokens",
+          "note": "The AAT announcement says AATs complement transaction tokens.",
+          "note_ja": "AATの告知で、AATがtransaction tokensを補完すると述べられている。",
+          "track": "oauth-wg"
+        },
+        {
+          "name": "draft-ietf-oauth-identity-chaining",
+          "note": "The AAT announcement says AATs complement identity chaining.",
+          "note_ja": "AATの告知で、AATがidentity chainingを補完すると述べられている。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Sweeney replies to Niyikiza's AAT -02 thread with three points. Chain-wide budgets such as max_lifetime and max_subtree need a single writer of the running total, which in Cred -02 is the DS ledger layered on an AAT-style chain. Revocation is partial for tokens verified away from the DS until they expire, and he asks that the companion document for AAT Section 9.8 state the freshness bound the enforcement point must meet. On del_max_depth, a leaf at del_depth equal to the root maximum is rejected by Asor -03 but accepted by AAT test vector J.10.f. Sweeney leans toward the Asor meaning but cares more that the vectors are reconciled. Earlier in the thread Niyikiza proposed comparing constraint types across the three drafts before IETF 127.",
+      "summary_ja": "SweeneyはNiyikizaのAAT -02に関するスレッドに三点で返信した。max_lifetimeやmax_subtreeのようなチェーン全体の予算には累計の書き込み元を一つにする必要があり、Cred -02ではそれがDSの台帳であってAAT型チェーンの上に重ねられる。DSの外で検証されるトークンの失効は期限切れまで部分的であり、AAT 9.8の補助文書には執行点が満たすべき鮮度の上限を明記してほしいと述べた。del_max_depthについては、del_depthがルートの最大値と等しい末端をAsor -03は拒否し、AATのテストベクターJ.10.fは受理する。Sweeneyはasor側の意味に傾くが、ベクターが整合されることの方を重視している。スレッド前半でNiyikizaは、IETF 127までに三つのドラフトの制約型を比較することを提案していた。",
+      "title": "AAT -02 announcement",
+      "updated_at": "2026-11-02T16:03:18+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/r-o9td1ZckYXYkvUGcny7fMrkJs/",
+      "use_cases": [
+        "A verifier that must implement subsumption checks for AAT, asor and hulea tokens and wants one rule per constraint type.",
+        "A deployment that sets del_max_depth on a root and needs to know whether a leaf exactly at that depth is valid."
+      ],
+      "use_cases_ja": [
+        "AAT、asor、huleaのトークンに対する包含判定を実装する検証者が、制約型ごとに一つの規則を求める場合。",
+        "ルートにdel_max_depthを設定し、その深さ丁度の末端が有効かどうかを知る必要がある場合。"
+      ]
+    },
+    "mail:t_R_fa4Y6MFW61IbBnlRY-iTxSA": {
+      "diagram": "",
+      "first_seen": "2026-11-02",
+      "headline": "An independent report finds a TypeScript verifier agrees with all 229 AAT vectors, and lists points the drafts leave underspecified.",
+      "headline_ja": "独立した実装報告によれば、TypeScript検証器はAATの229件のベクターすべてと一致し、各ドラフトで仕様が曖昧な点も挙げている。",
+      "id": "mail:t_R_fa4Y6MFW61IbBnlRY-iTxSA",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Azat Davliatshin posted draft-davliatshin-oauth-attenuation-chains-report-00, an RFC 7942-style implementation report by someone who authors neither draft covered. A verifier written from the text of AAT -01 and -02 and asor-02 agrees with the 229 AAT vectors and the 35 attenu-guard vectors. A ProVerif model covers both chain structures and isolates where their guarantees differ: which key verifies a link below the root. The report records 25 observations on AAT -01 (19 decided by -02), ten points where AAT -02 still permits more than one conforming behaviour, and seven observations on asor-02. The main asor-02 one is that Section 6 names no key for a link below the root. The author asks the draft authors for corrections.",
+      "summary_ja": "Azat Davliatshinは、対象の二つのドラフトのいずれの著者でもない立場で、RFC 7942形式の実装報告draft-davliatshin-oauth-attenuation-chains-report-00を投稿した。AAT -01と-02およびasor-02の本文から書いた検証器は、AATの229件のベクターとattenu-guardの35件のベクターに一致した。ProVerifモデルは両方のチェーン構造を扱い、保証が異なる点、すなわちルートより下のリンクをどの鍵で検証するかを切り分けている。AAT -01に対する25件の所見(うち19件は-02で解決)、AAT -02でなお複数の適合動作が許される10点、asor-02に対する7件の所見が記録されている。asor-02の主な所見は、第6節がルートより下のリンクの鍵を定めていない点である。著者はドラフト著者による訂正を求めている。",
+      "title": "Implementation report: attenuating delegation chains for agents (draft-niyikiza-oauth-attenuating-agent-tokens, draft-asor-wimse-agent-delegation-chain)",
+      "updated_at": "2026-11-02T16:03:18+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/t_R_fa4Y6MFW61IbBnlRY-iTxSA/",
+      "use_cases": [
+        "An implementer of AAT or asor chains who wants an independent verifier and vectors to test against.",
+        "A draft author looking for the ambiguities that independent implementers hit."
+      ],
+      "use_cases_ja": [
+        "AATやasorのチェーンを実装し、照合用の独立した検証器とベクターを求める実装者。",
+        "独立した実装者がつまずく曖昧な点を探しているドラフト著者。"
       ]
     },
     "mail:vauc1h3gao6R7YAlJH5ffDxEOwo": {
@@ -636,10 +790,10 @@
       "reason_ja": "2026-11-13 まで IESG Last Call 中であり、レビュー担当者が 4.5、5.1.5、5.6 節に具体的な修正案を出している。"
     },
     "Review related draft: draft-asor-wimse-agent-delegation-chain-03": {
-      "date": "2026-11-01",
+      "date": "2026-11-02",
       "priority": "high",
-      "reason": "A list reply shows its del_max_depth semantics differ by one hop from AAT, so a depth-8 leaf is rejected.",
-      "reason_ja": "メーリングリストの返信で、del_max_depth の意味が AAT と 1 ホップ異なり、深さ 8 のリーフが拒否されることが示された。"
+      "reason": "Its del_max_depth semantics differ from AAT by one hop and an implementation report lists asor-02 gaps.",
+      "reason_ja": "del_max_depthの意味がAATと一段異なり、実装報告がasor-02の不備を挙げている。"
     },
     "Review related draft: draft-durga-wimse-ctx-isolation-00": {
       "date": "2026-11-01",
@@ -656,8 +810,8 @@
     "Review related draft: draft-jackson-wimse-evaluation-05": {
       "date": "2026-11-02",
       "priority": "high",
-      "reason": "Author confirmed a new commitment-based Section 3.6 form and an open boundary conflict with the audit-record draft, both for -06.",
-      "reason_ja": "作者が Section 3.6 の新しいコミットメント方式と、監査レコードのドラフトとの境界の未解決の食い違いを確認しており、いずれも -06 で扱われる。"
+      "reason": "Open boundary conflict with AIMS and a new commitment-based standing form planned for -06.",
+      "reason_ja": "AIMSとの境界の衝突が未解決で、-06にコミットメント方式の追加が予定されている。"
     },
     "Review related draft: draft-reddy-wimse-oauth-dialog-binding-00": {
       "date": "2026-11-01",
@@ -665,10 +819,10 @@
       "reason": "New draft that extends the WIMSE HTTP signature and WPT and adds a tctx.dlg member."
     },
     "Review related draft: draft-sweeney-wimse-credential-delegation-02": {
-      "date": "2026-11-01",
+      "date": "2026-11-02",
       "priority": "high",
-      "reason": "Its author argued the server-side half composes with AATs and that the three attenuation drafts need one subsumption rule per constraint type.",
-      "reason_ja": "著者が、サーバー側の仕組みは AAT と組み合わせられ、三つの減衰ドラフトは制約型ごとに包含規則を一つにすべきだと述べた。"
+      "reason": "-02 announced with sub-delegation, cumulative bounds, chain profile and revocation, with specific review requests.",
+      "reason_ja": "-02が公開され、サブ委任、累計上限、チェーンプロファイル、失効が加わり、具体的なレビュー依頼も出ている。"
     },
     "Review related draft: draft-thaha-wimse-agent-evidence-binding-02": {
       "date": "2026-11-01",
