@@ -2,28 +2,28 @@
   "picks": [
     {
       "id": "draft:draft-ietf-oauth-identity-assertion-authz-grant-06",
-      "why": "IdPs and Resource ASes running ID-JAG must change behaviour: the IdP must authenticate the client, bad subject tokens return invalid_request, and a key-bound ID-JAG can replace client authentication at the Resource AS. The flow is unchanged.",
-      "why_ja": "ID-JAG を運用する IdP と Resource AS は挙動を変える必要がある。IdP はクライアントを認証しなければならず、不正な subject token には invalid_request を返す。鍵に紐づいた ID-JAG で Resource AS でのクライアント認証を置き換えることもできる。フロー自体は変わらない。"
+      "why": "IdP and Resource AS implementers must change behaviour: the IdP must authenticate the client, a bad subject token returns invalid_request rather than invalid_grant, and a key-bound ID-JAG can replace client authentication at the Resource AS. Open issues are expected at IETF 127.",
+      "why_ja": "IdP と Resource AS の実装者は挙動を変える必要がある。IdP はクライアントを認証しなければならず、不正な subject token には invalid_grant ではなく invalid_request を返す。鍵に紐づいた ID-JAG は Resource AS でのクライアント認証の代わりになる。IETF 127 で未解決の issue が議論される見込みである。"
     },
     {
       "id": "draft:draft-ietf-wimse-workload-creds-03",
-      "why": "Verifiers must check a WIT/WIC only against trust anchors bound to the trust domain in its Workload Identifier, and a new section covers the audience of application-layer proofs. iss stays optional here, but the agent-mandate profile requires it.",
-      "why_ja": "検証側は、Workload Identifier に書かれた trust domain に紐づく trust anchor だけで WIT/WIC を検証しなければならない。アプリケーション層の proof の audience を扱う節も新設された。iss はここでは任意のままだが、agent-mandate のプロファイルでは必須である。"
+      "why": "Verifiers may validate a WIT/WIC only against anchors bound to the trust domain in its Workload Identifier, and a new section covers the audience of application-layer proofs. The agent-mandate profile requires iss, but this draft keeps it optional.",
+      "why_ja": "検証側は、Workload Identifier に書かれた trust domain に紐づく anchor だけで WIT/WIC を検証しなければならない。アプリケーション層の proof の audience を扱う節も新設された。agent-mandate のプロファイルは iss を必須とするが、この draft では任意のままである。"
     },
     {
-      "id": "mail:yYnrgM51pZuvm6s8z1lmcv5tHEU",
-      "why": "AATs, asor and the hulea mandate overlap and reuse claim names with different meanings (del_max_depth is off by one). One shared subsumption rule per constraint type would decide whether they converge. Budgets and sub-root revocation still need a server.",
-      "why_ja": "AATs、asor、hulea mandate は役割が重なり、同じ claim 名を違う意味で使っている(del_max_depth は 1 つずれる)。constraint の型ごとに共通の subsumption ルールを持てるかで、三つが収束するかが決まる。予算や root より下の失効には、依然としてサーバが必要だ。"
+      "id": "draft:draft-ietf-oauth-deferred-token-response-01",
+      "why": "Other drafts now lean on it for human approval and consent, such as the ID-JAG consent question and an invoicing-mandate draft. Its substrate guarantees and deferred_interactive mode set what those profiles can build on.",
+      "why_ja": "ID-JAG のユーザー同意や請求書 agent の mandate draft など、人による承認や同意をこの draft に任せる動きが出ている。新しい基盤上の保証と deferred_interactive モードが、それらのプロファイルの前提になる。"
     },
     {
-      "id": "draft:draft-ietf-oauth-delegate-sd-jwt-00",
-      "why": "Now a WG document, it gives a standard way for an SD-JWT holder to pass authority on to an agent through chained key binding. An invoicing-mandate draft plans to rebuild its delegation on it, and credential-delegation-02 marks it as adopted.",
-      "why_ja": "WG 文書になったことで、SD-JWT の holder が key binding を連鎖させて agent に権限を渡す標準的な方法ができた。請求書 agent の mandate draft は次版で委譲をこれに載せ替える予定で、credential-delegation-02 も採用済みとしている。"
+      "id": "mail:NphFqty5NRjMoX6x3IEW5gVsR5s",
+      "why": "AAT accepts a leaf at del_depth 8 under del_max_depth 8 while asor -03 rejects it, so the same chain validates differently. Anyone implementing offline attenuation should expect the three formats to be reconciled before IETF 127.",
+      "why_ja": "del_max_depth が 8 のとき、AAT は del_depth 8 の leaf を受け入れるが asor -03 は拒否する。同じチェーンでも検証結果が変わるということである。オフラインで attenuation を実装する場合は、IETF 127 に向けて三つの形式が調整されることを前提にしたほうがよい。"
     },
     {
-      "id": "draft:draft-thaha-wimse-agent-evidence-binding-02",
-      "why": "Serving parties should base admission only on top-level claims and the current actor, and treat earlier actors in an act chain as audit history, not authority. Authority across hops needs per-hop signed evidence. Admission on full actor history is an open issue for IETF 127.",
-      "why_ja": "受け入れ側は、token の最上位 claim と現在の actor だけで受け入れを判断し、act チェーン上の以前の actor は権限ではなく監査用の履歴として扱うべきだとされた。hop をまたぐ権限の証明には hop ごとの署名付き証跡が必要になる。actor 履歴全体に基づく受け入れは IETF 127 での未解決課題である。"
+      "id": "mail:tpSpJCZZOQMvlE_EC0q4DNsz0R4",
+      "why": "A grant-flow route for agent authorization now competes with Hardt's separate AAuth protocol, and both use the name AAuth. Nothing is decided, but it shows whether the WG favours an OAuth extension or a new protocol.",
+      "why_ja": "agent の認可について、OAuth の grant flow として拡張する案が、Hardt の独立した AAuth プロトコルと並んだ。どちらも AAuth という名前を使っている。結論は出ていないが、WG が OAuth の拡張と新プロトコルのどちらを選ぶかの目安になる。"
     }
   ],
   "topics": [
@@ -31,8 +31,8 @@
       "id": "workload-credentials",
       "name": "Workload credentials and proof of possession",
       "name_ja": "ワークロードクレデンシャルと proof of possession",
-      "summary": "WIMSE's base stack covers identifiers, WIT/WIC credentials, WPT, HTTP-signature proofs and mTLS. http-signature is with the IESG, and practices-08 is in IESG Last Call (comments due 2026-11-13). workload-creds-03 ties validation to trust-domain anchors. OAuth SPIFFE client auth has PRs registering spiffe_jwt, spiffe_x509 and spiffe_wit auth methods.",
-      "summary_ja": "WIMSE の基盤スタックで、識別子、WIT/WIC、WPT、HTTP Signature による証明、mTLS を扱う。http-signature は IESG に提出済みで、practices-08 は IESG Last Call 中(コメント期限は 2026-11-13)である。workload-creds-03 は検証を trust domain に紐づく anchor に限定した。OAuth の SPIFFE client auth では、spiffe_jwt、spiffe_x509、spiffe_wit を認証方式として登録する PR が出ている。",
+      "summary": "WIMSE's base stack covers identifiers, WIT/WIC, WPT, HTTP-signature proofs and mTLS. http-signature is with the IESG. practices-08 is in IESG Last Call (comments due 2026-11-13); a first review asks to make sidecar-held keys and proof of possession explicit. workload-creds-03 ties validation to trust-domain anchors. OAuth SPIFFE client auth has PRs registering spiffe_* auth methods.",
+      "summary_ja": "WIMSE の基盤スタックで、識別子、WIT/WIC、WPT、HTTP Signature による証明、mTLS を扱う。http-signature は IESG に提出済みである。practices-08 は IESG Last Call 中(コメント期限は 2026-11-13)で、sidecar が鍵を持つ構成と proof of possession を明記するよう求める最初のレビューが出ている。workload-creds-03 は検証を trust domain に紐づく anchor に限定した。OAuth の SPIFFE client auth では spiffe_jwt、spiffe_x509、spiffe_wit を登録する PR が出ている。",
       "members": [
         {
           "track": "ietf-wimse",
@@ -105,8 +105,8 @@
       "id": "agent-delegation",
       "name": "Agent delegation and attenuation",
       "name_ja": "Agent の委譲と attenuation",
-      "summary": "This topic covers how authority narrows as it passes between agents. Three offline attenuation formats (AATs, the asor chain, the hulea mandate) overlap and reuse claim names, and credential-delegation-02 adopts the asor format. The list wants one subsumption rule per constraint type. Delegate SD-JWT is the only WG document here.",
-      "summary_ja": "agent 間で権限を渡すとき、それをどう狭めていくかを扱う。オフラインで attenuation を検証する形式が三つ(AATs、asor chain、hulea mandate)あり、互いに重なっていて claim 名も使い回されている。credential-delegation-02 は asor の形式を採用した。メーリングリストでは constraint の型ごとに subsumption ルールを一つにすることが求められている。WG 文書は Delegate SD-JWT だけである。",
+      "summary": "This topic covers how authority narrows as it passes between agents. Three offline attenuation formats (AATs, the asor chain, the hulea mandate) overlap and reuse claim names, with a del_max_depth mismatch found. hulea-01 and credential-delegation-02 are new revisions. Delegate SD-JWT is the only WG document. Competing AAuth proposals are under discussion.",
+      "summary_ja": "agent 間で権限を渡すとき、それをどう狭めていくかを扱う。オフラインで attenuation を検証する形式が三つ(AATs、asor chain、hulea mandate)あり、互いに重なって claim 名も使い回され、del_max_depth の食い違いも見つかった。hulea-01 と credential-delegation-02 が新版として出た。WG 文書は Delegate SD-JWT だけである。AAuth を名乗る競合する提案も議論されている。",
       "members": [
         {
           "track": "ietf-wimse",
@@ -152,8 +152,8 @@
       "id": "agent-evidence-audit",
       "name": "Agent identity, context and audit evidence",
       "name_ja": "Agent の identity・コンテキスト・監査証跡",
-      "summary": "This topic covers identity, context and audit for AI agent actions: AIMS, evidence binding, authorization-evidence records, per-call proofs, and new drafts on taint attestation and dialog binding. All but AIMS are individual drafts. Evidence binding -02 limits admission to the current actor. AIMS Section 11 audit records have no format yet, and AER-1 has been offered as one.",
-      "summary_ja": "AI agent の行動について、identity、コンテキスト、監査を扱う。対象は AIMS、evidence binding、authorization-evidence record、呼び出しごとの proof、それに新しく出た taint attestation と dialog binding の draft である。AIMS を除けばすべて個人 draft だ。evidence binding -02 は受け入れの判断を現在の actor に限定した。AIMS Section 11 の監査レコードには形式がまだなく、AER-1 が候補として提案されている。",
+      "summary": "This topic covers identity, context and audit for AI agent actions: AIMS, evidence binding, authorization-evidence records, per-call proofs, taint attestation and dialog binding. All but AIMS are individual drafts. Evidence binding -02 limits admission to the current actor. AIMS Section 11 audit records still have no format, and AER-1 is offered as a candidate.",
+      "summary_ja": "AI agent の行動について、identity、コンテキスト、監査を扱う。対象は AIMS、evidence binding、authorization-evidence record、呼び出しごとの proof、taint attestation、dialog binding である。AIMS を除けばすべて個人 draft だ。evidence binding -02 は受け入れの判断を現在の actor に限定した。AIMS Section 11 の監査レコードには形式がまだなく、AER-1 が候補として提案されている。",
       "members": [
         {
           "track": "ietf-wimse",
@@ -182,19 +182,23 @@
         {
           "track": "ietf-wimse",
           "name": "draft-reddy-wimse-oauth-dialog-binding"
+        },
+        {
+          "track": "ietf-wimse",
+          "name": "draft-jackson-wimse-evaluation"
         }
       ],
       "related": [
         "agent-delegation",
         "workload-credentials",
-        "cross-domain-grants"
+        "authorization-apis"
       ]
     },
     {
       "id": "cross-domain-grants",
       "name": "Cross-domain grants and token exchange",
       "name_ja": "ドメイン間グラントと token exchange",
-      "summary": "This topic covers carrying identity and authorization across trust domains via token exchange and assertion grants. Identity chaining is in the RFC Editor queue, and transaction tokens are waiting for write-up. ID-JAG -06 tightens client authentication, audience and error codes. Deferred Token Response -01 adds interactive completion, and the ID-JAG consent thread points to it.",
+      "summary": "This topic covers carrying identity and authorization across trust domains. Identity chaining is in the RFC Editor queue and transaction tokens are waiting for write-up. ID-JAG -06 tightens client authentication, audience and error codes. Deferred Token Response -01 adds interactive completion, and the ID-JAG consent thread points to it.",
       "summary_ja": "token exchange や assertion grant を使って、identity と認可を trust domain の境界越しに運ぶ方式を扱う。identity chaining は RFC Editor キューに入っており、transaction tokens は write-up 待ちだ。ID-JAG -06 はクライアント認証、audience、エラーコードを厳しくした。Deferred Token Response -01 は対話型の完了モードを追加し、ID-JAG のユーザー同意をめぐる議論もこれを参照している。",
       "members": [
         {
@@ -232,8 +236,8 @@
       "id": "oauth-core-bcp",
       "name": "OAuth core and security BCPs",
       "name_ja": "OAuth コアとセキュリティ BCP",
-      "summary": "This topic covers OAuth 2.1 and the BCPs around it. The JWT BCP (rfc8725bis) and rfc7523bis are in the RFC Editor queue, both blocked, and first-party apps is waiting for write-up. OAuth 2.1 -17 cites RFC 10017 for browser apps, and its editor asks for feedback on four open issues before IETF 127.",
-      "summary_ja": "OAuth 2.1 とその周辺の BCP を扱う。JWT BCP(rfc8725bis)と rfc7523bis は RFC Editor キューに入っているが、どちらも blocked の状態だ。first-party apps は write-up 待ちである。OAuth 2.1 -17 はブラウザアプリについて RFC 10017 を参照するようになり、編集者は IETF 127 に向けて未解決の issue 四件への意見を求めている。security topics update、refresh token expiration、client ID metadata document は WG 文書の段階だ。",
+      "summary": "This topic covers OAuth 2.1 and the BCPs around it. rfc8725bis and rfc7523bis are in the RFC Editor queue, both blocked, and first-party apps is waiting for write-up. OAuth 2.1 -17 cites RFC 10017 for browser apps; its editor wants feedback on four open issues before IETF 127. Security topics update, refresh token expiration and client ID metadata are WG documents.",
+      "summary_ja": "OAuth 2.1 とその周辺の BCP を扱う。rfc8725bis と rfc7523bis は RFC Editor キューに入っているが、どちらも blocked の状態だ。first-party apps は write-up 待ちである。OAuth 2.1 -17 はブラウザアプリについて RFC 10017 を参照するようになり、編集者は IETF 127 に向けて未解決の issue 四件への意見を求めている。security topics update、refresh token expiration、client ID metadata document は WG 文書の段階だ。",
       "members": [
         {
           "track": "oauth-wg",
@@ -274,8 +278,8 @@
       "id": "verifiable-credentials",
       "name": "Verifiable credentials and SD-JWT",
       "name_ja": "Verifiable Credentials と SD-JWT",
-      "summary": "This topic covers SD-JWT-based credentials and the OpenID4VC protocols that issue and present them. SD-JWT VC is in IESG Evaluation (-23 was editorial), and Token Status List is in the RFC Editor queue. Delegate SD-JWT -00 adds delegated presentations. OpenID4VCI and OpenID4VP merged 2 and 3 PRs in 30 days; HAIP was last pushed 38 days ago.",
-      "summary_ja": "SD-JWT ベースのクレデンシャルと、それを発行・提示するための OpenID4VC プロトコルを扱う。SD-JWT VC は IESG Evaluation に入っている(-23 は編集上の改訂)。Token Status List は RFC Editor キューにある。Delegate SD-JWT -00 で、委譲された提示ができるようになった。OpenID4VCI と OpenID4VP は 30 日でそれぞれ 2 件と 3 件の PR をマージした。HAIP の最終 push は 38 日前である。",
+      "summary": "This topic covers SD-JWT-based credentials and the OpenID4VC protocols that issue and present them. SD-JWT VC is in IESG Evaluation (-23 was editorial) and Token Status List is in the RFC Editor queue. Delegate SD-JWT -00 adds delegated presentations. OpenID4VCI and OpenID4VP merged 2 and 3 PRs in 30 days; HAIP was last pushed 38 days ago.",
+      "summary_ja": "SD-JWT ベースのクレデンシャルと、それを発行・提示するための OpenID4VC プロトコルを扱う。SD-JWT VC は IESG Evaluation に入っており(-23 は編集上の改訂)、Token Status List は RFC Editor キューにある。Delegate SD-JWT -00 で、委譲された提示ができるようになった。OpenID4VCI と OpenID4VP は 30 日でそれぞれ 2 件と 3 件の PR をマージし、HAIP の最終 push は 38 日前である。",
       "members": [
         {
           "track": "oauth-wg",
@@ -320,8 +324,8 @@
       "id": "identity-assurance",
       "name": "Identity assurance and proofing",
       "name_ja": "身元保証と本人確認",
-      "summary": "This topic covers verified identity data in OpenID: eKYC-IDA with its authority and registry profiles, the identity proofing extension, and government and national trust profiles. None of these repositories merged a PR in the last 30 days. Identity-Proofing-Extension was last pushed 18 days ago, igov 19, eKYC-IDA 39.",
-      "summary_ja": "OpenID における検証済み identity データを扱う。対象は eKYC-IDA とその authority / registry プロファイル、identity proofing extension、政府・国単位の trust プロファイルである。どのリポジトリも直近 30 日にマージされた PR はない。最終 push は Identity-Proofing-Extension が 18 日前、igov が 19 日前、eKYC-IDA が 39 日前だ。",
+      "summary": "This topic covers verified identity data in OpenID: eKYC-IDA with its authority and registry profiles, the identity proofing extension, and government and national trust profiles. None of these repositories merged a PR in the last 30 days. Last pushes: Identity-Proofing-Extension 19 days ago, igov 19, eKYC-IDA 39.",
+      "summary_ja": "OpenID における検証済み identity データを扱う。対象は eKYC-IDA とその authority / registry プロファイル、identity proofing extension、政府・国単位の trust プロファイルである。どのリポジトリも直近 30 日にマージされた PR はない。最終 push は Identity-Proofing-Extension が 19 日前、igov が 19 日前、eKYC-IDA が 39 日前だ。",
       "members": [
         {
           "track": "openid",
@@ -357,8 +361,8 @@
       "id": "authorization-apis",
       "name": "Authorization APIs and decision semantics",
       "name_ja": "認可 API と判定セマンティクス",
-      "summary": "This topic covers externalised authorization decisions and how verifiers evaluate authority. AuthZEN merged 54 PRs in 30 days, though its latest commits only touched CI. An 8 October AuthZEN decision leaves agent context to validated token claims such as client_id and act. The evaluation draft's author accepted two Section 3.6 fixes.",
-      "summary_ja": "外部化された認可判定と、検証側が権限をどう評価するかを扱う。AuthZEN は 30 日で 54 件の PR がマージされているが、直近のコミットは CI の変更だけだった。10 月 8 日の AuthZEN の決定で、agent のコンテキストは client_id や act といった検証済みの token claim から判断することになった。evaluation draft の著者は Section 3.6 の修正二点を受け入れた。RAR metadata and error remediation は OAuth の WG 文書である。",
+      "summary": "This topic covers externalised authorization decisions and how verifiers evaluate authority. AuthZEN merged 54 PRs in 30 days, though its latest commits only touched CI. An 8 October AuthZEN decision leaves agent context to validated token claims. The evaluation draft will add a commitment-based principal-standing check in -06; an age-boundary difference with the audit-record draft is open.",
+      "summary_ja": "外部化された認可判定と、検証側が権限をどう評価するかを扱う。AuthZEN は 30 日で 54 件の PR がマージされているが、直近のコミットは CI の変更だけだった。10 月 8 日の AuthZEN の決定で、agent のコンテキストは検証済みの token claim から判断することになった。evaluation draft は -06 でコミットメントを使った principal standing の確認を加える予定で、audit-record draft との年齢境界の食い違いは未解決である。RAR metadata and error remediation は OAuth の WG 文書である。",
       "members": [
         {
           "track": "openid",
@@ -375,6 +379,7 @@
       ],
       "related": [
         "agent-delegation",
+        "agent-evidence-audit",
         "oauth-core-bcp"
       ]
     },
@@ -440,8 +445,8 @@
       "id": "enterprise-profiles",
       "name": "Enterprise profiles and security events",
       "name_ja": "エンタープライズプロファイルとセキュリティイベント",
-      "summary": "This topic covers enterprise profiles and lifecycle signalling: IPSIE and its OpenID and SCIM profiles, Shared Signals and its WISE profile, Provider Commands, enterprise Connect extensions and FAPI. The IPSIE profile repositories have open PRs but merged none in 30 days; FAPI and the WISE profile merged one each.",
-      "summary_ja": "エンタープライズ・高セキュリティ向けのプロファイルと、ライフサイクルのシグナリングを扱う。対象は IPSIE とその OpenID / SCIM プロファイル、Shared Signals とその WISE プロファイル、OpenID Provider Commands、Connect のエンタープライズ拡張、FAPI である。IPSIE のプロファイル系リポジトリには open な PR があるが、30 日間マージはない。FAPI と WISE プロファイルはそれぞれ 1 件マージした。",
+      "summary": "This topic covers enterprise profiles and lifecycle signalling: IPSIE and its profiles, Shared Signals and its WISE profile, Provider Commands, enterprise Connect extensions and FAPI. The IPSIE profile repositories were pushed a day ago but merged no PRs in 30 days. FAPI and the WISE profile merged one each; sharedsignals has 12 open PRs.",
+      "summary_ja": "エンタープライズ・高セキュリティ向けのプロファイルと、ライフサイクルのシグナリングを扱う。対象は IPSIE とそのプロファイル、Shared Signals とその WISE プロファイル、OpenID Provider Commands、Connect のエンタープライズ拡張、FAPI である。IPSIE のプロファイル系リポジトリは 1 日前に push されたが、30 日間マージはない。FAPI と WISE プロファイルはそれぞれ 1 件マージし、sharedsignals には open な PR が 12 件ある。",
       "members": [
         {
           "track": "openid",
@@ -482,5 +487,5 @@
       ]
     }
   ],
-  "generated_at": "2026-11-01T22:09:10+00:00"
+  "generated_at": "2026-11-02T06:16:02+00:00"
 }
