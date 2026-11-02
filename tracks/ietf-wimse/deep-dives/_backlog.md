@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-01T22:04:51+00:00
+Generated at: 2026-11-02T06:10:44+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -34,7 +34,7 @@ Moved by this week's material. candidates.json and the site list raised candidat
 - **high** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: A list reply shows its del_max_depth semantics differ by one hop from AAT, so a depth-8 leaf is rejected.
 - **high** `Review related draft: draft-durga-wimse-ctx-isolation-00`: It was newly announced to the list with a request for review and a lightning slot at IETF 127.
 - **high** `Review related draft: draft-hulea-wimse-agent-mandate-01`: It is named as one of three offline attenuation formats whose subsumption rules may be compared before IETF 127.
-- **high** `Review related draft: draft-jackson-wimse-evaluation-05`: The author accepted two concrete changes to Section 3.6 on the staleness bound and missing proofs.
+- **high** `Review related draft: draft-jackson-wimse-evaluation-05`: Author confirmed a new commitment-based Section 3.6 form and an open boundary conflict with the audit-record draft, both for -06.
 - **high** `Review related draft: draft-reddy-wimse-oauth-dialog-binding-00`: New draft that extends the WIMSE HTTP signature and WPT and adds a tctx.dlg member.
 - **high** `Review related draft: draft-sweeney-wimse-credential-delegation-02`: Its author argued the server-side half composes with AATs and that the three attenuation drafts need one subsumption rule per constraint type.
 - **high** `Review related draft: draft-thaha-wimse-agent-evidence-binding-02`: The -02 changes the admission rule to current actor only and adds a new MUST NOT on caller references in reusable tokens.

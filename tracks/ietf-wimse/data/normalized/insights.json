@@ -13,6 +13,11 @@
       "at": "2026-11-01T22:07:04+00:00",
       "text": "The most significant item is the IESG Last Call on draft-ietf-wimse-workload-identity-practices-08 (comments due 2026-11-13). A first review proposes making sidecar-held keys and proof of possession explicit. The rest is mostly pre-IETF 127 list discussion on agent delegation and audit records, with no WG draft text changes.",
       "text_ja": "最も重要なのは draft-ietf-wimse-workload-identity-practices-08 の IESG Last Call（コメント期限は 2026-11-13）で、サイドカーによる鍵保持と proof of possession を明記する修正案が最初のレビューとして出た。残りは IETF 127 に向けたエージェント委任と監査記録に関するメーリングリストの議論が中心で、WG ドラフトの本文変更はない。"
+    },
+    {
+      "at": "2026-11-02T06:12:15+00:00",
+      "text": "Two threads on draft-jackson-wimse-evaluation-05 Section 3.6 moved: the author will add a commitment-based principal-standing form in -06 and is trying to settle a freshness-boundary conflict with the audit-record draft. No normative text changed yet.",
+      "text_ja": "draft-jackson-wimse-evaluation-05 の Section 3.6 に関する議論が二件進んだ。作者は -06 でコミットメント方式の principal standing を第三の形として追加する予定で、監査レコードのドラフトとの鮮度境界の食い違いも調整中である。規範的な本文の変更はまだない。"
     }
   ],
   "items": {
@@ -303,6 +308,29 @@
         "署名エージェントをオーディエンスやトークン種別で制限する方法を検討するプラットフォームチームは、提案された 5.1.5 節の文面を参照できる。"
       ]
     },
+    "mail:CXxR1y_41d06DktOvGJxjZQHMig": {
+      "diagram": "sequenceDiagram\nparticipant P as Presenter\nparticipant RP as Relying party\nparticipant S as Commitment publisher\nS->>RP: pinned publisher and max age\nS-->>P: commitment\nP->>RP: token and proof against commitment\nRP->>RP: verify proof against accepted commitment\nRP-->>P: accept, or refuse as for withdrawal",
+      "first_seen": "2026-11-02",
+      "headline": "The evaluation draft's author will add a commitment-based way to check principal standing in -06.",
+      "headline_ja": "評価ドラフトの作者が、コミットメント方式による principal standing の確認を -06 に追加する予定である。",
+      "id": "mail:CXxR1y_41d06DktOvGJxjZQHMig",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Wes Jackson accepts Marc Miro i Rierola's proposal as a third form in Section 3.6, next to a lookup beside the chain and short grant lifetimes. The relying party pins the commitment publisher and a maximum age, and the presenter proves against a commitment, so the source does not learn who is evaluated and no cross-party principal identifier is needed. Two corrections are agreed. The bound is the pinned maximum age, not the publication cadence, and a relying party wanting a tighter bound fetches the newest commitment itself. A missing or non-verifying proof is a refusal like a withdrawal, not an unavailable input, and the two are indistinguishable to an unauthenticated caller. The audit record member principal-standing-source in draft-gilda-audit-agent-audit-record-03 should name the publisher and the commitment's as-of time. The change lands in -06 after IETF 127.",
+      "summary_ja": "Wes Jackson は、Marc Miro i Rierola の提案を Section 3.6 の第三の形として採り入れると述べた。既存の二つの形は、チェーンと並べた参照と、短い付与有効期間である。新しい形では、検証者がコミットメントの発行元と最大経過時間を固定し、提示者がコミットメントに対して証明する。このため情報源は評価対象を知らず、関係者間で共通の principal 識別子も不要である。二点の修正も合意された。限界は公開間隔ではなく固定された最大経過時間であり、より短い限界が必要な検証者は最新のコミットメントを自ら取得する。証明の欠落や検証失敗は利用不能な入力ではなく、撤回と同じ拒否であり、認証されていない呼び出し元には区別できない。監査レコードの principal-standing-source には、発行元とコミットメントの as-of 時刻を記録すべきとされた。反映は IETF 127 後の -06 である。",
+      "title": "draft-jackson-wimse-evaluation-05, Section 3.6: principal standing without an identifier join",
+      "updated_at": "2026-11-02T06:12:15+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/CXxR1y_41d06DktOvGJxjZQHMig/",
+      "use_cases": [
+        "A relying party checks an agent's principal standing without telling a registry which principal is being evaluated.",
+        "A deployment needs a stated withdrawal bound, so it states the pinned maximum age and when that age starts."
+      ],
+      "use_cases_ja": [
+        "検証者が、どの principal を評価しているかをレジストリに知らせずに、エージェントの principal standing を確認する。",
+        "撤回の限界を明示する必要がある運用で、固定した最大経過時間とその起点を示す。"
+      ]
+    },
     "mail:EDu91EnPTVXXCO4bgtlrUknXLi4": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -423,6 +451,23 @@
         "複数の強制ポイントにまたがる累積的な利用上限が必要なデプロイでは、減衰トークンと委任サーバーを組み合わせることになる。"
       ]
     },
+    "mail:YbA0_uqrNGji2vsDdmqj2KlbND0": {
+      "diagram": "",
+      "first_seen": "2026-11-02",
+      "headline": "A newcomer asks how an individual can contribute to the WIMSE AI identity work.",
+      "headline_ja": "個人参加者が WIMSE の AI アイデンティティ作業に貢献する手順を尋ねる質問である。",
+      "id": "mail:YbA0_uqrNGji2vsDdmqj2KlbND0",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "Vaishnavi Gudur asks which route suits an individual contributor who is not speaking for an employer: a mailing-list comment, an issue or pull request, or a separate Internet-Draft. They also ask about IPR and disclosure steps. The topic is AI-agent identity, authorization freshness and revocation in relation to draft-ietf-wimse-aims. No technical text is submitted and the message has no replies in the material.",
+      "summary_ja": "Vaishnavi Gudur は、雇用主を代表しない個人参加者にとって、メーリングリストへのコメント、issue や pull request、別の Internet-Draft のどれが適切かを尋ねている。IPR と開示の手続きについても質問している。話題は draft-ietf-wimse-aims に関連する AI エージェントのアイデンティティ、認可の鮮度、失効である。技術的な文章の提出はなく、資料には返信も含まれていない。",
+      "title": "Process question: individual personal-capacity contribution to WIMSE AI identity work",
+      "updated_at": "2026-11-02T06:12:15+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/YbA0_uqrNGji2vsDdmqj2KlbND0/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "mail:Zhvxkeil5YLJZNzJblEXfK7bLno": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -518,6 +563,29 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "mail:pfPpZFDrdqavOQg7eSMesHJroYA": {
+      "diagram": "",
+      "first_seen": "2026-11-02",
+      "headline": "The evaluation draft and the audit-record draft disagree on whether an age exactly equal to the maximum age is fresh.",
+      "headline_ja": "評価ドラフトと監査レコードのドラフトで、最大経過時間ちょうどの年齢を新鮮とみなすかが食い違っている。",
+      "id": "mail:pfPpZFDrdqavOQg7eSMesHJroYA",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Wes Jackson confirms that a principal-standing lookup that cannot complete is a transient refusal, recorded as not-evaluated with principal-standing-source, as in draft-gilda-audit-agent-audit-record-03. He filed test vectors in an agent-evidence-vectors issue. At an age exactly equal to the maximum age, -05 requires refusal (at-or-past horizon), while -03 counts it as fresh (FR2), so the same record validates under one and not the other. The drafts also judge age at different instants: -05 at the evaluation instant, -03 at decision.reportedAt. He leaves the choice open and defers a joint profile until one boundary is agreed. Girish Konda's gap is confirmed: the permanent-refusal list and disclosure rule name issuers but not the principal. His wording is a likely fix, a withdrawn principal recording as evaluated, deny, but it is a -06 decision not yet taken.",
+      "summary_ja": "Wes Jackson は、完了できない principal-standing の参照は一時的な拒否であり、draft-gilda-audit-agent-audit-record-03 のとおり principal-standing-source を伴う not-evaluated として記録されると確認した。テストベクトルは agent-evidence-vectors の issue に登録済みである。最大経過時間ちょうどの年齢では、-05 は拒否を要求する（期限以降は使用不可）が、-03 は新鮮とみなす（FR2）ため、同じレコードが一方でのみ有効となる。年齢を判定する時点も異なり、-05 は評価時点、-03 は decision.reportedAt である。選択は未決で、境界が一つに決まるまで共同プロファイルは保留される。Girish Konda の指摘も認められた。永続的拒否の一覧と開示規則は issuer のみを挙げ、principal を挙げていない。同氏の文言が有力な修正案で、撤回された principal は evaluated、deny と記録されるが、-06 での決定は未了である。",
+      "title": "A principal-standing name for the 5.4 closed set",
+      "updated_at": "2026-11-02T06:12:15+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/pfPpZFDrdqavOQg7eSMesHJroYA/",
+      "use_cases": [
+        "An audit-record implementer needs to know whether a record at exactly the maximum age is valid or malformed.",
+        "A decision point must choose between judging age at evaluation time and at the reported time."
+      ],
+      "use_cases_ja": [
+        "監査レコードの実装者は、最大経過時間ちょうどのレコードが有効か不正かを知る必要がある。",
+        "判断点は、年齢を評価時点で判定するか報告時点で判定するかを選ぶ必要がある。"
+      ]
+    },
     "mail:vauc1h3gao6R7YAlJH5ffDxEOwo": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -586,10 +654,10 @@
       "reason_ja": "IETF 127 までに包含規則が比較され得る三つのオフライン減衰形式の一つとして名前が挙がっている。"
     },
     "Review related draft: draft-jackson-wimse-evaluation-05": {
-      "date": "2026-11-01",
+      "date": "2026-11-02",
       "priority": "high",
-      "reason": "The author accepted two concrete changes to Section 3.6 on the staleness bound and missing proofs.",
-      "reason_ja": "著者が 3.6 節の古さの上限と証明の欠落について二つの具体的な変更を受け入れた。"
+      "reason": "Author confirmed a new commitment-based Section 3.6 form and an open boundary conflict with the audit-record draft, both for -06.",
+      "reason_ja": "作者が Section 3.6 の新しいコミットメント方式と、監査レコードのドラフトとの境界の未解決の食い違いを確認しており、いずれも -06 で扱われる。"
     },
     "Review related draft: draft-reddy-wimse-oauth-dialog-binding-00": {
       "date": "2026-11-01",
