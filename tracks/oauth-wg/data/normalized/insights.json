@@ -9,6 +9,11 @@
       "at": "2026-11-01T22:07:05+00:00",
       "text": "The most notable activity is on AI-agent authorization: a second AAuth draft proposing a new OAuth grant, and AAT's -02 follow-up exposing an off-by-one difference in `del_max_depth` between agent-delegation drafts. The oauth-spiffe-client-authentication repo also saw a batch of PRs, mostly clarifications, plus a new multi-valued auth-method metadata approach.",
       "text_ja": "最も目立つのはAIエージェント認可の動きである。新しいOAuthグラントを提案する2つ目のAAuthドラフトが出され、AAT -02の議論ではエージェント委任ドラフト間で `del_max_depth` の解釈が1ホップずれることが判明した。oauth-spiffe-client-authenticationリポジトリでも多数のPRがあり、大半は明確化だが、複数値の認証方式メタデータの扱いが新たに加わった。"
+    },
+    {
+      "at": "2026-11-02T06:12:16+00:00",
+      "text": "A new individual draft, draft-nandakumar-agent-sd-card-00, proposes SD-JWT VC agent metadata. The other two items are agent-auth discussion: the KYAPay token review is still open, and a second, competing \"AAuth\" draft raises a name clash. No WG-adopted draft moved.",
+      "text_ja": "個人ドラフト draft-nandakumar-agent-sd-card-00 が、SD-JWT VC によるエージェントメタデータを提案した。ほかの2件はエージェント認可に関する議論で、KYAPay トークンのレビューは継続中であり、競合する第二の「AAuth」ドラフトは名称の衝突を招いている。WG採択ドラフトに動きはない。"
     }
   ],
   "items": {
@@ -343,6 +348,29 @@
         "SD-JWT VC の上にエージェントマンデートを構築するチームは、新しいチェーン形式を考案するのではなく Delegate SD-JWT に合わせられる。"
       ]
     },
+    "mail:EN-CEPT0fCmAvHElXbqyTeiQO9M": {
+      "diagram": "sequenceDiagram\nparticipant R as Agent registry\nparticipant A as Agent\nparticipant V as Verifier\nR->>A: SD-JWT VC with agent metadata\nA->>V: Selected disclosures plus key possession proof\nV->>V: Check registry attestation and proof",
+      "first_seen": "2026-11-02",
+      "headline": "In short, a new individual draft encodes AI agent metadata as an SD-JWT VC so each verifier sees only what it is allowed to.",
+      "headline_ja": "個人ドラフトが、AIエージェントのメタデータを SD-JWT VC として表現し、検証者ごとに開示範囲を絞る方式を提案した。",
+      "id": "mail:EN-CEPT0fCmAvHElXbqyTeiQO9M",
+      "kind": "mail",
+      "related": [],
+      "significance": "new-proposal",
+      "summary": "Suhas Nandakumar announced draft-nandakumar-agent-sd-card-00, which replaces draft-nandakumar-agent-sd-jwt. It says existing agent metadata documents (MCP tool lists, PAP discovery documents, A2A Agent Cards) expose everything to everyone, are weakly or not authenticated, and do not prove the presenter is the agent described. SD-Card encodes the metadata as an SD-JWT VC issued by an agent registry. The agent discloses to each verifier only what that verifier is authorized to see and proves key possession. The draft defines a protocol-independent core plus bindings for MCP, PAP and A2A. The author asks for feedback and collaborators. The mail gives no wire-format detail.",
+      "summary_ja": "Suhas Nandakumar が draft-nandakumar-agent-sd-card-00 を発表した。draft-nandakumar-agent-sd-jwt を置き換えるものである。既存のエージェントメタデータ文書（MCPのツール一覧、PAPのディスカバリ文書、A2A Agent Card）は全情報を誰にでも見せ、認証が弱いか無く、提示者が記述されたエージェント本人であることも証明しない、と指摘している。SD-Card はメタデータをエージェントレジストリが発行する SD-JWT VC として符号化する。エージェントは各検証者に、その検証者が閲覧を許可された情報だけを開示し、鍵の所持を証明する。プロトコル非依存のコアと、MCP、PAP、A2A向けのバインディングを定義する。著者はフィードバックと協力者を求めている。メールにワイヤフォーマットの詳細はない。",
+      "title": "Agent SD-Card (draft-nandakumar-agent-sd-card-00)",
+      "updated_at": "2026-11-02T06:12:16+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/EN-CEPT0fCmAvHElXbqyTeiQO9M/",
+      "use_cases": [
+        "An agent registry issuing signed agent descriptions that expose different fields to different counterparties",
+        "A verifier that needs to confirm the party presenting an A2A Agent Card holds the key for the agent described"
+      ],
+      "use_cases_ja": [
+        "エージェントレジストリが、相手ごとに異なる項目を開示できる署名付きエージェント記述を発行する場合",
+        "A2A Agent Card の提示者が、記述されたエージェントの鍵を保持していることを検証者が確認する場合"
+      ]
+    },
     "mail:IDo5i8W0qxEgmmAZB5ITc0k0apw": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -505,6 +533,52 @@
       "url": "https://mailarchive.ietf.org/arch/msg/oauth/Zuab1PpQZx_nWOimouWjczGiYOI/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:eeKxYLJ6nzp3P6b1Lb4uo2WKsTg": {
+      "diagram": "",
+      "first_seen": "2026-11-02",
+      "headline": "In short, the KYAPay token draft is changing how recipients check audience, and a reviewer says the host-versus-domain check for tdm is still too loose.",
+      "headline_ja": "KYAPay トークンのドラフトで受信者の audience 検証方法が変わりつつあり、レビュー者は tdm のホストとドメインの比較がなお緩いと指摘している。",
+      "id": "mail:eeKxYLJ6nzp3P6b1Lb4uo2WKsTg",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The thread reviews draft-skyfire-oauth-using-kyapay-tokens-01. Bhasker Allam's original review (21 Oct) flagged that the bearer JWT is signed but not encrypted and carries personal and payment data, that bot managers are told to admit such requests without challenge, that intermediaries cannot learn the aud set, and that the token does not say which account it is for. Ankit Agarwal (Skyfire) says PR #59 goes further: in the KYAPay Token draft, aud now identifies the identities the issuer holds for the Target and tsi becomes REQUIRED. Onboarded recipients check aud and tsi, others check tdm, which he corrects to the Target's domain, not host. Carlos Martínez (BeeL) objects that with path-based tenants, tdm app.beel.es/api would pass for anything under beel.es, and asks for host plus path-prefix matching or a note that the path is informational. Ankit says issue #66 and PR #59 track this. The material is truncated.",
+      "summary_ja": "このスレッドは draft-skyfire-oauth-using-kyapay-tokens-01 を扱う。Bhasker Allam の最初のレビュー（10月21日）は、ベアラー JWT が署名のみで暗号化されず個人情報や決済情報を含むこと、ボットマネージャーがそのようなリクエストをチャレンジなしで通すよう求められていること、中間者が aud の集合を知る方法がないこと、トークンがどのアカウント向けかを示さないことを指摘した。Ankit Agarwal（Skyfire）は、PR #59 がさらに踏み込むと述べる。KYAPay Token ドラフトでは aud が発行者の保持する Target 用の識別子を表し、tsi が REQUIRED になる。オンボード済みの受信者は aud と tsi を、それ以外は tdm を検証する。tdm は、ホストではなく Target のドメインを名指すと訂正された。Carlos Martínez（BeeL）は、パスでテナントを分ける場合、tdm が app.beel.es/api のトークンが beel.es 配下のあらゆるものに通ってしまうと指摘し、ホストとパス前方一致での比較か、パスは参考情報である旨の明記を求めている。Ankit は issue #66 と PR #59 で追跡すると答えた。資料は途中で切れている。",
+      "title": "Review of draft-skyfire-oauth-using-kyapay-tokens-01",
+      "updated_at": "2026-11-02T06:12:16+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/eeKxYLJ6nzp3P6b1Lb4uo2WKsTg/",
+      "use_cases": [
+        "A Target that hosts tenants under paths of one host and must decide how strictly to check tdm",
+        "A CDN or bot manager that sits in front of a Target and has no onboarding relationship with the token issuer"
+      ],
+      "use_cases_ja": [
+        "1つのホストの配下にパスごとにテナントを置く Target が、tdm をどの程度厳密に検証するか決める場合",
+        "トークン発行者とのオンボーディング関係を持たない、Target 手前の CDN やボットマネージャーを運用する場合"
+      ]
+    },
+    "mail:tpSpJCZZOQMvlE_EC0q4DNsz0R4": {
+      "diagram": "",
+      "first_seen": "2026-11-02",
+      "headline": "In short, a second draft named AAuth proposes an OAuth grant flow for AI agents, and the author of the other AAuth draft objects to the name clash.",
+      "headline_ja": "AIエージェント向けの OAuth グラントフローを提案する、同名 AAuth の第二のドラフトが出され、もう一方の AAuth の著者が名称の衝突に異議を唱えた。",
+      "id": "mail:tpSpJCZZOQMvlE_EC0q4DNsz0R4",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Jonathan Rosenberg announced draft-rosenberg-oauth-aauth-02, written with Pat White. It follows an OAuth interim meeting on AI agent authorization flows, where interest was raised in solving the problem with an OAuth extension (a new grant flow) rather than a new protocol. The draft has an overview of operation and a section comparing it with Dick Hardt's draft. In reply, Dick says that comparison covers draft-hardt-oauth-aauth-protocol -11 (now -12) but not draft-hardt-aauth-r3. In his description, R3 handles resource-authored approval text: the resource token carries r3_uri and r3_s256, only the PS and AS can fetch the document, and the agent is treated as adversarial and never sees it. Per-call proposals bind an approval to the call's actual parameters, single use. He also says two protocols called AAuth will confuse people, and mentions a community at aauth.dev and a proposed AAuth WG at the OpenID Foundation. No decision was reached.",
+      "summary_ja": "Jonathan Rosenberg が Pat White と共に書いた draft-rosenberg-oauth-aauth-02 を発表した。AIエージェントの認可フローを扱った OAuth の中間会合で、新しいプロトコルではなく OAuth 拡張（新しいグラントフロー）で解決することへの関心が示されたことを受けたものである。ドラフトには動作の概要と、Dick Hardt のドラフトとの比較節がある。これに対し Dick は、その比較が draft-hardt-oauth-aauth-protocol の -11（現在は -12）を対象とし、draft-hardt-aauth-r3 を含まないと指摘した。彼の説明では R3 はリソースが作成する承認テキストを扱う。リソーストークンが r3_uri と r3_s256 を運び、取得できるのは PS と AS のみで、エージェントは敵対的とみなされ内容を見ない。呼び出しごとの提案は、承認を実際の呼び出しパラメータに単回利用で結び付ける。さらに、同じ AAuth という名前の2つのプロトコルは混乱を招くと述べ、aauth.dev のコミュニティと、OpenID Foundation で提案されている AAuth WG に言及した。結論は出ていない。",
+      "title": "New I-D on AAuth - a new OAuth grant flow for AI Agents",
+      "updated_at": "2026-11-02T06:12:16+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/tpSpJCZZOQMvlE_EC0q4DNsz0R4/",
+      "use_cases": [
+        "Deciding whether agent authorization should be an OAuth grant extension or a separate protocol",
+        "Binding a human approval to the exact parameters of an agent's call while hiding the resource's context from the agent"
+      ],
+      "use_cases_ja": [
+        "エージェント認可を OAuth のグラント拡張とするか、独立したプロトコルとするかを判断する場合",
+        "リソースの文脈をエージェントに見せずに、人間の承認をエージェントの呼び出しの正確なパラメータに結び付ける場合"
+      ]
     },
     "mail:yYnrgM51pZuvm6s8z1lmcv5tHEU": {
       "diagram": "",
@@ -742,16 +816,7 @@
       "use_cases_ja": []
     }
   },
-  "overflow": [
-    {
-      "title": "oauth-wg/oauth-spiffe-client-authentication#58: Update SPIFFE bundle endpoint authentication details",
-      "url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/58"
-    },
-    {
-      "title": "oauth-wg/oauth-spiffe-client-authentication#56: Enhance SPIFFE client authentication guidance",
-      "url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/56"
-    }
-  ],
+  "overflow": [],
   "triage": {
     "draft-ietf-oauth-deferred-token-response": {
       "date": "2026-11-01",
