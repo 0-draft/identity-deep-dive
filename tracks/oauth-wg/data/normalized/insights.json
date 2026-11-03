@@ -29,6 +29,11 @@
       "at": "2026-11-03T14:22:01+00:00",
       "text": "The sd-jwt-vc draft got a \"Ready\" result in its telechat ART-ART review, so the last-call issues look closed. The other mail is early-stage: a new AS metadata draft for requiring DPoP, agent-delegation implementation testing, and the Skyfire KYAPay and AMR drafts.",
       "text_ja": "draft-ietf-oauth-sd-jwt-vc はテレチャット向け ART-ART レビューで「Ready」となり、ラストコールの指摘事項は解消されたとみられる。その他は初期段階の議論で、DPoP 必須を示す認可サーバーメタデータの新規ドラフト、エージェント委任の実装検証、Skyfire の KYAPay と AMR の各ドラフトである。"
+    },
+    {
+      "at": "2026-11-03T23:27:50+00:00",
+      "text": "The SD-JWT VC IESG ballot is the main news: Mike Bishop's DISCUSS says the draft overrides RFC 7800 without an Updates tag, and the editor is leaning toward adding Updates: 7800. Separately, the AAT, asor and AAuth threads continue.",
+      "text_ja": "最も重要なのは SD-JWT VC の IESG 投票である。Mike Bishop の DISCUSS は、本ドラフトが Updates タグなしで RFC 7800 の要件を上書きしている点を指摘しており、エディターは Updates: 7800 の追加に前向きである。あわせて、AAT・asor・AAuth をめぐる議論も続いている。"
     }
   ],
   "items": {
@@ -284,6 +289,48 @@
         "AT Protocol の認可サーバーが DPoP バウンドトークンが必須であることを通知する場合。"
       ]
     },
+    "mail:37iXdAM1CHnz4IWePz63h7i5jBI": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "The AAT and asor authors disagree on del_max_depth: Niki wants to keep the cap a holder sets, and the vectors will be reconciled before IETF 127.",
+      "headline_ja": "AAT と asor の著者は del_max_depth の意味で食い違っており、Niki は保持者が設定する上限を維持したい考えで、IETF 127 までにテストベクターを調整する。",
+      "id": "mail:37iXdAM1CHnz4IWePz63h7i5jBI",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-asor-wimse-agent-delegation-chain",
+          "note": "Its del_max_depth semantics are the ones being reconciled with AAT.",
+          "note_ja": "その del_max_depth の意味が AAT と調整される対象になっている。",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "draft-sweeney-wimse-credential-delegation",
+          "note": "Kieran Sweeney's server-side delegation draft, which adopts the asor format for tokens verified away from the Delegation Server.",
+          "note_ja": "Kieran Sweeney によるサーバー側の委任ドラフトで、Delegation Server の外で検証されるトークンに asor の形式を採用している。",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "draft-hulea-wimse-agent-mandate",
+          "note": "Named as the third offline attenuation format with typed constraints.",
+          "note_ja": "型付き制約を持つ三つ目のオフライン属性絞り込み形式として挙げられている。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Three offline attenuation formats now use typed constraints, and the discussion is about a shared del_max_depth meaning. Kieran Sweeney notes that AAT's test vector J.10.f accepts a leaf at depth equal to the root maximum, while asor rejects it. Niki adds a second difference. If a holder delegates with a smaller del_max_depth, AAT caps everything below it, but asor checks only against the root's value. Niki wants the shared definition to keep that cap. Both sides agree each name gets one registry entry. They also agree on reconciling vectors, and Niki will add a case and prepare a constraint comparison before IETF 127. Kieran also asks for the AAT companion document to state a revocation-freshness bound. He frames budgets and revocation as complementary to a server in the call path. The message is truncated.",
+      "summary_ja": "オフラインで属性を絞り込む形式が、型付き制約を使うものだけで三つ存在し、議論は del_max_depth の共通の意味に及んでいる。Kieran Sweeney は、AAT のテストベクター J.10.f はルートの最大値と等しい深さのリーフを受理するが、asor は拒否すると指摘した。Niki はもう一つの違いを挙げた。保持者がより小さい del_max_depth で委任した場合、AAT はそれ以下すべてに上限を適用するが、asor はルートの値だけで検査する。Niki は共通定義でもこの上限を残すべきだとしている。双方とも、各名前のレジストリエントリは一つにすることで合意しており、ベクターの調整にも同意した。Niki はケースを追加し、IETF 127 までに制約の比較を用意する。Kieran はさらに、AAT の付随文書に失効状態の鮮度の上限を記載するよう求めた。また、予算管理と失効は呼び出し経路上のサーバーと補完関係にあるとしている。メッセージは途中で切れている。",
+      "title": "AAT -02 announcement",
+      "updated_at": "2026-11-03T23:27:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/37iXdAM1CHnz4IWePz63h7i5jBI/",
+      "use_cases": [
+        "An enforcement point accepting both AAT and asor chains would give different answers for a leaf at the root's maximum depth.",
+        "A holder that wants to limit sub-delegation below the root maximum needs the cap to be honoured by verifiers."
+      ],
+      "use_cases_ja": [
+        "AAT と asor の両方のチェーンを受け付ける enforcement point は、ルートの最大深さにあるリーフに対して異なる結果を返すことになる。",
+        "ルートの最大値よりさらに再委任を制限したい保持者には、検証者がその上限を守ることが必要である。"
+      ]
+    },
     "mail:43bHbkS7BIlDj3GsRotAmOFJCbU": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -300,6 +347,29 @@
       "url": "https://mailarchive.ietf.org/arch/msg/oauth/43bHbkS7BIlDj3GsRotAmOFJCbU/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:4HcuffVivoI7zlujPUWwVPff6y0": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "Mike Bishop's DISCUSS on sd-jwt-vc-23 asks why the RFC 7800 override has no Updates tag; the editor proposes adding Updates: 7800.",
+      "headline_ja": "Mike Bishop の DISCUSS は、sd-jwt-vc-23 が RFC 7800 を上書きしながら Updates タグがない点を問い、エディターは Updates: 7800 の追加を提案している。",
+      "id": "mail:4HcuffVivoI7zlujPUWwVPff6y0",
+      "kind": "mail",
+      "related": [],
+      "significance": "substantive",
+      "summary": "The single DISCUSS concerns Section 2.2.2.3. RFC 7800 requires a JWT with a cnf claim to also carry sub or iss, and the draft explicitly overrides that, yet it has no Updates tag. The editor says the note was added reluctantly and that most implementations already ignore the RFC 7800 rule. The editor offers to add Updates: 7800, and asks whether extra explanatory text is needed. The reply also answers the COMMENT items. It will reorder the Section 1.2 sentence, drop the MUST in 5.5.1.2.1, add an SVG reference, and rephrase the 7.6 MUST. It declines a distinct media type for the metadata documents and declines extra redirect wording in 4.3. PR #450 is where the edits are being made, but it has nothing for the DISCUSS yet. The message is truncated, so the nits are not covered.",
+      "summary_ja": "DISCUSS は 2.2.2.3 節に関する一件である。RFC 7800 は cnf クレームを含む JWT に sub または iss も含めることを要求するが、本ドラフトはこれを明示的に上書きしており、Updates タグがない。エディターは、この注記は不本意ながら追加したものであり、多くの実装は RFC 7800 のこの要件をすでに無視していると述べる。そのうえで Updates: 7800 の追加を提案し、説明文が必要かを尋ねている。COMMENT にも回答しており、1.2 節の文の並べ替え、5.5.1.2.1 節の MUST の削除、SVG への参照追加、7.6 節の MUST の言い換えを行うとしている。一方、メタデータ文書に専用のメディアタイプを設けること、および 4.3 節にリダイレクトに関する文言を追加することは見送る。修正は PR #450 で進めているが、DISCUSS への対応はまだ含まれていない。メッセージは途中で切れており、nit の部分は確認できない。",
+      "title": "Mike Bishop's Discuss on draft-ietf-oauth-sd-jwt-vc-23: (with DISCUSS and COMMENT)",
+      "updated_at": "2026-11-03T23:27:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/4HcuffVivoI7zlujPUWwVPff6y0/",
+      "use_cases": [
+        "An implementer issuing key-bound SD-JWT VCs without iss or sub needs to know whether the RFC 7800 relaxation is formally sanctioned.",
+        "A verifier library that enforces the RFC 7800 sub/iss rule may need to relax it for SD-JWT VC."
+      ],
+      "use_cases_ja": [
+        "iss も sub も持たない鍵バインド SD-JWT VC を発行する実装者は、RFC 7800 の緩和が正式に認められるかを知る必要がある。",
+        "RFC 7800 の sub/iss 規則を強制している検証ライブラリは、SD-JWT VC では緩和が必要になる可能性がある。"
+      ]
     },
     "mail:4L4EamXpvnEXs13ZL8dnPPj-YRc": {
       "diagram": "",
@@ -511,6 +581,29 @@
         "エージェントやサーバーのカードをキャッシュする MCP クライアントが、有効期限前に信頼を取り消す手段を必要とする場合。"
       ]
     },
+    "mail:DlT9Bri0n6Y7rDc75zQfBhB3e70": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "A new OAuth-grant proposal for AI agents (draft-rosenberg-oauth-aauth-02) collides in name with Dick Hardt's AAuth, which is moving to an OpenID WG.",
+      "headline_ja": "AI エージェント向けの OAuth グラント案 draft-rosenberg-oauth-aauth-02 が、OpenID の WG に移る Dick Hardt の AAuth と名称で衝突している。",
+      "id": "mail:DlT9Bri0n6Y7rDc75zQfBhB3e70",
+      "kind": "mail",
+      "related": [],
+      "significance": "new-proposal",
+      "summary": "Jonathan Rosenberg and Pat White submitted draft-rosenberg-oauth-aauth-02, an OAuth grant-flow approach to agent authorization. It follows interest at an interim meeting in a solution that is an OAuth extension rather than a new protocol. The draft includes a comparison with Dick Hardt's draft-hardt-oauth-aauth-protocol. Hardt replies that the comparison omits draft-hardt-aauth-r3, where the resource writes approval text. The resource token carries its r3_uri and r3_s256, and only the PS and AS can fetch the document. He treats the agent as adversarial, and he says two protocols named AAuth will confuse people. A follow-up says the proposal for an AAuth WG at the OpenID Foundation was accepted last Friday. The draft text itself is not in the material.",
+      "summary_ja": "Jonathan Rosenberg と Pat White は、エージェント認可への OAuth グラントフロー方式として draft-rosenberg-oauth-aauth-02 を提出した。これは、新規プロトコルではなく OAuth 拡張で実現する解への関心が中間会合で示されたことを受けたものである。ドラフトには Dick Hardt の draft-hardt-oauth-aauth-protocol との比較が含まれる。Hardt は、この比較にはリソースが承認用テキストを書く draft-hardt-aauth-r3 が含まれていないと指摘した。リソーストークンは r3_uri と r3_s256 を持ち、取得できるのは PS と AS だけである。エージェントは敵対的とみなす設計であり、AAuth という名称のプロトコルが二つあると混乱を招くとも述べている。続報によれば、OpenID Foundation での AAuth WG の提案は先週の金曜日に承認された。ドラフト本文は資料に含まれていない。",
+      "title": "New I-D on AAuth - a new OAuth grant flow for AI Agents",
+      "updated_at": "2026-11-03T23:27:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/DlT9Bri0n6Y7rDc75zQfBhB3e70/",
+      "use_cases": [
+        "A team choosing between extending OAuth with a grant type and adopting a separate agent-authorization protocol would compare these two AAuth proposals.",
+        "An authorization server vendor deciding whether to track the OpenID AAuth WG or the OAuth WG for agent flows."
+      ],
+      "use_cases_ja": [
+        "グラントタイプで OAuth を拡張するか、別のエージェント認可プロトコルを採用するかを検討するチームは、この二つの AAuth 案を比較することになる。",
+        "エージェント向けフローについて OpenID の AAuth WG と OAuth WG のどちらを追うか決める認可サーバーのベンダーが該当する。"
+      ]
+    },
     "mail:EN-CEPT0fCmAvHElXbqyTeiQO9M": {
       "diagram": "sequenceDiagram\nparticipant R as Agent registry\nparticipant A as Agent\nparticipant V as Verifier\nR->>A: SD-JWT VC with agent metadata\nA->>V: Selected disclosures plus key possession proof\nV->>V: Check registry attestation and proof",
       "first_seen": "2026-11-02",
@@ -717,6 +810,27 @@
         "DPoP やトークン要件のメタデータによる通知に関する IETF 127 のセッションを選ぶ場合。"
       ]
     },
+    "mail:N7UVvD7olY2CRvYjtZmOxVqRx84": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "Roman Danyliw balloted No Objection on sd-jwt-vc-23, backing Bishop's DISCUSS and a clarification on iss with x5c.",
+      "headline_ja": "Roman Danyliw は sd-jwt-vc-23 に No Objection を投じ、Bishop の DISCUSS と、iss と x5c を併用する場合の明確化要求を支持した。",
+      "id": "mail:N7UVvD7olY2CRvYjtZmOxVqRx84",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Roman Danyliw's position is No Objection, with a COMMENT. It thanks the GENART reviewer, supports Mike Bishop's DISCUSS, and endorses Mahesh Jethanandani's point that the draft needs to be clearer when both iss and x5c are present on an HTTPS connection. The editor replied that they will work through Mike's DISCUSS and Mahesh's comments in their own threads. Mahesh's original comment is not in this material.",
+      "summary_ja": "Roman Danyliw の投票は COMMENT 付きの No Objection である。GENART レビュアーに謝意を示し、Mike Bishop の DISCUSS を支持するとともに、HTTPS 接続で iss と x5c の両方がある場合に明確化が必要だという Mahesh Jethanandani の指摘に賛同している。エディターは、Mike の DISCUSS と Mahesh のコメントは各スレッドで対応すると返信した。Mahesh の元のコメントは本資料には含まれていない。",
+      "title": "Roman Danyliw's No Objection on draft-ietf-oauth-sd-jwt-vc-23: (with COMMENT) (2 new messages)",
+      "updated_at": "2026-11-03T23:27:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/N7UVvD7olY2CRvYjtZmOxVqRx84/",
+      "use_cases": [
+        "A verifier that receives an SD-JWT VC whose issuer is identified both by an HTTPS iss and an x5c chain needs guidance on which one governs trust."
+      ],
+      "use_cases_ja": [
+        "発行者が HTTPS の iss と x5c 証明書チェーンの両方で示される SD-JWT VC を受け取る検証者は、どちらを信頼の根拠とするかの指針を必要とする。"
+      ]
+    },
     "mail:NphFqty5NRjMoX6x3IEW5gVsR5s": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -871,6 +985,36 @@
       ],
       "use_cases_ja": [
         "sub も iss も持たない鍵バウンドの SD-JWT VC を実装する場合、上書きが維持されるのか、Updates: 関係が付くのかを注視する必要がある。"
+      ]
+    },
+    "mail:dh5UWFQUjXkDtKzo7SrFUNArxZo": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "An independent AAT verifier report prompts the author to say how -03 will settle ten ambiguities, including shared-key issuers and absolute-URI checks.",
+      "headline_ja": "独立した AAT 検証実装の報告を受け、著者は -03 で 10 件の曖昧点（共有鍵の発行者、absolute-URI の検査など）をどう扱うかを説明した。",
+      "id": "mail:dh5UWFQUjXkDtKzo7SrFUNArxZo",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-asor-wimse-agent-delegation-chain",
+          "note": "The report subject is shared with this draft, whose chain semantics are compared against AAT.",
+          "note_ja": "報告の対象はこのドラフトと共通であり、そのチェーンの意味論が AAT と比較されている。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Azat Davliatshin's implementation report on attenuating agent tokens (AAT) lists findings C1 to C10. Niki Niyikiza replies with the intended reading for several. Duplicate header members should be rejected. aat_aud is a single string. A root signed by a key shared between two anchors passes under either issuer, because the enforcement point trusts the key. C8 means a well-formed public key under its kty rules, and C10 means an RFC 3986 absolute-URI. Niki plans to address all ten in -03 and to add test cases for shared keys or issuers. Azat agrees to tighten the C10 check, which currently accepts fragments. Songbo Bu contributed seven C6 regression cases that pass unchanged.",
+      "summary_ja": "Azat Davliatshin の attenuating agent tokens（AAT）の実装報告は、C1〜C10 の指摘を挙げている。Niki Niyikiza は複数の項目について意図した解釈を返答した。重複したヘッダーメンバーは拒否する。aat_aud は単一の文字列である。二つのアンカーが共有する鍵で署名されたルートは、どちらの発行者名でも通る。これは enforcement point が信頼するのは鍵だからである。C8 は kty の規則に従った整形式の公開鍵、C10 は RFC 3986 の absolute-URI を意味する。Niki は -03 で 10 件すべてに対応し、鍵や発行者を共有するケースのテストを追加する予定である。Azat は、現在フラグメントを許してしまう C10 の検査を厳格化することに同意した。Songbo Bu は C6 の回帰テスト 7 件を提供し、いずれも検証系を変更せずに通った。",
+      "title": "Implementation report: attenuating delegation chains for agents (draft-niyikiza-oauth-attenuating-agent-tokens, draft-asor-wimse-agent-delegation-chain) (2 new messages)",
+      "updated_at": "2026-11-03T23:27:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/dh5UWFQUjXkDtKzo7SrFUNArxZo/",
+      "use_cases": [
+        "An AAT verifier author needs to know that trust is anchored on the key, so rotating or sharing keys across issuer names changes acceptance.",
+        "Someone writing interoperable test vectors for delegation chains can use the C1 to C10 readings as the reference."
+      ],
+      "use_cases_ja": [
+        "AAT の検証実装者は、信頼の拠り所が鍵であり、発行者名をまたぐ鍵の共有やローテーションが受理結果に影響することを知る必要がある。",
+        "委任チェーンの相互運用テストベクターを書く者は、C1〜C10 の解釈を参照にできる。"
       ]
     },
     "mail:e6VAhZh7tZdVLRYZ-fRwxQKe63Y": {
@@ -1214,6 +1358,23 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "pr:oauth-wg/oauth-sd-jwt-vc#450": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "Draft PR #450 collects the edits responding to Mike Bishop's ballot; it has no content yet.",
+      "headline_ja": "PR #450 は Mike Bishop の投票への対応修正をまとめるドラフト PR だが、まだ内容はない。",
+      "id": "pr:oauth-wg/oauth-sd-jwt-vc#450",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "routine",
+      "summary": "The PR body only says it is a work in progress for Bishop's ballot and links the mailing-list message. The editor's reply says it will carry the agreed COMMENT changes but nothing for the DISCUSS yet. There is no diff in the material.",
+      "summary_ja": "PR の本文は、Bishop の投票に対する作業中の PR であると述べ、メーリングリストのメッセージへのリンクを示すだけである。エディターの返信によれば、合意済みの COMMENT への対応は含めるが、DISCUSS への対応はまだない。資料に差分は含まれていない。",
+      "title": "oauth-wg/oauth-sd-jwt-vc#450: Mike Bishop's ballot ",
+      "updated_at": "2026-11-03T23:27:50+00:00",
+      "url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/450",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "pr:oauth-wg/oauth-spiffe-client-authentication#57": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -1452,8 +1613,8 @@
     "draft-ietf-oauth-sd-jwt-vc": {
       "date": "2026-11-03",
       "priority": "high",
-      "reason": "The ART-ART telechat review returned Ready, so it is moving toward publication.",
-      "reason_ja": "ART-ART のテレチャット向けレビューが Ready となり、公開に向けて進んでいる。"
+      "reason": "It is in IESG review with an open DISCUSS (RFC 7800 override, possible Updates tag) and an active PR #450.",
+      "reason_ja": "IESG レビュー中で、未解決の DISCUSS（RFC 7800 の上書きと Updates タグの可能性）があり、PR #450 も進行中である。"
     },
     "draft-ietf-oauth-spiffe-client-auth": {
       "date": "2026-11-03",
