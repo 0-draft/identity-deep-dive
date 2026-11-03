@@ -24,6 +24,11 @@
       "at": "2026-11-03T01:02:39+00:00",
       "text": "The largest change is draft-ietf-oauth-client-id-metadata-document-03, which adds a normative client authentication section, a ban on a bare \"/\" path, mandatory iss in authorization responses, and rules for failed metadata fetches. SPIFFE client auth -03 makes client_id optional and ties its client identification to CIMD. sd-jwt-vc is in IESG review, with a DISCUSS over overriding RFC 7800.",
       "text_ja": "最大の動きは draft-ietf-oauth-client-id-metadata-document-03 で、クライアント認証の規範的な節、\"/\" のみのパスの禁止、認可レスポンスでの iss 必須化、メタデータ取得失敗時の規則が加わった。SPIFFE クライアント認証 -03 は client_id を任意とし、クライアント識別を CIMD と結び付けた。sd-jwt-vc は IESG 審査中で、RFC 7800 の上書きをめぐる DISCUSS が出ている。"
+    },
+    {
+      "at": "2026-11-03T14:22:01+00:00",
+      "text": "The sd-jwt-vc draft got a \"Ready\" result in its telechat ART-ART review, so the last-call issues look closed. The other mail is early-stage: a new AS metadata draft for requiring DPoP, agent-delegation implementation testing, and the Skyfire KYAPay and AMR drafts.",
+      "text_ja": "draft-ietf-oauth-sd-jwt-vc はテレチャット向け ART-ART レビューで「Ready」となり、ラストコールの指摘事項は解消されたとみられる。その他は初期段階の議論で、DPoP 必須を示す認可サーバーメタデータの新規ドラフト、エージェント委任の実装検証、Skyfire の KYAPay と AMR の各ドラフトである。"
     }
   ],
   "items": {
@@ -485,6 +490,27 @@
         "SD-JWT VC の上にエージェントマンデートを構築するチームは、新しいチェーン形式を考案するのではなく Delegate SD-JWT に合わせられる。"
       ]
     },
+    "mail:Dc4KhXLL8vR_5TULfqjlOnqLHVE": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "A commenter says the new Agent SD-Card draft lacks a revocation or status mechanism and asks whether that is intentional.",
+      "headline_ja": "新規の Agent SD-Card ドラフトには失効・ステータスの仕組みがないとして、意図的かどうかを問うコメントが寄せられた。",
+      "id": "mail:Dc4KhXLL8vR_5TULfqjlOnqLHVE",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Ben Le replies to the authors of draft-nandakumar-agent-sd-card-00. He cites his daily scan of the public MCP ecosystem, which found 1,509 listing swaps among 54,513 servers on Nov 1, and says the draft's section 8.2.5 consistency rules are the first client-side mechanism aimed at that. He positions his own draft-le-agent-passport-00 as call-time and SD-Card as the discovery-time complement. He asks whether the absence of a status or revocation mechanism is deliberate, since cards can be long-lived and expiry seems the only kill switch if a key is compromised or metadata is withdrawn.",
+      "summary_ja": "Ben Le が draft-nandakumar-agent-sd-card-00 の著者に返信した。公開 MCP エコシステムの日次スキャンで、11 月 1 日に 54,513 サーバー中 1,509 件のリスティング差し替えを確認したと述べ、ドラフトの 8.2.5 節の一貫性ルールをこれに対処する初のクライアント側機構と評価している。自身の draft-le-agent-passport-00 を呼び出し時、SD-Card を発見時の補完として位置付ける。カードは長期間有効になり得るため、鍵の侵害やメタデータ撤回時に有効期限しか無効化手段がないように見えるとして、ステータスや失効の仕組みがないのは意図的かを質問している。",
+      "title": "Agent SD-Card (draft-nandakumar-agent-sd-card-00)",
+      "updated_at": "2026-11-03T14:22:01+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/Dc4KhXLL8vR_5TULfqjlOnqLHVE/",
+      "use_cases": [
+        "An MCP client that caches agent or server cards wants a way to stop trusting a card before it expires."
+      ],
+      "use_cases_ja": [
+        "エージェントやサーバーのカードをキャッシュする MCP クライアントが、有効期限前に信頼を取り消す手段を必要とする場合。"
+      ]
+    },
     "mail:EN-CEPT0fCmAvHElXbqyTeiQO9M": {
       "diagram": "sequenceDiagram\nparticipant R as Agent registry\nparticipant A as Agent\nparticipant V as Verifier\nR->>A: SD-JWT VC with agent metadata\nA->>V: Selected disclosures plus key possession proof\nV->>V: Check registry attestation and proof",
       "first_seen": "2026-11-02",
@@ -506,6 +532,36 @@
       "use_cases_ja": [
         "エージェントレジストリが、相手ごとに異なる項目を開示できる署名付きエージェント記述を発行する場合",
         "A2A Agent Card の提示者が、記述されたエージェントの鍵を保持していることを検証者が確認する場合"
+      ]
+    },
+    "mail:ErCXP-rcCdgqItxWPj_7QxUCOHs": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "An implementer and an outside tester are adding regression tests for an unclarified issuer/key anchor case (C6) in an agent-token delegation verifier.",
+      "headline_ja": "エージェントトークン委任の検証器で、仕様が未確定の発行者・鍵アンカーの扱い（C6）について、実装者と外部の検証者が回帰テストを追加している。",
+      "id": "mail:ErCXP-rcCdgqItxWPj_7QxUCOHs",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-asor-wimse-agent-delegation-chain",
+          "note": "The thread's subject line names this draft alongside draft-niyikiza-oauth-attenuating-agent-tokens as the implementation report's target.",
+          "note_ja": "件名で、実装報告の対象として draft-niyikiza-oauth-attenuating-agent-tokens とともに挙げられている。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Songbo Bu reran Azat Davliatshin's verifier (commit d813114) against the AAT-02 corpus: all 229 vectors agree. He also added seven C6 tests on issuer/key pairs, such as a shared key under two issuer names, wrong-issuer and wrong-key controls, key rotation order, and a negative control where issuer and key sit in different anchor records, which is denied rather than combined. Azat reproduced 13/13 and identical results and asked for a pull request to github.com/azatdavliatshin/aat. He notes the draft authors do not yet know about C6. He plans to file an issue on tenuo-ai/tenuo, and until they answer, the tests record this implementation's interpretation.",
+      "summary_ja": "Songbo Bu が Azat Davliatshin の検証器（コミット d813114）を AAT-02 コーパスで再実行し、229 件のベクターすべてが一致した。さらに発行者と鍵のペアに関する C6 テストを七件追加した。一つの鍵を二つの発行者名で共有する場合、誤った発行者・誤った鍵の対照、鍵ローテーションの順序、発行者と鍵が別々のアンカーレコードにある場合の否定的対照（結合せず拒否される）を含む。Azat は 13/13 と同一の結果を再現し、github.com/azatdavliatshin/aat へのプルリクエストを依頼した。ドラフト著者はまだ C6 を把握していないため、tenuo-ai/tenuo に issue を立てる予定であり、回答が出るまではテストはこの実装の解釈を記録するものである。",
+      "title": "Implementation report: attenuating delegation chains for agents (draft-niyikiza-oauth-attenuating-agent-tokens, draft-asor-wimse-agent-delegation-chain) (2 new messages)",
+      "updated_at": "2026-11-03T14:22:01+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/ErCXP-rcCdgqItxWPj_7QxUCOHs/",
+      "use_cases": [
+        "Someone implementing a verifier for attenuating delegation chains can reuse the corpus and C6 cases to check how anchors are matched against issuer and key.",
+        "A draft author reading the C6 report learns of an ambiguity in how trust anchors bind an issuer to a key."
+      ],
+      "use_cases_ja": [
+        "減衰型委任チェーンの検証器を実装する際、コーパスと C6 ケースでアンカーと発行者・鍵の照合方法を確認できる。",
+        "ドラフト著者は、トラストアンカーが発行者と鍵をどう結び付けるかに曖昧さがあることを把握できる。"
       ]
     },
     "mail:IDo5i8W0qxEgmmAZB5ITc0k0apw": {
@@ -548,6 +604,27 @@
       "url": "https://mailarchive.ietf.org/arch/msg/oauth/IS0jLWoohK789pk78DCfEndMEA0/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:JV5gcUNjiOMAwDbLU5dwZLIUb-4": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "The AMR values draft moves to -03 with narrower values, while structured amr_details is tracked in a GitHub issue.",
+      "headline_ja": "AMR 値のドラフトが -03 に更新されて値が絞り込まれ、構造化された amr_details は GitHub の issue で扱われることになった。",
+      "id": "mail:JV5gcUNjiOMAwDbLU5dwZLIUb-4",
+      "kind": "mail",
+      "related": [],
+      "significance": "substantive",
+      "summary": "Ankit Agarwal says discussion of `amr_details` and alignment with OpenID4AC moves to issue #11 of draft-skyfire-oauth-amr-values. Draft -03 keeps `amr` a flat array. It narrows broad values: `sna` is separate from `bg`, and `email` names only the channel. It also adds a section and appendices showing how values compose. The thread shows participants arguing that `amr` cannot express relationships between methods, for example that an OTP was delivered by email, and Frederik Krogsdal Jacobsen adds earlier OpenID4AC feedback and IIW notes. Karl McGuinness had pointed to the OIDC4AC `amr_details` object as overlapping work.",
+      "summary_ja": "Ankit Agarwal は、`amr_details` と OpenID4AC との整合に関する議論を draft-skyfire-oauth-amr-values の issue #11 に移すと述べた。-03 では `amr` を平坦な配列のまま維持し、広すぎる値を絞り込んでいる。`sna` は `bg` から分離され、`email` はチャネルのみを表し、値の組み合わせ方を示す節と付録が追加された。スレッドでは、`amr` が方式間の関係（たとえば OTP がメールで配送されたこと）を表現できない点が議論され、Frederik Krogsdal Jacobsen は OpenID4AC への過去のフィードバックと IIW の記録を補足した。Karl McGuinness は重複する作業として OIDC4AC の `amr_details` オブジェクトを挙げていた。",
+      "title": "Review of draft-skyfire-oauth-amr-values",
+      "updated_at": "2026-11-03T14:22:01+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/JV5gcUNjiOMAwDbLU5dwZLIUb-4/",
+      "use_cases": [
+        "A relying party that consumes `amr` and needs to distinguish carrier-assisted phone verification from other background checks can use a separate `sna` value."
+      ],
+      "use_cases_ja": [
+        "`amr` を利用する依存当事者が、通信事業者支援による電話番号確認を他のバックグラウンド確認と区別したい場合、独立した `sna` 値を使える。"
+      ]
     },
     "mail:JVPELSKXNkSfFl8ghAjmH4SI5og": {
       "diagram": "",
@@ -735,6 +812,29 @@
         "ドラフト著者は、ProVerif モデルを使って2つのチェーン構造の保証を比較できる。"
       ]
     },
+    "mail:TGBWSzLrANvmjaoIotgAG7ZbS-8": {
+      "diagram": "sequenceDiagram\nparticipant C as Client\nparticipant AS as Authorization Server\nC->>AS: GET RFC 8414 metadata\nAS-->>C: dpop_bound_access_tokens_required true\nC->>AS: Token request with DPoP proof\nAS-->>C: DPoP-bound access token",
+      "first_seen": "2026-11-03",
+      "headline": "A new individual draft would let an authorization server advertise that it requires DPoP-bound access tokens, and a reviewer supports adoption.",
+      "headline_ja": "認可サーバーが DPoP バインドのアクセストークンを必須とすることをメタデータで示す新規ドラフトが提案され、レビュアーは採択を支持した。",
+      "id": "mail:TGBWSzLrANvmjaoIotgAG7ZbS-8",
+      "kind": "mail",
+      "related": [],
+      "significance": "new-proposal",
+      "summary": "Emelia Smith posted draft-emelia-oauth-as-metadata-dpop-required, which adds a `dpop_bound_access_tokens_required` parameter to RFC 8414 authorization server metadata. It came out of feedback on the client-id-metadata-document draft: today an AS cannot tell clients it always requires DPoP, and only resource-server-level signalling exists. Frederik Krogsdal Jacobsen supports adoption and says his company already has a proprietary equivalent. He raises three minor points. The wording about the client-side `dpop_bound_access_tokens` metadata mixes two different sources of requirements, and he points to an earlier proposal from Nick. EdDSA in the example is deprecated in the registry, so he suggests ML-DSA-44. The claim that a non-DPoP resource server will reject such requests may not hold, since a poor implementation could ignore the DPoP header.",
+      "summary_ja": "Emelia Smith が draft-emelia-oauth-as-metadata-dpop-required を投稿した。RFC 8414 の認可サーバーメタデータに `dpop_bound_access_tokens_required` パラメーターを追加する提案である。client-id-metadata-document ドラフトへのフィードバックが発端で、現状では認可サーバーが常に DPoP を要求することをクライアントに示す手段がなく、リソースサーバー側での通知しかない。Frederik Krogsdal Jacobsen は採択を支持し、自社に同等の独自機構があると述べた。軽微な指摘は三点ある。クライアント側メタデータ `dpop_bound_access_tokens` に関する記述は要件の出所が異なるため不自然であり、Nick の過去の提案を参照している。例中の EdDSA はレジストリで非推奨のため ML-DSA-44 などが望ましい。DPoP 非対応のリソースサーバーが必ず拒否するとは限らず、DPoP ヘッダーを無視する実装もあり得る。",
+      "title": "New Draft: OAuth Authorization Server Metadata Parameter for Requiring DPoP",
+      "updated_at": "2026-11-03T14:22:01+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/TGBWSzLrANvmjaoIotgAG7ZbS-8/",
+      "use_cases": [
+        "A client talking to an AS that mandates DPoP can learn this from metadata before requesting a token, instead of failing at the token endpoint.",
+        "A deployment using client ID metadata documents wants the AS to state its DPoP requirement up front."
+      ],
+      "use_cases_ja": [
+        "DPoP を必須とする認可サーバーに対し、クライアントはトークン要求の失敗を待たず、メタデータから事前に要件を把握できる。",
+        "クライアント ID メタデータドキュメントを使う環境で、認可サーバーが DPoP 要件を事前に明示できる。"
+      ]
+    },
     "mail:Zuab1PpQZx_nWOimouWjczGiYOI": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -867,6 +967,46 @@
         "サブツリー全体で総有効期間やサブ委任の数に上限を設ける必要があるマルチエージェント環境。",
         "DS から離れてトークンを検証するリソースサーバーが、失効後のトークンがどの程度の間受理され得るかを知る必要がある場合。"
       ]
+    },
+    "mail:q04QT1JhFmAAhDa__I840MmA7CE": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "The Skyfire authors answer a security review of the KYAPay drafts with new revisions, including a REQUIRED tsi claim.",
+      "headline_ja": "Skyfire の著者が KYAPay ドラフトのセキュリティレビューに対し、tsi を必須とする変更を含む改訂版で応答した。",
+      "id": "mail:q04QT1JhFmAAhDa__I840MmA7CE",
+      "kind": "mail",
+      "related": [],
+      "significance": "substantive",
+      "summary": "Ankit Agarwal says Bhasker Allam's review is reflected in KYAPay Token -03 and Using KYAPay Tokens -02, with GitHub issue #8 mapping each point to a pull request. One change goes beyond the review: in the Token draft, `aud` now identifies the combination of identities the issuer holds for the Target, and `tsi` becomes REQUIRED. Onboarded recipients check `aud` and `tsi`, while other recipients check `tdm`, the Target's host. The quoted review raised that the signed but unencrypted JWT carries personal and payment data, that bot managers should not admit requests without challenge regardless of assurance, and that the token does not say which account it is for. The review text is truncated, so its remaining points are not covered here.",
+      "summary_ja": "Ankit Agarwal は、Bhasker Allam のレビューが KYAPay Token -03 と Using KYAPay Tokens -02 に反映されたと報告し、GitHub の issue #8 が各指摘と対応するプルリクエストを対応付けている。レビューの範囲を超える変更として、Token ドラフトでは `aud` が発行者の保有する Target 向け識別情報の組み合わせを表し、`tsi` が REQUIRED になった。オンボード済みの受信者は `aud` と `tsi` を検査し、それ以外の受信者は Target のホストを示す `tdm` を検査する。引用されたレビューでは、署名のみで暗号化されない JWT が個人情報と決済情報を含むこと、保証レベルに関係なくボットマネージャーがチャレンジなしに通すべきでないこと、トークンがどのアカウント向けかを示さないことが指摘されていた。レビュー本文は途中で切れており、残りの指摘は扱っていない。",
+      "title": "Review of draft-skyfire-oauth-using-kyapay-tokens-01",
+      "updated_at": "2026-11-03T14:22:01+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/q04QT1JhFmAAhDa__I840MmA7CE/",
+      "use_cases": [
+        "A bot manager or CDN deciding whether to admit agent traffic bearing a KYAPay token needs to know which claims to check.",
+        "A service that has not onboarded with the issuer must rely on `tdm` rather than `aud` and `tsi`."
+      ],
+      "use_cases_ja": [
+        "KYAPay トークンを持つエージェントのトラフィックを通すか判断するボットマネージャーや CDN は、どのクレームを検査すべきかを把握する必要がある。",
+        "発行者にオンボードしていないサービスは、`aud` と `tsi` ではなく `tdm` に頼ることになる。"
+      ]
+    },
+    "mail:rShUO7YVi2WyKSxydiyWt5eonUc": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "The ART-ART reviewer rates draft-ietf-oauth-sd-jwt-vc-23 Ready for publication.",
+      "headline_ja": "ART-ART レビュアーが draft-ietf-oauth-sd-jwt-vc-23 を公開可能（Ready）と評価した。",
+      "id": "mail:rShUO7YVi2WyKSxydiyWt5eonUc",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "Christian Amsüss's telechat review of draft-ietf-oauth-sd-jwt-vc-23 returns the result \"Ready\". He says the document addressed all previously raised last-call issues well and is ready for publication. No text change or technical argument is included.",
+      "summary_ja": "Christian Amsüss による draft-ietf-oauth-sd-jwt-vc-23 のテレチャット向けレビューの結果は「Ready」である。ラストコールで指摘された事項はすべて適切に対処されており、公開可能との意見である。仕様文面の変更や技術的な議論は含まれない。",
+      "title": "draft-ietf-oauth-sd-jwt-vc-23 telechat Artart review",
+      "updated_at": "2026-11-03T14:22:01+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/rShUO7YVi2WyKSxydiyWt5eonUc/",
+      "use_cases": [],
+      "use_cases_ja": []
     },
     "mail:tQiCKnQA7RucSiXodCME9eVFuIc": {
       "diagram": "",
@@ -1289,9 +1429,9 @@
   "triage": {
     "draft-ietf-oauth-client-id-metadata-document": {
       "date": "2026-11-03",
-      "priority": "high",
-      "reason": "-03 adds a normative client authentication section, iss in responses, fetch failure rules and three merged PRs.",
-      "reason_ja": "-03 でクライアント認証の規範的な節、レスポンスでの iss、取得失敗時の規則が加わり、3 件の PR も取り込まれた。"
+      "priority": "low",
+      "reason": "It is only mentioned as the origin of the new DPoP-required metadata draft, with no change to the draft itself.",
+      "reason_ja": "DPoP 必須メタデータの新規ドラフトの発端として言及されただけで、ドラフト自体の変更はない。"
     },
     "draft-ietf-oauth-deferred-token-response": {
       "date": "2026-11-01",
@@ -1312,8 +1452,8 @@
     "draft-ietf-oauth-sd-jwt-vc": {
       "date": "2026-11-03",
       "priority": "high",
-      "reason": "IESG ballot has a DISCUSS (RFC 7800 override, no Updates: tag) and a supporting No Objection with SSRF and x5c comments.",
-      "reason_ja": "IESG 投票で、RFC 7800 の上書き（Updates: 表記なし）をめぐる DISCUSS と、それを支持し SSRF と x5c にも触れる No Objection が出ている。"
+      "reason": "The ART-ART telechat review returned Ready, so it is moving toward publication.",
+      "reason_ja": "ART-ART のテレチャット向けレビューが Ready となり、公開に向けて進んでいる。"
     },
     "draft-ietf-oauth-spiffe-client-auth": {
       "date": "2026-11-03",
