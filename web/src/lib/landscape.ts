@@ -116,7 +116,7 @@ export const STATUS_GROUP_LABEL: Record<StatusGroup, Record<Lang, string>> = {
   rfc: { en: "IETF RFC", ja: "IETF RFC" },
   near: { en: "IETF, with the IESG or RFC Editor", ja: "IETF、IESG 審査中または RFC Editor 待ち" },
   draft: { en: "IETF working-group draft", ja: "IETF WG ドラフト" },
-  "draft-inactive": { en: "IETF individual or expired draft", ja: "IETF 個人ドラフト・失効ドラフト" },
+  "draft-inactive": { en: "IETF individual, or no longer active, draft", ja: "IETF 個人ドラフト・失効などで止まったドラフト" },
   "openid-final": { en: "OpenID Final", ja: "OpenID Final" },
   "openid-draft": { en: "OpenID draft", ja: "OpenID ドラフト" },
   other: { en: "Other body", ja: "その他の団体" },
@@ -129,7 +129,7 @@ export const STAGE_DETAIL: Record<string, Record<Lang, string>> = {
   wglc: { en: "WG last call or write-up", ja: "WG ラストコール・取りまとめ" },
   wg: { en: "Working-group draft", ja: "WG ドラフト" },
   individual: { en: "Individual draft, not adopted by a WG", ja: "個人ドラフト（WG 未採択）" },
-  expired: { en: "Expired draft", ja: "失効したドラフト" },
+  expired: { en: "Expired, replaced or withdrawn draft", ja: "失効・置き換え・取り下げ済みのドラフト" },
   external: { en: "Outside the IETF and OpenID", ja: "IETF・OpenID 以外" },
   unknown: { en: "Status unknown", ja: "状態不明" },
 };
@@ -142,6 +142,14 @@ export const RELATION_LABEL: Record<RelationKind, Record<Lang, string>> = {
   alternative: { en: "Alternative to", ja: "代替" },
   complements: { en: "Works with", ja: "組み合わせ" },
 };
+
+/** "Replaces" from a spec that is not yet published is only an intent. */
+export function relationLabel(from: Spec, kind: RelationKind, lang: Lang): string {
+  if (kind === "replaces" && from.status.stage !== "rfc" && from.status.stage !== "openid-final") {
+    return { en: "Would replace", ja: "置き換え予定" }[lang];
+  }
+  return RELATION_LABEL[kind][lang];
+}
 
 export const KIND_LABEL: Record<string, Record<Lang, string>> = {
   idp: { en: "Identity provider", ja: "IdP" },
