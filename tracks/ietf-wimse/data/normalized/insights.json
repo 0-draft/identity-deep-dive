@@ -33,6 +33,11 @@
       "at": "2026-11-03T14:22:01+00:00",
       "text": "Wes Jackson settled on an \"at-or-past expiry\" rule (a permit is refused at exp, as in RFC 7519) for draft-jackson-wimse-evaluation, and the AIMS example vectors will change to match. The other two messages are an implementation test report and an off-topic pointer to an Independent Submission draft.",
       "text_ja": "Wes Jacksonは、draft-jackson-wimse-evaluation で「有効期限の時点以降は拒否する」規則（RFC 7519 と同様）を採用する方針を示し、AIMS の例示ベクターもそれに合わせて変更される。他の2件は実装テストの報告と、Independent Submission ドラフトへの言及である。"
+    },
+    {
+      "at": "2026-11-03T23:27:50+00:00",
+      "text": "The most substantive thread is AAT vs. draft-asor-wimse-agent-delegation-chain: they disagree on del_max_depth semantics (an off-by-one at the leaf, plus whether a holder's lower cap binds descendants), and the authors plan to reconcile test vectors before IETF 127. The chairs also issued guidance on AI-generated contributions and published the 18 Nov agenda.",
+      "text_ja": "最も重要なのは AAT と draft-asor-wimse-agent-delegation-chain の間の del_max_depth の意味の食い違い（リーフでの1ホップの差と、保持者が設定した下位の上限が子孫を拘束するか否か）であり、著者らは IETF 127 までにテストベクターの整合を図る予定である。また、議長が AI 生成コンテンツに関する指針を出し、11月18日のアジェンダも公開された。"
     }
   ],
   "items": {
@@ -468,6 +473,23 @@
         "MCP ツール出力経由の間接プロンプトインジェクションを懸念するエージェント基盤は、ツール呼び出しが信頼できる意図に由来することの証拠を求める。"
       ]
     },
+    "mail:Gkclut9IkiXtsXyeDRINOjXYDOY": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "The WIMSE chairs ask participants to vet AI-assisted content and warn they may restrict posting privileges for automated noise.",
+      "headline_ja": "WIMSE の議長が、AI 支援による投稿は自ら検証するよう求め、自動生成による妨害が続く場合は投稿権限を制限する可能性があると警告した",
+      "id": "mail:Gkclut9IkiXtsXyeDRINOjXYDOY",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The chairs say AI use for grammar, clarity or as a sounding board is fine, but participants must be able to explain, defend and take responsibility for what they submit. They object to large volumes of unvetted AI-generated text on the list and in drafts. If it continues, they may restrict posting privileges of participants whose automated content disrupts the group. No technical content changed.",
+      "summary_ja": "議長は、文法や明瞭さの改善、考えを整理する相手としての AI 利用は問題ないとしつつ、参加者は投稿内容を説明し、擁護し、責任を負えなければならないとしている。メーリングリストやドラフトでの、検証されない大量の AI 生成文書を問題視している。この傾向が続く場合、自動生成コンテンツでグループの作業を妨げる参加者の投稿権限を制限する可能性がある。技術的な内容の変更はない。",
+      "title": "Guidelines for AI-Assisted Contributions to the WIMSE WG",
+      "updated_at": "2026-11-03T23:27:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/Gkclut9IkiXtsXyeDRINOjXYDOY/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "mail:Hrs5zoD0NhilOMFW0vi2CEWd-8g": {
       "diagram": "",
       "first_seen": "2026-11-02",
@@ -521,6 +543,29 @@
         "マルチエージェントのハンドオフで、チェーンの完全性を保つためにホップ連鎖型の署名付きオファーと集約署名のどちらを選ぶか検討する場面。"
       ]
     },
+    "mail:Jc2dw6mvquzlcq1_HdTxmdtu99g": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "Three delegation drafts' authors agree trust-anchor provenance is outside the chain format; AAT lacks a post-quantum cutoff rule.",
+      "headline_ja": "三つの委任ドラフトの著者が、トラストアンカーの出所は委任チェーン形式の範囲外であることで一致し、AAT にはポスト量子の切替時期の規定がないと指摘された",
+      "id": "mail:Jc2dw6mvquzlcq1_HdTxmdtu99g",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Uppalapati notes that draft-asor, their own draft and AAT each treat how a verifier came to trust a root key, and how it is bound to a party, as out of scope. Niyikiza (AAT) confirms the verifier is configured with a trust anchor and that provisioning and key-to-party binding stay outside the protocol. Uppalapati says AAT Section 9.11 already requires an algorithm allowlist, but the -02 says nothing about post-quantum algorithms or a date after which quantum-vulnerable signatures are rejected. Whether that belongs in AAT or a deployment profile is left to Niyikiza. Uppalapati will cite AAT in their -02. The quoted thread also covers wording for the online/offline binding evidence. The message was truncated, so later parts are not covered.",
+      "summary_ja": "Uppalapati は、draft-asor、自身のドラフト、AAT のいずれも、検証者がルート鍵をどう信頼するに至ったか、およびそれを当事者にどう結び付けるかを範囲外としていると指摘している。AAT の Niyikiza は、検証者にトラストアンカーが設定されること、プロビジョニングと鍵・当事者の結び付けがプロトコルの外にあることを確認している。Uppalapati は、AAT の Section 9.11 が既にアルゴリズムの許可リストを要求している一方、-02 はポスト量子アルゴリズムや量子脆弱な署名を拒否し始める期日に触れていないと述べ、これを AAT と運用プロファイルのどちらに置くかは Niyikiza の判断に委ねている。Uppalapati は自身の -02 で AAT を引用する予定である。引用されたスレッドにはオンライン／オフラインでの結び付け証拠の文言に関するやり取りも含まれる。メッセージは途中で切れており、後半は扱っていない。",
+      "title": "Trust-anchor provenance (draft-asor-wimse-agent-delegation-chain-02, Section 6.4)",
+      "updated_at": "2026-11-03T23:27:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/Jc2dw6mvquzlcq1_HdTxmdtu99g/",
+      "use_cases": [
+        "Deploying delegation-chain verifiers that need a defined date after which quantum-vulnerable signatures are refused",
+        "Deciding where trust-anchor provisioning and key-to-party binding are specified for agent delegation"
+      ],
+      "use_cases_ja": [
+        "量子脆弱な署名を拒否する期日を定める必要がある委任チェーン検証者の導入",
+        "エージェント委任におけるトラストアンカーの配布と鍵・当事者の結び付けをどこで規定するかの判断"
+      ]
+    },
     "mail:KgIBpXR02dIGXJIoJBchaw4AUvo": {
       "diagram": "",
       "first_seen": "2026-11-03",
@@ -535,6 +580,23 @@
       "title": "Three questions on cross-domain authority evidence and decision-time verification",
       "updated_at": "2026-11-03T14:22:01+00:00",
       "url": "https://mailarchive.ietf.org/arch/msg/wimse/KgIBpXR02dIGXJIoJBchaw4AUvo/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "mail:M6HZLuj_f5QzF05jtEaV2XEsYFg": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "The author of draft-li-rttp-iqa-addressing-02 announces conformance test vectors for a closed refusal vocabulary and asks WIMSE to consider the pattern.",
+      "headline_ja": "draft-li-rttp-iqa-addressing-02 の著者が、閉じた拒否理由語彙の適合性テストベクターを公表し、WIMSE での参照を打診している",
+      "id": "mail:M6HZLuj_f5QzF05jtEaV2XEsYFg",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The author reports two vector families (aicent-grant-ref with 25 cases, aicent-lease-boundary with 15) for a five-value refusal vocabulary in a fixed priority order, with a grant reference in every response. Checker and mutation results are quoted, and the sets are hosted at a conformance hub and a GitHub lab. The author asks both the WIMSE and OAuth groups whether this pattern is worth referencing for error and expiry semantics. The draft is not a WIMSE document, and the message contains no WIMSE text change.",
+      "summary_ja": "著者は、固定の優先順位を持つ5値の拒否理由語彙と、全レスポンスに付与される grant reference について、2系統のベクター（aicent-grant-ref は25ケース、aicent-lease-boundary は15ケース）を公表したと報告している。チェッカーとミューテーションの結果が示され、一式は適合性ハブと GitHub のラボで公開されている。著者は、エラーと有効期限の意味論を詰める際にこのパターンを参照する価値があるかを WIMSE と OAuth の両グループに尋ねている。このドラフトは WIMSE の文書ではなく、メッセージにも WIMSE 文書の変更は含まれない。",
+      "title": "Executable conformance material for the refusal vocabulary and lease semantics in draft-li-rttp-iqa-addressing-02",
+      "updated_at": "2026-11-03T23:27:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/M6HZLuj_f5QzF05jtEaV2XEsYFg/",
       "use_cases": [],
       "use_cases_ja": []
     },
@@ -658,6 +720,36 @@
         "複数の強制ポイントにまたがる累積的な利用上限が必要なデプロイでは、減衰トークンと委任サーバーを組み合わせることになる。"
       ]
     },
+    "mail:UPxNKe3xv033k83xIYsAQO4gc6s": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "An independent AAT-02 verifier report led the AAT author to settle how ten interpretation questions should read and to plan fixes in -03.",
+      "headline_ja": "AAT-02 の独立検証実装の報告を受け、AAT の著者が10件の解釈上の論点の意図を示し、-03 での修正を予定している",
+      "id": "mail:UPxNKe3xv033k83xIYsAQO4gc6s",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-rfc8725bis",
+          "note": "The AAT discussion on rejecting inconsistent alg/kty and header handling is a similar JWT hardening concern, but the item does not cite this draft.",
+          "note_ja": "AAT の議論にある alg と kty の不整合の拒否やヘッダー処理は JWT の堅牢化という点で近いが、この項目はこのドラフトを引用していない。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "substantive",
+      "summary": "Azat's implementation report on the AAT-02 profile raised points C1 to C10. Niyikiza states the intended readings: duplicate header members are rejected like claims, aat_aud is a single string, a root signed by a shared key passes under either issuer because the enforcement point trusts the key (3k only checks the issuer is trusted for that key), C8 means a well-formed public key per its kty's rules (RFC 8037 for OKP), and C10 means absolute-URI per RFC 3986. C2 is acknowledged as a good catch, and the author aims to address all ten in -03. Azat will tighten the C10 check, which currently accepts any scheme followed by non-space characters. Songbo Bu contributed seven C6 issuer/key regression cases, which pass without verifier changes. The suite on main has no case yet where anchors share a key or issuer.",
+      "summary_ja": "Azat による AAT-02 プロファイルの実装報告は C1～C10 の論点を挙げていた。Niyikiza は意図する解釈を示している。ヘッダーの重複メンバーはクレームと同様に拒否する、aat_aud は単一の文字列、共有鍵で署名されたルートはどちらの issuer でも通る（強制点が信頼するのは鍵であり、3k は issuer がその鍵で信頼されているかだけを確認する）、C8 は kty の規則（OKP では RFC 8037）に従う正しい形式の公開鍵、C10 は RFC 3986 の absolute-URI である。C2 は良い指摘として認められ、著者は10件すべてを -03 で扱う予定である。Azat は、現在「スキーム: に続く空白以外の文字」を受理している C10 の検査を厳格化する。Songbo Bu が提供した C6 の issuer／鍵の回帰テスト7件は、検証器を変更せずに通過している。main のスイートには、アンカー間で鍵や issuer を共有するケースがまだない。",
+      "title": "Implementation report: attenuating delegation chains for agents (draft-niyikiza-oauth-attenuating-agent-tokens, draft-asor-wimse-agent-delegation-chain)",
+      "updated_at": "2026-11-03T23:27:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/UPxNKe3xv033k83xIYsAQO4gc6s/",
+      "use_cases": [
+        "Implementers of AAT verifiers who need to know the intended reading of root-issuer and key matching",
+        "Test authors building cross-implementation vectors for delegation-chain verification"
+      ],
+      "use_cases_ja": [
+        "ルートの issuer と鍵の照合について意図された解釈を知る必要のある AAT 検証器の実装者",
+        "委任チェーン検証の実装間テストベクターを作成する担当者"
+      ]
+    },
     "mail:YbA0_uqrNGji2vsDdmqj2KlbND0": {
       "diagram": "",
       "first_seen": "2026-11-02",
@@ -741,6 +833,23 @@
         "エージェントがユーザーの資格情報を保持せずに上流APIを呼び出す構成を求めるエージェント基盤。",
         "委任ツリー全体の合計存続時間やサブ委任数に上限を設けたい運用者。"
       ]
+    },
+    "mail:esoA29gdhVAvWpRZh_sNECcnWTM": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "The chairs published the WIMSE agenda for IETF 127 on 18 November, with AIMS and the Workload Authorization Grant getting the most time.",
+      "headline_ja": "議長が IETF 127 の WIMSE セッション（11月18日）のアジェンダを公開し、AIMS と Workload Authorization Grant に最も長い時間が割かれている",
+      "id": "mail:esoA29gdhVAvWpRZh_sNECcnWTM",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "The session runs 14:00 to 16:00 PST in Golden Gate 4-5. Items are WPT (10 min), the architecture (10), AIMS (30), draft-carleton-workload-authz-grant (30), workload identity metadata (10), and cross-organizational delegation requirements (10), plus chair updates and AOB. Slides are due by 16 November.",
+      "summary_ja": "セッションは PST 14:00～16:00、Golden Gate 4-5 で開催される。議題は WPT（10分）、アーキテクチャ（10分）、AIMS（30分）、draft-carleton-workload-authz-grant（30分）、ワークロードアイデンティティのメタデータ（10分）、組織間委任の要件（10分）、およびチェアからの報告と AOB である。資料の提出期限は11月16日である。",
+      "title": "WIMSE at IETF 127: Agenda (Wednesday, 18 November 2026)",
+      "updated_at": "2026-11-03T23:27:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/esoA29gdhVAvWpRZh_sNECcnWTM/",
+      "use_cases": [],
+      "use_cases_ja": []
     },
     "mail:izZnltSogYmO_6SbKFzCk9iPXOU": {
       "diagram": "",
@@ -898,6 +1007,29 @@
         "ルートにdel_max_depthを設定し、その深さ丁度の末端が有効かどうかを知る必要がある場合。"
       ]
     },
+    "mail:rjw8cJzJgQfy6qY4rqw5NONFa5U": {
+      "diagram": "sequenceDiagram\n  participant Root as Root (del_max_depth 8)\n  participant H as Holder (del_max_depth 2)\n  participant EP as Enforcement point\n  Root->>H: delegate\n  H->>EP: token at depth 3\n  Note over EP: AAT rejects, depth 3 exceeds holder cap 2\n  Note over EP: asor -03 accepts, checks only root max 8",
+      "first_seen": "2026-11-03",
+      "headline": "AAT and draft-asor-wimse-agent-delegation-chain disagree on del_max_depth, and the authors plan to reconcile their vectors before IETF 127.",
+      "headline_ja": "AAT と draft-asor-wimse-agent-delegation-chain が del_max_depth の意味で食い違っており、著者らは IETF 127 までにテストベクターを整合させる予定である",
+      "id": "mail:rjw8cJzJgQfy6qY4rqw5NONFa5U",
+      "kind": "mail",
+      "related": [],
+      "significance": "substantive",
+      "summary": "Under a root with del_max_depth 8, AAT accepts a leaf at del_depth 8 (vector J.10.f) while asor -03 rejects it. Niyikiza adds a second difference: if a holder delegates with del_max_depth 2, AAT caps everything below at that depth, while asor checks depth only against the root's 8. Niyikiza wants the shared definition to keep that cap so holders can restrict their own delegation depth, and will add a vector for it. Sweeney, whose credential-delegation draft adopts the asor format unchanged for tokens verified away from the server, leans toward the asor entry but cares more that vectors are reconciled. They also agree each name gets a single registry entry, and that the AAT revocation companion document should state how fresh an enforcement point's revocation state must be. Niyikiza will prepare a constraint-type comparison across the drafts for IETF 127.",
+      "summary_ja": "del_max_depth が 8 のルートの下で、AAT は del_depth 8 のリーフを受理する（ベクター J.10.f）が、asor -03 は拒否する。Niyikiza はもう一つの違いを挙げている。保持者が del_max_depth 2 で委任した場合、AAT はそれ以下すべてをその深さで制限するが、asor はルートの 8 に対してのみ深さを検査する。Niyikiza は、保持者が自身の委任の深さを制限できるよう、共通の定義でもこの上限を維持すべきだとし、そのためのケースを追加する。サーバー外で検証されるトークンについて asor の形式をそのまま採用している Sweeney は、asor 側の定義に傾いているが、どちらになるかよりベクターの整合を重視している。さらに、各名前の登録エントリは一つにすること、AAT の失効に関する補足文書で強制点の失効状態の鮮度を定めるべきことでも一致している。Niyikiza は IETF 127 までに、ドラフト間で制約タイプの比較を用意する予定である。",
+      "title": "AAT -02 announcement",
+      "updated_at": "2026-11-03T23:27:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/rjw8cJzJgQfy6qY4rqw5NONFa5U/",
+      "use_cases": [
+        "Implementers who accept delegation chains from both AAT and asor and would get different verdicts on the same token",
+        "Operators who need a holder to be able to restrict how deep its own sub-delegation can go"
+      ],
+      "use_cases_ja": [
+        "AAT と asor の両方の委任チェーンを受け付け、同じトークンで判定が異なってしまう実装者",
+        "保持者が自身の下位委任の深さを制限できる必要のある運用者"
+      ]
+    },
     "mail:rupjVELlCZWJgED1tcEE69jth08": {
       "diagram": "",
       "first_seen": "2026-11-03",
@@ -997,6 +1129,27 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "mail:yRYOUQzM9U15iUNTbopPo5C3lw4": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "A reviewer endorses the new principal-standing input in draft-jackson-wimse-evaluation-05 and asks that unreachable sources be recorded distinctly from denials.",
+      "headline_ja": "レビュアーが draft-jackson-wimse-evaluation-05 の新しい principal standing 入力を支持し、到達不能なソースを拒否と区別して記録するよう求めた",
+      "id": "mail:yRYOUQzM9U15iUNTbopPo5C3lw4",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Cliff agrees that Section 3.6 should stay separate from Section 3.5, because issuer standing and principal standing can fail independently and the record should say which one did. They accept that a lookup which cannot complete fails closed like a timeout. They ask that the record still show an evaluation that could not complete rather than a denial on the merits, so an unreachable source is never recorded as a withdrawal. They suggest a distinct principal-standing-source member in the Section 5.4 set.",
+      "summary_ja": "Cliff は、issuer の standing と principal の standing は独立に失敗し得て、記録はどちらが失敗したかを示すべきなので、Section 3.6 を Section 3.5 から分けておくことに賛成している。完了できない検索がタイムアウトと同様にフェイルクローズとなることも了承している。そのうえで、記録には内容に基づく拒否ではなく「評価を完了できなかった」ことを示し、到達不能なソースが失効として記録されないようにすることを求めている。Section 5.4 の集合に、principal-standing-source という独立したメンバーを設けることを提案している。",
+      "title": "draft-jackson-wimse-evaluation-05: a sixth input, principal standing",
+      "updated_at": "2026-11-03T23:27:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/yRYOUQzM9U15iUNTbopPo5C3lw4/",
+      "use_cases": [
+        "Audit pipelines that must tell an unreachable standing source apart from an actual withdrawal of authority"
+      ],
+      "use_cases_ja": [
+        "到達不能な standing ソースと、権限の実際の取り消しとを区別する必要がある監査パイプライン"
+      ]
+    },
     "repo:ietf-wg-wimse/draft-ietf-wimse-arch:13fa89a7a9c4": {
       "diagram": "",
       "first_seen": "2026-11-03",
@@ -1025,9 +1178,9 @@
     },
     "Review related draft: draft-asor-wimse-agent-delegation-chain-03": {
       "date": "2026-11-03",
-      "priority": "low",
-      "reason": "The implementation report mentions it, but the new material is test coverage and has no draft text change.",
-      "reason_ja": "実装報告で言及されているが、新しい内容はテストの追加であり、ドラフト本文の変更はない。"
+      "priority": "high",
+      "reason": "del_max_depth semantics conflict with AAT and vectors are to be reconciled before IETF 127.",
+      "reason_ja": "del_max_depth の意味が AAT と食い違っており、IETF 127 までにベクターの整合が予定されている。"
     },
     "Review related draft: draft-durga-wimse-ctx-isolation-00": {
       "date": "2026-11-01",
@@ -1041,12 +1194,6 @@
       "reason": "It is named as one of three offline attenuation formats whose subsumption rules may be compared before IETF 127.",
       "reason_ja": "IETF 127 までに包含規則が比較され得る三つのオフライン減衰形式の一つとして名前が挙がっている。"
     },
-    "Review related draft: draft-jackson-wimse-evaluation-05": {
-      "date": "2026-11-03",
-      "priority": "high",
-      "reason": "Expiry boundary settled as at-or-past; -06 will add it and the horizon-at-evaluation-instant rule as normative.",
-      "reason_ja": "有効期限の境界が「時点以降は拒否」に決まり、-06 で評価時点での範囲判定とともに規範化される。"
-    },
     "Review related draft: draft-reddy-wimse-aggregate-signatures-01": {
       "date": "2026-11-03",
       "priority": "high",
@@ -1057,12 +1204,6 @@
       "date": "2026-11-01",
       "priority": "high",
       "reason": "New draft that extends the WIMSE HTTP signature and WPT and adds a tctx.dlg member."
-    },
-    "Review related draft: draft-sweeney-wimse-credential-delegation-02": {
-      "date": "2026-11-02",
-      "priority": "high",
-      "reason": "-02 announced with sub-delegation, cumulative bounds, chain profile and revocation, with specific review requests.",
-      "reason_ja": "-02が公開され、サブ委任、累計上限、チェーンプロファイル、失効が加わり、具体的なレビュー依頼も出ている。"
     },
     "Review related draft: draft-thaha-wimse-agent-evidence-binding-02": {
       "date": "2026-11-01",
