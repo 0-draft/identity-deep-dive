@@ -6,7 +6,7 @@ draft-ietf-oauth-sd-jwt-vc-23 に対する ARTART の telechat レビューが 2
 
 ## なぜ重要か
 
-このドラフトは、ウォレットや Verifier の実装が SD-JWT ベースの資格情報に使う形式を定める。その HTTP 取得規則と Type Metadata の規則は、`iss` や `vct` の URL からメタデータを取得するすべての実装に適用される。最新の -23 には規範的な変更が見当たらない (`diff.txt`)。そのため重要なのは周辺の IESG 評価である。Mike Bishop は Section 2.2.2.3 の RFC 7800 の上書きに DISCUSS を出しており、Mahesh Jethanandani と Roman Danyliw が No Objection のコメントでそれを支持し、あわせて Section 7.1 と Section 2.5、7.3 にも触れている。以前に自動生成された概要は -23 を整理のためのリリースとしており、差分とは一致するが、バロットの立場には触れていなかった。
+このドラフトは、ウォレットや Verifier の実装が SD-JWT ベースの資格情報に使う形式を定める。その HTTP 取得規則と Type Metadata の規則は、`iss` や `vct` の URL からメタデータを取得するすべての実装に適用される。最新の -23 には規範的な変更が見当たらない (`diff.txt`)。そのため重要なのは周辺の IESG 評価である。Mike Bishop は Section 2.2.2.3 の RFC 7800 の上書きに DISCUSS を出しており、Mahesh Jethanandani と Roman Danyliw が No Objection のコメントでそれを支持している。Mahesh Jethanandani はあわせて Section 7.1 と Section 2.5、7.3 にも触れ、Roman Danyliw も Section 2.5、7.3 の指摘を支持している。以前に自動生成された概要は -23 を整理のためのリリースとしており、差分とは一致するが、バロットの立場には触れていなかった。
 
 ## 未解決の問題
 

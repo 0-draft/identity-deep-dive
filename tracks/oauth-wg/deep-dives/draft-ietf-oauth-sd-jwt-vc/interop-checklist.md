@@ -6,9 +6,9 @@
 - [ ] A credential with `cnf` but neither `sub` nor `iss` is accepted as the draft says, whatever RFC 7800 Section 3 says. Watch for the outcome of the open DISCUSS (Section 2.2.2.3).
 - [ ] A credential without selectively disclosable claims has no `_sd` claim and no Disclosures (Section 2.2.2.5).
 - [ ] When Key Binding is required, the KB-JWT is verified with the `cnf` key (Section 2.4).
-- [ ] A credential carrying both an HTTPS `iss` and an `x5c` header is verified with the mechanism that policy permits for that Issuer, not the one the credential happens to carry, and an attacker cannot switch the mechanism (Sections 2.5 and 7.3).
+- [ ] A credential carrying both an HTTPS `iss` and an `x5c` header is verified with a mechanism permitted for that Issuer by policy, and an attacker cannot influence which verification process is used (Sections 2.5 and 7.3). The draft does not say which mechanism applies when both are present.
 - [ ] With `x5c`, the chain is validated against a trust anchor permitted for the Issuer, `x5c` is read from the protected header, and `iss` need not match the certificate subject (Section 2.5).
-- [ ] The well-known URL for `iss` values with and without a path, and with a trailing slash, matches the examples (Section 4.1). `iss` with a query, a fragment or dot-segments in the path is rejected (Section 4).
+- [ ] The well-known URL for `iss` values with and without a path matches the examples, and any terminating `/` is removed before the URL is built (Section 4.1). An Issuer does not use an `iss` with a query, a fragment or dot-segments in the path (Section 4); the draft does not say how a recipient treats one.
 - [ ] The issuer metadata `issuer` is identical to the `iss` value, and the data is not used otherwise. Exactly one of `jwks` and `jwks_uri` is present (Sections 4.2 and 4.3).
 - [ ] Every dereferenced URL and every redirect target is HTTPS (data: URIs allowed only for rendering resources), the number of redirects is limited, and 4xx and 5xx responses are never used as content (Section 3).
 - [ ] Loopback, link-local, private-use and non-globally-reachable addresses, internal host names and DNS names that resolve to internal addresses are refused before any request (Section 7.1).

@@ -6,7 +6,7 @@ The ARTART telechat review of draft-ietf-oauth-sd-jwt-vc-23 returned Ready on 3 
 
 ## Why This Matters
 
-The draft defines the credential format that wallet and verifier implementations use for SD-JWT based credentials, and its HTTP retrieval and Type Metadata rules apply to every implementation that fetches metadata from `iss` or `vct` URLs. The latest revision, -23, has no visible normative change (`diff.txt`), so what matters is the IESG evaluation around it: Mike Bishop holds a DISCUSS on the RFC 7800 override in Section 2.2.2.3, and Mahesh Jethanandani and Roman Danyliw support it in No Objection comments that also raise Section 7.1 and Sections 2.5 and 7.3. An earlier machine briefing called -23 a clean-up release, which matches the diff, but it did not mention the ballot positions.
+The draft defines the credential format that wallet and verifier implementations use for SD-JWT based credentials, and its HTTP retrieval and Type Metadata rules apply to every implementation that fetches metadata from `iss` or `vct` URLs. The latest revision, -23, has no visible normative change (`diff.txt`), so what matters is the IESG evaluation around it: Mike Bishop holds a DISCUSS on the RFC 7800 override in Section 2.2.2.3, and Mahesh Jethanandani and Roman Danyliw support it in No Objection comments. Mahesh Jethanandani also raises Section 7.1 and Sections 2.5 and 7.3, and Roman Danyliw also supports the point on Sections 2.5 and 7.3. An earlier machine briefing called -23 a clean-up release, which matches the diff, but it did not mention the ballot positions.
 
 ## Open Questions
 
