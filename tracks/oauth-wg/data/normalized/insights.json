@@ -19,9 +19,46 @@
       "at": "2026-11-02T16:03:18+00:00",
       "text": "The main activity is a cluster of agent-delegation threads. Sweeney and Niyikiza agreed on how offline attenuation (AAT) and a Delegation Server (DS) divide the work, and still disagree on one hop in del_max_depth. Nothing changed in a core OAuth WG draft today.",
       "text_ja": "主な動きはエージェント委任に関する一連のスレッドである。Sweeney と Niyikiza は、オフラインの減衰（AAT）と Delegation Server（DS）の役割分担について合意した。一方、del_max_depth の1ホップの差は未解決のままである。OAuth WG の中核ドラフトに変更はなかった。"
+    },
+    {
+      "at": "2026-11-03T01:02:39+00:00",
+      "text": "The largest change is draft-ietf-oauth-client-id-metadata-document-03, which adds a normative client authentication section, a ban on a bare \"/\" path, mandatory iss in authorization responses, and rules for failed metadata fetches. SPIFFE client auth -03 makes client_id optional and ties its client identification to CIMD. sd-jwt-vc is in IESG review, with a DISCUSS over overriding RFC 7800.",
+      "text_ja": "最大の動きは draft-ietf-oauth-client-id-metadata-document-03 で、クライアント認証の規範的な節、\"/\" のみのパスの禁止、認可レスポンスでの iss 必須化、メタデータ取得失敗時の規則が加わった。SPIFFE クライアント認証 -03 は client_id を任意とし、クライアント識別を CIMD と結び付けた。sd-jwt-vc は IESG 審査中で、RFC 7800 の上書きをめぐる DISCUSS が出ている。"
     }
   ],
   "items": {
+    "draft:draft-ietf-oauth-client-id-metadata-document-03": {
+      "diagram": "flowchart TD\nA[AS fetches Client ID Metadata Document] --> B{Fetch result}\nB -->|transient failure| C[Keep cached metadata and tokens, return 503 at token endpoint]\nB -->|terminal failure| D[Return invalid_client, do not redirect user agent]\nB -->|ok| E[Intersect grant_types and response_types with AS support]\nE -->|empty| D\nE -->|non-empty| F{Auth method declared supported?}\nF -->|none supported| D\nF -->|yes| G[Proceed and include iss in authorization response]",
+      "first_seen": "2026-11-03",
+      "headline": "In short, CIMD -03 turns client authentication, fetch-failure handling and URL restrictions into explicit normative rules.",
+      "headline_ja": "CIMD -03 はクライアント認証、取得失敗時の扱い、URL の制限を明確な規範的要件として定めた",
+      "id": "draft:draft-ietf-oauth-client-id-metadata-document-03",
+      "kind": "draft-revision",
+      "related": [
+        {
+          "name": "draft-ietf-wimse-workload-creds",
+          "note": "Not tied to this item directly; SPIFFE client auth -03, which builds on CIMD, uses WIMSE workload credentials.",
+          "note_ja": "この項目とは直接関係しない。CIMD を利用する SPIFFE クライアント認証 -03 が WIMSE のワークロード資格情報を使用している。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "substantive",
+      "summary": "The Client Identifier URL must now have a path other than \"/\", and clients SHOULD normalize it because the AS MUST NOT. Client authentication gets its own section: shared-secret methods are barred, token_endpoint_auth_methods_supported is preferred over token_endpoint_auth_method, the default is none, and an AS that supports none of the declared methods rejects with invalid_client. The AS MUST intersect grant_types and response_types with what it supports and reject on an empty intersection, and the authorization response MUST carry iss (RFC 9207). Discovery failures are split into transient (no discarding cached metadata or refresh tokens, 503 at the token endpoint) and terminal (a client_id mismatch SHOULD invalidate refresh tokens). Also added: functional versus informative URI properties, a ban on deriving document contents from untrusted input, cache bounds, an Accept header recommendation and extra security sections. The diff is truncated, so later sections were not seen.",
+      "summary_ja": "Client Identifier URL のパスは \"/\" 以外が必須となり、AS は正規化してはならないため、クライアント側が正規化することが SHOULD となった。クライアント認証は独立した節になり、共有秘密方式は禁止、token_endpoint_auth_methods_supported が token_endpoint_auth_method より優先され、既定値は none とされ、宣言された方式を AS がいずれもサポートしない場合は invalid_client で拒否する。AS は grant_types と response_types を自身のサポートとの積集合に絞り、空なら拒否しなければならず、認可レスポンスには iss (RFC 9207) を含めなければならない。取得失敗は一時的なもの（キャッシュ済みメタデータやリフレッシュトークンを破棄しない、トークンエンドポイントでは 503）と終端的なもの（client_id の不一致ではリフレッシュトークンの無効化が SHOULD）に分けられた。そのほか、機能的 URI と情報的 URI の区別、信頼できない入力から文書内容を導出することの禁止、キャッシュ期間の上下限、Accept ヘッダーの推奨、セキュリティ considerations の追加がある。差分は途中で切れており、後半の節は確認できていない。",
+      "title": "draft-ietf-oauth-client-id-metadata-document-03: OAuth Client ID Metadata Document",
+      "updated_at": "2026-11-03T01:02:39+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-ietf-oauth-client-id-metadata-document-02&url2=draft-ietf-oauth-client-id-metadata-document-03",
+      "use_cases": [
+        "An MCP authorization server accepting unregistered clients by URL needs to implement the grant_types/response_types intersection and iss in responses.",
+        "A hosted client publishing one metadata document to many AS can list \\[\"none\",\"private_key_jwt\"\\] and rely on the defined selection and rejection behaviour.",
+        "An AS operator must decide how cached metadata and refresh tokens are treated when a client's metadata host is briefly down."
+      ],
+      "use_cases_ja": [
+        "URL でクライアントを受け付ける MCP 認可サーバーは、grant_types と response_types の積集合処理と、レスポンスへの iss 付与を実装する必要がある。",
+        "複数の AS に一つのメタデータ文書を公開するホスト型クライアントは、\\[\"none\",\"private_key_jwt\"\\] を列挙し、定義された選択・拒否の挙動に依拠できる。",
+        "AS の運用者は、クライアントのメタデータ配信元が一時的に停止した場合に、キャッシュ済みメタデータとリフレッシュトークンをどう扱うか決める必要がある。"
+      ]
+    },
     "draft:draft-ietf-oauth-deferred-token-response-01": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -145,6 +182,38 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "draft:draft-ietf-oauth-spiffe-client-auth-03": {
+      "diagram": "flowchart TD\nA[Request with SVID] --> B{client_id present?}\nB -->|no| C[SPIFFE ID is the client_id, match registered client]\nB -->|yes, URL| D[SPIFFE ID must equal spiffe_id in CIMD document]\nB -->|yes, other| E[SPIFFE ID must be associated via registration]\nC --> F[Authenticated]\nD --> F\nE --> F\nB -->|CIMD client without client_id| G[invalid_client]",
+      "first_seen": "2026-11-03",
+      "headline": "In short, SPIFFE client auth -03 makes client_id optional and defines how an SVID's SPIFFE ID maps to a client.",
+      "headline_ja": "SPIFFE クライアント認証 -03 は client_id を任意とし、SVID の SPIFFE ID とクライアントの対応付けを定めた",
+      "id": "draft:draft-ietf-oauth-spiffe-client-auth-03",
+      "kind": "draft-revision",
+      "related": [
+        {
+          "name": "draft-ietf-wimse-workload-creds",
+          "note": "The WIT-SVID is validated as a Workload Identity Token per this draft (Section 5.1.3 reference).",
+          "note_ja": "WIT-SVID は本ドラフトの Workload Identity Token として検証される（5.1.3 節を参照）。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "substantive",
+      "summary": "A new Client Identification section makes client_id optional for all three methods. If present, the SPIFFE ID must be authorized for that client: via the spiffe_id in a Client ID Metadata Document when client_id is a URL, otherwise via registration. If absent, the SPIFFE ID itself is the client_id, and CIMD clients MUST send client_id. For X509-SVID, the client verifies the server with its ordinary HTTPS trust anchors, while the AS validates the SVID only against the trust domain's own bundle, and MAY issue certificate-bound tokens. The WIT-SVID profile is identified by typ wit+jwt and replaces the client_id-to-sub rule of attestation-based client auth. Security considerations on JWT-SVID replay and trust bundles from CIMD were added, plus a Token Endpoint Authentication Methods IANA entry. The diff is truncated, so those later sections were not read.",
+      "summary_ja": "新設の Client Identification 節により、3 方式すべてで client_id が任意となった。client_id がある場合、SPIFFE ID はそのクライアントとして認可されている必要があり、client_id が URL なら Client ID Metadata Document の spiffe_id と照合し、そうでなければ登録情報で関連付ける。client_id がない場合は SPIFFE ID 自体が client_id となり、CIMD のクライアントは client_id を必ず送る。X509-SVID では、クライアントは通常の HTTPS の信頼アンカーでサーバーを検証し、AS は SVID を当該トラストドメインのバンドルのみで検証し、証明書バウンドトークンを発行してもよい。WIT-SVID プロファイルは typ が wit+jwt であることで識別され、attestation-based client auth の client_id と sub の照合規則を置き換える。JWT-SVID のリプレイおよび CIMD 由来のトラストバンドルに関するセキュリティ上の考慮と、Token Endpoint Authentication Methods の IANA 登録も追加された。差分は途中で切れており、後半の節は未確認である。",
+      "title": "draft-ietf-oauth-spiffe-client-auth-03: OAuth SPIFFE Client Authentication",
+      "updated_at": "2026-11-03T01:02:39+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-ietf-oauth-spiffe-client-auth-02&url2=draft-ietf-oauth-spiffe-client-auth-03",
+      "use_cases": [
+        "A workload using an X509-SVID can call a token endpoint without sending client_id, since the SPIFFE ID in the certificate identifies it.",
+        "A deployment identifying SPIFFE workloads by CIMD URL must send client_id and publish spiffe_id in its document.",
+        "An AS supporting both attestation-based client auth and WIT-SVIDs must use spiffe_wit, not attest_jwt_client_auth, to signal WIT-SVID support."
+      ],
+      "use_cases_ja": [
+        "X509-SVID を使うワークロードは、証明書内の SPIFFE ID で識別されるため client_id を送らずにトークンエンドポイントを呼び出せる。",
+        "CIMD の URL で SPIFFE ワークロードを識別する構成では、client_id を送り、文書に spiffe_id を公開する必要がある。",
+        "attestation-based client auth と WIT-SVID の両方に対応する AS は、WIT-SVID 対応の通知に attest_jwt_client_auth ではなく spiffe_wit を使う必要がある。"
+      ]
+    },
     "draft:draft-ietf-oauth-v2-1-17": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -187,6 +256,29 @@
         "IdP とライブラリのメンテナーは、Token Exchange のエラー処理を新しい invalid_request の挙動に照らして確認し直すべきである。"
       ]
     },
+    "mail:2eUXC32rF86kjqriGMvRTPLZ6Cc": {
+      "diagram": "sequenceDiagram\nparticipant C as Client\nparticipant AS as Authorization Server\nC->>AS: GET AS metadata (RFC 8414)\nAS-->>C: dpop_bound_access_tokens_required true\nC->>AS: Token request with DPoP proof\nAS-->>C: DPoP-bound access token",
+      "first_seen": "2026-11-03",
+      "headline": "In short, a new draft adds dpop_bound_access_tokens_required to AS metadata so an AS can say it only issues DPoP-bound tokens.",
+      "headline_ja": "AS が DPoP バウンドトークンのみを発行することを示す dpop_bound_access_tokens_required を AS メタデータに追加する新ドラフトが出た",
+      "id": "mail:2eUXC32rF86kjqriGMvRTPLZ6Cc",
+      "kind": "mail",
+      "related": [],
+      "significance": "new-proposal",
+      "summary": "Emelia Smith announced draft-emelia-oauth-as-metadata-dpop-required. Review of the CIMD draft by Max Gerber showed that an AS had no way to signal that it always requires DPoP-bound access tokens, as this could only be signalled at the resource server level. The draft registers dpop_bound_access_tokens_required in RFC 8414 AS metadata. The author expects further changes and wants to discuss it briefly at IETF 127.",
+      "summary_ja": "Emelia Smith が draft-emelia-oauth-as-metadata-dpop-required を発表した。Max Gerber による CIMD ドラフトのレビューをきっかけに、AS が常に DPoP バウンドのアクセストークンを要求することを示す手段がなく、リソースサーバーのレベルでしか示せないことが分かった。このドラフトは RFC 8414 の AS メタデータに dpop_bound_access_tokens_required を登録する。著者は今後も変更が必要だと見ており、IETF 127 で簡単に議論したいとしている。",
+      "title": "New Draft: OAuth Authorization Server Metadata Parameter for Requiring DPoP",
+      "updated_at": "2026-11-03T01:02:39+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/2eUXC32rF86kjqriGMvRTPLZ6Cc/",
+      "use_cases": [
+        "An MCP authorization server wanting clients to know up front that unbound tokens will never be issued.",
+        "An AT Protocol authorization server signalling that DPoP-bound tokens are mandatory."
+      ],
+      "use_cases_ja": [
+        "バウンドされないトークンは発行しないことを、MCP の認可サーバーがクライアントへ事前に知らせたい場合。",
+        "AT Protocol の認可サーバーが DPoP バウンドトークンが必須であることを通知する場合。"
+      ]
+    },
     "mail:43bHbkS7BIlDj3GsRotAmOFJCbU": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -225,6 +317,29 @@
         "token68 以外の文字を含むアクセストークンを発行する実装者は、許可される文字集合を狭める #273 を注視すべきである。"
       ]
     },
+    "mail:5yaIITzC7JvwuRt94lpF7u4P72E": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "In short, an IESG No Objection on sd-jwt-vc-23 backs the RFC 7800 DISCUSS and raises SSRF and x5c concerns.",
+      "headline_ja": "sd-jwt-vc-23 への No Objection の投票だが、RFC 7800 の DISCUSS を支持し、SSRF 対策と x5c に関する懸念も挙げている",
+      "id": "mail:5yaIITzC7JvwuRt94lpF7u4P72E",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Mahesh Jethanandani votes No Objection with comments. He supports Mike Bishop's DISCUSS: overriding the RFC 7800 MUST that a JWT with cnf contain sub or iss needs an Updates: relationship or a wording that makes it a profile-specific exception. He asks that the Section 7.1 ban on private and internal addresses allow locally configured allow-lists, so closed enterprise deployments still work. He also notes that Section 2.5 (iss need not match the x5c certificate) and Section 7.3 (iss-to-key relationship must be kept) conflict, and wants chain validation tied to RFC 5280. The message is truncated, so the remaining comments were not seen.",
+      "summary_ja": "Mahesh Jethanandani はコメント付きで No Objection に投票した。cnf を含む JWT に sub または iss を要求する RFC 7800 の MUST を上書きするには、Updates: 関係か、プロファイル固有の例外であることを明確にする文言が必要だとして、Mike Bishop の DISCUSS を支持している。7.1 節の私的アドレスや内部ホストの禁止については、閉じた企業内の運用が成り立つよう、ローカルに設定した許可リストを認めることを求めている。また、2.5 節（iss は x5c の証明書と対応しなくてよい）と 7.3 節（iss と鍵の関係を維持しなければならない）が食い違う点を指摘し、証明書チェーンの検証を RFC 5280 に結び付けることを求めている。メッセージは途中で切れており、残りのコメントは未確認である。",
+      "title": "Mahesh Jethanandani's No Objection on draft-ietf-oauth-sd-jwt-vc-23: (with COMMENT)",
+      "updated_at": "2026-11-03T01:02:39+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/5yaIITzC7JvwuRt94lpF7u4P72E/",
+      "use_cases": [
+        "An enterprise verifier whose issuer metadata lives on internal addresses needs the SSRF rule to allow configured hosts.",
+        "A verifier handling credentials that carry both an HTTPS iss and x5c needs a rule on which mechanism applies."
+      ],
+      "use_cases_ja": [
+        "発行者メタデータが内部アドレスにある企業内の検証者は、SSRF 対策の規則が設定済みホストを許可することを必要とする。",
+        "HTTPS の iss と x5c の両方を持つクレデンシャルを扱う検証者は、どちらの仕組みを適用するかの規則を必要とする。"
+      ]
+    },
     "mail:8_QkCb-jVUZyII6ex6eB6H63rhE": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -254,6 +369,23 @@
         "課金レコードがMissionの下で承認された予約に対応することを、オフラインで検証する検証者。",
         "承認アーティファクトから参照される権限メタデータを公開するリソースサーバー。"
       ]
+    },
+    "mail:9DWXGEm4cPXCTMVyN9rVdxzd238": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "In short, the KYAPay authors published revised versions of six drafts and ask for review.",
+      "headline_ja": "KYAPay の著者が 6 本のドラフトの改訂版を公開し、レビューを求めた",
+      "id": "mail:9DWXGEm4cPXCTMVyN9rVdxzd238",
+      "kind": "mail",
+      "related": [],
+      "significance": "new-proposal",
+      "summary": "The announcement lists updated drafts: kyapay-token-03, using-kyapay-tokens-02, kyapay-token-exchange-02, amr-values-03, id-verification-03 and aml-methods-01. They say the updates address review feedback and contain substantive changes. The message does not describe what changed, so the content cannot be summarised further.",
+      "summary_ja": "告知では、kyapay-token-03、using-kyapay-tokens-02、kyapay-token-exchange-02、amr-values-03、id-verification-03、aml-methods-01 の更新が挙げられている。レビューでの指摘を反映し、実質的な更新を含むとしている。変更内容は本文に書かれておらず、これ以上は要約できない。",
+      "title": "Updated versions of KYAPay specs incorporating review feedback",
+      "updated_at": "2026-11-03T01:02:39+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/9DWXGEm4cPXCTMVyN9rVdxzd238/",
+      "use_cases": [],
+      "use_cases_ja": []
     },
     "mail:Bb7y4lt7mBY568b460IyNhM4H3o": {
       "diagram": "",
@@ -480,6 +612,34 @@
         "ID-JAG を発行する前に同意ステップを設けたいコンシューマー向け IdP は、組み込みの仕組みを期待するのではなく DTR を検討するとよい。"
       ]
     },
+    "mail:MlA3pYYKmwUBy70N-1SBtFzInmA": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "In short, two agenda requests for IETF 127 were made for new metadata drafts on signalling DPoP and token requirements.",
+      "headline_ja": "IETF 127 のアジェンダに、DPoP やトークン要件を通知する新しいメタデータ系ドラフトの枠が 2 件要望された",
+      "id": "mail:MlA3pYYKmwUBy70N-1SBtFzInmA",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-wimse-wpt",
+          "note": "The joint session covers topics touching both groups, but this message does not link the drafts.",
+          "note_ja": "合同セッションは両 WG にまたがる話題を扱うが、このメッセージは両ドラフトを関連付けていない。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "The chairs asked for agenda items for two OAuth sessions and a joint WIMSE/OAuth session at IETF 127; the draft submission cut-off was 2 November 2026. Emelia Smith asked for a 1-2 minute slot for draft-emelia-oauth-as-metadata-dpop-required, which lets an AS signal that it only issues DPoP-bound tokens, motivated by MCP servers and AT Protocol. Yaron seconded and asked for a short slot for draft-zehavi-oauth-authority-metadata-00, which puts resource-server token requirements (sender-constraining, max_age, max_lifetime, acr_values) in protected resource metadata.",
+      "summary_ja": "座長は IETF 127 の OAuth セッション 2 枠と WIMSE/OAuth 合同セッション 1 枠の議題を募集しており、ドラフト提出の締切は 2026 年 11 月 2 日だった。Emelia Smith は、AS が DPoP バウンドトークンのみを発行することを通知できる draft-emelia-oauth-as-metadata-dpop-required について 1〜2 分の枠を求めた。背景は MCP サーバーと AT Protocol である。Yaron はこれに賛同し、リソースサーバーのトークン要件（sender-constraining、max_age、max_lifetime、acr_values）を保護リソースメタデータで示す draft-zehavi-oauth-authority-metadata-00 の短い枠を求めた。",
+      "title": "OAuth IETF 127 Call for Agenda Items (2 new messages)",
+      "updated_at": "2026-11-03T01:02:39+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/MlA3pYYKmwUBy70N-1SBtFzInmA/",
+      "use_cases": [
+        "Planning which IETF 127 sessions to attend for metadata signalling of DPoP and token requirements."
+      ],
+      "use_cases_ja": [
+        "DPoP やトークン要件のメタデータによる通知に関する IETF 127 のセッションを選ぶ場合。"
+      ]
+    },
     "mail:NphFqty5NRjMoX6x3IEW5gVsR5s": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -520,6 +680,29 @@
       "use_cases_ja": [
         "複数のオフライン縮小フォーマットのチェーンを受け入れ、深さ制限の挙動を揃える必要がある検証者。",
         "予算や失効の扱いについて、オフライン縮小と呼び出し経路上のサーバーのどちらを使うか検討するエージェント基盤。"
+      ]
+    },
+    "mail:RdQO6iHtU3opP2CnmLYxlOzVkXw": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "In short, a new draft lets clients declare egress IP ranges in metadata, and a reply from AWS argues against standardizing it.",
+      "headline_ja": "クライアントがメタデータで送信元 IP 範囲を宣言する新ドラフトが出たが、AWS からは標準化に反対する返信があった",
+      "id": "mail:RdQO6iHtU3opP2CnmLYxlOzVkXw",
+      "kind": "mail",
+      "related": [],
+      "significance": "new-proposal",
+      "summary": "Karl McGuinness and Xiaoyi Zhang proposed draft-mcguinness-oauth-client-ip-ranges-00. It defines client_ip_ranges (prefixes by value) and client_ip_ranges_uri (HTTPS URL of a prefix document), usable in dynamic registration and Client ID Metadata Documents, so an AS can restrict token endpoints without vendor-specific lists. Jeff, writing from AWS's perspective, objects: IP allow-listing is handled at the network layer, a client cannot assert what the server should treat as a legitimate origin, and a flagged IP may conflict with a declaration. He also questions retaining old ranges after fetch failure (4.5.1), wants the relaxation sentence in 4.5.2 to be a MUST, and cites NAT and X-Forwarded-For problems. He also cites privacy exposure of egress infrastructure.",
+      "summary_ja": "Karl McGuinness と Xiaoyi Zhang が draft-mcguinness-oauth-client-ip-ranges-00 を提案した。client_ip_ranges（プレフィックスを値で指定）と client_ip_ranges_uri（プレフィックス文書の HTTPS URL）を定義し、動的登録と Client ID Metadata Document で使えるため、AS はベンダー固有のリストなしにトークンエンドポイントを制限できる。AWS の立場から Jeff は反対している。IP の許可リストはネットワーク層で扱われている、クライアントはサーバーが正当な送信元とみなすべきものを主張する権限を持たない、リスク判断で不審とされた IP と宣言が衝突しうる、と述べる。さらに、取得失敗後に古い範囲を保持すること（4.5.1）に疑問を呈し、4.5.2 の緩和に関する文を MUST にすべきだとし、NAT や X-Forwarded-For の問題と、送信側インフラの露出というプライバシー上の懸念も挙げている。",
+      "title": "New draft: OAuth Client IP Range Metadata (draft-mcguinness-oauth-client-ip-ranges-00)",
+      "updated_at": "2026-11-03T01:02:39+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/RdQO6iHtU3opP2CnmLYxlOzVkXw/",
+      "use_cases": [
+        "A SaaS client that sends token requests from fixed egress ranges and registers via a Client ID Metadata Document.",
+        "An enterprise AS operator evaluating whether client-declared ranges should feed network access control."
+      ],
+      "use_cases_ja": [
+        "固定の送信元アドレス範囲からトークン要求を送り、Client ID Metadata Document で登録する SaaS クライアント。",
+        "クライアントが宣言した範囲をネットワークアクセス制御の入力にすべきかを検討する企業の AS 運用者。"
       ]
     },
     "mail:S713sBvE-oFuIiBYAAE-hrlTWhQ": {
@@ -568,6 +751,55 @@
       "url": "https://mailarchive.ietf.org/arch/msg/oauth/Zuab1PpQZx_nWOimouWjczGiYOI/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:d49b8f7_xsSOXCgDit-a1p9-yvg": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "In short, Mike Bishop's DISCUSS on sd-jwt-vc-23 asks why the RFC 7800 override has no Updates: tag.",
+      "headline_ja": "Mike Bishop の sd-jwt-vc-23 への DISCUSS は、RFC 7800 の上書きに Updates: 表記がない点を問うている",
+      "id": "mail:d49b8f7_xsSOXCgDit-a1p9-yvg",
+      "kind": "mail",
+      "related": [],
+      "significance": "substantive",
+      "summary": "The single DISCUSS is about Section 2.2.2.3, which says the document explicitly overrides the RFC 7800 requirement that a JWT with cnf also carry sub or iss. Bishop points out that this changes RFC 7800 yet the document has no Updates: tag. His COMMENTs include a suggested distinct media type for the issuer metadata JSON, stating that the issuer check holds across redirects, dropping a MUST from SVG template selection, giving SVG structure a normative pointer, and replacing an untestable MUST in Section 7.6. The message also lists nits and is truncated.",
+      "summary_ja": "唯一の DISCUSS は 2.2.2.3 節に関するもので、cnf を含む JWT に sub または iss も要求する RFC 7800 の要件を本文書が明示的に上書きすると述べている点である。Bishop は、これは RFC 7800 を変更するのに Updates: 表記がないと指摘している。COMMENT には、発行者メタデータの JSON に専用のメディアタイプを使うこと、リダイレクトを経ても発行者の検査が有効であることの明記、SVG テンプレート選択からの MUST の削除、SVG の構造への規範的な参照の追加、7.6 節の検証不能な MUST の置き換えなどが含まれる。誤字などの指摘もあり、メッセージは途中で切れている。",
+      "title": "Mike Bishop's Discuss on draft-ietf-oauth-sd-jwt-vc-23: (with DISCUSS and COMMENT)",
+      "updated_at": "2026-11-03T01:02:39+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/d49b8f7_xsSOXCgDit-a1p9-yvg/",
+      "use_cases": [
+        "Implementers of key-bound SD-JWT VCs without sub or iss should watch whether the override stays or the document gets an Updates: relationship."
+      ],
+      "use_cases_ja": [
+        "sub も iss も持たない鍵バウンドの SD-JWT VC を実装する場合、上書きが維持されるのか、Updates: 関係が付くのかを注視する必要がある。"
+      ]
+    },
+    "mail:e6VAhZh7tZdVLRYZ-fRwxQKe63Y": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "In short, a list reply suggests using issuer_jwt_hash in the KB-JWT so a delegate need not reveal the parent mandate's disclosures.",
+      "headline_ja": "委任先が親マンデートの開示情報を見せずに済むよう、KB-JWT で issuer_jwt_hash を使う案が示された",
+      "id": "mail:e6VAhZh7tZdVLRYZ-fRwxQKe63Y",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-hulea-wimse-agent-mandate",
+          "note": "Also concerns verifiable mandates for agents, though this message does not reference it.",
+          "note_ja": "エージェント向けの検証可能なマンデートを扱う点は共通するが、このメッセージは同ドラフトに言及していない。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Replying to Carlos and Gareth, Blake points to Section 4.1 of Delegate SD-JWT for the delegation part of their invoicing-agent mandate draft. A delegate can leave the parent mandate's disclosures out of what a counterparty sees only if the holder puts issuer_jwt_hash in the KB-JWT instead of sd_hash. Otherwise every invoice carries the purchasing policy. Blake also asks Gareth whether a buyer's wallet would use issuer_jwt_hash by default. No text change is described.",
+      "summary_ja": "Blake は Carlos と Gareth に宛てて、請求エージェント向けマンデート案の委任部分について Delegate SD-JWT の 4.1 節を参照するよう勧めている。委任先が親マンデートの開示情報を相手に見せずに済むのは、保有者が KB-JWT に sd_hash ではなく issuer_jwt_hash を入れた場合に限られ、そうでなければ請求書ごとに購買ポリシーが付随する。また、購入側のウォレットが既定で issuer_jwt_hash を使うかを Gareth に尋ねている。文面の変更は述べられていない。",
+      "title": "Feedback request: SD-JWT VC as mandates for invoicing agents",
+      "updated_at": "2026-11-03T01:02:39+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/e6VAhZh7tZdVLRYZ-fRwxQKe63Y/",
+      "use_cases": [
+        "An agent presenting an SD-JWT VC mandate to a counterparty without leaking the buyer's purchasing policy."
+      ],
+      "use_cases_ja": [
+        "エージェントが SD-JWT VC のマンデートを取引相手に提示する際に、購入側の購買ポリシーを漏らさないようにする場合。"
+      ]
     },
     "mail:eeKxYLJ6nzp3P6b1Lb4uo2WKsTg": {
       "diagram": "",
@@ -635,6 +867,23 @@
         "サブツリー全体で総有効期間やサブ委任の数に上限を設ける必要があるマルチエージェント環境。",
         "DS から離れてトークンを検証するリソースサーバーが、失効後のトークンがどの程度の間受理され得るかを知る必要がある場合。"
       ]
+    },
+    "mail:tQiCKnQA7RucSiXodCME9eVFuIc": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "In short, the OAuth WG virtual office hours on 16 November 2026 were canceled.",
+      "headline_ja": "2026 年 11 月 16 日の OAuth WG バーチャルオフィスアワーは中止された",
+      "id": "mail:tQiCKnQA7RucSiXodCME9eVFuIc",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "A Webex notice says Rifaat Shekh-Yusef canceled the 30-minute OAuth WG Virtual Office Hours scheduled for Monday, 16 November 2026 at 1:00 PM Eastern. No reason is given.",
+      "summary_ja": "Webex の通知によると、Rifaat Shekh-Yusef が 2026 年 11 月 16 日（月）東部時間 13:00 に予定されていた 30 分の OAuth WG バーチャルオフィスアワーを中止した。理由は記されていない。",
+      "title": "Canceled Webex meeting: OAuth WG Virtual Office Hours",
+      "updated_at": "2026-11-03T01:02:39+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/tQiCKnQA7RucSiXodCME9eVFuIc/",
+      "use_cases": [],
+      "use_cases_ja": []
     },
     "mail:thOF4kh9bZ3EyW2Q8TPA19sgBU8": {
       "diagram": "flowchart LR\nH[Holder] -->|offline attenuation| C[AAT-style chain]\nC --> EP[Enforcement point]\nEP -->|exercise reported| DS[Delegation Server ledger]\nDS -->|running total in delegation_constraints| EP",
@@ -743,6 +992,69 @@
       "use_cases_ja": [
         "サブエージェントにより狭いサブトークンをオフラインで発行し、相互運用可能な検証を望むエージェントフレームワーク。",
         "そうしなければ形式ごとに同じ制約比較を別々に実装することになる検証者。"
+      ]
+    },
+    "pr:oauth-wg/draft-ietf-oauth-client-id-metadata-document#128": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "In short, this PR separates functional URIs from informative URIs and says client_uri need not share the client_id origin.",
+      "headline_ja": "この PR は機能的 URI と情報的 URI を区別し、client_uri が client_id と同一オリジンである必要はないと明記する",
+      "id": "pr:oauth-wg/draft-ietf-oauth-client-id-metadata-document#128",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "substantive",
+      "summary": "The PR adds a section distinguishing URI properties and clarifies that client_uri is not restricted to the origin of client_id or redirect_uris. The -03 diff shows the result: functional URIs such as client_id, redirect_uris and jwks_uri, versus informative ones such as client_uri, logo_uri, policy_uri and tos_uri. The AS MUST NOT require client_uri to be on the same origin as, or a prefix of, the client_id or redirect_uris. It closes issue #10.",
+      "summary_ja": "この PR は URI プロパティを区別する節を追加し、client_uri が client_id や redirect_uris のオリジンに制限されないことを明確にする。-03 の差分では、client_id、redirect_uris、jwks_uri などの機能的 URI と、client_uri、logo_uri、policy_uri、tos_uri などの情報的 URI に分けられている。AS は client_uri が client_id や redirect_uris と同一オリジンであること、またはそのプレフィックスであることを要求してはならない。issue #10 をクローズする。",
+      "title": "oauth-wg/draft-ietf-oauth-client-id-metadata-document#128: Added section distinguishing functional and informative URI properties",
+      "updated_at": "2026-11-03T01:02:39+00:00",
+      "url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pull/128",
+      "use_cases": [
+        "An AS that currently rejects documents whose client_uri differs from the client_id origin must stop doing so."
+      ],
+      "use_cases_ja": [
+        "client_uri が client_id のオリジンと異なる文書を現在拒否している AS は、その拒否をやめる必要がある。"
+      ]
+    },
+    "pr:oauth-wg/draft-ietf-oauth-client-id-metadata-document#129": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "In short, this PR defines what an AS does when a CIMD client's grant_types or response_types are unsupported.",
+      "headline_ja": "この PR は、CIMD クライアントの grant_types や response_types が未対応のときの AS の動作を定める",
+      "id": "pr:oauth-wg/draft-ietf-oauth-client-id-metadata-document#129",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "substantive",
+      "summary": "The PR body says it covers one request from issue #71, the mismatch between the AS and a CIMD client over grant_types and response_types, and not the whole discussion. The matching text appears in the -03 diff, where the AS must intersect those fields with its own support and reject with invalid_client if the result is empty. The PR itself carries only a short description.",
+      "summary_ja": "PR 本文によれば、issue #71 のうち、AS と CIMD クライアントの間の grant_types と response_types の不一致に関する要望のみを扱い、議論全体は対象としない。対応する文言は -03 の差分にあり、AS はこれらのフィールドを自身の対応範囲との積集合にし、空なら invalid_client で拒否する。PR 自体には短い説明しかない。",
+      "title": "oauth-wg/draft-ietf-oauth-client-id-metadata-document#129: Define AS behavior when certain CIMD client features are unsupported",
+      "updated_at": "2026-11-03T01:02:39+00:00",
+      "url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pull/129",
+      "use_cases": [
+        "An AS that supports only authorization_code must decide what to do with a CIMD client declaring other grant types."
+      ],
+      "use_cases_ja": [
+        "authorization_code のみに対応する AS が、他のグラントタイプを宣言した CIMD クライアントをどう扱うかを決める場合。"
+      ]
+    },
+    "pr:oauth-wg/draft-ietf-oauth-client-id-metadata-document#130": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "In short, this PR requires pre-fetching and validating logo_uri before an AS shows a client logo.",
+      "headline_ja": "この PR は、AS がクライアントのロゴを表示する前に logo_uri を事前取得して検証することを求める",
+      "id": "pr:oauth-wg/draft-ietf-oauth-client-id-metadata-document#130",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "substantive",
+      "summary": "Per the PR body, displaying a logo now requires pre-fetching logo_uri, serving it from a trusted server, and validating the image contents. It also adds a security consideration on how the client is presented to end-users. Both appear in the -03 table of contents as Displaying Logos to End-Users and Presentation of the Client to End-Users. It closes issue #19.",
+      "summary_ja": "PR 本文によれば、ロゴを表示する際には logo_uri の事前取得、信頼できるサーバーからの配信、画像内容の検証が必須となる。また、エンドユーザーへのクライアントの提示方法に関するセキュリティ上の考慮が追加された。いずれも -03 の目次に、ロゴの表示とクライアントの提示という節として現れている。issue #19 をクローズする。",
+      "title": "oauth-wg/draft-ietf-oauth-client-id-metadata-document#130: require pre-fetching logo_uri, added security considerations",
+      "updated_at": "2026-11-03T01:02:39+00:00",
+      "url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pull/130",
+      "use_cases": [
+        "An AS consent screen that renders third-party logos must not hot-link the client's logo URL at display time."
+      ],
+      "use_cases_ja": [
+        "第三者のロゴを描画する AS の同意画面は、表示時にクライアントのロゴ URL を直接参照してはならない。"
       ]
     },
     "pr:oauth-wg/oauth-delegate-sd-jwt#14": {
@@ -954,10 +1266,33 @@
       "url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/68",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "pr:oauth-wg/oauth-spiffe-client-authentication#69": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "In short, this PR prepares the -03 submission of SPIFFE client auth and has no description.",
+      "headline_ja": "この PR は SPIFFE クライアント認証の -03 提出に向けた準備であり、説明は付いていない",
+      "id": "pr:oauth-wg/oauth-spiffe-client-authentication#69",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "routine",
+      "summary": "The title says it fixes render issues, moves the profiling specs to normative references and prepares the -03 submission. The body is empty, so nothing more can be said from the PR. The resulting changes are covered in the -03 diff item.",
+      "summary_ja": "タイトルによれば、レンダリングの問題の修正、プロファイル対象の仕様を規範的参照へ移すこと、-03 の提出準備を行う。本文は空であり、PR からはこれ以上のことは分からない。結果としての変更は -03 の差分の項目で扱っている。",
+      "title": "oauth-wg/oauth-spiffe-client-authentication#69: Fix render issues, move profiling specs to normative and prepare for -03 submission",
+      "updated_at": "2026-11-03T01:02:39+00:00",
+      "url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/69",
+      "use_cases": [],
+      "use_cases_ja": []
     }
   },
   "overflow": [],
   "triage": {
+    "draft-ietf-oauth-client-id-metadata-document": {
+      "date": "2026-11-03",
+      "priority": "high",
+      "reason": "-03 adds a normative client authentication section, iss in responses, fetch failure rules and three merged PRs.",
+      "reason_ja": "-03 でクライアント認証の規範的な節、レスポンスでの iss、取得失敗時の規則が加わり、3 件の PR も取り込まれた。"
+    },
     "draft-ietf-oauth-deferred-token-response": {
       "date": "2026-11-01",
       "priority": "high",
@@ -975,15 +1310,16 @@
       "reason": "-06 adds new normative behaviour (client auth at IdP, invalid_request, mTLS binding, new metadata) and a large rewrite."
     },
     "draft-ietf-oauth-sd-jwt-vc": {
-      "date": "2026-11-01",
-      "priority": "low",
-      "reason": "-23 is only minor editorial fixes and regenerated examples."
+      "date": "2026-11-03",
+      "priority": "high",
+      "reason": "IESG ballot has a DISCUSS (RFC 7800 override, no Updates: tag) and a supporting No Objection with SSRF and x5c comments.",
+      "reason_ja": "IESG 投票で、RFC 7800 の上書き（Updates: 表記なし）をめぐる DISCUSS と、それを支持し SSRF と x5c にも触れる No Objection が出ている。"
     },
     "draft-ietf-oauth-spiffe-client-auth": {
-      "date": "2026-11-01",
+      "date": "2026-11-03",
       "priority": "high",
-      "reason": "A batch of PRs (#57-#68) changes replay guidance, auth method registration, and multi-method metadata.",
-      "reason_ja": "PR #57〜#68でリプレイ指針、認証方式の登録、複数方式のメタデータが変更されている。"
+      "reason": "-03 makes client_id optional, ties client identification to CIMD and adds replay and trust-bundle security text.",
+      "reason_ja": "-03 で client_id が任意となり、クライアント識別が CIMD と結び付けられ、リプレイとトラストバンドルに関するセキュリティ記述が加わった。"
     },
     "draft-ietf-oauth-transaction-tokens": {
       "date": "2026-11-01",
