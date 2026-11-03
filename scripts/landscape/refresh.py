@@ -83,10 +83,24 @@ _state_names: dict[str, str] = {}
 
 
 def state_name(uri: str) -> str:
+    """A Datatracker state's name. The listing is paged; a URI it does not
+    cover is fetched on its own. One that still does not resolve raises, so
+    the spec falls back to its last good status and the run fails, instead of
+    the stage silently defaulting to a working-group draft."""
     if not _state_names:
-        for o in get_json(f"{API}/doc/state/?format=json&limit=1000").get("objects", []):
-            _state_names[o["resource_uri"]] = o["name"]
-    return _state_names.get(uri, "")
+        url = f"{API}/doc/state/?format=json&limit=1000"
+        while url:
+            page = get_json(url)
+            for o in page.get("objects", []):
+                _state_names[o["resource_uri"]] = o["name"]
+            nxt = (page.get("meta") or {}).get("next")
+            url = f"https://datatracker.ietf.org{nxt}" if nxt else ""
+    if uri not in _state_names:
+        name = get_json(f"https://datatracker.ietf.org{uri}?format=json").get("name", "")
+        if not name:
+            raise RuntimeError(f"unresolved Datatracker state {uri}")
+        _state_names[uri] = name
+    return _state_names[uri]
 
 
 def ietf_status(ietf: dict) -> dict:
@@ -108,7 +122,6 @@ def ietf_status(ietf: dict) -> dict:
             return ietf_status({"rfc": int(m.group(1))}) | {"from_draft": name}
     doc = get_json(f"{API}/doc/document/{name}/?format=json")
     labels = [state_name(u) for u in doc.get("states", [])]
-    labels = [l for l in labels if l]
     # Only draft-ietf-* names are working-group documents; anything else that
     # has not reached the IESG is an individual submission.
     stage = next((s for s, names in STAGE_STATES if names & set(labels)), "wg" if name.startswith("draft-ietf-") else "individual")
