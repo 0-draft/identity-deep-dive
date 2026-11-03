@@ -29,6 +29,6 @@
 
 ## 影響分析
 
-- 上流: ドラフトは、SD-JWT の形式と処理を RFC 9901 に、JWT と JWS の規則を RFC 7519 と RFC 7515 に、`cnf` を RFC 7800 に、HTTP 取得とキャッシュを RFC 9110 と RFC 9111 に依存する。Section 2.2.2.3 は、`sub` または `iss` を求める RFC 7800 Section 3 の要件から逸脱しており、資料には `Updates:` ヘッダーが示されていない。status list の参照は -22 から規範的である。
+- 上流: ドラフトは、SD-JWT の形式と処理を RFC 9901 に、JWT と JWS の規則を RFC 7519 と RFC 7515 に、`cnf` を RFC 7800 に、HTTP 取得とキャッシュを RFC 9110 と RFC 9111 に依存する。Section 2.2.2.3 は、`sub` または `iss` を求める RFC 7800 Section 3 の要件から逸脱しており、-23 のヘッダーに `Updates:` の行はなく、Datatracker にも Updates の関係はない。status list の参照は -22 から規範的である。
 - 下流: SD-JWT VC を実装するウォレット、Issuer、Verifier、および `vct` 値、Type Metadata、追加の鍵探索方式を定義するエコシステムのプロファイル (Section 2.2.2.1、2.5)。IANA には、`vct`、`vct#integrity`、`aka_vcts`、メディアタイプ `application/dc+sd-jwt`、well-known URI の接尾辞 `jwt-vc-issuer` の登録が求められている (Section 9)。本文には文書参照のプレースホルダーが残っている。
 - 互換性: -23 にプロトコルの変更は見当たらないため、-22 の実装は相互運用できるはずである。異なるのはテストベクターだけである。ドラフトの `typ` 値は `dc+sd-jwt` で、`vc+sd-jwt` に関する移行期間の注記は -19 で削除された。Section 2.2.2.3 の未解決の DISCUSS がどう決着するかは分からない。

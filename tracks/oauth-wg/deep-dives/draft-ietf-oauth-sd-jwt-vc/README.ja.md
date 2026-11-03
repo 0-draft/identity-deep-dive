@@ -49,9 +49,9 @@ sequenceDiagram
 
 ## 今なぜ重要か
 
-- **きっかけ**: ART-ART の telechat レビューが Ready を返し、ドラフトは公開に向かっている (`subject.json`)。そこに挙がる Datatracker の状態には "IESG Evaluation" と "Submitted to IESG for Publication" が含まれる。
-- **根拠となる資料**: メーリングリストには、Christian Amsüss による -23 のレビュー結果 Ready があり、以前に指摘された問題はすべて対処されたとしている。同時に、-23 に対する Mike Bishop の DISCUSS と Mahesh Jethanandani のコメント付き No Objection もある (`mail.txt`)。したがって、一つのディレクトレートのレビューが Ready でも IESG の審査が終わったわけではない。
-- **想定される影響**: このドラフトはウォレットの資格情報に使われる Standards Track の形式であり、Type Metadata と取得規則は、資格情報のメタデータを取得するすべての実装に影響する。DISCUSS の結果として `Updates: RFC 7800` の関係が付くか Section 2.2.2.3 の文言が変わる場合、`sub` も `iss` も持たない鍵束縛資格情報の扱いの記述が変わる。どの結論になるかは資料に示されていない。
+- **きっかけ**: -23 に対する ARTART の telechat レビューが 2026 年 11 月 3 日に Ready を返し、ドラフトは公開に向かっている (`subject.json`)。Datatracker では、IESG の状態が IESG Evaluation、WG の状態が Submitted to IESG for Publication で、2026 年 11 月 5 日の telechat の議題に載っている。
+- **根拠となる資料**: Christian Amsüss のレビューは、自身が Last Call のレビューで挙げた問題にはすべて対処済みだとしている。一方、同じバロットでは Mike Bishop が DISCUSS を出しており (2026 年 11 月 2 日)、Mahesh Jethanandani (11 月 2 日) と Roman Danyliw (11 月 3 日) が、それを支持するコメント付きの No Objection を出している。2026 年 11 月 4 日の時点で DISCUSS は解除されておらず、承認にはあと一つ Yes か No Objection が必要である (Datatracker のバロットページ)。したがって、一つのディレクトレートのレビューが Ready でも IESG の審査が終わったわけではない。
+- **想定される影響**: このドラフトはウォレットの資格情報に使われる Standards Track の形式であり、Type Metadata と取得規則は、資格情報のメタデータを取得するすべての実装に影響する。DISCUSS の結果として `Updates: RFC 7800` の関係が付くか Section 2.2.2.3 の文言が変わる場合、`sub` も `iss` も持たない鍵に束縛された資格情報の扱いの記述が変わる。どの結論になるかは資料に示されていない。
 
 ## 変更点
 
@@ -67,12 +67,12 @@ sequenceDiagram
 
 ## 未解決の問題
 
-- Section 2.2.2.3 は、`cnf` を持つ JWT に `sub` または `iss` を要求する RFC 7800 の規定を、このドラフトが「明示的に上書きする (explicitly overrides)」と述べているが、`Updates:` ヘッダーは示されていない。Mike Bishop の DISCUSS がこれを問うており、Mahesh Jethanandani が支持している。解決が `Updates` の関係になるのか文言の変更になるのかは示されていない。
-- Section 7.1 は、プライベートアドレス範囲と Consumer 内部のホストを無条件に禁止している。バロットのコメントは、閉じた環境や企業環境のために、設定された許可リストを認めるべきかを問うている。ドラフトにはその記述がない。
-- `x5c` と HTTPS の `iss` が両方ある場合、Section 2.5 と Section 7.3 は食い違う可能性があり、ドラフトは「ポリシーに従って許可された」以上にどの方式を適用するかを述べていない。また、バロットのコメントは、`x5c` の検証を RFC 7515 Section 4.1.6 経由で RFC 5280 に結び付けるよう求めている。これらの点は、ドラフトではなくメールに由来する。
-- Section 4.2 と Section 5.3.1 はメタデータに `application/json` を用いる。バロットのコメントは、専用のメディアタイプを勧めている。Section 4.3 では、`issuer` の検査がリダイレクトを経ても適用されることを明記してもよい。
-- Section 5.5.1.2.1 は SVG テンプレートの選択に MUST を使っており、コメントは、これを相互運用の要件ではないとしている。Section 5.5.1.2.2 には、SVG の構造に対する規範的な参照が必要である。Section 7.6 の MUST は、試験しにくいとコメントされている。
-- 取り込んだメールではバロットのメッセージが途中で切れているため、ここで扱っていない Mahesh Jethanandani と Mike Bishop のコメントがほかにある可能性がある。
+- Section 2.2.2.3 は、RFC 7800 Section 3 の規定 "At least one of the "sub" and "iss" claims MUST be present in the JWT" を「明示的に上書きする (explicitly overrides)」と述べているが、ヘッダーに `Updates:` の行はなく、Datatracker にも Updates の関係はない。RFC 9901 にはこうした逸脱はなく、`cnf` を RFC 7800 の定義どおりに使うだけである。Mike Bishop の DISCUSS はこの点の修正を求め、Mahesh Jethanandani と Roman Danyliw が支持している。Mahesh Jethanandani は、`Updates:` の関係を付けるか、このプロファイルに限った例外だと読める文言にするかの二つを挙げている。著者がどちらを選ぶかはまだ分からない。
+- Section 7.1 は、プライベートアドレス範囲と Consumer 内部のホストを無条件に禁止している。Mahesh Jethanandani のコメントは、これでは企業内や閉じたエコシステムでの運用ができないとして、既定の禁止は残したまま、許可リストのようにローカルのポリシーが明示的に認めた宛先は許すことを提案している。ドラフトにはその記述がない。
+- Mahesh Jethanandani のコメントは、`x5c` について Section 2.5 (`iss` は証明書と一致しなくてよい) と Section 7.3 (`iss` と鍵の関係を保たなければならない) が食い違っており、HTTPS の `iss` と `x5c` の両方がある場合にどちらの方式を使うかをドラフトが述べていないと指摘する。方式を選ぶのは資格情報の中身ではなく、その Issuer に対する Verifier のポリシーだと明記するよう提案しており、Roman Danyliw もこの点を支持している。さらに、チェーンの検証に RFC 5280 を参照すること (RFC 7515 Section 4.1.6 はすでに "The recipient MUST validate the certificate chain according to RFC 5280" と求めている) と、`x5c` の証明書自体は決して信頼アンカーにならないと書くことも求めている。これらの点は、Nas Til が Last Call で出した意見に由来するとしている。
+- Section 4.2 と Section 5.3.1 は、メタデータに `application/json` を使う。Mike Bishop のコメントは、オブジェクトの役割をサーバーが示せるよう専用のメディアタイプを提案している。また、`issuer` の規則がリダイレクトの経路にかかわらず適用されることを Section 4.3 に明記することも提案し、Section 4 が `iss` を大文字小文字を区別する URL としている点について、スキーム、ホスト、ポートは大文字小文字を区別しないと指摘している。いずれも DISCUSS ではなくコメントである。
+- Mike Bishop のコメントは、Section 5.5.1.2.1 の SVG テンプレートの選択に付いた MUST は相互運用の要件ではないこと、Section 5.5.1.2.2 には SVG の構造への規範的な参照が必要なこと、Section 7.6 の MUST は試験しにくいことを指摘している。
+- Mahesh Jethanandani のコメントは、一つの資格情報が引き起こす取得の総数に上限がないと指摘する。Section 3 は取得ごとに制限をかけ、Section 7.4 は循環を検出するが、循環しない長い `extends` のチェーンと、そこから参照される画像やテンプレートはどちらの検査も通る。チェーンの深さ、できれば資格情報ごとの取得総数に上限を設け、超えた場合は Type Metadata の処理失敗として扱うよう提案している (Section 3、5.4)。ほかに、Operational Considerations の節を加えることと、-16 の時点で書かれた shepherd write-up を承認前に更新することも求めている。
 
 ## 実験
 
