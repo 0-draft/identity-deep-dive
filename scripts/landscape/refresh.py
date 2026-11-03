@@ -55,26 +55,11 @@ TIMEOUT = 30
 SESSION = requests.Session()
 SESSION.headers["User-Agent"] = "identity-deep-dive-landscape/0.1 (+https://github.com/0-draft/identity-deep-dive)"
 
-# Datatracker state names, furthest stage wins (same mapping as the site's board).
-STAGE_STATES = [
-    ("rfced", {"RFC Ed Queue", "RFC-Ed-Ack", "AUTH48", "AUTH48-DONE", "EDIT", "MISSREF", "REF", "TO"}),
-    (
-        "iesg",
-        {
-            "Publication Requested",
-            "Submitted to IESG for Publication",
-            "AD Evaluation",
-            "IESG Evaluation",
-            "IESG Evaluation - Defer",
-            "In Last Call",
-            "Waiting for AD Go-Ahead",
-            "Waiting for Writeup",
-            "Approved-announcement to be sent",
-            "Approved-announcement sent",
-        },
-    ),
-    ("wglc", {"In WG Last Call", "WG Consensus: Waiting for Write-Up", "Waiting for WG Chair Go-Ahead"}),
-]
+# Datatracker state names, furthest stage wins. Shared with the site's progress
+# board (web/src/lib/lifecycle.ts) through one file so the two cannot drift.
+_STAGES = json.loads((DATA / "datatracker-stages.json").read_text(encoding="utf-8"))
+STAGE_STATES = [(stage, set(names)) for stage, names in _STAGES["stages"]]
+INACTIVE_STATES = set(_STAGES["inactive"])
 
 
 def fetch(url: str) -> requests.Response:
@@ -127,7 +112,9 @@ def ietf_status(ietf: dict) -> dict:
     # Only draft-ietf-* names are working-group documents; anything else that
     # has not reached the IESG is an individual submission.
     stage = next((s for s, names in STAGE_STATES if names & set(labels)), "wg" if name.startswith("draft-ietf-") else "individual")
-    if "Expired" in labels or "Dead" in labels:
+    # Expired, dead, replaced or withdrawn: no longer progressing, whatever
+    # stage it last reached.
+    if INACTIVE_STATES & set(labels):
         stage = "expired"
     return {
         "stage": stage,
