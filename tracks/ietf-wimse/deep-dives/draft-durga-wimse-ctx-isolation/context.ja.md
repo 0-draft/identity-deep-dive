@@ -2,7 +2,7 @@
 
 ## きっかけ
 
-本ドラフトは、レビューの依頼と IETF 127 でのライトニングスロットの希望とともに、WIMSE メーリングリストに新たに告知された（`subject.json`、`mail.txt`）。告知は関連ドラフト draft-durga-agenttrust-trace-verification-00 も対象にしている。このドラフトの Datatracker の状態は記録されていない。
+リビジョン 00 は 2026 年 10 月 29 日に公開され、2026 年 11 月 1 日に WIMSE メーリングリストで告知された。告知は、レビューと、議題に時間が残れば IETF 127 での 5 分のライトニングスロットを求めている。告知は関連ドラフト draft-durga-agenttrust-trace-verification-00（Informational、これも個人提出）も対象にしている。ヘッダーには「WIMSE / OAuth Working Group」とあるが、Datatracker ではストリームも WG の状態もない個人提出である。
 
 ## なぜ重要か
 
@@ -10,8 +10,8 @@
 
 ## 未解決の問い
 
-- ワーキンググループはテイントの報告を範囲内と見なすか。Workload Identity Token および Workload Proof Token との関係はどうなるか（Section 1）。
+- ワーキンググループはテイントの報告を範囲内と見なすか。Workload Identity Token および Workload Proof Token との関係はどうなるか（Abstract、Section 1）。
 - 依存当事者は、自己申告のテイントレベルをどう信頼できるか（Section 3、4）。
-- 告知で言及された項目（`ctx_isolation_witness`、`policy_manifest_sha256`）は、今後のリビジョンに現れるか。リビジョン 00 にはない。
+- 告知で言及された項目（`ctx_isolation_witness`、`policy_manifest_sha256`）は、今後のリビジョンに現れるか。本ドラフトにも関連ドラフトにも、リビジョン 00 にはない。
 - Abstract の COSE_Sign1 という記述と、Section 3 の単純な JSON 署名オブジェクトをどう整合させるか。
-- 誰が所管するのか。ヘッダーは WIMSE と OAuth の両方を挙げており、目標ステータスは Standards Track である。
+- 誰が採択するのか、そもそも採択されるのか。ヘッダーは WIMSE と OAuth の両方を挙げ、Standards Track としているが、どのワーキンググループも採択していない。

@@ -2,7 +2,7 @@
 
 ## Trigger
 
-The draft was newly announced to the WIMSE mailing list with a request for review and a possible lightning slot at IETF 127 (`subject.json`, `mail.txt`). The announcement also covers a companion draft, draft-durga-agenttrust-trace-verification-00. No Datatracker states are recorded for this draft.
+Revision 00 was posted on 29 October 2026 and announced to the WIMSE mailing list on 1 November 2026, with a request for review and for a 5-minute lightning slot at IETF 127 if agenda time remains. The announcement also covers a companion draft, draft-durga-agenttrust-trace-verification-00 (Informational, also an individual submission). The Datatracker lists this draft as an individual submission with no stream and no WG state, although its header names the "WIMSE / OAuth Working Group".
 
 ## Why This Matters
 
@@ -10,8 +10,8 @@ The draft addresses a gap that WIMSE token work does not cover: a workload can b
 
 ## Open Questions
 
-- Does the WG consider taint reporting in scope, and where would it sit relative to the Workload Identity Token and Workload Proof Token (Section 1)?
+- Does the WG consider taint reporting in scope, and where would it sit relative to the Workload Identity Token and Workload Proof Token (Abstract, Section 1)?
 - How can a relying party trust a self-asserted taint level (Sections 3, 4)?
-- Which fields mentioned in the announcement (`ctx_isolation_witness`, `policy_manifest_sha256`) will appear in a later revision? They are not in revision 00.
+- Which fields mentioned in the announcement (`ctx_isolation_witness`, `policy_manifest_sha256`) will appear in a later revision? They are not in revision 00 of this draft or of the companion draft.
 - How is the COSE_Sign1 statement in the Abstract reconciled with the plain JSON signature object in Section 3?
-- Who owns the work: the header names both WIMSE and OAuth, and the intended status is Standards Track.
+- Who, if anyone, would adopt the work: the header names both WIMSE and OAuth and says Standards Track, but no working group has adopted it.
