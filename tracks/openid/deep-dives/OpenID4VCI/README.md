@@ -1,84 +1,121 @@
-# Deep Dive: openid/OpenID4VCI
+# Deep Dive: OpenID for Verifiable Credential Issuance (openid/OpenID4VCI)
 
-> In one line: OpenID4VCI is the specification that lets holders request issuance of credentials and lets issuers issue verifiable credentials, developed in the openid/OpenID4VCI repository.
+> In one line: OpenID4VCI is an OAuth-protected API through which a Wallet obtains Verifiable Credentials from a Credential Issuer; 1.0 has been an OpenID Final Specification since September 2025, and the openid/OpenID4VCI repository now carries a 1.0 errata draft, a 1.1 draft that adds Interactive Authorization, and a new Server to Server draft.
 
 ## What this is
 
-The repository README describes the specification as one that allows holders to request issuance of credentials and issuers to issue verifiable credentials. The repository holds three working group drafts that are built automatically from the master branch: version 1.0, version 1.1 and a Server to Server (s2s) draft. The staged material is only the README and a list of recently updated pull requests, so it does not contain the text of any of these drafts. The pull request titles show the vocabulary in play: Credential Offer, a pre-authorized code flow with a transaction code, a Nonce endpoint and proof types, deferred issuance, Credential Issuer Metadata, DPoP, and an Interactive Authorization flow. This deep dive therefore describes the shape of the work and where it is moving, not the normative protocol.
+OpenID4VCI "defines an OAuth-protected API for the issuance of Verifiable Credentials" in any format, including SD-JWT VC, ISO mdoc and W3C VCDM (1.0 Section 1). The Credential Issuer acts as an OAuth 2.0 Resource Server; the Wallet is the OAuth client and gets an access token from an Authorization Server before calling the Credential Endpoint (1.0 Section 3.2). On top of OAuth it adds a Pre-Authorized Code grant, the `openid_credential` authorization details type, the `issuer_state` parameter and a Wallet `credential_offer_endpoint` (1.0 Section 3.2).
+
+The OpenID Foundation membership approved OpenID4VCI 1.0 as a Final Specification; the announcement is dated 16 September 2025 (102 approve, 1 object, 12 abstain). The repository (commit `21ffd6c`, 27 October 2026) holds three editor's drafts, all in the OpenID Digital Credentials Protocols working group:
+
+- `1.0/`: "1.0 incorporating errata set 1", revision `-19`. Its changes against the Final so far are a security consideration on Transaction Code guessing and restoring the rule that removes a terminating `/` when forming the metadata URL (Document History).
+- `1.1/`: revision `-01`, "created with same text as 1.0 Final" and then extended. The largest addition is Interactive Authorization (Section 6), a profile of OAuth 2.0 for First-Party Applications (FPA) that was removed from the 1.0 draft before Final (Document History).
+- `s2s/`: "Server to Server", revision `-01`, an API between a Wallet Server and an Issuer Server, first merged on 4 August 2026 (#753).
 
 ## How it works
 
-The README does not describe the protocol flow. The diagram below shows only the parties named in the README (holder and issuer) and the steps that pull request titles name. The exact order, parameters and which steps are optional must be checked against the drafts.
+The diagram follows the Authorization Code Flow (1.0 Section 3.4) and the Pre-Authorized Code Flow (Section 3.5), with the optional Nonce Endpoint (Section 7) and deferred issuance (Sections 8.3 and 9).
 
 ```mermaid
 sequenceDiagram
-    participant W as Holder wallet
-    participant I as Credential Issuer
-    I->>W: Credential Offer
-    W->>I: Request issuance of a credential
-    I->>W: Credential response
-    I->>W: Deferred response (202), credential delivered later
+    participant W as Wallet
+    participant AS as Authorization Server
+    participant CI as Credential Issuer
+    opt Issuer-initiated
+        CI->>W: Credential Offer (credential_issuer, credential_configuration_ids, grants)
+    end
+    W->>CI: GET /.well-known/openid-credential-issuer
+    CI-->>W: Credential Issuer Metadata
+    alt Authorization Code Flow
+        W->>AS: Authorization Request (authorization_details or scope, issuer_state)
+        AS-->>W: Authorization Response (code)
+        W->>AS: Token Request (code)
+    else Pre-Authorized Code Flow
+        W->>AS: Token Request (pre-authorized_code, tx_code)
+    end
+    AS-->>W: Token Response (access_token)
+    opt Issuer has a Nonce Endpoint
+        W->>CI: Nonce Request (POST, no access token)
+        CI-->>W: c_nonce
+    end
+    W->>CI: Credential Request (access token, proofs)
+    alt Issued now
+        CI-->>W: 200, credentials
+    else Deferred
+        CI-->>W: 202, transaction_id and interval
+        W->>CI: Deferred Credential Request (transaction_id)
+        CI-->>W: 200, credentials
+    end
 ```
 
-1. The issuer may hand the wallet a Credential Offer (pull request #759 proposes adding `issuer_redirect_uri` to it).
-2. The wallet requests issuance. The titles of #686 (`invalid_tx_code` for the pre-authz code flow) and #678 (`nonce` in proof types depending on a Nonce endpoint) show that a pre-authorized code flow with a transaction code and proof types with a nonce exist.
-3. The issuer returns the credential. #721 (metadata in credential response) shows the response can carry metadata.
-4. If the credential is not ready, the issuer can answer with a 202 and the wallet fetches it later (#722 fixes a 202 example, #816 concerns the deferred credential in the s2s draft).
+1. In the issuer-initiated variant, the Credential Issuer sends a Credential Offer, by value (`credential_offer`) or by reference (`credential_offer_uri`), for example as a QR code. It carries `credential_issuer`, `credential_configuration_ids` and optionally `grants` (1.0 Sections 4.1 and 4.1.1). In the wallet-initiated variant there is no offer.
+2. The Wallet fetches the Credential Issuer Metadata by inserting `/.well-known/openid-credential-issuer` between the host and the path of the Credential Issuer Identifier (1.0 Section 12.2.2).
+3. With the Authorization Code Flow, the Wallet sends an Authorization Request with `authorization_details` of type `openid_credential` or a credential `scope`, plus `issuer_state` if the offer contained one, and exchanges the code at the Token Endpoint (Sections 5 and 6). With the Pre-Authorized Code Flow, the Wallet skips the Authorization Endpoint and sends the `pre-authorized_code`, plus a Transaction Code (`tx_code`) if the offer required one (Section 3.5).
+4. If the Credential Issuer has a Nonce Endpoint, the Wallet gets a `c_nonce` from it; the endpoint is not a protected resource. An issuer that requires `c_nonce` in proofs MUST offer this endpoint (Section 7).
+5. The Wallet sends a Credential Request with the access token and, when key binding is required, `proofs` (Section 8.2). The issuer answers 200 with `credentials`, or, if it cannot issue immediately, MUST answer 202 with `transaction_id` and `interval` (Section 8.3). The Wallet then polls the optional Deferred Credential Endpoint with the `transaction_id` (Section 9).
+
+1.1 adds a third way to get the authorization code. The Wallet calls the Authorization Challenge Endpoint (advertised as `authorization_challenge_endpoint`) directly instead of through a browser. The Authorization Server can answer 403 with `insufficient_authorization`, `interaction_type_required` and, for presentations, an `auth_session` and an `openid4vp_request`. The Wallet then presents another credential with OpenID4VP and resends with the `auth_session` until it gets a code (1.1 Sections 6 to 6.2.1.1).
 
 ## Use cases
 
-- A wallet vendor implementing the holder side needs to request credentials from issuers that publish Credential Issuer Metadata (#775 concerns how the metadata URL is formed from the Credential Issuer Identifier).
-- An issuer that cannot issue immediately needs deferred issuance, covered by the 202 response and the deferred credential work (#722, #816).
-- An issuer that needs to interact with the end user during issuance meets the Interactive Authorization flow (#736, #819, #781).
-- A deployer that binds credentials to a holder key meets proof types and the explanation of how an issuer indicates that cryptographic key binding is not required (#714, #678).
-- A system that issues credentials server to server, without a wallet in the middle, would look at the s2s draft (#753, #809, #810); the staged material does not say what that draft covers beyond its title.
+The 1.1 draft lists six use cases in Appendix H: same-device Credential Offer, cross-device offer with information the End-User submitted beforehand, cross-device and deferred, wallet-initiated issuance during a presentation, the same with presentation of further credentials during issuance, and wallet-initiated issuance after installation.
+
+- A Wallet implementing the holder side follows Sections 3 to 9 and the Credential Format Profiles in Appendix A for SD-JWT VC, mdoc and W3C VCs.
+- An issuer that needs a manual review answers with a `transaction_id` and serves the Deferred Credential Endpoint (Sections 8.3 and 9).
+- An issuer that wants to see another credential before issuing, without sending the user to a browser, uses Interactive Authorization in 1.1 (Section 6, `urn:openid:dcp:ia:openid4vp_presentation`).
+- An issuer of bearer credentials, such as coupons or tickets, omits `cryptographic_binding_methods_supported`, and hence `proof_types_supported`, so the Wallet omits `proofs` (1.1 Section 15.2, from #714).
+- A Wallet Provider that runs its own server between the Wallet app and the issuer would use the s2s draft. The Wallet Server and Issuer Server authenticate with mTLS, and data the Wallet Client signs and encrypts to the issuer stays hidden from the Wallet Server (s2s Abstract and Sections 4 and 5.1).
 
 ## Why This Matters Now
 
-- **Trigger**: `subject.json` gives no reason (`ai_note` is empty); the repository was selected as a candidate on the `openid` track.
-- **Source evidence**: The pull request list shows active work: open pull requests #819, #810, #816, #759 and #678, and merged work such as the first s2s draft (#753), a credential dataset version (#472) and DPoP binding of `auth_session` (#803).
-- **Expected impact**: Implementers of wallets and issuers should expect changes in the 1.1 draft, including error response naming for Interactive Authorization and the s2s model names. The material does not say which changes are in a released version.
+- **Trigger**: `subject.json` gives no reason (`ai_note` is empty); the repository was the top `openid` candidate without a deep dive.
+- **Source evidence**: Between June and October 2026 the repository merged Interactive Authorization on FPA (#736, 24 June), the first s2s draft (#753, 4 August), session-binding rules for Interactive Authorization (#706, #797, #803) and the Credential Dataset parameters (#472, 15 October). #687 (open) sketches the steps to take 1.1 to Final: an implementer's draft, a formal security analysis, then a WG last call.
+- **Expected impact**: 1.0 Final is the version to implement today. Wallets and issuers that also follow 1.1 should expect wire-visible changes: the Interactive Authorization endpoint and parameters, a new `invalid_tx_code` token error, and `credential_dataset_id` and `credential_dataset_tag` in the Credential Response.
 
 ## What Changed
 
-The material has no diff, so this section lists what the recent pull requests introduce, as titles only. Their content was not staged and must be checked.
+Every item below was checked against the pull request diff and the current draft text at `21ffd6c`.
 
-- Merged: first draft of OpenId4VCI-S2S (#753), build rules for it (#799), a versioning table fix (#798) and snake_case properties for Document (#809).
-- Merged: Interactive Authorization built on top of the first party apps draft (#736), HTTP response codes aligned with FPA draft-4 (#781), URNs for types to prevent collisions (#712), unique `request_uris` required (#704).
-- Merged: `auth_session` is optional if another binding mechanism exists (#706), must be bound if DPoP is used (#803), and the most recent value in a session is clarified (#710). `state` must bind concurrent sessions (#797).
-- Merged: credential dataset version (#472), metadata in the credential response (#721), `invalid_tx_code` error (#686), removal of a terminating `/` from the Credential Issuer Identifier when forming the metadata URL (#775).
-- Open: `error` instead of `error_code` in the Interactive Authorization error response (#819), identifier model names in s2s (#810), deferred credential in s2s (#816), `issuer_redirect_uri` in Credential Offer (#759), `nonce` conditions in proof types (#678).
-- Closed without merge: expected URL instead of expected origins for the Interactive Authorization flow (#695), `redirect_uri` in credential error responses (#723), a VCDM 2 with JOSE format profile (#699), a status code requirement for the IAE response (#716).
+- **1.0 errata (`-19`)**: the terminating `/` rule is back in Section 12.2.2 (#775, merged 28 September 2026), and Section 13.6.3 "Transaction Code Guessing" was added. It says the AS SHOULD limit failed Transaction Code attempts and SHOULD return an error that says the code is invalid (#686).
+- **1.1, Interactive Authorization (Section 6)**: rebuilt as a profile of FPA, with the Authorization Challenge Endpoint (#736). It answers 403 Forbidden rather than 401, in line with FPA draft -04 (#781). Interaction types are URNs such as `urn:openid:dcp:ia:openid4vp_presentation` and `urn:openid:dcp:ia:auth_via_web` (#712). If `expected_origins` is present, it MUST contain only the derived Origin of the Authorization Challenge Endpoint (Section 6.2.1.1). #695, which would have used an expected URL instead, was closed.
+- **1.1, `auth_session` (Section 6.2.1)**: the key is "REQUIRED if specified by the interaction type", and a custom type must either require it or define another way to link requests (#706). The Wallet MUST send the most recently received value (#710). With DPoP, the AS MUST associate the `auth_session` value with the DPoP public key (#803).
+- **1.1, `auth_via_web` (Section 6.2.1.2)**: the Wallet MUST use a `request_uri` value only once, and the AS SHOULD treat it as one-time but MAY accept a reload (#704). A Wallet with concurrent sessions MUST send `state` (#797).
+- **1.1, Credential Response (Section 9.3)**: an OPTIONAL `credential_metadata` (#721) and RECOMMENDED `credential_dataset_id` and `credential_dataset_tag`, so a Wallet can tell when stored credentials are superseded (#472; Section 15.4).
+- **1.1, Token Error Response (Section 7.3)**: a wrong Transaction Code now gives `invalid_tx_code`. In 1.0 it is `invalid_grant` (1.0 Section 6.3; #686).
+- **1.0 and 1.1**: the 202 example now reads `202 Accepted` instead of `202 OK` (#722). An issuer that does not need key binding omits `cryptographic_binding_methods_supported` (#714).
+- **s2s**: first draft (#753), build rules (#799), a fixed versioning table (#798) and snake_case properties throughout (#809, merged 27 October 2026).
+- **Open**: `error` instead of `error_code` in the Interaction Required Response text (#819); renames in the s2s identifier model, with Session Id becoming Wallet Id and Credential Instance Id becoming Credential Id (#810); deferred credentials in s2s with a Transaction Id and a dedicated endpoint (#816, built on #810); `issuer_redirect_uri` in the Credential Offer with an `expected_redirect_uris` metadata allow-list (#759); and the conditions for `nonce` in key attestations and the `di_vp` `challenge` (#678).
+- **Closed without merge**: #695 (above), #699 (VCDM 2 with JOSE format profile), #716 (status code requirement for the IA response) and #723, which #759 replaces.
 
-Compatibility concerns visible from titles: renaming `error_code` to `error` (#819) and the s2s renames (#809, #810) would break implementations of earlier drafts, and the `/` removal (#775) changes the metadata URL an issuer must serve. Whether any of these is breaking is not stated.
+Compatibility. #819 changes one word: the examples and FPA draft -04 Section 5.2.2 already use `error`, so it fixes the prose and not the wire format. The s2s renames (#809, #810) change JSON names, but s2s has only one revision and no stable version. #775 is the one that changes behavior for deployed 1.0 issuers. Under the Final text, `https://issuer.example.com/tenant/` maps to `.../.well-known/openid-credential-issuer/tenant/`; under the errata text it maps to `.../tenant`. The issue behind it (#744) calls this "technically ... a breaking change".
 
 ## Technical Analysis
 
-The staged material has no spec sections, so the analysis is limited to what the pull request titles imply and is cited by pull request, not by section.
-
-- **Threat model**: Session binding is a recurring theme: `auth_session` binding with DPoP (#803), binding concurrent sessions with `state` (#797), unique `request_uris` (#704) and expected URL versus expected origins (#695, closed). These point to attacks on session mix-up or replay, but the material does not state the threats.
-- **Protocol flow**: Flows named are Credential Offer, pre-authorized code with a transaction code, Nonce endpoint with proof types, deferred issuance, and an Interactive Authorization flow built on the first party apps draft.
-- **Interop implications**: Several drafts coexist (1.0, 1.1, s2s), and the README points to other versions at <https://openid.net/sg/openid4vc/specifications/>. The credential format profile for VCDM 2 with JOSE (#699) was closed, so format support is a point to check. The metadata URL rule (#775) and error field naming (#819) are places where two implementations can diverge.
+- **Threat model**: The 1.0 Security Considerations cover Credential Offer tampering (Section 13.5), Pre-Authorized Code replay and Transaction Code phishing and guessing (Section 13.6), key proof replay, countered by `c_nonce` (Section 13.8), and access-token protection (Section 13.10). For native-app Wallets, DPoP is RECOMMENDED as the sender-constraining mechanism (Section 13.2). 1.1 adds two threats specific to Interactive Authorization. The first is session fixation: the AS MUST bind the OpenID4VP `nonce` to the `auth_session` (Section 6.2.1.4). The second is a malicious AS forwarding another AS's presentation request, which `expected_origins` and the audience binding of the presentation address (Section 6.2.1.5).
+- **Protocol flow**: One flow for all formats, with the format-specific parts confined to Appendix A. Batch issuance is one Credential Request with several proofs, giving credentials with the same format and dataset but different keys (1.0 Section 3.3.2). Proof types are `jwt`, `di_vp` and `attestation` (Appendix F).
+- **Interop implications**: Implementations can diverge on the metadata URL for identifiers ending in `/` (1.0 Final versus errata), on the token error for a wrong Transaction Code (`invalid_grant` in 1.0, `invalid_tx_code` in 1.1), and on whether a Wallet sends a `nonce` in a key attestation (#678 open). 1.0 also pins pre-final dependencies: SD-JWT VC -11, Attestation-Based Client Authentication -07, Token Status List -12 and OpenID Federation -43, and 1.1 adds FPA -04 (1.0 Section 14.7, 1.1 Section 15.9).
 
 ## Open Questions
 
-- What does each pull request change in the normative text? Only titles were staged.
-- Is the Interactive Authorization error response to use `error` or `error_code` (#819, open)?
-- Should `issuer_redirect_uri` be part of the Credential Offer (#759, open), and what security considerations come with it?
-- When is `nonce` required in proof types, given a Nonce endpoint may or may not exist (#678, open)?
-- How is deferred issuance defined in the s2s draft (#816, open), and how do the s2s identifier models relate to the wallet-facing drafts (#810)?
-- Which of 1.0 and 1.1 is intended for implementers today? The README lists both as working group drafts and does not say.
+- Will #775's metadata URL rule be published as errata to 1.0 Final, and how should an issuer whose identifier ends in `/` serve both URLs in the meantime?
+- How will the WG settle `nonce` in key attestations? #678 says "at the Issuer's discretion" in its 1.0 text and "left to the Wallet" in its 1.1 text.
+- In #759, can a Wallet trust `issuer_redirect_uri` with only the `expected_redirect_uris` match, given that an attacker can modify a Credential Offer?
+- How will deferred credentials in s2s (#816) relate to the PENDING state the current s2s draft already returns?
+- When does 1.1 reach an implementer's draft, which #687 treats as the next step?
 
 ## Experiments
 
-- [ ] Fetch the 1.1 working group draft and the 1.0 draft and diff the error response and Credential Offer definitions against the open pull requests #819 and #759.
-- [ ] Build the 1.1 HTML with the command in the README (`docker run ... danielfett/markdown2rfc`) and confirm it matches the published working group draft.
-- [ ] Run a wallet against an issuer metadata endpoint with and without a trailing `/` in the Credential Issuer Identifier and check which metadata URL each side forms (#775).
+- [ ] Build 1.0 Final and the `1.0/` errata draft and diff Sections 12.2.2 and 13.6 to confirm the errata changes are only the two listed in the Document History.
+- [ ] Run a Wallet against an issuer whose identifier is `https://<host>/tenant/` and record which metadata URL it requests (1.0 Final versus #775).
+- [ ] Send a Pre-Authorized Code Token Request with a wrong `tx_code` to an AS that follows 1.0 and one that follows 1.1, and record `invalid_grant` versus `invalid_tx_code`.
+- [ ] Walk the Interactive Authorization example in 1.1 Section 6.2.1.1 with a DPoP-bound client and check that a second DPoP key cannot reuse the `auth_session`.
 
 ## Sources
 
-- <https://github.com/openid/OpenID4VCI>
+- <https://github.com/openid/OpenID4VCI> (commit `21ffd6c74ca83a52eab78841c396619b9f91178c`)
+- <https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0-final.html>
+- <https://openid.net/openid-for-verifiable-credential-issuance-1-final-specification-approved/>
 - <https://openid.github.io/OpenID4VCI/openid-4-verifiable-credential-issuance-1_0-wg-draft.html>
 - <https://openid.github.io/OpenID4VCI/openid-4-verifiable-credential-issuance-1_1-wg-draft.html>
 - <https://openid.github.io/OpenID4VCI/openid-4-verifiable-credential-issuance-server-2-server-wg-draft.html>
-- <https://openid.net/sg/openid4vc/specifications/>
+- <https://openid.net/wg/digital-credentials-protocols/specifications/>

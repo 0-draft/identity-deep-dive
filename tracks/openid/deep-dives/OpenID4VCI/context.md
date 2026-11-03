@@ -2,14 +2,14 @@
 
 ## Trigger
 
-`subject.json` gives no reason for picking this repository (`ai_note` is empty). It is a repository on the `openid` track, and its README and recently updated pull requests were staged.
+`subject.json` gives no reason for picking this repository (`ai_note` is empty). It was the top candidate on the `openid` track without a deep dive. This deep dive was checked against the drafts at commit `21ffd6c` (27 October 2026) and the pull requests it cites.
 
 ## Why This Matters
 
-OpenID4VCI is the specification for how holders request credentials and issuers issue them. The recent pull requests show ongoing work on the 1.1 draft and a new Server to Server draft, including renamed error fields, session binding rules and deferred issuance. Anyone implementing a wallet or an issuer needs to know which draft and which pull requests they are building against.
+OpenID4VCI 1.0 is an OpenID Final Specification (approved 16 September 2025) and is the issuance half of the OpenID4VC family that HAIP 1.0 profiles. Work has moved to three places: errata for 1.0 (the metadata URL rule and Transaction Code guessing), 1.1 (Interactive Authorization on OAuth 2.0 for First-Party Applications, Credential Dataset parameters, `invalid_tx_code`), and a new Server to Server draft for Wallet Providers that run their own backend. An implementer has to know which of these texts a peer follows, because they differ on the wire.
 
 ## Open Questions
 
-- The staged material holds no draft text, so every statement here rests on pull request titles. Which pull requests change normative behavior?
-- Which draft (1.0, 1.1 or s2s) is the one implementers should target now?
-- What are the s2s draft's scope and its relation to the wallet-facing drafts?
+- Will the terminating `/` rule (#775) be published as 1.0 errata, and when?
+- When will 1.1 reach an implementer's draft (#687)?
+- How will the open s2s changes (#810, #816) settle the identifier names and deferred issuance?

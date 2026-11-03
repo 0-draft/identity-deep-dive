@@ -1,17 +1,18 @@
 # Interop Checklist
 
-この一覧はプルリクエストのタイトルのみから導いたものである。各項目はドラフト本文で確認すること。
+節番号は、1.1 または s2s と書いたもの以外は 1.0 のもので、コミット `21ffd6c` 時点である。
 
-- [ ] 他のテストに入る前に、各ピアがどのドラフト(1.0、1.1、s2s)を実装しているかを確認する。
-- [ ] 末尾に `/` がある識別子とない識別子から Credential Issuer Metadata URL を組み立て、双方が一致することを確認する(#775)。
-- [ ] Interactive Authorization のエラーを送り、フィールドが `error` か `error_code` かを確認する(#819)。
-- [ ] 事前承認コードフローで、誤ったトランザクションコードに対して `invalid_tx_code` が返ることを確認する(#686)。
-- [ ] Nonce エンドポイントが存在する場合としない場合の両方で、プルーフの `nonce` の扱いを確認する(#678)。
-- [ ] DPoP 使用時に `auth_session` が束縛されることを検証し、他の束縛がある場合は `auth_session` の省略が受理されることを検証する(#803、#706)。
-- [ ] 2 つの並行セッションを実行し、`state` がそれらを区別すること、および `auth_session` がセッション内で最新の値であることを検証する(#797、#710)。
-- [ ] `request_uris` がリクエスト間で一意であることを検証する(#704)。
-- [ ] 遅延発行の 202 レスポンスを、HTTP のリーズンフレーズと後の取得を含めて確認する(#722)。
-- [ ] Interactive Authorization レスポンスの HTTP ステータスコードを、first party apps draft-4 の値と照合する(#781)。
-- [ ] Credential Offer が `issuer_redirect_uri` を運ぶ場合、それを知らないウォレットが一貫して無視または拒否することを確認する(#759、オープン)。
-- [ ] s2s について、Document のプロパティが snake_case であり、識別子モデル名が合意された一覧と一致することを確認する(#809、#810)。
-- [ ] 発行者が暗号鍵バインディング不要であることをどう示すか、およびその場合にウォレットがプルーフを送らないことを確認する(#714)。
+- [ ] 各ピアがどの本文を実装しているかを確認する: 1.0 Final、1.0 のエラッタ版ドラフト、1.1、s2s。以下の項目でそれぞれ挙動が違う。
+- [ ] `https://<host>/tenant` と `https://<host>/tenant/` からメタデータ URL を組み立てる。エラッタ版と 1.1 では、どちらも `/.well-known/openid-credential-issuer/tenant` になる。1.0 Final では、後者は末尾に `/` が残る(Section 12.2.2、#775)。
+- [ ] Credential Offer を値渡し(`credential_offer`)と参照渡し(`credential_offer_uri`)で送り、両方を含む Offer をウォレットが拒否することを確認する(Section 4.1)。
+- [ ] 誤った `tx_code` で Pre-Authorized Code の Token Request を送る。1.0 の AS は `invalid_grant`、1.1 の AS は `invalid_tx_code` を返すはずである(1.0 Section 6.3、1.1 Section 7.3)。
+- [ ] 誤った `tx_code` を繰り返し送り、上限を超えたら AS が Pre-Authorized Code を無効にし、以後は `invalid_grant` を返すことを確認する(エラッタ版 Section 13.6.3)。
+- [ ] 発行者が Nonce Endpoint を持つ場合、`nonce` のない `jwt` proof が `invalid_proof` で、古い `c_nonce` を使った proof が `invalid_nonce` で拒否されることを確認する(Section 8.3.1.2、Appendix F.1)。
+- [ ] `cryptographic_binding_methods_supported` のない設定で、ウォレットが `proofs` を省き、発行者がそのリクエストを受け付けることを確認する(Section 14.2、#714)。
+- [ ] 遅延レスポンスを返し、ウォレットが `202`、`transaction_id`、`interval` に従い、Deferred Credential Endpoint からクレデンシャルを受け取ることを確認する(Sections 8.3 と 9)。
+- [ ] 1.1 の Interactive Authorization: `insufficient_authorization` が 403 Forbidden で返り、エラーのキーが例と同じく `error` であって `error_code` ではないことを確認する(Section 6.2.1、#781、#819)。
+- [ ] 1.1: ウォレットが常に最新の `auth_session` を送ること、DPoP を使う場合は別の DPoP 鍵で送られたその `auth_session` を AS が拒否することを確認する(Section 6.2.1、#710、#803)。
+- [ ] 1.1 の `auth_via_web`: ウォレットが `request_uri` を一度だけ使い、並行セッションを持つときに `state` を送ること、AS が期限切れの `request_uri` を拒否することを確認する(Section 6.2.1.2、#704、#797)。
+- [ ] 1.1: プレゼンテーション要求に `expected_origins` がある場合、それが Authorization Challenge Endpoint から導いた Origin だけを含み、ウォレットがそれを検証することを確認する(Section 6.2.1.1)。
+- [ ] 1.1: `credential_dataset_id` があるときは `credential_dataset_tag` もあること、タグが変わったらウォレットが保存済みのクレデンシャルを置き換えることを確認する(Sections 9.3 と 15.4)。
+- [ ] s2s: 両方のサーバーが mTLS を使い、`Api-Version` を送り、未対応の版には HTTP 400 と Problem Details で応答することを確認する(s2s Sections 5.1 と 5.3)。

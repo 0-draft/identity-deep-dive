@@ -2,24 +2,28 @@
 
 ## 参考文献
 
-ステージされた資料にはドラフトが含まれていないため、規範的および参考の参照一覧は得られない。資料が名前だけで言及している関連文書は次のとおりである。
+`21ffd6c` 時点のドラフトが挙げる規範参照のうち、相互運用に特に効くもの:
 
-- Interactive Authorization の土台となる OpenID first party apps ドラフト(FPA)(#736、#781 は FPA draft-4 に言及)。
-- #803 で参照されている DPoP。
-- クローズされた #699 の対象である、JOSE を用いる VCDM 2。
+- API 全体の土台である OAuth 2.0(RFC 6749)、`authorization_details` のための Rich Authorization Requests(RFC 9396)、Pushed Authorization Requests(RFC 9126)、DPoP(RFC 9449)。
+- 特定の版に固定された、Final になっていない依存仕様(1.0 Section 14.7): OpenID Federation 1.0 draft -43、SD-JWT VC draft -11、Attestation-Based Client Authentication draft -07、Token Status List draft -12。1.1 はこれに OAuth 2.0 for First-Party Applications draft -04 を加える(1.1 Section 15.9)。
+- Interactive Authorization のプレゼンテーションの段階で使う OpenID4VP(1.1 Section 6.2.1.1)。
+- s2s: 全エンドポイントでの mutual TLS(RFC 8705)、エラー用の Problem Details(RFC 9457)、API の版の廃止を知らせる `Sunset`(RFC 8594)(s2s Sections 5.1、5.3、5.4)。
 
 ## 主な変更
 
-一覧はプルリクエストのタイトルのみに基づく。
+各プルリクエストの差分で確認した。
 
-- OpenId4VCI-S2S の最初のドラフトがマージされ(#753)、続いて snake_case の Document プロパティ(#809)とビルドルール(#799)がマージされた。識別子モデル名(#810)と遅延クレデンシャル(#816)はオープンである。
-- first party apps ドラフトの上に構築された Interactive Authorization(#736)。そのエラーレスポンスで `error_code` の代わりに `error` を使う案(#819)はオープンである。
-- セッションの束縛: DPoP 使用時は `auth_session` が必須(#803)、他の束縛があれば任意(#706)、並行セッションは `state` で束縛(#797)。
-- クレデンシャルデータセットのバージョン(#472)、クレデンシャルレスポンス内のメタデータ(#721)、`invalid_tx_code`(#686)、メタデータ URL を組み立てる際の末尾の `/` の除去(#775)。
-- オープン: Credential Offer の `issuer_redirect_uri`(#759)、プルーフタイプの `nonce` の条件(#678)。
+- 1.0 エラッタ `-19`: Section 12.2.2 に末尾の `/` を取り除く規則が戻った(#775)。Section 13.6.3「Transaction Code Guessing」が加わった(#686)。
+- 1.1 の Interactive Authorization(Section 6): Authorization Challenge Endpoint を使う First-Party Applications のプロファイルになった(#736)。401 ではなく 403 を返す(#781)。インタラクション種別は URN になった(#712)。
+- 1.1 の `auth_session`: インタラクション種別が求める場合だけ必須(#706)。ウォレットは最新の値を送る(#710)。DPoP を使う場合、AS はこれを DPoP 公開鍵と結び付けなければならない(MUST)(#803)。
+- 1.1 の `auth_via_web`: ウォレットは `request_uri` を一度だけ使い(#704)、並行セッションを持つときは `state` を送る(#797)。
+- 1.1 の Credential Response: `credential_metadata`(#721)、`credential_dataset_id` と `credential_dataset_tag`(#472)。Token Error Response: `invalid_tx_code`(#686)。
+- 1.0 と 1.1: 遅延発行の例が `202 Accepted` になった(#722)。鍵バインディングが不要なら `cryptographic_binding_methods_supported` を省く(#714)。
+- s2s: 最初のドラフト(#753)、snake_case のプロパティ(#809)。オープン: 識別子の名前変更(#810)、遅延クレデンシャル(#816)。
+- 1.0 と 1.1 でオープン: `issuer_redirect_uri`(#759)、proof の種類ごとの `nonce` の条件(#678)。1.1 でオープン: `error_code` の記述の修正(#819)。
 
 ## 影響分析
 
-- 上流: Interactive Authorization の作業は first party apps ドラフトとその版(FPA draft-4、#781)に依存し、セッションの束縛には DPoP が参照されている(#803)。資料にはこれ以上は示されていない。
-- 下流: 1.0 または 1.1 を実装するウォレットと発行者、および s2s ドラフトを使うシステムが影響を受ける。資料は具体的な実装を挙げていない。
-- 互換性: `error_code` から `error` への変更(#819)と s2s の名前変更(#809、#810)は以前のドラフトを壊す可能性があり、メタデータ URL の変更(#775)は発行者が提供するものに影響する。これらが破壊的変更かどうかは資料に記載がない。
+- 上流: Interactive Authorization は First-Party Applications ドラフトに依存し、-04 に固定している。#819 が記述の修正で済むのは、そのエラー形式(`error`、Section 5.2.2)のためである。SD-JWT VC のフォーマットプロファイルは、固定された Final 前の SD-JWT VC の版に依存する。
+- 下流: HAIP 1.0 は OpenID4VCI をプロファイルしている(OpenID DCP WG の仕様一覧ページ)。1.0 Final で作ったウォレットと発行者は、エラッタのメタデータ規則の影響を受ける。1.1 も追う実装は、`invalid_tx_code` と Credential Dataset のパラメーターの影響を受ける。
+- 互換性: #775 は末尾が `/` の識別子のメタデータ URL を変え、#744 はこれを技術的には破壊的変更だとしている。#686 は Transaction Code の誤りに返すエラーを `invalid_grant`(1.0)から `invalid_tx_code`(1.1)に変えた。#819 は通信内容を変えない。s2s の名前変更は、安定版のないドラフトの中で JSON の名前を変える。
