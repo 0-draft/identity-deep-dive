@@ -22,6 +22,16 @@
   --color-sig-discussion: #9a5a0c;
   --color-sig-editorial: #6b7586;
   --color-sig-routine: #8c95a3;
+
+  /* Spec map status groups, in lifecycle order. */
+  --color-st-rfc: #0b6e60;
+  --color-st-near: #2c6db0;
+  --color-st-draft: #b0700e;
+  --color-st-draft-inactive: #c9a66b;
+  --color-st-openid-final: #5845c9;
+  --color-st-openid-draft: #9b8fd9;
+  --color-st-other: #6b7586;
+  --color-st-unknown: #b4bac4;
 }
 
 @layer base {
@@ -90,6 +100,27 @@
   [data-sig="discussion"] { --sig: var(--color-sig-discussion); }
   [data-sig="editorial"] { --sig: var(--color-sig-editorial); }
   [data-sig="routine"] { --sig: var(--color-sig-routine); }
+
+  [data-st="rfc"] { --st: var(--color-st-rfc); }
+  [data-st="near"] { --st: var(--color-st-near); }
+  [data-st="draft"] { --st: var(--color-st-draft); }
+  [data-st="draft-inactive"] { --st: var(--color-st-draft-inactive); }
+  [data-st="openid-final"] { --st: var(--color-st-openid-final); }
+  [data-st="openid-draft"] { --st: var(--color-st-openid-draft); }
+  [data-st="other"] { --st: var(--color-st-other); }
+  [data-st="unknown"] { --st: var(--color-st-unknown); }
+  .st-dot::before {
+    content: "";
+    display: inline-block;
+    width: 0.62em;
+    height: 0.62em;
+    margin-right: 0.4em;
+    border-radius: 999px;
+    background: var(--st);
+  }
+  .st-card {
+    border-left: 3px solid var(--st, var(--color-rule));
+  }
 
   .item {
     border-left: 3px solid var(--sig, var(--color-rule));

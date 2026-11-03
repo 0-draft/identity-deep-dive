@@ -1,0 +1,171 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { formatDateTime, href, pick, t, type Lang } from "../lib/i18n";
+import {
+  KIND_LABEL,
+  MATURITY_LABEL,
+  relationLabel,
+  STAGE_DETAIL,
+  STATUS_GROUP_LABEL,
+  landscape,
+  statusGroup,
+  type RelationKind,
+  type Spec,
+  type StatusGroup,
+} from "../lib/landscape";
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const { layers, specs, generatedAt } = landscape();
+const byId = new Map(specs.map((s) => [s.id, s]));
+const groups: StatusGroup[] = ["rfc", "near", "draft", "draft-inactive", "openid-final", "openid-draft", "other", "unknown"];
+const used = new Set(specs.map((s) => statusGroup(s.status)));
+
+// Short status text for a card: the RFC number, or the stage for a draft.
+const shortStatus = (s: Spec) =>
+  s.status.stage === "rfc" ? s.status.label : s.status.stage.startsWith("openid-") ? `OpenID ${s.status.label}` : (STAGE_DETAIL[s.status.stage] ?? STAGE_DETAIL.unknown)[lang];
+
+// Generally available support only; experimental, alpha and beta entries are
+// counted separately so a card never overstates who ships a spec.
+const ga = (s: Spec) => s.adoption.filter((c) => !c.maturity).length;
+
+// A status whose source page no longer showed its evidence, or that fell back
+// to the previous run's value after an error.
+const notReverified = (s: Spec) => s.status.stale === true || s.status.verified === false;
+
+// Each spec's direct neighbourhood as a small mermaid flowchart: what it
+// relates to, and what relates to it. One graph of every spec was too large
+// to read. Ids and labels come from the curated catalogue, with quotes and
+// brackets stripped.
+const label = (x: string) => x.replace(/["`<>\[\]{}()|#;]/g, " ").replace(/\s+/g, " ").trim();
+const node = (id: string) => "s_" + id.replace(/-/g, "_");
+const short = (s: Spec) => label(s.name.replace(/\s*\(.*\)\s*$/, ""));
+const incoming = (id: string) => specs.flatMap((o) => o.relations.filter((r) => r.to === id).map((r) => ({ from: o, kind: r.kind })));
+const neighbourhood = (s: Spec) => {
+  const out = s.relations.filter((r) => byId.has(r.to));
+  const inc = incoming(s.id);
+  if (out.length + inc.length === 0) return "";
+  const nodes = new Map<string, Spec>([[s.id, s]]);
+  out.forEach((r) => nodes.set(r.to, byId.get(r.to)!));
+  inc.forEach((r) => nodes.set(r.from.id, r.from));
+  const edge = (a: Spec, b: string, kind: RelationKind) =>
+    `  ${node(a.id)} ${kind === "alternative" ? "-.-" : "-->"}|${label(relationLabel(a, kind, lang))}| ${node(b)}`;
+  return [
+    "flowchart LR",
+    ...[...nodes.values()].map((n) => `  ${node(n.id)}["${short(n)}"]`),
+    `  style ${node(s.id)} stroke-width:3px`,
+    ...out.map((r) => edge(s, r.to, r.kind)),
+    ...inc.map((r) => edge(r.from, s.id, r.kind)),
+  ].join("\n");
+};
+---
+
+<Layout title={`${t(lang, "mapTitle")}: ${t(lang, "siteTitle")}`} lang={lang} path="map/" current="map">
+  <header class="mb-8 max-w-[72ch]">
+    <h1 class="headline text-3xl sm:text-4xl">{t(lang, "mapTitle")}</h1>
+    <p class="mt-3 text-muted">{t(lang, "mapIntro")}</p>
+    <p class="mt-2 text-sm text-muted">{t(lang, "mapAdoptionRule")}</p>
+    {generatedAt && <p class="mt-2 text-sm text-muted">{t(lang, "mapChecked")}: {formatDateTime(lang, generatedAt)}</p>}
+  </header>
+
+  <ul class="mb-8 flex flex-wrap gap-x-5 gap-y-2 text-sm" aria-label={t(lang, "mapLegend")}>
+    {groups.filter((g) => used.has(g)).map((g) => (
+      <li class="st-dot" data-st={g}>{STATUS_GROUP_LABEL[g][lang]}</li>
+    ))}
+  </ul>
+
+  <section aria-label={t(lang, "mapTitle")} class="space-y-6">
+    {layers.map((l) => {
+      const items = specs.filter((s) => s.layer === l.id);
+      return items.length > 0 && (
+        <div class="grid grid-cols-1 gap-3 md:grid-cols-[12rem_minmax(0,1fr)]">
+          <h2 class="headline pt-2 text-lg">{pick(lang, l.name, l.name_ja)}</h2>
+          <ul class="grid gap-2" style="grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr))">
+            {items.map((s) => (
+              <li>
+                <a href={`#spec-${s.id}`} data-st={statusGroup(s.status)} class="st-card block h-full rounded-md bg-surface px-3 py-2.5 no-underline hover:no-underline hover:shadow-sm">
+                  <span class="block text-[14px] font-semibold leading-snug text-ink">{s.name}</span>
+                  <span class="mt-1 flex flex-wrap gap-x-2 text-xs text-muted">
+                    <span class="st-dot" data-st={statusGroup(s.status)}>{shortStatus(s)}</span>
+                    {ga(s) > 0 && <span>{ga(s)} {t(lang, "mapAdopters")}</span>}
+                    {s.adoption.length - ga(s) > 0 && <span>{s.adoption.length - ga(s)} {t(lang, "mapPreview")}</span>}
+                    {notReverified(s) && <span>{t(lang, "mapStatusNotReverifiedShort")}</span>}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+    })}
+  </section>
+
+  <h2 class="headline mt-14 text-2xl">{t(lang, "mapDetails")}</h2>
+  <div class="mt-4 space-y-10">
+    {layers.map((l) => {
+      const items = specs.filter((s) => s.layer === l.id);
+      return items.length > 0 && (
+        <section>
+          <h3 class="border-b border-rule pb-1.5 text-sm font-semibold text-muted">{pick(lang, l.name, l.name_ja)}</h3>
+          <div class="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-2">
+            {items.map((s) => (
+              <article id={`spec-${s.id}`} data-st={statusGroup(s.status)} class="st-card scroll-mt-6 rounded-md bg-surface px-5 py-4">
+                <h4 class="headline text-[1.15rem]">{s.name}</h4>
+                <p class="mt-1 flex flex-wrap gap-x-3 text-[13px] text-muted">
+                  <span class="st-dot" data-st={statusGroup(s.status)}>{(STAGE_DETAIL[s.status.stage] ?? { en: s.status.label, ja: s.status.label })[lang]}</span>
+                  {s.status.url && <a href={s.status.url} rel="noreferrer">{s.status.label || t(lang, "mapSource")}</a>}
+                  {s.status.updated && <span>{s.status.updated}</span>}
+                  {s.status.note && <span>{pick(lang, s.status.note, s.status.note_ja)}</span>}
+                  {notReverified(s) && <span class="font-medium text-ink">{t(lang, "mapStatusNotReverified")}</span>}
+                </p>
+                <p class="mt-2 text-[15px] leading-relaxed">{pick(lang, s.summary, s.summary_ja)}</p>
+                {s.relations.length > 0 && (
+                  <ul class="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[13px]">
+                    {s.relations.filter((r) => byId.has(r.to)).map((r) => (
+                      <li><span class="text-muted">{relationLabel(s, r.kind, lang)}:</span> <a href={`#spec-${r.to}`}>{byId.get(r.to)!.name}</a></li>
+                    ))}
+                  </ul>
+                )}
+                {neighbourhood(s) && (
+                  <details class="disclosure mt-2" data-diagram>
+                    <summary>{t(lang, "mapRelations")}</summary>
+                    <div class="diagram-frame">
+                      <pre class="mermaid">{neighbourhood(s)}</pre>
+                    </div>
+                  </details>
+                )}
+                {s.deep_dive && (
+                  <p class="mt-2 text-[13px]"><a href={href(lang, `${s.deep_dive.track}/deep-dives/${s.deep_dive.slug}/`)}>{t(lang, "deepDive")}</a></p>
+                )}
+                <div class="mt-3">
+                  <p class="text-[13px] font-semibold text-muted">{t(lang, "mapAdoption")}</p>
+                  {s.adoption.length === 0 ? (
+                    <p class="mt-1 text-[13px] text-muted">{t(lang, "mapNoAdoption")}</p>
+                  ) : (
+                    <ul class="mt-1 space-y-1.5 text-[13px] leading-snug">
+                      {s.adoption.map((c) => (
+                        <li>
+                          <span class="font-medium">{c.who}</span>
+                          <span class="text-muted"> ({(KIND_LABEL[c.kind] ?? { en: c.kind, ja: c.kind })[lang]})</span>{c.maturity && <span class="ml-1 rounded border border-rule px-1 text-[11px] text-muted">{MATURITY_LABEL[c.maturity][lang]}</span>}: {pick(lang, c.what, c.what_ja)}{" "}
+                          <a href={c.url} rel="noreferrer">{t(lang, "mapSource")}</a>
+                          {c.verified_on && <span class="text-muted"> ({t(lang, "mapVerifiedOn")} {c.verified_on})</span>}
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  {s.unverified.length > 0 && (
+                    <p class="mt-1.5 text-xs text-muted">
+                      {t(lang, "mapNotReverified")}: {s.unverified.map((c) => (c.verified_on ? `${c.who} (${t(lang, "mapLastVerified")} ${c.verified_on})` : c.who)).join(", ")}
+                    </p>
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      );
+    })}
+  </div>
+</Layout>

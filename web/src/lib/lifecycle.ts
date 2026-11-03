@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import type { Lang } from "./i18n";
 import { readTrackState, recentInsightIds, type TrackId } from "./tracks";
 
@@ -14,26 +16,11 @@ export const STAGE_LABEL: Record<Stage, Record<Lang, string>> = {
   rfced: { en: "RFC Editor", ja: "RFC Editor" },
 };
 
-// Datatracker state names, furthest stage wins.
-const STAGE_STATES: [Stage, string[]][] = [
-  ["rfced", ["RFC Ed Queue", "RFC-Ed-Ack", "AUTH48", "AUTH48-DONE", "EDIT", "MISSREF", "REF", "TO"]],
-  [
-    "iesg",
-    [
-      "Publication Requested",
-      "Submitted to IESG for Publication",
-      "AD Evaluation",
-      "IESG Evaluation",
-      "IESG Evaluation - Defer",
-      "In Last Call",
-      "Waiting for AD Go-Ahead",
-      "Waiting for Writeup",
-      "Approved-announcement to be sent",
-      "Approved-announcement sent",
-    ],
-  ],
-  ["wglc", ["In WG Last Call", "WG Consensus: Waiting for Write-Up", "Waiting for WG Chair Go-Ahead"]],
-];
+// Datatracker state names, furthest stage wins. The table lives in
+// data/datatracker-stages.json, shared with scripts/landscape/refresh.py.
+const STAGE_STATES: [Stage, string[]][] = JSON.parse(
+  fs.readFileSync(path.resolve(process.cwd(), "..", "data", "datatracker-stages.json"), "utf8"),
+).stages;
 
 export function stageOf(labels: string[]): Stage {
   for (const [stage, names] of STAGE_STATES) {

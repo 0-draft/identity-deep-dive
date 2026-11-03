@@ -1,0 +1,57 @@
+name: Spec Map Refresh
+
+# Refreshes data/landscape-status.json: Datatracker states for the IETF specs
+# on the map, and whether each sourced claim's evidence phrase is still on its
+# page. No model is involved; the curated inputs (data/landscape.json and
+# data/landscape-sources.json) only change through pull requests.
+
+on:
+  schedule:
+    - cron: "0 9 * * 3"  # Wednesday 09:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: landscape
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - run: pip install requests
+      # The refresh exits 1 when anything was not verified. The file is still
+      # written (failed claims are marked, not dropped), so commit it first and
+      # fail the run afterwards.
+      - name: Refresh statuses and re-verify claims
+        id: refresh
+        run: |
+          set +e
+          python scripts/landscape/refresh.py | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "rc=${PIPESTATUS[0]}" >> "$GITHUB_OUTPUT"
+        shell: bash
+      - name: Commit and push (rebase-retry)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/landscape-status.json
+          git diff --cached --quiet && { echo "no changes"; exit 0; }
+          git commit -m "chore(map): refresh spec statuses $(date -u +%Y-%m-%d)"
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin main && git push && exit 0
+            echo "push attempt $i failed, retrying after backoff..."
+            sleep $((RANDOM % 10 + 5))
+          done
+          echo "push failed after 5 attempts"
+          exit 1
+      - name: Fail if anything was not verified
+        if: steps.refresh.outputs.rc != '0'
+        run: |
+          echo "::error::Some statuses or claims were not verified; see the job summary."
+          exit 1
