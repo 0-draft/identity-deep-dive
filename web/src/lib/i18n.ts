@@ -89,6 +89,7 @@ const STRINGS = {
   mapChecked: { en: "Statuses and sources checked", ja: "状態と出典の確認日時" },
   mapRelations: { en: "Relations diagram", ja: "関係図" },
   mapAdopters: { en: "documented adopters", ja: "件の公式な対応" },
+  mapLegend: { en: "Legend", ja: "凡例" },
   mapPreview: { en: "in preview", ja: "件のプレビュー" },
   mapAdoption: { en: "Documented support", ja: "公式に文書化された対応" },
   mapNoAdoption: {

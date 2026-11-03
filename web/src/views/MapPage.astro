@@ -4,11 +4,12 @@ import { formatDateTime, href, pick, t, type Lang } from "../lib/i18n";
 import {
   KIND_LABEL,
   MATURITY_LABEL,
-  RELATION_LABEL,
+  relationLabel,
   STAGE_DETAIL,
   STATUS_GROUP_LABEL,
   landscape,
   statusGroup,
+  type RelationKind,
   type Spec,
   type StatusGroup,
 } from "../lib/landscape";
@@ -49,14 +50,14 @@ const neighbourhood = (s: Spec) => {
   const nodes = new Map<string, Spec>([[s.id, s]]);
   out.forEach((r) => nodes.set(r.to, byId.get(r.to)!));
   inc.forEach((r) => nodes.set(r.from.id, r.from));
-  const edge = (a: string, b: string, kind: string) =>
-    `  ${node(a)} ${kind === "alternative" ? "-.-" : "-->"}|${label(RELATION_LABEL[kind as keyof typeof RELATION_LABEL][lang])}| ${node(b)}`;
+  const edge = (a: Spec, b: string, kind: RelationKind) =>
+    `  ${node(a.id)} ${kind === "alternative" ? "-.-" : "-->"}|${label(relationLabel(a, kind, lang))}| ${node(b)}`;
   return [
     "flowchart LR",
     ...[...nodes.values()].map((n) => `  ${node(n.id)}["${short(n)}"]`),
     `  style ${node(s.id)} stroke-width:3px`,
-    ...out.map((r) => edge(s.id, r.to, r.kind)),
-    ...inc.map((r) => edge(r.from.id, s.id, r.kind)),
+    ...out.map((r) => edge(s, r.to, r.kind)),
+    ...inc.map((r) => edge(r.from, s.id, r.kind)),
   ].join("\n");
 };
 ---
@@ -69,7 +70,7 @@ const neighbourhood = (s: Spec) => {
     {generatedAt && <p class="mt-2 text-sm text-muted">{t(lang, "mapChecked")}: {formatDateTime(lang, generatedAt)}</p>}
   </header>
 
-  <ul class="mb-8 flex flex-wrap gap-x-5 gap-y-2 text-sm" aria-label="Legend">
+  <ul class="mb-8 flex flex-wrap gap-x-5 gap-y-2 text-sm" aria-label={t(lang, "mapLegend")}>
     {groups.filter((g) => used.has(g)).map((g) => (
       <li class="st-dot" data-st={g}>{STATUS_GROUP_LABEL[g][lang]}</li>
     ))}
@@ -123,7 +124,7 @@ const neighbourhood = (s: Spec) => {
                 {s.relations.length > 0 && (
                   <ul class="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-[13px]">
                     {s.relations.filter((r) => byId.has(r.to)).map((r) => (
-                      <li><span class="text-muted">{RELATION_LABEL[r.kind][lang]}:</span> <a href={`#spec-${r.to}`}>{byId.get(r.to)!.name}</a></li>
+                      <li><span class="text-muted">{relationLabel(s, r.kind, lang)}:</span> <a href={`#spec-${r.to}`}>{byId.get(r.to)!.name}</a></li>
                     ))}
                   </ul>
                 )}
