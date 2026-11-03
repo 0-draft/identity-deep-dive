@@ -100,7 +100,7 @@ export function landscape(): Landscape {
 }
 
 /** Status groups for colour and legend, in lifecycle order. */
-export type StatusGroup = "rfc" | "near" | "draft" | "draft-inactive" | "openid-final" | "openid-draft" | "other";
+export type StatusGroup = "rfc" | "near" | "draft" | "draft-inactive" | "openid-final" | "openid-draft" | "other" | "unknown";
 
 export function statusGroup(s: SpecStatus): StatusGroup {
   if (s.stage === "rfc") return "rfc";
@@ -109,7 +109,8 @@ export function statusGroup(s: SpecStatus): StatusGroup {
   if (s.stage === "individual" || s.stage === "expired") return "draft-inactive";
   if (s.stage === "openid-final") return "openid-final";
   if (s.stage.startsWith("openid-")) return "openid-draft";
-  return "other";
+  if (s.stage === "external") return "other";
+  return "unknown";
 }
 
 export const STATUS_GROUP_LABEL: Record<StatusGroup, Record<Lang, string>> = {
@@ -120,6 +121,7 @@ export const STATUS_GROUP_LABEL: Record<StatusGroup, Record<Lang, string>> = {
   "openid-final": { en: "OpenID Final", ja: "OpenID Final" },
   "openid-draft": { en: "OpenID draft", ja: "OpenID ドラフト" },
   other: { en: "Other body", ja: "その他の団体" },
+  unknown: { en: "Status unknown", ja: "状態不明" },
 };
 
 export const STAGE_DETAIL: Record<string, Record<Lang, string>> = {
