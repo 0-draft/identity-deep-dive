@@ -2,7 +2,7 @@
 
 ## 参考文献
 
-Section 7 に挙げられている引用規格:
+Section 7 に挙げられている規範的参照:
 
 - RFC 2119, Key words for use in RFCs to Indicate Requirement Levels (BCP 14)
 - RFC 8174, Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words (BCP 14)

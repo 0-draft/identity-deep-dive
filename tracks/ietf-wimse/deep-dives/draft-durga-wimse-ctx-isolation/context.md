@@ -6,7 +6,7 @@ Revision 00 was posted on 29 October 2026 and announced to the WIMSE mailing lis
 
 ## Why This Matters
 
-The draft addresses a gap that WIMSE token work does not cover: a workload can be correctly authenticated while the tool call it makes was shaped by untrusted content in an LLM context window (Section 1). It proposes to make that visible and enforceable at the relying party with a signed taint attestation. The idea is easy to state, but the evidence in revision 00 is thin: the signer is the agent runtime, the key is not tied to a workload identity, and the step-up receipt is not defined. A reviewer should treat it as an early problem statement with a sketch of a wire format.
+The draft addresses a gap that WIMSE token work does not cover: a workload can be correctly authenticated while the tool call it makes was shaped by untrusted content in an LLM context window (Section 1). It proposes to make that visible and enforceable at the relying party with a signed taint attestation. The idea is easy to state, but the evidence in revision 00 is thin: the draft names no signer other than the agent runtime, the key is not tied to a workload identity, and the step-up receipt is not defined. A reviewer should treat it as an early problem statement with a sketch of a wire format.
 
 ## Open Questions
 
