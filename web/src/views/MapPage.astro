@@ -3,6 +3,7 @@ import Layout from "../layouts/Layout.astro";
 import { formatDateTime, href, pick, t, type Lang } from "../lib/i18n";
 import {
   KIND_LABEL,
+  MATURITY_LABEL,
   RELATION_LABEL,
   STAGE_DETAIL,
   STATUS_GROUP_LABEL,
@@ -24,6 +25,10 @@ const used = new Set(specs.map((s) => statusGroup(s.status)));
 // Short status text for a card: the RFC number, or the stage for a draft.
 const shortStatus = (s: Spec) =>
   s.status.stage === "rfc" ? s.status.label : s.status.stage.startsWith("openid-") ? `OpenID ${s.status.label}` : (STAGE_DETAIL[s.status.stage] ?? STAGE_DETAIL.unknown)[lang];
+
+// Generally available support only; experimental, alpha and beta entries are
+// counted separately so a card never overstates who ships a spec.
+const ga = (s: Spec) => s.adoption.filter((c) => !c.maturity).length;
 
 // A status whose source page no longer showed its evidence, or that fell back
 // to the previous run's value after an error.
@@ -83,7 +88,8 @@ const neighbourhood = (s: Spec) => {
                   <span class="block text-[14px] font-semibold leading-snug text-ink">{s.name}</span>
                   <span class="mt-1 flex flex-wrap gap-x-2 text-xs text-muted">
                     <span class="st-dot" data-st={statusGroup(s.status)}>{shortStatus(s)}</span>
-                    {s.adoption.length > 0 && <span>{s.adoption.length} {t(lang, "mapAdopters")}</span>}
+                    {ga(s) > 0 && <span>{ga(s)} {t(lang, "mapAdopters")}</span>}
+                    {s.adoption.length - ga(s) > 0 && <span>{s.adoption.length - ga(s)} {t(lang, "mapPreview")}</span>}
                     {notReverified(s) && <span>{t(lang, "mapStatusNotReverifiedShort")}</span>}
                   </span>
                 </a>
@@ -141,7 +147,7 @@ const neighbourhood = (s: Spec) => {
                       {s.adoption.map((c) => (
                         <li>
                           <span class="font-medium">{c.who}</span>
-                          <span class="text-muted"> ({(KIND_LABEL[c.kind] ?? { en: c.kind, ja: c.kind })[lang]})</span>: {pick(lang, c.what, c.what_ja)}{" "}
+                          <span class="text-muted"> ({(KIND_LABEL[c.kind] ?? { en: c.kind, ja: c.kind })[lang]})</span>{c.maturity && <span class="ml-1 rounded border border-rule px-1 text-[11px] text-muted">{MATURITY_LABEL[c.maturity][lang]}</span>}: {pick(lang, c.what, c.what_ja)}{" "}
                           <a href={c.url} rel="noreferrer">{t(lang, "mapSource")}</a>
                           {c.verified_on && <span class="text-muted"> ({t(lang, "mapVerifiedOn")} {c.verified_on})</span>}
                         </li>

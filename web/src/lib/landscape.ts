@@ -53,6 +53,8 @@ export interface Claim {
   evidence: string;
   verified: boolean;
   verified_on?: string;
+  /** Pre-GA support, as the cited page states it. Absent means generally available. */
+  maturity?: "experimental" | "alpha" | "beta";
 }
 
 export interface Spec {
@@ -149,4 +151,10 @@ export const KIND_LABEL: Record<string, Record<Lang, string>> = {
   spec: { en: "Specification", ja: "仕様" },
   wallet: { en: "Wallet", ja: "ウォレット" },
   government: { en: "Government", ja: "政府" },
+};
+
+export const MATURITY_LABEL: Record<NonNullable<Claim["maturity"]>, Record<Lang, string>> = {
+  experimental: { en: "experimental", ja: "実験的" },
+  alpha: { en: "alpha", ja: "アルファ" },
+  beta: { en: "beta", ja: "ベータ" },
 };
