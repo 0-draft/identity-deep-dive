@@ -9,20 +9,20 @@
 - [ ] A credential carrying both an HTTPS `iss` and an `x5c` header is verified with the mechanism that policy permits for that Issuer, not the one the credential happens to carry, and an attacker cannot switch the mechanism (Sections 2.5 and 7.3).
 - [ ] With `x5c`, the chain is validated against a trust anchor permitted for the Issuer, `x5c` is read from the protected header, and `iss` need not match the certificate subject (Section 2.5).
 - [ ] The well-known URL for `iss` values with and without a path, and with a trailing slash, matches the examples (Section 4.1). `iss` with a query, a fragment or dot-segments in the path is rejected (Section 4).
-- [ ] The issuer metadata `issuer` equals the `iss` value, including after a redirect, and the data is not used otherwise. Exactly one of `jwks` and `jwks_uri` is present (Sections 4.2 and 4.3).
+- [ ] The issuer metadata `issuer` is identical to the `iss` value, and the data is not used otherwise. Exactly one of `jwks` and `jwks_uri` is present (Sections 4.2 and 4.3).
 - [ ] Every dereferenced URL and every redirect target is HTTPS (data: URIs allowed only for rendering resources), the number of redirects is limited, and 4xx and 5xx responses are never used as content (Section 3).
 - [ ] Loopback, link-local, private-use and non-globally-reachable addresses, internal host names and DNS names that resolve to internal addresses are refused before any request (Section 7.1).
 - [ ] Each retrieval is time-bound and size-bound, and the content is validated against its expected format before use (Section 3).
 - [ ] The retrieved Type Metadata `vct` equals the reference used to fetch it, for the initial document and for each `extends` parent (Section 5.3).
 - [ ] A `#integrity` value is a valid SRI integrity metadata string, the strongest supported hash is used, a mismatch or an unsupported algorithm rejects the document, and CORS headers play no role (Section 6).
-- [ ] A document cached by integrity value is reused regardless of `no-store`, and one cached without an integrity value follows RFC 9111 (Section 5.3.4).
+- [ ] A document cached by integrity value may be reused regardless of `no-store`, and one cached without an integrity value follows RFC 9111 (Section 5.3.4).
 - [ ] An `extends` cycle is detected and rejected (Section 7.4).
 - [ ] A child type does not change `sd` from `always` or `never` to another value, or `mandatory` from true to false, and a `display` property in the child replaces rather than merges (Sections 5.5.2, 5.6.5 and 5.6.5.1).
 - [ ] Claim `path` handling follows Section 5.6.1.2: a string on a non-object, or null or an integer on a non-array, is an error, while a missing key or index only removes the element.
 - [ ] A verifier does not reject a presentation because a selectively disclosable mandatory claim is absent, and array positions count undisclosed elements (Section 5.6).
 - [ ] A malformed `claims` array, or a `path`, `mandatory` or `sd` that does not conform, causes rejection, while a bad `display` or `svg_id` does not (Sections 5.6 and 5.7).
 - [ ] When policy requires Type Metadata and it cannot be retrieved or processed, the credential is rejected (Section 5.7).
-- [ ] An SVG template is used only if each `svg_id` exists in claim metadata and no `svg_id` path contains null. Values are escaped for `&`, `<`, `>`, `"` and `'`, placeholders appear only in text content, and no code is executed or the SVG is sandboxed (Sections 5.5.1.2.2, 5.6 and 7.10).
-- [ ] Remote key references in `cnf` (`x5u`, `jku`, URL `kid`) are not followed (Section 8.3).
-- [ ] Servers send `X-Content-Type-Options: nosniff` and a restrictive `Content-Security-Policy` for metadata and rendering resources (Section 7.2).
+- [ ] An SVG template is not rendered (SHOULD) when a placeholder's `svg_id` is missing from claim metadata, when a claim value contains invalid XML characters, or when the `path` behind an `svg_id` selects more than one value, and `svg_id` never appears with a `path` that contains null (MUST NOT). Values are escaped for at least `&`, `<`, `>`, `"` and `'`, placeholders appear only in text content, no code in the template is executed, and the SVG display is sandboxed if that cannot be prevented reliably (Sections 5.5.1.2.2, 5.6 and 7.10).
+- [ ] Remote key references in `cnf` (`x5u`, `jku`, URL `kid`) are not followed. The draft advises against them and says only confirmation methods without remote retrieval SHOULD be supported (Section 8.3).
+- [ ] Servers send `X-Content-Type-Options: nosniff` and a restrictive `Content-Security-Policy` for metadata and rendering resources (SHOULD, Section 7.2).
 - [ ] Test vectors are taken from -23, not -22: the example signatures and the KB-JWT `iat` and `sd_hash` differ (`diff.txt`).
