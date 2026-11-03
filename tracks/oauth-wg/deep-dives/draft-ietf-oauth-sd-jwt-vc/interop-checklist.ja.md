@@ -1,0 +1,28 @@
+# Interop Checklist
+
+- [ ] SD-JWT のヘッダーの `typ` が `dc+sd-jwt` であり、メディアタイプを使う場合は `application/dc+sd-jwt` である (Section 2.1、2.2.1)。
+- [ ] `vct` が大文字小文字を区別する文字列で Collision-Resistant Name であり、`vct`、`iss`、`exp`、`nbf`、`cnf`、`vct#integrity`、`aka_vcts`、`status` が Disclosure の中に入らない (Section 2.2.2.1、2.2.2.3)。
+- [ ] `aka_vcts` が、`vct` の値を含まない空でない Collision-Resistant Name の配列であり、Verifier がそれを Issuer にその型の発行権限がある証拠と見なさない (Section 2.2.2.2、7.7)。
+- [ ] `cnf` を持ち `sub` も `iss` も持たない資格情報が、RFC 7800 Section 3 にかかわらず、ドラフトのとおりに受理される。未解決の DISCUSS の結果に注意する (Section 2.2.2.3)。
+- [ ] 選択的に開示できる claim を持たない資格情報が、`_sd` claim も Disclosure も持たない (Section 2.2.2.5)。
+- [ ] Key Binding が必要な場合、KB-JWT が `cnf` の鍵で検証される (Section 2.4)。
+- [ ] HTTPS の `iss` と `x5c` ヘッダーの両方を持つ資格情報が、資格情報がたまたま持つ方式ではなく、その Issuer にポリシーが許可する方式で検証され、攻撃者が方式を切り替えられない (Section 2.5、7.3)。
+- [ ] `x5c` の場合、チェーンがその Issuer に許可された信頼アンカーに対して検証され、`x5c` は保護ヘッダーから読まれ、`iss` が証明書のサブジェクトと一致する必要はない (Section 2.5)。
+- [ ] パスの有無、および末尾スラッシュの有無を含め、`iss` に対する well-known URL が例と一致する (Section 4.1)。クエリ、フラグメント、またはパスにドットセグメントを含む `iss` は拒否される (Section 4)。
+- [ ] Issuer メタデータの `issuer` が、リダイレクト後も含めて `iss` の値と同一であり、そうでない場合はそのデータを使わない。`jwks` と `jwks_uri` はちょうど一方だけが存在する (Section 4.2、4.3)。
+- [ ] 取得されるすべての URL とすべてのリダイレクト先が HTTPS であり (data: URI は描画リソースにのみ許される)、リダイレクト回数が制限され、4xx と 5xx の応答が内容として使われない (Section 3)。
+- [ ] ループバック、リンクローカル、プライベート用途、大域的に到達できないアドレス、内部ホスト名、内部アドレスに解決される DNS 名が、リクエストの前に拒否される (Section 7.1)。
+- [ ] 各取得が時間とサイズを制限され、内容が使用前に期待する形式に対して検証される (Section 3)。
+- [ ] 取得した Type Metadata の `vct` が、最初の文書でも各 `extends` の親でも、取得に使った参照と等しい (Section 5.3)。
+- [ ] `#integrity` の値が有効な SRI の integrity metadata 文字列であり、対応する最も強いハッシュが使われ、不一致または未対応のアルゴリズムは文書を拒否させ、CORS ヘッダーは影響しない (Section 6)。
+- [ ] 整合性の値をキーにキャッシュした文書は `no-store` にかかわらず再利用され、整合性の値なしでキャッシュしたものは RFC 9111 に従う (Section 5.3.4)。
+- [ ] `extends` の循環が検出され、拒否される (Section 7.4)。
+- [ ] 子の型が `sd` を `always` または `never` から別の値に変えず、`mandatory` を true から false に変えず、子の `display` が統合ではなく置き換えになる (Section 5.5.2、5.6.5、5.6.5.1)。
+- [ ] claim の `path` の扱いが Section 5.6.1.2 に従う。オブジェクトでないものへの文字列、または配列でないものへの null や整数はエラーであり、キーやインデックスの欠落は要素を選択から除くだけである。
+- [ ] Verifier が、選択的に開示できる必須 claim の不在を理由に提示を拒否せず、配列位置が未開示の要素も数える (Section 5.6)。
+- [ ] 不正な `claims` 配列、または適合しない `path`、`mandatory`、`sd` は拒否につながり、不正な `display` や `svg_id` は拒否につながらない (Section 5.6、5.7)。
+- [ ] ポリシーが Type Metadata を要求し、取得または処理できない場合に、資格情報が拒否される (Section 5.7)。
+- [ ] SVG テンプレートは、各 `svg_id` が claim metadata に存在し、どの `svg_id` の path にも null がない場合にのみ使われる。値は `&`、`<`、`>`、`"`、`'` についてエスケープされ、プレースホルダーはテキスト内容にのみ現れ、コードは実行されないか SVG がサンドボックス化される (Section 5.5.1.2.2、5.6、7.10)。
+- [ ] `cnf` 内の遠隔の鍵参照 (`x5u`、`jku`、URL の `kid`) がたどられない (Section 8.3)。
+- [ ] サーバーがメタデータと描画リソースに `X-Content-Type-Options: nosniff` と制限的な `Content-Security-Policy` を付ける (Section 7.2)。
+- [ ] テストベクターが -22 ではなく -23 から取られている。例の署名と KB-JWT の `iat` および `sd_hash` が異なる (`diff.txt`)。
