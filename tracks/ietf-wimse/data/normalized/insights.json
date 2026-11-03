@@ -28,6 +28,11 @@
       "at": "2026-11-03T01:02:39+00:00",
       "text": "draft-ietf-wimse-aims-01 is the main movement. It adds a policy-systems section (10.4), a long-lived sessions section (9.3), deprovisioning and identifier-lifecycle text, and WISE as an event source. A review on the list asks AIMS and the credential drafts to address trust between trust domains.",
       "text_ja": "最も重要な動きは draft-ietf-wimse-aims-01 である。ポリシーベースシステムの節（10.4）、長期セッションの節（9.3）、デプロビジョニングと識別子ライフサイクルの記述が追加され、WISE がイベント源として加わった。メーリングリストでは、信頼ドメイン間の信頼確立を AIMS と資格情報ドラフトで扱うよう求めるコメントが出ている。"
+    },
+    {
+      "at": "2026-11-03T14:22:01+00:00",
+      "text": "Wes Jackson settled on an \"at-or-past expiry\" rule (a permit is refused at exp, as in RFC 7519) for draft-jackson-wimse-evaluation, and the AIMS example vectors will change to match. The other two messages are an implementation test report and an off-topic pointer to an Independent Submission draft.",
+      "text_ja": "Wes Jacksonは、draft-jackson-wimse-evaluation で「有効期限の時点以降は拒否する」規則（RFC 7519 と同様）を採用する方針を示し、AIMS の例示ベクターもそれに合わせて変更される。他の2件は実装テストの報告と、Independent Submission ドラフトへの言及である。"
     }
   ],
   "items": {
@@ -516,6 +521,23 @@
         "マルチエージェントのハンドオフで、チェーンの完全性を保つためにホップ連鎖型の署名付きオファーと集約署名のどちらを選ぶか検討する場面。"
       ]
     },
+    "mail:KgIBpXR02dIGXJIoJBchaw4AUvo": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "The author of an Independent Submission draft points to how it handles source authority, decision-time validity and replayable verification.",
+      "headline_ja": "Independent Submission ドラフトの著者が、権限の所在、判定時点の有効性、再実行可能な検証の扱いを紹介している。",
+      "id": "mail:KgIBpXR02dIGXJIoJBchaw4AUvo",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Lee answers three questions about cross-domain authority evidence, citing draft-li-rttp-iqa-addressing-02. Authority for a subject is fixed by the owning organ, and an unreachable source gives authority_not_determined, never read as assent. Section 8.2 keeps effective instants and the observed instant as separate members, and expired reads are answered as expired. Section 8.3 describes sealed archives with the digest, frozen inputs, code and a replay procedure. The message presents these as reference points and not as a proposal against the WIMSE drafts.",
+      "summary_ja": "Leeは、ドメイン間の権限証拠に関する3つの質問に対し、draft-li-rttp-iqa-addressing-02 を引いて答えている。対象の権限は所有する機関が固定し、到達できない情報源は authority_not_determined として拒否され、同意とは解釈されない。8.2節は有効時刻と観測時刻を別のメンバーとして保持し、期限切れの読み取りは期限切れとして扱う。8.3節はダイジェスト、凍結した入力、コード、再実行手順を含む封印アーカイブを述べている。これらは WIMSE のドラフトに対する提案ではなく参照点として示されている。",
+      "title": "Three questions on cross-domain authority evidence and decision-time verification",
+      "updated_at": "2026-11-03T14:22:01+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/KgIBpXR02dIGXJIoJBchaw4AUvo/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "mail:Ohjj34ptHLwoSwPc0mCpxbotYI8": {
       "diagram": "",
       "first_seen": "2026-11-03",
@@ -794,6 +816,29 @@
         "年齢の計測で評価時刻とdecision.reportedAtのどちらを使うか決める必要がある監査記録の作成者。"
       ]
     },
+    "mail:owShZ68sWfdlOOV0MUVIuJjKoAw": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "Wes Jackson picks the JWT rule for permit expiry: a permit is refused at or after its expiry instant.",
+      "headline_ja": "Wes Jackson は許可証の有効期限について JWT と同じ規則、すなわち期限の時点以降は拒否することを選んだ。",
+      "id": "mail:owShZ68sWfdlOOV0MUVIuJjKoAw",
+      "kind": "mail",
+      "related": [],
+      "significance": "substantive",
+      "summary": "Following Blake Morrison's point that RFC 7519 section 4.1.4 forbids accepting a JWT on or after exp, Wes Jackson supports the at-or-past rule. He notes RFC 8392 says the same for CWTs and that SPIFFE uses RFC 7519 for the JWT-SVID exp. The -05 text keeps its rule, FR2 flips on the record side, and the AIMS vectors move. He offers to coordinate the -06 and -04 texts so both drafts adopt the same rule together. He also agrees -05 judges the horizon at the evaluation instant and says -06 will state that as normative.",
+      "summary_ja": "RFC 7519 の4.1.4節が exp の時点以降の JWT 受理を禁じているというBlake Morrisonの指摘を受け、Wes Jackson は「期限の時点以降は拒否」の規則を支持した。RFC 8392 が CWT について同じ規則を定めること、SPIFFE が JWT-SVID の exp に RFC 7519 を用いることにも触れている。-05 の規則は維持され、FR2 は記録側で反転し、AIMS のベクターは変更される。-06 と -04 の文面を調整し、両ドラフトが同時に同じ規則に揃うようにすると申し出ている。また、-05 が評価時点で期限の範囲を判定する点に同意し、-06 でそれを規範として明記するとしている。",
+      "title": "A principal-standing name for the 5.4 closed set",
+      "updated_at": "2026-11-03T14:22:01+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/owShZ68sWfdlOOV0MUVIuJjKoAw/",
+      "use_cases": [
+        "Implementers deciding whether a permit is still valid exactly at its expiry time",
+        "Authors of AIMS test vectors that must match the boundary rule"
+      ],
+      "use_cases_ja": [
+        "許可証が期限ちょうどの時点で有効かどうかを判断する実装者",
+        "境界規則に合わせる必要がある AIMS テストベクターの作成者"
+      ]
+    },
     "mail:pfPpZFDrdqavOQg7eSMesHJroYA": {
       "diagram": "",
       "first_seen": "2026-11-02",
@@ -897,6 +942,27 @@
         "独立した実装者がつまずく曖昧な点を探しているドラフト著者。"
       ]
     },
+    "mail:vYvV5zr1MwIDfVydyKMnAkiA61g": {
+      "diagram": "",
+      "first_seen": "2026-11-03",
+      "headline": "Implementer reports a verifier for attenuating agent delegation chains is being extended with issuer/key-pair regression tests (C6).",
+      "headline_ja": "エージェント委任チェーンの検証実装に対し、issuer と鍵の組に関する回帰テスト（C6）が追加される見込みである。",
+      "id": "mail:vYvV5zr1MwIDfVydyKMnAkiA61g",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Azat replies to Songbo Bu, who reran the AAT verifier at commit d813114 against the AAT-02 corpus and added seven issuer/key-pair tests called C6. They cover a shared key under two issuer names, wrong-issuer and wrong-key controls, and key rotation ordering. A paired negative control puts the issuer and verifying key in different anchor records, and the verifier denies it. Azat reproduced 13/13 and asks for a pull request on github.com/azatdavliatshin/aat. He says the draft authors have not yet been told about C6, that he plans to file an issue on tenuo-ai/tenuo, and that until they answer the tests only document this implementation's interpretation.",
+      "summary_ja": "AzatはSongbo Buに返信している。Songboは AAT-02 コーパスに対して d813114 の AAT 検証器を再実行し、C6 と呼ぶ7件の issuer と鍵の組のテストを追加した。内容は、1つの鍵を2つの issuer 名で共有するケース、issuer の誤りと鍵の誤りの対照、鍵ローテーションの順序である。issuer と検証鍵を別々の anchor レコードに置く負の対照は、検証器が拒否する。Azatは 13/13 の再現を確認し、github.com/azatdavliatshin/aat へのプルリクエストを依頼した。ドラフト著者には C6 をまだ伝えておらず、tenuo-ai/tenuo に issue を立てる予定であり、回答があるまでテストはこの実装の解釈を示すにとどまると述べている。",
+      "title": "Implementation report: attenuating delegation chains for agents (draft-niyikiza-oauth-attenuating-agent-tokens, draft-asor-wimse-agent-delegation-chain)",
+      "updated_at": "2026-11-03T14:22:01+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/vYvV5zr1MwIDfVydyKMnAkiA61g/",
+      "use_cases": [
+        "Implementers of attenuating delegation chain verifiers checking how issuer and key are bound in trust anchors"
+      ],
+      "use_cases_ja": [
+        "信頼アンカーにおける issuer と鍵の結び付けを確認する、減衰型委任チェーン検証器の実装者"
+      ]
+    },
     "mail:vauc1h3gao6R7YAlJH5ffDxEOwo": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -951,12 +1017,6 @@
   },
   "overflow": [],
   "triage": {
-    "Diff active WG draft: draft-ietf-wimse-aims-01": {
-      "date": "2026-11-03",
-      "priority": "high",
-      "reason": "-01 adds Sections 9.3 and 10.4, deprovisioning, identifier lifecycle and WISE, and has an open list review.",
-      "reason_ja": "-01 で9.3節、10.4節、デプロビジョニング、識別子ライフサイクル、WISE が加わり、メーリングリストでレビューも出ている。"
-    },
     "Diff active WG draft: draft-ietf-wimse-workload-identity-practices-08": {
       "date": "2026-11-01",
       "priority": "high",
@@ -966,8 +1026,8 @@
     "Review related draft: draft-asor-wimse-agent-delegation-chain-03": {
       "date": "2026-11-03",
       "priority": "low",
-      "reason": "Only cited in the AIMS review as recording the trust-anchor provenance gap, with no new material.",
-      "reason_ja": "AIMS のレビューで信頼アンカーの来歴に関するギャップの記録例として挙げられただけで、新しい材料はない。"
+      "reason": "The implementation report mentions it, but the new material is test coverage and has no draft text change.",
+      "reason_ja": "実装報告で言及されているが、新しい内容はテストの追加であり、ドラフト本文の変更はない。"
     },
     "Review related draft: draft-durga-wimse-ctx-isolation-00": {
       "date": "2026-11-01",
@@ -980,6 +1040,12 @@
       "priority": "high",
       "reason": "It is named as one of three offline attenuation formats whose subsumption rules may be compared before IETF 127.",
       "reason_ja": "IETF 127 までに包含規則が比較され得る三つのオフライン減衰形式の一つとして名前が挙がっている。"
+    },
+    "Review related draft: draft-jackson-wimse-evaluation-05": {
+      "date": "2026-11-03",
+      "priority": "high",
+      "reason": "Expiry boundary settled as at-or-past; -06 will add it and the horizon-at-evaluation-instant rule as normative.",
+      "reason_ja": "有効期限の境界が「時点以降は拒否」に決まり、-06 で評価時点での範囲判定とともに規範化される。"
     },
     "Review related draft: draft-reddy-wimse-aggregate-signatures-01": {
       "date": "2026-11-03",
