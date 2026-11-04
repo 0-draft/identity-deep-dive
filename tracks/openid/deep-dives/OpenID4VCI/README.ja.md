@@ -8,8 +8,8 @@ OpenID4VCI は「Verifiable Credential を発行するための、OAuth で保�
 
 OpenID Foundation の会員投票で OpenID4VCI 1.0 は Final Specification として承認された。告知の日付は 2025 年 9 月 16 日で、賛成 102、反対 1、棄権 12 だった。リポジトリ(コミット `21ffd6c`、2026 年 10 月 27 日)には編集中のドラフトが 3 つあり、どれも OpenID Digital Credentials Protocols ワーキンググループのものである。
 
-- `1.0/`: 「1.0 incorporating errata set 1」、リビジョン `-19`。Final からの変更は今のところ、Transaction Code の推測攻撃に関するセキュリティ上の考慮事項の追加と、メタデータ URL を組み立てる際に末尾の `/` を取り除く規則の復活の 2 点である(Document History)。
-- `1.1/`: リビジョン `-01`。「1.0 Final と同じ本文」から始めて拡張している。最大の追加は Interactive Authorization(Section 6)で、OAuth 2.0 for First-Party Applications(FPA)のプロファイルである。この仕組みは Final の前に 1.0 ドラフトから外されたものを戻したものである(Document History)。
+- `1.0/`: 「1.0 incorporating errata set 1」、リビジョン `-19`。Document History が Final からの変更として挙げるのは、Transaction Code の推測攻撃に関するセキュリティ上の考慮事項の追加と、メタデータ URL を組み立てる際に末尾の `/` を取り除く規則の復活の 2 点である。`1.0/` の git 履歴を見ると、ほかにも小さな修正が入っている。遅延発行の `202` の例の reason phrase(#722)、鍵束縛のないクレデンシャルについての Section 14.2 の段落(#714)、誤字の修正(#731)、エラッタ版のタイトルと新しい Section 1.1「Errata revisions」(#662)である。
+- `1.1/`: リビジョン `-01`。「1.0 Final と同じ本文」から始めて拡張している。最大の追加は Interactive Authorization(Section 6)である。この本文は Final の前に 1.0 ドラフトから外されていた。1.1 はまずそれを戻し、その後 OAuth 2.0 for First-Party Applications(FPA)のプロファイルとして作り直した(Document History、#736)。
 - `s2s/`: 「Server to Server」、リビジョン `-01`。Wallet Server と Issuer Server の間の API で、最初のドラフトは 2026 年 8 月 4 日にマージされた(#753)。
 
 ## 仕組み
@@ -48,7 +48,7 @@ sequenceDiagram
     end
 ```
 
-1. 発行者が開始する場合、Credential Issuer は Credential Offer を値渡し(`credential_offer`)か参照渡し(`credential_offer_uri`)で送る。たとえば QR コードにする。中身は `credential_issuer` と `credential_configuration_ids`、任意で `grants` である(1.0 Sections 4.1 と 4.1.1)。ウォレットが開始する場合は Offer がない。
+1. 発行者が開始する場合、Credential Issuer は Credential Offer を値渡し(`credential_offer`)か参照渡し(`credential_offer_uri`)で送る。Offer は QR コードにして渡すこともある。中身は `credential_issuer` と `credential_configuration_ids`、任意で `grants` である(1.0 Sections 4.1 と 4.1.1)。ウォレットが開始する場合は Offer がない。
 2. ウォレットは Credential Issuer Identifier のホストとパスの間に `/.well-known/openid-credential-issuer` を挟んだ URL から Credential Issuer Metadata を取得する(1.0 Section 12.2.2)。
 3. Authorization Code Flow では、ウォレットは `openid_credential` 型の `authorization_details` かクレデンシャル用の `scope` を付けて Authorization Request を送り、Offer に `issuer_state` があればそれも付ける。受け取ったコードは Token Endpoint で交換する(Sections 5 と 6)。Pre-Authorized Code Flow では Authorization Endpoint を通らず、`pre-authorized_code` を送る。Offer が Transaction Code(`tx_code`)を求めていればそれも送る(Section 3.5)。
 4. Credential Issuer が Nonce Endpoint を持っていれば、ウォレットはそこから `c_nonce` を取る。このエンドポイントは保護されたリソースではない。proof に `c_nonce` を求める発行者は、このエンドポイントを提供しなければならない(MUST)(Section 7)。
@@ -64,12 +64,12 @@ sequenceDiagram
 - 人手の審査が要る発行者は、`transaction_id` を返し、Deferred Credential Endpoint を用意する(Sections 8.3 と 9)。
 - 発行前に別のクレデンシャルを確認したいが、利用者をブラウザに移したくない発行者は、1.1 の Interactive Authorization を使う(Section 6、`urn:openid:dcp:ia:openid4vp_presentation`)。
 - クーポンやチケットのようなベアラー型クレデンシャルの発行者は `cryptographic_binding_methods_supported` を省き、その結果 `proof_types_supported` もなくなるので、ウォレットは `proofs` を送らない(1.1 Section 15.2、#714 で追加)。
-- ウォレットアプリと発行者の間に自前のサーバーを置くウォレット提供者は、s2s ドラフトを使う。Wallet Server と Issuer Server は mTLS で相互認証し、Wallet Client が発行者向けに署名・暗号化したデータは Wallet Server からは見えない(s2s Abstract、Sections 4 と 5.1)。
+- ウォレットアプリと発行者の間に自前のサーバーを置くウォレット提供者は、s2s ドラフトを使う。Wallet Server と Issuer Server は mTLS で相互認証し、Wallet Client が発行者向けに署名・暗号化したデータは Wallet Server からは見えない(s2s Abstract、Sections 4、5.1、5.5)。
 
 ## なぜ今重要か
 
 - **きっかけ**: `subject.json` に理由はない(`ai_note` が空)。`openid` トラックで、まだディープダイブのない候補の先頭だった。
-- **根拠**: 2026 年 6 月から 10 月にかけて、FPA を土台にした Interactive Authorization(#736、6 月 24 日)、最初の s2s ドラフト(#753、8 月 4 日)、Interactive Authorization のセッション束縛の規則(#706、#797、#803)、Credential Dataset のパラメーター(#472、10 月 15 日)がマージされた。オープンな #687 は、1.1 を Final にするまでの手順として、実装者向けドラフト、形式的なセキュリティ分析、WG ラストコールを挙げている。
+- **根拠**: 2026 年 6 月から 10 月にかけて、FPA を土台にした Interactive Authorization(#736、6 月 24 日)、最初の s2s ドラフト(#753、8 月 4 日)、Interactive Authorization のセッション束縛の規則(#706、#797、#803)、Credential Dataset のパラメーター(#472、10 月 15 日)がマージされた。オープンな #687 は、1.1 を Final にするまでの道筋についての個人的な提案で、実装者向けドラフトの WG ラストコールと形式的なセキュリティ分析を並行して始め、その後に Final の WG ラストコールを行う案を示している。
 - **想定される影響**: 今実装すべき版は 1.0 Final である。1.1 も追うウォレットと発行者は、通信内容が変わる箇所に備える必要がある。Interactive Authorization のエンドポイントとパラメーター、トークンエラーの `invalid_tx_code`、Credential Response の `credential_dataset_id` と `credential_dataset_tag` である。
 
 ## 変更点
@@ -77,8 +77,8 @@ sequenceDiagram
 以下はすべて、各プルリクエストの差分と `21ffd6c` 時点のドラフト本文で確認した。
 
 - **1.0 エラッタ(`-19`)**: Section 12.2.2 に末尾の `/` の規則が戻った(#775、2026 年 9 月 28 日マージ)。Section 13.6.3「Transaction Code Guessing」も加わった。Transaction Code の失敗回数を制限すべきこと(SHOULD)と、コードが無効だと分かるエラーを返すべきこと(SHOULD)を定めている(#686)。
-- **1.1、Interactive Authorization(Section 6)**: FPA のプロファイルとして作り直され、Authorization Challenge Endpoint を使う(#736)。応答は FPA draft -04 に合わせて 401 ではなく 403 Forbidden になった(#781)。インタラクション種別は `urn:openid:dcp:ia:openid4vp_presentation` や `urn:openid:dcp:ia:auth_via_web` のような URN である(#712)。`expected_origins` がある場合は、Authorization Challenge Endpoint から導いた Origin だけを含めなければならない(MUST)(Section 6.2.1.1)。期待する URL を使う案の #695 はクローズされた。
-- **1.1、`auth_session`(Section 6.2.1)**: 「インタラクション種別が指定する場合に REQUIRED」となり、独自の種別はこれを必須にするか、リクエストを結び付ける別の方法を定めるかのどちらかにする(#706)。ウォレットは最後に受け取った値を送らなければならない(MUST)(#710)。DPoP を使う場合、AS は `auth_session` の値を DPoP 公開鍵と結び付けなければならない(MUST)(#803)。
+- **1.1、Interactive Authorization(Section 6)**: FPA のプロファイルとして作り直され、Authorization Challenge Endpoint を使う(#736)。応答は FPA draft -04 に合わせて 401 ではなく 403 Forbidden になった(#781)。インタラクション種別は URN になり(#712)、今の名前は `urn:openid:dcp:ia:openid4vp_presentation` や `urn:openid:dcp:ia:auth_via_web` である(#736)。`expected_origins` がある場合は、Authorization Challenge Endpoint から導いた Origin だけを含めなければならない(MUST)(Section 6.2.1.1)。期待する URL を使う案の #695 はクローズされた。
+- **1.1、`auth_session`(Section 6.2.1)**: 「インタラクション種別が指定する場合に REQUIRED」となり、独自の種別はこれを必須にするか、リクエストを結び付ける別の方法を定めるかのどちらかにする(#706)。ウォレットは最後に受け取った値を送らなければならない(MUST)。#710 は、これを進行中の認可リクエストの流れの中に限定した。DPoP を使う場合、AS は `auth_session` の値を DPoP 公開鍵と結び付けなければならない(MUST)(#803)。
 - **1.1、`auth_via_web`(Section 6.2.1.2)**: ウォレットは `request_uri` の値を一度だけ使わなければならない(MUST)。AS は一回限りとして扱うべきだが(SHOULD)、再読み込みによる重複は受け入れてもよい(MAY)(#704)。並行セッションを持つウォレットは `state` を送らなければならない(MUST)(#797)。
 - **1.1、Credential Response(Section 9.3)**: 任意の `credential_metadata`(#721)と、推奨の `credential_dataset_id` と `credential_dataset_tag` が加わった。後者によって、ウォレットは保存済みのクレデンシャルが置き換わったかを判断できる(#472、Section 15.4)。
 - **1.1、Token Error Response(Section 7.3)**: Transaction Code の誤りには `invalid_tx_code` を返す。1.0 では `invalid_grant` である(1.0 Section 6.3、#686)。
@@ -87,7 +87,7 @@ sequenceDiagram
 - **オープン**: Interaction Required Response の本文で `error_code` を `error` に直す(#819)。s2s の識別子モデルの名前変更で、Session Id を Wallet Id に、Credential Instance Id を Credential Id にする(#810)。s2s の遅延クレデンシャルで、Transaction Id と専用エンドポイントを加える(#816、#810 が前提)。Credential Offer の `issuer_redirect_uri` と、その許可リストになるメタデータ `expected_redirect_uris`(#759)。key attestation の `nonce` と `di_vp` の `challenge` の条件(#678)。
 - **マージされずにクローズ**: #695(上記)、#699(JOSE を使う VCDM 2 のフォーマットプロファイル)、#716(IA の応答のステータスコード要件)、#723(#759 に置き換え)。
 
-互換性について。#819 は 1 語の修正である。例と FPA draft -04 Section 5.2.2 はすでに `error` を使っているので、直すのは本文の記述で、通信内容は変わらない。s2s の名前変更(#809、#810)は JSON の名前を変えるが、s2s はまだリビジョンが 1 つしかなく、安定版もない。運用中の 1.0 発行者の挙動を変えるのは #775 である。Final の本文では `https://issuer.example.com/tenant/` は `.../.well-known/openid-credential-issuer/tenant/` になり、エラッタの本文では `.../tenant` になる。元になった issue(#744)は、これを「technically ... a breaking change」と書いている。
+互換性について。#819 は 1 語の修正である。例と FPA draft -04 Section 5.2.2 はすでに `error` を使っているので、直すのは本文の記述で、通信内容は変わらない。s2s の名前変更(#809、#810)は JSON の名前を変えるが、s2s はまだリビジョンが 1 つしかなく、安定版もない。運用中の 1.0 発行者の挙動を変えるのは #775 である。Final の本文には末尾の `/` の規則がない(#744 は「silent」と書いている)ので、文字どおり読めば `https://issuer.example.com/tenant/` は `.../.well-known/openid-credential-issuer/tenant/` になり、エラッタの本文では `.../tenant` になる。元になった issue(#744)は、これを「technically ... a breaking change」と書いている。
 
 ## 技術分析
 

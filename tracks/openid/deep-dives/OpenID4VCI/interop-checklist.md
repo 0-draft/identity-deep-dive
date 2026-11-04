@@ -3,7 +3,7 @@
 Section numbers are for 1.0 unless marked 1.1 or s2s, at commit `21ffd6c`.
 
 - [ ] Confirm which text each peer implements: 1.0 Final, the 1.0 errata draft, 1.1, or s2s. They differ on the items below.
-- [ ] Form the metadata URL for `https://<host>/tenant` and `https://<host>/tenant/`. The errata text and 1.1 give `/.well-known/openid-credential-issuer/tenant` for both; 1.0 Final leaves the second ending in `/` (Section 12.2.2, #775).
+- [ ] Form the metadata URL for `https://<host>/tenant` and `https://<host>/tenant/`. The errata text and 1.1 give `/.well-known/openid-credential-issuer/tenant` for both; 1.0 Final has no rule for the terminating `/`, so read literally the second keeps it (Section 12.2.2, #744, #775).
 - [ ] Send a Credential Offer by value (`credential_offer`) and by reference (`credential_offer_uri`), and check that the Wallet rejects an offer that carries both (Section 4.1).
 - [ ] Send a Pre-Authorized Code Token Request with a wrong `tx_code`: expect `invalid_grant` from a 1.0 AS and `invalid_tx_code` from a 1.1 AS (1.0 Section 6.3, 1.1 Section 7.3).
 - [ ] Send repeated wrong `tx_code` values and check that the AS invalidates the Pre-Authorized Code after its limit and then returns `invalid_grant` (errata Section 13.6.3).
