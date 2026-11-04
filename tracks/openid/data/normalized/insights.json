@@ -19,6 +19,11 @@
       "at": "2026-11-03T23:27:51+00:00",
       "text": "Nothing substantive in the OpenID track: only commit-title activity in two supporting repositories, publication-checks (tooling) and ssf-wise-profile (spec publishing workflow).",
       "text_ja": "OpenIDトラックに実質的な変更はない。publication-checks(ツール)とssf-wise-profile(仕様公開ワークフロー)の二つのリポジトリで、コミットタイトルのみの動きがあった。"
+    },
+    {
+      "at": "2026-11-04T19:50:05+00:00",
+      "text": "Quiet run: openid/dchp took review edits, including making credential_type an array, and federation-entity-collection merged three clarification PRs (#65–#67). Both items are commit lists only, so details are thin.",
+      "text_ja": "今回は小規模な動きである。openid/dchp ではレビュー反映が進み、credential_type が配列になった。federation-entity-collection では明確化のPR（#65〜#67）が三件マージされた。どちらもコミット一覧のみで、詳細は限られる。"
     }
   ],
   "items": {
@@ -107,6 +112,44 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "repo:openid/dchp:2026-11-04T17:43:29Z": {
+      "diagram": "",
+      "first_seen": "2026-11-04",
+      "headline": "openid/dchp applied a round of review suggestions and changed credential_type to an array.",
+      "headline_ja": "openid/dchp にレビュー指摘が反映され、credential_type が配列に変更された。",
+      "id": "repo:openid/dchp:2026-11-04T17:43:29Z",
+      "kind": "repo-activity",
+      "related": [],
+      "significance": "substantive",
+      "summary": "Eight commits landed on the default branch. Most apply review suggestions from c2bo, martijnharing, jogu and awoie, plus a markdown list rendering fix. One commit, \"make credential_type an array\", appears to change a field's shape so that several credential types can be expressed. Only commit titles are available, with no diff, so the exact scope of that change and what it affects in the spec are not confirmed.",
+      "summary_ja": "デフォルトブランチに八件のコミットが入った。大半は c2bo、martijnharing、jogu、awoie によるレビュー提案の反映と、Markdown のリスト表示の修正である。「make credential_type an array」というコミットは、複数のクレデンシャルタイプを表現できるようフィールドの形を変えたものと見られる。ただし入手できたのはコミットタイトルのみで差分はなく、変更の正確な範囲や仕様への影響は確認できない。",
+      "title": "openid/dchp: 8 new commits on the default branch",
+      "updated_at": "2026-11-04T19:50:05+00:00",
+      "url": "https://github.com/openid/dchp",
+      "use_cases": [
+        "A wallet or verifier implementer following dchp should expect credential_type to be an array, not a single value, and plan parsing accordingly."
+      ],
+      "use_cases_ja": [
+        "dchp に追従するウォレットや検証者の実装者は、credential_type が単一値ではなく配列になる前提でパース処理を計画する必要がある。"
+      ]
+    },
+    "repo:openid/federation-entity-collection:2026-11-04T08:02:37Z": {
+      "diagram": "",
+      "first_seen": "2026-11-04",
+      "headline": "openid/federation-entity-collection merged three clarification PRs on pagination limit, trust mark verification and an omitted trust anchor parameter.",
+      "headline_ja": "openid/federation-entity-collection で、ページネーション上限、トラストマーク検証、省略されたトラストアンカーパラメータに関する三件の明確化PRがマージされた。",
+      "id": "repo:openid/federation-entity-collection:2026-11-04T08:02:37Z",
+      "kind": "repo-activity",
+      "related": [],
+      "significance": "editorial",
+      "summary": "Seven commits include merges of PRs #65 (clarify pagination limit), #66 (clarify trust mark verification) and #67 (clarify omitted trust anchor parameter), editorial fixes for issue 61, and a changelog entry covering PR65-67. The branch names indicate clarifications of existing behaviour. Without diffs, it is not possible to say whether any wire behaviour changed.",
+      "summary_ja": "七件のコミットには、PR #65（ページネーション上限の明確化）、#66（トラストマーク検証の明確化）、#67（トラストアンカーパラメータ省略時の明確化）のマージ、issue 61 に対する編集上の修正、PR65〜67 を対象とする変更履歴の追記が含まれる。ブランチ名からは既存の挙動の明確化と読み取れる。差分がないため、通信上の挙動が変わったかどうかは判断できない。",
+      "title": "openid/federation-entity-collection: 7 new commits on the default branch",
+      "updated_at": "2026-11-04T19:50:05+00:00",
+      "url": "https://github.com/openid/federation-entity-collection",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "repo:openid/ipsie-openid-sl1:2026-11-01T03:45:08Z": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -188,6 +231,12 @@
       "date": "2026-11-01",
       "priority": "low",
       "reason": "Only a CI runner bump landed, with no spec change."
+    },
+    "openid/dchp": {
+      "date": "2026-11-04",
+      "priority": "high",
+      "reason": "Eight commits including a credential_type array change and several review rounds.",
+      "reason_ja": "credential_type の配列化を含む八件のコミットとレビュー反映が続いている。"
     }
   }
 }
