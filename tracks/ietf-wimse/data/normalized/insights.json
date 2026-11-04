@@ -38,6 +38,11 @@
       "at": "2026-11-03T23:27:50+00:00",
       "text": "The most substantive thread is AAT vs. draft-asor-wimse-agent-delegation-chain: they disagree on del_max_depth semantics (an off-by-one at the leaf, plus whether a holder's lower cap binds descendants), and the authors plan to reconcile test vectors before IETF 127. The chairs also issued guidance on AI-generated contributions and published the 18 Nov agenda.",
       "text_ja": "最も重要なのは AAT と draft-asor-wimse-agent-delegation-chain の間の del_max_depth の意味の食い違い（リーフでの1ホップの差と、保持者が設定した下位の上限が子孫を拘束するか否か）であり、著者らは IETF 127 までにテストベクターの整合を図る予定である。また、議長が AI 生成コンテンツに関する指針を出し、11月18日のアジェンダも公開された。"
+    },
+    {
+      "at": "2026-11-04T06:29:28+00:00",
+      "text": "A mailing-list thread on draft-ietf-wimse-aims-01 is about how a verifier comes to trust another trust domain's certificate issuer. No draft text changed in this run. The other message is a process question about contributing as an individual.",
+      "text_ja": "draft-ietf-wimse-aims-01 について、検証者が他のトラストドメインの証明書発行者をどう信頼するかを論じるメーリングリストのスレッドがあった。ドラフト本文の変更はない。もう一件は個人としての寄稿手続きに関する質問である。"
     }
   ],
   "items": {
@@ -375,6 +380,36 @@
       "url": "https://mailarchive.ietf.org/arch/msg/wimse/14leMcljsbd1hdqCebK3Mmddcxo/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:2parb22KDc6Scj4hem0giiG0E0o": {
+      "diagram": "flowchart LR\n  S[Sending org] -->|publishes DNS TXT: issuer and client id| D[DNS]\n  A[Agent] -->|short-lived token| R[Receiver]\n  R -->|lookup record| D\n  R -->|fetch issuer public keys| I[Issuer AS]",
+      "first_seen": "2026-11-04",
+      "headline": "A reply to a gap report on AIMS -01 suggests a DNS-published alternative to upstream-CA trust across trust domains.",
+      "headline_ja": "AIMS -01 のギャップ報告への返信で、トラストドメイン間の信頼に上位CA方式の代わりとなるDNS公開方式が提案された。",
+      "id": "mail:2parb22KDc6Scj4hem0giiG0E0o",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-identity-chaining",
+          "note": "Also addresses authorization across trust domains, though this message does not cite it.",
+          "note_ja": "トラストドメイン間の認可を扱う点で近いが、本メッセージはこのドラフトに言及していない。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "The message replies to David Croston's comments on draft-ietf-wimse-aims-01. Croston asks AIMS to record that it does not say how a verifier comes to trust the certificate issuer of a trust domain it does not operate. He proposes issuing CAs chained to an upstream authority with critical URI name constraints, using existing X.509 only. The reply supports recording the gap but notes that both parties must still agree on a common anchor, and that withdrawal works at trust-domain level. It offers draft-shankarlingam-oauth-agent-dns-link-01 as a complement: the sender publishes a DNS TXT record naming its issuer and client identifier, the agent presents a short-lived token, and receivers validate it with that record and the issuer's keys (DNSSEC advised). It does not authenticate the agent's name. The reply asks AIMS to say that both certificate-path and DNS-published approaches exist. The source is truncated, so the rest of Croston's proposal is not visible.",
+      "summary_ja": "本メッセージは David Croston による draft-ietf-wimse-aims-01 へのコメントへの返信である。Croston は、検証者が自ら運用しないトラストドメインの証明書発行者をどう信頼するかが AIMS に書かれていないことを記録するよう求め、既存の X.509 のみで、critical な URI 名前制約を持つ発行CAを上位認証局につなぐ方式を提案している。返信はギャップの記録に賛成しつつ、双方が共通のアンカーに合意する必要があり、失効の単位もトラストドメインである点を指摘する。補完案として draft-shankarlingam-oauth-agent-dns-link-01 を挙げる。送信側が発行者とクライアント識別子を示す DNS TXT レコードを公開し、エージェントが短命トークンを提示し、受信側はそのレコードと発行者の鍵で検証する（DNSSEC の検証を推奨）。この方式はエージェント名自体は認証しない。AIMS には証明書パス方式と DNS 公開方式の両方があると記すよう求めている。原文は途中で切れているため、Croston の提案の残りは確認できない。",
+      "title": "AIMS -01: upstream authorities for Workload Identity Certificates (trust between trust domains)",
+      "updated_at": "2026-11-04T06:29:28+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/2parb22KDc6Scj4hem0giiG0E0o/",
+      "use_cases": [
+        "Deployers of agents that call partner organizations and want to avoid exchanging trust bundles pairwise.",
+        "Authors of AIMS or the credential drafts deciding how to describe cross-domain issuer trust."
+      ],
+      "use_cases_ja": [
+        "提携先組織を呼び出すエージェントを運用し、トラストバンドルを組織ごとに交換することを避けたい運用者。",
+        "AIMS や credential 系ドラフトで、ドメイン間の発行者信頼をどう記述するか検討する著者。"
+      ]
     },
     "mail:91TeMxN3w_c1-rqionvYSDjph4w": {
       "diagram": "",
@@ -749,6 +784,23 @@
         "ルートの issuer と鍵の照合について意図された解釈を知る必要のある AAT 検証器の実装者",
         "委任チェーン検証の実装間テストベクターを作成する担当者"
       ]
+    },
+    "mail:V64ktnCkrfe33lfMt34lDgGhxDA": {
+      "diagram": "",
+      "first_seen": "2026-11-04",
+      "headline": "A newcomer asked how to contribute as an individual, and was pointed to IETF participation guidance.",
+      "headline_ja": "新規参加者が個人として寄稿する方法を尋ね、IETF の参加ガイドを案内された。",
+      "id": "mail:V64ktnCkrfe33lfMt34lDgGhxDA",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "An individual asked which route (mailing-list comment, repository issue or PR, or Internet-Draft) and which IPR steps apply to a personal-capacity contribution on AI-agent identity, freshness and revocation related to draft-ietf-wimse-aims. The reply points to ietf.org/participate and says an I-D carries no company or IETF endorsement but is a contribution covered by the IETF IPR rules and the Note Well. It also mentions the recently posted guidelines on AI technology use. No technical content.",
+      "summary_ja": "個人が、draft-ietf-wimse-aims に関連する AI エージェントの識別、認可の鮮度、失効についての寄稿を個人の立場で行う場合に、どの経路（メーリングリストへのコメント、リポジトリの issue や PR、Internet-Draft）と IPR 手続きが適用されるかを尋ねた。返信は ietf.org/participate を案内し、I-D は会社や IETF の承認を意味しないが、IETF の IPR ルールと Note Well の対象となる寄稿であると述べている。最近公開された AI 技術の利用ガイドラインも参照するよう促している。技術的な内容はない。",
+      "title": "Process question: individual personal-capacity contribution to WIMSE AI identity work",
+      "updated_at": "2026-11-04T06:29:28+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/V64ktnCkrfe33lfMt34lDgGhxDA/",
+      "use_cases": [],
+      "use_cases_ja": []
     },
     "mail:YbA0_uqrNGji2vsDdmqj2KlbND0": {
       "diagram": "",
@@ -1177,10 +1229,10 @@
       "reason_ja": "2026-11-13 まで IESG Last Call 中であり、レビュー担当者が 4.5、5.1.5、5.6 節に具体的な修正案を出している。"
     },
     "Review related draft: draft-asor-wimse-agent-delegation-chain-03": {
-      "date": "2026-11-03",
-      "priority": "high",
-      "reason": "del_max_depth semantics conflict with AAT and vectors are to be reconciled before IETF 127.",
-      "reason_ja": "del_max_depth の意味が AAT と食い違っており、IETF 127 までにベクターの整合が予定されている。"
+      "date": "2026-11-04",
+      "priority": "low",
+      "reason": "Only cited in passing (Section 6.4 trust-anchor provenance) in the AIMS thread.",
+      "reason_ja": "AIMS のスレッドで 6.4 節のトラストアンカーの出所として言及されただけである。"
     },
     "Review related draft: draft-durga-wimse-ctx-isolation-00": {
       "date": "2026-11-01",

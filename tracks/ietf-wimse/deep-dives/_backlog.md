@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-03T23:25:46+00:00
+Generated at: 2026-11-04T06:28:34+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -31,11 +31,11 @@ Generated at: 2026-11-03T23:25:46+00:00
 Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.
 
 - **high** `Diff active WG draft: draft-ietf-wimse-workload-identity-practices-08`: It is in IESG Last Call until 2026-11-13 and a reviewer proposed concrete text changes to Sections 4.5, 5.1.5 and 5.6.
-- **high** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: del_max_depth semantics conflict with AAT and vectors are to be reconciled before IETF 127.
 - **high** `Review related draft: draft-durga-wimse-ctx-isolation-00`: It was newly announced to the list with a request for review and a lightning slot at IETF 127.
 - **high** `Review related draft: draft-hulea-wimse-agent-mandate-01`: It is named as one of three offline attenuation formats whose subsumption rules may be compared before IETF 127.
 - **high** `Review related draft: draft-reddy-wimse-aggregate-signatures-01`: Named on the list as the mechanism for per-hop provenance in delegation chains, with a second draft planning to cite it.
 - **high** `Review related draft: draft-reddy-wimse-oauth-dialog-binding-00`: New draft that extends the WIMSE HTTP signature and WPT and adds a tctx.dlg member.
 - **high** `Review related draft: draft-thaha-wimse-agent-evidence-binding-02`: The -02 changes the admission rule to current actor only and adds a new MUST NOT on caller references in reusable tokens.
+- **low** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: Only cited in passing (Section 6.4 trust-anchor provenance) in the AIMS thread.
 
 <!-- triage:end -->
