@@ -6,7 +6,7 @@
 - [ ] `https://<host>/tenant` と `https://<host>/tenant/` からメタデータ URL を組み立てる。エラッタ版と 1.1 では、どちらも `/.well-known/openid-credential-issuer/tenant` になる。1.0 Final には末尾の `/` の規則がなく、文字どおり読めば後者は末尾に `/` が残る(Section 12.2.2、#744、#775)。
 - [ ] Credential Offer を値渡し(`credential_offer`)と参照渡し(`credential_offer_uri`)で送り、両方を含む Offer をウォレットが拒否することを確認する(Section 4.1)。
 - [ ] 誤った `tx_code` で Pre-Authorized Code の Token Request を送る。1.0 の AS は `invalid_grant`、1.1 の AS は `invalid_tx_code` を返すはずである(1.0 Section 6.3、1.1 Section 7.3)。
-- [ ] 誤った `tx_code` を繰り返し送り、上限を超えたら AS が Pre-Authorized Code を無効にし、以後は `invalid_grant` を返すことを確認する(エラッタ版 Section 13.6.3)。
+- [ ] 誤った `tx_code` を繰り返し送り、AS がエラッタ版の SHOULD に従うかを確かめる。上限までは、コードが無効だと分かるエラーを返し、上限を超えたら Pre-Authorized Code を無効にして `invalid_grant` を返す(エラッタ版 Section 13.6.3)。いずれも SHOULD なので、不合格にはせず挙動を記録する。
 - [ ] 発行者が Nonce Endpoint を持つ場合、`nonce` のない `jwt` proof が `invalid_proof` で、古い `c_nonce` を使った proof が `invalid_nonce` で拒否されることを確認する(Section 8.3.1.2、Appendix F.1)。
 - [ ] `cryptographic_binding_methods_supported` のない設定で、ウォレットが `proofs` を省き、発行者がそのリクエストを受け付けることを確認する(Section 14.2、#714)。
 - [ ] 遅延レスポンスを返し、ウォレットが `202`、`transaction_id`、`interval` に従い、Deferred Credential Endpoint からクレデンシャルを受け取ることを確認する(Sections 8.3 と 9)。

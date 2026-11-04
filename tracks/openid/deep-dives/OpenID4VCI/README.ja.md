@@ -76,7 +76,7 @@ sequenceDiagram
 
 以下はすべて、各プルリクエストの差分と `21ffd6c` 時点のドラフト本文で確認した。
 
-- **1.0 エラッタ(`-19`)**: Section 12.2.2 に末尾の `/` の規則が戻った(#775、2026 年 9 月 28 日マージ)。Section 13.6.3「Transaction Code Guessing」も加わった。Transaction Code の失敗回数を制限すべきこと(SHOULD)と、コードが無効だと分かるエラーを返すべきこと(SHOULD)を定めている(#686)。
+- **1.0 エラッタ(`-19`)**: Section 12.2.2 に末尾の `/` の規則が戻った(#775、2026 年 9 月 28 日マージ)。Section 13.6.3「Transaction Code Guessing」も加わった。Transaction Code の失敗回数を制限すべきこと(SHOULD)、上限を超えたら Pre-Authorized Code を無効にしてその後の Token Request を拒否すべきこと(SHOULD)、コードが無効だと分かるエラーを返すべきこと(SHOULD)、無効になった Pre-Authorized Code には `invalid_grant` を返すべきこと(SHOULD)を定めている(#686)。
 - **1.1、Interactive Authorization(Section 6)**: FPA のプロファイルとして作り直され、Authorization Challenge Endpoint を使う(#736)。応答は FPA draft -04 に合わせて 401 ではなく 403 Forbidden になった(#781)。インタラクション種別は URN になり(#712)、今の名前は `urn:openid:dcp:ia:openid4vp_presentation` や `urn:openid:dcp:ia:auth_via_web` である(#736)。`expected_origins` がある場合は、Authorization Challenge Endpoint から導いた Origin だけを含めなければならない(MUST)(Section 6.2.1.1)。期待する URL を使う案の #695 はクローズされた。
 - **1.1、`auth_session`(Section 6.2.1)**: 「インタラクション種別が指定する場合に REQUIRED」となり、独自の種別はこれを必須にするか、リクエストを結び付ける別の方法を定めるかのどちらかにする(#706)。ウォレットは最後に受け取った値を送らなければならない(MUST)。#710 は、これを進行中の認可リクエストの流れの中に限定した。DPoP を使う場合、AS は `auth_session` の値を DPoP 公開鍵と結び付けなければならない(MUST)(#803)。
 - **1.1、`auth_via_web`(Section 6.2.1.2)**: ウォレットは `request_uri` の値を一度だけ使わなければならない(MUST)。AS は一回限りとして扱うべきだが(SHOULD)、再読み込みによる重複は受け入れてもよい(MAY)(#704)。並行セッションを持つウォレットは `state` を送らなければならない(MUST)(#797)。
@@ -105,7 +105,7 @@ sequenceDiagram
 
 ## 実験
 
-- [ ] 1.0 Final と `1.0/` のエラッタ版ドラフトをビルドして Sections 12.2.2 と 13.6 を比較し、エラッタの変更が Document History に書かれた 2 点だけであることを確かめる。
+- [ ] 1.0 Final と `1.0/` のエラッタ版ドラフトをビルドして全体を比較し、Document History の項目と #722、#714、#731、#662 以外に変わったものがあるかを確かめる。
 - [ ] 識別子が `https://<host>/tenant/` の発行者に対してウォレットを動かし、どのメタデータ URL を要求するかを記録する(1.0 Final と #775 の比較)。
 - [ ] 1.0 に従う AS と 1.1 に従う AS に、誤った `tx_code` で Pre-Authorized Code の Token Request を送り、`invalid_grant` と `invalid_tx_code` のどちらが返るかを記録する。
 - [ ] DPoP で束縛したクライアントで 1.1 Section 6.2.1.1 の Interactive Authorization の例をたどり、別の DPoP 鍵では同じ `auth_session` を使えないことを確かめる。
