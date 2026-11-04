@@ -34,6 +34,11 @@
       "at": "2026-11-03T23:27:50+00:00",
       "text": "The SD-JWT VC IESG ballot is the main news: Mike Bishop's DISCUSS says the draft overrides RFC 7800 without an Updates tag, and the editor is leaning toward adding Updates: 7800. Separately, the AAT, asor and AAuth threads continue.",
       "text_ja": "最も重要なのは SD-JWT VC の IESG 投票である。Mike Bishop の DISCUSS は、本ドラフトが Updates タグなしで RFC 7800 の要件を上書きしている点を指摘しており、エディターは Updates: 7800 の追加に前向きである。あわせて、AAT・asor・AAuth をめぐる議論も続いている。"
+    },
+    {
+      "at": "2026-11-04T19:50:04+00:00",
+      "text": "The IESG review of draft-ietf-oauth-sd-jwt-vc-23 produced a DISCUSS that is converging: an \"Updates: RFC 7800\" tag fixes it, and a separate PR tightens issuer key discovery. Elsewhere, the attestation-based client auth -12 draft drew a critical review, and a new Agent Intent Token draft got its first question.",
+      "text_ja": "draft-ietf-oauth-sd-jwt-vc-23 の IESG レビューで出た DISCUSS は収束しつつあり、「Updates: RFC 7800」の追加で解消される見込みである。別の PR では発行者鍵の発見方法が厳密化された。attestation-based client authentication の -12 版には批判的なレビューが付き、新規の Agent Intent Token ドラフトには最初の質問が寄せられた。"
     }
   ],
   "items": {
@@ -873,6 +878,27 @@
         "予算や失効の扱いについて、オフライン縮小と呼び出し経路上のサーバーのどちらを使うか検討するエージェント基盤。"
       ]
     },
+    "mail:RSYbXENasc79M4rSSodWbrbNWFU": {
+      "diagram": "sequenceDiagram\n  participant U as User\n  participant A as Agent\n  participant I as Trusted signer\n  participant AS as Authorization Server\n  A->>U: Negotiate and confirm intent\n  A->>I: Intent to sign\n  I-->>A: Intent Token\n  A->>AS: Authorization request + Intent Token\n  AS->>AS: Validate signature, compare request to intent",
+      "first_seen": "2026-11-04",
+      "headline": "A reader asks whether the new Agent Intent Token draft will fix the intent format per deployment or define common fields.",
+      "headline_ja": "新規の Agent Intent Token ドラフトについて、intent の形式を運用ごとに定めるのか共通フィールドを定義するのかという質問が出た。",
+      "id": "mail:RSYbXENasc79M4rSSodWbrbNWFU",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "This reply, from Yuan, is on Meiling Chen's announcement of draft-chen-oauth-agent-intent-token-00. The draft proposes a signed object, such as a JWT, that records the user's confirmed intent. An agent would carry it to the authorization server, which validates the signature and compares later requests with the recorded intent. Yuan asks about Section 3.3: an AP2 SDK example uses a natural_language_description field plus shopping-specific fields, so will the issuer and AS agree on the intent format per deployment, or is a small common set of extensible fields planned? No answer is in the material. The quoted announcement is partly garbled and truncated.",
+      "summary_ja": "Meiling Chen による draft-chen-oauth-agent-intent-token-00 の告知への、Yuan の返信である。このドラフトは、ユーザーが確認した意図を記録する署名付きオブジェクト（JWT など）を提案している。エージェントはこれを認可サーバーに提示し、認可サーバーは署名を検証したうえで、以後のリクエストを記録された意図と照合する。Yuan は 3.3 節について質問している。AP2 SDK の例では natural_language_description と買い物固有のフィールドが使われているが、intent の形式は発行者と AS が運用ごとに合意するのか、拡張可能な少数の共通フィールドを検討しているのかという点である。資料には回答がない。引用された告知文は一部が文字化けしており、途中で切れている。",
+      "title": "回复: Follow-up on OAuth Interim Discussion: New Draft \"Agent Intent Token\" for Review",
+      "updated_at": "2026-11-04T19:50:04+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/RSYbXENasc79M4rSSodWbrbNWFU/",
+      "use_cases": [
+        "An authorization server for AI agents that wants to check a request against the user's confirmed intent would need a defined intent format to do so."
+      ],
+      "use_cases_ja": [
+        "AI エージェント向けの認可サーバーが、リクエストをユーザーが確認した意図と照合するには、intent の形式が定義されている必要がある。"
+      ]
+    },
     "mail:RdQO6iHtU3opP2CnmLYxlOzVkXw": {
       "diagram": "",
       "first_seen": "2026-11-03",
@@ -949,6 +975,29 @@
         "クライアント ID メタデータドキュメントを使う環境で、認可サーバーが DPoP 要件を事前に明示できる。"
       ]
     },
+    "mail:XfEeU9P3FttCr9d8a2ncUFtTxLA": {
+      "diagram": "",
+      "first_seen": "2026-11-04",
+      "headline": "In short, the sd-jwt-vc DISCUSS on overriding RFC 7800 is to be resolved by marking the draft as updating RFC 7800.",
+      "headline_ja": "sd-jwt-vc の DISCUSS（RFC 7800 の要件の上書き）は、RFC 7800 を更新する旨の明記で解消される見込みである。",
+      "id": "mail:XfEeU9P3FttCr9d8a2ncUFtTxLA",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Mike Bishop's DISCUSS on draft-ietf-oauth-sd-jwt-vc-23 objects that the draft says it overrides the RFC 7800 requirement that a JWT with a cnf claim also carry sub or iss, but has no Updates tag. Brian Campbell proposed adding 'Updates: 7800 (if approved)' with explanatory text, and added it to PR #450. Bishop replied that the PR would address the DISCUSS and that the text need only say the requirement is removed rather than overridden. Campbell also answered several COMMENT items: he agreed to reorder a sentence in 1.2, drop a MUST in 5.5.1.2.1, and add a reference for SVG structure. He declined a distinct media type for metadata and extra redirect wording in 4.3. On the case-sensitive iss URL point, Bishop noted that RFC 7519 StringOrURI is already compared as a case-sensitive string. The material is truncated, so the remaining comments are not covered.",
+      "summary_ja": "Mike Bishop は draft-ietf-oauth-sd-jwt-vc-23 に対し、cnf クレームを持つ JWT に sub または iss を要求する RFC 7800 の要件を本ドラフトが上書きすると述べながら Updates タグがない点を DISCUSS とした。Brian Campbell は「Updates: 7800 (if approved)」と説明文を追加する案を示し、PR #450 に反映した。Bishop は、この PR で DISCUSS は解消されると回答し、文言は「上書き」ではなく「削除」とする程度の小さな修正で足りるとした。Campbell は COMMENT の一部にも回答しており、1.2 節の文の並べ替え、5.5.1.2.1 節の MUST の削除、SVG 構造への参照追加に同意した。一方、メタデータ用の独立したメディアタイプと、4.3 節でのリダイレクトに関する追記は断った。iss の「case-sensitive URL」については、Bishop が RFC 7519 の StringOrURI が既に大文字小文字を区別する文字列比較であると指摘した。資料は途中で切れており、残りのコメントは扱えていない。",
+      "title": "Mike Bishop's Discuss on draft-ietf-oauth-sd-jwt-vc-23: (with DISCUSS and COMMENT) (2 new messages)",
+      "updated_at": "2026-11-04T19:50:04+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/XfEeU9P3FttCr9d8a2ncUFtTxLA/",
+      "use_cases": [
+        "An implementer of key-bound SD-JWT VCs that carry neither sub nor iss can rely on the draft formally relaxing the RFC 7800 requirement.",
+        "An issuer or verifier comparing iss values should do plain string comparison, as RFC 7519 StringOrURI defines, not URL normalization."
+      ],
+      "use_cases_ja": [
+        "sub も iss も持たない鍵バインド済み SD-JWT VC を実装する者は、本ドラフトが RFC 7800 の要件を正式に緩和することを前提にできる。",
+        "iss を比較する発行者や検証者は、URL の正規化ではなく、RFC 7519 の StringOrURI が定める単純な文字列比較を行うべきである。"
+      ]
+    },
     "mail:Zuab1PpQZx_nWOimouWjczGiYOI": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -965,6 +1014,29 @@
       "url": "https://mailarchive.ietf.org/arch/msg/oauth/Zuab1PpQZx_nWOimouWjczGiYOI/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:bV406I0e4J58dKORo8v1EsLOBM4": {
+      "diagram": "",
+      "first_seen": "2026-11-04",
+      "headline": "A reviewer criticises the attestation-based client authentication draft as overcomplicated and argues for reuse of RFC 7521 and DPoP.",
+      "headline_ja": "attestation-based client authentication ドラフトに対し、複雑すぎるとして RFC 7521 や DPoP の再利用を求める批判的レビューが出た。",
+      "id": "mail:bV406I0e4J58dKORo8v1EsLOBM4",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "In a reply on the -12 draft thread (which the title says incorporates WGLC feedback), Erin says she has significant misgivings. She calls the Section 5.2 paragraph about dpop_jkt confusing, since dpop_jkt is sent at the authorization endpoint and makes a DPoP proof at the token endpoint mandatory. She argues the draft mixes client authentication to the AS with client authentication to the RS, and that the latter should be its own token type. She suggests building on RFC 7521 client_assertion or allowing two DPoP headers. She lists open problems: a fifth client authentication option (the OAuth-Client-Assertion header) with no rule for multiple methods, no signal to the client that the token is bound, unclear binding to a specific assertion or key, and no introspection or JWT access token profile extension. She also warns about non-interoperable option sprawl.",
+      "summary_ja": "-12 版（件名によれば WGLC のフィードバックを反映したもの）のスレッドで、Erin は重大な懸念を表明した。5.2 節の dpop_jkt に関する段落は、dpop_jkt が認可エンドポイントで送られ、トークンエンドポイントでの DPoP proof を必須にするものであるため、混乱を招く記述だとした。また、AS に対するクライアント認証と RS に対するクライアント認証が一つのドラフトに混在しており、後者は独立したトークンタイプにすべきだと主張した。RFC 7521 の client_assertion を土台にする案や、DPoP ヘッダーを二つ許す案も示した。未解決の問題として、OAuth-Client-Assertion ヘッダーという五つ目の認証手段が加わるのに複数指定時の扱いが定義されていないこと、トークンがバインドされていることがクライアントに伝わらないこと、特定のアサーションや鍵へのバインドが不明確なこと、イントロスペクションや JWT アクセストークンプロファイルへの拡張がないことを挙げた。さらに、選択肢が多く相互運用性の低い実装を生む恐れがあると警告した。",
+      "title": "Draft -12 of Attestation-Based Client Authentication incorporating WGLC feedback",
+      "updated_at": "2026-11-04T19:50:04+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/bV406I0e4J58dKORo8v1EsLOBM4/",
+      "use_cases": [
+        "An AS implementer would need to decide how to handle requests that carry several client authentication signals, which the draft does not specify.",
+        "A deployer weighing wallet or app attestation for client authentication should expect the binding and token-type questions to be debated further."
+      ],
+      "use_cases_ja": [
+        "AS の実装者は、複数のクライアント認証の指標を含むリクエストの扱いを自ら決める必要があるが、ドラフトはこれを規定していない。",
+        "ウォレットやアプリのアテステーションによるクライアント認証を検討する運用者は、バインディングとトークンタイプに関する議論が続くことを想定すべきである。"
+      ]
     },
     "mail:d49b8f7_xsSOXCgDit-a1p9-yvg": {
       "diagram": "",
@@ -1375,6 +1447,29 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "pr:oauth-wg/oauth-sd-jwt-vc#451": {
+      "diagram": "flowchart TD\n  C[Credential with iss and x5c] --> P{Policy picks mechanism for this issuer}\n  P -->|x5c| X[Validate chain per RFC 5280]\n  P -->|metadata| M[Fetch issuer metadata via iss]\n  X --> I[Issuer identity from certificate trust]\n  M --> J[Issuer identity from iss]\n  I --> N[Other inputs not used as identity unless bound by policy]\n  J --> N",
+      "first_seen": "2026-11-04",
+      "headline": "In short, this PR says the issuer identity comes from the chosen key-discovery mechanism, not from other inputs in the credential.",
+      "headline_ja": "この PR は、発行者の識別は選択された鍵発見メカニズムによって決まり、クレデンシャル内の他の入力では決まらないと明記するものである。",
+      "id": "pr:oauth-wg/oauth-sd-jwt-vc#451",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "substantive",
+      "summary": "The PR responds to Mahesh's ballot comment on sections 2.5 and 7.3, endorsed by Roman. A credential may carry inputs for several issuer key discovery mechanisms, such as iss and x5c. Policy picks the mechanism per issuer, and the issuer identity is what that mechanism establishes. Inputs for other mechanisms MUST NOT be treated as the issuer identity unless policy binds them and the recipient checked that. For x5c, chain validation follows RFC 7515 4.1.6 and RFC 5280, a cert is not a trust anchor merely by appearing in x5c, a verifier MAY reject an unbound iss, and issuers SHOULD NOT include iss without a binding. Section 7.3 now speaks of the issuer rather than the iss value. There is no precedence rule and no MUST reject, to avoid invalidating existing credentials. RFC 5280 becomes normative.",
+      "summary_ja": "Mahesh による 2.5 節および 7.3 節への ballot comment（Roman も支持）に対応する PR である。クレデンシャルは iss や x5c など、複数の発行者鍵発見メカニズムの入力を持ち得る。どのメカニズムを使うかはクレデンシャルではなく発行者ごとにポリシーが決め、発行者の識別は使用したメカニズムが確立するものとする。他のメカニズムの入力は、ポリシーがバインドし受信者が確認しない限り、発行者の識別として扱ってはならない（MUST NOT）。x5c については、チェーン検証を RFC 7515 4.1.6 と RFC 5280 に従って行い、x5c に含まれるだけで証明書がトラストアンカーになることはなく、バインドされていない iss は拒否してよく（MAY）、発行者はバインドなしに iss を含めるべきでない（SHOULD NOT）とする。7.3 節は iss の値ではなく発行者について述べる形に改められた。既存のクレデンシャルを無効にしないため、優先順位の規則や拒否の MUST は設けていない。RFC 5280 は normative な参照になる。",
+      "title": "oauth-wg/oauth-sd-jwt-vc#451: Issuer key discovery: policy selects the mechanism, inputs of other mechanisms do not identify the Issuer",
+      "updated_at": "2026-11-04T19:50:04+00:00",
+      "url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/451",
+      "use_cases": [
+        "A verifier accepting SD-JWT VCs under a shared CA or trusted list must not take the payload iss as the issuer just because the x5c chain validates.",
+        "An issuer that publishes metadata and also includes x5c should avoid including an iss that is not bound to the certificate."
+      ],
+      "use_cases_ja": [
+        "共有 CA やトラストリストの下で SD-JWT VC を受け付ける検証者は、x5c のチェーン検証が通ったという理由だけでペイロードの iss を発行者として扱ってはならない。",
+        "メタデータを公開しつつ x5c も含める発行者は、証明書にバインドされていない iss を含めないようにすべきである。"
+      ]
+    },
     "pr:oauth-wg/oauth-spiffe-client-authentication#57": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -1588,6 +1683,12 @@
   },
   "overflow": [],
   "triage": {
+    "draft-ietf-oauth-attestation-based-client-auth": {
+      "date": "2026-11-04",
+      "priority": "high",
+      "reason": "A detailed critical review of -12 questions its structure and DPoP/RFC 7521 reuse.",
+      "reason_ja": "-12 版の構成と DPoP や RFC 7521 の再利用について、詳細な批判的レビューが出たため。"
+    },
     "draft-ietf-oauth-client-id-metadata-document": {
       "date": "2026-11-03",
       "priority": "low",
@@ -1611,10 +1712,10 @@
       "reason": "-06 adds new normative behaviour (client auth at IdP, invalid_request, mTLS binding, new metadata) and a large rewrite."
     },
     "draft-ietf-oauth-sd-jwt-vc": {
-      "date": "2026-11-03",
+      "date": "2026-11-04",
       "priority": "high",
-      "reason": "It is in IESG review with an open DISCUSS (RFC 7800 override, possible Updates tag) and an active PR #450.",
-      "reason_ja": "IESG レビュー中で、未解決の DISCUSS（RFC 7800 の上書きと Updates タグの可能性）があり、PR #450 も進行中である。"
+      "reason": "IESG DISCUSS being resolved via Updates: RFC 7800, and PR #451 changes issuer key discovery rules.",
+      "reason_ja": "IESG の DISCUSS が RFC 7800 の更新明記で解消されつつあり、PR #451 で発行者鍵発見の規則も変わるため。"
     },
     "draft-ietf-oauth-spiffe-client-auth": {
       "date": "2026-11-03",
