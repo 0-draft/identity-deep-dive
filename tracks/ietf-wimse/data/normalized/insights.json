@@ -48,6 +48,11 @@
       "at": "2026-11-04T19:50:04+00:00",
       "text": "Review feedback on draft-sweeney-wimse-credential-delegation-02 is the most substantive item: six points on user-issued roots, tally mode and revocation. The AIMS chair also said AIMS only references work the WG has adopted, and the joint WIMSE/OAuth session agenda for IETF 127 was published.",
       "text_ja": "draft-sweeney-wimse-credential-delegation-02 へのレビューコメント（ユーザー発行ルート、集計モード、失効に関する6点）が最も実質的である。AIMS のチェアは、AIMS が WG で採択された作業のみを参照すると述べた。IETF 127 の WIMSE/OAuth 合同セッションの議題も公開された。"
+    },
+    {
+      "at": "2026-11-05T06:53:56+00:00",
+      "text": "One mailing-list thread: a review of draft-zambo-aer1-wimse-mapping (AER-1 receipts as AIMS Section 11 audit records) led to a -02 that commits a decision_reason member, and the reviewer now asks to widen \"not_evaluated\". No WG draft text changed in this run.",
+      "text_ja": "メーリングリストの1スレッドのみ。draft-zambo-aer1-wimse-mapping（AER-1レシートをAIMS第11節の監査記録に対応付ける案）へのレビューを受けて、-02でdecision_reasonメンバーがコミット対象になった。レビュアーは「not_evaluated」の適用範囲の拡大を求めている。WGドラフト本文の変更はない。"
     }
   ],
   "items": {
@@ -1000,6 +1005,29 @@
       "url": "https://mailarchive.ietf.org/arch/msg/wimse/lZ1_efh-DULGLvG7PXYdNd42zxs/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:ld6Xvi4y3UUZ55w0XcIiV8PMauI": {
+      "diagram": "",
+      "first_seen": "2026-11-05",
+      "headline": "A reviewer asks that the AER-1 audit mapping record fail-closed denials as not_evaluated when a required input was unavailable.",
+      "headline_ja": "AER-1の監査記録マッピングで、必要な入力が得られずfail-closedで拒否した場合もnot_evaluatedとして記録するよう、レビュアーが求めている。",
+      "id": "mail:ld6Xvi4y3UUZ55w0XcIiV8PMauI",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The author of draft-zambo-aer1-wimse-mapping proposes AER-1 receipts as one candidate format for the audit records that AIMS Section 11 requires but leaves unspecified. After an earlier review by Girish Konda, the -02 revision adds a committed decision_reason member in the receipt metadata: \"denied\" when the policy point evaluated and denied, \"not_evaluated\" when evaluation could not be completed, plus a decision_reason_detail naming the unreachable input. The reason is committed for the audit reader and is not returned to the caller, who still gets a uniform error, so the error does not become an oracle. Girish's latest reply says a fail-closed policy point that denies because a status source did not answer is still recorded as \"denied\", which merges the two cases again. The same applies to an input that was reached but too old. Girish proposes that \"not_evaluated\" apply whenever a decision-relevant input could not be established, even if a fail-closed rule then denies, with decision_reason_detail naming that input. The author states this is not a request for WIMSE adoption or agenda time at IETF 127. This is individual-draft discussion, not WG text.",
+      "summary_ja": "draft-zambo-aer1-wimse-mappingの著者は、AIMS第11節が要求しながら形式を定めていない監査記録の候補形式としてAER-1レシートを提案している。Girish Kondaによる先の指摘を受けて、-02ではレシートのメタデータにコミット対象のdecision_reasonメンバーが追加された。ポリシーポイントが評価して拒否した場合は「denied」、評価を完了できなかった場合は「not_evaluated」とし、到達できなかった入力をdecision_reason_detailに記す。この理由は監査者向けにコミットされるだけで呼び出し側には返されず、呼び出し側は従来どおり共通のエラーを受け取るため、エラーがオラクルになることはない。Girishの最新の返信は、ステータスソースが応答しないためfail-closedで拒否した場合も現行文言では「denied」と記録され、二つのケースが再び区別できなくなると指摘している。到達できたが古すぎる入力についても同様である。Girishは、判断に依存する入力を確定できなかったときは、fail-closedの規則が拒否したとしても「not_evaluated」を適用し、decision_reason_detailでその入力を示すよう提案している。著者はWIMSEでの採択やIETF 127での議題枠を求めていない。これは個人ドラフトに関する議論であり、WGの文書の変更ではない。",
+      "title": "draft-zambo-aer1-wimse-mapping-01: AER-1 as a candidate format for AIMS Section 11 audit records",
+      "updated_at": "2026-11-05T06:53:56+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/ld6Xvi4y3UUZ55w0XcIiV8PMauI/",
+      "use_cases": [
+        "An audit pipeline for AI agents that must tell a real policy denial from a denial caused by an unreachable status or policy source.",
+        "A policy enforcement point that fails closed and needs its audit record to name which input was missing or stale."
+      ],
+      "use_cases_ja": [
+        "AIエージェントの監査パイプラインで、本来のポリシー拒否と、ステータスやポリシーのソースに到達できないことによる拒否を区別する必要がある場合。",
+        "fail-closedで動作するポリシー強制点が、監査記録に欠落または古い入力を明示する必要がある場合。"
+      ]
     },
     "mail:mqgChd0K-6qLQ4geaOzD4ANpEUU": {
       "diagram": "",
