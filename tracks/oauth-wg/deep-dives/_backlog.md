@@ -1,15 +1,15 @@
-# OAuth WG Backlog (2026-11-04)
+# OAuth WG Backlog (2026-11-05)
 
-- generated_at_utc: `2026-11-04T19:48:55+00:00`
+- generated_at_utc: `2026-11-05T06:52:28+00:00`
 
-- [ ] `draft-ietf-oauth-sd-jwt-vc` score=118 updated=2026-10-31T18:37:09Z
+- [ ] `draft-ietf-oauth-sd-jwt-vc` score=125 updated=2026-11-04T20:03:51Z
 - [ ] `draft-ietf-oauth-status-list` score=90 updated=2026-11-03T19:29:28Z
 - [ ] `draft-ietf-oauth-rfc7523bis` score=90 updated=2026-11-03T19:25:31Z
 - [ ] `draft-ietf-oauth-client-id-metadata-document` score=90 updated=2026-11-02T22:02:56Z
 - [ ] `draft-ietf-oauth-identity-assertion-authz-grant` score=83 updated=2026-10-31T00:32:39Z
 - [ ] `draft-ietf-oauth-v2-1` score=76 updated=2026-10-31T04:16:32Z
 - [ ] `draft-ietf-oauth-delegate-sd-jwt` score=76 updated=2026-10-30T12:38:29Z
-- [ ] `draft-ietf-oauth-deferred-token-response` score=70 updated=2026-10-31T16:12:16Z
+- [ ] `draft-ietf-oauth-deferred-token-response` score=68 updated=2026-10-31T16:12:16Z
 - [ ] `draft-ietf-oauth-rfc8725bis` score=65 updated=2026-08-31T18:37:20Z
 - [ ] `draft-ietf-oauth-identity-chaining` score=65 updated=2026-08-21T20:25:31Z
 - [ ] `draft-ietf-oauth-attestation-based-client-auth` score=58 updated=2026-10-18T17:33:02Z
@@ -27,12 +27,12 @@ Moved by this week's material. candidates.json and the site list raised candidat
 
 - **high** `draft-ietf-oauth-attestation-based-client-auth`: A detailed critical review of -12 questions its structure and DPoP/RFC 7521 reuse.
 - **high** `draft-ietf-oauth-deferred-token-response`: -01 restructures the draft with substrate invariants, a new deferred_interactive mode and new editors; also cited as the answer to ID-JAG consent.
+- **high** `draft-ietf-oauth-delegate-sd-jwt`: List discussion clarifies issuer_jwt_hash versus sd_hash, with an updated version and roadmap planned for IETF.
 - **high** `draft-ietf-oauth-identity-assertion-authz-grant`: -06 adds new normative behaviour (client auth at IdP, invalid_request, mTLS binding, new metadata) and a large rewrite.
-- **high** `draft-ietf-oauth-sd-jwt-vc`: IESG DISCUSS being resolved via Updates: RFC 7800, and PR #451 changes issuer key discovery rules.
+- **high** `draft-ietf-oauth-sd-jwt-vc`: In IESG review with a DISCUSS being resolved via Updates: 7800, iss normalization and several ballot-driven PRs.
 - **high** `draft-ietf-oauth-spiffe-client-auth`: -03 makes client_id optional, ties client identification to CIMD and adds replay and trust-bundle security text.
 - **high** `draft-ietf-oauth-v2-1`: Seven new issues and 31 closed, several tagged ietf-127, including MUST vs SHOULD in §3.2.3 and invalid_client.
 - **low** `draft-ietf-oauth-client-id-metadata-document`: It is only mentioned as the origin of the new DPoP-required metadata draft, with no change to the draft itself.
-- **low** `draft-ietf-oauth-delegate-sd-jwt`: PR #14 adds a worked example and generator, so implementers can check their output against it.
 - **low** `draft-ietf-oauth-transaction-tokens`: Only a new implementation-report issue (#373) with one comment; no text change.
 
 <!-- triage:end -->
