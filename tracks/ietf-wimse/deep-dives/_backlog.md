@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-05T06:52:20+00:00
+Generated at: 2026-11-05T19:59:42+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -30,6 +30,8 @@ Generated at: 2026-11-05T06:52:20+00:00
 
 Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.
 
+- **high** `Diff active WG draft: draft-ietf-wimse-aims-01`: The list thread is shaping a new gap statement for cross-domain issuer trust and an audit-record mapping for Section 11.
+- **high** `Diff active WG draft: draft-ietf-wimse-identifier-04`: A fresh review calls it ready for WGLC and raises the "guarantee" wording.
 - **high** `Diff active WG draft: draft-ietf-wimse-workload-identity-practices-08`: It is in IESG Last Call until 2026-11-13 and a reviewer proposed concrete text changes to Sections 4.5, 5.1.5 and 5.6.
 - **high** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: Its format is adopted unchanged in credential-delegation-02 §5.5, and its depth semantics and §6.4 are under discussion.
 - **high** `Review related draft: draft-durga-wimse-ctx-isolation-00`: It was newly announced to the list with a request for review and a lightning slot at IETF 127.
