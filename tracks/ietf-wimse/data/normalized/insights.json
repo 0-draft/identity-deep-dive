@@ -58,6 +58,11 @@
       "at": "2026-11-05T20:01:32+00:00",
       "text": "The AIMS -01 thread is converging on recording \"trust between trust domains\" as an identified gap, with a mechanism-neutral property list, and no draft text has changed yet. Other items: a WIMSE identifier review that finds the draft ready for WGLC, an AER-1 audit-record mapping revision, and IETF 127 meeting logistics.",
       "text_ja": "AIMS -01 のスレッドは、「信頼ドメイン間の信頼」を既知のギャップとして記録し、特定の仕組みに依存しない性質のリストを添える方向にまとまりつつある。ドラフト本文の変更はまだない。ほかに、identifier ドラフトを WGLC 可能と見るレビュー、AER-1 監査記録マッピングの改訂、IETF 127 の会合案内があった。"
+    },
+    {
+      "at": "2026-11-06T06:53:13+00:00",
+      "text": "The list had two review emails from the same reviewer, one on draft-ietf-wimse-workload-creds and one on draft-ietf-wimse-http-signature. Both are mostly wording suggestions. The one normative suggestion is to allow mTLS as well as server-authenticated TLS for carrying a WIT and its proof of possession (PoP).",
+      "text_ja": "メーリングリストには、同一のレビュアーによる draft-ietf-wimse-workload-creds と draft-ietf-wimse-http-signature へのレビューが2通あった。大半は文言の改善提案である。規範的な提案は、WIT と PoP の送信経路に、サーバー認証のみの TLS に加えて mTLS も明記する点だけである。"
     }
   ],
   "items": {
@@ -1081,6 +1086,29 @@
         "委任ツリー全体の合計存続時間やサブ委任数に上限を設けたい運用者。"
       ]
     },
+    "mail:ea6rdI-IV2MeMNWjU_DmY01hU8Y": {
+      "diagram": "",
+      "first_seen": "2026-11-06",
+      "headline": "A reviewer suggests mostly readability edits to workload-creds, plus questions on exp lifetime, deny-list wording and mTLS in Section 9.6.",
+      "headline_ja": "workload-creds に対し、可読性向上の編集提案と、exp の有効期間・deny-list 表現・9.6節の mTLS についての指摘があった。",
+      "id": "mail:ea6rdI-IV2MeMNWjU_DmY01hU8Y",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The reviewer proposes rewording the abstract so credentials are 'bound to' the workload identity rather than 'represent' it. They also propose restating the WIT (application layer, e.g. HTTP) versus WIC (transport layer, mTLS) split as two recommended patterns, with a rationale. For Section 5 they suggest explaining why TLS termination at a load balancer calls for an application-layer credential that stays unaltered. On Section 5.1 they ask whether the 'hours' guidance for exp should be shorter, since some deployments already use about 5 minutes, and why jti text says deny-list rather than allow-list. They suggest Section 9.2 mention that short exp values mitigate the problem it describes. The one normative edit is in Section 9.6, where the requirement to send the WIT and PoP over a 'server-authenticated TLS' connection would also name mTLS. No WG response is in the material.",
+      "summary_ja": "レビュアーは、抽象で、クレデンシャルがワークロードのアイデンティティを「表す」ではなく「に紐づく」と書き換えることを提案している。WIT（HTTP などのアプリケーション層）と WIC（mTLS などのトランスポート層）の使い分けを、根拠付きの2つの推奨パターンとして書き直すことも提案している。5章には、ロードバランサーで TLS が終端する場合にアプリケーション層のクレデンシャルが改変されずに維持される必要があることの説明を加えるよう提案している。5.1節については、一部で既に5分程度の有効期間が使われていることから exp の「数時間」という目安を短くすべきか、また jti の説明がなぜ allow-list ではなく deny-list なのかを質問している。9.2節には、exp を短くすることがその問題の緩和策であると明記するよう提案している。規範的な修正は9.6節のみで、WIT と PoP を送る「サーバー認証 TLS」接続の要件に mTLS も明記するというものである。WG からの応答はこの資料には含まれていない。",
+      "title": "Review of draft-ietf-wimse-workload-creds",
+      "updated_at": "2026-11-06T06:53:13+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/ea6rdI-IV2MeMNWjU_DmY01hU8Y/",
+      "use_cases": [
+        "An implementer choosing WIT lifetimes would watch whether the WG tightens the 'on the order of hours' guidance for exp.",
+        "A deployer sending WITs over mTLS between services would benefit if Section 9.6 states that mTLS satisfies the channel requirement."
+      ],
+      "use_cases_ja": [
+        "WIT の有効期間を決める実装者は、WG が exp の「数時間程度」という目安を短くするかどうかに注目するとよい。",
+        "サービス間で mTLS 経由で WIT を送る運用者にとっては、9.6節が mTLS をチャネル要件の充足として明記すれば有益である。"
+      ]
+    },
     "mail:esoA29gdhVAvWpRZh_sNECcnWTM": {
       "diagram": "",
       "first_seen": "2026-11-03",
@@ -1194,6 +1222,23 @@
         "年齢がmaxAge丁度の入力を新鮮とみなすか拒否するかを決める必要がある検証器の実装者。",
         "年齢の計測で評価時刻とdecision.reportedAtのどちらを使うか決める必要がある監査記録の作成者。"
       ]
+    },
+    "mail:nlwwEHRta3EdrxB--z1NM-Mcp7M": {
+      "diagram": "",
+      "first_seen": "2026-11-06",
+      "headline": "A reviewer suggests wording changes to the http-signature introduction to state the full scope and why application-layer protection is used.",
+      "headline_ja": "http-signature の序文について、適用範囲の明示とアプリケーション層で保護する理由の説明を求める文言修正の提案があった。",
+      "id": "mail:nlwwEHRta3EdrxB--z1NM-Mcp7M",
+      "kind": "mail",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The reviewer notes the draft is past WGLC and judges the rest of the document very good. They propose adding 'HTTP' to the first sentence of the introduction so the full scope is stated at once. They also propose rewriting the introduction's rationale for application-layer protection. The new text says the motivation is consistent identifier and credential handling across the full transit path, including TLS sessions terminated and restarted at proxies or middleboxes, using HTTP signatures with a JWT. No protocol change is proposed, and no WG response is in the material.",
+      "summary_ja": "レビュアーは、この草案が WGLC を過ぎていることを認めた上で、残りの部分は非常に良いと評価している。序文の最初の文に「HTTP」を加え、適用範囲を一文で示すよう提案している。また、序文のアプリケーション層での保護の根拠の説明も書き換えを提案している。新しい文案では、プロキシやミドルボックスで TLS セッションが終端・再開されても、HTTP 署名と JWT により経路全体で一貫した識別子とクレデンシャルを使えることを動機としている。プロトコルの変更提案はなく、WG からの応答もこの資料には含まれていない。",
+      "title": "Review of draft-ietf-wimse-http-signature",
+      "updated_at": "2026-11-06T06:53:13+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/nlwwEHRta3EdrxB--z1NM-Mcp7M/",
+      "use_cases": [],
+      "use_cases_ja": []
     },
     "mail:owShZ68sWfdlOOV0MUVIuJjKoAw": {
       "diagram": "",
