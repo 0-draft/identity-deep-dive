@@ -1,8 +1,8 @@
 # OAuth WG Backlog (2026-11-06)
 
-- generated_at_utc: `2026-11-06T06:51:44+00:00`
+- generated_at_utc: `2026-11-06T19:27:24+00:00`
 
-- [ ] `draft-ietf-oauth-sd-jwt-vc` score=125 updated=2026-11-05T23:41:14Z
+- [ ] `draft-ietf-oauth-sd-jwt-vc` score=125 updated=2026-11-06T19:07:22Z
 - [ ] `draft-ietf-oauth-status-list` score=90 updated=2026-11-03T19:29:28Z
 - [ ] `draft-ietf-oauth-rfc7523bis` score=90 updated=2026-11-03T19:25:31Z
 - [ ] `draft-ietf-oauth-client-id-metadata-document` score=90 updated=2026-11-02T22:02:56Z
@@ -15,7 +15,7 @@
 - [ ] `draft-ietf-oauth-attestation-based-client-auth` score=58 updated=2026-10-18T17:33:02Z
 - [ ] `draft-ietf-oauth-transaction-tokens` score=54 updated=2026-08-21T11:57:16Z
 - [ ] `draft-ietf-oauth-first-party-apps` score=50 updated=2026-08-26T14:40:16Z
-- [ ] `draft-ietf-oauth-spiffe-client-auth` score=45 updated=2026-11-02T17:35:55Z
+- [ ] `draft-ietf-oauth-spiffe-client-auth` score=38 updated=2026-11-02T17:35:55Z
 - [ ] `draft-ietf-oauth-rar-metadata-remediation` score=20 updated=2026-08-23T20:29:29Z
 - [ ] `draft-ietf-oauth-refresh-token-expiration` score=20 updated=2026-07-06T17:53:06Z
 - [ ] `draft-ietf-oauth-security-topics-update` score=20 updated=2026-07-06T06:41:36Z
@@ -29,10 +29,10 @@ Moved by this week's material. candidates.json and the site list raised candidat
 - **high** `draft-ietf-oauth-deferred-token-response`: -01 restructures the draft with substrate invariants, a new deferred_interactive mode and new editors; also cited as the answer to ID-JAG consent.
 - **high** `draft-ietf-oauth-delegate-sd-jwt`: Authors explained the sd_hash vs issuer_jwt_hash design and are preparing an updated version with a roadmap at IETF 127.
 - **high** `draft-ietf-oauth-identity-assertion-authz-grant`: -06 adds new normative behaviour (client auth at IdP, invalid_request, mTLS binding, new metadata) and a large rewrite.
-- **high** `draft-ietf-oauth-sd-jwt-vc`: -25 published in response to an IESG DISCUSS, with normative wording changes on type matching and status checking.
 - **high** `draft-ietf-oauth-spiffe-client-auth`: -03 makes client_id optional, ties client identification to CIMD and adds replay and trust-bundle security text.
 - **high** `draft-ietf-oauth-v2-1`: Seven new issues and 31 closed, several tagged ietf-127, including MUST vs SHOULD in §3.2.3 and invalid_client.
 - **low** `draft-ietf-oauth-client-id-metadata-document`: It is only mentioned as the origin of the new DPoP-required metadata draft, with no change to the draft itself.
+- **low** `draft-ietf-oauth-sd-jwt-vc`: Revision -26 only makes editorial changes in response to IESG ballot comments, so there is no new substance to dive into.
 - **low** `draft-ietf-oauth-transaction-tokens`: Only the agenda request for a competing cross-domain approach mentioned it, with no text change.
 
 <!-- triage:end -->
