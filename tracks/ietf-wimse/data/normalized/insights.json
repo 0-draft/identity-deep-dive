@@ -63,6 +63,11 @@
       "at": "2026-11-06T06:53:13+00:00",
       "text": "The list had two review emails from the same reviewer, one on draft-ietf-wimse-workload-creds and one on draft-ietf-wimse-http-signature. Both are mostly wording suggestions. The one normative suggestion is to allow mTLS as well as server-authenticated TLS for carrying a WIT and its proof of possession (PoP).",
       "text_ja": "メーリングリストには、同一のレビュアーによる draft-ietf-wimse-workload-creds と draft-ietf-wimse-http-signature へのレビューが2通あった。大半は文言の改善提案である。規範的な提案は、WIT と PoP の送信経路に、サーバー認証のみの TLS に加えて mTLS も明記する点だけである。"
+    },
+    {
+      "at": "2026-11-06T19:28:20+00:00",
+      "text": "Kathleen Moriarty posted readability and security reviews of draft-ietf-wimse-workload-creds and draft-ietf-wimse-http-signature, both logged as s2s-protocol issues (#418, #417). A third thread, from the author of an external draft, proposes bounding sentences for the AIMS gap text. No normative change happened.",
+      "text_ja": "Kathleen Moriarty が draft-ietf-wimse-workload-creds と draft-ietf-wimse-http-signature の可読性・セキュリティ面のレビューを投稿し、それぞれ s2s-protocol の issue #418、#417 として登録された。AIMS のギャップ文に関する議論も続いたが、規範的な変更はない。"
     }
   ],
   "items": {
@@ -1002,6 +1007,53 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "mail:Vd1-lCWYXdJYkIMMV2z98f3IL5s": {
+      "diagram": "",
+      "first_seen": "2026-11-06",
+      "headline": "Kathleen Moriarty's review of http-signature asks for a one-sentence HTTP scope and a clearer reason for application-layer protection; logged as issue #417.",
+      "headline_ja": "Kathleen Moriarty による http-signature のレビューは、HTTP を明記した冒頭文と、アプリケーション層保護の理由の明確化を求めており、issue #417 として登録された。",
+      "id": "mail:Vd1-lCWYXdJYkIMMV2z98f3IL5s",
+      "kind": "mail",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The review says the draft is clear and in good shape. It suggests adding HTTP to the first sentence of the introduction. It also suggests rewording the paragraph on why deployments prefer application-layer protection. The proposed text says TLS may involve several hops that terminate and restart sessions, such as at a proxy or middlebox, and HTTP signatures with a JWT keep one identifier and credential across the path. It is a wording change only and does not alter the protocol. Yaron noted it as s2s-protocol issue #417.",
+      "summary_ja": "レビューはドラフトが明快で良好な状態だとしている。序文の最初の文に HTTP を加えることを提案し、デプロイ先がアプリケーション層の保護を好む理由の段落の書き換えも提案する。提案文は、TLS がプロキシやミドルボックスなどで終端・再開される複数ホップになり得ること、HTTP 署名と JWT を用いれば経路全体で一貫した識別子とクレデンシャルを保てることを述べる。文言の変更のみでプロトコルは変わらない。Yaron は s2s-protocol の issue #417 として記録した。",
+      "title": "Review of draft-ietf-wimse-http-signature",
+      "updated_at": "2026-11-06T19:28:20+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/Vd1-lCWYXdJYkIMMV2z98f3IL5s/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "mail:YSabmWandtjPFRSY5R89Ci6OWhA": {
+      "diagram": "",
+      "first_seen": "2026-11-06",
+      "headline": "Kathleen Moriarty's review of workload-creds suggests clearer wording and a few security tweaks; Yaron logged it as issue #418.",
+      "headline_ja": "Kathleen Moriarty による workload-creds のレビューは文言の明確化と数点のセキュリティ面の提案を含み、Yaron が issue #418 として登録した。",
+      "id": "mail:YSabmWandtjPFRSY5R89Ci6OWhA",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-status-list",
+          "note": "The review questions deny-list versus allow-list token status in the WIT, which is the area Token Status List covers; the material does not link the two drafts.",
+          "note_ja": "レビューは WIT のトークンステータスにおける deny-list と allow-list を問題にしており、Token Status List が扱う領域に近い。ただし資料は両ドラフトを結びつけていない。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "The review proposes rewording the abstract to say credentials are bound to the identity rather than represent it. It also proposes stating directly in the introduction that the WIT is for application-layer protocols such as HTTP and the WIC is for transport-layer protocols, mainly mTLS. For Section 5 it suggests explaining that TLS termination at a load balancer is a reason to use an application-layer credential. For Section 5.1 it asks whether the exp guidance of hours should be shorter, and why the draft says deny-list rather than allow-list. For Section 9.6 it suggests allowing mTLS as well as server-authenticated TLS. The message is truncated, so later comments are not visible. Yaron recorded it as s2s-protocol issue #418. These are suggestions, not adopted changes.",
+      "summary_ja": "レビューは、アブストラクトを、クレデンシャルがアイデンティティを表すのではなく紐づくものだと言い換えることを提案する。序文では、WIT は HTTP などのアプリケーション層向け、WIC は主に mTLS のトランスポート層向けだと直接述べることも提案する。5 節ではロードバランサでの TLS 終端がアプリケーション層クレデンシャルを使う理由になると説明することを勧める。5.1 節では exp の「数時間」という目安をより短くすべきか、また deny-list ではなく allow-list としない理由を尋ねる。9.6 節では、サーバー認証のみの TLS に加えて mTLS も許容することを提案する。メッセージは途中で切れており、以降のコメントは確認できない。Yaron は s2s-protocol の issue #418 として登録した。これらは提案であり、採用された変更ではない。",
+      "title": "Review of draft-ietf-wimse-workload-creds",
+      "updated_at": "2026-11-06T19:28:20+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/YSabmWandtjPFRSY5R89Ci6OWhA/",
+      "use_cases": [
+        "Implementers choosing between WIT and WIC for a deployment with TLS-terminating load balancers.",
+        "Operators setting WIT lifetimes and deciding between deny-list and allow-list status mechanisms."
+      ],
+      "use_cases_ja": [
+        "TLS を終端するロードバランサがある環境で WIT と WIC のどちらを使うか選ぶ場面。",
+        "WIT の有効期間や、deny-list と allow-list のどちらでステータスを管理するかを決める場面。"
+      ]
+    },
     "mail:YbA0_uqrNGji2vsDdmqj2KlbND0": {
       "diagram": "",
       "first_seen": "2026-11-02",
@@ -1387,6 +1439,29 @@
       "use_cases_ja": [
         "AATやasorのチェーンを実装し、照合用の独立した検証器とベクターを求める実装者。",
         "独立した実装者がつまずく曖昧な点を探しているドラフト著者。"
+      ]
+    },
+    "mail:uHj7l43s0fHCCyGLYRnOqvVpfpM": {
+      "diagram": "",
+      "first_seen": "2026-11-06",
+      "headline": "A thread on AIMS -01 converges on two bounding sentences for the gap text, with the rule placed in Section 10.4.",
+      "headline_ja": "AIMS -01 のギャップ文に二つの限定文を置き、規則は 10.4 節に置く方向で議論が収束した。",
+      "id": "mail:uHj7l43s0fHCCyGLYRnOqvVpfpM",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Lee (author of draft-li-rttp-iqa-addressing) and Jiahui Miao agree to put one bounding sentence in the AIMS gap text and the undeterminable-state behaviour in Section 10.4, where the accepting domain's own evaluation is described. The first sentence says that accepting another domain's issuer does not establish authorization for an action. The second says a determination made from observed evidence holds at the time of observation and does not by itself hold after that evidence expires. Lee supports this with his own draft's closed five-value refusal vocabulary and an observation_as_of_ms field. This is a proposal from one participant, not a WG decision. The message is truncated, and the other drafts and conformance sites it cites are self-promotion that I did not verify.",
+      "summary_ja": "Lee（draft-li-rttp-iqa-addressing の著者）と Jiahui Miao は、AIMS のギャップ文に限定文を一つ置き、判定不能な状態での挙動は受け入れ側ドメイン自身の評価を述べる 10.4 節に置くことで合意した。第一の文は、他ドメインの発行者を受け入れても当該操作の認可が成立するわけではないと述べる。第二の文は、観測された証拠に基づく判定は観測時点で成立し、証拠が失効した後はそれだけでは成立しないと述べる。Lee は自身のドラフトの閉じた五値の拒否語彙と observation_as_of_ms を根拠に挙げている。これは一参加者の提案であり、WG の決定ではない。メッセージは途中で切れており、引用された他ドラフトや適合性サイトは未検証である。",
+      "title": "AIMS -01: upstream authorities for Workload Identity Certificates (trust between trust domains)",
+      "updated_at": "2026-11-06T19:28:20+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/uHj7l43s0fHCCyGLYRnOqvVpfpM/",
+      "use_cases": [
+        "Deciding how a verifier treats a certificate from another trust domain's issuer when AIMS leaves authorization undetermined.",
+        "Designing a cross-domain acceptance audit record that includes the age of the evidence relied on."
+      ],
+      "use_cases_ja": [
+        "AIMS で認可が未決定のとき、他のトラストドメインの発行者による証明書を検証側がどう扱うかを決める場面。",
+        "依拠した証拠の経過時間を含むクロスドメイン受け入れの監査記録を設計する場面。"
       ]
     },
     "mail:vYvV5zr1MwIDfVydyKMnAkiA61g": {
