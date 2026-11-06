@@ -49,6 +49,11 @@
       "at": "2026-11-05T20:01:33+00:00",
       "text": "draft-ietf-oauth-sd-jwt-vc-24 was published during IESG review. It formally updates RFC 7800 so cnf no longer needs sub or iss, and it tightens issuer-identification rules for x5c and iss. Mike Bishop cleared his DISCUSS, and Éric Vyncke's DISCUSS on BCP 14 keywords is still being worked in PR #454.",
       "text_ja": "draft-ietf-oauth-sd-jwt-vc-24 が IESG レビュー中に公開された。cnf に sub または iss を必須とする要件を外す形で RFC 7800 を正式に更新し、x5c と iss による発行者の識別規則も厳格化した。Mike Bishop は DISCUSS を解除したが、Éric Vyncke の BCP 14 キーワードに関する DISCUSS は PR #454 で対応中である。"
+    },
+    {
+      "at": "2026-11-06T06:53:13+00:00",
+      "text": "draft-ietf-oauth-sd-jwt-vc-25 was published in answer to Éric Vyncke's DISCUSS: it turns the type-matching SHOULD into plain prose and spells out the risk of skipping the status check. The rest of the run is new AI-agent drafts and Skyfire AMR/KYAPay review threads.",
+      "text_ja": "draft-ietf-oauth-sd-jwt-vc-25 が公開された。Éric Vyncke の DISCUSS への対応として、型照合の SHOULD を通常の記述に改め、ステータス確認を省略した場合のリスクを明記している。そのほかは AI エージェント向けの新規ドラフトと、Skyfire の AMR・KYAPay に関するレビュー議論である。"
     }
   ],
   "items": {
@@ -236,6 +241,23 @@
         "HTTPS の iss と x5c ヘッダーの両方を持つクレデンシャルを受け付ける検証者は、どの仕組みで発行者を識別するかをポリシーで決める必要があり、束縛のない iss を信頼してはならない。",
         "sub も iss も持たない鍵束縛 SD-JWT VC を発行するウォレットや発行者は、上書きではなく RFC 7800 の正式な更新を根拠にできる。"
       ]
+    },
+    "draft:draft-ietf-oauth-sd-jwt-vc-25": {
+      "diagram": "",
+      "first_seen": "2026-11-06",
+      "headline": "The -25 revision drops the BCP 14 SHOULD on type matching, adds a status-check risk note and regenerates the examples.",
+      "headline_ja": "-25 版は型照合の BCP 14 の SHOULD を外し、ステータス確認のリスク記述を加え、例を再生成した",
+      "id": "draft:draft-ietf-oauth-sd-jwt-vc-25",
+      "kind": "draft-revision",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The type-matching text no longer uses SHOULD: a Holder or Verifier now \"treats\" an SD-JWT VC as being of a given type if the type is the vct value or in aka_vcts. The status-check text keeps SHOULD but adds that a Verifier that does not check status cannot detect revocation or suspension and accepts that risk under its policy. The examples were rewritten: the typ in the example headers changed from vc+sd-jwt to dc+sd-jwt, the PID example now uses a fictional \"Ændgard\" issuer with a urn:example:eudi:pid:aendgard:1 vct and extra claims (sex, age_in_years, portrait and others), and the signatures and hashes were recomputed. The rest of the diff shows only table-of-contents page numbers and whitespace, and the material is truncated.",
+      "summary_ja": "型照合の記述から SHOULD が除かれ、Holder または Verifier は、型が vct の値または aka_vcts に含まれる場合にその型として「扱う」と記述された。ステータス確認は SHOULD のままだが、確認しない Verifier は失効や停止を検知できず、そのリスクをポリシーに従って受け入れることになる、という説明が加わった。例も書き換えられ、ヘッダーの typ は vc+sd-jwt から dc+sd-jwt に変わり、PID の例は架空の「Ændgard」発行者、vct の urn:example:eudi:pid:aendgard:1、追加クレーム（sex、age_in_years、portrait など）を使い、署名とハッシュも再計算された。残りは目次のページ番号と空白の変更のみで、資料は途中で切れている。",
+      "title": "draft-ietf-oauth-sd-jwt-vc-25: SD-JWT-based Verifiable Digital Credentials (SD-JWT VC)",
+      "updated_at": "2026-11-06T06:53:13+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-ietf-oauth-sd-jwt-vc-24&url2=draft-ietf-oauth-sd-jwt-vc-25",
+      "use_cases": [],
+      "use_cases_ja": []
     },
     "draft:draft-ietf-oauth-spiffe-client-auth-03": {
       "diagram": "flowchart TD\nA[Request with SVID] --> B{client_id present?}\nB -->|no| C[SPIFFE ID is the client_id, match registered client]\nB -->|yes, URL| D[SPIFFE ID must equal spiffe_id in CIMD document]\nB -->|yes, other| E[SPIFFE ID must be associated via registration]\nC --> F[Authenticated]\nD --> F\nE --> F\nB -->|CIMD client without client_id| G[invalid_client]",
@@ -452,6 +474,36 @@
       ],
       "use_cases_ja": [
         "token68 以外の文字を含むアクセストークンを発行する実装者は、許可される文字集合を狭める #273 を注視すべきである。"
+      ]
+    },
+    "mail:5vpjfYjnk2eV2IT2Kqn-UnIhspc": {
+      "diagram": "sequenceDiagram\n  participant U as User\n  participant A as Agent\n  participant AS as Authorization Server\n  participant RP as Relying Party\n  A->>AS: Token Exchange, actor_token = Agent Passport\n  AS-->>A: root Delegation Receipt (agent-delegation type)\n  A->>A: sub-agent receipt, narrower than parent\n  A->>RP: passport and receipt chain\n  RP->>RP: verify chain, intersect with user access",
+      "first_seen": "2026-11-06",
+      "headline": "A new individual draft defines Agent Passports and Delegation Receipts, issued through Token Exchange.",
+      "headline_ja": "新規の個人ドラフトが Agent Passport と Delegation Receipt を定義し、Token Exchange で発行する",
+      "id": "mail:5vpjfYjnk2eV2IT2Kqn-UnIhspc",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "openid/aauth",
+          "note": "The author says the draft is meant to complement AAuth.",
+          "note_ja": "著者は、このドラフトは AAuth を補完するものだと述べている。",
+          "track": "openid"
+        }
+      ],
+      "significance": "new-proposal",
+      "summary": "draft-le-agent-passport-00 defines two signed objects. An Agent Passport is a JWT that binds an agent's key (cnf) to the accountable organisation and to a digest of its build. Delegation Receipts form a chain from a user through agents and sub-agents. Each step is key-bound and can only narrow the one before, and the relying party verifies the chain and intersects it with the user's own access. Root receipts are obtained with RFC 8693 Token Exchange, using the passport as actor token and a new requested_token_type urn:ietf:params:oauth:token-type:agent-delegation. Status uses the Token Status List draft. The open question is whether grants should be an RFC 9396 authorization_details type. The author mentions a side meeting at IETF 127 and an IPR disclosure, and says the draft complements draft-klrc-aiagent-auth and AAuth.",
+      "summary_ja": "draft-le-agent-passport-00 は二種類の署名付きオブジェクトを定義する。Agent Passport は、エージェントの鍵（cnf）を責任を負う組織とビルドのダイジェストに結び付ける JWT である。Delegation Receipt はユーザーからエージェント、サブエージェントへ続く連鎖で、各段は鍵に束縛され、前の段より権限を狭めることしかできない。依拠当事者は連鎖を検証し、ユーザー自身のアクセス権との共通部分を取る。ルートの receipt は RFC 8693 の Token Exchange で取得し、passport を actor token とし、新しい requested_token_type urn:ietf:params:oauth:token-type:agent-delegation を用いる。ステータスは Token Status List ドラフトで表す。未解決の論点は、付与を RFC 9396 の authorization_details の type として表すべきかどうかである。著者は IETF 127 でのサイドミーティングと IPR 開示にも触れ、draft-klrc-aiagent-auth や AAuth を補完するものだと述べている。",
+      "title": "New draft: Agent Passports and Delegation Receipts (draft-le-agent-passport-00)",
+      "updated_at": "2026-11-06T06:53:13+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/5vpjfYjnk2eV2IT2Kqn-UnIhspc/",
+      "use_cases": [
+        "An authorisation server that already supports RAR and wants to issue agent delegation grants as authorization_details",
+        "A relying party that must check, across organisations, that a sub-agent's authority is a subset of the user's"
+      ],
+      "use_cases_ja": [
+        "RAR に対応済みの認可サーバーが、エージェントへの委任を authorization_details として発行したい場合",
+        "組織をまたいで、サブエージェントの権限がユーザーの権限の部分集合であることを依拠当事者が検証する必要がある場合"
       ]
     },
     "mail:5yaIITzC7JvwuRt94lpF7u4P72E": {
@@ -844,6 +896,27 @@
         "status 確認が必須かどうかを判断する検証者は、公開前にこの SHOULD が厳格化または説明されることがありうる。"
       ]
     },
+    "mail:M4Uyhdqn_YtaeFSEIX63kx6ay0o": {
+      "diagram": "",
+      "first_seen": "2026-11-06",
+      "headline": "Rob Zagarella's implementer review of the Skyfire amr-values and id-verification drafts produced issues on bg, idv_time and overlap with RFC 8176.",
+      "headline_ja": "Rob Zagarella による Skyfire の amr-values と id-verification の実装者レビューから、bg、idv_time、RFC 8176 との重複に関する issue が生まれた",
+      "id": "mail:M4Uyhdqn_YtaeFSEIX63kx6ay0o",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Ankit reports that two of Rob's points are now issues: splitting the combined bg value into a device-identifier issue and a geo-location issue, and what idv_time should mean for verification time. The quoted review asks for a note per new amr value saying whether it specialises, extends or is disjoint from an existing RFC 8176 value (for example face and facliv), and asks that facliv be defined. Rob later agrees that ISO/IEC 30107-3 does not formally define passive versus active liveness and suggests facliv simply mean facial liveness was performed, leaving finer distinctions to a profile. Mike Jones says overlap is normal among amr values, removes call in PR #7 and opened issue #8 for the clarifications. The material is truncated.",
+      "summary_ja": "Ankit は、Rob の指摘のうち二点が issue になったと報告している。結合された bg を device identifier と geo-location の二つの issue に分けること、そして検証時刻を表す idv_time の意味である。引用されたレビューは、新しい amr 値ごとに、既存の RFC 8176 の値（face と facliv など）を特殊化するのか、拡張するのか、無関係なのかを一行で示すことと、facliv の定義を求めている。Rob は後に、ISO/IEC 30107-3 が受動的・能動的ライブネスを正式に区分しているわけではないと認め、facliv は顔のライブネスが行われたことのみを意味し、細かな区別はプロファイルに委ねるのがよいと述べている。Mike Jones は amr の値の間で重複があるのは通常のことだと述べ、call を PR #7 で削除し、明確化のために issue #8 を作成した。資料は途中で切れている。",
+      "title": "Implementer review of draft-skyfire-oauth-amr-values-01 and draft-skyfire-oauth-id-verification-01",
+      "updated_at": "2026-11-06T06:53:13+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/M4Uyhdqn_YtaeFSEIX63kx6ay0o/",
+      "use_cases": [
+        "An implementer that records a facial match plus an active liveness challenge and has to choose which amr values to emit"
+      ],
+      "use_cases_ja": [
+        "顔照合と能動的ライブネスチャレンジを記録する実装者が、どの amr 値を出力すべきかを決める場合"
+      ]
+    },
     "mail:MDAs2JISpkI8GPkxxqSeiwHFmd4": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -954,6 +1027,29 @@
       "use_cases_ja": [
         "複数のオフライン縮小フォーマットのチェーンを受け入れ、深さ制限の挙動を揃える必要がある検証者。",
         "予算や失効の扱いについて、オフライン縮小と呼び出し経路上のサーバーのどちらを使うか検討するエージェント基盤。"
+      ]
+    },
+    "mail:Nuj5rCPT4ntMHnV1yZdKyWGaWTs": {
+      "diagram": "",
+      "first_seen": "2026-11-06",
+      "headline": "The IESG ballot on sd-jwt-vc-23 questions two SHOULDs, and the authors answer that they will soften one and explain the other.",
+      "headline_ja": "sd-jwt-vc-23 への IESG 投票で二つの SHOULD が問われ、著者は一方を外し他方に説明を加えると回答した",
+      "id": "mail:Nuj5rCPT4ntMHnV1yZdKyWGaWTs",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Éric Vyncke entered a DISCUSS on -23. He asks why type matching (Section 2.2.2.2) and status checking (Section 2.4) are not MUSTs, and notes that the type-matching SHOULD is not really an interoperability requirement under BCP 14. An author replied that the type-matching text was added late, was meant to help layers above such as DCQL and OpenID4VP, and would be better without BCP 14 language. For status, the author said a verifier may be offline and that more text will cover the consequences of not checking. Vyncke's comments also second a DISCUSS about a missing formal update of RFC 7800 and suggest replacing the normative reference to RFC 6890 with the IANA IPv4 and IPv6 special-purpose registries. The -25 diff acts on the first two points.",
+      "summary_ja": "Éric Vyncke は -23 に DISCUSS を入れた。型照合（2.2.2.2 節）とステータス確認（2.4 節）がなぜ MUST ではないのか、また型照合の SHOULD は BCP 14 上は相互運用性の要件ではないのではないか、と指摘している。著者は、型照合の記述は遅い段階で追加され、DCQL や OpenID4VP などの上位層を助ける意図であり、BCP 14 の用語を避けるほうがよいと回答した。ステータスについては、Verifier がオフラインの場合があるため MUST にせず、確認しない場合の影響の説明を加えると述べた。COMMENT では、RFC 7800 の正式な更新が欠けているという DISCUSS への同意と、RFC 6890 への規範的参照を IANA の IPv4・IPv6 特殊用途レジストリに置き換える提案もある。-25 の差分は最初の二点に対応している。",
+      "title": "Éric Vyncke's Discuss on draft-ietf-oauth-sd-jwt-vc-23: (with DISCUSS and COMMENT)",
+      "updated_at": "2026-11-06T06:53:13+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/Nuj5rCPT4ntMHnV1yZdKyWGaWTs/",
+      "use_cases": [
+        "A wallet or verifier library that matches credential types via aka_vcts and needs to know whether the rule is a protocol requirement",
+        "A verifier that may be offline and has to decide how to handle a credential with a status claim"
+      ],
+      "use_cases_ja": [
+        "aka_vcts で認証情報の型を照合するウォレットや Verifier のライブラリが、その規則がプロトコル上の要件かどうかを知る必要がある場合",
+        "オフラインになり得る Verifier が、status クレームを持つ認証情報をどう扱うかを決める場合"
       ]
     },
     "mail:Qguh52h8Jv00QvGc4miq8aAwZzY": {
@@ -1103,6 +1199,47 @@
         "DPoP を必須とする認可サーバーに対し、クライアントはトークン要求の失敗を待たず、メタデータから事前に要件を把握できる。",
         "クライアント ID メタデータドキュメントを使う環境で、認可サーバーが DPoP 要件を事前に明示できる。"
       ]
+    },
+    "mail:UsmI2yL5sspN4GY--aQIsGIIdoU": {
+      "diagram": "",
+      "first_seen": "2026-11-06",
+      "headline": "Review points on the Skyfire KYAPay drafts are now tracked as GitHub issues.",
+      "headline_ja": "Skyfire の KYAPay ドラフトに対するレビュー指摘が GitHub の issue として管理されるようになった",
+      "id": "mail:UsmI2yL5sspN4GY--aQIsGIIdoU",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Ankit lists the open points from Jean Diaconu's review as issues: how separate KYA and PAY tokens in one request relate (the token draft says they refer to the same initiator only when both iss and sub are equal), a Human-in-the-Loop option for a site to ask for recent human confirmation, and the AML methods draft's vendor-page references and false, stale or sensitive assertions. The quoted thread shows Mike Jones answering the review: PR #49 clarifies aid and sti and mentions jti and short lifetimes against replay, an issue tracks the unclear verifier description, and the token-exchange example is being reworked. The quoted text is truncated.",
+      "summary_ja": "Ankit は、Jean Diaconu のレビューで残っていた指摘を issue として列挙している。内容は、一つのリクエスト内の別々の KYA トークンと PAY トークンの関係（トークンのドラフトでは iss と sub の両方が等しい場合に限り同一の開始者を指すとされている）、サイトが直近の人間による確認を求められる Human in the Loop、AML methods ドラフトのベンダーページへの参照および誤り・陳腐化・機微情報を含むアサーションである。引用されたやり取りでは、Mike Jones が PR #49 で aid と sti を明確化し、リプレイ対策として jti と短い有効期間に言及したこと、verifier の説明の不明瞭さが issue になったこと、token-exchange の例を作り直していることが読み取れる。引用部分は途中で切れている。",
+      "title": "Review of draft-skyfire-oauth-kyapay-*",
+      "updated_at": "2026-11-06T06:53:13+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/UsmI2yL5sspN4GY--aQIsGIIdoU/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "mail:WJpNueNQRESJbSsW15stezsMDFQ": {
+      "diagram": "",
+      "first_seen": "2026-11-06",
+      "headline": "A mailing list for an AAuth working group has been opened at the OpenID Foundation.",
+      "headline_ja": "OpenID Foundation に AAuth ワーキンググループ用のメーリングリストが開設された",
+      "id": "mail:WJpNueNQRESJbSsW15stezsMDFQ",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "openid/aauth",
+          "note": "The OpenID repository for the AAuth work that this list serves.",
+          "note_ja": "このメーリングリストが対象とする AAuth の作業に対応する OpenID 側のリポジトリ。",
+          "track": "openid"
+        }
+      ],
+      "significance": "routine",
+      "summary": "A short message tells those interested in AAuth about the openid-specs-aauth mailing list at the OpenID Foundation. It says the foundation is still provisioning the rest of the new working group's infrastructure. The message has no technical content.",
+      "summary_ja": "AAuth に関心のある人に向けて、OpenID Foundation の openid-specs-aauth メーリングリストを案内する短いメッセージである。同財団は新しいワーキンググループの残りの基盤を整備中だという。技術的な内容は含まれていない。",
+      "title": "AAuth working group at OpenID foundation",
+      "updated_at": "2026-11-06T06:53:13+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/WJpNueNQRESJbSsW15stezsMDFQ/",
+      "use_cases": [],
+      "use_cases_ja": []
     },
     "mail:XfEeU9P3FttCr9d8a2ncUFtTxLA": {
       "diagram": "",
@@ -1354,6 +1491,27 @@
       "url": "https://mailarchive.ietf.org/arch/msg/oauth/iF4rmUNJrV794fM4cxaEbM49ebQ/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:iIq9497aU0Zlq2xv1BnmBnDX1hQ": {
+      "diagram": "",
+      "first_seen": "2026-11-06",
+      "headline": "The amr-values thread argues over the broad bg value, separate sna, and a structured amr_details claim.",
+      "headline_ja": "amr-values の議論では、広すぎる bg 値、sna の独立登録、構造化された amr_details クレームが論点になっている",
+      "id": "mail:iIq9497aU0Zlq2xv1BnmBnDX1hQ",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Ankit says Bjorn Hjelm's points are now issues: device identifier as its own value (issue 14) and geo-location treated as context rather than authentication (issue 15). In the quoted thread Bjorn argues that bg is no different from sna, which he says is a misleading term for Number Verify, and that device recognition is too vague. Shankar supports registering sna separately because bg is too broad, and proposes an optional amr_details companion claim with method, channel and mechanism so that relationships such as an OTP delivered by email can be expressed, leaving amr unchanged. Mike Jones objected to changing the structure or ordering semantics of amr without working group discussion. PR #9 and PR #10 (a new mdc value for synced passkeys) are up. The material is truncated.",
+      "summary_ja": "Ankit は、Bjorn Hjelm の指摘が issue になったと述べている。device identifier を独立した値とすること（issue 14）と、geo-location を認証手段ではなく文脈として扱うこと（issue 15）である。引用されたやり取りで Bjorn は、bg は sna と変わらず、sna は Number Verify を指す用語としては紛らわしいこと、また device recognition は意味が広すぎることを指摘している。Shankar は bg が広すぎるとして sna を別途登録することを支持し、amr 自体は変えずに、method、channel、mechanism を持つ任意の amr_details 補助クレームを提案している。これにより、メールで配送された OTP のような関係を表現できる。Mike Jones は、ワーキンググループでの議論なしに amr の構造や順序の意味を変えることに異議を述べている。PR #9 と、同期パスキー向けの新しい値 mdc を加える PR #10 が出ている。資料は途中で切れている。",
+      "title": "Review of draft-skyfire-oauth-amr-values",
+      "updated_at": "2026-11-06T06:53:13+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/iIq9497aU0Zlq2xv1BnmBnDX1hQ/",
+      "use_cases": [
+        "A mobile-first service that uses phone numbers as account identifiers and needs to tell carrier-assisted verification apart from other background checks"
+      ],
+      "use_cases_ja": [
+        "電話番号をアカウント識別子として使うモバイル中心のサービスが、キャリア支援による検証をその他のバックグラウンド確認と区別する必要がある場合"
+      ]
     },
     "mail:ilZ30bU7n7Sc7lQNtg-kRgiQI04": {
       "diagram": "sequenceDiagram\nparticipant U as User\nparticipant A as Agent\nparticipant I as Intent Token issuer\nparticipant AS as Authorization Server\nA->>U: Negotiate and confirm intent\nI->>A: Signed Intent Token\nA->>AS: Request plus Intent Token\nAS->>AS: Validate signature, compare request to intent\nAS->>A: Narrowly scoped access token",
@@ -2089,10 +2247,10 @@
       "reason": "-06 adds new normative behaviour (client auth at IdP, invalid_request, mTLS binding, new metadata) and a large rewrite."
     },
     "draft-ietf-oauth-sd-jwt-vc": {
-      "date": "2026-11-05",
+      "date": "2026-11-06",
       "priority": "high",
-      "reason": "-24 published with Updates: 7800 and new issuer-identification rules while IESG DISCUSS items remain open.",
-      "reason_ja": "-24 が Updates: 7800 と新しい発行者識別規則を伴って公開され、IESG の DISCUSS 項目も残っている。"
+      "reason": "-25 published in response to an IESG DISCUSS, with normative wording changes on type matching and status checking.",
+      "reason_ja": "IESG の DISCUSS への対応として -25 が公開され、型照合とステータス確認の記述が変更された。"
     },
     "draft-ietf-oauth-spiffe-client-auth": {
       "date": "2026-11-03",
