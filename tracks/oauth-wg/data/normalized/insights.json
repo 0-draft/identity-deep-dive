@@ -59,6 +59,11 @@
       "at": "2026-11-06T19:28:20+00:00",
       "text": "draft-ietf-oauth-sd-jwt-vc-26 is an editorial-only revision that responds to Éric Vyncke's IESG ballot comments: it cites the IANA special-purpose address registries and removes a duplicate sentence. A small PR also fixes an example in the SPIFFE client authentication draft.",
       "text_ja": "draft-ietf-oauth-sd-jwt-vc-26 は編集上の修正のみの改訂であり、Éric Vyncke 氏の IESG 投票コメントに対応して、IANA の特殊用途アドレスレジストリを参照し、重複した文を削除した。また、SPIFFE クライアント認証ドラフトの例を修正する小さなプルリクエストがあった。"
+    },
+    {
+      "at": "2026-11-07T06:03:19+00:00",
+      "text": "A new individual draft, draft-williams-oauth-poi-core-00, proposes a human-signed, per-transaction approval that goes straight to the Resource Server instead of raising the agent's token scope. Two list threads on agent delegation (Cred -02 and AAT -02) are still working out one meaning for del_max_depth and a freshness bound for revocation.",
+      "text_ja": "新規個人ドラフト draft-williams-oauth-poi-core-00 が、エージェントのトークンのスコープを引き上げる代わりに、人間が署名した取引単位の承認をリソースサーバーへ直接渡す方式を提案した。エージェント委任に関する二つのスレッド（Cred -02 と AAT -02）では、del_max_depth の意味の統一と失効の鮮度の上限が引き続き議論されている。"
     }
   ],
   "items": {
@@ -793,6 +798,38 @@
         "ドラフト著者は、トラストアンカーが発行者と鍵をどう結び付けるかに曖昧さがあることを把握できる。"
       ]
     },
+    "mail:FD4LLf6MJkGO-7gEassAblQJD90": {
+      "diagram": "sequenceDiagram\nparticipant C as Client\nparticipant AS as Authorization Server\nparticipant RS as Resource Server\nparticipant H as Human via Signing Vault\nC->>AS: Session login\nAS-->>C: Ephemeral Intent Key certified via cnf\nC->>RS: Request action\nRS-->>C: Signed challenge with display facts\nC->>H: Show RS-signed facts\nH-->>C: Sign PoIE over hash of transaction\nC->>RS: PoIE\nRS->>RS: Verify signature and execute that action only",
+      "first_seen": "2026-11-07",
+      "headline": "A new draft proposes that a human signs a hash of the exact transaction, and the Resource Server checks it without involving the Authorization Server.",
+      "headline_ja": "人間が取引内容のハッシュに署名し、リソースサーバーが認可サーバーを介さず検証する方式を提案する新規ドラフト",
+      "id": "mail:FD4LLf6MJkGO-7gEassAblQJD90",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-hulea-wimse-agent-mandate",
+          "note": "Both address verifiable human authorization for agent actions, but the material does not show a direct link, so this is a topical pointer.",
+          "note_ja": "どちらもエージェント操作に対する検証可能な人間の認可を扱うが、資料に直接の関連は示されておらず、主題上の参照にとどまる。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "new-proposal",
+      "summary": "draft-williams-oauth-poi-core-00 introduces Proof-of-Intent. The human signs a Proof-of-Intent Envelope (PoIE) that commits to the SHA-256 hash of the transaction parameters, canonicalised with RFC 8785 JCS. The Resource Server (RS) verifies the signature and executes only that action. At session login the Authorization Server (AS) certifies a short-lived Ephemeral Intent Key through an RFC 7800 cnf claim. After that the client signs the RS's challenge locally, so the AS is not on the live path. A client-side Signing Vault shows the RS-signed display facts to the user. The RS picks one of three assurance tiers: session key proof of possession, platform biometrics, or FIDO2 cross-platform hardware tokens. The author contrasts this with draft-rosenberg-oauth-aauth, where approval produces a broader-scope access token through the AS. A companion draft covers multi-hop escalation and concurrency, and a reference implementation is linked.",
+      "summary_ja": "draft-williams-oauth-poi-core-00 は Proof-of-Intent を導入する。人間は、RFC 8785 JCS で正規化した取引パラメーターの SHA-256 ハッシュにコミットする Proof-of-Intent Envelope（PoIE）に署名し、リソースサーバー（RS）は署名を検証してその操作だけを実行する。セッションのログイン時に認可サーバー（AS）が RFC 7800 の cnf クレームで短命の Ephemeral Intent Key を証明し、その後はクライアントが RS のチャレンジにローカルで署名するため、実行時のパスに AS は入らない。クライアント側の Signing Vault が RS の署名付き表示情報をユーザーに提示する。RS はセッション鍵による所持証明、プラットフォーム生体認証、FIDO2 クロスプラットフォームハードウェアトークンの三段階の保証レベルから一つを要求する。著者は、承認の結果として AS がより広いスコープのアクセストークンを発行する draft-rosenberg-oauth-aauth と対比している。マルチホップのエスカレーションと並行性を扱う補助ドラフトがあり、参照実装も示されている。",
+      "title": "New Draft: draft-williams-oauth-poi-core-00 (Proof-of-Intent Core)",
+      "updated_at": "2026-11-07T06:03:19+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/FD4LLf6MJkGO-7gEassAblQJD90/",
+      "use_cases": [
+        "An agent that pays an invoice, where the user must approve one exact payee and amount and the agent must not keep a reusable elevated token.",
+        "A Resource Server that wants to check high-consequence approvals offline, without calling the AS on each transaction.",
+        "A deployment that requires a hardware-backed WebAuthn approval for high-value agent actions."
+      ],
+      "use_cases_ja": [
+        "請求書の支払いを行うエージェントで、ユーザーが特定の受取人と金額を承認し、エージェントが再利用可能な昇格トークンを保持しない場合。",
+        "リソースサーバーが、取引ごとに AS を呼び出さずに、重要な操作の承認を検証したい場合。",
+        "価値の高いエージェント操作に対して、WebAuthn によるハードウェア裏付けの承認を求める運用。"
+      ]
+    },
     "mail:IDo5i8W0qxEgmmAZB5ITc0k0apw": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -916,6 +953,42 @@
       ],
       "use_cases_ja": [
         "status 確認が必須かどうかを判断する検証者は、公開前にこの SHOULD が厳格化または説明されることがありうる。"
+      ]
+    },
+    "mail:L2gMfUEpsEtu7r9bHmWQ9uerlOk": {
+      "diagram": "",
+      "first_seen": "2026-11-07",
+      "headline": "A reviewer asks that the Cred delegation draft keep user approval evidence separate from the root and define what a verifier sees for suspended delegations.",
+      "headline_ja": "Cred 委任ドラフトについて、ユーザー承認の証跡をルートから分離し、停止中の委任に対する検証側の扱いを定めるよう求めるレビュー",
+      "id": "mail:L2gMfUEpsEtu7r9bHmWQ9uerlOk",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-sweeney-wimse-credential-delegation",
+          "note": "The draft under discussion is the one being reviewed in this thread.",
+          "note_ja": "このスレッドでレビューされているのが当該ドラフトである。",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "draft-asor-wimse-agent-delegation-chain",
+          "note": "Cred -02 adopts its agent_delegation format unchanged for tokens verified away from the DS.",
+          "note_ja": "Cred -02 は DS の外で検証されるトークンにその agent_delegation 形式をそのまま採用している。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "The message quotes Kieran Sweeney's announcement of draft-sweeney-wimse-credential-delegation-02 and adds Rob Zagarella's reply. In the quoted announcement, a Delegation Server (DS) holds deposited credentials and agents exercise them by proxy under a delegation token. The -02 changes include a sub-delegation exchange, rank order carried in the token, and cumulative bounds in a delegation_constraints claim (max_lifetime, max_subtree) with the DS as single writer. It also adopts the agent_delegation format from draft-asor-wimse-agent-delegation-chain for tokens verified away from the DS, and states that revocation is invalidation, not closure, with a 1-hour token cap. Zagarella's reply makes two points. For a user-minted root in -03, keep who minted it separate from evidence that a natural person approved it, recorded as method and assurance only (such as amr values) and never biometric data. For Section 7, say what a verifier sees for actions taken while a delegation was suspended, and whether a restored delegation is the same grant or a new one.",
+      "summary_ja": "このメッセージは、Kieran Sweeney による draft-sweeney-wimse-credential-delegation-02 の告知を引用し、Rob Zagarella の返信を加えたものである。引用された告知によれば、Delegation Server（DS）がユーザーの預けた認証情報を保持し、エージェントは委任トークンの下でそれを代理行使する。-02 の変更点には、サブ委任の交換、トークンに含まれる順位、DS を唯一の書き込み元とする delegation_constraints クレーム（max_lifetime、max_subtree）による累積上限がある。DS の外で検証されるトークンには draft-asor-wimse-agent-delegation-chain の agent_delegation 形式をそのまま採用し、失効は「無効化であって終了ではない」とし、トークンの上限を 1 時間とする。Zagarella の返信は二点を述べる。-03 のユーザー発行ルートでは、誰が発行したかと、自然人が承認したという証跡を分け、後者は方式と保証レベル（amr 値など）のみとして生体データは含めないこと。Section 7 では、停止中に行われた操作を検証側がどう扱うか、復元された委任が同一の許可か新規の許可かを明記することである。",
+      "title": "draft-sweeney-wimse-credential-delegation-02",
+      "updated_at": "2026-11-07T06:03:19+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/L2gMfUEpsEtu7r9bHmWQ9uerlOk/",
+      "use_cases": [
+        "A Delegation Server operator who must let a verifier outside the DS tell whether a real person approved a user-minted root.",
+        "A verifier comparing a revocation or suspension decision for an action taken just before a delegation was restored."
+      ],
+      "use_cases_ja": [
+        "DS の外にいる検証側が、ユーザー発行ルートを実在の人間が承認したかどうかを判断する必要がある DS 運用者。",
+        "委任が復元される直前の操作について、失効や停止の判断を比較する検証側。"
       ]
     },
     "mail:M4Uyhdqn_YtaeFSEIX63kx6ay0o": {
@@ -1678,6 +1751,42 @@
       "url": "https://mailarchive.ietf.org/arch/msg/oauth/rShUO7YVi2WyKSxydiyWt5eonUc/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:sNzggu7MhnF8lEATmAi6g-F8Nv0": {
+      "diagram": "",
+      "first_seen": "2026-11-07",
+      "headline": "The AAT, Cred and Asor authors agree del_max_depth should have one meaning, and a reviewer asks the comparison to cover digest-bound leaf constraints.",
+      "headline_ja": "AAT、Cred、Asor の著者が del_max_depth の意味を一つにすることで一致し、レビュアーがダイジェストに束縛された末端制約の比較を求める",
+      "id": "mail:sNzggu7MhnF8lEATmAi6g-F8Nv0",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-asor-wimse-agent-delegation-chain",
+          "note": "Its del_max_depth semantics and registry entry are the point of disagreement with AAT.",
+          "note_ja": "その del_max_depth の意味とレジストリ項目が AAT との相違点である。",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "draft-sweeney-wimse-credential-delegation",
+          "note": "Cred -02 Sections 5.5 and 7 are cited for depth semantics and the revocation freshness bound.",
+          "note_ja": "深さの意味と失効の鮮度の上限について Cred -02 の Section 5.5 と 7 が参照されている。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "This is a thread, not an announcement, and the fetched text is truncated. Quoted messages show a one-hop difference in del_max_depth. Under a root with del_max_depth 8, AAT accepts a leaf at del_depth 8 (test vector J.10.f) while the Asor -03 text rejects it. Niki Aimable Niyikiza adds a second difference: if a holder delegates with del_max_depth 2, AAT rejects a token at depth 3, while Asor checks depth only against the root's 8. Niyikiza wants the shared definition to keep the holder's cap, and Rob Zagarella agrees, since otherwise a holder cannot narrow its own onward delegation. Sweeney leans toward the Asor registry entry but cares more about reconciled vectors. Sweeney and Niyikiza also agree that the companion document for AAT Section 9.8 should state how fresh an enforcement point's revocation state must be. Zagarella asks that the planned constraint comparison record whether each draft can bind a leaf to a digest of the exact request, and that the freshness bound be stated in the same terms as Cred -02 Section 7.",
+      "summary_ja": "これは告知ではなくスレッドであり、取得できた本文は途中で切れている。引用されたメッセージによれば、del_max_depth には一ホップの差がある。del_max_depth が 8 のルートの下で、AAT は del_depth 8 の末端を受理し（テストベクター J.10.f）、Asor -03 の文面は拒否する。Niki Aimable Niyikiza はさらに二つ目の違いを挙げる。保持者が del_max_depth 2 で委任した場合、AAT は深さ 3 のトークンを拒否するが、Asor は深さをルートの 8 とだけ照合する。Niyikiza は共通定義が保持者による上限を維持すべきだとし、Rob Zagarella も、そうでなければ保持者が自身の先の委任を絞れなくなるとして同意する。Sweeney は Asor のレジストリ項目に傾くが、ベクターの整合の方を重視する。Sweeney と Niyikiza は、AAT Section 9.8 の補助文書で、実施点の失効状態がどれだけ新しくなければならないかを明記すべきという点でも一致している。Zagarella は、予定されている制約の比較に、各ドラフトが末端をリクエスト全体のダイジェストに束縛できるかを記録すること、また鮮度の上限を Cred -02 Section 7 と同じ表現で述べることを求めている。",
+      "title": "AAT -02 announcement",
+      "updated_at": "2026-11-07T06:03:19+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/sNzggu7MhnF8lEATmAi6g-F8Nv0/",
+      "use_cases": [
+        "An implementer of AAT or Asor delegation chains who needs depth-limit behaviour to be the same across libraries.",
+        "A deployment where each approval must bind to one exact action, such as one payee and amount, and the chain must show it sits inside the broader grant."
+      ],
+      "use_cases_ja": [
+        "AAT や Asor の委任チェーンを実装し、深さ制限の挙動をライブラリ間で揃えたい実装者。",
+        "承認を特定の受取人と金額など一つの正確な操作に束縛し、チェーン上でそれがより広い許可の範囲内にあることを示す必要がある運用。"
+      ]
     },
     "mail:tQiCKnQA7RucSiXodCME9eVFuIc": {
       "diagram": "",
