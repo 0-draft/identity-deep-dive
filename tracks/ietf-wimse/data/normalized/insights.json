@@ -68,6 +68,11 @@
       "at": "2026-11-06T19:28:20+00:00",
       "text": "Kathleen Moriarty posted readability and security reviews of draft-ietf-wimse-workload-creds and draft-ietf-wimse-http-signature, both logged as s2s-protocol issues (#418, #417). A third thread, from the author of an external draft, proposes bounding sentences for the AIMS gap text. No normative change happened.",
       "text_ja": "Kathleen Moriarty が draft-ietf-wimse-workload-creds と draft-ietf-wimse-http-signature の可読性・セキュリティ面のレビューを投稿し、それぞれ s2s-protocol の issue #418、#417 として登録された。AIMS のギャップ文に関する議論も続いたが、規範的な変更はない。"
+    },
+    {
+      "at": "2026-11-07T06:03:19+00:00",
+      "text": "Most notable: an independent test-vector set (6 positive, 22 negative) for draft-ietf-wimse-http-signature-08 was posted, and the editor said verifiers should reject messages with MUST NOT parameters. Otherwise it was list discussion on delegation chains and AER-1 audit records, plus a spelling-only commit.",
+      "text_ja": "最も重要なのは draft-ietf-wimse-http-signature-08 の独立したテストベクター（正例6件、負例22件）の投稿で、エディタは MUST NOT のパラメーターを含むメッセージは検証側が拒否すべきだと述べた。その他は委任チェーンと AER-1 監査記録に関するメーリングリストの議論と、スペル修正のみのコミットである。"
     }
   ],
   "items": {
@@ -472,6 +477,29 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "mail:7hhLkU1MMoQJJoahXOS2T17YiQk": {
+      "diagram": "",
+      "first_seen": "2026-11-07",
+      "headline": "In short, the AER-1 mapping for AIMS audit records will separate denied decisions from decisions that could not be evaluated.",
+      "headline_ja": "AIMS 監査記録向けの AER-1 マッピングで、拒否された判断と評価できなかった判断を区別する方針が固まった。",
+      "id": "mail:7hhLkU1MMoQJJoahXOS2T17YiQk",
+      "kind": "mail",
+      "related": [],
+      "significance": "substantive",
+      "summary": "In a thread on draft-zambo-aer1-wimse-mapping, Girish Konda argued that a rejection receipt cannot distinguish a policy denial from a check that could not be completed, since the producer's reason sits outside the committed hash. The -02 added a committed decision_reason member (denied or not_evaluated) with decision_reason_detail. Konda then noted that fail-closed denials after an unreachable or stale input would still be recorded as denied. The author agreed: -03 will use not_evaluated whenever an input the decision depended on could not be established, even if a fail-closed rule denies. The reason is committed for the audit reader and not returned to the caller. -03 will be posted on November 15 after the submission tool reopens.",
+      "summary_ja": "draft-zambo-aer1-wimse-mapping のスレッドで Girish Konda は、提供側の理由がコミットされるハッシュの外にあるため、拒否レシートではポリシーによる拒否と確認を完了できなかった場合を区別できないと指摘した。-02 では、コミットされる decision_reason メンバー（denied または not_evaluated）と decision_reason_detail が追加された。Konda はさらに、到達不能または古い入力の後に fail-closed で拒否した場合も denied と記録されてしまうと指摘した。著者はこれに同意し、-03 では、判断が依存する入力を確定できなかった場合は fail-closed の規則で拒否しても not_evaluated とする。この理由は監査の読み手のためにコミットされ、呼び出し元には返されない。-03 は投稿ツールの再開後の 11 月 15 日に投稿される。",
+      "title": "draft-zambo-aer1-wimse-mapping-01: AER-1 as a candidate format for AIMS Section 11 audit records",
+      "updated_at": "2026-11-07T06:03:19+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/7hhLkU1MMoQJJoahXOS2T17YiQk/",
+      "use_cases": [
+        "A deployment producing tamper-evident audit logs for AIMS Section 11 needs to tell policy denials from unreachable or stale policy and status sources.",
+        "A fail-closed policy point can keep returning a uniform error to callers while still recording why it denied."
+      ],
+      "use_cases_ja": [
+        "AIMS Section 11 向けに改ざん検知可能な監査ログを作成する環境では、ポリシーによる拒否と、ポリシー源や状態源に到達できない、または古い場合とを区別する必要がある。",
+        "fail-closed のポリシー判断点は、呼び出し元には一様なエラーを返しつつ、拒否の理由を記録に残せる。"
+      ]
+    },
     "mail:91TeMxN3w_c1-rqionvYSDjph4w": {
       "diagram": "",
       "first_seen": "2026-11-01",
@@ -569,6 +597,36 @@
       "use_cases_ja": [
         "信頼ドメインごとにトラストバンドルを個別交換せずに、互いのワークロードを検証したい複数の組織。",
         "一つの固定アンカーの下で複数の信頼ドメインを運用し、あるドメインの発行者が別ドメインの ID を発行できないようにしたいプラットフォーム運用者。"
+      ]
+    },
+    "mail:EDluDjc325ZvOf2QXX9rj3kJM7o": {
+      "diagram": "",
+      "first_seen": "2026-11-07",
+      "headline": "In short, Rob Zagarella commented on Cred delegation -02: keep human-approval evidence separate in a user-minted root, and specify suspend/restore semantics.",
+      "headline_ja": "Rob Zagarella が draft-sweeney-wimse-credential-delegation-02 にコメントし、ユーザー発行ルートでの人間承認の証跡の分離と、停止・復元時の挙動の明確化を提案した。",
+      "id": "mail:EDluDjc325ZvOf2QXX9rj3kJM7o",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-transaction-tokens",
+          "note": "Both carry delegated authority across call chains, but the material does not link them explicitly; weak connection.",
+          "note_ja": "どちらも呼び出しチェーン上で委任された権限を扱うが、資料に明示的な関連は無く、関連は弱い。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "The thread carries Kieran Sweeney's -02 announcement. The draft is a profile where a Delegation Server holds user-deposited credentials and agents exercise them by proxy under a delegation token. Main changes are a sub-delegation exchange, rank order in the token, cumulative bounds (max_lifetime, max_subtree) with the DS as single writer, a chain-verifiable profile adopting draft-asor-wimse-agent-delegation-chain's agent_delegation format, and revocation framed as invalidation, not closure. Zagarella's reply, the new message, suggests that -03 distinguish who minted a root from evidence of natural-person approval, recording only method and assurance. It also asks Section 7 to say what a verifier sees for actions during a suspension and whether a restored delegation is the same grant, with the 1-hour cap presented as a bound on exposure.",
+      "summary_ja": "このスレッドには Kieran Sweeney による -02 の告知が含まれる。このドラフトは、Delegation Server がユーザーの預けた資格情報を保持し、エージェントが委任トークンの下でそれを代理で行使するプロファイルである。主な変更は、サブ委任の交換、トークン内の順位、DS を単一の書き込み元とする累積上限（max_lifetime、max_subtree）、draft-asor-wimse-agent-delegation-chain の agent_delegation 形式を採用したチェーン検証プロファイル、および失効を「閉鎖ではなく無効化」とする整理である。新しい返信で Zagarella は、-03 でルートの発行者と、自然人の承認の証跡（方法と保証レベルのみ）を分けることを提案した。また Section 7 に、停止中の操作が検証側にどう見えるか、復元された委任が同一の許可か新規かを明記し、1時間の上限は露出の上限として示すよう求めた。",
+      "title": "draft-sweeney-wimse-credential-delegation-02",
+      "updated_at": "2026-11-07T06:03:19+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/EDluDjc325ZvOf2QXX9rj3kJM7o/",
+      "use_cases": [
+        "An agent platform that lets users deposit upstream credentials and delegate to agents without exposing them.",
+        "A verifier away from the Delegation Server needs a fixed place to check human-approval evidence for a user-minted root."
+      ],
+      "use_cases_ja": [
+        "ユーザーが上流の資格情報を預け、それを露出させずにエージェントへ委任させるエージェント基盤。",
+        "Delegation Server から離れた検証側が、ユーザー発行ルートに対する人間承認の証跡を確認する場所が必要となる場合。"
       ]
     },
     "mail:EDu91EnPTVXXCO4bgtlrUknXLi4": {
@@ -707,6 +765,29 @@
       "use_cases_ja": [
         "委任されたタスクを扱ったエージェントと、そのうち要求や応答を改変したものを検証する場面。",
         "マルチエージェントのハンドオフで、チェーンの完全性を保つためにホップ連鎖型の署名付きオファーと集約署名のどちらを選ぶか検討する場面。"
+      ]
+    },
+    "mail:IcH0Hq5968-TzSxLL7Wpi4pl-7k": {
+      "diagram": "",
+      "first_seen": "2026-11-07",
+      "headline": "In short, an independent test-vector set for http-signature-08 was posted, and the editor said verifiers should reject messages carrying MUST NOT parameters.",
+      "headline_ja": "draft-ietf-wimse-http-signature-08 の独立したテストベクターが投稿され、エディタは MUST NOT のパラメーターを含むメッセージを検証側が拒否すべきだと回答した。",
+      "id": "mail:IcH0Hq5968-TzSxLL7Wpi4pl-7k",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Jiahui Miao posted 6 positive and 22 negative vectors, each tied to a MUST in the draft, with deterministic keys, spelled-out signature bases and a fixed clock. They asked whether a verifier should reject or ignore sender-side MUST NOT parameters (keyid, alg), and whether the Section 3.7 example nonces, which are below the 64-bit minimum, deserve an editorial note. Yaron replied that a MUST NOT in a security RFC should be rejected by the recipient, that an issue will be opened to add this note, and that a few of the vectors may need fixing (details in issue 419). The set is under review in the s2s-protocol repository.",
+      "summary_ja": "Jiahui Miao が、ドラフトの各 MUST に対応づけた正例6件と負例22件のテストベクターを投稿した。鍵は決定的に導出され、署名ベースが明記され、時刻は固定されている。送信側に対する MUST NOT のパラメーター（keyid、alg）を検証側が拒否すべきか無視すべきか、また 64 ビットの下限に満たない Section 3.7 の例の nonce に編集上の注記が必要かを質問した。Yaron は、セキュリティ RFC の MUST NOT は受信側が拒否すべきであり、その旨の注記を追加する issue を作成したこと、およびベクターの一部は修正が必要になる可能性があること（詳細は issue 419）を回答した。",
+      "title": "Test vectors for draft-ietf-wimse-http-signature-08 — request for review (2 new messages)",
+      "updated_at": "2026-11-07T06:03:19+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/IcH0Hq5968-TzSxLL7Wpi4pl-7k/",
+      "use_cases": [
+        "An implementer of WIMSE HTTP message signatures wanting interoperability checks can use the vectors, noting some may be corrected.",
+        "A verifier author deciding how to treat messages that include keyid or alg parameters now has the editor's stated intent: reject."
+      ],
+      "use_cases_ja": [
+        "WIMSE の HTTP メッセージ署名を実装する者は、相互運用性の確認にこのベクターを利用できる。ただし一部は修正される可能性がある。",
+        "keyid や alg を含むメッセージの扱いを決める検証側の実装者は、エディタの意図（拒否）を確認できる。"
       ]
     },
     "mail:JKrQPk6TmUIwlo_HiK8vKdLH42I": {
@@ -1136,6 +1217,29 @@
       "use_cases_ja": [
         "エージェントがユーザーの資格情報を保持せずに上流APIを呼び出す構成を求めるエージェント基盤。",
         "委任ツリー全体の合計存続時間やサブ委任数に上限を設けたい運用者。"
+      ]
+    },
+    "mail:cTEAHakgjO-revheF0EDR8Am5RA": {
+      "diagram": "",
+      "first_seen": "2026-11-07",
+      "headline": "In short, the AAT and Asor drafts disagree on del_max_depth, and the thread favours a shared definition that lets a holder cap depth below its own position.",
+      "headline_ja": "AAT と Asor のドラフトで del_max_depth の意味が異なり、保持者が自身より下の深さに上限を設けられる共通定義にする方向で議論されている。",
+      "id": "mail:cTEAHakgjO-revheF0EDR8Am5RA",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "This thread compares delegation-constraint drafts ahead of IETF 127. AAT accepts a leaf at del_depth equal to the root's del_max_depth (test vector J.10.f) while asor -03 rejects it. A second difference from Azat's implementation report: if a root has del_max_depth 8 and its holder delegates with 2, AAT rejects depth 3 while Asor checks only against 8. Niki argued the shared definition should keep the cap, and Rob Zagarella's new reply agrees. Zagarella also asked that the comparison record whether each draft can bind a leaf to a digest of the exact request, and that the AAT Section 9.8 companion document state a revocation freshness bound in terms comparable to Cred -02 Section 7. The material shown is truncated.",
+      "summary_ja": "このスレッドは IETF 127 に向けて委任制約のドラフトを比較している。AAT は del_depth がルートの del_max_depth と等しい末端を受理する（テストベクター J.10.f）が、asor -03 は拒否する。Azat の実装報告による二つ目の差異として、ルートの del_max_depth が 8 で保持者が 2 で委任した場合、AAT は深さ 3 を拒否するが Asor は 8 に対してのみ検査する。Niki は共通定義でこの上限を維持すべきだと述べ、Rob Zagarella の新しい返信も同意した。Zagarella はさらに、比較表に各ドラフトが正確なリクエストのダイジェストに末端を束縛できるかを記録すること、および AAT Section 9.8 の補足文書で失効の鮮度の上限を Cred -02 Section 7 と比較可能な形で示すことを求めた。提示された資料は途中で切れている。",
+      "title": "AAT -02 announcement",
+      "updated_at": "2026-11-07T06:03:19+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/cTEAHakgjO-revheF0EDR8Am5RA/",
+      "use_cases": [
+        "Implementers of offline-verifiable delegation chains need identical depth-limit behaviour across drafts to avoid interoperability failures.",
+        "Deployments requiring fresh human approval want a leaf bound to one exact request."
+      ],
+      "use_cases_ja": [
+        "オフラインで検証可能な委任チェーンを実装する者は、相互運用性の問題を避けるため、ドラフト間で深さ制限の挙動が同一である必要がある。",
+        "新たな人間承認を必要とする環境では、一つの正確なリクエストに束縛された末端が求められる。"
       ]
     },
     "mail:ea6rdI-IV2MeMNWjU_DmY01hU8Y": {
@@ -1581,6 +1685,23 @@
       "url": "https://github.com/ietf-wg-wimse/draft-ietf-wimse-arch",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "repo:ietf-wg-wimse/draft-ietf-wimse-s2s-protocol:499f0608fc22": {
+      "diagram": "",
+      "first_seen": "2026-11-07",
+      "headline": "In short, one commit fixing three spelling errors in the s2s-protocol repository.",
+      "headline_ja": "s2s-protocol リポジトリで、スペルミス3件を修正したコミットが1件あった。",
+      "id": "repo:ietf-wg-wimse/draft-ietf-wimse-s2s-protocol:499f0608fc22",
+      "kind": "repo-activity",
+      "related": [],
+      "significance": "routine",
+      "summary": "Commit 499f0608fc22 (#415) fixes three spelling errors in the wpt directory or component, going by the message 'wpt: fix three spelling errors'. No further detail is available and no protocol behaviour is indicated.",
+      "summary_ja": "コミット 499f0608fc22（#415）は、メッセージ「wpt: fix three spelling errors」のとおり wpt でのスペルミス3件を修正するものである。詳細は無く、プロトコルの挙動への影響は示されていない。",
+      "title": "1 new commit(s) in ietf-wg-wimse/draft-ietf-wimse-s2s-protocol",
+      "updated_at": "2026-11-07T06:03:19+00:00",
+      "url": "https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol",
+      "use_cases": [],
+      "use_cases_ja": []
     }
   },
   "overflow": [],
@@ -1590,6 +1711,12 @@
       "priority": "high",
       "reason": "The list thread is shaping a new gap statement for cross-domain issuer trust and an audit-record mapping for Section 11.",
       "reason_ja": "メーリングリストでは、ドメイン間の発行者信頼に関する新たなギャップ記述と、11 節の監査記録マッピングが議論されている。"
+    },
+    "Diff active WG draft: draft-ietf-wimse-http-signature-08": {
+      "date": "2026-11-07",
+      "priority": "high",
+      "reason": "Independent test vectors and the editor's reject-on-MUST-NOT statement point to coming clarifications and possible vector fixes.",
+      "reason_ja": "独立したテストベクターと、MUST NOT は拒否するというエディタの回答から、今後の明確化やベクター修正が見込まれる。"
     },
     "Diff active WG draft: draft-ietf-wimse-identifier-04": {
       "date": "2026-11-05",
@@ -1604,10 +1731,10 @@
       "reason_ja": "2026-11-13 まで IESG Last Call 中であり、レビュー担当者が 4.5、5.1.5、5.6 節に具体的な修正案を出している。"
     },
     "Review related draft: draft-asor-wimse-agent-delegation-chain-03": {
-      "date": "2026-11-04",
+      "date": "2026-11-07",
       "priority": "high",
-      "reason": "Its format is adopted unchanged in credential-delegation-02 §5.5, and its depth semantics and §6.4 are under discussion.",
-      "reason_ja": "その形式が credential-delegation-02 の §5.5 でそのまま採用され、深さの意味と §6.4 が議論されている。"
+      "reason": "Its del_max_depth semantics are being reconciled with AAT and are adopted unchanged by Cred -02 Section 5.5.",
+      "reason_ja": "del_max_depth の意味が AAT と調整中であり、Cred -02 Section 5.5 でそのまま採用されている。"
     },
     "Review related draft: draft-durga-wimse-ctx-isolation-00": {
       "date": "2026-11-01",
@@ -1633,10 +1760,10 @@
       "reason": "New draft that extends the WIMSE HTTP signature and WPT and adds a tctx.dlg member."
     },
     "Review related draft: draft-sweeney-wimse-credential-delegation-02": {
-      "date": "2026-11-04",
+      "date": "2026-11-07",
       "priority": "high",
-      "reason": "A detailed list reviewer comment proposes changes to §5.5, tally mode and revocation, with open questions from the author.",
-      "reason_ja": "メーリングリスト上の詳細なレビューが、§5.5、集計モード、失効についての変更を提案し、作者側の未解決の問いも残っている。"
+      "reason": "Active -02 review thread with open design questions on cumulative bounds, revocation and the depth boundary.",
+      "reason_ja": "累積上限、失効、深さ境界について未解決の設計上の問いがあり、-02 のレビューが活発である。"
     },
     "Review related draft: draft-thaha-wimse-agent-evidence-binding-02": {
       "date": "2026-11-01",
