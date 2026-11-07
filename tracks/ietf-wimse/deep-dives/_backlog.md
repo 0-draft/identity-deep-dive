@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-07T13:06:27+00:00
+Generated at: 2026-11-07T21:54:25+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -30,7 +30,6 @@ Generated at: 2026-11-07T13:06:27+00:00
 Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.
 
 - **high** `Diff active WG draft: draft-ietf-wimse-aims-01`: The list thread is shaping a new gap statement for cross-domain issuer trust and an audit-record mapping for Section 11.
-- **high** `Diff active WG draft: draft-ietf-wimse-http-signature-08`: Independent test vectors and the editor's reject-on-MUST-NOT statement point to coming clarifications and possible vector fixes.
 - **high** `Diff active WG draft: draft-ietf-wimse-identifier-04`: A fresh review calls it ready for WGLC and raises the "guarantee" wording.
 - **high** `Diff active WG draft: draft-ietf-wimse-workload-identity-practices-08`: It is in IESG Last Call until 2026-11-13 and a reviewer proposed concrete text changes to Sections 4.5, 5.1.5 and 5.6.
 - **high** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: Its del_max_depth semantics are being reconciled with AAT and are adopted unchanged by Cred -02 Section 5.5.
@@ -40,5 +39,6 @@ Moved by this week's material. candidates.json and the site list raised candidat
 - **high** `Review related draft: draft-reddy-wimse-oauth-dialog-binding-00`: New draft that extends the WIMSE HTTP signature and WPT and adds a tctx.dlg member.
 - **high** `Review related draft: draft-sweeney-wimse-credential-delegation-02`: Active -02 review thread with open design questions on cumulative bounds, revocation and the depth boundary.
 - **high** `Review related draft: draft-thaha-wimse-agent-evidence-binding-02`: The -02 changes the admission rule to current actor only and adds a new MUST NOT on caller references in reusable tokens.
+- **low** `Diff active WG draft: draft-ietf-wimse-http-signature-08`: Today's material is only a test-vector correction on the list; it brings no draft text change to diff.
 
 <!-- triage:end -->

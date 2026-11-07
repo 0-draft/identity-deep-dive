@@ -73,6 +73,11 @@
       "at": "2026-11-07T06:03:19+00:00",
       "text": "Most notable: an independent test-vector set (6 positive, 22 negative) for draft-ietf-wimse-http-signature-08 was posted, and the editor said verifiers should reject messages with MUST NOT parameters. Otherwise it was list discussion on delegation chains and AER-1 audit records, plus a spelling-only commit.",
       "text_ja": "最も重要なのは draft-ietf-wimse-http-signature-08 の独立したテストベクター（正例6件、負例22件）の投稿で、エディタは MUST NOT のパラメーターを含むメッセージは検証側が拒否すべきだと述べた。その他は委任チェーンと AER-1 監査記録に関するメーリングリストの議論と、スペル修正のみのコミットである。"
+    },
+    {
+      "at": "2026-11-07T21:55:17+00:00",
+      "text": "Only one item: a mailing-list follow-up on community-contributed test vectors for draft-ietf-wimse-http-signature-08, fixing a missing \"?\" in the @query component of three vectors. No draft text changed.",
+      "text_ja": "今回は一件のみで、draft-ietf-wimse-http-signature-08 のテストベクターに関するメーリングリストの続報である。三つのベクターで @query コンポーネントの先頭の「?」が欠けていた誤りが修正された。ドラフト本文の変更はない。"
     }
   ],
   "items": {
@@ -1088,6 +1093,23 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "mail:VCH1w0y6OuR-koGRiJYakzmtGAo": {
+      "diagram": "",
+      "first_seen": "2026-11-07",
+      "headline": "Test vectors for the WIMSE HTTP signature draft were fixed: @query values lacked the leading ? required by RFC 9421.",
+      "headline_ja": "WIMSE HTTP署名ドラフトのテストベクターで、RFC 9421が要求する先頭の「?」を欠いていた @query の値が修正された。",
+      "id": "mail:VCH1w0y6OuR-koGRiJYakzmtGAo",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "An individual contributor reports on the mailing list that test vectors P-01 and P-02 wrote the @query component value without the leading ? required by RFC 9421 Section 2.2.7. An independent run found the same defect in P-06's WIMSE signature. All three were regenerated over corrected signature bases with the same keys, parameters and fixed clock. The literal signature in N-15 was also regenerated because it was computed over a P-01-shaped base. Its expected outcome (reject, Section 3.1) is unchanged. Old signatures fail against the corrected bases, and other cases are unaffected. The author also confirms that N-06/N-07 record reject for the keyid / alg MUST NOT parameters, now backed by the draft author's stated intent. An issue was opened to add an example-nonce note. The author will contact the chairs about how to contribute the vectors. Nothing in the draft itself changed.",
+      "summary_ja": "個人参加者がメーリングリストで報告した。テストベクター P-01 と P-02 では、RFC 9421 Section 2.2.7 が要求する先頭の「?」を付けずに @query コンポーネントの値が記載されていた。独立した実行により、P-06 の WIMSE 署名にも同じ誤りが見つかった。三つとも、同じ鍵、パラメーター、固定時刻で、修正後の署名ベースに対して再生成された。N-15 のリテラル署名も P-01 と同形の署名ベースから計算されていたため再生成されたが、期待される結果(拒否、Section 3.1)は変わらない。旧署名は修正後の署名ベースでは検証に失敗し、他のケースは影響を受けない。また、N-06/N-07 が keyid / alg の MUST NOT パラメーターに対して拒否を記録していることは、ドラフト著者の意図の表明によって裏付けられた。例示用 nonce に関する注記を追加する issue が起票された。ベクターの提供形式については、投稿者がチェアに連絡する予定である。ドラフト本文自体に変更はない。",
+      "title": "Test vectors for draft-ietf-wimse-http-signature-08 — request for review",
+      "updated_at": "2026-11-07T21:55:17+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/VCH1w0y6OuR-koGRiJYakzmtGAo/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "mail:Vd1-lCWYXdJYkIMMV2z98f3IL5s": {
       "diagram": "",
       "first_seen": "2026-11-06",
@@ -1714,9 +1736,9 @@
     },
     "Diff active WG draft: draft-ietf-wimse-http-signature-08": {
       "date": "2026-11-07",
-      "priority": "high",
-      "reason": "Independent test vectors and the editor's reject-on-MUST-NOT statement point to coming clarifications and possible vector fixes.",
-      "reason_ja": "独立したテストベクターと、MUST NOT は拒否するというエディタの回答から、今後の明確化やベクター修正が見込まれる。"
+      "priority": "low",
+      "reason": "Today's material is only a test-vector correction on the list; it brings no draft text change to diff.",
+      "reason_ja": "本日の資料はメーリングリスト上のテストベクター修正のみで、差分を取るべきドラフト本文の変更はない。"
     },
     "Diff active WG draft: draft-ietf-wimse-identifier-04": {
       "date": "2026-11-05",
