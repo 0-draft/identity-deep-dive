@@ -64,6 +64,11 @@
       "at": "2026-11-07T06:03:19+00:00",
       "text": "A new individual draft, draft-williams-oauth-poi-core-00, proposes a human-signed, per-transaction approval that goes straight to the Resource Server instead of raising the agent's token scope. Two list threads on agent delegation (Cred -02 and AAT -02) are still working out one meaning for del_max_depth and a freshness bound for revocation.",
       "text_ja": "新規個人ドラフト draft-williams-oauth-poi-core-00 が、エージェントのトークンのスコープを引き上げる代わりに、人間が署名した取引単位の承認をリソースサーバーへ直接渡す方式を提案した。エージェント委任に関する二つのスレッド（Cred -02 と AAT -02）では、del_max_depth の意味の統一と失効の鮮度の上限が引き続き議論されている。"
+    },
+    {
+      "at": "2026-11-07T21:55:18+00:00",
+      "text": "RFC 10070 (the former draft-ietf-oauth-rfc7523bis) was published as a Proposed Standard. It changes how audience values are treated in JWT client authentication and assertion grants. A separate mail supports adoption of the Identity Continuation Assertion draft.",
+      "text_ja": "RFC 10070（旧 draft-ietf-oauth-rfc7523bis）が Proposed Standard として発行された。JWT クライアント認証とアサーション認可グラントにおけるオーディエンス値の扱いを改める内容である。別に、Identity Continuation Assertion ドラフトの採用を支持するメールがあった。"
     }
   ],
   "items": {
@@ -871,6 +876,29 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "mail:IdojKDr32WDsE5FLAVxhBppZppU": {
+      "diagram": "",
+      "first_seen": "2026-11-07",
+      "headline": "A gateway vendor supports WG adoption of the Identity Continuation Assertion draft (-02) and backs two open issues.",
+      "headline_ja": "ゲートウェイ事業者が Identity Continuation Assertion ドラフト (-02) の WG 採用を支持し、未解決の issue 二件に賛成した。",
+      "id": "mail:IdojKDr32WDsE5FLAVxhBppZppU",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "A Runlayer engineer, who runs an MCP gateway between agent hosts and upstream APIs, supports working-group adoption of -02 for deployments needing IdP-authorized continuation across service boundaries. They back issue #145: the error response (§5.5.6, §6.3) should distinguish rate, fan-out, hop-count and actor-lineage depth failures so clients can pick a recovery action. They find the accepting-domain trust boundary reasonable for a gateway whose RAS also acts as CAI (§8.1). They also support an IdP-enforced bound on source-hop age (#142), provided it allows scheduled continuation from durable roots. No draft text changed in this message.",
+      "summary_ja": "MCP ゲートウェイをエージェントホストと上流 API の間で運用する Runlayer の担当者が、サービス境界をまたぐ IdP 認可の継続を必要とする運用のために -02 の WG 採用を支持した。issue #145 に賛成し、エラーレスポンス (§5.5.6, §6.3) でレート、ファンアウト、ホップ数、アクター系譜の深さの各失敗を区別し、クライアントが回復動作を選べるようにすることを求めた。RAS が CAI も兼ねるゲートウェイでは、受け入れドメインの信頼境界は妥当だとした (§8.1)。また、永続的なルートからの定期的な継続を許容することを条件に、IdP が強制するソースホップ年齢の上限 (#142) を支持した。このメッセージでドラフト本文の変更はない。",
+      "title": "New I-D: Identity Continuation Assertion for OAuth 2.0 Token Exchange (request for review)",
+      "updated_at": "2026-11-07T21:55:18+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/IdojKDr32WDsE5FLAVxhBppZppU/",
+      "use_cases": [
+        "An MCP gateway that must tell agent clients whether to back off, reduce fan-out or re-authenticate after a continuation is refused.",
+        "A deployment that runs scheduled agent jobs from a long-lived root and needs a hop-age limit that does not break them."
+      ],
+      "use_cases_ja": [
+        "継続が拒否された際に、バックオフ、ファンアウト削減、再認証のどれを行うべきかをエージェントのクライアントに伝える必要がある MCP ゲートウェイ。",
+        "長期間有効なルートから定期的にエージェントジョブを実行し、それを妨げないホップ年齢の上限を必要とする運用。"
+      ]
+    },
     "mail:JV5gcUNjiOMAwDbLU5dwZLIUb-4": {
       "diagram": "",
       "first_seen": "2026-11-03",
@@ -1666,6 +1694,29 @@
       "use_cases_ja": [
         "ドメインをまたぐワークロードやエージェント呼び出しを構築するチームは、2 つの Transaction Token 方式が統合されるかに注目すべきである。",
         "タスクを複数のサブエージェントに分割するエージェント基盤は、バッチ委任の提案に注目できる。"
+      ]
+    },
+    "mail:p2R-7159NVo7lsuhVAm3CAyLEYU": {
+      "diagram": "",
+      "first_seen": "2026-11-07",
+      "headline": "RFC 10070 is published: it updates RFCs 7521, 7522, 7523 and 9126 on audience values in assertion-based client authentication and grants.",
+      "headline_ja": "RFC 10070 が発行され、アサーションベースのクライアント認証とグラントにおけるオーディエンス値について RFC 7521、7522、7523、9126 を更新した。",
+      "id": "mail:p2R-7159NVo7lsuhVAm3CAyLEYU",
+      "kind": "mail",
+      "related": [],
+      "significance": "substantive",
+      "summary": "The RFC Editor announced RFC 10070, a Proposed Standard by Jones, Campbell, Mortimore and Skokan, built from draft-ietf-oauth-rfc7523bis-11. It updates RFC 7523, 7521, 7522 and 9126 regarding the treatment of audience values in OAuth 2.0 client assertion authentication and assertion-based authorization grants, to address a security vulnerability in the earlier audience requirements. The announcement does not give the new audience rules, so the exact required values are not shown in this material.",
+      "summary_ja": "RFC Editor が RFC 10070 を告知した。Jones、Campbell、Mortimore、Skokan による Proposed Standard で、draft-ietf-oauth-rfc7523bis-11 に基づく。OAuth 2.0 のクライアントアサーション認証およびアサーションベースの認可グラントにおけるオーディエンス値の扱いについて RFC 7523、7521、7522、9126 を更新し、従来のオーディエンス要件にあったセキュリティ上の脆弱性に対処する。告知文には新しいオーディエンスの規則が書かれておらず、必要とされる具体的な値はこの資料からは分からない。",
+      "title": "RFC 10070 on Updates to OAuth 2.0 JSON Web Token (JWT) Client Authentication and Assertion-Based Authorization Grants",
+      "updated_at": "2026-11-07T21:55:18+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/p2R-7159NVo7lsuhVAm3CAyLEYU/",
+      "use_cases": [
+        "An authorization server that accepts private_key_jwt client assertions or JWT bearer grants and needs to review which audience values it accepts.",
+        "A client library that builds client assertions and must check which audience value it places in them."
+      ],
+      "use_cases_ja": [
+        "private_key_jwt のクライアントアサーションや JWT ベアラーグラントを受け付け、許容するオーディエンス値を見直す必要がある認可サーバー。",
+        "クライアントアサーションを生成し、設定するオーディエンス値を確認する必要があるクライアントライブラリ。"
       ]
     },
     "mail:pY7YK9NUnlAfWvpf-PhiQ_n53qE": {
