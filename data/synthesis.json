@@ -3,7 +3,7 @@
     {
       "id": "draft:draft-ietf-oauth-identity-assertion-authz-grant-06",
       "why": "The flow is unchanged but the rules are tighter. IdPs must authenticate the client, return invalid_request instead of invalid_grant for a bad subject token, and support RS256. Existing ID-JAG code needs rechecking; open issues are expected at IETF 127.",
-      "why_ja": "フローは変わらないが規則は厳しくなった。IdP はクライアントを認証し、不正な subject token には invalid_grant でなく invalid_request を返し、RS256 に対応する必要がある。既存の ID-JAG 実装は見直しが要り、編集者は IETF 127 で未解決の issue が出ると見ている。"
+      "why_ja": "フローは変わらないが規則は厳しくなった。IdP はクライアントを認証し、不正な subject token には invalid_grant でなく invalid_request を返し、RS256 に対応する必要がある。既存の ID-JAG 実装は見直しが要り、IETF 127 で未解決の issue が出る見込みである。"
     },
     {
       "id": "draft:draft-ietf-oauth-client-id-metadata-document-03",
@@ -31,8 +31,8 @@
       "id": "workload-credentials",
       "name": "Workload credentials and proof of possession",
       "name_ja": "ワークロードクレデンシャルと proof of possession",
-      "summary": "WIMSE's base stack: identifiers, WIT/WIC, WPT, HTTP signatures, mTLS. http-signature is with the IESG; practices-08 is in IESG Last Call (comments due 2026-11-13). workload-creds-03 was restructured; reviews of it and http-signature (issues #417, #418) ask mostly for wording changes. Cross-domain issuer trust is an open gap (AIMS issue 175).",
-      "summary_ja": "WIMSE の基盤で、識別子、WIT/WIC、WPT、HTTP Signature、mTLS を扱う。http-signature は IESG に提出済みで、practices-08 は IESG Last Call 中(コメント期限は 2026-11-13)である。workload-creds-03 は構成が改められ、これと http-signature への査読(issue #417、#418)は主に文言の修正を求めている。他ドメインの発行者の信頼方法は未規定で、AIMS の issue 175 で追跡されている。",
+      "summary": "WIMSE's base stack: identifiers, WIT/WIC, WPT, HTTP signatures, mTLS. http-signature is with the IESG and has an independent test-vector set under review (issue 419); practices-08 is in IESG Last Call (comments due 2026-11-13). workload-creds-03 was restructured; reviews (issues #417, #418) mostly ask for wording changes. Cross-domain issuer trust is an open gap (AIMS issue 175).",
+      "summary_ja": "WIMSE の基盤で、識別子、WIT/WIC、WPT、HTTP Signature、mTLS を扱う。http-signature は IESG に提出済みで、独立したテストベクタが査読中である(issue 419)。practices-08 は IESG Last Call 中で、コメント期限は 2026-11-13 である。workload-creds-03 は構成が改められ、査読(issue #417、#418)は主に文言の修正を求めている。他ドメインの発行者の信頼方法は未規定で、AIMS の issue 175 で追跡されている。",
       "members": [
         {
           "track": "ietf-wimse",
@@ -89,10 +89,6 @@
         {
           "track": "oauth-wg",
           "name": "draft-ietf-oauth-spiffe-client-auth"
-        },
-        {
-          "track": "oauth-wg",
-          "name": "draft-ietf-oauth-attestation-based-client-auth"
         }
       ],
       "related": [
@@ -131,8 +127,8 @@
       "id": "agent-delegation",
       "name": "Agent delegation and attenuation",
       "name_ja": "Agent の委譲と attenuation",
-      "summary": "How authority narrows between agents. Offline attenuation formats (AAT, asor chain, hulea mandate) overlap and reuse claim names; credential-delegation-02 adds a Delegation Server and drew several review gaps. The AAT/asor del_max_depth mismatch is open, with vectors to be reconciled before IETF 127. An independent report found ten AAT -02 ambiguities, to be addressed in -03.",
-      "summary_ja": "agent 間で権限をどう狭めるかを扱う。オフライン検証の attenuation 形式(AAT、asor chain、hulea mandate)は重なり合い、claim 名も使い回されている。credential-delegation-02 は Delegation Server を加え、査読で複数の不足が指摘された。AAT と asor の del_max_depth の食い違いは未解決で、IETF 127 前にテストベクタを揃える予定である。独立した実装報告が指摘した AAT -02 の曖昧な十点は -03 で対応される見込みだ。",
+      "summary": "How authority narrows between agents. Offline attenuation formats (AAT, asor chain, hulea mandate) overlap and reuse claim names; credential-delegation-02 adds a Delegation Server and drew review gaps on roots and suspension. The AAT/asor del_max_depth mismatch is open, with vectors to be reconciled before IETF 127. AAT -03 is to settle ten ambiguities an independent report found.",
+      "summary_ja": "agent 間で権限をどう狭めるかを扱う。オフライン検証の attenuation 形式(AAT、asor chain、hulea mandate)は重なり合い、claim 名も使い回されている。credential-delegation-02 は Delegation Server を加え、査読でルートの扱いや一時停止について不足が指摘された。AAT と asor の del_max_depth の食い違いは未解決で、IETF 127 前にテストベクタを揃える予定である。独立した実装報告が指摘した AAT -02 の曖昧な十点は -03 で対応される見込みだ。",
       "members": [
         {
           "track": "ietf-wimse",
@@ -216,8 +212,8 @@
       "id": "agent-evidence-audit",
       "name": "Agent identity, context and audit evidence",
       "name_ja": "Agent の identity・コンテキスト・監査証跡",
-      "summary": "Identity, context and audit for AI agent actions. AIMS -01 (WG document) adds long-lived session, policy input and deprovisioning text and has 30 minutes at IETF 127. The AER-1 mapping will use not_evaluated when a needed input is unavailable (-03 due Nov 15). The evaluation draft adds a commitment-based principal-standing form in -06. ctx-isolation-00 and dialog-binding-00 are new.",
-      "summary_ja": "AI agent の行動について、identity、コンテキスト、監査を扱う。WG 文書の AIMS -01 は長時間セッション、ポリシー入力、デプロビジョニングの記述を加え、IETF 127 で 30 分の枠がある。AER-1 の対応づけは、判定に必要な入力を確定できなければ not_evaluated とする(-03 は 11 月 15 日の予定)。evaluation draft は -06 でコミットメントに基づく principal standing の方式を加える。ctx-isolation-00 と dialog-binding-00 は新規である。",
+      "summary": "Identity, context and audit for AI agent actions. AIMS -01 (WG document) adds session, policy-input and deprovisioning text and has 30 minutes at IETF 127. The AER-1 mapping will use not_evaluated when an input is unavailable (-03 due Nov 15). The evaluation draft adds a commitment-based standing form in -06; its age boundary conflicts with the audit-record draft.",
+      "summary_ja": "AI agent の行動について、identity、コンテキスト、監査を扱う。WG 文書の AIMS -01 は長時間セッション、ポリシー入力、デプロビジョニングの記述を加え、IETF 127 で 30 分の枠がある。AER-1 の対応づけは、判定に必要な入力を確定できなければ not_evaluated とする(-03 は 11 月 15 日の予定)。evaluation draft は -06 でコミットメントに基づく principal standing の方式を加えるが、age 境界は audit-record draft と食い違う。ctx-isolation-00 と dialog-binding-00 は新規である。",
       "members": [
         {
           "track": "ietf-wimse",
@@ -391,8 +387,8 @@
       "id": "identity-assurance",
       "name": "Identity assurance and proofing",
       "name_ja": "身元保証と本人確認",
-      "summary": "Verified identity data in OpenID: eKYC-IDA with its authority profile, the identity proofing extension, and government and national trust profiles. None of these repositories merged a PR in the last 30 days. Last pushes: cg-australian-digital-trust 4 days ago, Identity-Proofing-Extension 24, igov 24, eKYC-IDA 44, eKYC-IDA-Authority 51.",
-      "summary_ja": "OpenID における検証済み identity データを扱う。対象は eKYC-IDA とその authority プロファイル、identity proofing extension、政府・国単位の trust プロファイルである。どのリポジトリも直近 30 日にマージされた PR はない。最終 push は cg-australian-digital-trust が 4 日前、Identity-Proofing-Extension と igov が 24 日前、eKYC-IDA が 44 日前、eKYC-IDA-Authority が 51 日前だ。",
+      "summary": "Verified identity data in OpenID: eKYC-IDA with its authority profile, the identity proofing extension, and government and national trust profiles. None of these repositories merged a PR in the last 30 days. Last pushes: cg-australian-digital-trust 5 days ago, Identity-Proofing-Extension 24, igov 24, eKYC-IDA 44, eKYC-IDA-Authority 51.",
+      "summary_ja": "OpenID における検証済み identity データを扱う。対象は eKYC-IDA とその authority プロファイル、identity proofing extension、政府・国単位の trust プロファイルである。どのリポジトリも直近 30 日にマージされた PR はない。最終 push は cg-australian-digital-trust が 5 日前、Identity-Proofing-Extension と igov が 24 日前、eKYC-IDA が 44 日前、eKYC-IDA-Authority が 51 日前だ。",
       "members": [
         {
           "track": "openid",
@@ -424,8 +420,8 @@
       "id": "authorization-apis",
       "name": "Authorization APIs and decision semantics",
       "name_ja": "認可 API と判定セマンティクス",
-      "summary": "Externalised authorization decisions and how verifiers evaluate authority. AuthZEN merged 43 PRs in 30 days, has 21 open, and was pushed today (PR #801; content not shown). AIMS -01 points to AuthZEN for external policy decision points. Wes Jackson backs refusing a permit at or after expiry (RFC 7519); the age-boundary conflict with the audit-record draft is open.",
-      "summary_ja": "外部化された認可判定と、検証側が権限をどう評価するかを扱う。AuthZEN は 30 日で 43 件の PR をマージし、open な PR は 21 件で、今日 push された(PR #801、内容は不明)。AIMS -01 は外部のポリシー判定点としてこれを参照する。Wes Jackson は RFC 7519 に沿って有効期限の時点以降は permit を拒否する規則を支持している。audit-record draft との age 境界の食い違いは未解決である。",
+      "summary": "Externalised authorization decisions and how verifiers evaluate authority. AuthZEN merged 43 PRs in 30 days, has 21 open and was pushed today; recent merges include the Access Request OAuth Profile build (#800). AIMS -01 points to AuthZEN for external policy decision points. The evaluation draft's age-boundary conflict with the audit-record draft is open.",
+      "summary_ja": "外部化された認可判定と、検証側が権限をどう評価するかを扱う。AuthZEN は 30 日で 43 件の PR をマージし、open な PR は 21 件で、今日 push された。最近のマージには Access Request OAuth Profile のビルド(#800)がある。AIMS -01 は外部のポリシー判定点としてこれを参照する。evaluation draft と audit-record draft の age 境界の食い違いは未解決である。",
       "members": [
         {
           "track": "openid",
@@ -454,8 +450,8 @@
       "id": "openid-connect-federation",
       "name": "OpenID Connect, federation and client libraries",
       "name_ja": "OpenID Connect・Federation・クライアントライブラリ",
-      "summary": "OpenID Connect core and extensions, native SSO, OpenID Federation extensions and the AppAuth libraries. federation-entity-collection merged 8 PRs in 30 days (three clarifications this week) and federation-wallet 3, both pushed in the last day. AppAuth-iOS merged 7, with 50 open. Connect core and native SSO merged none (last pushes 62 and 54 days ago); so did AppAuth-JS, pushed today.",
-      "summary_ja": "OpenID Connect のコアと拡張、native SSO、OpenID Federation の拡張、AppAuth ライブラリを扱う。federation-entity-collection は 30 日で 8 件(今週は説明を明確にする PR 三件)、federation-wallet は 3 件の PR をマージし、どちらも直近 1 日以内に push された。AppAuth-iOS は 7 件をマージし、open な PR が 50 件ある。Connect コアと native SSO はマージがなく(最終 push は 62 日前と 54 日前)、AppAuth-JS もマージはないが最終 push は今日である。",
+      "summary": "OpenID Connect core and extensions, native SSO, OpenID Federation extensions and the AppAuth libraries. federation-entity-collection merged 8 PRs in 30 days (three clarifications this week) and federation-wallet 3, both pushed yesterday. AppAuth-iOS merged 7, with 50 open. Connect core and native SSO merged none (last pushes 63 and 54 days ago); nor did AppAuth-JS, pushed today.",
+      "summary_ja": "OpenID Connect のコアと拡張、native SSO、OpenID Federation の拡張、AppAuth ライブラリを扱う。federation-entity-collection は 30 日で 8 件(今週は説明を明確にする PR 三件)、federation-wallet は 3 件の PR をマージし、どちらも昨日 push された。AppAuth-iOS は 7 件をマージし、open な PR が 50 件ある。Connect コアと native SSO はマージがなく(最終 push は 63 日前と 54 日前)、AppAuth-JS もマージはないが最終 push は今日である。",
       "members": [
         {
           "track": "openid",
@@ -555,5 +551,5 @@
       ]
     }
   ],
-  "generated_at": "2026-11-07T06:06:43+00:00"
+  "generated_at": "2026-11-07T13:09:30+00:00"
 }
