@@ -79,6 +79,11 @@
       "at": "2026-11-08T13:29:24+00:00",
       "text": "No substantive protocol change: a reply on the list proposes carrying a PSEA token as the attestation in the new draft-williams-oauth-poi-core-00, and a small PR fixes a missing IANA registration for req_wl in the Transaction Tokens draft.",
       "text_ja": "プロトコル上の実質的な変更はない。新規ドラフト draft-williams-oauth-poi-core-00 のアテステーションとして PSEA トークンを使う案がメーリングリストで提示され、Transaction Tokens ドラフトでは req_wl の IANA 登録漏れを直す小さな PR が出た。"
+    },
+    {
+      "at": "2026-11-08T22:10:15+00:00",
+      "text": "The weekly GitHub digest shows a cleanup of the client-id-metadata-document issue tracker: 11 issues closed, 1 opened. mcguinness also filed two new issues against the ID-JAG draft. No draft text is included, so this is activity only.",
+      "text_ja": "週次GitHubダイジェストでは、client-id-metadata-documentのissueが11件クローズされ1件が新規作成された。ID-JAGドラフトにもmcguinnessが2件のissueを起票している。ドラフト本文の差分は含まれず、活動の記録のみである。"
     }
   ],
   "items": {
@@ -657,6 +662,29 @@
       "url": "https://mailarchive.ietf.org/arch/msg/oauth/BjF_dwq7lhDLYi6gDms38n2KM80/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:CAJtRQ9c4tUCaB70TUVbzBvEejk": {
+      "diagram": "",
+      "first_seen": "2026-11-08",
+      "headline": "Weekly digest: big issue cleanup on the client-id-metadata-document draft, two new ID-JAG issues, and several sd-jwt-vc PRs.",
+      "headline_ja": "週次ダイジェスト: client-id-metadata-documentのissue大量整理、ID-JAGの新規issue2件、sd-jwt-vcのPR複数。",
+      "id": "mail:CAJtRQ9c4tUCaB70TUVbzBvEejk",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The digest lists GitHub activity only, with no spec text. In draft-ietf-oauth-client-id-metadata-document, 11 issues were closed, including those on token_endpoint_auth_method with private_key_jwt (#100), guidance on omitting token_endpoint_auth_method (#92), unsupported metadata values (#71), AS error returns (#85), disallowing the root path as a URL (#86) and data URIs for logo_uri (#19). One new issue (#131) says the response_types intersection rejects otherwise usable token-endpoint grants. Three PRs were opened, and PR #99 (Add Client Authentication section) got a comment. For oauth-identity-assertion-authz-grant, mcguinness opened #160 (sender-constrained ID-JAG should not replace required client authentication) and #159 (sections 7.2 and 8 require jwt-bearer but omit jwt-dpop). oauth-sd-jwt-vc got 7 new PRs, and PR #450 (Mike Bishop's ballot) got a comment. oauth-v2-1 PR #268 (supporting OAuth 2.0 and 2.1 clients concurrently) got 3 comments. oauth-transaction-tokens got 1 new PR. The digest does not show the reasons for the closures or the content of the PRs.",
+      "summary_ja": "このダイジェストはGitHub上の活動一覧のみで、仕様本文は含まれない。draft-ietf-oauth-client-id-metadata-documentでは11件のissueがクローズされた。内訳には、private_key_jwtにおけるtoken_endpoint_auth_method（#100）、token_endpoint_auth_method省略時のガイダンス（#92）、未対応メタデータ値（#71）、ASのエラー返却（#85）、ルートパスのURL禁止（#86）、logo_uriのdata URI（#19）が含まれる。新規issue #131は、response_typesの積集合により、本来使えるトークンエンドポイントのグラントが拒否されると指摘している。PRは3件作成され、PR #99（Add Client Authentication section）にコメントが付いた。oauth-identity-assertion-authz-grantでは、mcguinnessが#160（sender-constrained ID-JAGは必須のクライアント認証を置き換えるべきでない）と#159（7.2節と8節がjwt-bearerを要求しjwt-dpopに言及していない）を起票した。oauth-sd-jwt-vcでは新規PRが7件あり、PR #450（Mike Bishop's ballot）にコメントが付いた。oauth-v2-1のPR #268（OAuth 2.0クライアントと2.1クライアントの併存対応）には3件のコメントがあった。oauth-transaction-tokensでは新規PRが1件あった。クローズの理由やPRの内容はダイジェストからは分からない。",
+      "title": "Weekly github digest (OAuth Activity Summary)",
+      "updated_at": "2026-11-08T22:10:15+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/CAJtRQ9c4tUCaB70TUVbzBvEejk/",
+      "use_cases": [
+        "An authorization server implementing client ID metadata documents wants to know whether the client authentication and response_types handling rules are still changing.",
+        "An implementer of the ID-JAG grant who plans to use DPoP should watch #159 and #160 on the jwt-dpop gap and on client authentication."
+      ],
+      "use_cases_ja": [
+        "client ID metadata documentを実装する認可サーバーの開発者は、クライアント認証とresponse_typesの扱いの規則がまだ変わりつつあるかを把握できる。",
+        "DPoPの利用を予定しているID-JAGグラントの実装者は、jwt-dpopの欠落とクライアント認証に関する#159と#160を注視すべきである。"
+      ]
     },
     "mail:Ci_tGG-8lSZPMLOh20ZfJ7XDQP4": {
       "diagram": "",
@@ -2525,10 +2553,10 @@
       "reason_ja": "-12 版の構成と DPoP や RFC 7521 の再利用について、詳細な批判的レビューが出たため。"
     },
     "draft-ietf-oauth-client-id-metadata-document": {
-      "date": "2026-11-03",
-      "priority": "low",
-      "reason": "It is only mentioned as the origin of the new DPoP-required metadata draft, with no change to the draft itself.",
-      "reason_ja": "DPoP 必須メタデータの新規ドラフトの発端として言及されただけで、ドラフト自体の変更はない。"
+      "date": "2026-11-08",
+      "priority": "high",
+      "reason": "11 issues closed and a new response_types issue (#131) this week, with PRs adding a Client Authentication section.",
+      "reason_ja": "今週は11件のissueがクローズされ、response_typesに関する新規issue（#131）が立ち、クライアント認証セクションを追加するPRもあった。"
     },
     "draft-ietf-oauth-deferred-token-response": {
       "date": "2026-11-01",
@@ -2542,9 +2570,10 @@
       "reason_ja": "作者が sd_hash と issuer_jwt_hash の設計を説明し、IETF 127 でロードマップを示す更新版を準備している。"
     },
     "draft-ietf-oauth-identity-assertion-authz-grant": {
-      "date": "2026-11-01",
+      "date": "2026-11-08",
       "priority": "high",
-      "reason": "-06 adds new normative behaviour (client auth at IdP, invalid_request, mTLS binding, new metadata) and a large rewrite."
+      "reason": "Two new issues (#159, #160) on jwt-dpop and client authentication point to open design questions.",
+      "reason_ja": "jwt-dpopとクライアント認証に関する新規issue（#159、#160）が、未解決の設計上の論点を示している。"
     },
     "draft-ietf-oauth-sd-jwt-vc": {
       "date": "2026-11-06",
