@@ -1,6 +1,6 @@
 # OAuth WG Backlog (2026-11-08)
 
-- generated_at_utc: `2026-11-08T06:06:31+00:00`
+- generated_at_utc: `2026-11-08T13:28:36+00:00`
 
 - [ ] `draft-ietf-oauth-sd-jwt-vc` score=125 updated=2026-11-06T19:07:22Z
 - [ ] `draft-ietf-oauth-rfc8725bis` score=90 updated=2026-11-06T22:32:52Z
@@ -11,8 +11,8 @@
 - [ ] `draft-ietf-oauth-v2-1` score=66 updated=2026-10-31T04:16:32Z
 - [ ] `draft-ietf-oauth-identity-chaining` score=65 updated=2026-08-21T20:25:31Z
 - [ ] `draft-ietf-oauth-delegate-sd-jwt` score=64 updated=2026-10-30T12:38:29Z
+- [ ] `draft-ietf-oauth-transaction-tokens` score=64 updated=2026-08-21T11:57:16Z
 - [ ] `draft-ietf-oauth-attestation-based-client-auth` score=58 updated=2026-10-18T17:33:02Z
-- [ ] `draft-ietf-oauth-transaction-tokens` score=54 updated=2026-08-21T11:57:16Z
 - [ ] `draft-ietf-oauth-first-party-apps` score=50 updated=2026-08-26T14:40:16Z
 - [ ] `draft-ietf-oauth-spiffe-client-auth` score=38 updated=2026-11-02T17:35:55Z
 - [ ] `draft-ietf-oauth-rar-metadata-remediation` score=20 updated=2026-08-23T20:29:29Z
@@ -32,6 +32,6 @@ Moved by this week's material. candidates.json and the site list raised candidat
 - **high** `draft-ietf-oauth-v2-1`: Seven new issues and 31 closed, several tagged ietf-127, including MUST vs SHOULD in §3.2.3 and invalid_client.
 - **low** `draft-ietf-oauth-client-id-metadata-document`: It is only mentioned as the origin of the new DPoP-required metadata draft, with no change to the draft itself.
 - **low** `draft-ietf-oauth-sd-jwt-vc`: Revision -26 only makes editorial changes in response to IESG ballot comments, so there is no new substance to dive into.
-- **low** `draft-ietf-oauth-transaction-tokens`: Only the agenda request for a competing cross-domain approach mentioned it, with no text change.
+- **low** `draft-ietf-oauth-transaction-tokens`: PR #374 fixes a missing IANA registration for the required req_wl claim, a small editorial fix.
 
 <!-- triage:end -->

@@ -74,6 +74,11 @@
       "at": "2026-11-08T06:07:15+00:00",
       "text": "The only item is the chairs' announcement of the draft OAuth WG agenda for the San Francisco meeting (IETF 127). The message has no agenda content, so nothing substantive can be reported.",
       "text_ja": "唯一の項目は、サンフランシスコ会合（IETF 127）向けOAuth WGの議題案を知らせるチェアの連絡である。本文に議題の内容はなく、実質的な変化は確認できない。"
+    },
+    {
+      "at": "2026-11-08T13:29:24+00:00",
+      "text": "No substantive protocol change: a reply on the list proposes carrying a PSEA token as the attestation in the new draft-williams-oauth-poi-core-00, and a small PR fixes a missing IANA registration for req_wl in the Transaction Tokens draft.",
+      "text_ja": "プロトコル上の実質的な変更はない。新規ドラフト draft-williams-oauth-poi-core-00 のアテステーションとして PSEA トークンを使う案がメーリングリストで提示され、Transaction Tokens ドラフトでは req_wl の IANA 登録漏れを直す小さな PR が出た。"
     }
   ],
   "items": {
@@ -919,6 +924,29 @@
       "use_cases_ja": [
         "継続が拒否された際に、バックオフ、ファンアウト削減、再認証のどれを行うべきかをエージェントのクライアントに伝える必要がある MCP ゲートウェイ。",
         "長期間有効なルートから定期的にエージェントジョブを実行し、それを妨げないホップ年齢の上限を必要とする運用。"
+      ]
+    },
+    "mail:JAOcNgwRIJuiIxUVCIy2iSJMQIg": {
+      "diagram": "",
+      "first_seen": "2026-11-08",
+      "headline": "A reply on the Proof-of-Intent Core draft suggests carrying a PSEA token as its attestation.",
+      "headline_ja": "Proof-of-Intent Core ドラフトのアテステーションに PSEA トークンを使う案が提案された。",
+      "id": "mail:JAOcNgwRIJuiIxUVCIy2iSJMQIg",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The message is addressed to the author of draft-williams-oauth-poi-core-00 (the thread is titled as the new draft announcement). The sender says the attestation in PoI Core is close to the token defined in draft-yossif-psea, an EAT profile in RATS. In PSEA, the approver's enrolled authenticator signs, after user verification, over the SHA-256 of the RFC 8785 form of the exact action parameters. The sender cites 31 public conformance cases and one independent verifier. PSEA does not cover how the resource server requests approval or how the client key is certified, which PoI Core does define. The sender therefore proposes that the PoIE carry a PSEA token as its attestation and asks whether the author is open to checking the fit. The draft text itself is not in the material, so nothing more about PoI Core is claimed.",
+      "summary_ja": "このメッセージは draft-williams-oauth-poi-core-00 の著者に宛てたもので、新規ドラフト告知のスレッドに付いている。送信者は、PoI Core のアテステーションが RATS の EAT プロファイルである draft-yossif-psea のトークンに近いと述べている。PSEA では、登録済みの承認者の認証器が、ユーザー検証の後に、対象操作のパラメーターを RFC 8785 で正規化した形の SHA-256 に対して署名する。送信者は 31 件の公開適合テストケースと、それを再現する独立した検証実装が一つあると述べている。PSEA は、リソースサーバーが承認を要求する方法やクライアント鍵の証明方法を定めていないが、PoI Core はその両方を定めている。そのため送信者は、PoIE が独自のアテステーションを定める代わりに PSEA トークンを運ぶ案を示し、適合するか確認する意向を著者に尋ねている。ドラフト本文は資料に含まれないため、PoI Core についてこれ以上のことは述べない。",
+      "title": "New Draft: draft-williams-oauth-poi-core-00 (Proof-of-Intent Core)",
+      "updated_at": "2026-11-08T13:29:24+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/JAOcNgwRIJuiIxUVCIy2iSJMQIg/",
+      "use_cases": [
+        "A resource server that wants user-verified approval of one exact action (for example a payment) and must choose between a bespoke attestation format and an existing EAT profile.",
+        "An implementer building a verifier who wants shared conformance cases rather than a draft-specific attestation format."
+      ],
+      "use_cases_ja": [
+        "特定の操作（例えば支払い）についてユーザー検証付きの承認をリソースサーバーが求める場合に、独自のアテステーション形式と既存の EAT プロファイルのどちらを使うか選ぶ場面。",
+        "ドラフト固有のアテステーション形式ではなく、共有された適合テストケースに基づいて検証実装を作りたい実装者。"
       ]
     },
     "mail:JV5gcUNjiOMAwDbLU5dwZLIUb-4": {
@@ -2469,6 +2497,23 @@
       "url": "https://github.com/oauth-wg/oauth-spiffe-client-authentication/pull/70",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "pr:oauth-wg/oauth-transaction-tokens#374": {
+      "diagram": "",
+      "first_seen": "2026-11-08",
+      "headline": "A PR adds the required req_wl claim to the JWT Claims registry entries in the Transaction Tokens draft.",
+      "headline_ja": "Transaction Tokens ドラフトの JWT Claims レジストリ登録に、必須の req_wl クレームを追加する PR。",
+      "id": "pr:oauth-wg/oauth-transaction-tokens#374",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The contributor noticed that req_wl is a REQUIRED claim but is missing from the JWT Claims Registry Contents in the IANA section, where only tctx and rctx are listed. The PR adds the registration. It is an IANA considerations fix and does not change the token format or processing.",
+      "summary_ja": "投稿者は、req_wl が必須クレームであるにもかかわらず、IANA の節の JWT Claims Registry Contents には tctx と rctx しか載っていないことに気付いた。この PR はその登録を追加する。IANA 考慮事項の修正であり、トークン形式や処理は変わらない。",
+      "title": "oauth-wg/oauth-transaction-tokens#374: Register the req_wl claim in the JWT Claims registry",
+      "updated_at": "2026-11-08T13:29:24+00:00",
+      "url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/374",
+      "use_cases": [],
+      "use_cases_ja": []
     }
   },
   "overflow": [],
@@ -2514,10 +2559,10 @@
       "reason_ja": "-03 で client_id が任意となり、クライアント識別が CIMD と結び付けられ、リプレイとトラストバンドルに関するセキュリティ記述が加わった。"
     },
     "draft-ietf-oauth-transaction-tokens": {
-      "date": "2026-11-05",
+      "date": "2026-11-08",
       "priority": "low",
-      "reason": "Only the agenda request for a competing cross-domain approach mentioned it, with no text change.",
-      "reason_ja": "競合するクロスドメイン方式の議題要望で触れられたのみで、本文の変更はない。"
+      "reason": "PR #374 fixes a missing IANA registration for the required req_wl claim, a small editorial fix.",
+      "reason_ja": "PR #374 は必須クレーム req_wl の IANA 登録漏れを直すもので、編集上の小さな修正にとどまる。"
     },
     "draft-ietf-oauth-v2-1": {
       "date": "2026-11-01",
