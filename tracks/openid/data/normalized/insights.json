@@ -34,6 +34,11 @@
       "at": "2026-11-06T19:28:20+00:00",
       "text": "Quiet run: openid/authzen had one merge commit (PR #801 \"iana-rfc\"), and the material doesn't show what it changed.",
       "text_ja": "今回は動きが少ない。openid/authzen にマージコミットが一件（PR #801 \"iana-rfc\"）あったが、変更内容は提供された資料からは分からない。"
+    },
+    {
+      "at": "2026-11-09T22:26:02+00:00",
+      "text": "The openid/dchp repository was the active one (23 commits), with spec edits to its format annexes: a rename to credential_format, credential_types as an array, and mdoc and SD-JWT VC wording fixes. openid/claims-aggregation only gained a contribution guide.",
+      "text_ja": "openid/dchp が最も動いており（23コミット）、フォーマット附属書で credential_format への名称変更、credential_types の配列化、mdoc と SD-JWT VC の文言修正が行われた。openid/claims-aggregation の変更は貢献ガイドの追加のみである。"
     }
   ],
   "items": {
@@ -105,6 +110,23 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "repo:openid/claims-aggregation:2026-11-09T11:53:32Z": {
+      "diagram": "",
+      "first_seen": "2026-11-09",
+      "headline": "openid/claims-aggregation merged a contributor guide and made no spec change.",
+      "headline_ja": "openid/claims-aggregation は貢献ガイドをマージしたが、仕様の変更はない。",
+      "id": "repo:openid/claims-aggregation:2026-11-09T11:53:32Z",
+      "kind": "repo-activity",
+      "related": [],
+      "significance": "routine",
+      "summary": "Two commits landed on the default branch since late June: a contribution guidance document (PR #42) and its merge commit. The commit messages show no change to protocol text.",
+      "summary_ja": "6月下旬以降、デフォルトブランチに2件のコミットが入った。貢献ガイダンス文書の追加（PR #42）とそのマージコミットである。コミットメッセージからは、プロトコル本文の変更は確認できない。",
+      "title": "openid/claims-aggregation: 2 new commits on the default branch",
+      "updated_at": "2026-11-09T22:26:02+00:00",
+      "url": "https://github.com/openid/claims-aggregation",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "repo:openid/dchp:2026-11-04T17:43:29Z": {
       "diagram": "",
       "first_seen": "2026-11-04",
@@ -124,6 +146,29 @@
       ],
       "use_cases_ja": [
         "dchp に追従するウォレットや検証者の実装者は、credential_type が単一値ではなく配列になる前提でパース処理を計画する必要がある。"
+      ]
+    },
+    "repo:openid/dchp:2026-11-09T20:09:24Z": {
+      "diagram": "",
+      "first_seen": "2026-11-09",
+      "headline": "openid/dchp saw 23 commits of spec edits: a field rename, credential_types as an array, and mdoc and SD-JWT VC wording fixes.",
+      "headline_ja": "openid/dchp で23コミットの仕様編集があり、フィールド名の変更、credential_types の配列化、mdoc と SD-JWT VC の文言修正が行われた。",
+      "id": "repo:openid/dchp:2026-11-09T20:09:24Z",
+      "kind": "repo-activity",
+      "related": [],
+      "significance": "substantive",
+      "summary": "Only the commit titles are available, and 8 of the 23 are not listed, so this is a partial picture. The titles show CredentialItem.format renamed to credential_format and the format annexes adapted to credential_types being an array. They also show the following. The wallet, not the mdoc, chooses issuer- or device-signed. A substitute data element may be returned where its definition allows. The mapping of support_no_cryptographic_binding to DocRequestInfo was dropped. SD-JWT VC path semantics were deferred to issue #52, and a KB-JWT suggestion was applied. The ISO 18013-5 Document type is no longer redefined as a byte string, the authority key identifier now uses the RFC 5280 name, and RFC 7515 was added as a normative reference. Several other commits are review fixes and housekeeping. Exact wire-format effects cannot be confirmed from titles alone.",
+      "summary_ja": "利用できるのはコミットタイトルのみで、23件中8件は一覧に含まれないため、全体像は部分的である。タイトルからは、CredentialItem.format を credential_format に改名したこと、フォーマット附属書を credential_types の配列化に合わせたことが読み取れる。また、mdoc ではなくウォレットが issuer 署名か device 署名かを選ぶと明記したこと、定義が認める場合に代替のデータ要素を返せるようにしたこと、support_no_cryptographic_binding の DocRequestInfo へのマッピングを削除したことも読み取れる。SD-JWT VC のパス意味論は issue #52 に委ねられ、KB-JWT の提案が反映された。ISO 18013-5 の Document 型をバイト列として再定義するのをやめ、authority key identifier には RFC 5280 の名称を用い、RFC 7515 を規範的参照に追加した。残りはレビュー対応と整備のコミットである。ワイヤ形式への正確な影響は、タイトルだけでは確認できない。",
+      "title": "openid/dchp: 23 new commits on the default branch",
+      "updated_at": "2026-11-09T22:26:02+00:00",
+      "url": "https://github.com/openid/dchp",
+      "use_cases": [
+        "A wallet developer tracking dchp needs to update for the renamed credential_format field and the array-valued credential_types.",
+        "An implementer of mdoc responses needs to know that the wallet selects issuer- or device-signed data."
+      ],
+      "use_cases_ja": [
+        "dchp を追跡するウォレット開発者は、credential_format への名称変更と、配列となった credential_types に対応する必要がある。",
+        "mdoc レスポンスの実装者は、issuer 署名か device 署名かをウォレットが選ぶことを把握する必要がある。"
       ]
     },
     "repo:openid/federation-entity-collection:2026-11-04T08:02:37Z": {
@@ -209,11 +254,17 @@
       "reason": "Only commit titles (a CI build step and one merge) were seen, with no visible spec text change.",
       "reason_ja": "確認できたのはコミットタイトル（CI ビルド手順の追加とマージ 1 件）のみで、仕様本文の変更は見えない。"
     },
+    "openid/claims-aggregation": {
+      "date": "2026-11-09",
+      "priority": "low",
+      "reason": "Only a contribution guide was added, with no spec change.",
+      "reason_ja": "貢献ガイドの追加のみで、仕様の変更はない。"
+    },
     "openid/dchp": {
-      "date": "2026-11-04",
+      "date": "2026-11-09",
       "priority": "high",
-      "reason": "Eight commits including a credential_type array change and several review rounds.",
-      "reason_ja": "credential_type の配列化を含む八件のコミットとレビュー反映が続いている。"
+      "reason": "23 commits in four days, including a field rename and credential_types becoming an array.",
+      "reason_ja": "4日間で23コミットあり、フィールド名の変更と credential_types の配列化を含む。"
     }
   }
 }
