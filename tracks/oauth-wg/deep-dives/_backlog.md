@@ -1,6 +1,6 @@
-# OAuth WG Backlog (2026-11-08)
+# OAuth WG Backlog (2026-11-09)
 
-- generated_at_utc: `2026-11-08T22:09:30+00:00`
+- generated_at_utc: `2026-11-09T06:37:17+00:00`
 
 - [ ] `draft-ietf-oauth-sd-jwt-vc` score=125 updated=2026-11-06T19:07:22Z
 - [ ] `draft-ietf-oauth-rfc8725bis` score=90 updated=2026-11-06T22:32:52Z
@@ -26,12 +26,9 @@ Moved by this week's material. candidates.json and the site list raised candidat
 
 - **high** `draft-ietf-oauth-attestation-based-client-auth`: A detailed critical review of -12 questions its structure and DPoP/RFC 7521 reuse.
 - **high** `draft-ietf-oauth-client-id-metadata-document`: 11 issues closed and a new response_types issue (#131) this week, with PRs adding a Client Authentication section.
-- **high** `draft-ietf-oauth-deferred-token-response`: -01 restructures the draft with substrate invariants, a new deferred_interactive mode and new editors; also cited as the answer to ID-JAG consent.
 - **high** `draft-ietf-oauth-delegate-sd-jwt`: Authors explained the sd_hash vs issuer_jwt_hash design and are preparing an updated version with a roadmap at IETF 127.
 - **high** `draft-ietf-oauth-identity-assertion-authz-grant`: Two new issues (#159, #160) on jwt-dpop and client authentication point to open design questions.
 - **high** `draft-ietf-oauth-spiffe-client-auth`: -03 makes client_id optional, ties client identification to CIMD and adds replay and trust-bundle security text.
-- **high** `draft-ietf-oauth-v2-1`: Seven new issues and 31 closed, several tagged ietf-127, including MUST vs SHOULD in §3.2.3 and invalid_client.
-- **low** `draft-ietf-oauth-sd-jwt-vc`: Revision -26 only makes editorial changes in response to IESG ballot comments, so there is no new substance to dive into.
 - **low** `draft-ietf-oauth-transaction-tokens`: PR #374 fixes a missing IANA registration for the required req_wl claim, a small editorial fix.
 
 <!-- triage:end -->
