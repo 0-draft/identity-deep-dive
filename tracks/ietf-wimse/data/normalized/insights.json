@@ -74,6 +74,11 @@
       "at": "2026-11-10T07:23:46+00:00",
       "text": "One mailing-list comment on draft-hulea-wimse-agent-mandate-01 argues that Section 9.5 should not let a relying party drop a token's budget contribution just because the token \"expired unused\". No other WIMSE material moved.",
       "text_ja": "draft-hulea-wimse-agent-mandate-01 の Section 9.5 について、トークンが「未使用のまま失効した」ことだけを理由に RP が予算への寄与を削除できるのは問題だとするメーリングリスト上のコメントが1件あった。他の WIMSE 関連の動きはない。"
+    },
+    {
+      "at": "2026-11-10T19:47:45+00:00",
+      "text": "No draft text changed in this run: the two items are mailing-list messages. The more substantive one is a review comment asking that section 5.4 of an unnamed record format say its entries are valid only at the evaluation instant. The other is a procedural reply about a joint WIMSE/OAuth session at IETF 127.",
+      "text_ja": "今回はドラフト本文の変更はなく、メーリングリストの投稿が2件のみである。主な内容は、名前の明示されていないレコード形式の5.4節について、各エントリが評価時点のみを表すと明記するよう求めるレビューコメントである。もう1件は、IETF 127の WIMSE/OAuth 合同セッションに関する手続き上の返信である。"
     }
   ],
   "items": {
@@ -514,6 +519,30 @@
       "title": "IETF 127 side meeting: Attenuating Authorization Tokens, Monday 11:15",
       "updated_at": "2026-11-09T22:26:02+00:00",
       "url": "https://mailarchive.ietf.org/arch/msg/wimse/KhTvcCX802aq2nWC2d1fB7kU4Mg/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "mail:L1aB2ez0awvPzFZxxfm-tlZmZ64": {
+      "diagram": "",
+      "first_seen": "2026-11-10",
+      "headline": "Chairs say a competing cross-domain transaction token proposal may ask questions at the IETF 127 joint session but may not co-present",
+      "headline_ja": "競合するクロスドメイン・トランザクショントークン提案は、IETF 127 合同セッションで質問できるが共同発表はできないとされた",
+      "id": "mail:L1aB2ez0awvPzFZxxfm-tlZmZ64",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-transaction-tokens",
+          "note": "The joint session item concerns transaction tokens extended across domains, and the competing draft targets the same use case.",
+          "note_ja": "合同セッションの議題はドメインをまたぐトランザクショントークンであり、競合ドラフトも同じユースケースを対象としている。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "routine",
+      "summary": "This is a short reply from Sean to Yuan, quoting an earlier thread. Yuan had asked for five minutes at the joint WIMSE/OAuth session to present draft-liu-oauth-cross-domain-txn-token, which targets the same use case as the Cross-Domain Transaction Tokens item already on the agenda. Sean says that after talking with Pieter and George, Yuan is welcome to ask questions but co-presenting is not an option for now. The quoted call for agenda items says the OAuth chairs requested two two-hour slots plus a joint WIMSE/OAuth session. It also says items with demonstrated interest from several parties get priority, and gives 2 November 2026 as the draft submission cut-off. No protocol text changed.",
+      "summary_ja": "Sean から Yuan への短い返信であり、過去のやり取りを引用している。Yuan は、合同セッションで既にアジェンダにある Cross-Domain Transaction Tokens と同じユースケースを対象とする draft-liu-oauth-cross-domain-txn-token を発表するため、5分の枠を求めていた。Sean は、Pieter と George と相談した結果、Yuan が質問することは歓迎するが、共同発表は現時点では認められないと述べている。引用されたアジェンダ募集の文面によれば、OAuth チェアは2時間枠を2つと、WIMSE/OAuth の合同セッションを要請している。複数の関係者の関心が示された案件を優先すること、およびドラフト提出の締切が2026年11月2日であることも書かれている。プロトコル本文の変更はない。",
+      "title": "OAuth IETF 127 Call for Agenda Items",
+      "updated_at": "2026-11-10T19:47:45+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/L1aB2ez0awvPzFZxxfm-tlZmZ64/",
       "use_cases": [],
       "use_cases_ja": []
     },
@@ -1043,6 +1072,29 @@
       ],
       "use_cases_ja": [
         "到達不能な状態情報源と証明の検証失敗を区別する必要がある検証者の、エラーコードや拒否コードの設計。"
+      ]
+    },
+    "mail:suAzkd-0n9Luwa_CCR5n0JKA53Q": {
+      "diagram": "",
+      "first_seen": "2026-11-10",
+      "headline": "A reviewer asks that section 5.4 state that its entries describe the evaluation instant only, not the moment of the effect",
+      "headline_ja": "レビュアーが、5.4節のエントリは効果発生時ではなく評価時点のみを表すと明記するよう求めている",
+      "id": "mail:suAzkd-0n9Luwa_CCR5n0JKA53Q",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Cliff supports adding an optional decision.evaluatedAt field, alongside Marc's malformed case. He notes this does not settle the gap between freshness at evaluation and freshness at the effect. Because the record already carries effect.interval.openedAt, a reader can compute an input's age when the effect began. He asks for one sentence in 5.4 saying the entries speak to the evaluation instant only. He also asks for a test record whose standing is fresh at evaluatedAt but past maxAge at openedAt, to be accepted as well formed. The message does not name the draft, and the thread's earlier context is not included, so the surrounding proposal is only partly visible.",
+      "summary_ja": "Cliff は、Marc の不正形式のケースと併せて、任意の decision.evaluatedAt フィールドを追加することに賛成している。ただし、評価時点での鮮度と効果発生時点での鮮度の差は、これだけでは解消しないと指摘している。レコードには既に effect.interval.openedAt があるため、読み手は効果開始時点での入力の経過時間を計算できる。そこで、5.4節に「エントリは評価時点のみを表す」という一文を加えることを求めている。また、standing が evaluatedAt 時点では新鮮だが openedAt 時点では maxAge を超えているテストレコードを、整形式として受理するよう求めている。投稿はドラフト名を示しておらず、スレッドの前後の文脈も含まれないため、元の提案は一部しか分からない。",
+      "title": "A principal-standing name for the 5.4 closed set",
+      "updated_at": "2026-11-10T19:47:45+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/suAzkd-0n9Luwa_CCR5n0JKA53Q/",
+      "use_cases": [
+        "An implementer validating decision records needs to know whether a stale input at effect time makes the record malformed or only informational.",
+        "An auditor reconstructing an action from a record wants to compute input age at effect start from effect.interval.openedAt, without treating evaluatedAt as proof of freshness at that time."
+      ],
+      "use_cases_ja": [
+        "判断レコードを検証する実装者は、効果発生時点で入力が古い場合に、そのレコードを不正形式として扱うのか、参考情報にとどめるのかを知る必要がある。",
+        "レコードから行為を再構成する監査担当者は、evaluatedAt を効果発生時点の鮮度の証拠とみなさず、effect.interval.openedAt から効果開始時点の入力の経過時間を計算したい。"
       ]
     },
     "mail:uHj7l43s0fHCCyGLYRnOqvVpfpM": {
