@@ -1,0 +1,26 @@
+# Interop Checklist
+
+- [ ] Request covers `@method`, `@path` and `@query`, and does not cover `@authority` for non-CONNECT methods (Section 3).
+- [ ] A request with no query still signs `@query` with the value `?` (Section 3, RFC 9421 Section 2.2.7), and the signature base keeps the leading `?` for non-empty queries such as `?flavor=vanilla`.
+- [ ] For CONNECT, the request covers `@method` and `@authority` and not `@path` or `@query`, and the signed response covers `@method;req` and `@authority;req` and not `@path;req` or `@query;req` (Section 3).
+- [ ] Content-Type, Content-Digest, Authorization, Txn-Token and Workload-Identity-Token are covered when present, and Workload-Identity-Token is covered on every signed response (Section 3).
+- [ ] When a body exists, Content-Digest is present, computed per RFC 9530 over the received content, and compared by the receiver. A missing or mismatched value is rejected (Section 3).
+- [ ] `created`, `expires`, `nonce` and `tag` are present on requests and responses, `tag` equals `wimse-workload-to-workload`, and `expires` is short (Section 3).
+- [ ] `keyid` and `alg` are absent on send. The verifier behaviour when they are present is not in the draft, so record the choice made (reject or ignore) and compare with the working-group answer (Section 3).
+- [ ] The WIMSE signature is selected by `tag`, never by label. A message with two signatures carrying that tag is rejected, and a message with no such tag is treated as carrying no WIMSE signature (Section 3).
+- [ ] Nonces come from a cryptographically secure random number generator and carry at least 64 bits of entropy. Do not copy the short nonces from Section 3.7 (Section 3).
+- [ ] Signatures outside the validity window (`created` and `expires`) are rejected, with the clock skew policy documented, because the draft gives no tolerance value (Section 3).
+- [ ] The WIT is validated per Section 5.1.4 of the workload credentials draft before the signature is checked, and nothing is processed until both pass (Section 3).
+- [ ] The signature algorithm is taken from `cnf.jwk.alg` in the WIT, a mismatched or locally unacceptable algorithm is rejected, and ES256 and Ed25519 both verify (Sections 3.1, 3.7).
+- [ ] `wimse-aud` matches a configured value by exact string comparison. A trailing slash and an explicit default port do not match. It is never derived from Host (Section 3.2).
+- [ ] The sender's default `wimse-aud` (target URI without query and fragment) matches the recipient's configured string, or a deployment-specific audience is used when a proxy rewrites the URI (Section 3.2).
+- [ ] `wimse-sign-response` is a Boolean parameter, written as true only when the client requires signing. The client rejects an unsigned response in that case and accepts an unsigned response otherwise (Sections 3.3, 3.5).
+- [ ] Every signed response sets `wimse-req-nonce` to the request's `nonce`, and the client rejects a missing or different value (Sections 3.4, 3.5).
+- [ ] When the client sends Accept-Signature, it lists at least the components the profile requires, and `wimse-sign-response` wins when the two conflict (Section 3.5).
+- [ ] Authentication failure returns 400 with the `wimse-signature-invalid` problem type, and the body and timing do not reveal whether the WIT or the HTTP message signature failed. 401 is not used (Section 3.6).
+- [ ] When signing is required but unsupported the server returns 501 with `wimse-signed-response-unsupported`. When signing is supported but not possible for this response (streamed, very large) it returns 400 with `wimse-signed-response-unavailable`. It never returns a successful unsigned response (Sections 3.5, 3.6).
+- [ ] A client that receives 400 or 501 from a signing failure handles both problem types, and also behaves sensibly when the peer sends no problem details body (Section 3.6).
+- [ ] The WIT and the signature travel only over server-authenticated TLS, with client hostname validation per RFC 9525 (Section 3).
+- [ ] A proxy that adds its own HTTP message signature does not break WIMSE signature selection, and a proxy that changes a covered component causes verification to fail (Section 5.2).
+- [ ] Replay-cache behaviour, if implemented, is documented as local policy, including what happens when a replay reaches a different cluster member (Sections 3, 5.1).
+- [ ] The test vectors from issue #419 were regenerated after the `@query` correction, so re-fetch them before relying on old signature values (mail).
