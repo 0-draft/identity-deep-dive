@@ -79,6 +79,11 @@
       "at": "2026-11-10T07:23:46+00:00",
       "text": "One mailing-list message this run, with no draft text changes. It suggests splitting audit records between OAuth (the AS's record of an approval) and RATS (the approver's own signature), with the proposed AUDIT effort profiling how a record references both.",
       "text_ja": "今回はメーリングリストの投稿が1件のみで、ドラフト本文の変更はない。認可サーバーによる承認の記録は OAuth、承認者自身の署名は RATS に置き、AUDIT がその両方を参照する記録の形式を規定する、という分担案が示された。"
+    },
+    {
+      "at": "2026-11-10T19:47:45+00:00",
+      "text": "The only change to protocol text is oauth-delegate-sd-jwt PR #15, which moves cnf, exp, nbf and the other security claims from delegate_payload into the base KB-SD-JWT payload and defines their semantics. The rest is mailing-list discussion about authorization-evidence signatures, the IETF 127 agenda, and an AUDIT BoF dispute.",
+      "text_ja": "最も重要なのは oauth-delegate-sd-jwt の PR #15 で、cnf、exp、nbf などのセキュリティクレームを delegate_payload からベースの KB-SD-JWT ペイロードへ移し、その意味を定義している。他はメーリングリストの議論で、authorization-evidence への署名、IETF 127 のアジェンダ、AUDIT BoF をめぐる対立である。"
     }
   ],
   "items": {
@@ -575,6 +580,36 @@
         "失効状態をどの程度新しく保つべきかを定める必要がある、実施ポイントの実装者。"
       ]
     },
+    "mail:GmKE3c79_SYg6u67lPViOq2L_Eo": {
+      "diagram": "",
+      "first_seen": "2026-11-10",
+      "headline": "The authorization-evidence draft author says -02 deliberately leaves approver-side signatures open and wants WG agreement on the evidence model first.",
+      "headline_ja": "authorization-evidence ドラフトの著者は、-02 が承認者側署名の仕組みを意図的に未定義とし、まず証拠モデルでの合意を優先すると回答した。",
+      "id": "mail:GmKE3c79_SYg6u67lPViOq2L_Eo",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-munoz-wimse-authorization-evidence",
+          "note": "Also defines signed authorization-evidence records for agent actions, so it addresses the same problem space.",
+          "note_ja": "エージェント操作に対する署名付き認可証拠レコードを定めており、同じ問題領域を扱う。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Mohamad Khalil Yossif had pointed out that Section 9.4 of draft-liu-oauth-authorization-evidence-02 says the as_signature proves only that the AS recorded an approval, not that the approver made it. He proposed that draft-yossif-psea, an EAT profile in which the approver's authenticator signs the SHA-256 of the RFC 8785 (JCS) bytes of the disclosure object, be carried in an optional authorization_evidence member. He noted this does not close Section 9.5, because trusted display stays out of scope. The author, Dapeng, replied that Section 9.4 only makes a recommendation and deliberately leaves the mechanism open. The draft could later specify requirements or reference existing IETF work. For now the priority is WG convergence on the problem statement and evidence model, and he offered to add Mohamad to the GitHub repository. No draft text changed.",
+      "summary_ja": "Mohamad Khalil Yossif は、draft-liu-oauth-authorization-evidence-02 の 9.4 節では as_signature が示すのは AS が承認を記録したことであって承認者が承認したことではない、と指摘していた。さらに、承認者の認証器が disclosure オブジェクトの RFC 8785 (JCS) バイト列の SHA-256 に署名する EAT プロファイル draft-yossif-psea を、authorization_evidence の任意メンバーとして運ぶ案を示した。信頼できる表示は範囲外のため 9.5 節の問題は解決しないとも述べている。著者の Dapeng は、9.4 節は推奨を述べるだけで仕組みは意図的に未定義であり、必要なら要件を定めるか既存の IETF 成果を参照できると回答した。現時点では問題定義と証拠モデルについてWGの収束を優先するとし、GitHub リポジトリへの参加も提案した。ドラフト本文の変更はない。",
+      "title": "回复：draft-liu-oauth-authorization-evidence-02: an approver-side signature for 9.4",
+      "updated_at": "2026-11-10T19:47:45+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/GmKE3c79_SYg6u67lPViOq2L_Eo/",
+      "use_cases": [
+        "An AS that records user approvals for agent actions and needs to show later that the person, not only the server, approved them.",
+        "A verifier that wants to compare an approver-signed digest against the disclosure object recorded by the AS."
+      ],
+      "use_cases_ja": [
+        "エージェントの操作に対するユーザー承認を記録する AS が、サーバーだけでなく本人が承認したことを後から示す必要がある場合。",
+        "承認者が署名したダイジェストを、AS が記録した disclosure オブジェクトと照合したい検証者。"
+      ]
+    },
     "mail:H_h0W8yp2srlIk_-UN01zYkH1MI": {
       "diagram": "",
       "first_seen": "2026-11-08",
@@ -1025,6 +1060,34 @@
         "iss を比較する発行者や検証者は、URL の正規化ではなく、RFC 7519 の StringOrURI が定める単純な文字列比較を行うべきである。"
       ]
     },
+    "mail:_-ahqOZnJXf_i_DSW7lV0Ecl81Q": {
+      "diagram": "",
+      "first_seen": "2026-11-10",
+      "headline": "The AUDIT BoF organiser asked if OAuth will produce reusable authorization record formats, and one participant repeatedly objected to the AUDIT WG.",
+      "headline_ja": "AUDIT BoF の提案者が OAuth WG に再利用可能な認可レコード形式を作る予定があるか尋ね、ある参加者が AUDIT WG 設立に繰り返し反対した。",
+      "id": "mail:_-ahqOZnJXf_i_DSW7lV0Ecl81Q",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-munoz-wimse-authorization-evidence",
+          "note": "Signed authorization-evidence records for agent actions are the kind of record format the AUDIT BoF asks about.",
+          "note_ja": "エージェント操作の署名付き認可証拠レコードは、AUDIT BoF が問うレコード形式に該当する。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Henk Birkholz wrote that the OAuth WG has rechartered to cover authorization and delegation of autonomous agents. He asked whether it plans tangible record or log artifact formats the proposed AUDIT WG could reuse, and said the BoF at IETF 127 aims to reuse as many existing formats as possible. Heime.Jorgen objected repeatedly, arguing that post-hoc records without pre-effect binding invite replay and TOCTOU attacks, and that the charter fails RFC 5434 criteria. They asked for extensibility slots for pre-effect seals and execution nonces. Mirja Kuehlewind replied that the objection was noted and need not be repeated. No OAuth WG member answered Henk's question in this material, and no draft text is involved.",
+      "summary_ja": "Henk Birkholz は、OAuth WG が自律エージェントの認可と委任を対象に再チャータされたことに触れ、提案中の AUDIT WG が再利用できる具体的なレコード形式やログアーティファクトを作る予定があるかを尋ねた。IETF 127 の BoF は既存形式をできるだけ再利用する方針だという。Heime.Jorgen は、実行前の結合がない事後記録はリプレイや TOCTOU 攻撃を招き、チャーターは RFC 5434 の基準を満たさないとして繰り返し反対し、実行前シールや実行ノンスのための拡張スロットを求めた。Mirja Kuehlewind は、反対意見は記録済みであり繰り返す必要はないと返した。この資料では OAuth WG の参加者による Henk の質問への回答はなく、ドラフト本文も関与しない。",
+      "title": "OAUTH record formats & the AUDIT BoF (4 new messages)",
+      "updated_at": "2026-11-10T19:47:45+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/_-ahqOZnJXf_i_DSW7lV0Ecl81Q/",
+      "use_cases": [
+        "Authors of agent authorization or delegation drafts who may be asked to make their records usable as audit evidence."
+      ],
+      "use_cases_ja": [
+        "エージェントの認可・委任ドラフトの著者が、自分たちのレコードを監査証拠として使えるようにするよう求められる可能性がある場合。"
+      ]
+    },
     "mail:bGFDNfQvdE1DvdJ3e_NUEkY7oG4": {
       "diagram": "",
       "first_seen": "2026-11-05",
@@ -1385,6 +1448,23 @@
         "タスクを複数のサブエージェントに分割するエージェント基盤は、バッチ委任の提案に注目できる。"
       ]
     },
+    "mail:kIBSOEWMsXmmvZy9Vh7EJBJrzV4": {
+      "diagram": "",
+      "first_seen": "2026-11-10",
+      "headline": "Chairs and presenters declined a co-presenting slot for a competing cross-domain transaction token draft in the IETF 127 joint session.",
+      "headline_ja": "IETF 127 の WIMSE/OAuth 合同セッションで、競合するクロスドメイン Transaction Token ドラフトの共同発表は認められなかった。",
+      "id": "mail:kIBSOEWMsXmmvZy9Vh7EJBJrzV4",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "The thread is the IETF 127 call for agenda items. The OAuth chairs requested two two-hour slots plus a joint WIMSE/OAuth session, and the Internet-Draft cut-off was 2 November 2026. Yuan (Huawei) asked for five minutes in the joint session to present draft-liu-oauth-cross-domain-txn-token, an alternative to the Cross-Domain Transaction Tokens item already on the agenda. Sean O'Dell replied, after talking with Pieter and George, that Yuan is welcome to ask questions but co-presenting is not an option at this time. The two approaches are being compared in issue #17 of gffletch/tt_xdomain. No technical content changed.",
+      "summary_ja": "IETF 127 のアジェンダ募集スレッドである。OAuth のチェアは2つの2時間枠に加え WIMSE/OAuth 合同セッションを要請し、Internet-Draft の提出締切は 2026年11月2日だった。Yuan (Huawei) は、すでにアジェンダにある Cross-Domain Transaction Tokens の代替案 draft-liu-oauth-cross-domain-txn-token を合同セッションで5分発表したいと依頼した。Sean O'Dell は Pieter と George と相談の上、Yuan が質問することは歓迎するが、現時点では共同発表はできないと回答した。両アプローチは gffletch/tt_xdomain の issue #17 で比較されている。技術的内容の変更はない。",
+      "title": "OAuth IETF 127 Call for Agenda Items",
+      "updated_at": "2026-11-10T19:47:45+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/kIBSOEWMsXmmvZy9Vh7EJBJrzV4/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "mail:p2R-7159NVo7lsuhVAm3CAyLEYU": {
       "diagram": "",
       "first_seen": "2026-11-07",
@@ -1615,6 +1695,29 @@
         "第三者のロゴを描画する AS の同意画面は、表示時にクライアントのロゴ URL を直接参照してはならない。"
       ]
     },
+    "pr:oauth-wg/oauth-delegate-sd-jwt#15": {
+      "diagram": "",
+      "first_seen": "2026-11-10",
+      "headline": "In oauth-delegate-sd-jwt, cnf, exp, nbf and the other security claims move out of delegate_payload into the base KB-SD-JWT payload, with defined semantics.",
+      "headline_ja": "oauth-delegate-sd-jwt で、cnf、exp、nbf などのセキュリティクレームが delegate_payload からベースの KB-SD-JWT ペイロードへ移り、意味も定義される。",
+      "id": "pr:oauth-wg/oauth-delegate-sd-jwt#15",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "substantive",
+      "summary": "PR #15, which fixes #3 and #10, moves the security and validity claims (cnf, exp, nbf and so on) out of delegate_payload into the base KB-SD-JWT payload. Standard JWT and SD-JWT libraries can then evaluate them without first unpacking the delegate payload. When several delegate_payload entries are present, they share the base KB-SD-JWT's security claims. The PR also adds a section defining how cnf, iat, exp, nbf, aud, nonce, sd_hash and issuer_jwt_hash are interpreted when a KB-SD-JWT is delegated to a new Delegate Holder, versus how subsequent Delegate Holders and Verifiers interpret them, and updates the Verification section to match. Only the PR description was available, not the diff.",
+      "summary_ja": "#3 と #10 を修正する PR #15 は、セキュリティおよび有効性に関するクレーム (cnf、exp、nbf など) を delegate_payload からベースの KB-SD-JWT ペイロードへ移す。これにより標準的な JWT / SD-JWT ライブラリは、delegate payload を先に展開せずにそれらを評価できる。複数の delegate_payload エントリがある場合は、ベース KB-SD-JWT のセキュリティクレームを共有する。また、cnf、iat、exp、nbf、aud、nonce、sd_hash、issuer_jwt_hash が、新しい Delegate Holder への委任時にどう解釈されるか、およびその後の Delegate Holder や検証者にどう解釈されるかを定める節を追加し、Verification の節も更新する。入手できたのは PR の説明のみで、差分は確認できていない。",
+      "title": "oauth-wg/oauth-delegate-sd-jwt#15: Move security claims to base KB-SD-JWT payload and define claim semantics",
+      "updated_at": "2026-11-10T19:47:45+00:00",
+      "url": "https://github.com/oauth-wg/oauth-delegate-sd-jwt/pull/15",
+      "use_cases": [
+        "A library implementer who wants existing SD-JWT KB verification to check cnf and expiry on a delegated presentation without delegate-specific unpacking.",
+        "An agent that re-delegates a credential to another holder and needs the audience and nonce semantics to be unambiguous."
+      ],
+      "use_cases_ja": [
+        "委任されたプレゼンテーションの cnf や有効期限を、委任固有の展開処理なしに既存の SD-JWT KB 検証で確認したいライブラリ実装者。",
+        "クレデンシャルを別のホルダーへ再委任するエージェントが、audience と nonce の意味を明確にする必要がある場合。"
+      ]
+    },
     "pr:oauth-wg/oauth-sd-jwt-vc#450": {
       "diagram": "",
       "first_seen": "2026-11-03",
@@ -1839,10 +1942,10 @@
       "reason_ja": "今週は11件のissueがクローズされ、response_typesに関する新規issue（#131）が立ち、クライアント認証セクションを追加するPRもあった。"
     },
     "draft-ietf-oauth-delegate-sd-jwt": {
-      "date": "2026-11-05",
+      "date": "2026-11-10",
       "priority": "high",
-      "reason": "Authors explained the sd_hash vs issuer_jwt_hash design and are preparing an updated version with a roadmap at IETF 127.",
-      "reason_ja": "作者が sd_hash と issuer_jwt_hash の設計を説明し、IETF 127 でロードマップを示す更新版を準備している。"
+      "reason": "PR #15 restructures where security claims live in the KB-SD-JWT and defines their delegation semantics.",
+      "reason_ja": "PR #15 が KB-SD-JWT 内のセキュリティクレームの配置を変更し、委任時の意味を定義している。"
     },
     "draft-ietf-oauth-identity-assertion-authz-grant": {
       "date": "2026-11-08",
