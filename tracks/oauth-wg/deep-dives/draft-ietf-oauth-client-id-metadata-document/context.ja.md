@@ -1,0 +1,16 @@
+# 背景
+
+## きっかけ
+
+`subject.json` の選定理由によれば、今週 11 件の issue がクローズされ、response_types に関する新しい issue（#131）が立てられた。Client Authentication の節を加える PR もある。ただし、用意された資料にはそれらの issue や PR は含まれていない。ドラフトはリビジョン 03（2026 年 11 月 2 日）であり、Datatracker の状態は Active、I-D Exists、WG Document で、oauth-wg トラックにある。
+
+## なぜ重要か
+
+本ドラフトは、クライアントが HTTPS の URL を client_id として使い、認可サーバーがそこからメタデータを取得する方式を定める（Section 3、6）。リビジョン 03 では、これまで非公式だった複数の点が規範的な規則になった。たとえば、クライアント認証のデフォルト（Section 5）、失敗時の扱い（Section 6.1）、iss パラメーターの必須化（Section 7）、ロゴの自前配信（Section 10.9）である。URL 形式の client_id に依存する認可サーバーとクライアントの実装者は直接影響を受け、節番号もすべて移動した。
+
+## 未解決の論点
+
+- Section 5 の jwks または jwks_uri の要件は、private_key_jwt のみに適用されるのか。それとも、複数の方式の 1 つとして private_key_jwt を提示するすべての文書に適用されるのか。
+- 文書に grant_types や response_types がない場合、サーバーはどう扱うのか（Section 6）。ドラフトは述べていない。
+- OAuth 2.1 の issue 266 に関する編集上の注記を踏まえると、認可エンドポイントでの invalid_client はどう対応付けるべきか（Section 5）。
+- メールスレッドの提案、すなわち取得前の検証手順、クエリ成分の MUST NOT 化、サーバーメタデータの登録タイプ一覧を、ワーキンググループは取り上げるのか（Section 3、6、8、9.2）。

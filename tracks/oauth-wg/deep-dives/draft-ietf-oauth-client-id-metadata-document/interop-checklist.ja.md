@@ -1,0 +1,29 @@
+# 相互運用チェックリスト
+
+- [ ] Client Identifier URL が https を使い、userinfo、ドットセグメント、フラグメントを含まず、`/` 以外のパスを持つ（Section 3）。
+- [ ] クエリ成分を持つ URL が一貫して扱われる。ドラフトは SHOULD NOT としており、メールスレッドの提案では MUST NOT になる（Section 3）。
+- [ ] サーバーは URL を単純な文字列比較で比べ、正規化しない。`https://example.com/client` と `https://example.com:443/client` は別のクライアントである（Section 3）。
+- [ ] 文書の client_id が、Client Identifier URL と実際に取得した URL の両方に一致する（Section 4）。
+- [ ] サーバー自身の発行者識別子、または信頼する相手の識別子と同じ client_id は拒否される（Section 10.1）。
+- [ ] 取得時に `Accept: application/json` を送り、200 OK のみを受け入れ、URL 短縮サービスを含むあらゆるリダイレクトをエラーとして扱い、追従しない（Section 6）。
+- [ ] 読み取り上限（推奨は 5 キロバイト）を超えるレスポンス本文はエラーとして扱われる（Section 10.11）。
+- [ ] 特殊用途アドレス [RFC6890] に解決される URL は、本体の文書、jwks_uri、logo_uri のいずれでも拒否される。ループバックの例外は本番環境では無効である（Section 10.7）。
+- [ ] 文書に client_secret、client_secret_expires_at、いずれの認証プロパティにも共有秘密を使う認証方式、秘密鍵の素材が含まれず、jwks と jwks_uri が両方存在することもない。software_statement 経由の内容にも同じ規則が適用される（Section 4.1、4.3）。
+- [ ] token_endpoint_auth_method も token_endpoint_auth_methods_supported もない文書は、client_secret_basic ではなく none として扱われる。none のクライアントにクライアントアサーションが送られた場合は invalid_client となる（Section 5）。
+- [ ] 両方のプロパティを持つ文書では、token_endpoint_auth_method が token_endpoint_auth_methods_supported に含まれる（Section 5）。
+- [ ] [OpenID.RPMetadataChoices] を実装しないサーバーも、token_endpoint_auth_methods_supported を認識する（Section 5）。
+- [ ] サーバーは一覧から対応する方式を選び、対応しない方式があってもエラーにせず、1 つも対応しない場合は invalid_client を返す（Section 5）。
+- [ ] jwks も jwks_uri もない private_key_jwt の文書は invalid_client で拒否される。また、`["none", "private_key_jwt"]` の場合にこの要件がどう解釈されるかを試験する（Section 5）。
+- [ ] クライアントアサーションは `typ` ヘッダー（推奨値は `client-authentication+jwt`）を持ち、サーバーはそれを検証してアルゴリズムの許可リストを適用する（Section 5）。
+- [ ] grant_types または response_types の共通部分が空の場合は invalid_client となり、これらのフィールドがない場合の挙動が文書化されている（Section 6）。
+- [ ] 一時的な取得失敗ではキャッシュ済みメタデータとリフレッシュトークンを変更せず、トークンエンドポイントと PAR エンドポイントで HTTP 503 を返す。終端的な client_id の不一致ではリフレッシュトークンを失効させる。どちらの場合もユーザーエージェントをクライアントへリダイレクトしない（Section 6.1）。
+- [ ] エラー応答と不正な文書はキャッシュされず、ヘッダーの内容にかかわらず実効的なキャッシュ期間の最大値が適用される（Section 6.2）。
+- [ ] 認可レスポンスに iss が含まれ、クライアントがそれを検証する（Section 7）。
+- [ ] サーバーメタデータが client_id_metadata_document_supported を公開し、クライアントはユーザーをリダイレクトする前にそれを確認する（Section 8）。
+- [ ] 事前登録のクライアントと CIMD のクライアントが内部で区別でき、生成する client_id が `https://` で始まらない（Section 9.1）。
+- [ ] 文書が、問い合わせ元、Cookie、ヘッダー、クエリやパスの内容によらず同一であり、サーバーは取得時に Cookie やユーザー情報を送らない（Section 4.5、11.1）。
+- [ ] client_id と異なるオリジンの client_uri が受け入れられ、redirect_uris の制限はサーバーのポリシーに従う（Section 4.4、10.2）。
+- [ ] logo_uri の内容は事前取得され、画像として検証され、直接リンクされずにサーバー自身のホストから配信される（Section 10.9）。
+- [ ] 同意画面には client_id のホスト名が表示され、client_name とロゴはポリシーが許す場合にのみ表示される（Section 10.6、10.10）。
+- [ ] 永続化された同意は、Client Identifier URL とリソースをキーとする（Section 10.12）。
+- [ ] ポート番号が変わるループバックのリダイレクト URI は受け入れられ、それ以外のリダイレクト URI は完全一致が必要である（Section 4.2）。
