@@ -32,53 +32,46 @@ TOPIC_PATTERNS: dict[str, list[str]] = {
 }
 
 
-def clean_lines(text: str) -> list[str]:
-    out: list[str] = []
-    for raw in text.splitlines():
-        line = compact_whitespace(raw)
-        if line:
-            out.append(line)
-    return out
+def parse_posts(soup: BeautifulSoup, max_posts: int) -> list[dict[str, str]]:
+    """One post per row of the browse table.
 
-
-def map_subject_to_link(soup: BeautifulSoup) -> dict[str, str]:
-    mapping: dict[str, str] = {}
-    for anchor in soup.find_all("a", href=MESSAGE_HREF_RE):
-        subject = compact_whitespace(anchor.get_text(" ", strip=True))
-        href = anchor.get("href", "")
-        if subject and href and subject not in mapping:
-            mapping[subject] = f"https://mailarchive.ietf.org{href}"
-    return mapping
-
-
-def parse_posts(lines: list[str], max_posts: int) -> list[dict[str, str]]:
+    Each row (div.xtr) holds the subject twice (a <span> and the
+    a.msg-detail link), then the from and date cells. Read the cells of the
+    row instead of the page text, and key posts on the message URL: replies
+    share a subject, so the subject cannot identify a message.
+    """
     posts: list[dict[str, str]] = []
-    seen: set[tuple[str, str, str]] = set()
+    seen: set[str] = set()
 
-    for i, line in enumerate(lines):
-        if not SUBJECT_RE.search(line):
+    rows = soup.select("div.xtr")
+    if not rows:
+        # The page changed shape; fail the track rather than publish no mail.
+        raise SystemExit("mailarchive: no div.xtr rows in the browse page")
+
+    for row in rows:
+        anchor = row.find("a", class_="msg-detail", href=MESSAGE_HREF_RE)
+        if anchor is None:
+            continue
+        subject = compact_whitespace(anchor.get_text(" ", strip=True))
+        if not SUBJECT_RE.search(subject):
+            continue
+        url = f"https://mailarchive.ietf.org{anchor['href']}"
+        if url in seen:
             continue
 
-        subject = line
-        sender = ""
-        date = ""
+        sender_cell = row.select_one(".from-col")
+        date_cell = row.select_one(".date-col")
+        parsed = parse_date(date_cell.get_text(strip=True)) if date_cell else None
 
-        for j in range(i + 1, min(i + 8, len(lines))):
-            candidate = lines[j]
-            if not sender and candidate.lower() not in {"wimse", "subject", "from", "date", "list"}:
-                if not parse_date(candidate):
-                    sender = candidate
-            parsed = parse_date(candidate)
-            if parsed:
-                date = parsed.isoformat()
-                break
-
-        key = (subject, sender, date)
-        if key in seen:
-            continue
-
-        seen.add(key)
-        posts.append({"subject": subject, "sender": sender, "date": date})
+        seen.add(url)
+        posts.append(
+            {
+                "subject": subject,
+                "sender": compact_whitespace(sender_cell.get_text(" ", strip=True)) if sender_cell else "",
+                "date": parsed.isoformat() if parsed else "",
+                "url": url,
+            }
+        )
         if len(posts) >= max_posts:
             break
 
@@ -107,19 +100,12 @@ def main() -> None:
     html = fetch_text(src["browse_url"])
     soup = BeautifulSoup(html, "html.parser")
 
-    text = soup.get_text("\n")
-    lines = clean_lines(text)
-
-    posts = parse_posts(lines, int(src.get("max_posts", 120)))
+    posts = parse_posts(soup, int(src.get("max_posts", 120)))
     topic_counts = detect_topics(posts)
     top_senders = [
         {"sender": sender, "count": count}
         for sender, count in Counter([p["sender"] for p in posts if p["sender"]]).most_common(10)
     ]
-
-    subject_link = map_subject_to_link(soup)
-    for post in posts:
-        post["url"] = subject_link.get(post["subject"], "")
 
     normalized = {
         "collected_at": iso_now(),
