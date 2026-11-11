@@ -6,7 +6,7 @@ The pick note in `subject.json` says 11 issues were closed and a new response_ty
 
 ## Why This Matters
 
-The draft lets a client use an HTTPS URL as its client_id, with the authorization server fetching the metadata from it (Sections 3 and 6). Revision 03 turns a number of previously informal points into normative rules, such as client authentication defaults (Section 5), failure handling (Section 6.1), the mandatory iss parameter (Section 7) and logo re-serving (Section 10.9). Implementers of authorization servers and clients that rely on URL client_ids are directly affected, and the section numbers have all moved.
+The draft lets a client use an HTTPS URL as its client_id, with the authorization server fetching the metadata from it (Sections 3 and 6). Revision 03 adds or tightens a number of normative rules, such as client authentication defaults (Section 5), failure handling (Section 6.1), the mandatory iss parameter (Section 7) and logo re-serving, which was a SHOULD in -02 and is now a MUST (Section 10.9). Implementers of authorization servers and clients that rely on URL client_ids are directly affected, and every section from Section 5 on has a new number.
 
 ## Open Questions
 

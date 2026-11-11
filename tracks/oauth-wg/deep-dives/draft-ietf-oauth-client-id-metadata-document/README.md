@@ -19,7 +19,7 @@ sequenceDiagram
     AS->>H: GET Client Identifier URL, Accept application/json, no redirects followed
     H-->>AS: 200 OK with Client ID Metadata Document
     AS->>AS: Validate client_id match, redirect URI, grant and response types, auth method
-    AS->>U: Consent screen showing client hostname and vetted metadata
+    AS->>U: Consent screen showing client hostname and client metadata
     U->>AS: User approves
     AS->>U: Authorization response including iss
     U->>C: Redirect back to the client
@@ -47,7 +47,7 @@ sequenceDiagram
 ## Why This Matters Now
 
 - **Trigger**: 11 issues closed and a new response_types issue (#131) this week, with PRs adding a Client Authentication section (from `subject.json`). The issue and PR details are not in the staged material.
-- **Source evidence**: Revision 03 is dated 2 November 2026. It adds a Client Authentication section (Section 5), error handling for failed fetches (Section 6.1), the grant_types and response_types intersection rule (Section 6), a mandatory iss parameter (Section 7) and several new security considerations (Section 10). The mail thread on the -03 announcement already proposes further changes.
+- **Source evidence**: Revision 03 is dated 2 November 2026. It moves Client Authentication out of Security Considerations into a new, expanded Section 5, and adds error handling for failed fetches (Section 6.1), the grant_types and response_types intersection rule (Section 6), a mandatory iss parameter (Section 7) and several new security considerations (Section 10). The mail thread on the -03 announcement already proposes further changes.
 - **Expected impact**: Implementers of authorization servers that accept URL client_ids need to revisit authentication defaults, fetch and cache behaviour, error responses and logo handling. Clients need to normalize their URLs and keep their documents stable and free of request-dependent content.
 
 ## What Changed
@@ -59,24 +59,25 @@ sequenceDiagram
   - New Section 4.4 separates functional URIs from informative URIs, and the server MUST NOT require client_uri to share an origin with client_id or redirect_uris.
   - New Section 4.5 forbids deriving document contents from untrusted external input.
   - Client Authentication moved out of Security Considerations into Section 5. token_endpoint_auth_methods_supported is preferred, token_endpoint_auth_method is NOT RECOMMENDED, and the RFC7591 default of client_secret_basic MUST NOT be applied.
+  - The server MUST intersect the document's grant_types and response_types with what it supports and MUST reject with invalid_client if either intersection is empty, and SHOULD send `Accept: application/json` when fetching (Section 6, explained in Section 10.7.1).
   - Discovery failures are split into transient and terminal, with refresh-token consequences and an HTTP 503 option (Section 6.1).
-  - Cache guidance gains maximum and minimum effective durations and permits rate limiting (Section 6.2).
+  - Caching: -02 said the server MAY set its own upper and lower bounds on cache lifetime. -03 says it SHOULD enforce a maximum effective duration whatever the response says, and SHOULD enforce a minimum when none is indicated. The Expires header need not be honoured, and rate limiting of re-fetches is allowed (MAY) (Section 6.2).
   - The authorization response MUST include iss (Section 7).
   - Logo prefetching and re-serving became MUST (Section 10.9).
   - New security sections cover URL confusion with issuer identifiers (Section 10.1), client presentation (Section 10.10) and resource-scoped persisted authorization state (Section 10.12).
   - The TBD note about a client_id_expires_at property was removed.
-- Compatibility or migration concerns: the section numbering changed throughout, so any reference to -02 section numbers is stale. A document that omits both authentication properties is now treated as a public client, where RFC7591 would imply client_secret_basic. A server that did not previously require iss in the authorization response, or that linked logo_uri directly, must change. Servers that treated `/` as a valid path, or that required client_uri to be same-origin, must change too. token_endpoint_auth_method still works as a fallback but is NOT RECOMMENDED (Section 5).
+- Compatibility or migration concerns: Sections 1 to 4.3 keep their numbers, but everything from Section 5 on was renumbered (for example, Client Information Discovery moved from Section 5 to Section 6, and Client Authentication from Section 8.2 to Section 5), so references to those -02 section numbers are stale. A document that omits both authentication properties is now treated as a public client, where RFC7591 would imply client_secret_basic. A server that did not previously require iss in the authorization response, or that linked logo_uri directly, must change. Servers that treated `/` as a valid path, or that required client_uri to be same-origin, must change too. token_endpoint_auth_method still works as a fallback but is NOT RECOMMENDED (Section 5).
 
 ## Technical Analysis
 
 - Threat model implications:
   - The client controls the document, so everything in it is an assertion by the client. A client can impersonate a better-known one through its name or logo (Section 10.10), and the draft suggests showing the client_id hostname and optional domain-trust heuristics (Sections 10.6 and 10.8).
-  - Fetching attacker-chosen URLs creates SSRF exposure. The server MUST NOT fetch URLs that resolve to special-use addresses [RFC6890], with a narrow loopback exception for development (Section 10.7). It SHOULD read at most about 5 kilobytes (Section 10.11).
+  - Fetching attacker-chosen URLs creates SSRF exposure. The server MUST NOT fetch URLs that resolve to special-use addresses [RFC6890], with a narrow loopback exception for development (Section 10.7). It SHOULD limit how much of the response it reads, and the recommended maximum is 5 kilobytes (Section 10.11).
   - The draft says a URL equal to the server's own issuer or to another trusted identifier can cause token confusion, so the server SHOULD reject it (Section 10.1).
-  - Persisted consent MUST be scoped to the pair of URL and resource (Section 10.12).
+  - Any persisted or reused authorization decision MUST be scoped at least to the pair of Client Identifier URL and resource (Section 10.12).
   - Request-dependent documents can leak who is asking or show different content to different parties, which Section 4.5 forbids and Section 11.1 explains.
 - Protocol flow implications:
-  - Only 200 OK counts, redirects are not followed, and failures never redirect the user agent back to the client (Section 6.1).
+  - Only 200 OK counts and redirects are not followed (Section 6). When a request fails because the document could not be retrieved or was invalid, the server MUST NOT redirect the user agent back to the client (Section 6.1).
   - A terminal failure from a client_id mismatch SHOULD invalidate outstanding refresh tokens. A transient failure SHOULD NOT invalidate trust or discard cached metadata (Section 6.1).
   - Server metadata advertises support with the client_id_metadata_document_supported boolean (Section 8).
   - Client authentication relies on public keys only, via jwks or jwks_uri, and the JWT guidance points to [RFC8725] and a `typ` of `client-authentication+jwt` from rfc7523bis (Section 5).
@@ -98,7 +99,7 @@ sequenceDiagram
 
 ## Experiments
 
-- [ ] Lab 1: stand up a test authorization server that fetches a CIMD, then serve documents that vary one property each (mismatched client_id, a 301 redirect, a 500, a body over 5 kilobytes, a URL ending in `/`) and record which error each produces against Sections 4, 6 and 6.1.
+- [ ] Lab 1: stand up a test authorization server that fetches a CIMD, then serve documents that vary one property each (mismatched client_id, a 301 redirect, a 500, a body over 5 kilobytes, a URL whose path is only `/`) and record which error each produces against Sections 4, 6 and 6.1.
 - [ ] Lab 2: publish documents with no auth properties, with only token_endpoint_auth_method, with both properties inconsistent, and with `["none", "private_key_jwt"]` plus a jwks_uri. Check the authentication method the server infers and whether a client assertion sent to a none client gets invalid_client (Section 5).
 - [ ] Lab 3: add a document with a logo_uri and a client_uri on another origin, and confirm the server re-serves the logo from its own host, validates the image and does not require same-origin for client_uri (Sections 4.4 and 10.9).
 
