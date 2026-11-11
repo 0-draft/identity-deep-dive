@@ -156,8 +156,12 @@
   }
 
   /* Rendered daily and weekly reports. */
+  /* break-word, not anywhere: it only breaks a token that would overflow, so
+     long identifiers and inline code wrap on a phone without changing the
+     min-content width of tables. */
   .prose-report {
     @apply max-w-none text-[15px] leading-relaxed text-ink;
+    overflow-wrap: break-word;
   }
   .prose-report h1 {
     @apply mt-0 mb-4 text-xl font-semibold;
