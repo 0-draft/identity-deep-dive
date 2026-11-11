@@ -1,16 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-03T01:02:40+00:00",
-      "text": "AppAuth-iOS landed two small commits: a crash fix for JSON-array token/registration responses and a test-oriented refactor of the custom browser user agent. Nothing protocol-level moved.",
-      "text_ja": "AppAuth-iOSに小さなコミットが2件入った。トークン／登録レスポンスがJSON配列の場合のクラッシュ修正と、カスタムブラウザのユーザーエージェントをテストしやすくする変更である。プロトコル面の動きはない。"
-    },
-    {
-      "at": "2026-11-03T23:27:51+00:00",
-      "text": "Nothing substantive in the OpenID track: only commit-title activity in two supporting repositories, publication-checks (tooling) and ssf-wise-profile (spec publishing workflow).",
-      "text_ja": "OpenIDトラックに実質的な変更はない。publication-checks(ツール)とssf-wise-profile(仕様公開ワークフロー)の二つのリポジトリで、コミットタイトルのみの動きがあった。"
-    },
-    {
       "at": "2026-11-04T19:50:05+00:00",
       "text": "Quiet run: openid/dchp took review edits, including making credential_type an array, and federation-entity-collection merged three clarification PRs (#65–#67). Both items are commit lists only, so details are thin.",
       "text_ja": "今回は小規模な動きである。openid/dchp ではレビュー反映が進み、credential_type が配列になった。federation-entity-collection では明確化のPR（#65〜#67）が三件マージされた。どちらもコミット一覧のみで、詳細は限られる。"
@@ -39,26 +29,14 @@
       "at": "2026-11-10T19:47:45+00:00",
       "text": "OpenID4VCI renamed identifiers in its S2S (server-to-server) model (session_id to wallet_id, credential_instance_id to credential_id) and moved all JSON properties to snake_case. The other two repos had only housekeeping or title-only merges.",
       "text_ja": "OpenID4VCIのS2S（サーバー間）モデルで識別子名が変更され（session_idはwallet_idへ、credential_instance_idはcredential_idへ）、JSONプロパティがすべてsnake_caseに統一された。他の二つのリポジトリは管理的な更新、またはタイトルのみのマージだった。"
+    },
+    {
+      "at": "2026-11-11T06:29:05+00:00",
+      "text": "Only one item: two CONTRIBUTING.md-related commits in openid/aauth about meeting notes. Nothing changed in protocol or specification text.",
+      "text_ja": "対象は openid/aauth の会議記録に関するコミット2件のみで、プロトコルや仕様本文の変更はない。"
     }
   ],
   "items": {
-    "repo:openid/AppAuth-iOS:2026-11-02T22:18:54Z": {
-      "diagram": "",
-      "first_seen": "2026-11-03",
-      "headline": "AppAuth-iOS no longer crashes on a JSON-array token or registration response, and gets a testable custom-browser opener.",
-      "headline_ja": "AppAuth-iOSは、トークンまたは登録レスポンスがJSON配列でもクラッシュしなくなり、カスタムブラウザの起動処理もテスト可能になった。",
-      "id": "repo:openid/AppAuth-iOS:2026-11-02T22:18:54Z",
-      "kind": "repo-activity",
-      "related": [],
-      "significance": "routine",
-      "summary": "Two commits landed on the default branch. #988 stops the library crashing when a token or dynamic registration response body is a JSON array instead of an object. #984 adds an injectable URL opener and unit tests for OIDExternalUserAgentIOSCustomBrowser. Only the commit titles are available, so details of the error handling and the opener API are not known.",
-      "summary_ja": "デフォルトブランチに2件のコミットが入った。#988は、トークンまたは動的クライアント登録のレスポンス本文がオブジェクトではなくJSON配列だった場合にライブラリがクラッシュする問題を修正する。#984は、OIDExternalUserAgentIOSCustomBrowserに差し替え可能なURLオープナーとユニットテストを追加する。入手できたのはコミットタイトルのみで、エラー処理やオープナーAPIの詳細は不明である。",
-      "title": "openid/AppAuth-iOS: 2 new commits on the default branch",
-      "updated_at": "2026-11-03T01:02:40+00:00",
-      "url": "https://github.com/openid/AppAuth-iOS",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
     "repo:openid/OpenID4VCI:2026-11-10T19:11:10Z": {
       "diagram": "",
       "first_seen": "2026-11-10",
@@ -95,6 +73,23 @@
       "summary_ja": "三つのコミットで、ワーキンググループ用のリポジトリファイルと会議カレンダーの追加、カレンダーフィードのアドレスのコピーボタンの追加、READMEから購読ページへのリンク化が行われた。いずれも管理的な変更であり、コミットタイトルからはプロトコルの内容は確認できない。",
       "title": "openid/aauth: 3 new commits on the default branch",
       "updated_at": "2026-11-10T19:47:45+00:00",
+      "url": "https://github.com/openid/aauth",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "repo:openid/aauth:2026-11-11T00:52:07Z": {
+      "diagram": "",
+      "first_seen": "2026-11-11",
+      "headline": "openid/aauth trimmed its CONTRIBUTING file and changed how meeting notes are handled.",
+      "headline_ja": "openid/aauth が CONTRIBUTING を簡素化し、会議記録の扱いを変更した。",
+      "id": "repo:openid/aauth:2026-11-11T00:52:07Z",
+      "kind": "repo-activity",
+      "related": [],
+      "significance": "routine",
+      "summary": "Two commits landed on the default branch. One trims CONTRIBUTING to essentials and describes meeting notes taken by an agent. The other drops the condition that OIDF approval is needed for meeting notes. Only commit titles are available, so details are unknown. No specification or protocol content is shown as changed.",
+      "summary_ja": "デフォルトブランチに2件のコミットがあった。1件は CONTRIBUTING を要点のみに絞り、エージェントが取る会議記録について記述するものである。もう1件は会議記録に OIDF の承認が必要という条件を削除するものである。コミットタイトルのみが入手できたため詳細は不明である。仕様やプロトコルの内容が変更された形跡はない。",
+      "title": "openid/aauth: 2 new commits on the default branch",
+      "updated_at": "2026-11-11T06:29:05+00:00",
       "url": "https://github.com/openid/aauth",
       "use_cases": [],
       "use_cases_ja": []
@@ -244,50 +239,10 @@
       "url": "https://github.com/openid/federation-wallet",
       "use_cases": [],
       "use_cases_ja": []
-    },
-    "repo:openid/publication-checks:2026-11-03T18:12:22Z": {
-      "diagram": "",
-      "first_seen": "2026-11-03",
-      "headline": "The OpenID publication checks now accept unnumbered Document History headings in xml2rfc output.",
-      "headline_ja": "OpenIDの公開チェックが、xml2rfc出力の番号なしDocument Historyの見出しを受け付けるようになった。",
-      "id": "repo:openid/publication-checks:2026-11-03T18:12:22Z",
-      "kind": "repo-activity",
-      "related": [],
-      "significance": "routine",
-      "summary": "Three commits landed: a change titled \"Accept unnumbered xml2rfc Document History headings\" (merged as PR #17) and a merge of PR #16 named \"add-dchp-workgroup\". Only commit titles are available, so the exact checks changed are not visible. This is publication tooling and does not touch any protocol.",
-      "summary_ja": "3件のコミットがあり、「Accept unnumbered xml2rfc Document History headings」(PR #17としてマージ)と、「add-dchp-workgroup」という名のPR #16のマージが含まれる。入手できたのはコミットタイトルのみで、変更された具体的なチェック内容は分からない。これは公開ツールの変更であり、プロトコルには影響しない。",
-      "title": "openid/publication-checks: 3 new commits on the default branch",
-      "updated_at": "2026-11-03T23:27:51+00:00",
-      "url": "https://github.com/openid/publication-checks",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
-    "repo:openid/ssf-wise-profile:2026-11-03T16:27:47Z": {
-      "diagram": "",
-      "first_seen": "2026-11-03",
-      "headline": "The ssf-wise-profile repository reworked its spec publishing workflow and added a notice to the standard.",
-      "headline_ja": "ssf-wise-profileリポジトリが仕様公開用ワークフローを見直し、標準文書に通知文を追加した。",
-      "id": "repo:openid/ssf-wise-profile:2026-11-03T16:27:47Z",
-      "kind": "repo-activity",
-      "related": [],
-      "significance": "routine",
-      "summary": "Five commits: a refactor of the GitHub Actions workflow for publishing specs, a build change that also creates a branch and documents, a notice added to the standard and later changed to unnumbered, and a header adjustment. Only commit titles are available, so the notice's content and any normative change cannot be determined. It looks like publication housekeeping.",
-      "summary_ja": "5件のコミットがあり、仕様公開用GitHub Actionsワークフローのリファクタリング、ブランチとドキュメントも作成するビルド変更、標準文書への通知文の追加(のちに番号なしへ変更)、ヘッダーの調整が含まれる。入手できたのはコミットタイトルのみで、通知文の内容や規範的な変更の有無は判断できない。公開作業に関する整備とみられる。",
-      "title": "openid/ssf-wise-profile: 5 new commits on the default branch",
-      "updated_at": "2026-11-03T23:27:51+00:00",
-      "url": "https://github.com/openid/ssf-wise-profile",
-      "use_cases": [],
-      "use_cases_ja": []
     }
   },
   "overflow": [],
   "triage": {
-    "openid/AppAuth-iOS": {
-      "date": "2026-11-03",
-      "priority": "low",
-      "reason": "Only a robustness fix and a test refactor landed; no protocol or API change visible from commit titles.",
-      "reason_ja": "入ったのは堅牢性の修正とテスト用リファクタリングのみで、コミットタイトルからはプロトコルやAPIの変更は見えない。"
-    },
     "openid/OpenID4VCI": {
       "date": "2026-11-10",
       "priority": "high",
