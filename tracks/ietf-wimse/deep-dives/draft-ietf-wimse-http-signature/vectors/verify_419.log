@@ -1,0 +1,155 @@
+=== 0. key material self-consistency
+  issuer: d -> x matches published public key: True
+  svcA: d -> x matches published public key: True
+  svcB: d -> x matches published public key: True
+  svcC: d -> x/y matches published public key: True
+  other: d -> x matches published public key: True
+  derivation issuer: SHA-256('s01-validation-vectors:issuer') == d: True
+  derivation svcA: SHA-256('s01-validation-vectors:svcA') == d: True
+  derivation svcB: SHA-256('s01-validation-vectors:svcB') == d: True
+  derivation other: SHA-256('s01-validation-vectors:other') == d: True
+  derivation svcC: SHA-256('s01-validation-vectors:svcC') mod (n-1)+1 == d: True
+  WIT-A: errs=[] sub=wimse://example.com/svcA cnf.kid=vec-a-key exp-T0=3600 iat-T0=-60
+  WIT-B: errs=[] sub=wimse://example.com/svcB cnf.kid=vec-b-key exp-T0=3600 iat-T0=-60
+  WIT-C: errs=[] sub=wimse://example.com/svcC cnf.kid=vec-c-key exp-T0=3600 iat-T0=-60
+
+=== 1. reproduce published signatures byte-for-byte with my base construction + the published private keys
+  P-01: regenerated == published: True
+  P-03: regenerated == published: True
+  P-04: regenerated == published: True
+  P-05: regenerated == published: True
+  P-06-sig2: regenerated == published: True
+  P-06-sig1: regenerated == published: True
+  P-02: regenerated == published: True
+  N-15 (ES256, RFC 6979 via cryptography deterministic_signing): regenerated == published: True
+  P-01 signature base as I build it:
+    | "@method": GET
+    | "@path": /gimme-ice-cream
+    | "@query": ?flavor=vanilla
+    | "workload-identity-token": eyJhbGciOiJFZDI1NTE5Iiwia2lkIjoiaXNzdWVyLWtleSIsInR5cCI6IndpdCt...
+    | "@signature-params": ("@method" "@path" "@query" "workload-identity-token");created=179500...
+
+=== 2. stale (issue-body) values: check the 2026-11-07 comment's claim
+  P-01: stale/corrected-base=False stale/no-?-base=True new/corrected-base=True new/no-?-base=False
+  P-06-sig2: stale/corrected-base=False stale/no-?-base=True new/corrected-base=True new/no-?-base=False
+  P-02: stale/corrected-base=False stale/no-?-base=True new/corrected-base=True
+  N-15 under svcC key: stale/corrected-base=False stale/no-?-base=True new/corrected-base=True
+
+=== 3. positive vectors (verification time T0+60)
+[P-01] expected=accept got=accept MATCH
+[P-03] expected=accept got=accept MATCH
+[P-04] expected=accept got=accept MATCH
+[P-05] expected=accept got=accept MATCH
+[P-06] expected=accept got=accept MATCH
+[P-02] expected=accept got=accept MATCH
+    note: client-side check, wimse-req-nonce bound to P-01 nonce
+  (P-06 decoy sig1 carries keyid; irrelevant because it is not the tagged signature; accept=True)
+  (P-06 decoy sig1 verifies under other-key: True)
+
+=== 4. negative vectors
+[N-01] expected=reject got=reject MATCH
+    - required component @query not covered (S3)
+    note: re-signed variant; signature itself is valid
+    with sender-coverage MUSTs not enforced on receive: accept=True []
+    N-02 base @path value: "@path": /
+[N-02] expected=reject got=reject MATCH
+    - CONNECT request covers @path (S3 MUST NOT)
+    note: re-signed variant
+    with sender-coverage MUSTs not enforced on receive: accept=True []
+[N-03] expected=reject got=reject MATCH
+    - body present but Content-Digest absent (S3 / RFC 9530)
+    note: re-signed variant
+[N-04] expected=reject got=reject MATCH
+    - Content-Digest sha-256 mismatch with received body
+    note: issue says this 'also makes the signature fail' - see whether the signature failure appears above
+[N-05] expected=reject got=reject MATCH
+    - required param expires missing (S3)
+    - no expires -> validity window undefined
+    note: re-signed variant
+    not re-signed variant: accept=False ['HTTP signature invalid under cnf.jwk (Ed25519) (S3.1)', 'required param expires missing (S3)', 'no expires -> validity window undefined']
+[N-06] expected=reject got=reject MATCH
+    - forbidden param keyid present (S3 'MUST NOT be used'; S3.1 for alg)
+    note: re-signed; crypto-valid
+    verifier that does not reject keyid on receive: accept=True []
+[N-07] expected=reject got=reject MATCH
+    - forbidden param alg present (S3 'MUST NOT be used'; S3.1 for alg)
+    note: re-signed; crypto-valid
+    verifier that does not reject alg on receive: accept=True []
+[N-08] expected=reject got=reject MATCH
+    - 2 signatures carry the WIMSE tag -> MUST reject (S3)
+[N-09] expected=reject got=reject MATCH
+    - WIT expired (exp=1795003600, now=1795003600)
+    - outside validity window (expires=1795000300, now=1795003600) (S3)
+    note: WIT-A exp == T0+3600, so the WIT exp check also trips at this instant
+    control at T0+301 (sig window only): accept=False ['outside validity window (expires=1795000300, now=1795000301) (S3)']
+[N-10] expected=reject got=reject MATCH
+    - wimse-aud 'https://svcb.example.com/gimme-ice-cream/' not in trusted config (S3.2 simple string comparison)
+    note: re-signed
+[N-11] expected=reject got=reject MATCH
+    - request lacks wimse-aud (S3, S3.2)
+    note: re-signed
+[N-12] expected=reject got=reject MATCH
+    - response lacks wimse-req-nonce (S3, S3.4/3.5)
+    - wimse-req-nonce None != request nonce (S3.5)
+    note: re-signed response
+[N-13] expected=reject got=reject MATCH
+    - wimse-req-nonce '00000000000000000000000000000000' != request nonce (S3.5)
+    note: re-signed response
+[N-14] expected=reject got=reject MATCH
+    - unsigned response but request had wimse-sign-response=?1 (S3.5 client MUST reject)
+[N-15] expected=reject got=reject MATCH
+    - HTTP signature invalid under cnf.jwk (Ed25519) (S3.1)
+    note: published sig valid under svcC ES256 key: True
+[N-16] harness: 1000 nonces from a 32-bit (8-hex) generator -> max representable entropy 32 bits < 64 -> sender NOT conformant
+    lint applied to the vector nonces: P-01=128b, N-15=128b
+    lint applied to draft -08 Figure 2/4/6/7 nonces abcd1111..abcd4444 -> 32 bits (O-2)
+[N-17] probe: WIT-expired request -> accept=False causes=['WIT expired (exp=1795000030, now=1795000060)']; bad-signature request -> accept=False causes=['HTTP signature invalid under cnf.jwk (Ed25519) (S3.1)']
+    error surface emitted: (400, 'https://iana.org/assignments/http-problem-types#wimse-signature-invalid') vs (400, 'https://iana.org/assignments/http-problem-types#wimse-signature-invalid') -> identical=True
+    (server conformance can only be judged against a real server; a server that returns these causes in the body or 401 is non-conformant by S3.6)
+[N-18] checker: 200 unsigned after wimse-sign-response -> conformant=False; 501 when unsupported -> True; 400 when supported-but-unavailable -> True; 400 when unsupported -> False
+[N-19] Accept-Signature sig1=("@status");tag="wimse-workload-to-workload" covers required response set: False -> sender NOT conformant
+[N-20] probe: expired WIT + valid HTTP sig -> accept=False causes=['WIT expired (exp=1795000030, now=1795000060)']
+    (ordering 'WIT before signature, nothing processed before full validation' is an implementation property; this verifier validates the WIT first)
+    N-21 control (CONNECT response with @method;req @authority;req): accept=True []
+[N-21] expected=reject got=reject MATCH
+    - CONNECT response covers @path;req (S3 MUST NOT)
+    note: constructed (issue gives no literal values); re-signed
+    with sender-coverage MUSTs not enforced on receive: accept=True []
+[N-22] P-06 by tag: accept=True []; by first label (strawman): accept=False ['HTTP signature invalid under cnf.jwk (Ed25519) (S3.1)', 'required param expires missing (S3)', 'required param nonce missing (S3)', 'request lacks wimse-aud (S3, S3.2)', "forbidden param keyid present (S3 'MUST NOT be used'; S3.1 for alg)", 'required component @query not covered (S3)', 'present header workload-identity-token not covered (S3)', 'no expires -> validity window undefined']
+
+=== 5. sanity: draft -08 Section 3.7 examples (HTTP signature only; draft issuer key not published)
+  Fig2 request: HTTP signature verifies under cnf.jwk (Ed25519): True; digest errs=[]
+  Fig4 response: HTTP signature verifies under cnf.jwk (Ed25519): True; digest errs=[]
+  Fig6 request b-c: HTTP signature verifies under cnf.jwk (Ed25519): True; digest errs=[]
+  Fig7 response c: HTTP signature verifies under cnf.jwk (ES256): True; digest errs=[]
+
+=== summary
+ID     expected                   got                                      match
+P-01   accept                     accept                                   yes
+P-03   accept                     accept                                   yes
+P-04   accept                     accept                                   yes
+P-05   accept                     accept                                   yes
+P-06   accept                     accept                                   yes
+P-02   accept                     accept                                   yes
+N-01   reject                     reject                                   yes
+N-02   reject                     reject                                   yes
+N-03   reject                     reject                                   yes
+N-04   reject                     reject                                   yes
+N-05   reject                     reject                                   yes
+N-06   reject                     reject                                   yes
+N-07   reject                     reject                                   yes
+N-08   reject                     reject                                   yes
+N-09   reject                     reject                                   yes
+N-10   reject                     reject                                   yes
+N-11   reject                     reject                                   yes
+N-12   reject                     reject                                   yes
+N-13   reject                     reject                                   yes
+N-14   reject                     reject                                   yes
+N-15   reject                     reject                                   yes
+N-16   sender not conformant      sender not conformant (harness)          yes
+N-17   server not conformant      n/a (server behaviour)                   n/a
+N-18   server not conformant      server not conformant (checker)          yes
+N-19   sender not conformant      sender not conformant (checker)          yes
+N-20   verifier not conformant    probe rejected (my verifier)             n/a
+N-21   reject                     reject                                   yes
+N-22   verifier not conformant    label-picker diverges from tag-picker    yes
