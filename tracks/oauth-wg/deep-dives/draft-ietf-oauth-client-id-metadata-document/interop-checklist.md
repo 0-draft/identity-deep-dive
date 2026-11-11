@@ -16,7 +16,7 @@
 - [ ] A private_key_jwt document without jwks or jwks_uri is rejected with invalid_client, and the `["none", "private_key_jwt"]` case is tested to see how the requirement is read (Section 5).
 - [ ] Client assertions carry a `typ` header, recommended value `client-authentication+jwt` (SHOULD), the server validates it (SHOULD), and the server implements an algorithm allowlist (MUST) (Section 5).
 - [ ] An empty grant_types or response_types intersection yields invalid_client, and the server documents how it treats a document that omits these fields, since the draft does not say whether the RFC 7591 defaults apply (Section 6).
-- [ ] A transient fetch failure leaves cached metadata and refresh tokens alone (SHOULD NOT invalidate). At the token and PAR endpoints a failure returns invalid_client, or HTTP 503 for a transient failure (MUST). A terminal client_id mismatch invalidates refresh tokens (SHOULD). In every case the user agent is not redirected to the client (MUST NOT) (Section 6.1).
+- [ ] A transient fetch failure leaves cached metadata and refresh tokens alone (SHOULD NOT invalidate). At the token and PAR endpoints a failure returns invalid_client, or HTTP 503 for a transient failure (MUST). A terminal client_id mismatch invalidates refresh tokens immediately (SHOULD). In every case the user agent is not redirected to the client (MUST NOT) (Section 6.1).
 - [ ] Error responses and malformed documents are never cached, and a maximum effective cache duration applies whatever the headers say (Section 6.2).
 - [ ] The authorization response includes iss and the client checks it (Section 7).
 - [ ] Server metadata publishes client_id_metadata_document_supported, and a client checks it before redirecting the user (Section 8).

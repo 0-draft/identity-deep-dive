@@ -78,7 +78,7 @@ sequenceDiagram
   - Request-dependent documents can leak who is asking or show different content to different parties, which Section 4.5 forbids and Section 11.1 explains.
 - Protocol flow implications:
   - Only 200 OK counts and redirects are not followed (Section 6). When a request fails because the document could not be retrieved or was invalid, the server MUST NOT redirect the user agent back to the client (Section 6.1).
-  - A terminal failure from a client_id mismatch SHOULD invalidate outstanding refresh tokens. A transient failure SHOULD NOT invalidate trust or discard cached metadata (Section 6.1).
+  - A terminal failure from a client_id mismatch SHOULD invalidate outstanding refresh tokens immediately. A transient failure SHOULD NOT invalidate trust or discard cached metadata (Section 6.1).
   - Server metadata advertises support with the client_id_metadata_document_supported boolean (Section 8).
   - Client authentication relies on public keys only, via jwks or jwks_uri, and the JWT guidance points to [RFC8725] and a `typ` of `client-authentication+jwt` from rfc7523bis (Section 5).
 - Interop concerns:

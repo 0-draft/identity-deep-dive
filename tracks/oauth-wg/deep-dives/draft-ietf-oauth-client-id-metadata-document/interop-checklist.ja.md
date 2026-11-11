@@ -16,7 +16,7 @@
 - [ ] jwks も jwks_uri もない private_key_jwt の文書は invalid_client で拒否される。また、`["none", "private_key_jwt"]` の場合にこの要件がどう解釈されるかを試験する（Section 5）。
 - [ ] クライアントアサーションは `typ` ヘッダーを持ち、その推奨値は `client-authentication+jwt` である（SHOULD）。サーバーはそれを検証し（SHOULD）、アルゴリズムの許可リストを実装する（MUST）（Section 5）。
 - [ ] grant_types または response_types の共通部分が空の場合は invalid_client となる。ドラフトは RFC 7591 の既定値が適用されるかを述べていないため、これらのフィールドを省略した文書の扱いをサーバー側で文書化している（Section 6）。
-- [ ] 一時的な取得失敗では、キャッシュ済みメタデータとリフレッシュトークンを無効にしない（SHOULD NOT）。トークンエンドポイントと PAR エンドポイントでは、失敗時に invalid_client を、一時的な失敗なら HTTP 503 を返す（MUST）。恒久的な失敗のうち client_id の不一致によるものでは、リフレッシュトークンを失効させる（SHOULD）。いずれの場合もユーザーエージェントをクライアントへリダイレクトしない（MUST NOT）（Section 6.1）。
+- [ ] 一時的な取得失敗では、キャッシュ済みメタデータとリフレッシュトークンを無効にしない（SHOULD NOT）。トークンエンドポイントと PAR エンドポイントでは、失敗時に invalid_client を、一時的な失敗なら HTTP 503 を返す（MUST）。恒久的な失敗のうち client_id の不一致によるものでは、リフレッシュトークンを直ちに失効させる（SHOULD）。いずれの場合もユーザーエージェントをクライアントへリダイレクトしない（MUST NOT）（Section 6.1）。
 - [ ] エラー応答と不正な文書はキャッシュされず、ヘッダーの内容にかかわらず実効的なキャッシュ期間の最大値が適用される（Section 6.2）。
 - [ ] 認可レスポンスに iss が含まれ、クライアントがそれを検証する（Section 7）。
 - [ ] サーバーメタデータが client_id_metadata_document_supported を公開し、クライアントはユーザーをリダイレクトする前にそれを確認する（Section 8）。
