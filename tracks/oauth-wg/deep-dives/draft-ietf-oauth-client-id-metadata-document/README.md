@@ -38,7 +38,7 @@ sequenceDiagram
 
 ## Use cases
 
-- A Model Context Protocol-style or similar client talks to many authorization servers it has never met, and publishes one metadata document instead of registering at each. The draft does not mention MCP, so this is only an example of the pattern in Section 1.
+- A client with a stable public web presence talks to many authorization servers it has no prior relationship with, and publishes one metadata document instead of registering at each (Section 1).
 - An enterprise identity provider pre-registers a Client Identifier URL to onboard a specific client, fetching the document at registration time and setting up client authentication (Section 9.2).
 - An authorization server that supports both CIMD clients and clients it registered itself keeps its generated client_id values from starting with `https://` (Section 9.1).
 - A developer works on localhost against an authorization server that restricts redirect_uris, and uses a CIMD Service that provisions a stable Client Identifier URL (Section 10.13, Appendix A).
@@ -46,8 +46,8 @@ sequenceDiagram
 
 ## Why This Matters Now
 
-- **Trigger**: 11 issues closed and a new response_types issue (#131) this week, with PRs adding a Client Authentication section (from `subject.json`). The issue and PR details are not in the staged material.
-- **Source evidence**: Revision 03 is dated 2 November 2026. It moves Client Authentication out of Security Considerations into a new, expanded Section 5, and adds error handling for failed fetches (Section 6.1), the grant_types and response_types intersection rule (Section 6), a mandatory iss parameter (Section 7) and several new security considerations (Section 10). The mail thread on the -03 announcement already proposes further changes.
+- **Trigger**: on 2 November 2026, the day -03 was posted, 11 issues were closed in the draft's GitHub repository and PR #99 "Add Client Authentication section" was merged. On 8 November, issue #131 was opened: it argues that the response_types intersection rule in Section 6 rejects clients that only use token-endpoint grants such as client credentials. The issue is open with no replies yet.
+- **Source evidence**: Revision 03 is dated 2 November 2026. It moves Client Authentication out of Security Considerations into a new, expanded Section 5, and adds error handling for failed fetches (Section 6.1), the grant_types and response_types intersection rule (Section 6), a mandatory iss parameter (Section 7) and several new security considerations (Section 10). The only reply so far to the -03 announcement on the OAuth list (9 November 2026) proposes further changes.
 - **Expected impact**: Implementers of authorization servers that accept URL client_ids need to revisit authentication defaults, fetch and cache behaviour, error responses and logo handling. Clients need to normalize their URLs and keep their documents stable and free of request-dependent content.
 
 ## What Changed
@@ -89,12 +89,12 @@ sequenceDiagram
 
 ## Open Questions
 
-- Section 5 says the document MUST include jwks or jwks_uri and that the authorization request must return invalid_client otherwise. It sits in the JWT-based authentication paragraph, and the revision history says the requirement applies when using private_key_jwt. Whether it applies to a document that lists `["none", "private_key_jwt"]` is not explicit, although the Section 5.1 example includes a jwks_uri.
+- Section 5 says the document MUST include jwks or jwks_uri and that the authorization request must return invalid_client otherwise. It sits in the paragraph on JWT-based authentication methods, and the revision history says the requirement applies "when using private_key_jwt". The text was proposed in a review comment on PR #99 (28 October 2026) as "When using `private_key_jwt` for client auth", to close issue #100, which asked about a document declaring private_key_jwt without keys. Whether "using" covers a document that lists `["none", "private_key_jwt"]` and is then used as a public client is not stated, although the Section 5.1 examples always include a jwks_uri.
 - Section 5 carries an editorial note that invalid_client at the authorization endpoint lacks supporting text in the underlying specification (OAuth 2.1 issue 266). The error mapping is therefore unsettled.
-- Section 6 requires rejecting when the grant_types or response_types intersection is empty, but does not say what applies when the document omits these fields. This is not stated and should be confirmed.
-- Section 6.1 says the server SHOULD abort when a fetch fails, then later says it MUST return invalid_client or 503 at the token and pushed authorization request endpoints. How these two statements fit together for the authorization endpoint is not spelled out.
-- Section 8 calls client_id_metadata_document_supported OPTIONAL while saying servers that publish metadata MUST include it. The mail thread also notes it cannot express "supported only for pre-registered URLs" and proposes a client_id_metadata_document_registration_types_supported list (Section 9.2, mail).
-- The mail thread proposes a pre-fetch validation step in Section 6 and changing the query component from SHOULD NOT to MUST NOT (Section 3). These are proposals from one participant, not WG consensus.
+- Section 6 requires rejecting when the grant_types or response_types intersection is empty, but does not say what applies when the document omits these fields. RFC 7591 Section 2 defaults an omitted grant_types to `authorization_code` and an omitted response_types to `code`. Section 5 explicitly sets aside the RFC 7591 default for token_endpoint_auth_method, but Section 6 says nothing either way about these two. Issue #131 assumes the RFC 7591 default applies and shows that the rule then rejects token-endpoint-only clients at servers without an authorization endpoint. The working group has not responded yet.
+- Section 6.1 makes aborting the authorization request a SHOULD when the fetch fails, and Section 10.6 anticipates a consent screen where the fetch failed and only the client_id URL is shown. When a request does fail because the document could not be retrieved or was invalid, the server MUST NOT redirect the user agent to the client and SHOULD inform the user. The MUST to return invalid_client, or HTTP 503 for a transient failure, covers only the token and pushed authorization request endpoints. This matches issue #85, which asked that the authorization endpoint not redirect back to the client and that the token and PAR endpoints return a defined error. The two sentences therefore do not conflict.
+- Section 8 calls client_id_metadata_document_supported OPTIONAL while saying servers that publish metadata MUST include it. A reply on the OAuth list also notes that the boolean cannot express "supported only for pre-registered URLs" and proposes a client_id_metadata_document_registration_types_supported list (Section 9.2).
+- The same reply proposes a pre-fetch validation step in Section 6 and changing the query component from SHOULD NOT to MUST NOT (Section 3). It follows up on issue #112, which is still open. These proposals come from one participant: as of 11 November 2026 the thread has no other replies, so working group support is not shown.
 - Section 6.2 leaves the maximum and minimum effective cache durations to the server without recommended values.
 
 ## Experiments
@@ -106,5 +106,12 @@ sequenceDiagram
 ## Sources
 
 - <https://datatracker.ietf.org/doc/draft-ietf-oauth-client-id-metadata-document/03/>
+- <https://www.ietf.org/archive/id/draft-ietf-oauth-client-id-metadata-document-03.txt>
+- <https://author-tools.ietf.org/iddiff?url1=draft-ietf-oauth-client-id-metadata-document-02&url2=draft-ietf-oauth-client-id-metadata-document-03>
 - <https://mailarchive.ietf.org/arch/msg/oauth/VGYXFHqx9gft63TPdmVtAUaYkLU/>
+- <https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pull/99>
+- <https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/85>
+- <https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/100>
 - <https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/112>
+- <https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/131>
+- <https://www.rfc-editor.org/rfc/rfc7591#section-2>

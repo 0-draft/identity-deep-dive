@@ -38,7 +38,7 @@ sequenceDiagram
 
 ## ユースケース
 
-- Model Context Protocol のように、未知の多数の認可サーバーと通信するクライアントが、各所に登録する代わりに 1 つのメタデータ文書を公開する。ドラフトは MCP に言及していないため、これは Section 1 のパターンの一例にすぎない。
+- 安定した公開 Web サイトを持つクライアントが、事前の関係がない多数の認可サーバーと通信する際に、各所に登録する代わりに 1 つのメタデータ文書を公開する（Section 1）。
 - 企業の ID プロバイダーが特定のクライアントを受け入れるため Client Identifier URL を事前登録し、登録時に文書を取得してクライアント認証を設定する（Section 9.2）。
 - CIMD のクライアントと自身が登録したクライアントの両方に対応する認可サーバーが、自ら生成する client_id を `https://` で始まらないようにする（Section 9.1）。
 - 開発者が localhost 上で、redirect_uris を制限する認可サーバーに対して開発し、安定した Client Identifier URL を発行する CIMD Service を使う（Section 10.13、Appendix A）。
@@ -46,8 +46,8 @@ sequenceDiagram
 
 ## なぜ今重要か
 
-- **きっかけ**: 今週 11 件の issue がクローズされ、response_types に関する新しい issue（#131）が立てられた。Client Authentication の節を加える PR もある（`subject.json` による）。issue と PR の詳細は用意された資料に含まれていない。
-- **資料上の根拠**: リビジョン 03 は 2026 年 11 月 2 日付である。Client Authentication はセキュリティ上の考慮事項から独立した Section 5 に移り、内容も拡充された。あわせて、取得失敗時のエラー処理（Section 6.1）、grant_types と response_types の共通部分の規則（Section 6）、iss パラメーターの必須化（Section 7）、複数の新しいセキュリティ上の考慮事項（Section 10）が加わった。-03 の公開通知に対するメールスレッドでも、さらなる変更が提案されている。
+- **きっかけ**: -03 が公開された 2026 年 11 月 2 日に、ドラフトの GitHub リポジトリで 11 件の issue がクローズされ、PR #99「Add Client Authentication section」がマージされた。11 月 8 日には issue #131 が立てられた。この issue は、Section 6 の response_types の共通部分の規則により、クライアントクレデンシャルのようなトークンエンドポイントだけを使うグラントのクライアントが拒否されると指摘している。issue はまだオープンで、返信もない。
+- **資料上の根拠**: リビジョン 03 は 2026 年 11 月 2 日付である。Client Authentication はセキュリティ上の考慮事項から独立した Section 5 に移り、内容も拡充された。あわせて、取得失敗時のエラー処理（Section 6.1）、grant_types と response_types の共通部分の規則（Section 6）、iss パラメーターの必須化（Section 7）、複数の新しいセキュリティ上の考慮事項（Section 10）が加わった。OAuth のメーリングリストでは、-03 の公開通知に対する現時点で唯一の返信（2026 年 11 月 9 日）が、さらなる変更を提案している。
 - **期待される影響**: URL 形式の client_id を受け入れる認可サーバーの実装者は、認証のデフォルト、取得とキャッシュの挙動、エラー応答、ロゴの扱いを見直す必要がある。クライアントは URL を正規化し、文書を安定させ、リクエストに依存する内容を含めないようにする必要がある。
 
 ## 変更点
@@ -89,12 +89,12 @@ sequenceDiagram
 
 ## 未解決の論点
 
-- Section 5 は、文書が jwks または jwks_uri を含まなければならず、含まない場合は認可リクエストが invalid_client を返すと述べている。この文は JWT ベースの認証の段落にあり、改版履歴では private_key_jwt 使用時の要件とされている。`["none", "private_key_jwt"]` を宣言する文書にも適用されるかは明示されていないが、Section 5.1 の例には jwks_uri が含まれている。
+- Section 5 は、文書が jwks または jwks_uri を含まなければならず、含まない場合は認可リクエストが invalid_client を返すと述べている。この文は JWT ベースの認証方式の段落にあり、改版履歴では private_key_jwt を使う場合の要件とされている。この文は、鍵を持たずに private_key_jwt を宣言した文書の扱いを問う issue #100 を解決するため、PR #99 のレビューコメント（2026 年 10 月 28 日）で「When using `private_key_jwt` for client auth」という形で提案されたものである。`["none", "private_key_jwt"]` を宣言し、実際にはパブリッククライアントとして使われる文書も「使う場合」に含まれるかは書かれていない。ただし、Section 5.1 の例にはいずれも jwks_uri が含まれている。
 - Section 5 には、認可エンドポイントでの invalid_client を裏付ける文が基となる仕様にない（OAuth 2.1 の issue 266）という編集上の注記がある。そのためエラーの対応付けは未確定である。
-- Section 6 は、grant_types または response_types の共通部分が空なら拒否するとしているが、文書がこれらを省略した場合の扱いは述べていない。この点は記載がなく、確認が必要である。
-- Section 6.1 は、取得に失敗した場合サーバーは中止することが推奨される（SHOULD）としつつ、後段でトークンエンドポイントとプッシュ型認可リクエストのエンドポイントでは invalid_client または 503 を返さなければならない（MUST）としている。認可エンドポイントでこの 2 つがどう両立するかは書かれていない。
-- Section 8 は client_id_metadata_document_supported を OPTIONAL としながら、メタデータを公開するサーバーはこれを含めなければならない（MUST）としている。メールスレッドは、この真偽値では「事前登録済みの URL のみ対応」を表せないことも指摘し、client_id_metadata_document_registration_types_supported というリストを提案している（Section 9.2、メール）。
-- メールスレッドは、Section 6 に取得前の検証手順を設けることと、クエリ成分を SHOULD NOT から MUST NOT に改めること（Section 3）を提案している。これは一参加者の提案であり、ワーキンググループの合意ではない。
+- Section 6 は、grant_types または response_types の共通部分が空なら拒否するとしているが、文書がこれらを省略した場合の扱いは述べていない。RFC 7591 の Section 2 では、grant_types を省略すると `authorization_code`、response_types を省略すると `code` が既定値になる。Section 5 は token_endpoint_auth_method について RFC 7591 の既定値を明示的に退けているが、Section 6 はこの 2 つについて何も述べていない。issue #131 は RFC 7591 の既定値が適用されると見なしたうえで、その場合この規則が、認可エンドポイントを持たないサーバーでトークンエンドポイントだけを使うクライアントを拒否してしまうことを示している。ワーキンググループはまだ応答していない。
+- Section 6.1 は、取得に失敗した場合に認可リクエストを中止することを SHOULD としており、Section 10.6 も取得に失敗して client_id の URL しか表示できない同意画面を想定している。文書を取得できない、または文書が不正であるためにリクエストが失敗した場合、サーバーはユーザーエージェントをクライアントへリダイレクトしてはならず（MUST NOT）、ユーザーにエラーを知らせることが推奨される（SHOULD）。invalid_client、または一時的な失敗であれば HTTP 503 を返さなければならない（MUST）のは、トークンエンドポイントとプッシュ型認可リクエストのエンドポイントだけである。これは、認可エンドポイントではクライアントへリダイレクトせず、トークンエンドポイントと PAR エンドポイントでは定められたエラーを返すよう求めた issue #85 と一致する。したがって、2 つの文は矛盾していない。
+- Section 8 は client_id_metadata_document_supported を OPTIONAL としながら、メタデータを公開するサーバーはこれを含めなければならない（MUST）としている。OAuth のメーリングリストへの返信は、この真偽値では「事前登録済みの URL のみ対応」を表せないことも指摘し、client_id_metadata_document_registration_types_supported というリストを提案している（Section 9.2）。
+- 同じ返信は、Section 6 に取得前の検証手順を設けることと、クエリ成分を SHOULD NOT から MUST NOT に改めること（Section 3）も提案している。これはまだオープンの issue #112 を受けたものである。いずれも一参加者の提案であり、2026 年 11 月 11 日時点でスレッドにほかの返信はないため、ワーキンググループの支持は確認できない。
 - Section 6.2 は、実効的なキャッシュ期間の最大値と最小値をサーバーに委ねており、推奨値を示していない。
 
 ## 実験
@@ -106,5 +106,12 @@ sequenceDiagram
 ## 出典
 
 - <https://datatracker.ietf.org/doc/draft-ietf-oauth-client-id-metadata-document/03/>
+- <https://www.ietf.org/archive/id/draft-ietf-oauth-client-id-metadata-document-03.txt>
+- <https://author-tools.ietf.org/iddiff?url1=draft-ietf-oauth-client-id-metadata-document-02&url2=draft-ietf-oauth-client-id-metadata-document-03>
 - <https://mailarchive.ietf.org/arch/msg/oauth/VGYXFHqx9gft63TPdmVtAUaYkLU/>
+- <https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pull/99>
+- <https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/85>
+- <https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/100>
 - <https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/112>
+- <https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/issues/131>
+- <https://www.rfc-editor.org/rfc/rfc7591#section-2>
