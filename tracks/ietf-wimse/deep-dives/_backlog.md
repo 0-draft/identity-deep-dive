@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-10T19:45:59+00:00
+Generated at: 2026-11-11T06:27:58+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -34,7 +34,6 @@ Moved by this week's material. candidates.json and the site list raised candidat
 - **high** `Diff active WG draft: draft-ietf-wimse-workload-creds-03`: Active issues on editorial comments (#418), coexistence reconciliation (#414) and overlapping trust roots (#370).
 - **high** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: The del_max_depth meaning versus AAT is being reconciled before IETF 127.
 - **high** `Review related draft: draft-hulea-wimse-agent-mandate-01`: A list comment identifies a concrete under-counting gap in Section 9.5 that bypasses sum_max.
-- **high** `Review related draft: draft-reddy-wimse-aggregate-signatures-01`: Named on the list as the mechanism for per-hop provenance in delegation chains, with a second draft planning to cite it.
 - **high** `Review related draft: draft-sweeney-wimse-credential-delegation-02`: Cred-02 Sections 5.5 and 7 are being compared with AAT on depth and revocation.
 - **low** `Diff active WG draft: draft-ietf-wimse-identifier-04`: The only review comment is a one-phrase terminology nit.
 
