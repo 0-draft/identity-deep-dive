@@ -30,7 +30,7 @@ sequenceDiagram
 1. The client sends the user to the authorization server with the Client Identifier URL as client_id. The URL must be https, have a path other than `/`, and carry no userinfo, dot segments or fragment (Section 3).
 2. The authorization server SHOULD fetch the document automatically, SHOULD send `Accept: application/json`, MUST accept only 200 OK, and MUST NOT follow redirects (Section 6).
 3. The server checks that the document's client_id equals the URL by simple string comparison (Section 4), and that the redirect URI exactly matches a registered one, with a loopback exception for ports (Section 4.2).
-4. The server intersects the document's grant_types and response_types with what it supports, and rejects with invalid_client if either intersection is empty (Section 6).
+4. The server MUST intersect the document's grant_types and response_types with what it supports, and MUST reject with invalid_client if either intersection is empty (Section 6).
 5. The server determines the client authentication method. If neither token_endpoint_auth_method nor token_endpoint_auth_methods_supported is present, it MUST assume none (Section 5).
 6. The server SHOULD show the client_id hostname on the consent screen, and it MUST prefetch and re-serve any logo it displays (Sections 10.6 and 10.9).
 7. The authorization response MUST include iss (Section 7).

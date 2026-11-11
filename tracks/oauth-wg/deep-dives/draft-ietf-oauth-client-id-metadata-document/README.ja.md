@@ -30,7 +30,7 @@ sequenceDiagram
 1. クライアントは、Client Identifier URL を client_id としてユーザーを認可サーバーへ送る。URL は https でなければならず、`/` 以外のパスを持ち、userinfo、ドットセグメント、フラグメントを含んではならない（Section 3）。
 2. 認可サーバーは文書を自動的に取得することが推奨される（SHOULD）。`Accept: application/json` を送ることが推奨され（SHOULD）、200 OK のみを受け入れなければならず（MUST）、リダイレクトを追従してはならない（MUST NOT）（Section 6）。
 3. サーバーは、文書の client_id が URL と単純な文字列比較で一致することを確認する（Section 4）。また、リダイレクト URI が登録済みのものと完全一致することも確認する。ただしポート番号についてはループバックの例外がある（Section 4.2）。
-4. サーバーは、文書の grant_types と response_types を自身が対応するものと突き合わせて共通部分を求め、どちらかが空であれば invalid_client で拒否する（Section 6）。
+4. サーバーは、文書の grant_types と response_types を自身が対応するものと突き合わせて共通部分を求めなければならず（MUST）、どちらかが空であれば invalid_client で拒否しなければならない（MUST）（Section 6）。
 5. サーバーはクライアント認証方式を決定する。token_endpoint_auth_method も token_endpoint_auth_methods_supported も存在しない場合は none と見なさなければならない（Section 5）。
 6. サーバーは同意画面に client_id のホスト名を表示することが推奨される。ロゴを表示する場合は、事前取得して自身で配信しなければならない（Section 10.6、10.9）。
 7. 認可レスポンスには iss を含めなければならない（Section 7）。
