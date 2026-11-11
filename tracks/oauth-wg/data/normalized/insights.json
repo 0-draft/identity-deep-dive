@@ -74,6 +74,11 @@
       "at": "2026-11-11T06:29:04+00:00",
       "text": "The only item is a mailing-list thread on draft-liu-oauth-authorization-evidence-02, where the discussion is about a possible optional approver-side signature for Section 9.4. There is no text change yet and no draft revision.",
       "text_ja": "今回の対象は draft-liu-oauth-authorization-evidence-02 に関するメーリングリストのスレッド1件のみで、9.4節の承認者側署名を任意で追加する案が議論されている。草案本文の変更はまだない。"
+    },
+    {
+      "at": "2026-11-11T19:40:16+00:00",
+      "text": "No substantive spec change in the oauth-wg track. The four list messages are all about delegation-chain drafts: Kieran Sweeney clarifies what credential-delegation -02 does and does not cover, and Niki Niyikiza is preparing a side-by-side comparison of the chain drafts for a 16 November side meeting at IETF 127.",
+      "text_ja": "oauth-wgトラックに仕様本文の実質的な変更はない。4件のメールはいずれも委任チェーン系ドラフトに関するもので、Kieran Sweeney が credential-delegation -02 の対象範囲を明確にし、Niki Niyikiza が IETF 127 の 11月16日のサイドミーティングに向けて各ドラフトの比較を準備している。"
     }
   ],
   "items": {
@@ -351,6 +356,36 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "mail:HgHlAofjYWaRfRhhN5v3-jqmw48": {
+      "diagram": "",
+      "first_seen": "2026-11-11",
+      "headline": "Kieran answers review comments on credential-delegation -02: cumulative budgets need a single writer, and -02 says nothing on suspension or restoration.",
+      "headline_ja": "Kieran が credential-delegation -02 へのコメントに回答し、累積上限には書き込み元を一つにする必要があること、-02 は一時停止と復元に触れていないことを述べた。",
+      "id": "mail:HgHlAofjYWaRfRhhN5v3-jqmw48",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-sweeney-wimse-credential-delegation",
+          "note": "This is the draft whose -02 text is being discussed.",
+          "note_ja": "議論されている -02 の本体のドラフトである。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Kieran replies to Caleb and Rob. He accepts Caleb's points 1, 4 and 6 (the remap for a user-issued token, depth-0 values, and 'user-issued'). On how a user-issued root composes with the chain format, he and Rafael still need to agree, and Caleb's jti-as-root shape is a concrete proposal. A mode marker per cumulative key is planned for -03. He cautions that a cumulative budget needs a single writer that sees every exercise, so a tally held at each verifier bounds the total per verifier only, as Section 5.5 already says. -02 names no status mechanism for tokens the DS did not issue, and Section 7 says only that an offline verifier learns of revocation through whatever status mechanism it consults. He values Rob's split between who issued the root and evidence that a person approved it. Section 7 covers revocation only, nothing on suspension or restoration, and the 1-hour cap bounds exposure without closing it.",
+      "summary_ja": "Kieran は Caleb と Rob に回答している。Caleb の指摘のうち 1、4、6（ユーザー発行トークンのリマップ、深さ0の値、「user-issued」）は妥当としている。ユーザー発行のルートをチェーン形式とどう組み合わせるかは Rafael とまだ調整が必要で、Caleb の jti をルートとする案は具体的な提案だとしている。累積キーごとのモードマーカーは -03 で提案する予定である。累積上限には全ての行使を観測する書き込み元が一つ必要であり、検証者ごとに保持する集計では検証者ごとの合計しか抑えられないと注意しており、これは Section 5.5 にも既に書かれている。-02 は DS が発行していないトークンのステータス機構を定めておらず、Section 7 はオフライン検証者が失効を知るのは参照するステータス機構によるとだけ述べている。Rob の、ルートの発行者と人が承認した証拠を分けるという指摘は有用としている。Section 7 は失効のみを扱い、一時停止と復元には触れておらず、1時間の上限は露出を抑えるが閉じるものではないと認めている。",
+      "title": "draft-sweeney-wimse-credential-delegation-02",
+      "updated_at": "2026-11-11T19:40:16+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/HgHlAofjYWaRfRhhN5v3-jqmw48/",
+      "use_cases": [
+        "A deployer relying on per-verifier tallies who needs to know that a cumulative limit is not enforced across separate verifiers.",
+        "A verifier of delegation tokens issued elsewhere that has to choose a status mechanism because -02 names none."
+      ],
+      "use_cases_ja": [
+        "検証者ごとの集計に頼っており、累積上限が別々の検証者をまたいでは強制されないことを知る必要がある運用者。",
+        "他所で発行された委任トークンを検証するが、-02 がステータス機構を定めていないため自分で選ぶ必要がある検証者。"
+      ]
+    },
     "mail:IdojKDr32WDsE5FLAVxhBppZppU": {
       "diagram": "",
       "first_seen": "2026-11-07",
@@ -473,6 +508,42 @@
       ],
       "use_cases_ja": [
         "顔照合と能動的ライブネスチャレンジを記録する実装者が、どの amr 値を出力すべきかを決める場合"
+      ]
+    },
+    "mail:Nk-LW0yXArpzKDtHhnMrpiC31Fw": {
+      "diagram": "",
+      "first_seen": "2026-11-11",
+      "headline": "Delegation-chain drafts to be compared at a 16 Nov side meeting; the lowest del_max_depth on the path is the effective limit.",
+      "headline_ja": "委任チェーン系ドラフトを11月16日のサイドミーティングで比較する予定であり、経路上で最小の del_max_depth が実効上限になるとされた。",
+      "id": "mail:Nk-LW0yXArpzKDtHhnMrpiC31Fw",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-sweeney-wimse-credential-delegation",
+          "note": "The -02 text Kieran describes (Sections 5.5, 7) is this draft.",
+          "note_ja": "Kieran が述べる -02（Section 5.5、7）はこのドラフトである。",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "draft-asor-wimse-agent-delegation-chain",
+          "note": "Item 3 names asor as one of the drafts with its own per-constraint subsumption rule.",
+          "note_ja": "項目3で、制約種別ごとに独自の包含規則を持つドラフトの一つとして挙げられている。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Kieran agrees with Niki and Rob that a child token's del_max_depth below its parent's is a narrowing a verifier should honor, so the effective maximum at any hop is the lowest value on the path. He says this is a separate question from the leaf being at the maximum and should be decided separately. He accepts an exact-request row in the comparison: his -02 checks each call at the DS against the operations in the token but cannot bind a leaf to a digest of one request, so the entry would be 'not expressible in the token'. He also agrees to state the 9.8 freshness bound in the terms of -02 Section 7, and asks that the -02 entry for tokens verified away from the DS be treated as provisional because Section 5.5 takes its chain format by reference. The quoted message from Niki announces a side meeting on Monday 16 November, 11:15-12:15 PST in Continental 7 and on Webex, with alignment across delegation-chain drafts as a topic.",
+      "summary_ja": "Kieran は、子トークンの del_max_depth が親より小さい場合は絞り込みであり検証者はそれに従うべきで、したがって各ホップの実効上限は経路上の最小値になるという Niki と Rob の見解に同意している。これは葉が上限にあるかどうかとは別の問題であり、別々に決めるべきだとしている。比較表に「正確な単一リクエストへの束縛」の行を加えることにも同意しており、自身の -02 は DS で各呼び出しをトークン内の操作と照合するが、葉を一つのリクエストのダイジェストに束縛する制約はないため、現状の記載は「トークン内では表現できない」になるとしている。また 9.8 の鮮度の上限を -02 の Section 7 と同じ用語で記述することにも同意し、Section 5.5 がチェーン形式を参照で取り込んでいるため、DS から離れて検証されるトークンについての -02 の記載は暫定として扱うよう求めている。引用された Niki のメッセージは、11月16日（月）11:15〜12:15 PST に Continental 7 と Webex でサイドミーティングを開き、委任チェーン系ドラフト間の整合を議題とすることを知らせている。",
+      "title": "AAT -02 announcement",
+      "updated_at": "2026-11-11T19:40:16+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/Nk-LW0yXArpzKDtHhnMrpiC31Fw/",
+      "use_cases": [
+        "An implementer of a delegation-chain verifier deciding how to compute the effective depth limit when child tokens narrow del_max_depth.",
+        "An author or reviewer comparing the chain drafts who wants to attend the 16 November side meeting."
+      ],
+      "use_cases_ja": [
+        "子トークンが del_max_depth を絞り込む場合に実効的な深さ上限をどう計算するかを決める、委任チェーン検証者の実装者。",
+        "チェーン系ドラフトを比較しており、11月16日のサイドミーティングへの参加を考えている著者やレビュアー。"
       ]
     },
     "mail:Nuj5rCPT4ntMHnV1yZdKyWGaWTs": {
@@ -742,6 +813,42 @@
         "ウォレットやアプリのアテステーションによるクライアント認証を検討する運用者は、バインディングとトークンタイプに関する議論が続くことを想定すべきである。"
       ]
     },
+    "mail:bdZNYx7-PNM1utAtW6X1mNjGVxk": {
+      "diagram": "",
+      "first_seen": "2026-11-11",
+      "headline": "Kieran replies on draft-le-agent-passport-00: shared limits need one counter, and RAR could carry root receipts.",
+      "headline_ja": "Kieran が draft-le-agent-passport-00 に回答し、共有上限には集計役が一人必要であり、RAR でルートの受領証を発行できると述べた。",
+      "id": "mail:bdZNYx7-PNM1utAtW6X1mNjGVxk",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-hulea-wimse-agent-mandate",
+          "note": "Named as one of the drafts with its own subsumption rule.",
+          "note_ja": "独自の包含規則を持つドラフトの一つとして名前が挙がっている。",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "draft-asor-wimse-agent-delegation-chain",
+          "note": "Named as one of the drafts with its own subsumption rule.",
+          "note_ja": "独自の包含規則を持つドラフトの一つとして名前が挙がっている。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "The message is a reply to Ben on two open items of the new Agent Passports and Delegation Receipts draft; only Kieran's reply is in the material, not the draft itself. On shared limit accounting between relying parties, he says a cumulative limit needs a single writer that sees every exercise. Separate RPs cannot hold the total, so either the receipt names one RP or a party in the call path keeps the running total. On RAR, he agrees authorization_details can be used for grants, so an AS that already does RAR can issue root receipts. He suggests first lining up the subsumption rule per constraint type, since asor, AAT and Hulea each have their own, and says Niki has offered to compare them before IETF 127.",
+      "summary_ja": "このメールは、新しい Agent Passports and Delegation Receipts ドラフトの未解決の2点について Ben に返信したものであり、資料にあるのは Kieran の返信のみでドラフト本体は含まれない。依拠当事者（RP）間の共有上限の集計について、累積上限には全ての行使を観測する書き込み元が一つ必要であり、別々の RP では合計を保持できないため、受領証が一つの RP を指名するか、呼び出し経路上のいずれかの当事者が累計を保持する必要があるとしている。RAR については、authorization_details を付与に使うことに同意し、既に RAR を扱う AS ならルートの受領証を発行できるとしている。最初に揃えるべきは制約種別ごとの包含規則であり、asor、AAT、Hulea がそれぞれ独自の規則を持つこと、Niki が IETF 127 までに比較を申し出ていることを述べている。",
+      "title": "New draft: Agent Passports and Delegation Receipts (draft-le-agent-passport-00)",
+      "updated_at": "2026-11-11T19:40:16+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/bdZNYx7-PNM1utAtW6X1mNjGVxk/",
+      "use_cases": [
+        "An AS that already supports RAR and wants to issue root delegation receipts using authorization_details.",
+        "A designer of a multi-RP agent system who must decide where a shared spending or call limit is counted."
+      ],
+      "use_cases_ja": [
+        "既に RAR に対応しており、authorization_details を使ってルートの委任受領証を発行したい AS。",
+        "複数の RP にまたがるエージェントシステムで、共有の支出上限や呼び出し上限をどこで集計するかを決める設計者。"
+      ]
+    },
     "mail:bfpR7SKa2oUmlJ0GLfNwLhyC_m8": {
       "diagram": "sequenceDiagram\n  participant P as Approver\n  participant AS as Authorization server\n  participant V as Verifier\n  AS->>P: show disclosure object\n  P->>AS: PSEA token signed over SHA-256 of JCS bytes\n  AS->>V: authorization_evidence with as_signature and optional PSEA token\n  V->>V: compare PSEA digest with disclosure digest",
       "first_seen": "2026-11-09",
@@ -800,6 +907,36 @@
       "use_cases_ja": [
         "エージェントの操作に対するユーザー承認を記録する AS で、承認が AS の記録だけでなく本人によるものであることを示す手段が必要な場合。",
         "検証者が、有効な承認者署名と、本人が実際に画面で見た内容の証明とを区別する必要がある場合。"
+      ]
+    },
+    "mail:dpTduyNNrzmM3tl_v15aiapVm74": {
+      "diagram": "",
+      "first_seen": "2026-11-11",
+      "headline": "A contributor proposes a mechanism-free requirements list for an approver-side signature in section 9.4 of draft-liu-oauth-authorization-evidence-02.",
+      "headline_ja": "draft-liu-oauth-authorization-evidence-02 の 9.4 について、承認者側署名の要件を方式に依存しない形で列挙する案が出された。",
+      "id": "mail:dpTduyNNrzmM3tl_v15aiapVm74",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-munoz-wimse-authorization-evidence",
+          "note": "Similar topic of signed authorization evidence, but the material does not link the two, so this is only a pointer to compare.",
+          "note_ja": "署名付き認可証跡という近い題材だが、資料上は両者の関連は示されておらず、比較のための参考にとどまる。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Mohamad asks to be added to the GitHub repository (account MohamadKhalilYossif) and agrees that requirements should come first. For 9.4 he proposes a short normative list that any approver-side signature must meet, naming no mechanism: it covers the exact disclosure bytes or their digest, it is made by a credential bound to the approver at enrollment, and it identifies the approval it belongs to. Existing work, PSEA included, would then be an informative reference. He will send this as a pull request rather than on the list. This is a proposal in a message, not yet text in the draft.",
+      "summary_ja": "Mohamad は GitHub リポジトリへの追加を依頼し（アカウントは MohamadKhalilYossif）、要件を先に定めることに同意している。9.4 については、方式を名指しせず、承認者側署名が満たすべき短い規範的な一覧を提案している。内容は、開示されるバイト列そのものまたはそのダイジェストを対象とすること、登録時に承認者へ束縛された資格情報で作成されること、属する承認を識別できることの3点である。PSEA を含む既存の仕事は参考文献（informative reference）とする。これはリストではなくプルリクエストで送るとしている。メール上の提案であり、ドラフト本文にはまだ反映されていない。",
+      "title": "draft-liu-oauth-authorization-evidence-02: an approver-side signature for 9.4",
+      "updated_at": "2026-11-11T19:40:16+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/dpTduyNNrzmM3tl_v15aiapVm74/",
+      "use_cases": [
+        "An implementer of human-approval flows for agent actions who wants to know what an approver signature must cover.",
+        "A reviewer who wants to follow or contribute to the draft's requirements via pull request."
+      ],
+      "use_cases_ja": [
+        "エージェントの動作に対する人の承認フローを実装しており、承認者の署名が何を対象とすべきかを知りたい実装者。",
+        "要件についてプルリクエストを通じて議論に参加したい、または追いたいレビュアー。"
       ]
     },
     "mail:eF1vdEFtTTEe1AWPPIWHswsKezM": {
