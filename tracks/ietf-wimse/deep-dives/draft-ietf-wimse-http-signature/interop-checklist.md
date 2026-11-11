@@ -24,5 +24,5 @@
 - [ ] A proxy that adds its own HTTP message signature does not break WIMSE signature selection, and a proxy that changes a covered component causes verification to fail (Section 5.2).
 - [ ] Replay-cache behaviour, if implemented, is documented as local policy, including what happens when a replay reaches a different cluster member (Sections 3, 5.1).
 - [ ] When using the issue #419 test vectors, take the P-01, P-02, P-06 and N-15 signatures from the author's 7 November comment. The issue body still shows the original values, computed over an `@query` without the leading `?`.
-- [ ] For issue #419 N-04, expect the signature to stay valid and the message to fail only on the recomputed Content-Digest. A verifier that reports N-04 as a signature failure is checking the wrong thing (Section 3).
+- [ ] For issue #419 N-04, expect the signature to stay valid and the message to fail only on the recomputed Content-Digest. A verifier that reports N-04 as a signature failure is reporting a failure the vector does not produce.
 - [ ] Record the receive-side choice for sender-only rules that #419 expects to be rejected: `keyid`/`alg` present (N-06, N-07), a required component missing (N-01), and `@path` covered on CONNECT (N-02, N-21). Also record whether CONNECT `@authority` keeps the explicit `:443` (P-04).

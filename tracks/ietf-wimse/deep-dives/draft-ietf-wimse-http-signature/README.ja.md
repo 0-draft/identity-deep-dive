@@ -87,7 +87,7 @@ sequenceDiagram
 ## 実験
 
 - [ ] Lab 1: Section 3.7.1 の Figure 2 のリクエストと Figure 4 のレスポンスについて、RFC 9421 のライブラリで署名ベースを再構築し、WIT 内の公開鍵で署名を検証して、`@query` が先頭の `?` を含む `?flavor=vanilla` になっていることを確認する。
-- [ ] Lab 2: issue #419 のテストベクター一式（P-01、P-02、P-06、N-15 は作者の 11 月 7 日のコメントにある再生成後の署名）に対して検証実装を実行し、受理と拒否の判断を期待結果と比較する。特に `wimse-aud` の変種（末尾のスラッシュ、明示的な既定ポート）、`wimse-workload-to-workload` の tag の重複、`keyid` と `alg` の存在、CONNECT の各ケースを見る。
+- [x] Lab 2: issue #419 のテストベクター一式（P-01、P-02、P-06、N-15 は作者の 11 月 7 日のコメントにある再生成後の署名）に対して検証実装を実行し、受理と拒否の判断を期待結果と比較する。特に `wimse-aud` の変種（末尾のスラッシュ、明示的な既定ポート）、`wimse-workload-to-workload` の tag の重複、`keyid` と `alg` の存在、CONNECT の各ケースを見る。
 - [ ] Lab 3: `Host` を書き換える TLS 終端プロキシをサーバーの前に置き、`wimse-sign-response` を true にした署名付きリクエストを送る。検証が引き続き成功すること、署名できない（ストリーミングの）サーバーが `wimse-signed-response-unavailable` を付けた 400 を返すこと、署名に対応しないサーバーが `wimse-signed-response-unsupported` を付けた 501 を返すことを確認する。
 
 ## 情報源

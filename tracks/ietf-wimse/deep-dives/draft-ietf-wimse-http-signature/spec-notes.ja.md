@@ -48,10 +48,11 @@
 
 ## テストベクターの再実行
 
-2026 年 11 月 11 日、このリポジトリは issue #419 の 28 本のベクターを、-08 の本文と RFC 9421 から書いた独立の検証器で再実行した。P-01、P-02、P-06、N-15 は 11 月 7 日のコメントにある再生成後の値を使った。検証器そのものの確認として、公開されている秘密鍵で signature base を組み直して署名し直したところ、公開されている 8 本の署名とバイト単位で一致した（N-15 は RFC 6979 の決定論的署名による ES256）。
+2026 年 11 月 11 日、このリポジトリは issue #419 の 28 本のベクターを、-08 の本文と RFC 9421 から書いた検証器で再実行した。P-01、P-02、P-06、N-15 には、11 月 7 日のコメントにある再生成後の値を使った。スクリプトは [`vectors/verify_419.py`](https://github.com/0-draft/identity-deep-dive/blob/main/tracks/ietf-wimse/deep-dives/draft-ietf-wimse-http-signature/vectors/verify_419.py)、出力は [`vectors/verify_419.log`](https://github.com/0-draft/identity-deep-dive/blob/main/tracks/ietf-wimse/deep-dives/draft-ietf-wimse-http-signature/vectors/verify_419.log) にあり、再現手順は検証ログに書いた。検証器が正しく動いていることは、次のように確かめた。公開されているテスト用の鍵で signature base を組み直して署名し直すと、公開されている 8 本の署名とバイト単位で一致する（ログの 1 節）。
 
 - 結果: 期待結果と食い違ったベクターはなかった。受理か拒否かを判定する 22 本（P-01〜P-06、N-01〜N-15、N-21）はすべて一致した。送信側・サーバー側・検証側の振る舞いを扱う N-16、N-18、N-19、N-22 も一致した。N-17（どの検査で失敗したかをエラーで明かさない）と N-20（何より先に WIT を検証する）は、メッセージ 1 本からは判定できないため採点していない。
-- N-04: issue は、本文を変えると「署名も失敗する」と書いている。実際には失敗しない。変わるのは本文だけで、`Content-Digest` ヘッダーは元の値のままであり、署名が対象にしているのはそのヘッダーである。署名は検証に通り、メッセージが拒否される理由は、受信した本文から計算し直したダイジェストが一致しないことだけである（Section 3、"the receiver MUST compute the Content-Digest value ... and compare it"）。
-- N-09: 検証時刻 T0+3600 が WIT-A の `exp` と同じなので、WIT の期限切れと署名の有効期間外が同時に起きる。T0+301 にすると有効期間の検査だけが失敗し、この場合も拒否される。
-- N-15: ES256 の署名を `cnf.jwk` の Ed25519 鍵で検証すると、単に署名不正として失敗する。Section 3.1 の「ローカルポリシーで許可されないアルゴリズム」の経路を通るのは、`cnf.jwk` 以外から鍵を取る検証器だけである。
-- 受信側の扱いを -08 の本文が決めていない期待結果: N-06 と N-07（`keyid` と `alg` は送信側への MUST NOT）、N-01（必須のコンポーネント）、N-02 と N-21（CONNECT の送信者がカバーしてはならないコンポーネント）。これらの送信側の規則を検証側で強制しない実装では、暗号的には正しい N-01、N-06、N-07 が受理される。P-04 は CONNECT についての -08 の書き方に従い、`@authority` を `svcb.example.com:443` として署名している。RFC 9421 Section 2.2.3（RFC 9110 を参照し、既定のポートを省く）どおりに正規化すると `svcb.example.com` になり、署名は通らない。
+- N-04: issue には、本文の変更で "also makes the signature fail" と書かれている。今回の実行ではそうならなかった。変わるのは本文だけで、`Content-Digest` ヘッダーは元の値のままであり、署名が対象にしているのはそのヘッダーである。検証器が報告した失敗は、受信した本文から計算し直したダイジェストの不一致だけだった（Section 3: "the receiver MUST compute the `Content-Digest` value for the message content received and compare it with the `Content-Digest` value provided in the message"）。
+- N-09: 検証時刻 T0+3600 が WIT-A の `exp` と同じなので、WIT の期限切れと署名の有効期間外が同時に起きる。スクリプトは T0+301 でも検査しており、この時刻では有効期間の検査だけが失敗し、やはり拒否される。
+- N-15: ES256 の署名は `cnf.jwk` の Ed25519 鍵では署名不正として失敗し、svcC の ES256 鍵では検証に通る。そのため `cnf.jwk` から鍵を取る検証器では、このベクターは Section 3.1 の「ローカルポリシーで許可されないアルゴリズム」の検査まで届かない。
+- -08 の本文が送信側の規則としてしか書いていない期待結果: N-06 と N-07（`keyid` と `alg` は "MUST NOT be used"）、N-01（必須のコンポーネントは "MUST be signed"）、N-02 と N-21（CONNECT の送信者は "MUST NOT cover `@path` or `@query`"）。この検証器でこれらの規則を受信側で強制しない設定にすると、署名そのものは正しいので N-01、N-06、N-07 は受理される。他の検証器が拒否するかどうかは、送信側の規則をどう読むかによる。
+- P-04 は `@authority` を `svcb.example.com:443` として署名している。-08 の Section 3 は "The `@authority` value is the host and port of the CONNECT target (Section 2.2.3 of RFC9421)" と書く。RFC 9421 の Section 2.2.3 は "The component value MUST be normalized according to the rules provided in [HTTP], Section 4.2.3. Namely, the hostname is normalized to lowercase, and the default port is omitted." と書く。authority 形式の CONNECT の対象にはスキームがなく、443 をその既定のポートとみなすかどうかはどちらにも書かれていない。そのため、この値は実装によって分かれ得る。
