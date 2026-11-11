@@ -87,7 +87,7 @@ sequenceDiagram
 ## Experiments
 
 - [ ] Lab 1: Rebuild the signature base for the Figure 2 request and Figure 4 response in Section 3.7.1 using an RFC 9421 library, verify the signatures with the public keys in the WITs, and check that `@query` is `?flavor=vanilla` with the leading `?`.
-- [ ] Lab 2: Run a verifier against the test vector set in issue #419, using the regenerated P-01, P-02, P-06 and N-15 signatures from the author's 7 November comment, and compare its accept and reject decisions with the expected outcomes, in particular `wimse-aud` variants (trailing slash, explicit default port), duplicate `wimse-workload-to-workload` tags, `keyid` and `alg` present, and the CONNECT cases.
+- [ ] Lab 2: Run a verifier against the test vector set in issue #419, using the regenerated P-01, P-02, P-06 and N-15 signatures from the author's 7 November comment, and compare its accept and reject decisions with the expected outcomes, in particular `wimse-aud` variants (trailing slash, explicit default port), duplicate `wimse-workload-to-workload` tags, `keyid` and `alg` present, and the CONNECT cases. Partly done on 11 November 2026 (see the hands-on log): the 22 accept/reject vectors were run, with most negative inputs reconstructed from the issue's prose, and N-17 and N-20 are still open.
 - [ ] Lab 3: Put a TLS-terminating proxy that rewrites `Host` in front of a server, send a signed request with `wimse-sign-response` set to true, and check that verification still succeeds, that a server that cannot sign (streamed response) returns 400 with `wimse-signed-response-unavailable`, and that a server without signing support returns 501 with `wimse-signed-response-unsupported`.
 
 ## Sources
