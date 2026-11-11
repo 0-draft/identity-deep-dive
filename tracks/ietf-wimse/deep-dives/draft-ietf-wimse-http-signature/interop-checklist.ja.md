@@ -1,0 +1,26 @@
+# 相互運用チェックリスト
+
+- [ ] リクエストが `@method`、`@path`、`@query` を対象に含み、CONNECT 以外のメソッドでは `@authority` を対象に含めていない（Section 3）。
+- [ ] クエリのないリクエストでも、`@query` に値 `?` を付けて署名している（Section 3、RFC 9421 の Section 2.2.7）。また `?flavor=vanilla` のような空でないクエリでは、署名ベースが先頭の `?` を保持している。
+- [ ] CONNECT では、リクエストが `@method` と `@authority` を対象にして `@path` と `@query` を対象にせず、署名付きレスポンスが `@method;req` と `@authority;req` を対象にして `@path;req` と `@query;req` を対象にしていない（Section 3）。
+- [ ] Content-Type、Content-Digest、Authorization、Txn-Token、Workload-Identity-Token が存在する場合に対象に含まれ、署名付きレスポンスのすべてで Workload-Identity-Token が対象に含まれている（Section 3）。
+- [ ] 本文がある場合、Content-Digest が存在し、RFC 9530 に従って受信した内容から計算され、受信者が比較している。欠落または不一致の値は拒否される（Section 3）。
+- [ ] リクエストとレスポンスに `created`、`expires`、`nonce`、`tag` があり、`tag` が `wimse-workload-to-workload` に等しく、`expires` が短い（Section 3）。
+- [ ] 送信時に `keyid` と `alg` がない。これらが存在する場合の検証側の挙動はドラフトにないため、選択（拒否か無視か）を記録する。リストでの Yaron Sheffer の返信は拒否を支持しており、issue #419 のベクターも拒否を期待している（N-06、N-07）（Section 3）。
+- [ ] WIMSE 署名はラベルではなく `tag` で選択される。その tag を持つ署名が二つあるメッセージは拒否され、その tag がないメッセージは WIMSE 署名を持たないものとして扱われる（Section 3）。
+- [ ] nonce は暗号論的に安全な乱数生成器から得られ、64 ビット以上のエントロピーを持つ。Section 3.7 の `abcd1111` のような固定の nonce をそのまま使わない（Section 3、issue #420）。
+- [ ] 有効期間（`created` と `expires`）外の署名は拒否される。ドラフトは許容値を示していないため、時計のずれに関する方針を文書化する（Section 3）。
+- [ ] 署名を確認する前に WIT を検証し、両方が通るまで何も処理しない（Section 3）。-08 はこの手順として workload-creds の「Section 5.1.4」を挙げているが、参照先の -02 にその節はない。workload-creds-03 の Section 5.1.3（「Validating the WIT」）を使う。
+- [ ] 署名アルゴリズムを WIT の `cnf.jwk.alg` から取り、ローカルで許容しないアルゴリズムは拒否する（Section 3.1）。`ES256` は workload-creds が汎用実装にサポートを求めているので検証できる。Section 3.7 の例で使われる `Ed25519` は、サポートしていれば検証できる。非推奨の `EdDSA` はどちらのドラフトも禁止していないので、扱いを意図して決めておく。
+- [ ] `wimse-aud` は設定された値と完全一致の文字列比較で照合される。末尾のスラッシュや明示的な既定ポートは一致しない。Host から導出されることはない（Section 3.2）。
+- [ ] 送信者の既定の `wimse-aud`（クエリとフラグメントを除いた対象 URI）が受信者の設定した文字列と一致するか、プロキシが URI を書き換える場合はデプロイ環境固有の audience が使われる（Section 3.2）。
+- [ ] `wimse-sign-response` は Boolean パラメーターであり、クライアントが署名を要求する場合にのみ true として書かれる。その場合クライアントは署名のないレスポンスを拒否し、それ以外では署名のないレスポンスを受け入れる（Section 3.3、3.5）。
+- [ ] 署名付きレスポンスのすべてで `wimse-req-nonce` にリクエストの `nonce` が設定され、クライアントは欠落または異なる値を拒否する（Section 3.4、3.5）。
+- [ ] クライアントが Accept-Signature を送る場合、少なくともプロファイルが要求するコンポーネントを列挙し、両者が食い違うときは `wimse-sign-response` が優先される（Section 3.5）。
+- [ ] 認証の失敗には問題タイプ `wimse-signature-invalid` を付けた 400 が返され、レスポンスから WIT と HTTP メッセージ署名のどちらが失敗したか分からない。この用途での 401 は NOT RECOMMENDED である（Section 3.6）。
+- [ ] 署名が必須だが未対応の場合、サーバーは `wimse-signed-response-unsupported` を付けた 501 を返す。署名に対応しているがこのレスポンスには不可能な場合（ストリーミング、非常に大きい場合）は、`wimse-signed-response-unavailable` を付けた 400 を返す。署名のない成功レスポンスは決して返さない（Section 3.5、3.6）。
+- [ ] 署名の失敗による 400 または 501 を受け取ったクライアントが、両方の問題タイプを扱え、相手が problem details の本文を送らない場合も適切に動作する（Section 3.6）。
+- [ ] WIT と署名は、サーバー認証付き TLS 上でのみ送られ、クライアントは RFC 9525 に従ってホスト名を検証している（Section 3）。
+- [ ] 独自の HTTP メッセージ署名を加えるプロキシが WIMSE 署名の選択を妨げず、対象コンポーネントを変更するプロキシがあれば検証が失敗する（Section 5.2）。
+- [ ] リプレイキャッシュを実装する場合、その挙動がローカルポリシーとして文書化されており、リプレイが別のクラスターメンバーに届いた場合の挙動も含まれている（Section 3、5.1）。
+- [ ] issue #419 のテストベクターを使う場合、P-01、P-02、P-06、N-15 の署名は作者の 11 月 7 日のコメントにある値を使う。issue 本文には、先頭の `?` を欠いた `@query` で計算した元の値が残っている。
