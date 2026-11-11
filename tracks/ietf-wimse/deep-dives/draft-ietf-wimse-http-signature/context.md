@@ -6,7 +6,7 @@ The subject was picked as an active working-group draft with a new revision to d
 
 ## Why This Matters
 
-The draft is close to the end of the working-group process, so the -08 changes are the last chance to settle behaviour before IESG review. -08 turns several loose points into MUSTs: nonce generation and entropy, the 400 and 501 error behaviour with registered problem types, TLS use, and Simple String Comparison for `wimse-aud`. It also adds a CONNECT exception. Independent test vectors written against -08 were posted to the WIMSE list, and a reviewer sent comments on the introduction. Implementers of -07 need to check what changed, and anyone writing a verifier now has shared inputs to test against.
+The draft is close to the end of the working-group process, so the -08 changes are the last chance to settle behaviour before IESG review. -08 turns several loose points into MUSTs: nonce generation and entropy, the 400 and 501 error behaviour, and Simple String Comparison for `wimse-aud`. It registers three problem types, moves the existing TLS MUST from Security Considerations into Section 3, and adds a CONNECT exception. Independent test vectors written against -08 were posted to the WIMSE list, and a reviewer sent comments on the introduction. Implementers of -07 need to check what changed, and anyone writing a verifier now has shared inputs to test against.
 
 ## Open Questions
 

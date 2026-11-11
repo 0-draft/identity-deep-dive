@@ -49,7 +49,7 @@ sequenceDiagram
 
 - **きっかけ**: `subject.json` によれば、本ドラフトに対して三つの新しい issue が立てられている。テストベクター（#419）、例における nonce のエントロピー（#420）、編集上のコメント（#417）である。またドラフトは Publication Requested と Submitted to IESG for Publication の状態にあり、今の文言変更は最終形に近い。
 - **根拠となる資料**: -08 の差分は、CONNECT の例外、`wimse-aud` への Simple String Comparison、64 ビット以上の nonce エントロピー、三つの登録済み問題タイプによる一様なエラー処理、およびシェパードレビューへの対応を加えている（Appendix B.1）。WIMSE メーリングリストでは、個人参加者が -08 に対するテストベクター一式（正例 6 件、負例 22 件）を投稿し、先頭の `?` を欠いていた `@query` の値を修正した。別の参加者が導入部への編集上のレビューを送り、Yaron Sheffer が issue #417 として記録した。
-- **期待される影響**: 検証実装を共通の入力でテストできるようになり、これまで SHOULD や暗黙だった複数の挙動（nonce 生成、エラーコード、TLS の使用）が MUST になる。-07 の実装は、nonce、エラー処理、audience の比較、CONNECT の経路を確認する必要がある。ドラフトの Implementation Status には二つの実装（Cofide、wimsey）が載っているが、どの版に従うかは記されていない。
+- **期待される影響**: 検証実装を共通の入力でテストできるようになり、これまで SHOULD や暗黙だった複数の挙動（nonce の生成とエントロピー、エラー時のステータスコード、`wimse-aud` の比較方法）が MUST になる。TLS の要件は新しくない。-07 でもすでに MUST で、Section 5.1 から Section 3 に移っただけである。-07 の実装は、nonce、エラー処理、audience の比較、CONNECT の経路を確認する必要がある。ドラフトの Implementation Status には二つの実装（Cofide、wimsey）が載っているが、どの版に従うかは記されていない。
 
 ## 変更点
 
@@ -60,17 +60,17 @@ sequenceDiagram
 - 時間枠（Section 3）: 受信者は有効期間外の署名を拒否しなければならない。この文は、Security Considerations にあった MUST に代わるものである。
 - TLS（Section 3）: サーバー認証付き TLS 接続とクライアントによるホスト名検証（[RFC9525]）の MUST は、Section 5.1 からプロトコルの節に移った。BCP 195 に従うことを求める SHOULD が新たに加わった。
 - Content-Digest（Section 3）は [RFC9530] を参照するようになり、これは [RFC3986] および BCP 195 とともに新たな規範的参照である。
-- エラー処理（Section 3.6）: 認証の失敗には `wimse-signature-invalid` を付けた 400 を返さなければならず、どの検査が失敗したかを示してはならない。署名が必須だが署名に対応しないサーバーは、`wimse-signed-response-unsupported` を付けた 501 を返さなければならない。署名に対応するが、このレスポンスには署名できないサーバーは、`wimse-signed-response-unavailable` を付けた 400 を返さなければならない。-07 では 400 または 501 を返す SHOULD だった。problem details の本文は SHOULD である。
+- エラー処理（Section 3.6）: 認証の失敗には `wimse-signature-invalid` を付けた 400 を返さなければならず、どの検査が失敗したかを示してはならない。署名が必須だが署名に対応しないサーバーは、`wimse-signed-response-unsupported` を付けた 501 を返さなければならない。署名に対応するが、このレスポンスには署名できないサーバーは、`wimse-signed-response-unavailable` を付けた 400 を返さなければならない。-07 では、検証の失敗については「400 などの」ステータスコードが適切と述べるだけで、必須の署名付きレスポンスを返せないサーバーについては 400 か 501 を返す SHOULD だった。problem details の本文は、相手が受け付けないと分かっている場合を除き SHOULD である。
 - `wimse-sign-response`（Section 3.3）: true の場合、サーバーは署名するかエラーを返さなければならない。
 - IANA（Section 7.2）: HTTP Problem Types への三件の登録が追加された。
-- 編集上の再構成: Security Goals は Appendix A に、Document History は Appendix B に、DPoP との比較は Appendix C に移った。Privacy Considerations（Section 6）は、ワークロード資格情報ドラフトへの参照のみに縮小された。Section 5 の複数の MUST は、Section 3 に戻る説明的な記述になった。Section 3.1 のアルゴリズムの記述は、「ES256 のサポートが MUST であるという要件を引き継ぐ」から、ワークロード資格情報ドラフトのアルゴリズム要件に「従う」に変わった。Section 3.2 と Section 3.3 の「定義する」という文は書き換えられた。
+- 編集上の再構成: Security Goals は本文（-07 の Section 6）から Appendix A に移り、そのぶん Document History は Appendix B、DPoP との比較は Appendix C に繰り下がった。-07 で Security Considerations の下位節だった Privacy Considerations は独立した Section 6 になり、ワークロード資格情報ドラフトへの参照だけに縮小された。Section 5 の複数の MUST は、Section 3 に戻る説明的な記述になった。Section 3.1 のアルゴリズムの記述は、「ES256 のサポートが MUST であるという要件を引き継ぐ」から、ワークロード資格情報ドラフトのアルゴリズム要件に「従う」に変わった。Section 3.2 と Section 3.3 の「定義する」という文は書き換えられた。
 - 互換性と移行: 短い、または低エントロピーの nonce を使っていた -07 の送信者、URI 正規化後に `wimse-aud` を比較していた送信者または受信者、署名できないときに別の方法で 501 や 400 を返していたサーバー、およびすべての CONNECT 通信は、変更が必要になる。エラーレスポンスは、相手が problem details を受け付けないと分かっている場合を除き、登録済みの問題タイプを付ける必要がある。
 
 ## 技術的分析
 
 - 脅威モデルへの含意: WIT はベアラートークンとして使われないが、取得されたトークンと署名は署名の有効期間内であれば再送され得る（Section 5.1）。短い `expires`、nonce、任意のリプレイキャッシュがこれを軽減する。ただしドラフトは、攻撃者がどのクラスターメンバーが検証するかを選べる場合、リプレイ検出は有効でないと述べている（Section 5.1、Appendix A.4）。ミドルボックスは平文の WIT と署名を見られ、それを取得して再送したり、署名されていないヘッダーを変更したりできる（Section 5.2）。ドラフトは、ミドルボックスが対象コンポーネントを検出されずに変更することはできないとし、中間者での再署名は対象外としている。`@authority` ではなく署名付きパラメーターに audience を結び付けることが、authority の書き換えがあっても検証を維持する方法である（Section 3、5.1）。Appendix A.4 は、リクエストとレスポンスの組の削除が検出されずに済まないのは、クライアントが `wimse-sign-response` で署名を要求し、署名のないレスポンスを拒否する場合に限ると述べている。したがって、サーバーのローカルポリシーによる署名だけでは日和見的である（Section 3.5）。
 - プロトコルフローへの含意: 検証の順序は固定されている。まず WIT、次に HTTP メッセージ署名であり、両方が通るまでそれ以上の処理は行わない（Section 3）。WIMSE 署名は tag で見つけるため、中間者による他の署名と共存できる（Section 3、5.2）。`wimse-sign-response` は Accept-Signature より優先され、Accept-Signature でプロファイルより弱い対象範囲を要求してはならない（Section 3.5）。アルゴリズムは `alg` パラメーターではなく WIT の `cnf.jwk.alg` から決まり、ローカルポリシーで許容されないアルゴリズムは受信者が拒否する（Section 3.1）。署名に関する二つのエラー経路は、ステータスコードと問題タイプだけで区別される。未対応は 501、利用不能は 400 である（Section 3.6）。
-- 相互運用上の懸念: `wimse-aud` は完全一致の文字列として比較されるため、「送信者が知る」既定の対象 URI を使う送信者は、設定された値とバイト単位で一致させなければならない（Section 3.2）。`@query` はクエリが空でも含めなければならず、その値は `?` である。メールのやり取りは、署名ベースで先頭の `?` を省くことがテストベクターで実際に起きた実装上の誤りだったことを示している（Section 3、メール）。本文がある場合、Content-Digest は必ず存在し、検証されなければならない。CONNECT のリクエストとレスポンスは、異なる対象集合を用いる（Section 3）。Section 3.7 の例は短い nonce 文字列を使っており、リストのスレッドによれば Section 3 の下限より短いため、実装者はそれを真似してはならない。問題タイプの URI は IANA の Problem Types レジストリの名前空間にあり、Section 7.2 の登録が完了している必要がある（Section 7.2）。
+- 相互運用上の懸念: `wimse-aud` は完全一致の文字列として比較されるため、「送信者が知る」既定の対象 URI を使う送信者は、設定された値とバイト単位で一致させなければならない（Section 3.2）。`@query` はクエリが空でも含めなければならず、その値は `?` である。メールのやり取りは、署名ベースで先頭の `?` を省くことがテストベクターで実際に起きた実装上の誤りだったことを示している（Section 3、メール）。本文がある場合、Content-Digest は必ず存在し、検証されなければならない。CONNECT のリクエストとレスポンスは、異なる対象集合を用いる（Section 3）。Section 3 と 3.6 は WIT の検証についてワークロード資格情報ドラフトの「Section 5.1.4」を参照しているが、参照先の版（-02）に Section 5.1.4 はない。検証手順は、-08 より後に出た workload-creds-03 の Section 5.1.3 にある。Section 3.7 の例は短い nonce 文字列を使っており、リストのスレッドによれば Section 3 の下限より短いため、実装者はそれを真似してはならない。問題タイプの URI は IANA の Problem Types レジストリの名前空間にあり、Section 7.2 の登録が完了している必要がある（Section 7.2）。
 
 ## 未解決の問題
 
