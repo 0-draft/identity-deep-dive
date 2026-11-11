@@ -2,11 +2,11 @@
 
 ## きっかけ
 
-本件は、差分を取れる新しい版を持つ、活動中の作業部会ドラフト draft-ietf-wimse-http-signature-08 として選ばれた。選定時の注記によれば、本ドラフトに対して三つの新しい issue が立てられている。テストベクター（#419）、例における nonce のエントロピー（#420）、編集上のコメント（#417）である。Datatracker の状態は Active、Publication Requested、Submitted to IESG for Publication である。
+新しい版が出て差分を取れる活動中の WG ドラフトとして、draft-ietf-wimse-http-signature-08 を選んだ。選定時のメモによれば、このドラフトには新しい issue が三つ立っている。テストベクター（#419）、例における nonce のエントロピー（#420）、編集上のコメント（#417）である。Datatracker の状態は Active、Publication Requested、Submitted to IESG for Publication である。
 
 ## なぜ重要か
 
-ドラフトは作業部会での手続きの終盤にあるため、-08 の変更は IESG のレビュー前に挙動を確定させる最後の機会である。-08 は、いくつかの緩い点を MUST にした。nonce の生成とエントロピー、400 と 501 のエラー挙動、`wimse-aud` に対する Simple String Comparison である。あわせて三つの問題タイプを登録し、既存の TLS の MUST を Security Considerations から Section 3 に移し、CONNECT の例外を加えた。-08 向けの独立したテストベクターが issue #419 に投稿されて WIMSE リストで告知され、査読者が導入部へのコメントを送った。-07 の実装者は何が変わったかを確認する必要があり、検証実装を書く者は、共通の入力でテストできるようになった。
+ドラフトは WG での手続きの終盤にあり、-08 の変更は IESG のレビュー前に挙動を固める最後の機会になる。-08 は、いくつかの緩い点を MUST にした。nonce の生成とエントロピー、400 と 501 のエラー挙動、`wimse-aud` に対する Simple String Comparison である。あわせて三つの問題タイプを登録し、既存の TLS の MUST を Security Considerations から Section 3 に移し、CONNECT の例外を加えた。-08 向けの独立したテストベクターが issue #419 に投稿されて WIMSE リストで告知され、査読者が導入部へのコメントを送った。-07 の実装者は変更点を確認する必要があり、検証実装を書く人は共通の入力でテストできるようになった。
 
 ## 未解決の問題
 
