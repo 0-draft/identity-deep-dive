@@ -16,6 +16,7 @@
 
 - Section 0 of the log: every test key derives from `SHA-256("s01-validation-vectors:<name>")` (svcC reduced mod n-1, plus 1), and the three WITs verify under the issuer key.
 - Section 1: the script rebuilds all 8 published signatures (P-01 to P-05, both P-06 signatures, N-15) byte for byte.
+- Most negative vectors are this repository's reconstructions of the change the issue describes, not the issue's bytes. spec-notes lists which vectors used which inputs.
 - No vector disagreed with its expected outcome. 22 accept/reject vectors and 4 behaviour vectors matched. N-17 and N-20 were not scored. The findings are in spec-notes, "Test Vector Re-run".
 
 ## Failure Modes
