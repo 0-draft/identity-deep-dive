@@ -2,8 +2,8 @@
 
 ## Environment
 
-- Runtime: Python 3.15.2
-- Tooling: `cryptography` 50.0.2 (Ed25519, ECDSA P-256 with RFC 6979 deterministic signing), `gh` to fetch the draft source
+- Runtime: Python 3.15.2 (printed on the first line of `vectors/verify_419.log`)
+- Tooling: `cryptography` 50.0.2 (same line) (Ed25519, ECDSA P-256 with RFC 6979 deterministic signing), `gh` to fetch the draft source
 - Versions: draft-ietf-wimse-http-signature-08 (tag `draft-ietf-wimse-http-signature-08` in ietf-wg-wimse/draft-ietf-wimse-s2s-protocol), issue #419 vectors with the 7 November 2026 regenerated values
 
 ## Steps
