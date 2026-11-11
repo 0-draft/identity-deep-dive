@@ -74,7 +74,7 @@ sequenceDiagram
 
 ## 未解決の問題
 
-- `keyid` と `alg` に対する検証側の挙動（Section 3）: ドラフトは送信者に対して「使ってはならない」と述べているが、検証側がそれらを含むメッセージを拒否するのか無視するのかは、ドラフトの本文に書かれていない。テストベクターの作者は「reject」と記録し（issue #419 の N-06 と N-07）、リストで尋ねた。共著者の Yaron Sheffer は 2026 年 11 月 7 日に「IMO a MUST NOT in any security RFC should be rejected by the recipient.」と返信した。ただし -08 後の main ブランチも含め、ドラフトの本文にはまだ書かれていない。
+- `keyid` と `alg` に対する検証側の挙動（Section 3）: ドラフトは送信者に対して「使ってはならない」と述べているが、検証側がそれらを含むメッセージを拒否するのか無視するのかは、ドラフトの本文に書かれていない。テストベクターの作者は「reject」と記録し（issue #419 の N-06 と N-07）、リストで尋ねた。-08 のヘッダーに載る著者 2 人（Joe Salowey と Yaron Sheffer）のうち Sheffer が、2026 年 11 月 7 日に個人の意見として「IMO a MUST NOT in any security RFC should be rejected by the recipient.」と返信した。これはリスト上の一著者の意見で、ドラフトが採用した規定ではない。-08 後の main ブランチも含め、ドラフトの本文にはまだ書かれていない。
 - 例の nonce（Section 3.7）: issue #420 は、#419 の所見 O-2 を受けて Yaron Sheffer が 2026 年 11 月 7 日に立てたもので、例の nonce は説明用でエントロピーの下限を満たさないという編集上の注記を例の近くに加えるよう求めている。例の生成コードは変えない方針である。issue は open のままで、注記はまだドラフトにない。
 - nonce の形式（Section 3）: ドラフトはエントロピーのビット数を定めているが、nonce 文字列の符号化や長さは定めておらず、受信者がエントロピーをどう確認できるかも述べていない。-08 の後、main ブランチでは、同じ要件を満たすならクライアントが Accept-Signature にあるサーバー生成の nonce を使ってもよいことになった（PR #404、-09 向け）。
 - CONNECT の audience（Section 3、3.2）: `wimse-aud` の既定値はクエリとフラグメントを除いた対象 URI だが、CONNECT の対象は authority-form である。CONNECT の場合の既定の audience が何かは、ドラフトに書かれていない。
