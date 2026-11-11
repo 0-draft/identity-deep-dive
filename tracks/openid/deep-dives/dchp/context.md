@@ -2,14 +2,15 @@
 
 ## Trigger
 
-The repository was picked because of this note: 23 commits in four days, including a field rename and credential_types becoming an array. The track is `openid`.
+- Event detected by radar: "23 commits in four days, including a field rename and credential_types becoming an array" (track `openid`). On `main` this was two rebase-merged pull requests. #61 landed 8 commits on 4 November 2026 and made `credential_type` an array. #57 landed 23 commits on 9 November 2026: format details moved into per-format annexes and `CredentialItem.format` was renamed `credential_format`.
+- Related repository / PR / Issue: <https://github.com/openid/dchp>, pull requests #57 and #61, issue #46.
 
 ## Why This Matters
 
-The repository is the working area of the OpenID Foundation's Digital Credentials Harmonized Presentation Working Group, which supports a joint initiative with ISO/IEC JTC 1/SC 17 (WG10) and the DCP Working Group. Its aim is to harmonize ISO/IEC 18013-5 Device Request / Device Response with OpenID for Verifiable Presentations Authorization Request / Authorization Response, for in-person and online presentation, including ISO mdoc and IETF SD-JWT VC. Fast changes to field names and shapes affect anyone implementing from the Editor's Copy, which the README says is not an approved Working Group Draft.
+The repository is the working area of the OpenID Foundation's Digital Credentials Harmonized Presentation Working Group. The specification's Foreword says the text is developed jointly by members of ISO/IEC JTC 1/SC 17 WG 10 and the OpenID Foundation DCP Working Group. It defines one CBOR request and response model with a transcript-based channel binding. The model is meant to work over ISO/IEC 18013-5 proximity sessions, OpenID4VP and the Digital Credentials API, for both ISO mdoc and SD-JWT VC. The text is an Editor's Copy without working group consensus on its core clauses, and several open pull requests (#76, #77, #81) would change integer keys, structures or names. Anyone implementing it now has to pin a commit.
 
 ## Open Questions
 
-- What do the 23 commits change on the wire? The staged material has only the README and pull request titles, so the exact scope is not confirmed.
-- How will security considerations be written, given that pull request #85 adds only a placeholder?
-- Which of the open pull requests (#64, #65, #76, #77, #81, #83) will be accepted, and in what form?
+- Will the prose and the CDDL be aligned before any WG Draft? Today they disagree on `ChannelBinding` keys and on `purpose_id` (`controller_id` in the prose, `controlled_id` in the CDDL). Open pull request #76 fixes this.
+- How will the transcript be carried into the mdoc `SessionTranscript`, and how will the KB-JWT `nonce` and `aud` be encoded (issue #10)?
+- When will the first Working Group Draft be published (issue #72, deferred on 4 November 2026 by about one to two months), and through which ISO/IEC route (issue #13: PAS or PSDO)?

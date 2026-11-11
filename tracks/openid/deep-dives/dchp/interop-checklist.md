@@ -1,11 +1,15 @@
 # Interop Checklist
 
-- [ ] Confirm which revision of the Editor's Copy an implementation targets, since credential_type became an array (pull request #61) and the README says the copy is not an approved Working Group Draft.
-- [ ] Test that a request with a single credential type and a request with several credential types are both parsed correctly after the array change.
-- [ ] Check that element names use the casing of the current Editor's Copy, for example CredentialQuery and scenario_sets (pull requests #83, #82, #73, #59), and that a parser rejects or handles the old casing as intended.
-- [ ] Verify that ISO mdoc and IETF SD-JWT VC handling follows the per-format annexes (pull request #57) and not older core text.
-- [ ] Compare the CDDL with the prose for every message you implement, because pull request #76 reports inconsistencies.
-- [ ] Test responses that return several credentials for one query and several queries for one credential, if pull request #77 is merged.
-- [ ] Check that any CBOR you sign or hash uses the deterministic encoding the specification requires, if pull request #64 is merged.
-- [ ] Check reader authentication with an X.509 certificate chain, including the header placement, if pull request #65 is merged.
-- [ ] Do not rely on security considerations text yet, since pull request #85 adds only a placeholder.
+- [ ] Record the commit of `openid/dchp` you implement (for example `4ddd238`). The README says the Editor's Copy is not an approved Working Group Draft, and every core clause still lacks working group consensus.
+- [ ] Encode `CredentialQuery.credential_types` (key 2) as an array of text strings (pull request #61). Check that a query with n types is processed as n queries, and that every combination referencing it is expanded the same way.
+- [ ] Use `dc+sd-jwt`, not `vc+sd-jwt`, as the SD-JWT VC `credential_format` (pull request #57). Match `credential_types` against the mdoc `docType` or the SD-JWT VC `vct` as a case-sensitive string comparison.
+- [ ] Take `ChannelBinding` integer keys from one agreed source. On `main` the prose and the CDDL disagree: `dc_api_origin` is key 8 in the prose and key 7 in the CDDL, and the BLE fields differ. Open pull request #76 aligns them to the prose numbering.
+- [ ] Encode both transaction transcripts with deterministic CBOR (RFC 8949 Section 4.2; open pull request #64 pins Section 4.2.1), and check that verifier and wallet compute the same SHA-256 of the `RequestPayload` bytes.
+- [ ] Agree with your peer which transcript is the HPKE info for response encryption. The transcript list and CDDL comment say `ReaderTransactionTranscript`, and the "Use in Protocol Operations" table says `WalletTransactionTranscript`.
+- [ ] Without session-layer encryption (Digital Credentials API, scheme-based invocation), always encrypt the response. Check that each `encrypted` entry is a `COSE_Encrypt` that decrypts to an `Envelope`, and that `encryption_ref` selects the right entry of `additional_encryption_contexts`.
+- [ ] Verify `reader_auth` as a `COSE_Sign` with a detached payload of the `RequestPayload` bytes and the `ReaderTransactionTranscript`. How the reader key is conveyed is open: pull request #65 proposes an `x5chain` in the protected header.
+- [ ] Check `issuer_identifiers.x509_ref` against the `keyIdentifier` of the Authority Key Identifier (RFC 5280) of each certificate in the mdoc `IssuerAuth` `x5chain` or the SD-JWT VC `x5c` header.
+- [ ] Return a non-key-bound mdoc, or an SD-JWT VC without a KB-JWT, only when `support_no_cryptographic_binding` is `true`. The text states only this wallet rule, so decide how your verifier treats such a credential when it did not set the flag.
+- [ ] Do not interoperate on the SD-JWT VC binding yet. The KB-JWT `nonce` is the SHA-256 of the `WalletTransactionTranscript`, but its string encoding and the `aud` value are open (issue #10). The SD-JWT VC `path` is open as well (issue #52).
+- [ ] If pull request #77 merges, move response parsing from a `CredentialRef`-keyed map to an array with `query_refs`, and test one credential answering two queries and two credentials answering one query with `allow_multiple`.
+- [ ] Do not rely on Security Considerations text: none exists on `main`, and pull request #85 adds only a placeholder.
