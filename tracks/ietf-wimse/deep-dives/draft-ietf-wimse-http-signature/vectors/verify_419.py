@@ -469,6 +469,8 @@ def log(*a):
     s = " ".join(str(x) for x in a); LOG.append(s); print(s)
 
 def run():
+    import cryptography, platform
+    log(f"python {platform.python_version()}, cryptography {cryptography.__version__}")
     results = []
     def record(vid, expected, accept, fails, note=""):
         got = "accept" if accept else "reject"
