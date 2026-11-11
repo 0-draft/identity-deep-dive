@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-11T06:27:58+00:00
+Generated at: 2026-11-11T19:38:25+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -29,12 +29,12 @@ Generated at: 2026-11-11T06:27:58+00:00
 
 Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.
 
-- **high** `Diff active WG draft: draft-ietf-wimse-http-signature-08`: Three new issues target this draft (test vectors #419, nonce entropy in examples #420, editorial comments #417).
+- **high** `Diff active WG draft: draft-ietf-wimse-http-signature-08`: Independent vectors (issue #419) and the chair's reject-on-MUST-NOT answer may lead to fixes and clarifications.
 - **high** `Diff active WG draft: draft-ietf-wimse-mutual-tls-03`: A review proposes key-pair authentication text and says WGLC looks possible.
 - **high** `Diff active WG draft: draft-ietf-wimse-workload-creds-03`: Active issues on editorial comments (#418), coexistence reconciliation (#414) and overlapping trust roots (#370).
-- **high** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: The del_max_depth meaning versus AAT is being reconciled before IETF 127.
+- **high** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: del_max_depth meaning and leaf-at-maximum behaviour are being reconciled with AAT and Cred -02.
 - **high** `Review related draft: draft-hulea-wimse-agent-mandate-01`: A list comment identifies a concrete under-counting gap in Section 9.5 that bypasses sum_max.
-- **high** `Review related draft: draft-sweeney-wimse-credential-delegation-02`: Cred-02 Sections 5.5 and 7 are being compared with AAT on depth and revocation.
+- **high** `Review related draft: draft-sweeney-wimse-credential-delegation-02`: -02 is under active review with open points for -03 (user-issued root, tally mode, revocation status).
 - **low** `Diff active WG draft: draft-ietf-wimse-identifier-04`: The only review comment is a one-phrase terminology nit.
 
 <!-- triage:end -->
