@@ -1,0 +1,29 @@
+# Interop Checklist
+
+- [ ] The Client Identifier URL uses https, has no userinfo, no dot segments and no fragment, and has a path other than `/` (Section 3).
+- [ ] A URL with a query component is handled consistently, since the draft says SHOULD NOT and a proposal from one participant on the mailing list would make it MUST NOT (Section 3).
+- [ ] The server compares URLs by simple string and does not normalize: `https://example.com/client` and `https://example.com:443/client` are different clients (Section 3).
+- [ ] The document's client_id equals both the Client Identifier URL and the URL actually fetched (Section 4).
+- [ ] A client_id equal to the server's own issuer or to the identifier of an authorization server or resource server it trusts is rejected (SHOULD) (Section 10.1).
+- [ ] The fetch sends `Accept: application/json`, accepts only 200 OK, treats any redirect (including from a URL shortener) as an error, and does not follow it (Section 6).
+- [ ] A response body past the read limit (recommended 5 kilobytes) is treated as an error (Section 10.11).
+- [ ] URLs resolving to special-use addresses [RFC6890] are refused, in the main document and in jwks_uri and logo_uri. The loopback exception is off in production (Section 10.7).
+- [ ] The document contains no client_secret, no client_secret_expires_at, no shared-secret auth method in either auth property, no private key material, and not both jwks and jwks_uri. Content delivered via software_statement is held to the same rules (Sections 4.1 and 4.3).
+- [ ] A document with neither token_endpoint_auth_method nor token_endpoint_auth_methods_supported is treated as none, not client_secret_basic. A client assertion sent to a none client gets invalid_client (Section 5).
+- [ ] A document with both properties has token_endpoint_auth_method inside token_endpoint_auth_methods_supported (Section 5).
+- [ ] A server that does not implement [OpenID.RPMetadataChoices] still recognises token_endpoint_auth_methods_supported (Section 5).
+- [ ] The server picks a supported method from the list and does not fail on unsupported ones, and returns invalid_client when none is supported (Section 5).
+- [ ] A private_key_jwt document without jwks or jwks_uri is rejected with invalid_client, and the `["none", "private_key_jwt"]` case is tested to see how the requirement is read (Section 5).
+- [ ] Client assertions carry a `typ` header, recommended value `client-authentication+jwt` (SHOULD), the server validates it (SHOULD), and the server implements an algorithm allowlist (MUST) (Section 5).
+- [ ] An empty grant_types or response_types intersection yields invalid_client, and the server documents how it treats a document that omits these fields, since the draft does not say whether the RFC 7591 defaults apply (Section 6).
+- [ ] A transient fetch failure leaves cached metadata and refresh tokens alone (SHOULD NOT invalidate). At the token and PAR endpoints a failure returns invalid_client, or HTTP 503 for a transient failure (MUST). A terminal client_id mismatch invalidates refresh tokens immediately (SHOULD). In every case the user agent is not redirected to the client (MUST NOT) (Section 6.1).
+- [ ] Error responses and malformed documents are never cached, and a maximum effective cache duration applies whatever the headers say (Section 6.2).
+- [ ] The authorization response includes iss and the client checks it (Section 7).
+- [ ] Server metadata publishes client_id_metadata_document_supported, and a client checks it before redirecting the user (Section 8).
+- [ ] Pre-registered and CIMD clients are distinguishable internally, and generated client_id values do not start with `https://` (Section 9.1).
+- [ ] The document's contents are not derived from untrusted input such as path or query components of the URL, request headers, cookies or the requesting user or server (MUST NOT), and the server avoids sending cookies, user-specific information or unnecessary headers on the fetch (SHOULD) (Sections 4.5 and 11.1).
+- [ ] client_uri on a different origin from client_id is accepted, while redirect_uris restrictions follow server policy (Sections 4.4 and 10.2).
+- [ ] logo_uri content is prefetched, validated as an image and served from the server's own host, never linked directly (Section 10.9).
+- [ ] The consent screen shows the client_id hostname, and client_name and logo are shown only as policy allows (Sections 10.6 and 10.10).
+- [ ] Persisted or reused authorization decisions are scoped at least to the pair of Client Identifier URL and resource (Section 10.12).
+- [ ] Loopback redirect URIs with varying ports are accepted and other redirect URIs must match exactly (Section 4.2).
