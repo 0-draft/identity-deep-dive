@@ -6,9 +6,9 @@
 - [ ] Content-Type, Content-Digest, Authorization, Txn-Token and Workload-Identity-Token are covered when present, and Workload-Identity-Token is covered on every signed response (Section 3).
 - [ ] When a body exists, Content-Digest is present, computed per RFC 9530 over the received content, and compared by the receiver. A missing or mismatched value is rejected (Section 3).
 - [ ] `created`, `expires`, `nonce` and `tag` are present on requests and responses, `tag` equals `wimse-workload-to-workload`, and `expires` is short (Section 3).
-- [ ] `keyid` and `alg` are absent on send. The verifier behaviour when they are present is not in the draft, so record the choice made (reject or ignore) and compare with the working-group answer (Section 3).
+- [ ] `keyid` and `alg` are absent on send. The verifier behaviour when they are present is not in the draft, so record the choice made (reject or ignore). Yaron Sheffer's reply on the list favours reject, and the issue #419 vectors expect it (N-06, N-07) (Section 3).
 - [ ] The WIMSE signature is selected by `tag`, never by label. A message with two signatures carrying that tag is rejected, and a message with no such tag is treated as carrying no WIMSE signature (Section 3).
-- [ ] Nonces come from a cryptographically secure random number generator and carry at least 64 bits of entropy. Do not copy the short nonces from Section 3.7 (Section 3).
+- [ ] Nonces come from a cryptographically secure random number generator and carry at least 64 bits of entropy. Do not copy the fixed Section 3.7 nonces such as `abcd1111` (Section 3, issue #420).
 - [ ] Signatures outside the validity window (`created` and `expires`) are rejected, with the clock skew policy documented, because the draft gives no tolerance value (Section 3).
 - [ ] The WIT is validated before the signature is checked, and nothing is processed until both pass (Section 3). -08 cites "Section 5.1.4" of workload-creds for this, which does not exist in the cited -02; use Section 5.1.3 ("Validating the WIT") of workload-creds-03.
 - [ ] The signature algorithm is taken from `cnf.jwk.alg` in the WIT, and a locally unacceptable algorithm is rejected (Section 3.1). `ES256` verifies, since workload-creds requires general-purpose implementations to support it. `Ed25519`, used in the Section 3.7 examples, verifies if supported. Decide on purpose how the deprecated `EdDSA` identifier is handled, since neither draft forbids it.
@@ -23,4 +23,4 @@
 - [ ] The WIT and the signature travel only over server-authenticated TLS, with client hostname validation per RFC 9525 (Section 3).
 - [ ] A proxy that adds its own HTTP message signature does not break WIMSE signature selection, and a proxy that changes a covered component causes verification to fail (Section 5.2).
 - [ ] Replay-cache behaviour, if implemented, is documented as local policy, including what happens when a replay reaches a different cluster member (Sections 3, 5.1).
-- [ ] The test vectors from issue #419 were regenerated after the `@query` correction, so re-fetch them before relying on old signature values (mail).
+- [ ] When using the issue #419 test vectors, take the P-01, P-02, P-06 and N-15 signatures from the author's 7 November comment. The issue body still shows the original values, computed over an `@query` without the leading `?`.

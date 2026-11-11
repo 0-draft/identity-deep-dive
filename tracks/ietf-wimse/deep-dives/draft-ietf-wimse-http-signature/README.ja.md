@@ -43,13 +43,13 @@ sequenceDiagram
 - 剥がされた、または差し替えられたレスポンスを検出したいクライアントが、`wimse-sign-response` と `wimse-req-nonce` を併用する場合（Section 3.3、3.5、Appendix A.4）。
 - CONNECT メソッドによるプロキシのトンネリングで、プロファイルが `@path` と `@query` の代わりに `@authority` を対象にする場合（Section 3）。
 - 一つのサービスに複数の宛先名がある構成で、比較がバイト単位の完全一致であるため、受け入れる文字列をすべて受信側の設定に列挙しなければならない場合（Section 3.2）。
-- 今回の版に対してメーリングリストで提案された独立のテストベクターで、適合性を確認したい実装者とテスト担当者。
+- issue #419 にある今回の版向けの独立したテストベクターで、適合性を確認したい実装者とテスト担当者。
 
 ## なぜ今重要か
 
 - **きっかけ**: `subject.json` によれば、本ドラフトに対して三つの新しい issue が立てられている。テストベクター（#419）、例における nonce のエントロピー（#420）、編集上のコメント（#417）である。またドラフトは Publication Requested と Submitted to IESG for Publication の状態にあり、今の文言変更は最終形に近い。
-- **根拠となる資料**: -08 の差分は、CONNECT の例外、`wimse-aud` への Simple String Comparison、64 ビット以上の nonce エントロピー、三つの登録済み問題タイプによる一様なエラー処理、およびシェパードレビューへの対応を加えている（Appendix B.1）。WIMSE メーリングリストでは、個人参加者が -08 に対するテストベクター一式（正例 6 件、負例 22 件）を投稿し、先頭の `?` を欠いていた `@query` の値を修正した。別の参加者が導入部への編集上のレビューを送り、Yaron Sheffer が issue #417 として記録した。
-- **期待される影響**: 検証実装を共通の入力でテストできるようになり、これまで SHOULD や暗黙だった複数の挙動（nonce の生成とエントロピー、エラー時のステータスコード、`wimse-aud` の比較方法）が MUST になる。TLS の要件は新しくない。-07 でもすでに MUST で、Section 5.1 から Section 3 に移っただけである。-07 の実装は、nonce、エラー処理、audience の比較、CONNECT の経路を確認する必要がある。ドラフトの Implementation Status には二つの実装（Cofide、wimsey）が載っているが、どの版に従うかは記されていない。
+- **根拠となる資料**: -08 の差分は、CONNECT の例外、`wimse-aud` への Simple String Comparison、64 ビット以上の nonce エントロピー、三つの登録済み問題タイプによる一様なエラー処理、およびシェパードレビューへの対応を加えている（Appendix B.1）。2026 年 11 月 6 日には、個人参加者が -08 向けのテストベクター一式（正例 6 件、負例 22 件、所見 3 件）を issue #419 に投稿し、WIMSE メーリングリストで告知した。issue 上での Yaron Sheffer のレビューと別の参加者による独立した検証を受けて、作者は 11 月 7 日に P-01、P-02、P-06、N-15 を再生成した。これらは `@query` の値に先頭の `?` が欠けていた。11 月 5 日には Kathleen Moriarty が導入部への編集上のレビューを送り、Yaron Sheffer が issue #417 として記録した。
+- **期待される影響**: 検証実装を共通の入力でテストできるようになり、これまで SHOULD や暗黙だった複数の挙動（nonce の生成とエントロピー、エラー時のステータスコード、`wimse-aud` の比較方法）が MUST になる。TLS の要件は新しくない。-07 でもすでに MUST で、Section 5.1 から Section 3 に移っただけである。-07 の実装は、nonce、エラー処理、audience の比較、CONNECT の経路を確認する必要がある。Section 4（Implementation Status）には二つの実装が最終更新日付きで載っているが、対応する版は書かれていない。Cofide（2025 年 11 月 13 日）と wimsey（2026 年 9 月 8 日）である。Cofide のリポジトリは前身の draft-ietf-wimse-s2s-protocol の実装だと説明しており、最終 push は 2025 年 11 月 14 日なので、-08 の変更より前のものである。-08 の後、ドラフトの main ブランチでは wimsey の項目が「signed responses as per version -08 of the draft」に更新された（PR #406）。
 
 ## 変更点
 
@@ -70,31 +70,36 @@ sequenceDiagram
 
 - 脅威モデルへの含意: WIT はベアラートークンとして使われないが、取得されたトークンと署名は署名の有効期間内であれば再送され得る（Section 5.1）。短い `expires`、nonce、任意のリプレイキャッシュがこれを軽減する。ただしドラフトは、攻撃者がどのクラスターメンバーが検証するかを選べる場合、リプレイ検出は有効でないと述べている（Section 5.1、Appendix A.4）。ミドルボックスは平文の WIT と署名を見られ、それを取得して再送したり、署名されていないヘッダーを変更したりできる（Section 5.2）。ドラフトは、ミドルボックスが対象コンポーネントを検出されずに変更することはできないとし、中間者での再署名は対象外としている。`@authority` ではなく署名付きパラメーターに audience を結び付けることが、authority の書き換えがあっても検証を維持する方法である（Section 3、5.1）。Appendix A.4 は、リクエストとレスポンスの組の削除が検出されずに済まないのは、クライアントが `wimse-sign-response` で署名を要求し、署名のないレスポンスを拒否する場合に限ると述べている。したがって、サーバーのローカルポリシーによる署名だけでは日和見的である（Section 3.5）。
 - プロトコルフローへの含意: 検証の順序は固定されている。まず WIT、次に HTTP メッセージ署名であり、両方が通るまでそれ以上の処理は行わない（Section 3）。WIMSE 署名は tag で見つけるため、中間者による他の署名と共存できる（Section 3、5.2）。`wimse-sign-response` は Accept-Signature より優先され、Accept-Signature でプロファイルより弱い対象範囲を要求してはならない（Section 3.5）。アルゴリズムは `alg` パラメーターではなく WIT の `cnf.jwk.alg` から決まり、ローカルポリシーで許容されないアルゴリズムは受信者が拒否する（Section 3.1）。署名に関する二つのエラー経路は、ステータスコードと問題タイプだけで区別される。未対応は 501、利用不能は 400 である（Section 3.6）。
-- 相互運用上の懸念: `wimse-aud` は完全一致の文字列として比較されるため、「送信者が知る」既定の対象 URI を使う送信者は、設定された値とバイト単位で一致させなければならない（Section 3.2）。`@query` はクエリが空でも含めなければならず、その値は `?` である。メールのやり取りは、署名ベースで先頭の `?` を省くことがテストベクターで実際に起きた実装上の誤りだったことを示している（Section 3、メール）。本文がある場合、Content-Digest は必ず存在し、検証されなければならない。CONNECT のリクエストとレスポンスは、異なる対象集合を用いる（Section 3）。Section 3 と 3.6 は WIT の検証についてワークロード資格情報ドラフトの「Section 5.1.4」を参照しているが、参照先の版（-02）に Section 5.1.4 はない。検証手順は、-08 より後に出た workload-creds-03 の Section 5.1.3 にある。Section 3.7 の例は短い nonce 文字列を使っており、リストのスレッドによれば Section 3 の下限より短いため、実装者はそれを真似してはならない。問題タイプの URI は IANA の Problem Types レジストリの名前空間にあり、Section 7.2 の登録が完了している必要がある（Section 7.2）。
+- 相互運用上の懸念: `wimse-aud` は完全一致の文字列として比較されるため、「送信者が知る」既定の対象 URI を使う送信者は、設定された値とバイト単位で一致させなければならない（Section 3.2）。`@query` はクエリが空でも含めなければならず、その値は `?` である（Section 3）。署名ベースで先頭の `?` を落とす誤りは、issue #419 のテストベクターの初版で実際に起きている。本文がある場合、Content-Digest は必ず存在し、検証されなければならない。CONNECT のリクエストとレスポンスは、異なる対象集合を用いる（Section 3）。Section 3 と 3.6 は WIT の検証についてワークロード資格情報ドラフトの「Section 5.1.4」を参照しているが、参照先の版（-02）に Section 5.1.4 はない。検証手順は、-08 より後に出た workload-creds-03 の Section 5.1.3 にある。Section 3.7 の例は固定の nonce（`abcd1111` から `abcd4444`）を使っている。16 進 8 文字で最大 32 ビット、しかもランダムではないので Section 3 の下限を満たさず、真似してはいけない（issue #420）。例のファイルは -07 から変わっておらず、issue #419 の独立した検証では、Figure 2 の署名は `?flavor=vanilla` で検証できたと報告されている。問題タイプの URI は IANA の Problem Types レジストリの名前空間にあり、Section 7.2 の登録が完了している必要がある（Section 7.2）。
 
 ## 未解決の問題
 
-- `keyid` と `alg` に対する検証側の挙動（Section 3）: ドラフトは送信者に対して「使ってはならない」と述べているが、検証側がそれらを含むメッセージを拒否するのか無視するのかは、ドラフトの本文に書かれていない。テストベクターの作者は「reject」と記録し、リストで作業部会に尋ねた。メールによれば Yaron Sheffer が回答し、作者は「ベクターは作者が述べた意図に基づく」と書いているが、ドラフトの本文にはまだ明記されていない。
-- 例の nonce（Section 3.7）: リストのスレッドは、例の nonce は説明用であるという編集上の注記を提案している。`subject.json` は例における nonce のエントロピーに関する issue（#420）を挙げているが、提供された資料にはその内容が示されていない。
-- nonce の形式（Section 3）: ドラフトはエントロピーのビット数を定めているが、nonce 文字列の符号化や長さは定めておらず、受信者がエントロピーをどう確認できるかも述べていない。
+- `keyid` と `alg` に対する検証側の挙動（Section 3）: ドラフトは送信者に対して「使ってはならない」と述べているが、検証側がそれらを含むメッセージを拒否するのか無視するのかは、ドラフトの本文に書かれていない。テストベクターの作者は「reject」と記録し（issue #419 の N-06 と N-07）、リストで尋ねた。共著者の Yaron Sheffer は 2026 年 11 月 7 日に「IMO a MUST NOT in any security RFC should be rejected by the recipient.」と返信した。ただし -08 後の main ブランチも含め、ドラフトの本文にはまだ書かれていない。
+- 例の nonce（Section 3.7）: issue #420 は、#419 の所見 O-2 を受けて Yaron Sheffer が 2026 年 11 月 7 日に立てたもので、例の nonce は説明用でエントロピーの下限を満たさないという編集上の注記を例の近くに加えるよう求めている。例の生成コードは変えない方針である。issue は open のままで、注記はまだドラフトにない。
+- nonce の形式（Section 3）: ドラフトはエントロピーのビット数を定めているが、nonce 文字列の符号化や長さは定めておらず、受信者がエントロピーをどう確認できるかも述べていない。-08 の後、main ブランチでは、同じ要件を満たすならクライアントが Accept-Signature にあるサーバー生成の nonce を使ってもよいことになった（PR #404、-09 向け）。
 - CONNECT の audience（Section 3、3.2）: `wimse-aud` の既定値はクエリとフラグメントを除いた対象 URI だが、CONNECT の対象は authority-form である。CONNECT の場合の既定の audience が何かは、ドラフトに書かれていない。
 - 一様な 400 と別個の問題タイプ（Section 3.6）: サーバーはどの検査が失敗したかを示してはならないが、署名付きレスポンスが利用できない場合の 400 は別のエラーである。problem details を受け付けないクライアントは両者を区別できず、ドラフトはこれを論じていない。
 - 中間者による再署名（Section 5.2）: WIMSE 署名を剥がして置き換えることは、ドラフトでは展開環境のポリシーに委ねられている。
-- 導入部の文言（Section 1）: リスト上のレビューは、最初の文に HTTP を明記し、複数の TLS ホップにまたがるオブジェクトレベルの認証を説明することを提案している。-08 の Section 1 にはその文言はなく、issue 番号は #417 である。
+- 導入部の文言（Section 1）: Kathleen Moriarty のレビュー（issue #417）は、最初の文に HTTP を明記し、複数の TLS ホップにまたがるオブジェクトレベルの認証を説明するよう提案している。issue は open で結論は出ておらず、-08 の Section 1 にその文言はない。
 - リプレイキャッシュの範囲（Section 3、5.1、Appendix A.4）: 何をどれだけの期間記憶するかはローカルポリシーであり、別のクラスターメンバーへのリプレイは成功し得る。
 - Appendix C は、将来の版で署名付きレスポンスを必須にするかどうかを決められると、依然として述べている。
 
 ## 実験
 
 - [ ] Lab 1: Section 3.7.1 の Figure 2 のリクエストと Figure 4 のレスポンスについて、RFC 9421 のライブラリで署名ベースを再構築し、WIT 内の公開鍵で署名を検証して、`@query` が先頭の `?` を含む `?flavor=vanilla` になっていることを確認する。
-- [ ] Lab 2: issue #419 からリンクされたテストベクター一式に対して検証実装を実行し、受理と拒否の判断を期待結果と比較する。特に `wimse-aud` の変種（末尾のスラッシュ、明示的な既定ポート）、`wimse-workload-to-workload` の tag の重複、`keyid` と `alg` の存在、CONNECT の各ケースを見る。
+- [ ] Lab 2: issue #419 のテストベクター一式（P-01、P-02、P-06、N-15 は作者の 11 月 7 日のコメントにある再生成後の署名）に対して検証実装を実行し、受理と拒否の判断を期待結果と比較する。特に `wimse-aud` の変種（末尾のスラッシュ、明示的な既定ポート）、`wimse-workload-to-workload` の tag の重複、`keyid` と `alg` の存在、CONNECT の各ケースを見る。
 - [ ] Lab 3: `Host` を書き換える TLS 終端プロキシをサーバーの前に置き、`wimse-sign-response` を true にした署名付きリクエストを送る。検証が引き続き成功すること、署名できない（ストリーミングの）サーバーが `wimse-signed-response-unavailable` を付けた 400 を返すこと、署名に対応しないサーバーが `wimse-signed-response-unsupported` を付けた 501 を返すことを確認する。
 
 ## 情報源
 
 - [draft-ietf-wimse-http-signature-08](https://datatracker.ietf.org/doc/draft-ietf-wimse-http-signature/08/)
 - [WIMSE リスト: Test vectors for draft-ietf-wimse-http-signature-08, request for review](https://mailarchive.ietf.org/arch/msg/wimse/4oCoc4IePmmc1cCm1FthFanNNRc/)
-- [WIMSE リスト: Re: Test vectors for draft-ietf-wimse-http-signature-08](https://mailarchive.ietf.org/arch/msg/wimse/VCH1w0y6OuR-koGRiJYakzmtGAo/)
+- [WIMSE リスト: Re: Test vectors for draft-ietf-wimse-http-signature-08（Yaron Sheffer）](https://mailarchive.ietf.org/arch/msg/wimse/IcH0Hq5968-TzSxLL7Wpi4pl-7k/)
+- [WIMSE リスト: Re: Test vectors for draft-ietf-wimse-http-signature-08（ベクターの作者）](https://mailarchive.ietf.org/arch/msg/wimse/VCH1w0y6OuR-koGRiJYakzmtGAo/)
+- [WIMSE リスト: Review of draft-ietf-wimse-http-signature](https://mailarchive.ietf.org/arch/msg/wimse/nlwwEHRta3EdrxB--z1NM-Mcp7M/)
 - [WIMSE リスト: Re: Review of draft-ietf-wimse-http-signature](https://mailarchive.ietf.org/arch/msg/wimse/Vd1-lCWYXdJYkIMMV2z98f3IL5s/)
-- [ドラフトのリポジトリにあるテストベクターの issue #419](https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol/issues/419)
+- [issue #385: シェパードレビュー](https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol/issues/385)
+- [issue #417: 導入部への編集上のコメント](https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol/issues/417)
+- [issue #419: -08 のテストベクター](https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol/issues/419)
+- [issue #420: エントロピーの下限を満たさない例の nonce](https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol/issues/420)
 - [ドラフトのソースリポジトリと issue トラッカー](https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol)
