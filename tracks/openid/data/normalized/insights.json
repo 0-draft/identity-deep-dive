@@ -1,11 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-04T19:50:05+00:00",
-      "text": "Quiet run: openid/dchp took review edits, including making credential_type an array, and federation-entity-collection merged three clarification PRs (#65–#67). Both items are commit lists only, so details are thin.",
-      "text_ja": "今回は小規模な動きである。openid/dchp ではレビュー反映が進み、credential_type が配列になった。federation-entity-collection では明確化のPR（#65〜#67）が三件マージされた。どちらもコミット一覧のみで、詳細は限られる。"
-    },
-    {
       "at": "2026-11-05T06:53:57+00:00",
       "text": "The only openid activity is three AuthZEN commits. They add a CI build and publish step for the Access Request OAuth Profile and merge a branch named \"aroap-latest-dtr-txn\". Nothing substantive is visible.",
       "text_ja": "openid トラックの動きは AuthZEN の 3 コミットのみである。Access Request OAuth Profile のビルドと公開の CI 追加と、\"aroap-latest-dtr-txn\" ブランチのマージだ。内容に踏み込んだ変更は確認できない。"
@@ -34,6 +29,11 @@
       "at": "2026-11-11T06:29:05+00:00",
       "text": "Only one item: two CONTRIBUTING.md-related commits in openid/aauth about meeting notes. Nothing changed in protocol or specification text.",
       "text_ja": "対象は openid/aauth の会議記録に関するコミット2件のみで、プロトコルや仕様本文の変更はない。"
+    },
+    {
+      "at": "2026-11-12T07:16:10+00:00",
+      "text": "The only movement is one merge commit in openid/OpenID4VP (PR #800, branch 718-age-over-nn). The material gives no diff, so the content of the change is unknown.",
+      "text_ja": "動きは openid/OpenID4VP への1件のマージコミット（PR #800、ブランチ 718-age-over-nn）のみである。差分が提供されていないため、変更内容は不明である。"
     }
   ],
   "items": {
@@ -59,6 +59,23 @@
         "S2Sドラフトに対して実装するウォレットや発行者の開発者は、session_idやcredential_instance_idなどのフィールド名を更新する必要がある。",
         "S2Sメッセージ用のJSONスキーマやテストフィクスチャを書く場合は、snake_caseのプロパティ名に切り替える必要がある。"
       ]
+    },
+    "repo:openid/OpenID4VP:2026-11-11T21:10:34Z": {
+      "diagram": "",
+      "first_seen": "2026-11-12",
+      "headline": "A merge of PR #800 (branch 718-age-over-nn) landed in OpenID4VP; the material has no diff, so the content is unknown.",
+      "headline_ja": "OpenID4VP に PR #800（ブランチ 718-age-over-nn）がマージされたが、差分がなく内容は不明である。",
+      "id": "repo:openid/OpenID4VP:2026-11-11T21:10:34Z",
+      "kind": "repo-activity",
+      "related": [],
+      "significance": "routine",
+      "summary": "One commit, 66f5ff931301, merged pull request #800 from the branch openid/718-age-over-nn into the default branch of openid/OpenID4VP. The branch name suggests a change related to age-over-NN claims, but the material contains only the merge commit title, with no diff or PR description, so the actual effect on the specification cannot be stated.",
+      "summary_ja": "コミット 66f5ff931301 が、ブランチ openid/718-age-over-nn からの PR #800 を openid/OpenID4VP のデフォルトブランチにマージした。ブランチ名から age-over-NN クレームに関する変更と推測されるが、提供された資料にはマージコミットのタイトルしかなく、差分も PR の説明もないため、仕様への実際の影響は述べられない。",
+      "title": "openid/OpenID4VP: 1 new commit on the default branch",
+      "updated_at": "2026-11-12T07:16:10+00:00",
+      "url": "https://github.com/openid/OpenID4VP",
+      "use_cases": [],
+      "use_cases_ja": []
     },
     "repo:openid/aauth:2026-11-10T18:10:47Z": {
       "diagram": "",
@@ -162,27 +179,6 @@
       "use_cases": [],
       "use_cases_ja": []
     },
-    "repo:openid/dchp:2026-11-04T17:43:29Z": {
-      "diagram": "",
-      "first_seen": "2026-11-04",
-      "headline": "openid/dchp applied a round of review suggestions and changed credential_type to an array.",
-      "headline_ja": "openid/dchp にレビュー指摘が反映され、credential_type が配列に変更された。",
-      "id": "repo:openid/dchp:2026-11-04T17:43:29Z",
-      "kind": "repo-activity",
-      "related": [],
-      "significance": "substantive",
-      "summary": "Eight commits landed on the default branch. Most apply review suggestions from c2bo, martijnharing, jogu and awoie, plus a markdown list rendering fix. One commit, \"make credential_type an array\", appears to change a field's shape so that several credential types can be expressed. Only commit titles are available, with no diff, so the exact scope of that change and what it affects in the spec are not confirmed.",
-      "summary_ja": "デフォルトブランチに八件のコミットが入った。大半は c2bo、martijnharing、jogu、awoie によるレビュー提案の反映と、Markdown のリスト表示の修正である。「make credential_type an array」というコミットは、複数のクレデンシャルタイプを表現できるようフィールドの形を変えたものと見られる。ただし入手できたのはコミットタイトルのみで差分はなく、変更の正確な範囲や仕様への影響は確認できない。",
-      "title": "openid/dchp: 8 new commits on the default branch",
-      "updated_at": "2026-11-04T19:50:05+00:00",
-      "url": "https://github.com/openid/dchp",
-      "use_cases": [
-        "A wallet or verifier implementer following dchp should expect credential_type to be an array, not a single value, and plan parsing accordingly."
-      ],
-      "use_cases_ja": [
-        "dchp に追従するウォレットや検証者の実装者は、credential_type が単一値ではなく配列になる前提でパース処理を計画する必要がある。"
-      ]
-    },
     "repo:openid/dchp:2026-11-09T20:09:24Z": {
       "diagram": "",
       "first_seen": "2026-11-09",
@@ -205,23 +201,6 @@
         "dchp を追跡するウォレット開発者は、credential_format への名称変更と、配列となった credential_types に対応する必要がある。",
         "mdoc レスポンスの実装者は、issuer 署名か device 署名かをウォレットが選ぶことを把握する必要がある。"
       ]
-    },
-    "repo:openid/federation-entity-collection:2026-11-04T08:02:37Z": {
-      "diagram": "",
-      "first_seen": "2026-11-04",
-      "headline": "openid/federation-entity-collection merged three clarification PRs on pagination limit, trust mark verification and an omitted trust anchor parameter.",
-      "headline_ja": "openid/federation-entity-collection で、ページネーション上限、トラストマーク検証、省略されたトラストアンカーパラメータに関する三件の明確化PRがマージされた。",
-      "id": "repo:openid/federation-entity-collection:2026-11-04T08:02:37Z",
-      "kind": "repo-activity",
-      "related": [],
-      "significance": "editorial",
-      "summary": "Seven commits include merges of PRs #65 (clarify pagination limit), #66 (clarify trust mark verification) and #67 (clarify omitted trust anchor parameter), editorial fixes for issue 61, and a changelog entry covering PR65-67. The branch names indicate clarifications of existing behaviour. Without diffs, it is not possible to say whether any wire behaviour changed.",
-      "summary_ja": "七件のコミットには、PR #65（ページネーション上限の明確化）、#66（トラストマーク検証の明確化）、#67（トラストアンカーパラメータ省略時の明確化）のマージ、issue 61 に対する編集上の修正、PR65〜67 を対象とする変更履歴の追記が含まれる。ブランチ名からは既存の挙動の明確化と読み取れる。差分がないため、通信上の挙動が変わったかどうかは判断できない。",
-      "title": "openid/federation-entity-collection: 7 new commits on the default branch",
-      "updated_at": "2026-11-04T19:50:05+00:00",
-      "url": "https://github.com/openid/federation-entity-collection",
-      "use_cases": [],
-      "use_cases_ja": []
     },
     "repo:openid/federation-wallet:2026-11-06T00:18:03Z": {
       "diagram": "",
