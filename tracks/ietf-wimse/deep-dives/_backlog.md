@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-11T19:38:25+00:00
+Generated at: 2026-11-12T07:14:50+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -32,9 +32,9 @@ Moved by this week's material. candidates.json and the site list raised candidat
 - **high** `Diff active WG draft: draft-ietf-wimse-http-signature-08`: Independent vectors (issue #419) and the chair's reject-on-MUST-NOT answer may lead to fixes and clarifications.
 - **high** `Diff active WG draft: draft-ietf-wimse-mutual-tls-03`: A review proposes key-pair authentication text and says WGLC looks possible.
 - **high** `Diff active WG draft: draft-ietf-wimse-workload-creds-03`: Active issues on editorial comments (#418), coexistence reconciliation (#414) and overlapping trust roots (#370).
-- **high** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: del_max_depth meaning and leaf-at-maximum behaviour are being reconciled with AAT and Cred -02.
 - **high** `Review related draft: draft-hulea-wimse-agent-mandate-01`: A list comment identifies a concrete under-counting gap in Section 9.5 that bypasses sum_max.
-- **high** `Review related draft: draft-sweeney-wimse-credential-delegation-02`: -02 is under active review with open points for -03 (user-issued root, tally mode, revocation status).
+- **high** `Review related draft: draft-sweeney-wimse-credential-delegation-02`: Authors are actively revising for -03: tally single-writer limits, status location for user-issued roots, suspension and restoration.
+- **high** `Review related draft: draft-thaha-wimse-agent-evidence-binding-03`: Thread over RFC 8693 act-claim handling and wording changes to be taken into the next revision.
 - **low** `Diff active WG draft: draft-ietf-wimse-identifier-04`: The only review comment is a one-phrase terminology nit.
 
 <!-- triage:end -->
