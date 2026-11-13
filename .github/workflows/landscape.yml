@@ -1,13 +1,15 @@
 name: Spec Map Refresh
 
-# Refreshes data/landscape-status.json: Datatracker states for the IETF specs
-# on the map, and whether each sourced claim's evidence phrase is still on its
-# page. No model is involved; the curated inputs (data/landscape.json and
-# data/landscape-sources.json) only change through pull requests.
+# Refreshes data/landscape-status.json: Datatracker states and revision
+# history for the IETF specs on the map, and whether each sourced claim's
+# evidence phrase is still on its page. No model is involved; the curated
+# inputs (data/landscape.json and data/landscape-sources.json) only change
+# through pull requests. The job summary also lists working-group drafts the
+# tracks follow that have no entry on the map yet.
 
 on:
   schedule:
-    - cron: "0 9 * * 3"  # Wednesday 09:00 UTC
+    - cron: "0 9 * * *"  # daily 09:00 UTC, after the 06:00 collection
   workflow_dispatch:
 
 permissions:

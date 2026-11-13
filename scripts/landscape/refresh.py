@@ -103,23 +103,61 @@ def state_name(uri: str) -> str:
     return _state_names[uri]
 
 
+def revision_history(name: str) -> list[dict]:
+    """Every revision of a draft with its date, oldest first, from the
+    Datatracker's new-revision events."""
+    url = f"{API}/doc/docevent/?doc__name={name}&type=new_revision&format=json&limit=200"
+    out: list[dict] = []
+    while url:
+        page = get_json(url)
+        for o in page.get("objects", []):
+            rev = str(o.get("rev") or "")
+            date = str(o.get("time") or "")[:10]
+            if rev and date and not any(h["rev"] == rev for h in out):
+                out.append({"rev": rev, "date": date})
+        nxt = (page.get("meta") or {}).get("next")
+        url = f"https://datatracker.ietf.org{nxt}" if nxt else ""
+    return sorted(out, key=lambda h: (h["date"], h["rev"]))
+
+
+def rfc_published(n: int) -> str:
+    events = get_json(f"{API}/doc/docevent/?doc__name=rfc{n}&type=published_rfc&format=json&limit=5")
+    dates = sorted(str(o.get("time") or "")[:10] for o in events.get("objects", []) if o.get("time"))
+    return dates[0] if dates else ""
+
+
+def draft_of_rfc(n: int) -> str:
+    rel = get_json(f"{API}/doc/relateddocument/?target__name=rfc{n}&relationship__slug=became_rfc&format=json")
+    for o in rel.get("objects", []):
+        m = re.search(r"/doc/document/(draft-[^/]+)/", o.get("source", ""))
+        if m:
+            return m.group(1)
+    return ""
+
+
 def ietf_status(ietf: dict) -> dict:
     if "rfc" in ietf:
         n = int(ietf["rfc"])
         doc = get_json(f"{API}/doc/document/rfc{n}/?format=json")
-        return {
+        draft = ietf.get("from_draft") or draft_of_rfc(n)
+        out = {
             "stage": "rfc",
             "label": f"RFC {n}",
             "title": doc.get("title", ""),
             "url": f"https://www.rfc-editor.org/rfc/rfc{n}",
+            "published": rfc_published(n),
         }
+        if draft:
+            out["from_draft"] = draft
+            out["history"] = revision_history(draft)
+        return out
     name = ietf["draft"]
     became = get_json(f"{API}/doc/relateddocument/?source__name={name}&relationship__slug=became_rfc&format=json")
     targets = [o["target"] for o in became.get("objects", [])]
     if targets:
         m = re.search(r"rfc(\d+)", targets[0])
         if m:
-            return ietf_status({"rfc": int(m.group(1))}) | {"from_draft": name}
+            return ietf_status({"rfc": int(m.group(1)), "from_draft": name})
     doc = get_json(f"{API}/doc/document/{name}/?format=json")
     labels = [state_name(u) for u in doc.get("states", [])]
     # Only draft-ietf-* names are working-group documents; anything else that
@@ -136,6 +174,7 @@ def ietf_status(ietf: dict) -> dict:
         "states": labels,
         "updated": str(doc.get("time", ""))[:10],
         "url": f"https://datatracker.ietf.org/doc/{name}/",
+        "history": revision_history(name),
     }
 
 
@@ -215,6 +254,25 @@ def validate(catalogue: dict, sources: dict) -> list[str]:
     return errors
 
 
+def newcomers(catalogue: dict) -> list[str]:
+    """Working-group drafts the tracks already follow that are not on the map,
+    from the tracks' normalized Datatracker data (no network)."""
+    on_map = {s["ietf"]["draft"] for s in catalogue["specs"] if s.get("ietf", {}).get("draft")}
+    inactive = {"Expired", "Dead", "Replaced"}
+    found: dict[str, str] = {}
+    for track in ("oauth-wg", "ietf-wimse"):
+        p = ROOT / "tracks" / track / "data" / "normalized" / "datatracker.json"
+        if not p.exists():
+            continue
+        data = json.loads(p.read_text(encoding="utf-8"))
+        for d in list(data.get("drafts", [])) + list(data.get("active_drafts", [])):
+            name = d.get("name", "")
+            labels = set(d.get("state_labels", []))
+            if name.startswith("draft-ietf-") and name not in on_map and not (labels & inactive):
+                found[name] = d.get("title", "")
+    return [f"{n}: {t}" for n, t in sorted(found.items())]
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true", help="verify only; write nothing, exit 1 on any failure")
@@ -289,6 +347,12 @@ def main() -> int:
             }
         )
         time.sleep(0.2)
+
+    fresh = newcomers(catalogue)
+    if fresh:
+        print(f"landscape: {len(fresh)} working-group drafts the tracks follow are not on the map:")
+        for f in fresh:
+            print(f"  not on the map: {f}")
 
     bad_status = {k: v for k, v in statuses.items() if v.get("stale") or v.get("verified") is False}
     bad = [a for a in adoption if not a["verified"]]
