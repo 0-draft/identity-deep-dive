@@ -35,6 +35,26 @@ jobs:
           python-version: "3.12"
       - name: Compile all Python scripts
         run: python -m compileall -q tracks/*/scripts scripts
+      - name: Check the spec explainers against their template
+        run: python scripts/landscape/explainers.py
+      - name: Check the RFC texts and translations are well formed
+        run: |
+          for d in data/rfc/*/; do
+            python - "$d" <<'PY'
+          import json, sys
+          from pathlib import Path
+          d = Path(sys.argv[1])
+          en = json.loads((d / "en.json").read_text())
+          ids = {p["id"]: p["kind"] for s in en["sections"] for p in s["paragraphs"]}
+          if (d / "ja.json").exists():
+              ja = json.loads((d / "ja.json").read_text())
+              bad = [k for k in ja["paragraphs"] if ids.get(k) in (None, "pre")]
+              if bad:
+                  sys.exit(f"{d}: translated paragraphs that do not exist or are preformatted: {bad[:5]}")
+              if ja["source_hash"] != en["content_hash"]:
+                  print(f"::warning::{d}: translation predates the current English text")
+          PY
+          done
 
   shellcheck:
     runs-on: ubuntu-latest
