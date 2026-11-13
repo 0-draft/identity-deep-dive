@@ -1,0 +1,10 @@
+---
+import SpecPage from "../../../../views/SpecPage.astro";
+import { landscape } from "../../../../lib/landscape";
+
+export function getStaticPaths() {
+  return landscape().specs.map((s) => ({ params: { id: s.id } }));
+}
+---
+
+<SpecPage lang="ja" id={Astro.params.id!} />

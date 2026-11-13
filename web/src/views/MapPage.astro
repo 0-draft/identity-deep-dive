@@ -13,6 +13,9 @@ import {
   type Spec,
   type StatusGroup,
 } from "../lib/landscape";
+import { activity, newcomers } from "../lib/activity";
+import { hasExplainer } from "../lib/explainers";
+import { trackName } from "../lib/tracks";
 
 interface Props {
   lang: Lang;
@@ -22,6 +25,17 @@ const { layers, specs, generatedAt } = landscape();
 const byId = new Map(specs.map((s) => [s.id, s]));
 const groups: StatusGroup[] = ["rfc", "near", "draft", "draft-inactive", "openid-final", "openid-draft", "other", "unknown"];
 const used = new Set(specs.map((s) => statusGroup(s.status)));
+
+// What moved in the last 90 days, by the signals the tracks collect; and the
+// working-group drafts the tracks follow that have no entry on the map yet.
+const acts = new Map(specs.map((s) => [s.id, activity(s)]));
+const moving = specs
+  .filter((s) => (acts.get(s.id)?.score ?? 0) > 0)
+  .sort((a, b) => (acts.get(b.id)!.score - acts.get(a.id)!.score) || ((acts.get(b.id)!.latest ?? "") < (acts.get(a.id)!.latest ?? "") ? -1 : 1))
+  .slice(0, 6);
+const onMap = new Set(specs.flatMap((s) => [s.ietf?.draft, s.status.from_draft]).filter((x): x is string => !!x));
+const fresh = newcomers(onMap);
+const specHref = (s: Spec) => href(lang, `map/${s.id}/`);
 
 // Short status text for a card: the RFC number, or the stage for a draft.
 const shortStatus = (s: Spec) =>
@@ -76,6 +90,30 @@ const neighbourhood = (s: Spec) => {
     ))}
   </ul>
 
+  {moving.length > 0 && (
+    <section aria-labelledby="moving" class="mb-10">
+      <h2 id="moving" class="headline text-2xl">{t(lang, "mapMoving")}</h2>
+      <p class="mt-1 mb-4 max-w-[70ch] text-sm text-muted">{t(lang, "mapMovingNote")}</p>
+      <ol class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {moving.map((s) => {
+          const a = acts.get(s.id)!;
+          const lead = a.insights[0];
+          return (
+            <li>
+              <a href={specHref(s)} data-st={statusGroup(s.status)} class="st-card block h-full rounded-md bg-surface px-4 py-3 no-underline hover:no-underline hover:shadow-sm">
+                <span class="flex items-baseline justify-between gap-3">
+                  <span class="text-[15px] font-semibold leading-snug text-ink">{s.name}</span>
+                  <span class="shrink-0 text-xs text-muted tabular-nums">{a.score} {t(lang, "mapSignals")}</span>
+                </span>
+                {lead && <span class="mt-1.5 block text-[13px] leading-snug text-muted">{pick(lang, lead.headline, lead.headline_ja)}</span>}
+              </a>
+            </li>
+          );
+        })}
+      </ol>
+    </section>
+  )}
+
   <section aria-label={t(lang, "mapTitle")} class="space-y-6">
     {layers.map((l) => {
       const items = specs.filter((s) => s.layer === l.id);
@@ -85,7 +123,7 @@ const neighbourhood = (s: Spec) => {
           <ul class="grid gap-2" style="grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr))">
             {items.map((s) => (
               <li>
-                <a href={`#spec-${s.id}`} data-st={statusGroup(s.status)} class="st-card block h-full rounded-md bg-surface px-3 py-2.5 no-underline hover:no-underline hover:shadow-sm">
+                <a href={specHref(s)} data-st={statusGroup(s.status)} class="st-card block h-full rounded-md bg-surface px-3 py-2.5 no-underline hover:no-underline hover:shadow-sm">
                   <span class="block text-[14px] font-semibold leading-snug text-ink">{s.name}</span>
                   <span class="mt-1 flex flex-wrap gap-x-2 text-xs text-muted">
                     <span class="st-dot" data-st={statusGroup(s.status)}>{shortStatus(s)}</span>
@@ -102,6 +140,21 @@ const neighbourhood = (s: Spec) => {
     })}
   </section>
 
+  {fresh.length > 0 && (
+    <section aria-labelledby="newcomers" class="mt-12">
+      <h2 id="newcomers" class="headline text-xl">{t(lang, "mapNewcomers")}</h2>
+      <p class="mt-1 mb-3 max-w-[70ch] text-sm text-muted">{t(lang, "mapNewcomersNote")}</p>
+      <ul class="grid gap-x-6 gap-y-1.5 text-[14px] leading-snug sm:grid-cols-2">
+        {fresh.map((d) => (
+          <li>
+            <a href={d.url} rel="noreferrer">{d.name}</a><span class="text-muted">-{d.rev}</span>
+            <span class="block text-[13px] text-muted">{d.title} · {trackName(d.track)} · {d.date}</span>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )}
+
   <h2 class="headline mt-14 text-2xl">{t(lang, "mapDetails")}</h2>
   <div class="mt-4 space-y-10">
     {layers.map((l) => {
@@ -112,7 +165,7 @@ const neighbourhood = (s: Spec) => {
           <div class="mt-3 grid grid-cols-1 gap-3 lg:grid-cols-2">
             {items.map((s) => (
               <article id={`spec-${s.id}`} data-st={statusGroup(s.status)} class="st-card scroll-mt-6 rounded-md bg-surface px-5 py-4">
-                <h4 class="headline text-[1.15rem]">{s.name}</h4>
+                <h4 class="headline text-[1.15rem]"><a href={specHref(s)} class="text-ink no-underline hover:underline">{s.name}</a></h4>
                 <p class="mt-1 flex flex-wrap gap-x-3 text-[13px] text-muted">
                   <span class="st-dot" data-st={statusGroup(s.status)}>{(STAGE_DETAIL[s.status.stage] ?? { en: s.status.label, ja: s.status.label })[lang]}</span>
                   {s.status.url && <a href={s.status.url} rel="noreferrer">{s.status.label || t(lang, "mapSource")}</a>}
@@ -136,9 +189,10 @@ const neighbourhood = (s: Spec) => {
                     </div>
                   </details>
                 )}
-                {s.deep_dive && (
-                  <p class="mt-2 text-[13px]"><a href={href(lang, `${s.deep_dive.track}/deep-dives/${s.deep_dive.slug}/`)}>{t(lang, "deepDive")}</a></p>
-                )}
+                <p class="mt-2 flex flex-wrap gap-x-4 text-[13px]">
+                  <a href={specHref(s)}>{hasExplainer(s.id) ? t(lang, "mapExplainer") : t(lang, "mapOpenSpec")}</a>
+                  {s.deep_dive && <a href={href(lang, `${s.deep_dive.track}/deep-dives/${s.deep_dive.slug}/`)}>{t(lang, "deepDive")}</a>}
+                </p>
                 <div class="mt-3">
                   <p class="text-[13px] font-semibold text-muted">{t(lang, "mapAdoption")}</p>
                   {s.adoption.length === 0 ? (

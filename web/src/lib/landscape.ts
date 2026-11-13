@@ -41,6 +41,12 @@ export interface SpecStatus {
   stale?: boolean;
   note?: string;
   note_ja?: string;
+  /** The draft an RFC came from, when the catalogue names the draft. */
+  from_draft?: string;
+  /** Revision history from the Datatracker, newest last. */
+  history?: { rev: string; date: string }[];
+  /** Publication date of an RFC. */
+  published?: string;
 }
 
 export interface Claim {
@@ -65,6 +71,9 @@ export interface Spec {
   summary_ja: string;
   relations: { to: string; kind: RelationKind }[];
   deep_dive?: { track: string; slug: string };
+  ietf?: { rfc?: number; draft?: string };
+  openid?: boolean;
+  external?: { url: string; label?: string };
   status: SpecStatus;
   adoption: Claim[];
   /** Claims whose evidence was not found at the last check. */
@@ -92,6 +101,9 @@ export function landscape(): Landscape {
     summary_ja: s.summary_ja,
     relations: s.relations ?? [],
     deep_dive: s.deep_dive,
+    ietf: s.ietf,
+    openid: s.openid,
+    external: s.external,
     status: status.specs?.[s.id] ?? { stage: "unknown", label: "" },
     adoption: claims.filter((c) => c.spec === s.id && c.verified),
     unverified: claims.filter((c) => c.spec === s.id && !c.verified),

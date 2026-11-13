@@ -1,0 +1,10 @@
+---
+import RfcPage from "../../../../views/RfcPage.astro";
+import { rfcSpecs } from "../../../../lib/rfcpages";
+
+export function getStaticPaths() {
+  return rfcSpecs().map((s) => ({ params: { id: s.id } }));
+}
+---
+
+<RfcPage lang="en" id={Astro.params.id!} />

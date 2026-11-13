@@ -1,0 +1,256 @@
+---
+import Layout from "../layouts/Layout.astro";
+import InsightItem from "../components/InsightItem.astro";
+import { formatDay, href, pick, t, type Lang } from "../lib/i18n";
+import {
+  KIND_LABEL,
+  MATURITY_LABEL,
+  relationLabel,
+  STAGE_DETAIL,
+  landscape,
+  statusGroup,
+  type RelationKind,
+  type Spec,
+} from "../lib/landscape";
+import { explainer, sectionsOf } from "../lib/explainers";
+import { activity } from "../lib/activity";
+import { renderDocument } from "../lib/markdown";
+import { rfc as loadRfc } from "../lib/rfc";
+import { trackName } from "../lib/tracks";
+
+interface Props {
+  lang: Lang;
+  id: string;
+}
+const { lang, id } = Astro.props;
+const { layers, specs } = landscape();
+const spec = specs.find((s) => s.id === id)!;
+const byId = new Map(specs.map((s) => [s.id, s]));
+const layer = layers.find((l) => l.id === spec.layer);
+
+const doc = explainer(id, lang);
+const act = activity(spec);
+const rfcDoc = act.rfc ? loadRfc(act.rfc) : null;
+
+// Every product, IdP, cloud, wallet, government and spec claim on one side;
+// libraries and open-source servers on the other.
+const OSS_KINDS = new Set(["library"]);
+const products = spec.adoption.filter((c) => !OSS_KINDS.has(c.kind));
+const oss = spec.adoption.filter((c) => OSS_KINDS.has(c.kind));
+
+// The spec's neighbourhood, as on the map page: what it relates to and what
+// relates to it, one small graph.
+const label = (x: string) => x.replace(/["`<>\[\]{}()|#;]/g, " ").replace(/\s+/g, " ").trim();
+const node = (x: string) => "s_" + x.replace(/-/g, "_");
+const short = (s: Spec) => label(s.name.replace(/\s*\(.*\)\s*$/, ""));
+const incoming = specs.flatMap((o) => o.relations.filter((r) => r.to === id).map((r) => ({ from: o, kind: r.kind })));
+const outgoing = spec.relations.filter((r) => byId.has(r.to));
+const nodes = new Map<string, Spec>([[id, spec]]);
+outgoing.forEach((r) => nodes.set(r.to, byId.get(r.to)!));
+incoming.forEach((r) => nodes.set(r.from.id, r.from));
+const edge = (a: Spec, b: string, kind: RelationKind) =>
+  `  ${node(a.id)} ${kind === "alternative" ? "-.-" : "-->"}|${label(relationLabel(a, kind, lang))}| ${node(b)}`;
+const graph =
+  outgoing.length + incoming.length > 0
+    ? [
+        "flowchart LR",
+        ...[...nodes.values()].map((n) => `  ${node(n.id)}["${short(n)}"]`),
+        `  style ${node(id)} stroke-width:3px`,
+        ...outgoing.map((r) => edge(spec, r.to, r.kind)),
+        ...incoming.map((r) => edge(r.from, id, r.kind)),
+      ].join("\n")
+    : "";
+
+const stage = (STAGE_DETAIL[spec.status.stage] ?? { en: spec.status.label, ja: spec.status.label })[lang];
+const sections = doc ? sectionsOf(doc.body) : [];
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9぀-ヿ一-鿿]+/g, "-").replace(/^-|-$/g, "");
+const html = doc ? renderDocument(doc.body, t(lang, "diagram")).replace(/<h2>(.+?)<\/h2>/g, (_, h: string) => `<h2 id="${slug(h)}">${h}</h2>`) : "";
+const recentInsights = act.insights.slice(0, 8);
+const mail = act.mail.slice(0, 10);
+const timeline = [...act.revisions].reverse();
+const title = `${spec.name}: ${t(lang, "siteTitle")}`;
+const description = doc?.oneLiner || pick(lang, spec.summary, spec.summary_ja);
+---
+
+<Layout title={title} lang={lang} path={`map/${id}/`} current="map" description={description}>
+  <nav class="mb-4 text-sm text-muted">
+    <a href={href(lang, "map/")}>{t(lang, "specBack")}</a> / {layer ? pick(lang, layer.name, layer.name_ja) : spec.layer}
+  </nav>
+
+  <header class="mb-8">
+    <h1 class="headline text-3xl break-words sm:text-4xl">{spec.name}</h1>
+    <p class="mt-3 max-w-[60ch] text-[17px] leading-relaxed">{description}</p>
+    <dl class="mt-5 grid grid-cols-2 gap-x-6 gap-y-3 text-sm sm:grid-cols-4" data-st={statusGroup(spec.status)}>
+      <div>
+        <dt class="text-xs font-semibold text-muted uppercase">{t(lang, "specWhere")}</dt>
+        <dd class="st-dot mt-0.5">{stage}</dd>
+        {spec.status.note && <dd class="text-muted">{pick(lang, spec.status.note, spec.status.note_ja)}</dd>}
+      </div>
+      <div>
+        <dt class="text-xs font-semibold text-muted uppercase">{t(lang, "specOfficial")}</dt>
+        <dd class="mt-0.5 break-words">
+          {spec.status.url ? <a href={spec.status.url} rel="noreferrer">{spec.status.label || t(lang, "mapSource")}</a> : <span class="text-muted">{spec.status.label}</span>}
+        </dd>
+        {spec.status.updated && <dd class="text-muted">{spec.status.updated}</dd>}
+      </div>
+      <div>
+        <dt class="text-xs font-semibold text-muted uppercase">{t(lang, "mapAdoption")}</dt>
+        <dd class="mt-0.5">
+          {spec.adoption.length === 0 ? <span class="text-muted">0</span> : <a href="#support">{products.length + oss.length}</a>}
+        </dd>
+      </div>
+      <div>
+        <dt class="text-xs font-semibold text-muted uppercase">{t(lang, "specActivity")}</dt>
+        <dd class="mt-0.5">{act.score > 0 ? <a href="#activity">{act.score} {t(lang, "mapSignals")}</a> : <span class="text-muted">0</span>}</dd>
+      </div>
+    </dl>
+    <p class="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+      {spec.deep_dive && <a href={href(lang, `${spec.deep_dive.track}/deep-dives/${spec.deep_dive.slug}/`)}>{t(lang, "deepDive")}</a>}
+      {rfcDoc && <a href={href(lang, `map/${id}/rfc/`)}>{t(lang, "specRfc")}</a>}
+      {doc && <a href={`https://github.com/0-draft/identity-deep-dive/tree/main/data/specs/${id}`} rel="noreferrer">{t(lang, "specExplainerSource")}</a>}
+    </p>
+  </header>
+
+  <div class="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_20rem]">
+    <div class="min-w-0">
+      {doc ? (
+        <article class="rounded-md border border-rule bg-surface px-5 py-6 sm:px-8">
+          {lang === "ja" && !doc.translated && <p class="mb-4 rounded-md bg-paper px-3 py-2 text-sm text-muted">{t(lang, "specExplainerUntranslated")}</p>}
+          {sections.length > 1 && (
+            <nav aria-label="Sections" class="mb-6 flex flex-wrap gap-2 text-sm">
+              {sections.map((s) => <a class="rounded border border-rule px-2.5 py-1 no-underline hover:bg-paper hover:no-underline" href={`#${slug(s)}`}>{s}</a>)}
+            </nav>
+          )}
+          <div class="prose-report prose-explainer" set:html={html} />
+        </article>
+      ) : (
+        <article class="rounded-md border border-rule bg-surface px-5 py-6 sm:px-8">
+          <p class="text-sm text-muted">{t(lang, "specNoExplainer")}</p>
+          <p class="mt-3 text-[15px] leading-relaxed">{pick(lang, spec.summary, spec.summary_ja)}</p>
+        </article>
+      )}
+
+      {graph && (
+        <section id="relations" class="mt-10 scroll-mt-6">
+          <h2 class="headline text-2xl">{t(lang, "specRelations")}</h2>
+          <details class="disclosure mt-2" data-diagram open>
+            <summary>{t(lang, "mapRelations")}</summary>
+            <div class="diagram-frame"><pre class="mermaid">{graph}</pre></div>
+          </details>
+        </section>
+      )}
+
+      <section id="support" class="mt-10 scroll-mt-6">
+        <h2 class="headline text-2xl">{t(lang, "mapAdoption")}</h2>
+        <p class="mt-1 text-sm text-muted">{t(lang, "mapAdoptionRule")}</p>
+        {spec.adoption.length === 0 && <p class="mt-3 text-sm text-muted">{t(lang, "mapNoAdoption")}</p>}
+        <div class="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+          {[
+            { key: "specProducts" as const, items: products },
+            { key: "specOss" as const, items: oss },
+          ].map(({ key, items }) => items.length > 0 && (
+            <div class="rounded-md border border-rule bg-surface px-4 py-3">
+              <h3 class="text-sm font-semibold text-muted">{t(lang, key)}</h3>
+              <ul class="mt-2 space-y-2 text-[14px] leading-snug">
+                {items.map((c) => (
+                  <li>
+                    <span class="font-medium">{c.who}</span>
+                    <span class="text-muted"> ({(KIND_LABEL[c.kind] ?? { en: c.kind, ja: c.kind })[lang]})</span>
+                    {c.maturity && <span class="ml-1 rounded border border-rule px-1 text-[11px] text-muted">{MATURITY_LABEL[c.maturity][lang]}</span>}: {pick(lang, c.what, c.what_ja)}{" "}
+                    <a href={c.url} rel="noreferrer">{t(lang, "mapSource")}</a>
+                    {c.verified_on && <span class="text-muted"> ({t(lang, "mapVerifiedOn")} {c.verified_on})</span>}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        {spec.unverified.length > 0 && (
+          <p class="mt-3 text-xs text-muted">
+            {t(lang, "mapNotReverified")}: {spec.unverified.map((c) => (c.verified_on ? `${c.who} (${t(lang, "mapLastVerified")} ${c.verified_on})` : c.who)).join(", ")}
+          </p>
+        )}
+      </section>
+
+      <section id="activity" class="mt-10 scroll-mt-6">
+        <h2 class="headline text-2xl">{t(lang, "specActivity")}</h2>
+        <p class="mt-1 text-sm text-muted">{t(lang, "specActivityNote")}</p>
+        {act.score === 0 && timeline.length === 0 && recentInsights.length === 0 && mail.length === 0 && (
+          <p class="mt-3 text-sm text-muted">{t(lang, "specNoActivity")}</p>
+        )}
+        {recentInsights.length > 0 && (
+          <div class="mt-5">
+            <h3 class="text-sm font-semibold text-muted">{t(lang, "specRecentExplanations")}</h3>
+            <ul class="mt-2 space-y-2">
+              {recentInsights.map((i) => (
+                <li><InsightItem item={i} lang={lang} variant="compact" showTrack={true} /></li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {mail.length > 0 && (
+          <div class="mt-6">
+            <h3 class="text-sm font-semibold text-muted">{t(lang, "specMail")}</h3>
+            <ul class="mt-2 space-y-1.5 text-[14px] leading-snug">
+              {mail.map((m) => (
+                <li>
+                  <a href={m.url} rel="noreferrer">{m.subject}</a>
+                  <span class="text-muted"> {m.date ? formatDay(lang, m.date) : ""} · {trackName(m.track)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </section>
+    </div>
+
+    <aside class="min-w-0 space-y-8 lg:sticky lg:top-6 lg:self-start">
+      <section>
+        <h2 class="text-sm font-semibold text-muted">{t(lang, "specRelations")}</h2>
+        {outgoing.length + incoming.length === 0 ? (
+          <p class="mt-2 text-sm text-muted">—</p>
+        ) : (
+          <ul class="mt-2 space-y-1 text-[14px]">
+            {outgoing.map((r) => (
+              <li><span class="text-muted">{relationLabel(spec, r.kind, lang)}:</span> <a href={href(lang, `map/${r.to}/`)}>{byId.get(r.to)!.name}</a></li>
+            ))}
+            {incoming.map((r) => (
+              <li><a href={href(lang, `map/${r.from.id}/`)}>{r.from.name}</a> <span class="text-muted">— {relationLabel(r.from, r.kind, lang).toLowerCase()}</span></li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section>
+        <h2 class="text-sm font-semibold text-muted">{t(lang, "specRevisions")}</h2>
+        {timeline.length === 0 ? (
+          <p class="mt-2 text-sm text-muted">{act.published ? `${t(lang, "specPublished")} ${act.published}` : t(lang, "specNoRevisions")}</p>
+        ) : (
+          <ol class="revisions mt-2 text-[13px]" style={`--n:${timeline.length}`}>
+            {timeline.map((r, i) => (
+              <li class:list={["revision", i === timeline.length - 1 && "revision-latest"]}>
+                <span class="font-mono">-{r.rev}</span>
+                <span class="text-muted">{r.date}</span>
+              </li>
+            ))}
+            {act.published && (
+              <li class="revision revision-latest"><span class="font-mono">RFC</span><span class="text-muted">{act.published}</span></li>
+            )}
+          </ol>
+        )}
+      </section>
+
+      {rfcDoc && (
+        <section class="rounded-md border border-rule bg-surface px-4 py-3">
+          <h2 class="text-sm font-semibold">
+            <a href={href(lang, `map/${id}/rfc/`)}>{t(lang, "specRfc")}</a>
+          </h2>
+          <p class="mt-1 text-[13px] text-muted">{t(lang, "specRfcNote")}</p>
+          {rfcDoc.translation && (
+            <p class="mt-1 text-[13px] text-muted">{Math.round(rfcDoc.translation.coverage * 100)}% {t(lang, "rfcCoverage")}</p>
+          )}
+        </section>
+      )}
+    </aside>
+  </div>
+</Layout>

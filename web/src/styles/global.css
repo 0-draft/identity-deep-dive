@@ -284,4 +284,45 @@
   .prose-report blockquote {
     @apply my-4 border-l-4 border-rule pl-4 text-muted;
   }
+
+  /* Spec explainers: the headings are the page's structure, so they get the
+     serif voice; the first diagram sits right under its heading. */
+  .prose-explainer h2 {
+    @apply mt-10 mb-3 border-0 pb-0 text-[1.35rem];
+    font-family: var(--font-serif);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.22;
+    text-wrap: balance;
+  }
+  :lang(ja) .prose-explainer h2 {
+    font-family: "Noto Serif JP", var(--font-serif);
+    letter-spacing: 0;
+    line-height: 1.45;
+  }
+  .prose-explainer h2:first-child {
+    @apply mt-0;
+  }
+  .prose-explainer > details.disclosure {
+    @apply my-5;
+  }
+  .prose-explainer li > strong {
+    @apply text-ink;
+  }
+
+  /* Revision timeline: a vertical rail with a dot per revision, the latest
+     one filled. */
+  .revisions {
+    @apply relative ml-1.5 border-l border-rule pl-4;
+  }
+  .revision {
+    @apply relative flex flex-wrap gap-x-3 py-0.5;
+  }
+  .revision::before {
+    content: "";
+    @apply absolute top-[0.55em] -left-[1.3rem] h-2 w-2 rounded-full border border-muted bg-surface;
+  }
+  .revision-latest::before {
+    @apply border-ink bg-ink;
+  }
 }
