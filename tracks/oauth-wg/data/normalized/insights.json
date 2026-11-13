@@ -1,18 +1,5 @@
 {
-  "attempts": {
-    "count": 1
-  },
   "briefs": [
-    {
-      "at": "2026-11-05T06:53:56+00:00",
-      "text": "draft-ietf-oauth-sd-jwt-vc is in IESG review. Mike Bishop's DISCUSS on overriding the RFC 7800 sub/iss MUST is being resolved by adding \"Updates: 7800\", and further ballot-comment PRs are open. Separately, the new Agent Intent Token draft got its first list feedback.",
-      "text_ja": "draft-ietf-oauth-sd-jwt-vc は IESG レビュー中である。RFC 7800 の sub/iss の MUST を上書きする点への Mike Bishop の DISCUSS は「Updates: 7800」の追加で解消に向かっており、他の投票コメントへの PR も出ている。別件として、新規の Agent Intent Token ドラフトに最初のフィードバックが寄せられた。"
-    },
-    {
-      "at": "2026-11-05T20:01:33+00:00",
-      "text": "draft-ietf-oauth-sd-jwt-vc-24 was published during IESG review. It formally updates RFC 7800 so cnf no longer needs sub or iss, and it tightens issuer-identification rules for x5c and iss. Mike Bishop cleared his DISCUSS, and Éric Vyncke's DISCUSS on BCP 14 keywords is still being worked in PR #454.",
-      "text_ja": "draft-ietf-oauth-sd-jwt-vc-24 が IESG レビュー中に公開された。cnf に sub または iss を必須とする要件を外す形で RFC 7800 を正式に更新し、x5c と iss による発行者の識別規則も厳格化した。Mike Bishop は DISCUSS を解除したが、Éric Vyncke の BCP 14 キーワードに関する DISCUSS は PR #454 で対応中である。"
-    },
     {
       "at": "2026-11-06T06:53:13+00:00",
       "text": "draft-ietf-oauth-sd-jwt-vc-25 was published in answer to Éric Vyncke's DISCUSS: it turns the type-matching SHOULD into plain prose and spells out the risk of skipping the status check. The rest of the run is new AI-agent drafts and Skyfire AMR/KYAPay review threads.",
@@ -82,39 +69,14 @@
       "at": "2026-11-12T07:16:09+00:00",
       "text": "No draft text changed in this run. The two list messages are an IETF 127 slide-upload reminder and a thread on how to compare the AAT-02 draft with PSEA-based approval proofs.",
       "text_ja": "この回ではドラフト本文の変更はない。メーリングリストの2件は、IETF 127のスライド提出依頼と、AAT-02を承認証明（PSEA）と比較する方法をめぐる議論である。"
+    },
+    {
+      "at": "2026-11-13T06:50:52+00:00",
+      "text": "The main item is the draft-le-agent-passport-00 thread. The author set out per-constraint subsumption rules for -01 and agreed to compare them with other delegation drafts before IETF 127. The only other change is an authorship-ordering PR on OAuth 2.1.",
+      "text_ja": "最も重要なのは draft-le-agent-passport-00 のスレッドである。著者が -01 向けの制約種別ごとの包含規則を示し、IETF 127 前に他の委任ドラフトと比較することに同意した。ほかには OAuth 2.1 の著者表記に関する PR が一件あるのみである。"
     }
   ],
   "items": {
-    "draft:draft-ietf-oauth-sd-jwt-vc-24": {
-      "diagram": "",
-      "first_seen": "2026-11-05",
-      "headline": "This revision makes SD-JWT VC formally update RFC 7800 and tightens how the issuer is identified.",
-      "headline_ja": "SD-JWT VC が RFC 7800 を正式に更新し、発行者の識別方法も厳格化した改訂版である。",
-      "id": "draft:draft-ietf-oauth-sd-jwt-vc-24",
-      "kind": "draft-revision",
-      "related": [
-        {
-          "name": "openid/OpenID4VP",
-          "note": "OpenID4VP presents SD-JWT VC credentials, so issuer identification rules affect verifiers there.",
-          "note_ja": "OpenID4VP は SD-JWT VC を提示するため、発行者識別の規則は同仕様の検証者に影響する。",
-          "track": "openid"
-        }
-      ],
-      "significance": "substantive",
-      "summary": "-24 adds 'Updates: 7800 (if approved)' and a new section 2.2.2.3.1 saying the RFC 7800 requirement that a JWT with cnf also carry sub or iss is nullified, not just overridden, and applies to SD-JWT VCs, SD-JWTs and JWTs generally. For key discovery, an x5c chain must be validated per RFC 7515 and RFC 5280 against a policy-permitted trust anchor (inclusion in x5c does not make a certificate an anchor). An iss claim is not authenticated by the x5c mechanism, and issuers SHOULD NOT include an unbound iss. Recipients MUST NOT treat inputs of other mechanisms as identifying the issuer unless policy binds them, and the security considerations now spell this out. Lowercasing scheme and host in iss is RECOMMENDED. Other changes are wording: some MAY/MUST became 'can', and RFC 5280 and SVG references were added. The appendix examples were also regenerated, and the mailing list (item 2) reports this regeneration was a mistake.",
-      "summary_ja": "-24 は「Updates: 7800 (if approved)」を追加し、新設の 2.2.2.3.1 節で、cnf を含む JWT に sub または iss を含めるという RFC 7800 の要件を、上書きではなく無効化すると述べている。これは SD-JWT VC に限らず SD-JWT や JWT 一般に適用される。鍵の発見では、x5c の証明書チェーンを RFC 7515 と RFC 5280 に従い、ポリシーが許可する trust anchor に対して検証する必要がある。x5c に含まれているだけでは trust anchor にならない。iss クレームは x5c の仕組みでは認証されず、発行者は束縛のない iss を含めるべきでない（SHOULD NOT）。他の仕組みの入力を、ポリシーで束縛されない限り発行者の識別に使ってはならない（MUST NOT）ことが、セキュリティ考慮事項にも明記された。iss のスキームとホストを小文字化することが推奨される。その他は一部の MAY/MUST を 'can' に改めるなどの文言修正と、RFC 5280 および SVG の参照追加である。付録の例も再生成されたが、メーリングリスト（項目 2）によればこれは誤りだった。",
-      "title": "draft-ietf-oauth-sd-jwt-vc-24: SD-JWT-based Verifiable Digital Credentials (SD-JWT VC)",
-      "updated_at": "2026-11-05T20:01:33+00:00",
-      "url": "https://author-tools.ietf.org/iddiff?url1=draft-ietf-oauth-sd-jwt-vc-23&url2=draft-ietf-oauth-sd-jwt-vc-24",
-      "use_cases": [
-        "A verifier that accepts credentials with both an HTTPS iss and an x5c header must now decide by policy which mechanism identifies the issuer, and must not trust an unbound iss.",
-        "A wallet or issuer producing key-bound SD-JWT VCs without sub or iss can now cite a formal update to RFC 7800 rather than an override."
-      ],
-      "use_cases_ja": [
-        "HTTPS の iss と x5c ヘッダーの両方を持つクレデンシャルを受け付ける検証者は、どの仕組みで発行者を識別するかをポリシーで決める必要があり、束縛のない iss を信頼してはならない。",
-        "sub も iss も持たない鍵束縛 SD-JWT VC を発行するウォレットや発行者は、上書きではなく RFC 7800 の正式な更新を根拠にできる。"
-      ]
-    },
     "draft:draft-ietf-oauth-sd-jwt-vc-25": {
       "diagram": "",
       "first_seen": "2026-11-06",
@@ -146,23 +108,6 @@
       "title": "draft-ietf-oauth-sd-jwt-vc-26: SD-JWT-based Verifiable Digital Credentials (SD-JWT VC)",
       "updated_at": "2026-11-06T19:28:20+00:00",
       "url": "https://author-tools.ietf.org/iddiff?url1=draft-ietf-oauth-sd-jwt-vc-25&url2=draft-ietf-oauth-sd-jwt-vc-26",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
-    "mail:-XTToR0epFjLtoYB-XfkOUVcjps": {
-      "diagram": "",
-      "first_seen": "2026-11-05",
-      "headline": "Charles Eckel's No Objection ballot on sd-jwt-vc-23 asks for lowercase keywords and a stricter svg_id character set.",
-      "headline_ja": "Charles Eckel の sd-jwt-vc-23 への No Objection 投票は、BCP 14 キーワードの小文字化と svg_id の文字集合の厳密化を求めている。",
-      "id": "mail:-XTToR0epFjLtoYB-XfkOUVcjps",
-      "kind": "mail",
-      "related": [],
-      "significance": "editorial",
-      "summary": "Eckel supports Mike Bishop's DISCUSS on the RFC 7800 sub/iss override. His comments: change MAY to lowercase \"can\" in Sections 2.2, 2.2.2.5 and 5.3.3, where no protocol-level option is meant. He also asks whether \"alphanumeric\" for svg_id is specific enough, suggesting ASCII A-Z, a-z, 0-9 and underscore, and a statement on case-sensitivity. The editor replies that PR #453 fixes the keywords and that alphanumeric is probably specific enough.",
-      "summary_ja": "Eckel は RFC 7800 の sub/iss 上書きに関する Mike Bishop の DISCUSS を支持している。コメントは、セクション 2.2、2.2.2.5、5.3.3 で、プロトコル上の選択肢を意図しない MAY を小文字の can にすること、および svg_id の「alphanumeric」が十分に明確かを問い、ASCII の A-Z、a-z、0-9 とアンダースコアに限定し、大文字小文字の区別も明記することを提案している。エディターは、キーワードは PR #453 で修正し、alphanumeric で十分に明確だと思うと回答している。",
-      "title": "Charles Eckel's No Objection on draft-ietf-oauth-sd-jwt-vc-23: (with COMMENT) (2 new messages)",
-      "updated_at": "2026-11-05T06:53:56+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/-XTToR0epFjLtoYB-XfkOUVcjps/",
       "use_cases": [],
       "use_cases_ja": []
     },
@@ -412,6 +357,50 @@
         "長期間有効なルートから定期的にエージェントジョブを実行し、それを妨げないホップ年齢の上限を必要とする運用。"
       ]
     },
+    "mail:J309gZABiOnSsvebrwYUWTi1Aow": {
+      "diagram": "",
+      "first_seen": "2026-11-13",
+      "headline": "Agent Passport author spells out -01 rules for cumulative limits, RAR grants and per-constraint attenuation of delegation receipts.",
+      "headline_ja": "Agent Passport の著者が、累積上限・RAR による付与・制約種別ごとの委任レシート縮小規則について -01 の方針を示した。",
+      "id": "mail:J309gZABiOnSsvebrwYUWTi1Aow",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-asor-wimse-agent-delegation-chain",
+          "note": "Named in the thread as having its own subsumption rule to compare against.",
+          "note_ja": "スレッドで、比較対象となる独自の包含規則を持つドラフトとして挙げられている。",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "draft-hulea-wimse-agent-mandate",
+          "note": "Named in the thread (as Hulea) among the drafts whose attenuation rules are to be compared.",
+          "note_ja": "スレッドで、縮小規則の比較対象として Hulea の名で挙げられている。",
+          "track": "ietf-wimse"
+        },
+        {
+          "name": "draft-sweeney-wimse-credential-delegation",
+          "note": "Kieran Sweeney, who replies in the thread, authors this credential delegation draft. This is an inference from the author name only.",
+          "note_ja": "スレッドで返信している Kieran Sweeney が著者の委任ドラフトである。著者名のみに基づく推定である。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "new-proposal",
+      "summary": "In reply to Kieran Sweeney, Ben Le says -01 will require a receipt with a cumulative limit to name exactly one relying party, which alone counts for the receipt and all its children. A limit without a single named party will be invalid. Sharing a total across relying parties is out of scope, and whether another party in the call path could keep the total is left open. He will define an RFC 9396 authorization_details type for grants so an authorization server that supports RAR can issue root receipts directly, while Token Exchange remains the path for an agent that obtains a receipt using its passport as actor token. He also gives a per-constraint subsumption table (host, port, methods, paths, tools, max_body_bytes, max_calls, max_spend, exp, aud). A child attenuates its parent only if every rule holds, unknown members are rejected, and anything not comparable is rejected. -01 has only a fixed limit of 8 receipts per chain and no depth claim. He plans to join Niki's comparison side meeting on 16 November and hold his own on 17 November, ahead of IETF 127.",
+      "summary_ja": "Ben Le は Kieran Sweeney への返信で、-01 では累積上限を持つレシートは依拠当事者を一つだけ指名しなければならず、その当事者がレシートとすべての子レシートの合計を単独で数えると述べた。単一の指名がない上限付きレシートは無効となる。複数の依拠当事者間で合計を共有することは対象外であり、呼び出し経路上の他の当事者が合計を保持する可能性は未決である。付与には RFC 9396 の authorization_details タイプを定義し、RAR 対応の認可サーバーがルートレシートを直接発行できるようにする。エージェントがパスポートをアクタートークンとしてレシートを得る場合は Token Exchange を使い続ける。さらに制約種別ごとの包含規則表(host、port、methods、paths、tools、max_body_bytes、max_calls、max_spend、exp、aud)を示した。子が親を縮小したといえるのはすべての規則を満たす場合のみであり、未知のメンバーや比較できないものは拒否される。-01 にはチェーン当たり 8 レシートという固定上限のみがあり、深さのクレームはない。IETF 127 に先立ち、11月16日の Niki 主催のサイドミーティングに参加し、17日に自身のサイドミーティングを開く予定である。",
+      "title": "New draft: Agent Passports and Delegation Receipts (draft-le-agent-passport-00) (2 new messages)",
+      "updated_at": "2026-11-13T06:50:52+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/J309gZABiOnSsvebrwYUWTi1Aow/",
+      "use_cases": [
+        "An authorization server that already supports RAR could issue root delegation receipts for agents using a new authorization_details type.",
+        "A relying party enforcing a cumulative spend or call cap on an agent chain must be the one named counter in the receipt.",
+        "Implementers of several agent delegation drafts can use the per-constraint attenuation table as a basis for shared test vectors."
+      ],
+      "use_cases_ja": [
+        "RAR に対応済みの認可サーバーは、新しい authorization_details タイプを使ってエージェント向けのルート委任レシートを発行できる。",
+        "エージェントのチェーンに累積の支出上限や呼び出し回数上限を適用する依拠当事者は、レシート内で指名された唯一のカウンターとなる必要がある。",
+        "複数のエージェント委任ドラフトを実装する者は、制約種別ごとの縮小規則表を共通のテストベクトルの出発点にできる。"
+      ]
+    },
     "mail:JAOcNgwRIJuiIxUVCIy2iSJMQIg": {
       "diagram": "",
       "first_seen": "2026-11-08",
@@ -433,27 +422,6 @@
       "use_cases_ja": [
         "特定の操作（例えば支払い）についてユーザー検証付きの承認をリソースサーバーが求める場合に、独自のアテステーション形式と既存の EAT プロファイルのどちらを使うか選ぶ場面。",
         "ドラフト固有のアテステーション形式ではなく、共有された適合テストケースに基づいて検証実装を作りたい実装者。"
-      ]
-    },
-    "mail:Jq-oFheO82BciSZUIkv2hjpc1WI": {
-      "diagram": "",
-      "first_seen": "2026-11-05",
-      "headline": "Éric Vyncke blocked -23 with a DISCUSS asking why two SHOULDs are not MUSTs.",
-      "headline_ja": "Éric Vyncke は 2 つの SHOULD がなぜ MUST でないのかを問う DISCUSS で -23 をブロックした。",
-      "id": "mail:Jq-oFheO82BciSZUIkv2hjpc1WI",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Vyncke's DISCUSS questions the SHOULD in Section 2.2.2.2 on treating an SD-JWT VC as being of a type listed in aka_vcts, and the SHOULD in Section 2.4 on checking status when present. He asks for guidance on when to bypass each and the consequences, citing the IESG statement on BCP 14 usage. Non-blocking comments second Bishop's DISCUSS on the RFC 7800 update and suggest replacing the normative RFC 6890 reference in Section 7.1 with the IANA IPv4 and IPv6 special-purpose registries.",
-      "summary_ja": "Vyncke の DISCUSS は、aka_vcts に列挙された型として SD-JWT VC を扱うことに関する 2.2.2.2 節の SHOULD と、status がある場合に確認することに関する 2.4 節の SHOULD について問うものである。それぞれを回避してよい場合とその結果についての指針を求め、BCP 14 の使い方に関する IESG 声明を引いている。ブロックしないコメントでは、RFC 7800 の更新に関する Bishop の DISCUSS に同意し、7.1 節の RFC 6890 への規範的参照を IANA の IPv4 および IPv6 特殊用途レジストリに置き換えることを提案している。",
-      "title": "Éric Vyncke's Discuss on draft-ietf-oauth-sd-jwt-vc-23: (with DISCUSS and COMMENT)",
-      "updated_at": "2026-11-05T20:01:33+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/Jq-oFheO82BciSZUIkv2hjpc1WI/",
-      "use_cases": [
-        "Verifiers deciding whether status checks are mandatory could see the status SHOULD tightened or explained before publication."
-      ],
-      "use_cases_ja": [
-        "status 確認が必須かどうかを判断する検証者は、公開前にこの SHOULD が厳格化または説明されることがありうる。"
       ]
     },
     "mail:L2gMfUEpsEtu7r9bHmWQ9uerlOk": {
@@ -589,57 +557,6 @@
       "use_cases": [],
       "use_cases_ja": []
     },
-    "mail:Qguh52h8Jv00QvGc4miq8aAwZzY": {
-      "diagram": "",
-      "first_seen": "2026-11-05",
-      "headline": "A thread on using SD-JWT VC mandates for invoicing agents explains when to choose sd_hash or issuer_jwt_hash in Delegate SD-JWT.",
-      "headline_ja": "請求エージェント向けの SD-JWT VC マンデートに関するスレッドで、Delegate SD-JWT における sd_hash と issuer_jwt_hash の使い分けが説明された。",
-      "id": "mail:Qguh52h8Jv00QvGc4miq8aAwZzY",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-hulea-wimse-agent-mandate",
-          "note": "Also addresses verifiable mandates for agents across domains, an overlapping delegation use case.",
-          "note_ja": "ドメインをまたぐエージェントの検証可能なマンデートを扱い、委任のユースケースが重なる。",
-          "track": "ietf-wimse"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "Gareth Oliver explained that issuer_jwt_hash in the KB-JWT lets the holder allow a delegate to change what is disclosed from the preceding SD-JWT. That allows a chain such as base invoice, then narrowed invoice, then further narrowed invoice, where later delegates can drop claims from earlier links. sd_hash is for cases like a user credential at the base, where the holder wants downstream delegates unable to remove disclosures so verifiers can see which user delegated. He is unsure whether partial enforcement is needed and said the delegate-sd-jwt draft is being updated, with a roadmap at IETF. Carlos will rebuild his invoicing proposal on Delegate SD-JWT for -01.",
-      "summary_ja": "Gareth Oliver は、KB-JWT に issuer_jwt_hash を入れると、直前の SD-JWT から開示内容を変更することを委任先に許可できると説明した。これにより、基本の請求書、絞り込んだ請求書、さらに絞り込んだ請求書という連鎖で、後続の委任先が前段のクレームを除外できる。sd_hash は、基底がユーザークレデンシャルのような場合に使い、下流の委任先が開示を除外できないようにして、検証者がどのユーザーが委任したかを確認できるようにする。部分的に強制する仕組みが必要かは不明とし、delegate-sd-jwt ドラフトを更新中で、IETF でロードマップを示すと述べた。Carlos は請求の提案を Delegate SD-JWT 上で作り直し、-01 とする。",
-      "title": "Feedback request: SD-JWT VC as mandates for invoicing agents",
-      "updated_at": "2026-11-05T20:01:33+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/Qguh52h8Jv00QvGc4miq8aAwZzY/",
-      "use_cases": [
-        "A buyer's wallet delegating an invoice to sub-agents must choose issuer_jwt_hash to let them hide the parent mandate's purchasing policy from counterparties.",
-        "A service passing a user credential downstream can use sd_hash so verifiers always see the user's disclosures."
-      ],
-      "use_cases_ja": [
-        "購入者のウォレットが請求書をサブエージェントに委任する際、親のマンデートにある購買ポリシーを取引先に見せたくない場合は issuer_jwt_hash を選ぶ必要がある。",
-        "ユーザークレデンシャルを下流に渡すサービスは sd_hash を使い、検証者が常にユーザーの開示内容を確認できるようにできる。"
-      ]
-    },
-    "mail:SnO92JvcAcpugLZExKJEkY5t0ac": {
-      "diagram": "",
-      "first_seen": "2026-11-05",
-      "headline": "Mike Bishop moved to No Objection on -24, keeping two non-blocking comments.",
-      "headline_ja": "Mike Bishop は -24 に対し No Objection とし、ブロックしない 2 件のコメントを残した。",
-      "id": "mail:SnO92JvcAcpugLZExKJEkY5t0ac",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Bishop's ballot on -24 is No Objection, noting that -24 added the Updates: 7800 tag and fixed most of his comments. He retains non-blocking comments for the record. The first suggests a distinct media type rather than application/json for the JWT VC Issuer Metadata (Section 4.2) and Type Metadata (5.3.1), so the server can assert the document's role. The second suggests Section 4.3 state that the issuer in the response must match the JWT's iss even after a redirect, regardless of who served it.",
-      "summary_ja": "Bishop の -24 に対する投票は No Objection である。-24 で Updates: 7800 タグが追加され、コメントの大半が反映されたと述べている。ブロックしないコメントは記録として残している。1 つ目は、JWT VC Issuer Metadata（4.2 節）と Type Metadata（5.3.1）に application/json ではなく専用のメディアタイプを使い、サーバーが文書の役割を明示できるようにする提案である。2 つ目は、リダイレクトがあっても、応答中の発行者は誰が応答したかにかかわらず JWT の iss と一致しなければならないと 4.3 節に明記する提案である。",
-      "title": "Mike Bishop's No Objection on draft-ietf-oauth-sd-jwt-vc-24: (with COMMENT)",
-      "updated_at": "2026-11-05T20:01:33+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/SnO92JvcAcpugLZExKJEkY5t0ac/",
-      "use_cases": [
-        "Implementers of issuer metadata fetching should already validate that the returned issuer matches the JWT iss even across redirects."
-      ],
-      "use_cases_ja": [
-        "発行者メタデータを取得する実装は、リダイレクトを経てもレスポンスの発行者が JWT の iss と一致することを検証すべきである。"
-      ]
-    },
     "mail:TBcBJFPZ9FOUaegDVgM2Lyg82MY": {
       "diagram": "",
       "first_seen": "2026-11-09",
@@ -764,29 +681,6 @@
       ],
       "use_cases_ja": [
         "エージェントの認可・委任ドラフトの著者が、自分たちのレコードを監査証拠として使えるようにするよう求められる可能性がある場合。"
-      ]
-    },
-    "mail:bGFDNfQvdE1DvdJ3e_NUEkY7oG4": {
-      "diagram": "",
-      "first_seen": "2026-11-05",
-      "headline": "Mahesh Jethanandani's No Objection on sd-jwt-vc-23 raises RFC 7800, SSRF allow-list and x5c/iss consistency points.",
-      "headline_ja": "Mahesh Jethanandani の sd-jwt-vc-23 への No Objection 投票は、RFC 7800、SSRF 対策の許可リスト、x5c と iss の整合性を指摘している。",
-      "id": "mail:bGFDNfQvdE1DvdJ3e_NUEkY7oG4",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Mahesh supports Mike's DISCUSS: RFC 7800 Section 3 has a plain MUST for sub or iss, so overriding it needs an Updates relationship or rewording. He asks that the Section 7.1 URL validation, which forbids private and internal addresses, allow locally configured allow-lists for closed enterprise deployments. He also notes Section 2.5 says iss need not match the x5c certificate while Section 7.3 says the relationship is critical. Brian Campbell replies that the DISCUSS is nearly resolved, PR #451 covers the x509 and https issuer comments and PR #452 others. The message is truncated.",
-      "summary_ja": "Mahesh は Mike の DISCUSS を支持し、RFC 7800 の第3節は sub または iss について単純な MUST であり、上書きには Updates 関係または文言の修正が必要だとする。また、私的・内部アドレスを禁じる 7.1 節の URL 検証について、閉じた企業環境向けにローカルに設定した許可リストを認めるよう求めている。さらに、2.5 節は x5c 使用時に iss が証明書と対応しなくてよいとし、7.3 節は両者の関係維持が重要だとする点の不整合を指摘している。Brian Campbell は DISCUSS は解決間近で、PR #451 が x509 と https の iss に関する指摘を、PR #452 が他の指摘を扱うと返答した。本文は途中で切れている。",
-      "title": "Mahesh Jethanandani's No Objection on draft-ietf-oauth-sd-jwt-vc-23: (with COMMENT)",
-      "updated_at": "2026-11-05T06:53:56+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/bGFDNfQvdE1DvdJ3e_NUEkY7oG4/",
-      "use_cases": [
-        "Enterprise or closed-ecosystem verifiers fetching issuer and type metadata from internal hosts.",
-        "Implementers verifying credentials that carry both an HTTPS iss and an x5c chain."
-      ],
-      "use_cases_ja": [
-        "内部ホストから発行者メタデータやタイプメタデータを取得する、企業や閉じたエコシステムの検証者。",
-        "HTTPS の iss と x5c 証明書チェーンの両方を持つクレデンシャルを検証する実装者。"
       ]
     },
     "mail:bdZNYx7-PNM1utAtW6X1mNjGVxk": {
@@ -938,29 +832,6 @@
         "RAR を使った承認フローの実装者が、承認者側の署名を OAuth で規定するのか RATS から参照するのかを知りたい場合。"
       ]
     },
-    "mail:eU4eBAFONfRVBWTNarvtszxJKRI": {
-      "diagram": "",
-      "first_seen": "2026-11-05",
-      "headline": "Reviewer proposes that an AS advertise supported intent types via metadata, like Authority Metadata does for scopes.",
-      "headline_ja": "レビュアーが、認可サーバーがメタデータでサポートする意図タイプを公開する方式を提案した。",
-      "id": "mail:eU4eBAFONfRVBWTNarvtszxJKRI",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Yuan Ni accepts the author's direction of a small set of common intent fields with extensions. Yuan then suggests the AS advertise the intent types it supports in OAuth metadata, with references to field definitions, similar to draft-zehavi-oauth-authority-metadata for scopes and authorization details types. The Intent Token issuer could then build intent objects the AS understands. This is an initial thought, not a text change.",
-      "summary_ja": "Yuan Ni は、少数の共通フィールドと拡張を認める著者の方針に同意した。そのうえで、スコープや authorization details type について説明する draft-zehavi-oauth-authority-metadata と同様に、認可サーバーがサポートする意図タイプとそのフィールド定義への参照を OAuth メタデータで公開することを提案した。Intent Token 発行者はこれを参照して認可サーバーが理解できる意図オブジェクトを構築できる。これは初期的な案であり、本文の変更ではない。",
-      "title": "回复: 回复: Follow-up on OAuth Interim Discussion: New Draft \"Agent Intent Token\" for Review",
-      "updated_at": "2026-11-05T06:53:56+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/eU4eBAFONfRVBWTNarvtszxJKRI/",
-      "use_cases": [
-        "Deployments where several AS products must interpret intent objects from different agent frameworks.",
-        "Intent Token issuers that need to know the accepted intent fields before signing."
-      ],
-      "use_cases_ja": [
-        "複数の認可サーバー製品が、異なるエージェントフレームワークの意図オブジェクトを解釈する必要がある環境。",
-        "署名前に受理される意図フィールドを知る必要がある Intent Token 発行者。"
-      ]
-    },
     "mail:gcLkOg4kdUT_OAP1T3tSnKoDWGA": {
       "diagram": "",
       "first_seen": "2026-11-09",
@@ -982,29 +853,6 @@
         "誰がどの操作を認可したかを監査に使えるようにしたい、エージェント認可ドラフトの著者。"
       ]
     },
-    "mail:hSDZBQ75YQ4MiQdZcYXAxauEQOs": {
-      "diagram": "",
-      "first_seen": "2026-11-05",
-      "headline": "sd-jwt-vc will add \"Updates: 7800\" and lowercase-normalize iss scheme and host to resolve Mike Bishop's DISCUSS.",
-      "headline_ja": "sd-jwt-vc は Mike Bishop の DISCUSS に対応するため、「Updates: 7800」の追加と iss のスキームとホストの小文字化を行う。",
-      "id": "mail:hSDZBQ75YQ4MiQdZcYXAxauEQOs",
-      "kind": "mail",
-      "related": [],
-      "significance": "substantive",
-      "summary": "Bishop's DISCUSS points out that the draft overrides the RFC 7800 requirement that a JWT with cnf also carry sub or iss, without an Updates tag. Brian Campbell added \"Updates: 7800 (if approved)\" with explanatory text to PR #450, and Bishop says that approach addresses the DISCUSS. Bishop also notes that a \"case-sensitive URL\" for iss conflicts with RFC 3986, where scheme and host are case-insensitive. Campbell then added a sentence about lowercasing scheme and host to PR #450, to be merged and published near the submission cutoff. The thread is truncated.",
-      "summary_ja": "Bishop の DISCUSS は、cnf を含む JWT が sub または iss も含むべきとする RFC 7800 の要件を、Updates の記載なしに上書きしている点を指摘している。Brian Campbell は PR #450 に「Updates: 7800 (if approved)」と説明文を追加し、Bishop はこれで DISCUSS に対応できるとした。Bishop はまた、iss を「case-sensitive URL」とする記述は、スキームとホストが大文字小文字を区別しない RFC 3986 と矛盾すると指摘した。Campbell はスキームとホストの小文字化に関する文を PR #450 に追加し、投稿締切の前後でマージと公開を行う予定である。スレッドは途中で切れている。",
-      "title": "Mike Bishop's Discuss on draft-ietf-oauth-sd-jwt-vc-23: (with DISCUSS and COMMENT)",
-      "updated_at": "2026-11-05T06:53:56+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/hSDZBQ75YQ4MiQdZcYXAxauEQOs/",
-      "use_cases": [
-        "Implementers of key-bound SD-JWT VCs without sub or iss, who can now rely on RFC 7800 being formally updated.",
-        "Verifiers comparing iss values, who need consistent normalization of scheme and host."
-      ],
-      "use_cases_ja": [
-        "sub も iss も持たない鍵バインド SD-JWT VC の実装者。RFC 7800 が正式に更新されることを前提にできる。",
-        "iss 値を比較する検証者。スキームとホストの正規化を一貫させる必要がある。"
-      ]
-    },
     "mail:hh3_9z2RzgF3LPcvuGhNWy7IuIA": {
       "diagram": "",
       "first_seen": "2026-11-09",
@@ -1019,23 +867,6 @@
       "title": "draft-ietf-oauth-sd-jwt-vc-26 telechat Secdir review",
       "updated_at": "2026-11-09T06:38:02+00:00",
       "url": "https://mailarchive.ietf.org/arch/msg/oauth/hh3_9z2RzgF3LPcvuGhNWy7IuIA/",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
-    "mail:iF4rmUNJrV794fM4cxaEbM49ebQ": {
-      "diagram": "",
-      "first_seen": "2026-11-05",
-      "headline": "Charles Eckel balloted No Objection on -23 with comments on BCP 14 wording and svg_id.",
-      "headline_ja": "Charles Eckel は -23 に No Objection を投じ、BCP 14 の用語と svg_id について指摘した。",
-      "id": "mail:iF4rmUNJrV794fM4cxaEbM49ebQ",
-      "kind": "mail",
-      "related": [],
-      "significance": "editorial",
-      "summary": "Eckel asked that MAY be lowercased where no normative meaning is intended (sections 2.2, 2.2.2.5 and 5.3.3), supported Bishop's DISCUSS on the RFC 7800 override, and asked whether 'alphanumeric' is specific enough for svg_id, suggesting ASCII A-Z, a-z, 0-9 and underscore and a statement on case sensitivity. Campbell said PR #453 fixes the keyword overuse and he thinks 'alphanumeric' is specific enough; Eckel deferred to that. The -24 diff does show those MAYs changed to 'can'.",
-      "summary_ja": "Eckel は、規範的意味を意図しない箇所（2.2、2.2.2.5、5.3.3 節）の MAY を小文字にするよう求め、RFC 7800 の上書きに関する Bishop の DISCUSS を支持した。また svg_id の「alphanumeric」で十分か疑問を呈し、ASCII の A-Z、a-z、0-9 とアンダースコアに限定し、大文字小文字の区別も明記することを提案した。Campbell は PR #453 でキーワードの使い過ぎを修正したと述べ、「alphanumeric」で十分だと考えている。Eckel はこれに従った。-24 の差分では、これらの MAY が 'can' に変わっている。",
-      "title": "Charles Eckel's No Objection on draft-ietf-oauth-sd-jwt-vc-23: (with COMMENT)",
-      "updated_at": "2026-11-05T20:01:33+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/iF4rmUNJrV794fM4cxaEbM49ebQ/",
       "use_cases": [],
       "use_cases_ja": []
     },
@@ -1058,66 +889,6 @@
       ],
       "use_cases_ja": [
         "電話番号をアカウント識別子として使うモバイル中心のサービスが、キャリア支援による検証をその他のバックグラウンド確認と区別する必要がある場合"
-      ]
-    },
-    "mail:ilZ30bU7n7Sc7lQNtg-kRgiQI04": {
-      "diagram": "sequenceDiagram\nparticipant U as User\nparticipant A as Agent\nparticipant I as Intent Token issuer\nparticipant AS as Authorization Server\nA->>U: Negotiate and confirm intent\nI->>A: Signed Intent Token\nA->>AS: Request plus Intent Token\nAS->>AS: Validate signature, compare request to intent\nAS->>A: Narrowly scoped access token",
-      "first_seen": "2026-11-05",
-      "headline": "Agent Intent Token authors respond to a review and file an issue for AS-side discovery of intent types.",
-      "headline_ja": "Agent Intent Token の著者がレビューに応じ、意図タイプの認可サーバー側ディスカバリーを課題として登録した。",
-      "id": "mail:ilZ30bU7n7Sc7lQNtg-kRgiQI04",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-hulea-wimse-agent-mandate",
-          "note": "Also proposes verifiable, signed statements of what an agent is authorized to do on a principal's behalf.",
-          "note_ja": "主体に代わってエージェントが行える内容を検証可能な署名付き文書で示す点で、同様の問題領域を扱う。",
-          "track": "ietf-wimse"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "Meiling Chen thanks Yuan Ni for the suggestion to add discovery of supported intent types and opens Issue #6 in the Maisy-ML/Agent-Intent-Token repository to track it, inviting Yuan to help refine it. The quoted thread shows the draft (draft-chen-oauth-agent-intent-token-00): a signed intent object, confirmed by the user, that an agent presents to the AS so the AS can compare later requests against the original intent. The message is a thread digest with some truncation.",
-      "summary_ja": "Meiling Chen は、サポートする意図タイプのディスカバリーを加えるという Yuan Ni の提案に謝意を示し、Maisy-ML/Agent-Intent-Token リポジトリに Issue #6 を作成して追跡するとした。引用されたスレッドによれば、draft-chen-oauth-agent-intent-token-00 は、ユーザーが確認した意図を署名付きオブジェクトとし、エージェントが認可サーバーに提示して後続リクエストと照合させるものである。本文はスレッドの要約で、一部が切り詰められている。",
-      "title": "回复: Follow-up on OAuth Interim Discussion: New Draft \"Agent Intent Token\" for Review (2 new messages)",
-      "updated_at": "2026-11-05T06:53:56+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/ilZ30bU7n7Sc7lQNtg-kRgiQI04/",
-      "use_cases": [
-        "An AS operator evaluating how agent-supplied user intent could be checked against later authorization requests.",
-        "An agent platform deciding how its intent issuer learns which intent types an AS understands."
-      ],
-      "use_cases_ja": [
-        "エージェントが提示するユーザー意図を後続の認可リクエストと照合する方法を検討する認可サーバー運用者。",
-        "意図トークン発行者が、認可サーバーの理解できる意図タイプをどう知るかを検討するエージェント基盤の開発者。"
-      ]
-    },
-    "mail:jfRVNFlragKJJ_nY22tCF9RUU8Y": {
-      "diagram": "",
-      "first_seen": "2026-11-05",
-      "headline": "Two agenda requests for IETF 127: a competing cross-domain transaction token design and a batch delegation draft.",
-      "headline_ja": "IETF 127 の議題要望が 2 件あった。競合するクロスドメイン Transaction Token の設計と、バッチ委任のドラフトである。",
-      "id": "mail:jfRVNFlragKJJ_nY22tCF9RUU8Y",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-ietf-wimse-wpt",
-          "note": "The joint session targets topics spanning workload and OAuth work such as transaction tokens.",
-          "note_ja": "合同セッションは Transaction Token のようにワークロードと OAuth にまたがる題材を対象とする。",
-          "track": "ietf-wimse"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "In reply to the chairs' call for agenda items, Yuan asked for five minutes in the joint WIMSE/OAuth session to present draft-liu-oauth-cross-domain-txn-token, a different approach to the same use case as the Cross-Domain Transaction Tokens item already on the agenda (discussed in tt_xdomain issue #17). Yuan also asked for ten minutes in the OAuth session for draft-ni-oauth-batch-authorization-delegation, which addresses delegating authority to multiple agents when a task is split, following Problem 3 from the 19 October interim. The call notes a draft cutoff of 2 November 2026.",
-      "summary_ja": "議題募集に対し、Yuan は、WIMSE/OAuth 合同セッションで 5 分間、draft-liu-oauth-cross-domain-txn-token を発表したいと要望した。これは、すでに議題にある Cross-Domain Transaction Tokens と同じユースケースに対する別のアプローチで、tt_xdomain の issue #17 で議論されている。また OAuth セッションで 10 分間、draft-ni-oauth-batch-authorization-delegation を発表したいと要望した。これは 10 月 19 日の interim の Problem 3 に続き、タスクを分割した際に複数のエージェントへ権限を委任する方法を扱う。募集文では、ドラフトの提出締切は 2026 年 11 月 2 日とされている。",
-      "title": "OAuth IETF 127 Call for Agenda Items (2 new messages)",
-      "updated_at": "2026-11-05T20:01:33+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/jfRVNFlragKJJ_nY22tCF9RUU8Y/",
-      "use_cases": [
-        "Teams building cross-domain workload or agent calls should watch whether the two transaction token approaches converge.",
-        "Agent platforms splitting tasks across sub-agents may follow the batch delegation proposal."
-      ],
-      "use_cases_ja": [
-        "ドメインをまたぐワークロードやエージェント呼び出しを構築するチームは、2 つの Transaction Token 方式が統合されるかに注目すべきである。",
-        "タスクを複数のサブエージェントに分割するエージェント基盤は、バッチ委任の提案に注目できる。"
       ]
     },
     "mail:kIBSOEWMsXmmvZy9Vh7EJBJrzV4": {
@@ -1196,57 +967,6 @@
         "承認を特定の受取人と金額など一つの正確な操作に束縛し、チェーン上でそれがより広い許可の範囲内にあることを示す必要がある運用。"
       ]
     },
-    "mail:vblvH5VSHxX_2iXUV_n26xyQt2A": {
-      "diagram": "",
-      "first_seen": "2026-11-05",
-      "headline": "Mike Bishop's DISCUSS on the RFC 7800 override was resolved by adding Updates: 7800, and he flagged wrong examples in -24.",
-      "headline_ja": "RFC 7800 の上書きに関する Mike Bishop の DISCUSS は Updates: 7800 の追加で解消し、-24 の例の誤りも指摘された。",
-      "id": "mail:vblvH5VSHxX_2iXUV_n26xyQt2A",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Bishop's DISCUSS objected that the draft overrides a requirement in RFC 7800 without an Updates tag. Brian Campbell added 'Updates: 7800 (if approved)' with explanatory text in PR #450, plus a sentence on lowercasing scheme and host for iss. Bishop confirmed the PR would address the DISCUSS and, after -24 appeared, said he had cleared it. He also noted that the Appendix A examples in -24 use typ vc+sd-jwt, contrary to Section 2.2.1, and that A.1's content changed. Campbell replied that this was his mistake from building the XML locally instead of with the normal GitHub Actions tooling. The thread was truncated, so other DISCUSS points are not visible.",
-      "summary_ja": "Bishop の DISCUSS は、Updates タグなしに RFC 7800 の要件を上書きしている点への指摘だった。Brian Campbell は PR #450 で説明文付きの「Updates: 7800 (if approved)」と、iss のスキームとホストの小文字化に関する一文を追加した。Bishop はこの PR で DISCUSS が解消されると確認し、-24 公開後に解除したと述べた。また、-24 の Appendix A の例が 2.2.1 節に反して typ に vc+sd-jwt を使い、A.1 の内容も変わっていると指摘した。Campbell は、通常の GitHub Actions のツールではなくローカルで XML をビルドしたための自分の誤りだと答えた。スレッドは途中で切れており、他の DISCUSS 項目は確認できない。",
-      "title": "Mike Bishop's Discuss on draft-ietf-oauth-sd-jwt-vc-23: (with DISCUSS and COMMENT) (2 new messages)",
-      "updated_at": "2026-11-05T20:01:33+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/vblvH5VSHxX_2iXUV_n26xyQt2A/",
-      "use_cases": [
-        "Implementers copying test vectors from -24 Appendix A should not rely on them until corrected, since the typ header is wrong."
-      ],
-      "use_cases_ja": [
-        "-24 の Appendix A のテストベクターは typ ヘッダーが誤っているため、修正されるまで依拠すべきでない。"
-      ]
-    },
-    "mail:xl9Ft9J7xv1wq9-BG1yDV6AWiO4": {
-      "diagram": "flowchart LR\nB[Base SD-JWT] --> D1[Delegate 1 KB-SD-JWT]\nD1 --> D2[Delegate 2 KB-SD-JWT]\nD1 -. issuer_jwt_hash .-> R[Delegate 2 may drop claims from base and D1]\nD1 -. sd_hash .-> F[Base disclosures must stay]",
-      "first_seen": "2026-11-05",
-      "headline": "Thread on using Delegate SD-JWT for invoicing-agent mandates clarifies when to use issuer_jwt_hash versus sd_hash.",
-      "headline_ja": "請求エージェントの委任に Delegate SD-JWT を使う議論で、issuer_jwt_hash と sd_hash の使い分けが整理された。",
-      "id": "mail:xl9Ft9J7xv1wq9-BG1yDV6AWiO4",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-hulea-wimse-agent-mandate",
-          "note": "Also covers verifiable mandates for agents acting across domains, a competing or complementary approach.",
-          "note_ja": "ドメインをまたぐエージェントの検証可能な委任状を扱い、競合または補完する設計である。",
-          "track": "ietf-wimse"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "Gareth explains that issuer_jwt_hash in the KB-JWT lets a delegate holder change what is disclosed from the preceding SD-JWT, so a chain such as Invoice to narrowed invoice to further narrowed invoice can drop claims from both the delegate and base SD-JWTs. If the base is a User Credential, using sd_hash forbids removing those disclosures, so verifiers can always identify the user. Gareth is unsure whether a generic partial policy, requiring certain disclosures to stay, is needed. Blake replies that for invoicing the business issues the mandate, so principal can stay plain and limits selectively disclosable, making a partial policy unnecessary.",
-      "summary_ja": "Gareth は、KB-JWT の issuer_jwt_hash により、委任先ホルダーが直前の SD-JWT の開示内容を変更でき、請求書から絞り込んだ請求書へと続く連鎖で、委任先と基底の双方の SD-JWT からクレームを除去できると説明した。基底がユーザークレデンシャルの場合は sd_hash を使うと開示の除去が禁止され、検証者は常にユーザーを特定できる。特定の開示を残させる汎用的な部分ポリシーが必要かは不明としている。Blake は、請求の場合は事業者が委任状を発行するため principal は通常のクレームのままにして制限を選択的開示にでき、部分ポリシーは不要と返答した。",
-      "title": "Feedback request: SD-JWT VC as mandates for invoicing agents (2 new messages)",
-      "updated_at": "2026-11-05T06:53:56+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/xl9Ft9J7xv1wq9-BG1yDV6AWiO4/",
-      "use_cases": [
-        "A buyer's wallet delegating narrowed invoice mandates to agents without revealing internal purchasing limits to counterparties.",
-        "A user-credential-rooted delegation where verifiers must always see which user delegated."
-      ],
-      "use_cases_ja": [
-        "取引相手に社内の購買上限を見せず、絞り込んだ請求の委任をエージェントに渡すバイヤー側ウォレット。",
-        "検証者がどのユーザーが委任したかを常に確認できる必要がある、ユーザークレデンシャルを起点とした委任。"
-      ]
-    },
     "pr:oauth-wg/oauth-delegate-sd-jwt#15": {
       "diagram": "",
       "first_seen": "2026-11-10",
@@ -1269,57 +989,6 @@
         "委任されたプレゼンテーションの cnf や有効期限を、委任固有の展開処理なしに既存の SD-JWT KB 検証で確認したいライブラリ実装者。",
         "クレデンシャルを別のホルダーへ再委任するエージェントが、audience と nonce の意味を明確にする必要がある場合。"
       ]
-    },
-    "pr:oauth-wg/oauth-sd-jwt-vc#452": {
-      "diagram": "",
-      "first_seen": "2026-11-05",
-      "headline": "PR #452 addresses further comments from Mahesh Jethanandani's ballot on sd-jwt-vc.",
-      "headline_ja": "PR #452 は、Mahesh Jethanandani の投票コメントのうち残りの指摘に対応する。",
-      "id": "pr:oauth-wg/oauth-sd-jwt-vc#452",
-      "kind": "pull-request",
-      "related": [],
-      "significance": "routine",
-      "summary": "The PR body only links to a mailing-list message and mentions PR #451. No diff or description of the changes is provided, so the content cannot be stated.",
-      "summary_ja": "PR 本文はメーリングリストのメッセージへのリンクと PR #451 への言及のみで、差分や変更内容の説明がなく、内容は述べられない。",
-      "title": "oauth-wg/oauth-sd-jwt-vc#452: some other items from Mahesh Jethanandani ballot",
-      "updated_at": "2026-11-05T06:53:56+00:00",
-      "url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/452",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
-    "pr:oauth-wg/oauth-sd-jwt-vc#453": {
-      "diagram": "",
-      "first_seen": "2026-11-05",
-      "headline": "PR #453 fixes over-eager BCP 14 keywords in sd-jwt-vc following Charles Eckel's ballot comments.",
-      "headline_ja": "PR #453 は、Charles Eckel の投票コメントを受けて sd-jwt-vc の過剰な BCP 14 キーワードを修正する。",
-      "id": "pr:oauth-wg/oauth-sd-jwt-vc#453",
-      "kind": "pull-request",
-      "related": [],
-      "significance": "editorial",
-      "summary": "The PR body only links to Eckel's ballot email, and the title describes keyword fixes. The diff is not in the material, so exact edits are unknown. The linked ballot suggests MAY to can in Sections 2.2, 2.2.2.5 and 5.3.3.",
-      "summary_ja": "PR 本文は Eckel の投票メールへのリンクのみで、タイトルはキーワード修正を示している。差分は資料に含まれず、正確な変更内容は不明である。リンク先の投票コメントは、2.2、2.2.2.5、5.3.3 節の MAY を can に改めることを示唆している。",
-      "title": "oauth-wg/oauth-sd-jwt-vc#453: some keyword fixes for Charles Eckel's No Objection on draft-ietf-oauth-sd-jwt-vc-23: (with COMMENT)",
-      "updated_at": "2026-11-05T06:53:56+00:00",
-      "url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/453",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
-    "pr:oauth-wg/oauth-sd-jwt-vc#454": {
-      "diagram": "",
-      "first_seen": "2026-11-05",
-      "headline": "PR #454 starts addressing Éric Vyncke's DISCUSS, but the body gives no detail.",
-      "headline_ja": "PR #454 は Éric Vyncke の DISCUSS への対応を始めるものだが、本文に詳細はない。",
-      "id": "pr:oauth-wg/oauth-sd-jwt-vc#454",
-      "kind": "pull-request",
-      "related": [],
-      "significance": "routine",
-      "summary": "The PR is titled 'Vyncke discuss' and its body only links to Vyncke's ballot message. No diff or description of the change is provided, so what it changes cannot be stated.",
-      "summary_ja": "この PR のタイトルは「Vyncke discuss」で、本文は Vyncke の投票メッセージへのリンクのみである。差分や変更内容の説明はなく、何を変更するかは述べられない。",
-      "title": "oauth-wg/oauth-sd-jwt-vc#454: Vyncke discuss",
-      "updated_at": "2026-11-05T20:01:33+00:00",
-      "url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/454",
-      "use_cases": [],
-      "use_cases_ja": []
     },
     "pr:oauth-wg/oauth-sd-jwt-vc#455": {
       "diagram": "",
@@ -1418,6 +1087,23 @@
       "title": "oauth-wg/oauth-transaction-tokens#374: Register the req_wl claim in the JWT Claims registry",
       "updated_at": "2026-11-08T13:29:24+00:00",
       "url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/374",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "pr:oauth-wg/oauth-v2-1#283": {
+      "diagram": "",
+      "first_seen": "2026-11-13",
+      "headline": "A PR proposes moving Dick and Torsten from authors to the acknowledgements in OAuth 2.1.",
+      "headline_ja": "OAuth 2.1 で Dick と Torsten を著者欄から謝辞へ移す PR が出された。",
+      "id": "pr:oauth-wg/oauth-v2-1#283",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The PR body argues that Aaron has contributed far more to the document than anyone else, so the attribution should reflect that. It includes a screenshot as an imperfect example measure. No spec text or protocol behaviour changes. The material gives no discussion or outcome.",
+      "summary_ja": "PR の本文は、Aaron が文書に対して他の誰よりもはるかに多く貢献しており、著者表記もそれを反映すべきだと主張している。不完全な例としてスクリーンショットが添付されている。仕様の本文やプロトコルの挙動は変わらない。議論や結果は資料に含まれていない。",
+      "title": "oauth-wg/oauth-v2-1#283: move Dick and Torsten to the acknowledgements",
+      "updated_at": "2026-11-13T06:50:52+00:00",
+      "url": "https://github.com/oauth-wg/oauth-v2-1/pull/283",
       "use_cases": [],
       "use_cases_ja": []
     }
