@@ -2,14 +2,14 @@
  "number": 7523,
  "title": "JSON Web Token (JWT) Profile for OAuth 2.0 Client Authentication and Authorization Grants",
  "url": "https://www.rfc-editor.org/rfc/rfc7523",
- "fetched_at": "2026-11-13T13:50:34+00:00",
+ "fetched_at": "2026-11-13T14:13:45+00:00",
  "sections": [
   {
    "id": "abstract",
    "title": "Abstract",
    "paragraphs": [
     {
-     "id": "abstract-1",
+     "id": "abstract-39b17bad",
      "kind": "p",
      "en": "This specification defines the use of a JSON Web Token (JWT) Bearer Token as a means for requesting an OAuth 2.0 access token as well as for client authentication."
     }
@@ -20,32 +20,27 @@
    "title": "Introduction",
    "paragraphs": [
     {
-     "id": "1-1",
+     "id": "1-b30a6d7b",
      "kind": "p",
      "en": "JSON Web Token (JWT) [JWT] is a JSON-based [RFC7159] security token encoding that enables identity and security information to be shared across security domains.  A security token is generally issued by an Identity Provider and consumed by a Relying Party that relies on its content to identify the token's subject for security-related purposes."
     },
     {
-     "id": "1-2",
+     "id": "1-b7740bce",
      "kind": "p",
-     "en": "The OAuth 2.0 Authorization Framework [RFC6749] provides a method for making authenticated HTTP requests to a resource using an access token.  Access tokens are issued to third-party clients by an authorization server (AS) with the (sometimes implicit) approval of the resource owner.  In OAuth, an authorization grant is an abstract term used to describe intermediate credentials that represent the resource owner authorization.  An authorization grant is used by the client to obtain an access token.  Several authorization grant types are defined to support a wide range of client types and user experiences.  OAuth also allows for the definition of new extension grant types to support additional clients or to provide a bridge between OAuth and other trust frameworks.  Finally, OAuth allows the"
+     "en": "The OAuth 2.0 Authorization Framework [RFC6749] provides a method for making authenticated HTTP requests to a resource using an access token.  Access tokens are issued to third-party clients by an authorization server (AS) with the (sometimes implicit) approval of the resource owner.  In OAuth, an authorization grant is an abstract term used to describe intermediate credentials that represent the resource owner authorization.  An authorization grant is used by the client to obtain an access token.  Several authorization grant types are defined to support a wide range of client types and user experiences.  OAuth also allows for the definition of new extension grant types to support additional clients or to provide a bridge between OAuth and other trust frameworks.  Finally, OAuth allows the definition of additional authentication mechanisms to be used by clients when interacting with the authorization server."
     },
     {
-     "id": "1-3",
-     "kind": "p",
-     "en": "definition of additional authentication mechanisms to be used by clients when interacting with the authorization server."
-    },
-    {
-     "id": "1-4",
+     "id": "1-62ec893e",
      "kind": "p",
      "en": "\"Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants\" [RFC7521] is an abstract extension to OAuth 2.0 that provides a general framework for the use of assertions (a.k.a. security tokens) as client credentials and/or authorization grants with OAuth 2.0.  This specification profiles the OAuth Assertion Framework [RFC7521] to define an extension grant type that uses a JWT Bearer Token to request an OAuth 2.0 access token as well as for use as client credentials.  The format and processing rules for the JWT defined in this specification are intentionally similar, though not identical, to those in the closely related specification \"Security Assertion Markup Language (SAML) 2.0 Profile for OAuth 2.0 Client Authentication and Authorization Grants\" [RFC7522].  The differences arise where the structure and semantics of JWTs differ from SAML Assertions.  JWTs, for example, have no direct equivalent to the <SubjectConfirmation> or <AuthnStatement> elements of SAML Assertions."
     },
     {
-     "id": "1-5",
+     "id": "1-6386f959",
      "kind": "p",
      "en": "This document defines how a JWT Bearer Token can be used to request an access token when a client wishes to utilize an existing trust relationship, expressed through the semantics of the JWT, without a direct user-approval step at the authorization server.  It also defines how a JWT can be used as a client authentication mechanism. The use of a security token for client authentication is orthogonal to and separable from using a security token as an authorization grant.  They can be used either in combination or separately.  Client authentication using a JWT is nothing more than an alternative way for a client to authenticate to the token endpoint and must be used in conjunction with some grant type to form a complete and meaningful protocol request.  JWT authorization grants may be used with or without client authentication or identification.  Whether or not client authentication is needed in conjunction with a JWT authorization grant, as well as the supported types of client authentication, are policy decisions at the discretion of the authorization server."
     },
     {
-     "id": "1-6",
+     "id": "1-5c41afda",
      "kind": "p",
      "en": "The process by which the client obtains the JWT, prior to exchanging it with the authorization server or using it for client authentication, is out of scope."
     }
@@ -56,12 +51,12 @@
    "title": "Notational Conventions",
    "paragraphs": [
     {
-     "id": "1.1-1",
+     "id": "1.1-2e5750bb",
      "kind": "p",
      "en": "The key words \"MUST\", \"MUST NOT\", \"REQUIRED\", \"SHALL\", \"SHALL NOT\", \"SHOULD\", \"SHOULD NOT\", \"RECOMMENDED\", \"MAY\", and \"OPTIONAL\" in this document are to be interpreted as described in RFC 2119 [RFC2119]."
     },
     {
-     "id": "1.1-2",
+     "id": "1.1-51a29bd9",
      "kind": "p",
      "en": "Unless otherwise noted, all the protocol parameter names and values are case sensitive."
     }
@@ -72,7 +67,7 @@
    "title": "Terminology",
    "paragraphs": [
     {
-     "id": "1.2-1",
+     "id": "1.2-42b24159",
      "kind": "p",
      "en": "All terms are as defined in the following specifications: \"The OAuth 2.0 Authorization Framework\" [RFC6749], the OAuth Assertion Framework [RFC7521], and \"JSON Web Token (JWT)\" [JWT]."
     }
@@ -83,7 +78,7 @@
    "title": "HTTP Parameter Bindings for Transporting Assertions",
    "paragraphs": [
     {
-     "id": "2-1",
+     "id": "2-8cb6ca1e",
      "kind": "p",
      "en": "The OAuth Assertion Framework [RFC7521] defines generic HTTP parameters for transporting assertions (a.k.a. security tokens) during interactions with a token endpoint.  This section defines specific parameters and treatments of those parameters for use with JWT Bearer Tokens."
     }
@@ -94,44 +89,44 @@
    "title": "Using JWTs as Authorization Grants",
    "paragraphs": [
     {
-     "id": "2.1-1",
+     "id": "2.1-3d4234e3",
      "kind": "p",
      "en": "To use a Bearer JWT as an authorization grant, the client uses an access token request as defined in Section 4 of the OAuth Assertion Framework [RFC7521] with the following specific parameter values and encodings."
     },
     {
-     "id": "2.1-2",
+     "id": "2.1-a6c80d3c",
      "kind": "p",
      "en": "The value of the \"grant_type\" is \"urn:ietf:params:oauth:grant- type:jwt-bearer\"."
     },
     {
-     "id": "2.1-3",
+     "id": "2.1-71710b46",
      "kind": "p",
      "en": "The value of the \"assertion\" parameter MUST contain a single JWT."
     },
     {
-     "id": "2.1-4",
+     "id": "2.1-93f57005",
      "kind": "p",
      "en": "The \"scope\" parameter may be used, as defined in the OAuth Assertion Framework [RFC7521], to indicate the requested scope."
     },
     {
-     "id": "2.1-5",
+     "id": "2.1-668086a0",
      "kind": "p",
      "en": "Authentication of the client is optional, as described in Section 3.2.1 of OAuth 2.0 [RFC6749] and consequently, the \"client_id\" is only needed when a form of client authentication that relies on the parameter is used."
     },
     {
-     "id": "2.1-6",
+     "id": "2.1-e78b1d22",
      "kind": "p",
      "en": "The following example demonstrates an access token request with a JWT as an authorization grant (with extra line breaks for display purposes only):"
     },
     {
-     "id": "2.1-7",
-     "kind": "p",
-     "en": "POST /token.oauth2 HTTP/1.1 Host: as.example.com Content-Type: application/x-www-form-urlencoded"
+     "id": "2.1-5d44ce92",
+     "kind": "pre",
+     "en": "     POST /token.oauth2 HTTP/1.1\n     Host: as.example.com\n     Content-Type: application/x-www-form-urlencoded"
     },
     {
-     "id": "2.1-8",
-     "kind": "p",
-     "en": "grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer &assertion=eyJhbGciOiJFUzI1NiIsImtpZCI6IjE2In0. eyJpc3Mi[...omitted for brevity...]. J9l-ZhwP[...omitted for brevity...]"
+     "id": "2.1-c89e726c",
+     "kind": "pre",
+     "en": "     grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer\n     &assertion=eyJhbGciOiJFUzI1NiIsImtpZCI6IjE2In0.\n     eyJpc3Mi[...omitted for brevity...].\n     J9l-ZhwP[...omitted for brevity...]"
     }
    ]
   },
@@ -140,34 +135,34 @@
    "title": "Using JWTs for Client Authentication",
    "paragraphs": [
     {
-     "id": "2.2-1",
+     "id": "2.2-93c25758",
      "kind": "p",
      "en": "To use a JWT Bearer Token for client authentication, the client uses the following parameter values and encodings."
     },
     {
-     "id": "2.2-2",
-     "kind": "p",
-     "en": "The value of the \"client_assertion_type\" is \"urn:ietf:params:oauth:client-assertion-type:jwt-bearer\"."
+     "id": "2.2-ecb7f032",
+     "kind": "pre",
+     "en": "   The value of the \"client_assertion_type\" is\n   \"urn:ietf:params:oauth:client-assertion-type:jwt-bearer\"."
     },
     {
-     "id": "2.2-3",
+     "id": "2.2-617bbc9c",
      "kind": "p",
      "en": "The value of the \"client_assertion\" parameter contains a single JWT. It MUST NOT contain more than one JWT."
     },
     {
-     "id": "2.2-4",
+     "id": "2.2-a003011b",
      "kind": "p",
      "en": "The following example demonstrates client authentication using a JWT during the presentation of an authorization code grant in an access token request (with extra line breaks for display purposes only):"
     },
     {
-     "id": "2.2-5",
-     "kind": "p",
-     "en": "POST /token.oauth2 HTTP/1.1 Host: as.example.com Content-Type: application/x-www-form-urlencoded"
+     "id": "2.2-5d44ce92",
+     "kind": "pre",
+     "en": "     POST /token.oauth2 HTTP/1.1\n     Host: as.example.com\n     Content-Type: application/x-www-form-urlencoded"
     },
     {
-     "id": "2.2-6",
-     "kind": "p",
-     "en": "grant_type=authorization_code& code=n0esc3NRze7LTCu7iYzS6a5acc3f0ogp4& client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3A client-assertion-type%3Ajwt-bearer& client_assertion=eyJhbGciOiJSUzI1NiIsImtpZCI6IjIyIn0. eyJpc3Mi[...omitted for brevity...]. cC4hiUPo[...omitted for brevity...]"
+     "id": "2.2-307d45bc",
+     "kind": "pre",
+     "en": "     grant_type=authorization_code&\n     code=n0esc3NRze7LTCu7iYzS6a5acc3f0ogp4&\n     client_assertion_type=urn%3Aietf%3Aparams%3Aoauth%3A\n     client-assertion-type%3Ajwt-bearer&\n     client_assertion=eyJhbGciOiJSUzI1NiIsImtpZCI6IjIyIn0.\n     eyJpc3Mi[...omitted for brevity...].\n     cC4hiUPo[...omitted for brevity...]"
     }
    ]
   },
@@ -176,69 +171,69 @@
    "title": "JWT Format and Processing Requirements",
    "paragraphs": [
     {
-     "id": "3-1",
+     "id": "3-b005c266",
      "kind": "p",
      "en": "In order to issue an access token response as described in OAuth 2.0 [RFC6749] or to rely on a JWT for client authentication, the authorization server MUST validate the JWT according to the criteria below.  Application of additional restrictions and policy are at the discretion of the authorization server."
     },
     {
-     "id": "3-2",
-     "kind": "pre",
-     "en": "   1.   The JWT MUST contain an \"iss\" (issuer) claim that contains a\n        unique identifier for the entity that issued the JWT.  In the\n        absence of an application profile specifying otherwise,\n        compliant applications MUST compare issuer values using the\n        Simple String Comparison method defined in Section 6.2.1 of RFC\n        3986 [RFC3986]."
+     "id": "3-5728a684",
+     "kind": "li",
+     "en": "1.   The JWT MUST contain an \"iss\" (issuer) claim that contains a unique identifier for the entity that issued the JWT.  In the absence of an application profile specifying otherwise, compliant applications MUST compare issuer values using the Simple String Comparison method defined in Section 6.2.1 of RFC 3986 [RFC3986]."
     },
     {
-     "id": "3-3",
-     "kind": "pre",
-     "en": "   2.   The JWT MUST contain a \"sub\" (subject) claim identifying the\n        principal that is the subject of the JWT.  Two cases need to be\n        differentiated:"
+     "id": "3-3db4b13d",
+     "kind": "li",
+     "en": "2.   The JWT MUST contain a \"sub\" (subject) claim identifying the principal that is the subject of the JWT.  Two cases need to be differentiated:"
     },
     {
-     "id": "3-4",
-     "kind": "pre",
-     "en": "        A.  For the authorization grant, the subject typically\n            identifies an authorized accessor for which the access token\n            is being requested (i.e., the resource owner or an\n            authorized delegate), but in some cases, may be a\n            pseudonymous identifier or other value denoting an anonymous\n            user."
+     "id": "3-75c1b30b",
+     "kind": "p",
+     "en": "A.  For the authorization grant, the subject typically identifies an authorized accessor for which the access token is being requested (i.e., the resource owner or an authorized delegate), but in some cases, may be a pseudonymous identifier or other value denoting an anonymous user."
     },
     {
-     "id": "3-5",
-     "kind": "pre",
-     "en": "        B.  For client authentication, the subject MUST be the\n            \"client_id\" of the OAuth client."
+     "id": "3-71fc08e2",
+     "kind": "p",
+     "en": "B.  For client authentication, the subject MUST be the \"client_id\" of the OAuth client."
     },
     {
-     "id": "3-6",
-     "kind": "pre",
-     "en": "   3.   The JWT MUST contain an \"aud\" (audience) claim containing a\n        value that identifies the authorization server as an intended\n        audience.  The token endpoint URL of the authorization server\n        MAY be used as a value for an \"aud\" element to identify the\n        authorization server as an intended audience of the JWT.  The\n        authorization server MUST reject any JWT that does not contain\n        its own identity as the intended audience.  In the absence of an\n        application profile specifying otherwise, compliant applications\n        MUST compare the audience values using the Simple String\n        Comparison method defined in Section 6.2.1 of RFC 3986\n        [RFC3986].  As noted in Section 5, the precise strings to be\n        used as the audience for a given authorization server must be\n        configured out of band by the authorization server and the\n        issuer of the JWT."
+     "id": "3-48f5364a",
+     "kind": "li",
+     "en": "3.   The JWT MUST contain an \"aud\" (audience) claim containing a value that identifies the authorization server as an intended audience.  The token endpoint URL of the authorization server MAY be used as a value for an \"aud\" element to identify the authorization server as an intended audience of the JWT.  The authorization server MUST reject any JWT that does not contain its own identity as the intended audience.  In the absence of an application profile specifying otherwise, compliant applications MUST compare the audience values using the Simple String Comparison method defined in Section 6.2.1 of RFC 3986 [RFC3986].  As noted in Section 5, the precise strings to be used as the audience for a given authorization server must be configured out of band by the authorization server and the issuer of the JWT."
     },
     {
-     "id": "3-7",
-     "kind": "pre",
-     "en": "   4.   The JWT MUST contain an \"exp\" (expiration time) claim that\n        limits the time window during which the JWT can be used.  The\n        authorization server MUST reject any JWT with an expiration time\n        that has passed, subject to allowable clock skew between\n        systems.  Note that the authorization server may reject JWTs\n        with an \"exp\" claim value that is unreasonably far in the\n        future."
+     "id": "3-e24170e3",
+     "kind": "li",
+     "en": "4.   The JWT MUST contain an \"exp\" (expiration time) claim that limits the time window during which the JWT can be used.  The authorization server MUST reject any JWT with an expiration time that has passed, subject to allowable clock skew between systems.  Note that the authorization server may reject JWTs with an \"exp\" claim value that is unreasonably far in the future."
     },
     {
-     "id": "3-8",
-     "kind": "pre",
-     "en": "   5.   The JWT MAY contain an \"nbf\" (not before) claim that identifies\n        the time before which the token MUST NOT be accepted for\n        processing."
+     "id": "3-eb9175c2",
+     "kind": "li",
+     "en": "5.   The JWT MAY contain an \"nbf\" (not before) claim that identifies the time before which the token MUST NOT be accepted for processing."
     },
     {
-     "id": "3-9",
-     "kind": "pre",
-     "en": "   6.   The JWT MAY contain an \"iat\" (issued at) claim that identifies\n        the time at which the JWT was issued.  Note that the\n        authorization server may reject JWTs with an \"iat\" claim value\n        that is unreasonably far in the past."
+     "id": "3-a48876f2",
+     "kind": "li",
+     "en": "6.   The JWT MAY contain an \"iat\" (issued at) claim that identifies the time at which the JWT was issued.  Note that the authorization server may reject JWTs with an \"iat\" claim value that is unreasonably far in the past."
     },
     {
-     "id": "3-10",
-     "kind": "pre",
-     "en": "   7.   The JWT MAY contain a \"jti\" (JWT ID) claim that provides a\n        unique identifier for the token.  The authorization server MAY\n        ensure that JWTs are not replayed by maintaining the set of used\n        \"jti\" values for the length of time for which the JWT would be\n        considered valid based on the applicable \"exp\" instant."
+     "id": "3-70e46bdf",
+     "kind": "li",
+     "en": "7.   The JWT MAY contain a \"jti\" (JWT ID) claim that provides a unique identifier for the token.  The authorization server MAY ensure that JWTs are not replayed by maintaining the set of used \"jti\" values for the length of time for which the JWT would be considered valid based on the applicable \"exp\" instant."
     },
     {
-     "id": "3-11",
+     "id": "3-92c72913",
      "kind": "li",
      "en": "8.   The JWT MAY contain other claims."
     },
     {
-     "id": "3-12",
-     "kind": "pre",
-     "en": "   9.   The JWT MUST be digitally signed or have a Message\n        Authentication Code (MAC) applied by the issuer.  The\n        authorization server MUST reject JWTs with an invalid signature\n        or MAC."
+     "id": "3-2c329154",
+     "kind": "li",
+     "en": "9.   The JWT MUST be digitally signed or have a Message Authentication Code (MAC) applied by the issuer.  The authorization server MUST reject JWTs with an invalid signature or MAC."
     },
     {
-     "id": "3-13",
-     "kind": "pre",
-     "en": "   10.  The authorization server MUST reject a JWT that is not valid in\n        all other respects per \"JSON Web Token (JWT)\" [JWT]."
+     "id": "3-040f8417",
+     "kind": "li",
+     "en": "10.  The authorization server MUST reject a JWT that is not valid in all other respects per \"JSON Web Token (JWT)\" [JWT]."
     }
    ]
   },
@@ -247,27 +242,27 @@
    "title": "Authorization Grant Processing",
    "paragraphs": [
     {
-     "id": "3.1-1",
+     "id": "3.1-630eca77",
      "kind": "p",
      "en": "JWT authorization grants may be used with or without client authentication or identification.  Whether or not client authentication is needed in conjunction with a JWT authorization grant, as well as the supported types of client authentication, are policy decisions at the discretion of the authorization server. However, if client credentials are present in the request, the authorization server MUST validate them."
     },
     {
-     "id": "3.1-2",
+     "id": "3.1-fefddcee",
      "kind": "p",
      "en": "If the JWT is not valid, or the current time is not within the token's valid time window for use, the authorization server constructs an error response as defined in OAuth 2.0 [RFC6749].  The value of the \"error\" parameter MUST be the \"invalid_grant\" error code.  The authorization server MAY include additional information regarding the reasons the JWT was considered invalid using the \"error_description\" or \"error_uri\" parameters."
     },
     {
-     "id": "3.1-3",
+     "id": "3.1-059c3e8c",
      "kind": "p",
      "en": "For example:"
     },
     {
-     "id": "3.1-4",
-     "kind": "p",
-     "en": "HTTP/1.1 400 Bad Request Content-Type: application/json Cache-Control: no-store"
+     "id": "3.1-cfe1358e",
+     "kind": "pre",
+     "en": "     HTTP/1.1 400 Bad Request\n     Content-Type: application/json\n     Cache-Control: no-store"
     },
     {
-     "id": "3.1-5",
+     "id": "3.1-d34732c2",
      "kind": "pre",
      "en": "     {\n      \"error\":\"invalid_grant\",\n      \"error_description\":\"Audience validation failed\"\n     }"
     }
@@ -278,7 +273,7 @@
    "title": "Client Authentication Processing",
    "paragraphs": [
     {
-     "id": "3.2-1",
+     "id": "3.2-d46a3f0b",
      "kind": "p",
      "en": "If the client JWT is not valid, the authorization server constructs an error response as defined in OAuth 2.0 [RFC6749].  The value of the \"error\" parameter MUST be the \"invalid_client\" error code.  The authorization server MAY include additional information regarding the reasons the JWT was considered invalid using the \"error_description\" or \"error_uri\" parameters."
     }
@@ -289,49 +284,49 @@
    "title": "Authorization Grant Example",
    "paragraphs": [
     {
-     "id": "4-1",
+     "id": "4-cec68491",
      "kind": "p",
      "en": "The following examples illustrate what a conforming JWT and an access token request would look like."
     },
     {
-     "id": "4-2",
+     "id": "4-2d4b6779",
      "kind": "p",
      "en": "The example shows a JWT issued and signed by the system entity identified as \"https://jwt-idp.example.com\".  The subject of the JWT is identified by email address as \"mike@example.com\".  The intended audience of the JWT is \"https://jwt-rp.example.net\", which is an identifier with which the authorization server identifies itself. The JWT is sent as part of an access token request to the authorization server's token endpoint at \"https://authz.example.net/ token.oauth2\"."
     },
     {
-     "id": "4-3",
+     "id": "4-8477447c",
      "kind": "p",
      "en": "Below is an example JSON object that could be encoded to produce the JWT Claims Set for a JWT:"
     },
     {
-     "id": "4-4",
-     "kind": "p",
-     "en": "{\"iss\":\"https://jwt-idp.example.com\", \"sub\":\"mailto:mike@example.com\", \"aud\":\"https://jwt-rp.example.net\", \"nbf\":1300815780, \"exp\":1300819380, \"http://claims.example.com/member\":true}"
+     "id": "4-d4ec86bc",
+     "kind": "pre",
+     "en": "     {\"iss\":\"https://jwt-idp.example.com\",\n      \"sub\":\"mailto:mike@example.com\",\n      \"aud\":\"https://jwt-rp.example.net\",\n      \"nbf\":1300815780,\n      \"exp\":1300819380,\n      \"http://claims.example.com/member\":true}"
     },
     {
-     "id": "4-5",
+     "id": "4-72491c56",
      "kind": "p",
      "en": "The following example JSON object, used as the header of a JWT, declares that the JWT is signed with the Elliptic Curve Digital Signature Algorithm (ECDSA) P-256 SHA-256 using a key identified by the \"kid\" value \"16\"."
     },
     {
-     "id": "4-6",
-     "kind": "p",
-     "en": "{\"alg\":\"ES256\",\"kid\":\"16\"}"
+     "id": "4-d3570b62",
+     "kind": "pre",
+     "en": "     {\"alg\":\"ES256\",\"kid\":\"16\"}"
     },
     {
-     "id": "4-7",
+     "id": "4-4031cc3d",
      "kind": "p",
      "en": "To present the JWT with the claims and header shown in the previous example as part of an access token request, for example, the client might make the following HTTPS request (with extra line breaks for display purposes only):"
     },
     {
-     "id": "4-8",
-     "kind": "p",
-     "en": "POST /token.oauth2 HTTP/1.1 Host: authz.example.net Content-Type: application/x-www-form-urlencoded"
+     "id": "4-b1500274",
+     "kind": "pre",
+     "en": "     POST /token.oauth2 HTTP/1.1\n     Host: authz.example.net\n     Content-Type: application/x-www-form-urlencoded"
     },
     {
-     "id": "4-9",
-     "kind": "p",
-     "en": "grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer &assertion=eyJhbGciOiJFUzI1NiIsImtpZCI6IjE2In0. eyJpc3Mi[...omitted for brevity...]. J9l-ZhwP[...omitted for brevity...]"
+     "id": "4-c89e726c",
+     "kind": "pre",
+     "en": "     grant_type=urn%3Aietf%3Aparams%3Aoauth%3Agrant-type%3Ajwt-bearer\n     &assertion=eyJhbGciOiJFUzI1NiIsImtpZCI6IjE2In0.\n     eyJpc3Mi[...omitted for brevity...].\n     J9l-ZhwP[...omitted for brevity...]"
     }
    ]
   },
@@ -340,12 +335,12 @@
    "title": "Interoperability Considerations",
    "paragraphs": [
     {
-     "id": "5-1",
+     "id": "5-f5478774",
      "kind": "p",
      "en": "Agreement between system entities regarding identifiers, keys, and endpoints is required in order to achieve interoperable deployments of this profile.  Specific items that require agreement are as follows: values for the issuer and audience identifiers, the location of the token endpoint, the key used to apply and verify the digital signature or MAC over the JWT, one-time use restrictions on the JWT, maximum JWT lifetime allowed, and the specific subject and claim requirements of the JWT.  The exchange of such information is explicitly out of scope for this specification.  In some cases, additional profiles may be created that constrain or prescribe these values or specify how they are to be exchanged.  Examples of such profiles include the OAuth 2.0 Dynamic Client Registration Core Protocol [OAUTH-DYN-REG], OpenID Connect Dynamic Client Registration 1.0 [OpenID.Registration], and OpenID Connect Discovery 1.0 [OpenID.Discovery]."
     },
     {
-     "id": "5-2",
+     "id": "5-08a2a72e",
      "kind": "p",
      "en": "The \"RS256\" algorithm, from [JWA], is a mandatory-to-implement JSON Web Signature algorithm for this profile."
     }
@@ -356,12 +351,12 @@
    "title": "Security Considerations",
    "paragraphs": [
     {
-     "id": "6-1",
+     "id": "6-10bf3f23",
      "kind": "p",
      "en": "The security considerations described within the following specifications are all applicable to this document: \"Assertion Framework for OAuth 2.0 Client Authentication and Authorization Grants\" [RFC7521], \"The OAuth 2.0 Authorization Framework\" [RFC6749], and \"JSON Web Token (JWT)\" [JWT]."
     },
     {
-     "id": "6-2",
+     "id": "6-a74479de",
      "kind": "p",
      "en": "The specification does not mandate replay protection for the JWT usage for either the authorization grant or for client authentication.  It is an optional feature, which implementations may employ at their own discretion."
     }
@@ -372,12 +367,12 @@
    "title": "Privacy Considerations",
    "paragraphs": [
     {
-     "id": "7-1",
+     "id": "7-b7c7372a",
      "kind": "p",
      "en": "A JWT may contain privacy-sensitive information and, to prevent disclosure of such information to unintended parties, should only be transmitted over encrypted channels, such as Transport Layer Security (TLS).  In cases where it is desirable to prevent disclosure of certain information to the client, the JWT should be encrypted to the authorization server."
     },
     {
-     "id": "7-2",
+     "id": "7-65ad045a",
      "kind": "p",
      "en": "Deployments should determine the minimum amount of information necessary to complete the exchange and include only such claims in the JWT.  In some cases, the \"sub\" (subject) claim can be a value representing an anonymous or pseudonymous user, as described in Section 6.3.1 of the OAuth Assertion Framework [RFC7521]."
     }
@@ -393,14 +388,29 @@
    "title": "Sub-Namespace Registration of urn:ietf:params:oauth:grant-type:jwt-bearer",
    "paragraphs": [
     {
-     "id": "8.1-1",
+     "id": "8.1-463f8140",
      "kind": "p",
      "en": "This section registers the value \"grant-type:jwt-bearer\" in the IANA \"OAuth URI\" registry established by \"An IETF URN Sub-Namespace for OAuth\" [RFC6755]."
     },
     {
-     "id": "8.1-2",
+     "id": "8.1-28afbb41",
      "kind": "li",
-     "en": "o  URN: urn:ietf:params:oauth:grant-type:jwt-bearer o  Common Name: JWT Bearer Token Grant Type Profile for OAuth 2.0 o  Change Controller: IESG o  Specification Document: RFC 7523"
+     "en": "o  URN: urn:ietf:params:oauth:grant-type:jwt-bearer"
+    },
+    {
+     "id": "8.1-eb12356f",
+     "kind": "li",
+     "en": "o  Common Name: JWT Bearer Token Grant Type Profile for OAuth 2.0"
+    },
+    {
+     "id": "8.1-e502c81a",
+     "kind": "li",
+     "en": "o  Change Controller: IESG"
+    },
+    {
+     "id": "8.1-22faa4ce",
+     "kind": "li",
+     "en": "o  Specification Document: RFC 7523"
     }
    ]
   },
@@ -409,14 +419,29 @@
    "title": "Sub-Namespace Registration of urn:ietf:params:oauth:client-assertion-type:jwt-bearer",
    "paragraphs": [
     {
-     "id": "8.2-1",
+     "id": "8.2-36c989cc",
      "kind": "p",
      "en": "This section registers the value \"client-assertion-type:jwt-bearer\" in the IANA \"OAuth URI\" registry established by \"An IETF URN Sub- Namespace for OAuth\" [RFC6755]."
     },
     {
-     "id": "8.2-2",
+     "id": "8.2-23e8fdbf",
      "kind": "li",
-     "en": "o  URN: urn:ietf:params:oauth:client-assertion-type:jwt-bearer o  Common Name: JWT Bearer Token Profile for OAuth 2.0 Client Authentication o  Change Controller: IESG o  Specification Document: RFC 7523"
+     "en": "o  URN: urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
+    },
+    {
+     "id": "8.2-7259a5b3",
+     "kind": "li",
+     "en": "o  Common Name: JWT Bearer Token Profile for OAuth 2.0 Client Authentication"
+    },
+    {
+     "id": "8.2-e502c81a",
+     "kind": "li",
+     "en": "o  Change Controller: IESG"
+    },
+    {
+     "id": "8.2-22faa4ce",
+     "kind": "li",
+     "en": "o  Specification Document: RFC 7523"
     }
    ]
   },
@@ -430,37 +455,37 @@
    "title": "Normative References",
    "paragraphs": [
     {
-     "id": "9.1-1",
+     "id": "9.1-08dc0a2e",
      "kind": "pre",
      "en": "   [JWA]      Jones, M., \"JSON Web Algorithms (JWA)\", RFC 7518,\n              DOI 10.17487/RFC7518, May 2015,\n              <http://www.rfc-editor.org/info/rfc7518>."
     },
     {
-     "id": "9.1-2",
+     "id": "9.1-6f092907",
      "kind": "pre",
      "en": "   [JWT]      Jones, M., Bradley, J., and N. Sakimura, \"JSON Web Token\n              (JWT)\", RFC 7519, DOI 10.17487/RFC7519, May 2015,\n              <http://www.rfc-editor.org/info/rfc7519>."
     },
     {
-     "id": "9.1-3",
+     "id": "9.1-ed39da47",
      "kind": "pre",
      "en": "   [RFC2119]  Bradner, S., \"Key words for use in RFCs to Indicate\n              Requirement Levels\", BCP 14, RFC 2119,\n              DOI 10.17487/RFC2119, March 1997,\n              <http://www.rfc-editor.org/info/rfc2119>."
     },
     {
-     "id": "9.1-4",
+     "id": "9.1-d9c1a087",
      "kind": "pre",
      "en": "   [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, \"Uniform\n              Resource Identifier (URI): Generic Syntax\", STD 66,\n              RFC 3986, DOI 10.17487/RFC3986, January 2005,\n              <http://www.rfc-editor.org/info/rfc3986>."
     },
     {
-     "id": "9.1-5",
+     "id": "9.1-c07dd55e",
      "kind": "pre",
      "en": "   [RFC6749]  Hardt, D., Ed., \"The OAuth 2.0 Authorization Framework\",\n              RFC 6749, DOI 10.17487/RFC6749, October 2012,\n              <http://www.rfc-editor.org/info/rfc6749>."
     },
     {
-     "id": "9.1-6",
+     "id": "9.1-967304b4",
      "kind": "pre",
      "en": "   [RFC7159]  Bray, T., Ed., \"The JavaScript Object Notation (JSON) Data\n              Interchange Format\", RFC 7159, DOI 10.17487/RFC7159, March\n              2014, <http://www.rfc-editor.org/info/rfc7159>."
     },
     {
-     "id": "9.1-7",
+     "id": "9.1-297db7d4",
      "kind": "pre",
      "en": "   [RFC7521]  Campbell, B., Mortimore, C., Jones, M., and Y. Goland,\n              \"Assertion Framework for OAuth 2.0 Client Authentication\n              and Authorization Grants\", RFC 7521, DOI 10.17487/RFC7521,\n              May 2015, <http://www.rfc-editor.org/info/rfc7521>."
     }
@@ -471,27 +496,27 @@
    "title": "Informative References",
    "paragraphs": [
     {
-     "id": "9.2-1",
-     "kind": "pre",
-     "en": "   [OAUTH-DYN-REG]\n              Richer, J., Jones, M., Bradley, J., Machulak, M., and P.\n              Hunt, \"OAuth 2.0 Dynamic Client Registration Protocol\",\n              Work in Progress, draft-ietf-oauth-dyn-reg-29, May 2015."
+     "id": "9.2-86b1125c",
+     "kind": "p",
+     "en": "[OAUTH-DYN-REG] Richer, J., Jones, M., Bradley, J., Machulak, M., and P. Hunt, \"OAuth 2.0 Dynamic Client Registration Protocol\", Work in Progress, draft-ietf-oauth-dyn-reg-29, May 2015."
     },
     {
-     "id": "9.2-2",
-     "kind": "pre",
-     "en": "   [OpenID.Discovery]\n              Sakimura, N., Bradley, J., Jones, M., and E. Jay, \"OpenID\n              Connect Discovery 1.0 incorporating errata set 1\",\n              November 2014, <http://openid.net/specs/\n              openid-connect-discovery-1_0.html>."
+     "id": "9.2-9369bab0",
+     "kind": "p",
+     "en": "[OpenID.Discovery] Sakimura, N., Bradley, J., Jones, M., and E. Jay, \"OpenID Connect Discovery 1.0 incorporating errata set 1\", November 2014, <http://openid.net/specs/ openid-connect-discovery-1_0.html>."
     },
     {
-     "id": "9.2-3",
-     "kind": "pre",
-     "en": "   [OpenID.Registration]\n              Sakimura, N., Bradley, J., and M. Jones, \"OpenID Connect\n              Dynamic Client Registration 1.0 incorporating errata set\n              1\", November 2014, <http://openid.net/specs/\n              openid-connect-registration-1_0.html>."
+     "id": "9.2-e3a20e85",
+     "kind": "p",
+     "en": "[OpenID.Registration] Sakimura, N., Bradley, J., and M. Jones, \"OpenID Connect Dynamic Client Registration 1.0 incorporating errata set 1\", November 2014, <http://openid.net/specs/ openid-connect-registration-1_0.html>."
     },
     {
-     "id": "9.2-4",
+     "id": "9.2-5b7899a2",
      "kind": "pre",
      "en": "   [RFC6755]  Campbell, B. and H. Tschofenig, \"An IETF URN Sub-Namespace\n              for OAuth\", RFC 6755, DOI 10.17487/RFC6755, October 2012,\n              <http://www.rfc-editor.org/info/rfc6755>."
     },
     {
-     "id": "9.2-5",
+     "id": "9.2-d2c1419c",
      "kind": "pre",
      "en": "   [RFC7522]  Campbell, B., Mortimore, C., and M. Jones, \"Security\n              Assertion Markup Language (SAML) 2.0 Profile for OAuth 2.0\n              Client Authentication and Authorization Grants\", RFC 7522,\n              DOI 10.17487/RFC7522, May 2015,\n              <http://www.rfc-editor.org/info/rfc7522>."
     }
@@ -502,12 +527,12 @@
    "title": "Acknowledgements",
    "paragraphs": [
     {
-     "id": "acknowledgements-1",
+     "id": "acknowledgements-813005e6",
      "kind": "p",
      "en": "This profile was derived from \"Security Assertion Markup Language (SAML) 2.0 Profile for OAuth 2.0 Client Authentication and Authorization Grants\" [RFC7522], which has the same authors as this document."
     }
    ]
   }
  ],
- "content_hash": "21a05708e9097cdd0f253921ae9e51e0658259c1b5b7b4fa554857dfc50dbf8e"
+ "content_hash": "f7310c99700f8473f845bc70641aad22f4ec4efb64f0bbdea0b71adf7e4a5ab3"
 }

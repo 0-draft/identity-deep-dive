@@ -2,14 +2,14 @@
  "number": 9449,
  "title": "OAuth 2.0 Demonstrating Proof of Possession (DPoP)",
  "url": "https://www.rfc-editor.org/rfc/rfc9449",
- "fetched_at": "2026-11-13T13:50:34+00:00",
+ "fetched_at": "2026-11-13T14:13:45+00:00",
  "sections": [
   {
    "id": "abstract",
    "title": "Abstract",
    "paragraphs": [
     {
-     "id": "abstract-1",
+     "id": "abstract-d72e8296",
      "kind": "p",
      "en": "This document describes a mechanism for sender-constraining OAuth 2.0 tokens via a proof-of-possession mechanism on the application level. This mechanism allows for the detection of replay attacks with access and refresh tokens."
     }
@@ -20,17 +20,17 @@
    "title": "Introduction",
    "paragraphs": [
     {
-     "id": "1-1",
+     "id": "1-3b39ac4e",
      "kind": "p",
      "en": "Demonstrating Proof of Possession (DPoP) is an application-level mechanism for sender-constraining OAuth [RFC6749] access and refresh tokens.  It enables a client to prove the possession of a public/ private key pair by including a DPoP header in an HTTP request.  The value of the header is a JSON Web Token (JWT) [RFC7519] that enables the authorization server to bind issued tokens to the public part of a client's key pair.  Recipients of such tokens are then able to verify the binding of the token to the key pair that the client has demonstrated that it holds via the DPoP header, thereby providing some assurance that the client presenting the token also possesses the private key.  In other words, the legitimate presenter of the token is constrained to be the sender that holds and proves possession of the private part of the key pair."
     },
     {
-     "id": "1-2",
+     "id": "1-e8e820fc",
      "kind": "p",
      "en": "The mechanism specified herein can be used in cases where other methods of sender-constraining tokens that utilize elements of the underlying secure transport layer, such as [RFC8705] or [TOKEN-BINDING], are not available or desirable.  For example, due to a sub-par user experience of TLS client authentication in user agents and a lack of support for HTTP token binding, neither mechanism can be used if an OAuth client is an application that is dynamically downloaded and executed in a web browser (sometimes referred to as a \"single-page application\").  Additionally, applications that are installed and run directly on a user's device are well positioned to benefit from DPoP-bound tokens that guard against the misuse of tokens by a compromised or malicious resource.  Such applications often have dedicated protected storage for cryptographic keys."
     },
     {
-     "id": "1-3",
+     "id": "1-6a3b9b55",
      "kind": "p",
      "en": "DPoP can be used to sender-constrain access tokens regardless of the client authentication method employed, but DPoP itself is not used for client authentication.  DPoP can also be used to sender-constrain refresh tokens issued to public clients (those without authentication credentials associated with the client_id)."
     }
@@ -41,32 +41,32 @@
    "title": "Conventions and Terminology",
    "paragraphs": [
     {
-     "id": "1.1-1",
+     "id": "1.1-e10c0f28",
      "kind": "p",
      "en": "The key words \"MUST\", \"MUST NOT\", \"REQUIRED\", \"SHALL\", \"SHALL NOT\", \"SHOULD\", \"SHOULD NOT\", \"RECOMMENDED\", \"NOT RECOMMENDED\", \"MAY\", and \"OPTIONAL\" in this document are to be interpreted as described in BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all capitals, as shown here."
     },
     {
-     "id": "1.1-2",
+     "id": "1.1-b7ee27d8",
      "kind": "p",
      "en": "This specification uses the Augmented Backus-Naur Form (ABNF) notation of [RFC5234]."
     },
     {
-     "id": "1.1-3",
+     "id": "1.1-276a5d94",
      "kind": "p",
      "en": "This specification uses the terms \"access token\", \"refresh token\", \"authorization server\", \"resource server\", \"authorization endpoint\", \"authorization request\", \"authorization response\", \"token endpoint\", \"grant type\", \"access token request\", \"access token response\", \"client\", \"public client\", and \"confidential client\" defined by \"The OAuth 2.0 Authorization Framework\" [RFC6749]."
     },
     {
-     "id": "1.1-4",
+     "id": "1.1-93f1ef48",
      "kind": "p",
      "en": "The terms \"request\", \"response\", \"header field\", and \"target URI\" are imported from [RFC9110]."
     },
     {
-     "id": "1.1-5",
+     "id": "1.1-c8d9c146",
      "kind": "p",
      "en": "The terms \"JOSE\" and \"JOSE Header\" are imported from [RFC7515]."
     },
     {
-     "id": "1.1-6",
+     "id": "1.1-8e6faccf",
      "kind": "p",
      "en": "This document contains non-normative examples of partial and complete HTTP messages.  Some examples use a single trailing backslash to indicate line wrapping for long values, as per [RFC8792].  The character and leading spaces on wrapped lines are not part of the value."
     }
@@ -77,37 +77,37 @@
    "title": "Objectives",
    "paragraphs": [
     {
-     "id": "2-1",
+     "id": "2-234702ba",
      "kind": "p",
      "en": "The primary aim of DPoP is to prevent unauthorized or illegitimate parties from using leaked or stolen access tokens, by binding a token to a public key upon issuance and requiring that the client proves possession of the corresponding private key when using the token. This constrains the legitimate sender of the token to only the party with access to the private key and gives the server receiving the token added assurances that the sender is legitimately authorized to use it."
     },
     {
-     "id": "2-2",
+     "id": "2-6a49aa44",
      "kind": "p",
      "en": "Access tokens that are sender-constrained via DPoP thus stand in contrast to the typical bearer token, which can be used by any party in possession of such a token.  Although protections generally exist to prevent unintended disclosure of bearer tokens, unforeseen vectors for leakage have occurred due to vulnerabilities and implementation issues in other layers in the protocol or software stack (see, e.g., Compression Ratio Info-leak Made Easy (CRIME) [CRIME], Browser Reconnaissance and Exfiltration via Adaptive Compression of Hypertext (BREACH) [BREACH], Heartbleed [Heartbleed], and the Cloudflare parser bug [Cloudbleed]).  There have also been numerous published token theft attacks on OAuth implementations themselves ([GitHub.Tokens] is just one high-profile example).  DPoP provides a general defense in depth against the impact of unanticipated token leakage.  DPoP is not, however, a substitute for a secure transport and MUST always be used in conjunction with HTTPS."
     },
     {
-     "id": "2-3",
+     "id": "2-68f54691",
      "kind": "p",
      "en": "The very nature of the typical OAuth protocol interaction necessitates that the client discloses the access token to the protected resources that it accesses.  The attacker model in [SECURITY-TOPICS] describes cases where a protected resource might be counterfeit, malicious, or compromised and plays received tokens against other protected resources to gain unauthorized access. Audience-restricted access tokens (e.g., using the JWT [RFC7519] aud claim) can prevent such misuse.  However, doing so in practice has proven to be prohibitively cumbersome for many deployments (despite extensions such as [RFC8707]).  Sender-constraining access tokens is a more robust and straightforward mechanism to prevent such token replay at a different endpoint, and DPoP is an accessible application-layer means of doing so."
     },
     {
-     "id": "2-4",
+     "id": "2-32a8f406",
      "kind": "p",
      "en": "Due to the potential for cross-site scripting (XSS), browser-based OAuth clients bring to bear added considerations with respect to protecting tokens.  The most straightforward XSS-based attack is for an attacker to exfiltrate a token and use it themselves completely independent of the legitimate client.  A stolen access token is used for protected resource access, and a stolen refresh token is used for obtaining new access tokens.  If the private key is non-extractable (as is possible with [W3C.WebCryptoAPI]), DPoP renders exfiltrated tokens alone unusable."
     },
     {
-     "id": "2-5",
+     "id": "2-bd291342",
      "kind": "p",
      "en": "XSS vulnerabilities also allow an attacker to execute code in the context of the browser-based client application and maliciously use a token indirectly through the client.  That execution context has access to utilize the signing key; thus, it can produce DPoP proofs to use in conjunction with the token.  At this application layer, there is most likely no feasible defense against this threat except generally preventing XSS; therefore, it is considered out of scope for DPoP."
     },
     {
-     "id": "2-6",
+     "id": "2-858d8319",
      "kind": "p",
      "en": "Malicious XSS code executed in the context of the browser-based client application is also in a position to create DPoP proofs with timestamp values in the future and exfiltrate them in conjunction with a token.  These stolen artifacts can later be used independent of the client application to access protected resources.  To prevent this, servers can optionally require clients to include a server- chosen value into the proof that cannot be predicted by an attacker (nonce).  In the absence of the optional nonce, the impact of pre- computed DPoP proofs is limited somewhat by the proof being bound to an access token on protected resource access.  Because a proof covering an access token that does not yet exist cannot feasibly be created, access tokens obtained with an exfiltrated refresh token and pre-computed proofs will be unusable."
     },
     {
-     "id": "2-7",
+     "id": "2-d930a366",
      "kind": "p",
      "en": "Additional security considerations are discussed in Section 11."
     }
@@ -118,82 +118,82 @@
    "title": "Concept",
    "paragraphs": [
     {
-     "id": "3-1",
+     "id": "3-f48ec072",
      "kind": "p",
      "en": "The main data structure introduced by this specification is a DPoP proof JWT that is sent as a header in an HTTP request, as described in detail below.  A client uses a DPoP proof JWT to prove the possession of a private key corresponding to a certain public key."
     },
     {
-     "id": "3-2",
+     "id": "3-43b74bb5",
      "kind": "p",
      "en": "Roughly speaking, a DPoP proof is a signature over:"
     },
     {
-     "id": "3-3",
+     "id": "3-1f977095",
      "kind": "li",
      "en": "*  some data of the HTTP request to which it is attached,"
     },
     {
-     "id": "3-4",
+     "id": "3-da918375",
      "kind": "li",
      "en": "*  a timestamp,"
     },
     {
-     "id": "3-5",
+     "id": "3-81d7bd07",
      "kind": "li",
      "en": "*  a unique identifier,"
     },
     {
-     "id": "3-6",
+     "id": "3-409f40bc",
      "kind": "li",
      "en": "*  an optional server-provided nonce, and"
     },
     {
-     "id": "3-7",
+     "id": "3-dc12beb7",
      "kind": "li",
      "en": "*  a hash of the associated access token when an access token is present within the request."
     },
     {
-     "id": "3-8",
+     "id": "3-5681ad2a",
      "kind": "pre",
      "en": "   +--------+                                          +---------------+\n   |        |--(A)-- Token Request ------------------->|               |\n   | Client |        (DPoP Proof)                      | Authorization |\n   |        |                                          |     Server    |\n   |        |<-(B)-- DPoP-Bound Access Token ----------|               |\n   |        |        (token_type=DPoP)                 +---------------+\n   |        |\n   |        |\n   |        |                                          +---------------+\n   |        |--(C)-- DPoP-Bound Access Token --------->|               |\n   |        |        (DPoP Proof)                      |    Resource   |\n   |        |                                          |     Server    |\n   |        |<-(D)-- Protected Resource ---------------|               |\n   |        |                                          +---------------+\n   +--------+"
     },
     {
-     "id": "3-9",
+     "id": "3-7424b89a",
      "kind": "pre",
      "en": "                         Figure 1: Basic DPoP Flow"
     },
     {
-     "id": "3-10",
+     "id": "3-26b7f773",
      "kind": "p",
      "en": "The basic steps of an OAuth flow with DPoP (without the optional nonce) are shown in Figure 1."
     },
     {
-     "id": "3-11",
+     "id": "3-8deebb88",
      "kind": "p",
      "en": "A.  In the token request, the client sends an authorization grant (e.g., an authorization code, refresh token, etc.) to the authorization server in order to obtain an access token (and potentially a refresh token).  The client attaches a DPoP proof to the request in an HTTP header."
     },
     {
-     "id": "3-12",
+     "id": "3-ff3c5ade",
      "kind": "p",
      "en": "B.  The authorization server binds (sender-constrains) the access token to the public key claimed by the client in the DPoP proof; that is, the access token cannot be used without proving possession of the respective private key.  If a refresh token is issued to a public client, it is also bound to the public key of the DPoP proof."
     },
     {
-     "id": "3-13",
+     "id": "3-89decd39",
      "kind": "p",
      "en": "C.  To use the access token, the client has to prove possession of the private key by, again, adding a header to the request that carries a DPoP proof for that request.  The resource server needs to receive information about the public key to which the access token is bound.  This information may be encoded directly into the access token (for JWT-structured access tokens) or provided via token introspection endpoint (not shown).  The resource server verifies that the public key to which the access token is bound matches the public key of the DPoP proof.  It also verifies that the access token hash in the DPoP proof matches the access token presented in the request."
     },
     {
-     "id": "3-14",
+     "id": "3-2003ca25",
      "kind": "p",
      "en": "D.  The resource server refuses to serve the request if the signature check fails or if the data in the DPoP proof is wrong, e.g., the target URI does not match the URI claim in the DPoP proof JWT. The access token itself, of course, must also be valid in all other respects."
     },
     {
-     "id": "3-15",
+     "id": "3-286e726f",
      "kind": "p",
      "en": "The DPoP mechanism presented herein is not a client authentication method.  In fact, a primary use case of DPoP is for public clients (e.g., single-page applications and applications on a user's device) that do not use client authentication.  Nonetheless, DPoP is designed to be compatible with private_key_jwt and all other client authentication methods."
     },
     {
-     "id": "3-16",
+     "id": "3-4c2abee0",
      "kind": "p",
      "en": "DPoP does not directly ensure message integrity, but it relies on the TLS layer for that purpose.  See Section 11 for details."
     }
@@ -204,17 +204,17 @@
    "title": "DPoP Proof JWTs",
    "paragraphs": [
     {
-     "id": "4-1",
+     "id": "4-cdd73b6f",
      "kind": "p",
      "en": "DPoP introduces the concept of a DPoP proof, which is a JWT created by the client and sent with an HTTP request using the DPoP header field.  Each HTTP request requires a unique DPoP proof."
     },
     {
-     "id": "4-2",
+     "id": "4-85e38348",
      "kind": "p",
      "en": "A valid DPoP proof demonstrates to the server that the client holds the private key that was used to sign the DPoP proof JWT.  This enables authorization servers to bind issued tokens to the corresponding public key (as described in Section 5) and enables resource servers to verify the key-binding of tokens that it receives (see Section 7.1), which prevents said tokens from being used by any entity that does not have access to the private key."
     },
     {
-     "id": "4-3",
+     "id": "4-45d7f883",
      "kind": "p",
      "en": "The DPoP proof demonstrates possession of a key and, by itself, is not an authentication or access control mechanism.  When presented in conjunction with a key-bound access token as described in Section 7.1, the DPoP proof provides additional assurance about the legitimacy of the client to present the access token.  However, a valid DPoP proof JWT is not sufficient alone to make access control decisions."
     }
@@ -225,47 +225,47 @@
    "title": "The DPoP HTTP Header",
    "paragraphs": [
     {
-     "id": "4.1-1",
+     "id": "4.1-6a180fbb",
      "kind": "p",
      "en": "A DPoP proof is included in an HTTP request using the following request header field."
     },
     {
-     "id": "4.1-2",
-     "kind": "p",
-     "en": "DPoP:  A JWT that adheres to the structure and syntax of Section 4.2."
+     "id": "4.1-7f5b1877",
+     "kind": "pre",
+     "en": "   DPoP:  A JWT that adheres to the structure and syntax of Section 4.2."
     },
     {
-     "id": "4.1-3",
+     "id": "4.1-faa4cda0",
      "kind": "p",
      "en": "Figure 2 shows an example DPoP HTTP header field.  The example uses \"\\\" line wrapping per [RFC8792]."
     },
     {
-     "id": "4.1-4",
-     "kind": "p",
-     "en": "DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6Ik\\ VDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCR\\ nMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JE\\ QSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiItQndDM0VTYzZhY2MybFRjIiwiaHRtIj\\ oiUE9TVCIsImh0dSI6Imh0dHBzOi8vc2VydmVyLmV4YW1wbGUuY29tL3Rva2VuIiwia\\ WF0IjoxNTYyMjYyNjE2fQ.2-GxA6T8lP4vfrg8v-FdWP0A0zdrj8igiMLvqRMUvwnQg\\ 4PtFLbdLXiOSsX0x7NVY-FNyJK70nfbV37xRZT3Lg"
+     "id": "4.1-668ddb8c",
+     "kind": "pre",
+     "en": "   DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6Ik\\\n    VDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCR\\\n    nMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JE\\\n    QSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiItQndDM0VTYzZhY2MybFRjIiwiaHRtIj\\\n    oiUE9TVCIsImh0dSI6Imh0dHBzOi8vc2VydmVyLmV4YW1wbGUuY29tL3Rva2VuIiwia\\\n    WF0IjoxNTYyMjYyNjE2fQ.2-GxA6T8lP4vfrg8v-FdWP0A0zdrj8igiMLvqRMUvwnQg\\\n    4PtFLbdLXiOSsX0x7NVY-FNyJK70nfbV37xRZT3Lg"
     },
     {
-     "id": "4.1-5",
+     "id": "4.1-0b1c38b2",
      "kind": "pre",
      "en": "                       Figure 2: Example DPoP Header"
     },
     {
-     "id": "4.1-6",
+     "id": "4.1-965cad16",
      "kind": "p",
      "en": "Note that per [RFC9110], header field names are case insensitive; thus, DPoP, DPOP, dpop, etc., are all valid and equivalent header field names.  However, case is significant in the header field value."
     },
     {
-     "id": "4.1-7",
+     "id": "4.1-cc2f05ca",
      "kind": "p",
      "en": "The DPoP HTTP header field value uses the token68 syntax defined in Section 11.2 of [RFC9110] and is repeated below in Figure 3 for ease of reference."
     },
     {
-     "id": "4.1-8",
+     "id": "4.1-e7642af9",
      "kind": "pre",
      "en": "   DPoP       = token68\n   token68    = 1*( ALPHA / DIGIT /\n                    \"-\" / \".\" / \"_\" / \"~\" / \"+\" / \"/\" ) *\"=\""
     },
     {
-     "id": "4.1-9",
+     "id": "4.1-dddd055b",
      "kind": "pre",
      "en": "                      Figure 3: DPoP Header Field ABNF"
     }
@@ -276,92 +276,92 @@
    "title": "DPoP Proof JWT Syntax",
    "paragraphs": [
     {
-     "id": "4.2-1",
+     "id": "4.2-e367702d",
      "kind": "p",
      "en": "A DPoP proof is a JWT [RFC7519] that is signed (using JSON Web Signature (JWS) [RFC7515]) with a private key chosen by the client (see below).  The JOSE Header of a DPoP JWT MUST contain at least the following parameters:"
     },
     {
-     "id": "4.2-2",
+     "id": "4.2-11ab50c1",
      "kind": "p",
      "en": "typ:  A field with the value dpop+jwt, which explicitly types the DPoP proof JWT as recommended in Section 3.11 of [RFC8725]."
     },
     {
-     "id": "4.2-3",
+     "id": "4.2-51082e0f",
      "kind": "p",
      "en": "alg:  An identifier for a JWS asymmetric digital signature algorithm from [IANA.JOSE.ALGS].  It MUST NOT be none or an identifier for a symmetric algorithm (Message Authentication Code (MAC))."
     },
     {
-     "id": "4.2-4",
+     "id": "4.2-8cebf3ac",
      "kind": "p",
      "en": "jwk:  Represents the public key chosen by the client in JSON Web Key (JWK) [RFC7517] format as defined in Section 4.1.3 of [RFC7515]. It MUST NOT contain a private key."
     },
     {
-     "id": "4.2-5",
+     "id": "4.2-e1d724ec",
      "kind": "p",
      "en": "The payload of a DPoP proof MUST contain at least the following claims:"
     },
     {
-     "id": "4.2-6",
+     "id": "4.2-a058f853",
      "kind": "p",
      "en": "jti:  Unique identifier for the DPoP proof JWT.  The value MUST be assigned such that there is a negligible probability that the same value will be assigned to any other DPoP proof used in the same context during the time window of validity.  Such uniqueness can be accomplished by encoding (base64url or any other suitable encoding) at least 96 bits of pseudorandom data or by using a version 4 Universally Unique Identifier (UUID) string according to [RFC4122].  The jti can be used by the server for replay detection and prevention; see Section 11.1."
     },
     {
-     "id": "4.2-7",
+     "id": "4.2-7f6590b5",
      "kind": "p",
      "en": "htm:  The value of the HTTP method (Section 9.1 of [RFC9110]) of the request to which the JWT is attached."
     },
     {
-     "id": "4.2-8",
+     "id": "4.2-062c6fd7",
      "kind": "p",
      "en": "htu:  The HTTP target URI (Section 7.1 of [RFC9110]) of the request to which the JWT is attached, without query and fragment parts."
     },
     {
-     "id": "4.2-9",
+     "id": "4.2-f6d2668a",
      "kind": "p",
      "en": "iat:  Creation timestamp of the JWT (Section 4.1.6 of [RFC7519])."
     },
     {
-     "id": "4.2-10",
+     "id": "4.2-0e8c94dc",
      "kind": "p",
      "en": "When the DPoP proof is used in conjunction with the presentation of an access token in protected resource access (see Section 7), the DPoP proof MUST also contain the following claim:"
     },
     {
-     "id": "4.2-11",
+     "id": "4.2-23ba8bb8",
      "kind": "p",
      "en": "ath:  Hash of the access token.  The value MUST be the result of a base64url encoding (as defined in Section 2 of [RFC7515]) the SHA-256 [SHS] hash of the ASCII encoding of the associated access token's value."
     },
     {
-     "id": "4.2-12",
+     "id": "4.2-e56c4706",
      "kind": "p",
      "en": "When the authentication server or resource server provides a DPoP- Nonce HTTP header in a response (see Sections 8 and 9), the DPoP proof MUST also contain the following claim:"
     },
     {
-     "id": "4.2-13",
+     "id": "4.2-30a726a0",
      "kind": "p",
      "en": "nonce:  A recent nonce provided via the DPoP-Nonce HTTP header."
     },
     {
-     "id": "4.2-14",
+     "id": "4.2-745263fb",
      "kind": "p",
      "en": "A DPoP proof MAY contain other JOSE Header Parameters or claims as defined by extension, profile, or deployment-specific requirements."
     },
     {
-     "id": "4.2-15",
+     "id": "4.2-8ced7746",
      "kind": "p",
      "en": "Figure 4 is a conceptual example showing the decoded content of the DPoP proof in Figure 2.  The JSON of the JWT header and payload are shown, but the signature part is omitted.  As usual, line breaks and extra spaces are included for formatting and readability."
     },
     {
-     "id": "4.2-16",
+     "id": "4.2-628ee723",
      "kind": "pre",
      "en": "   {\n     \"typ\":\"dpop+jwt\",\n     \"alg\":\"ES256\",\n     \"jwk\": {\n       \"kty\":\"EC\",\n       \"x\":\"l8tFrhx-34tV3hRICRDY9zCkDlpBhF42UQUfWVAWBFs\",\n       \"y\":\"9VE4jf_Ok_o64zbTTlcuNJajHmt6v9TDVrU0CdvGRDA\",\n       \"crv\":\"P-256\"\n     }\n   }\n   .\n   {\n     \"jti\":\"-BwC3ESc6acc2lTc\",\n     \"htm\":\"POST\",\n     \"htu\":\"https://server.example.com/token\",\n     \"iat\":1562262616\n   }"
     },
     {
-     "id": "4.2-17",
+     "id": "4.2-f3506411",
      "kind": "pre",
      "en": "               Figure 4: Example JWT Content of a DPoP Proof"
     },
     {
-     "id": "4.2-18",
+     "id": "4.2-8e5cd69c",
      "kind": "p",
      "en": "Of the HTTP request, only the HTTP method and URI are included in the DPoP JWT; therefore, only these two message parts are covered by the DPoP proof.  The idea is to sign just enough of the HTTP data to provide reasonable proof of possession with respect to the HTTP request.  This design approach of using only a minimal subset of the HTTP header data is to avoid the substantial difficulties inherent in attempting to normalize HTTP messages.  Nonetheless, DPoP proofs can be extended to contain other information of the HTTP request (see also Section 11.7)."
     }
@@ -372,22 +372,77 @@
    "title": "Checking DPoP Proofs",
    "paragraphs": [
     {
-     "id": "4.3-1",
+     "id": "4.3-6da7a90e",
      "kind": "p",
      "en": "To validate a DPoP proof, the receiving server MUST ensure the following:"
     },
     {
-     "id": "4.3-2",
-     "kind": "pre",
-     "en": "   1.   There is not more than one DPoP HTTP request header field.\n   2.   The DPoP HTTP request header field value is a single and well-\n        formed JWT.\n   3.   All required claims per Section 4.2 are contained in the JWT.\n   4.   The typ JOSE Header Parameter has the value dpop+jwt.\n   5.   The alg JOSE Header Parameter indicates a registered asymmetric\n        digital signature algorithm [IANA.JOSE.ALGS], is not none, is\n        supported by the application, and is acceptable per local\n        policy.\n   6.   The JWT signature verifies with the public key contained in the\n        jwk JOSE Header Parameter.\n   7.   The jwk JOSE Header Parameter does not contain a private key.\n   8.   The htm claim matches the HTTP method of the current request.\n   9.   The htu claim matches the HTTP URI value for the HTTP request in\n        which the JWT was received, ignoring any query and fragment\n        parts.\n   10.  If the server provided a nonce value to the client, the nonce\n        claim matches the server-provided nonce value.\n   11.  The creation time of the JWT, as determined by either the iat\n        claim or a server managed timestamp via the nonce claim, is\n        within an acceptable window (see Section 11.1).\n   12.  If presented to a protected resource in conjunction with an\n        access token,\n        *  ensure that the value of the ath claim equals the hash of\n           that access token, and\n        *  confirm that the public key to which the access token is\n           bound matches the public key from the DPoP proof."
+     "id": "4.3-cf37828a",
+     "kind": "li",
+     "en": "1.   There is not more than one DPoP HTTP request header field."
     },
     {
-     "id": "4.3-3",
+     "id": "4.3-926aff3e",
+     "kind": "li",
+     "en": "2.   The DPoP HTTP request header field value is a single and well- formed JWT."
+    },
+    {
+     "id": "4.3-7abdb498",
+     "kind": "li",
+     "en": "3.   All required claims per Section 4.2 are contained in the JWT."
+    },
+    {
+     "id": "4.3-aec4fb11",
+     "kind": "li",
+     "en": "4.   The typ JOSE Header Parameter has the value dpop+jwt."
+    },
+    {
+     "id": "4.3-c7102595",
+     "kind": "li",
+     "en": "5.   The alg JOSE Header Parameter indicates a registered asymmetric digital signature algorithm [IANA.JOSE.ALGS], is not none, is supported by the application, and is acceptable per local policy."
+    },
+    {
+     "id": "4.3-9602847b",
+     "kind": "li",
+     "en": "6.   The JWT signature verifies with the public key contained in the jwk JOSE Header Parameter."
+    },
+    {
+     "id": "4.3-e98e05b3",
+     "kind": "li",
+     "en": "7.   The jwk JOSE Header Parameter does not contain a private key."
+    },
+    {
+     "id": "4.3-5ca0cc85",
+     "kind": "li",
+     "en": "8.   The htm claim matches the HTTP method of the current request."
+    },
+    {
+     "id": "4.3-16ab1f98",
+     "kind": "li",
+     "en": "9.   The htu claim matches the HTTP URI value for the HTTP request in which the JWT was received, ignoring any query and fragment parts."
+    },
+    {
+     "id": "4.3-10aa262d",
+     "kind": "li",
+     "en": "10.  If the server provided a nonce value to the client, the nonce claim matches the server-provided nonce value."
+    },
+    {
+     "id": "4.3-d8e7409f",
+     "kind": "li",
+     "en": "11.  The creation time of the JWT, as determined by either the iat claim or a server managed timestamp via the nonce claim, is within an acceptable window (see Section 11.1)."
+    },
+    {
+     "id": "4.3-8f915f6c",
+     "kind": "li",
+     "en": "12.  If presented to a protected resource in conjunction with an access token, *  ensure that the value of the ath claim equals the hash of that access token, and *  confirm that the public key to which the access token is bound matches the public key from the DPoP proof."
+    },
+    {
+     "id": "4.3-c2167aff",
      "kind": "p",
      "en": "To reduce the likelihood of false negatives, servers SHOULD employ syntax-based normalization (Section 6.2.2 of [RFC3986]) and scheme- based normalization (Section 6.2.3 of [RFC3986]) before comparing the htu claim."
     },
     {
-     "id": "4.3-4",
+     "id": "4.3-f8233809",
      "kind": "p",
      "en": "These checks may be performed in any order."
     }
@@ -398,87 +453,87 @@
    "title": "DPoP Access Token Request",
    "paragraphs": [
     {
-     "id": "5-1",
+     "id": "5-50d09a5d",
      "kind": "p",
      "en": "To request an access token that is bound to a public key using DPoP, the client MUST provide a valid DPoP proof JWT in a DPoP header when making an access token request to the authorization server's token endpoint.  This is applicable for all access token requests regardless of grant type (e.g., the common authorization_code and refresh_token grant types and extension grants such as the JWT authorization grant [RFC7523]).  The HTTP request shown in Figure 5 illustrates such an access token request using an authorization code grant with a DPoP proof JWT in the DPoP header.  Figure 5 uses \"\\\" line wrapping per [RFC8792]."
     },
     {
-     "id": "5-2",
-     "kind": "p",
-     "en": "POST /token HTTP/1.1 Host: server.example.com Content-Type: application/x-www-form-urlencoded DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6Ik\\ VDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCR\\ nMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JE\\ QSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiItQndDM0VTYzZhY2MybFRjIiwiaHRtIj\\ oiUE9TVCIsImh0dSI6Imh0dHBzOi8vc2VydmVyLmV4YW1wbGUuY29tL3Rva2VuIiwia\\ WF0IjoxNTYyMjYyNjE2fQ.2-GxA6T8lP4vfrg8v-FdWP0A0zdrj8igiMLvqRMUvwnQg\\ 4PtFLbdLXiOSsX0x7NVY-FNyJK70nfbV37xRZT3Lg"
+     "id": "5-71fcd599",
+     "kind": "pre",
+     "en": "   POST /token HTTP/1.1\n   Host: server.example.com\n   Content-Type: application/x-www-form-urlencoded\n   DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6Ik\\\n    VDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCR\\\n    nMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JE\\\n    QSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiItQndDM0VTYzZhY2MybFRjIiwiaHRtIj\\\n    oiUE9TVCIsImh0dSI6Imh0dHBzOi8vc2VydmVyLmV4YW1wbGUuY29tL3Rva2VuIiwia\\\n    WF0IjoxNTYyMjYyNjE2fQ.2-GxA6T8lP4vfrg8v-FdWP0A0zdrj8igiMLvqRMUvwnQg\\\n    4PtFLbdLXiOSsX0x7NVY-FNyJK70nfbV37xRZT3Lg"
     },
     {
-     "id": "5-3",
-     "kind": "p",
-     "en": "grant_type=authorization_code\\ &client_id=s6BhdRkqt\\ &code=SplxlOBeZQQYbYS6WxSbIA &redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb\\ &code_verifier=bEaL42izcC-o-xBk0K2vuJ6U-y1p9r_wW2dFWIWgjz-"
+     "id": "5-948620fb",
+     "kind": "pre",
+     "en": "   grant_type=authorization_code\\\n   &client_id=s6BhdRkqt\\\n   &code=SplxlOBeZQQYbYS6WxSbIA\n   &redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb\\\n   &code_verifier=bEaL42izcC-o-xBk0K2vuJ6U-y1p9r_wW2dFWIWgjz-"
     },
     {
-     "id": "5-4",
+     "id": "5-e5410795",
      "kind": "pre",
      "en": "    Figure 5: Token Request for a DPoP Sender-Constrained Token Using an\n                             Authorization Code"
     },
     {
-     "id": "5-5",
+     "id": "5-d81cdafa",
      "kind": "p",
      "en": "The DPoP HTTP header field MUST contain a valid DPoP proof JWT.  If the DPoP proof is invalid, the authorization server issues an error response per Section 5.2 of [RFC6749] with invalid_dpop_proof as the value of the error parameter."
     },
     {
-     "id": "5-6",
+     "id": "5-57bb6305",
      "kind": "p",
      "en": "To sender-constrain the access token after checking the validity of the DPoP proof, the authorization server associates the issued access token with the public key from the DPoP proof, which can be accomplished as described in Section 6.  A token_type of DPoP MUST be included in the access token response to signal to the client that the access token was bound to its DPoP key and can be used as described in Section 7.1.  The example response shown in Figure 6 illustrates such a response."
     },
     {
-     "id": "5-7",
-     "kind": "p",
-     "en": "HTTP/1.1 200 OK Content-Type: application/json Cache-Control: no-store"
+     "id": "5-73e07ea6",
+     "kind": "pre",
+     "en": "   HTTP/1.1 200 OK\n   Content-Type: application/json\n   Cache-Control: no-store"
     },
     {
-     "id": "5-8",
+     "id": "5-ab116722",
      "kind": "pre",
      "en": "   {\n    \"access_token\": \"Kz~8mXK1EalYznwH-LC-1fBAo.4Ljp~zsPE_NeO.gxU\",\n    \"token_type\": \"DPoP\",\n    \"expires_in\": 2677,\n    \"refresh_token\": \"Q..Zkm29lexi8VnWg2zPW1x-tgGad0Ibc3s3EwM_Ni4-g\"\n   }"
     },
     {
-     "id": "5-9",
+     "id": "5-8f94d835",
      "kind": "pre",
      "en": "                      Figure 6: Access Token Response"
     },
     {
-     "id": "5-10",
+     "id": "5-717dd7b0",
      "kind": "p",
      "en": "The example response in Figure 6 includes a refresh token that the client can use to obtain a new access token when the previous one expires.  Refreshing an access token is a token request using the refresh_token grant type made to the authorization server's token endpoint.  As with all access token requests, the client makes it a DPoP request by including a DPoP proof, as shown in Figure 7. Figure 7 uses \"\\\" line wrapping per [RFC8792]."
     },
     {
-     "id": "5-11",
-     "kind": "p",
-     "en": "POST /token HTTP/1.1 Host: server.example.com Content-Type: application/x-www-form-urlencoded DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6Ik\\ VDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCR\\ nMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JE\\ QSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiItQndDM0VTYzZhY2MybFRjIiwiaHRtIj\\ oiUE9TVCIsImh0dSI6Imh0dHBzOi8vc2VydmVyLmV4YW1wbGUuY29tL3Rva2VuIiwia\\ WF0IjoxNTYyMjY1Mjk2fQ.pAqut2IRDm_De6PR93SYmGBPXpwrAk90e8cP2hjiaG5Qs\\ GSuKDYW7_X620BxqhvYC8ynrrvZLTk41mSRroapUA"
+     "id": "5-d0150044",
+     "kind": "pre",
+     "en": "   POST /token HTTP/1.1\n   Host: server.example.com\n   Content-Type: application/x-www-form-urlencoded\n   DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6Ik\\\n    VDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCR\\\n    nMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JE\\\n    QSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiItQndDM0VTYzZhY2MybFRjIiwiaHRtIj\\\n    oiUE9TVCIsImh0dSI6Imh0dHBzOi8vc2VydmVyLmV4YW1wbGUuY29tL3Rva2VuIiwia\\\n    WF0IjoxNTYyMjY1Mjk2fQ.pAqut2IRDm_De6PR93SYmGBPXpwrAk90e8cP2hjiaG5Qs\\\n    GSuKDYW7_X620BxqhvYC8ynrrvZLTk41mSRroapUA"
     },
     {
-     "id": "5-12",
-     "kind": "p",
-     "en": "grant_type=refresh_token\\ &client_id=s6BhdRkqt\\ &refresh_token=Q..Zkm29lexi8VnWg2zPW1x-tgGad0Ibc3s3EwM_Ni4-g"
+     "id": "5-0fe08d54",
+     "kind": "pre",
+     "en": "   grant_type=refresh_token\\\n   &client_id=s6BhdRkqt\\\n   &refresh_token=Q..Zkm29lexi8VnWg2zPW1x-tgGad0Ibc3s3EwM_Ni4-g"
     },
     {
-     "id": "5-13",
+     "id": "5-cf06c50c",
      "kind": "pre",
      "en": "    Figure 7: Token Request for a DPoP-Bound Token Using a Refresh Token"
     },
     {
-     "id": "5-14",
+     "id": "5-5c9f099d",
      "kind": "p",
      "en": "When an authorization server supporting DPoP issues a refresh token to a public client that presents a valid DPoP proof at the token endpoint, the refresh token MUST be bound to the respective public key.  The binding MUST be validated when the refresh token is later presented to get new access tokens.  As a result, such a client MUST present a DPoP proof for the same key that was used to obtain the refresh token each time that refresh token is used to obtain a new access token.  The implementation details of the binding of the refresh token are at the discretion of the authorization server. Since the authorization server both produces and validates its refresh tokens, there is no interoperability consideration in the specific details of the binding."
     },
     {
-     "id": "5-15",
+     "id": "5-f843891d",
      "kind": "p",
      "en": "An authorization server MAY elect to issue access tokens that are not DPoP bound, which is signaled to the client with a value of Bearer in the token_type parameter of the access token response per [RFC6750]. For a public client that is also issued a refresh token, this has the effect of DPoP-binding the refresh token alone, which can improve the security posture even when protected resources are not updated to support DPoP."
     },
     {
-     "id": "5-16",
+     "id": "5-cded7318",
      "kind": "p",
      "en": "If the access token response contains a different token_type value than DPoP, the access token protection provided by DPoP is not given. The client MUST discard the response in this case if this protection is deemed important for the security of the application; otherwise, the client may continue as in a regular OAuth interaction."
     },
     {
-     "id": "5-17",
+     "id": "5-ce81f563",
      "kind": "p",
      "en": "Refresh tokens issued to confidential clients (those having established authentication credentials with the authorization server) are not bound to the DPoP proof public key because they are already sender-constrained with a different existing mechanism.  The OAuth 2.0 Authorization Framework [RFC6749] already requires that an authorization server bind refresh tokens to the client to which they were issued and that confidential clients authenticate to the authorization server when presenting a refresh token.  As a result, such refresh tokens are sender-constrained by way of the client identifier and the associated authentication requirement.  This existing sender-constraining mechanism is more flexible (e.g., it allows credential rotation for the client without invalidating refresh tokens) than binding directly to a particular public key."
     }
@@ -489,12 +544,12 @@
    "title": "Authorization Server Metadata",
    "paragraphs": [
     {
-     "id": "5.1-1",
+     "id": "5.1-f2a3a9a2",
      "kind": "p",
      "en": "This document introduces the following authorization server metadata [RFC8414] parameter to signal support for DPoP in general and the specific JWS alg values the authorization server supports for DPoP proof JWTs."
     },
     {
-     "id": "5.1-2",
+     "id": "5.1-3f12483e",
      "kind": "p",
      "en": "dpop_signing_alg_values_supported:  A JSON array containing a list of the JWS alg values (from the [IANA.JOSE.ALGS] registry) supported by the authorization server for DPoP proof JWTs."
     }
@@ -505,22 +560,22 @@
    "title": "Client Registration Metadata",
    "paragraphs": [
     {
-     "id": "5.2-1",
+     "id": "5.2-2fbaf990",
      "kind": "p",
      "en": "The Dynamic Client Registration Protocol [RFC7591] defines an API for dynamically registering OAuth 2.0 client metadata with authorization servers.  The metadata defined by [RFC7591], and registered extensions to it, also imply a general data model for clients that is useful for authorization server implementations even when the Dynamic Client Registration Protocol isn't in play.  Such implementations will typically have some sort of user interface available for managing client configuration."
     },
     {
-     "id": "5.2-2",
+     "id": "5.2-f811913e",
      "kind": "p",
      "en": "This document introduces the following client registration metadata [RFC7591] parameter to indicate that the client always uses DPoP when requesting tokens from the authorization server."
     },
     {
-     "id": "5.2-3",
+     "id": "5.2-c0b70b2d",
      "kind": "p",
      "en": "dpop_bound_access_tokens:  A boolean value specifying whether the client always uses DPoP for token requests.  If omitted, the default value is false."
     },
     {
-     "id": "5.2-4",
+     "id": "5.2-56760d78",
      "kind": "p",
      "en": "If the value is true, the authorization server MUST reject token requests from the client that do not contain the DPoP header."
     }
@@ -531,12 +586,12 @@
    "title": "Public Key Confirmation",
    "paragraphs": [
     {
-     "id": "6-1",
+     "id": "6-1c04dd2f",
      "kind": "p",
      "en": "Resource servers MUST be able to reliably identify whether an access token is DPoP-bound and ascertain sufficient information to verify the binding to the public key of the DPoP proof (see Section 7.1). Such a binding is accomplished by associating the public key with the token in a way that can be accessed by the protected resource, such as embedding the JWK hash in the issued access token directly, using the syntax described in Section 6.1, or through token introspection as described in Section 6.2.  Other methods of associating a public key with an access token are possible per an agreement by the authorization server and the protected resource; however, they are beyond the scope of this specification."
     },
     {
-     "id": "6-2",
+     "id": "6-50cdb606",
      "kind": "p",
      "en": "Resource servers supporting DPoP MUST ensure that the public key from the DPoP proof matches the one bound to the access token."
     }
@@ -547,37 +602,37 @@
    "title": "JWK Thumbprint Confirmation Method",
    "paragraphs": [
     {
-     "id": "6.1-1",
+     "id": "6.1-ce2f71c6",
      "kind": "p",
      "en": "When access tokens are represented as JWTs [RFC7519], the public key information is represented using the jkt confirmation method member defined herein.  To convey the hash of a public key in a JWT, this specification introduces the following JWT Confirmation Method [RFC7800] member for use under the cnf claim."
     },
     {
-     "id": "6.1-2",
+     "id": "6.1-2d88236a",
      "kind": "p",
      "en": "jkt:  JWK SHA-256 Thumbprint confirmation method.  The value of the jkt member MUST be the base64url encoding (as defined in [RFC7515]) of the JWK SHA-256 Thumbprint (according to [RFC7638]) of the DPoP public key (in JWK format) to which the access token is bound."
     },
     {
-     "id": "6.1-3",
+     "id": "6.1-3d876d89",
      "kind": "p",
      "en": "The following example JWT in Figure 8 with a decoded JWT payload shown in Figure 9 contains a cnf claim with the jkt JWK Thumbprint confirmation method member.  The jkt value in these examples is the hash of the public key from the DPoP proofs in the examples shown in Section 5.  The example uses \"\\\" line wrapping per [RFC8792]."
     },
     {
-     "id": "6.1-4",
-     "kind": "p",
-     "en": "eyJhbGciOiJFUzI1NiIsImtpZCI6IkJlQUxrYiJ9.eyJzdWIiOiJzb21lb25lQGV4YW1\\ wbGUuY29tIiwiaXNzIjoiaHR0cHM6Ly9zZXJ2ZXIuZXhhbXBsZS5jb20iLCJuYmYiOjE\\ 1NjIyNjI2MTEsImV4cCI6MTU2MjI2NjIxNiwiY25mIjp7ImprdCI6IjBaY09DT1JaTll\\ 5LURXcHFxMzBqWnlKR0hUTjBkMkhnbEJWM3VpZ3VBNEkifX0.3Tyo8VTcn6u_PboUmAO\\ YUY1kfAavomW_YwYMkmRNizLJoQzWy2fCo79Zi5yObpIzjWb5xW4OGld7ESZrh0fsrA"
+     "id": "6.1-ba60210d",
+     "kind": "pre",
+     "en": "   eyJhbGciOiJFUzI1NiIsImtpZCI6IkJlQUxrYiJ9.eyJzdWIiOiJzb21lb25lQGV4YW1\\\n   wbGUuY29tIiwiaXNzIjoiaHR0cHM6Ly9zZXJ2ZXIuZXhhbXBsZS5jb20iLCJuYmYiOjE\\\n   1NjIyNjI2MTEsImV4cCI6MTU2MjI2NjIxNiwiY25mIjp7ImprdCI6IjBaY09DT1JaTll\\\n   5LURXcHFxMzBqWnlKR0hUTjBkMkhnbEJWM3VpZ3VBNEkifX0.3Tyo8VTcn6u_PboUmAO\\\n   YUY1kfAavomW_YwYMkmRNizLJoQzWy2fCo79Zi5yObpIzjWb5xW4OGld7ESZrh0fsrA"
     },
     {
-     "id": "6.1-5",
+     "id": "6.1-35a05c9c",
      "kind": "pre",
      "en": "       Figure 8: JWT Containing a JWK SHA-256 Thumbprint Confirmation"
     },
     {
-     "id": "6.1-6",
+     "id": "6.1-2f5f38e6",
      "kind": "pre",
      "en": "   {\n     \"sub\":\"someone@example.com\",\n     \"iss\":\"https://server.example.com\",\n     \"nbf\":1562262611,\n     \"exp\":1562266216,\n     \"cnf\":\n     {\n       \"jkt\":\"0ZcOCORZNYy-DWpqq30jZyJGHTN0d2HglBV3uiguA4I\"\n     }\n   }"
     },
     {
-     "id": "6.1-7",
+     "id": "6.1-530c1b9e",
      "kind": "pre",
      "en": "    Figure 9: JWT Claims Set with a JWK SHA-256 Thumbprint Confirmation"
     }
@@ -588,52 +643,52 @@
    "title": "JWK Thumbprint Confirmation Method in Token Introspection",
    "paragraphs": [
     {
-     "id": "6.2-1",
+     "id": "6.2-63e2c5cd",
      "kind": "p",
      "en": "\"OAuth 2.0 Token Introspection\" [RFC7662] defines a method for a protected resource to query an authorization server about the active state of an access token.  The protected resource also determines metainformation about the token."
     },
     {
-     "id": "6.2-2",
+     "id": "6.2-23aa3127",
      "kind": "p",
      "en": "For a DPoP-bound access token, the hash of the public key to which the token is bound is conveyed to the protected resource as metainformation in a token introspection response.  The hash is conveyed using the same cnf content with jkt member structure as the JWK Thumbprint confirmation method, described in Section 6.1, as a top-level member of the introspection response JSON.  Note that the resource server does not send a DPoP proof with the introspection request, and the authorization server does not validate an access token's DPoP binding at the introspection endpoint.  Rather, the resource server uses the data of the introspection response to validate the access token binding itself locally."
     },
     {
-     "id": "6.2-3",
+     "id": "6.2-f59aa2a1",
      "kind": "p",
      "en": "If the token_type member is included in the introspection response, it MUST contain the value DPoP."
     },
     {
-     "id": "6.2-4",
+     "id": "6.2-bc396a9f",
      "kind": "p",
      "en": "The example introspection request in Figure 10 and corresponding response in Figure 11 illustrate an introspection exchange for the example DPoP-bound access token that was issued in Figure 6."
     },
     {
-     "id": "6.2-5",
-     "kind": "p",
-     "en": "POST /as/introspect.oauth2 HTTP/1.1 Host: server.example.com Content-Type: application/x-www-form-urlencoded Authorization: Basic cnM6cnM6TWt1LTZnX2xDektJZHo0ZnNON2tZY3lhK1Rp"
+     "id": "6.2-26b0c69a",
+     "kind": "pre",
+     "en": "   POST /as/introspect.oauth2 HTTP/1.1\n   Host: server.example.com\n   Content-Type: application/x-www-form-urlencoded\n   Authorization: Basic cnM6cnM6TWt1LTZnX2xDektJZHo0ZnNON2tZY3lhK1Rp"
     },
     {
-     "id": "6.2-6",
-     "kind": "p",
-     "en": "token=Kz~8mXK1EalYznwH-LC-1fBAo.4Ljp~zsPE_NeO.gxU"
+     "id": "6.2-689dfa9c",
+     "kind": "pre",
+     "en": "   token=Kz~8mXK1EalYznwH-LC-1fBAo.4Ljp~zsPE_NeO.gxU"
     },
     {
-     "id": "6.2-7",
+     "id": "6.2-7d23baa2",
      "kind": "pre",
      "en": "                  Figure 10: Example Introspection Request"
     },
     {
-     "id": "6.2-8",
-     "kind": "p",
-     "en": "HTTP/1.1 200 OK Content-Type: application/json Cache-Control: no-store"
+     "id": "6.2-73e07ea6",
+     "kind": "pre",
+     "en": "   HTTP/1.1 200 OK\n   Content-Type: application/json\n   Cache-Control: no-store"
     },
     {
-     "id": "6.2-9",
+     "id": "6.2-e6861bcd",
      "kind": "pre",
      "en": "   {\n     \"active\": true,\n     \"sub\": \"someone@example.com\",\n     \"iss\": \"https://server.example.com\",\n     \"nbf\": 1562262611,\n     \"exp\": 1562266216,\n     \"cnf\":\n     {\n       \"jkt\": \"0ZcOCORZNYy-DWpqq30jZyJGHTN0d2HglBV3uiguA4I\"\n     }\n   }"
     },
     {
-     "id": "6.2-10",
+     "id": "6.2-bc8546e6",
      "kind": "pre",
      "en": "     Figure 11: Example Introspection Response for a DPoP-Bound Access\n                                   Token"
     }
@@ -644,22 +699,22 @@
    "title": "Protected Resource Access",
    "paragraphs": [
     {
-     "id": "7-1",
+     "id": "7-e5585f89",
      "kind": "p",
      "en": "Requests to DPoP-protected resources MUST include both a DPoP proof as per Section 4 and the access token as described in Section 7.1. The DPoP proof MUST include the ath claim with a valid hash of the associated access token."
     },
     {
-     "id": "7-2",
+     "id": "7-e107b801",
      "kind": "p",
      "en": "Binding the token value to the proof in this way prevents a proof to be used with multiple different access token values across different requests.  For example, if a client holds tokens bound to two different resource owners, AT1 and AT2, and uses the same key when talking to the authorization server, it's possible that these tokens could be swapped.  Without the ath field to bind it, a captured signature applied to AT1 could be replayed with AT2 instead, changing the rights and access of the intended request.  This same substitution prevention remains for rotated access tokens within the same combination of client and resource owner -- a rotated token value would require the calculation of a new proof.  This binding additionally ensures that a proof intended for use with the access token is not usable without an access token, or vice-versa."
     },
     {
-     "id": "7-3",
+     "id": "7-49aa7fc1",
      "kind": "p",
      "en": "The resource server is required to calculate the hash of the token value presented and verify that it is the same as the hash value in the ath field as described in Section 4.3.  Since the ath field value is covered by the DPoP proof's signature, its inclusion binds the access token value to the holder of the key used to generate the signature."
     },
     {
-     "id": "7-4",
+     "id": "7-efb27561",
      "kind": "p",
      "en": "Note that the ath field alone does not prevent replay of the DPoP proof or provide binding to the request in which the proof is presented, and it is still important to check the time window of the proof as well as the included message parameters, such as htm and htu."
     }
@@ -670,117 +725,147 @@
    "title": "The DPoP Authentication Scheme",
    "paragraphs": [
     {
-     "id": "7.1-1",
+     "id": "7.1-4c22a160",
      "kind": "p",
      "en": "A DPoP-bound access token is sent using the Authorization request header field per Section 11.6.2 of [RFC9110] with an authentication scheme of DPoP.  The syntax of the Authorization header field for the DPoP scheme uses the token68 syntax defined in Section 11.2 of [RFC9110] for credentials and is repeated below for ease of reference.  The ABNF notation syntax for DPoP authentication scheme credentials is as follows:"
     },
     {
-     "id": "7.1-2",
+     "id": "7.1-f0693128",
      "kind": "pre",
      "en": "   token68    = 1*( ALPHA / DIGIT /\n                    \"-\" / \".\" / \"_\" / \"~\" / \"+\" / \"/\" ) *\"=\""
     },
     {
-     "id": "7.1-3",
+     "id": "7.1-a9a56d30",
      "kind": "p",
      "en": "credentials = \"DPoP\" 1*SP token68"
     },
     {
-     "id": "7.1-4",
+     "id": "7.1-c4957203",
      "kind": "pre",
      "en": "                 Figure 12: DPoP Authentication Scheme ABNF"
     },
     {
-     "id": "7.1-5",
+     "id": "7.1-f51ef775",
      "kind": "p",
      "en": "For such an access token, a resource server MUST check that a DPoP proof was also received in the DPoP header field of the HTTP request, check the DPoP proof according to the rules in Section 4.3, and check that the public key of the DPoP proof matches the public key to which the access token is bound per Section 6."
     },
     {
-     "id": "7.1-6",
+     "id": "7.1-2b320693",
      "kind": "p",
      "en": "The resource server MUST NOT grant access to the resource unless all checks are successful."
     },
     {
-     "id": "7.1-7",
+     "id": "7.1-2e28eed1",
      "kind": "p",
      "en": "Figure 13 shows an example request to a protected resource with a DPoP-bound access token in the Authorization header and the DPoP proof in the DPoP header.  The example uses \"\\\" line wrapping per [RFC8792].  Figure 14 shows the decoded content of that DPoP proof. The JSON of the JWT header and payload are shown, but the signature part is omitted.  As usual, line breaks and indentation are included for formatting and readability."
     },
     {
-     "id": "7.1-8",
-     "kind": "p",
-     "en": "GET /protectedresource HTTP/1.1 Host: resource.example.org Authorization: DPoP Kz~8mXK1EalYznwH-LC-1fBAo.4Ljp~zsPE_NeO.gxU DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6Ik\\ VDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCR\\ nMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JE\\ QSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiJlMWozVl9iS2ljOC1MQUVCIiwiaHRtIj\\ oiR0VUIiwiaHR1IjoiaHR0cHM6Ly9yZXNvdXJjZS5leGFtcGxlLm9yZy9wcm90ZWN0Z\\ WRyZXNvdXJjZSIsImlhdCI6MTU2MjI2MjYxOCwiYXRoIjoiZlVIeU8ycjJaM0RaNTNF\\ c05yV0JiMHhXWG9hTnk1OUlpS0NBcWtzbVFFbyJ9.2oW9RP35yRqzhrtNP86L-Ey71E\\ OptxRimPPToA1plemAgR6pxHF8y6-yqyVnmcw6Fy1dqd-jfxSYoMxhAJpLjA"
+     "id": "7.1-d6331741",
+     "kind": "pre",
+     "en": "   GET /protectedresource HTTP/1.1\n   Host: resource.example.org\n   Authorization: DPoP Kz~8mXK1EalYznwH-LC-1fBAo.4Ljp~zsPE_NeO.gxU\n   DPoP: eyJ0eXAiOiJkcG9wK2p3dCIsImFsZyI6IkVTMjU2IiwiandrIjp7Imt0eSI6Ik\\\n    VDIiwieCI6Imw4dEZyaHgtMzR0VjNoUklDUkRZOXpDa0RscEJoRjQyVVFVZldWQVdCR\\\n    nMiLCJ5IjoiOVZFNGpmX09rX282NHpiVFRsY3VOSmFqSG10NnY5VERWclUwQ2R2R1JE\\\n    QSIsImNydiI6IlAtMjU2In19.eyJqdGkiOiJlMWozVl9iS2ljOC1MQUVCIiwiaHRtIj\\\n    oiR0VUIiwiaHR1IjoiaHR0cHM6Ly9yZXNvdXJjZS5leGFtcGxlLm9yZy9wcm90ZWN0Z\\\n    WRyZXNvdXJjZSIsImlhdCI6MTU2MjI2MjYxOCwiYXRoIjoiZlVIeU8ycjJaM0RaNTNF\\\n    c05yV0JiMHhXWG9hTnk1OUlpS0NBcWtzbVFFbyJ9.2oW9RP35yRqzhrtNP86L-Ey71E\\\n    OptxRimPPToA1plemAgR6pxHF8y6-yqyVnmcw6Fy1dqd-jfxSYoMxhAJpLjA"
     },
     {
-     "id": "7.1-9",
+     "id": "7.1-d0be06bd",
      "kind": "pre",
      "en": "                 Figure 13: DPoP-Protected Resource Request"
     },
     {
-     "id": "7.1-10",
+     "id": "7.1-04442aac",
      "kind": "pre",
      "en": "   {\n     \"typ\":\"dpop+jwt\",\n     \"alg\":\"ES256\",\n     \"jwk\": {\n       \"kty\":\"EC\",\n       \"x\":\"l8tFrhx-34tV3hRICRDY9zCkDlpBhF42UQUfWVAWBFs\",\n       \"y\":\"9VE4jf_Ok_o64zbTTlcuNJajHmt6v9TDVrU0CdvGRDA\",\n       \"crv\":\"P-256\"\n     }\n   }\n   .\n   {\n     \"jti\":\"e1j3V_bKic8-LAEB\",\n     \"htm\":\"GET\",\n     \"htu\":\"https://resource.example.org/protectedresource\",\n     \"iat\":1562262618,\n     \"ath\":\"fUHyO2r2Z3DZ53EsNrWBb0xWXoaNy59IiKCAqksmQEo\"\n   }"
     },
     {
-     "id": "7.1-11",
+     "id": "7.1-2b0877e6",
      "kind": "pre",
      "en": "       Figure 14: Decoded Content of the DPoP Proof JWT in Figure 13"
     },
     {
-     "id": "7.1-12",
+     "id": "7.1-bfa9ea39",
      "kind": "p",
      "en": "Upon receipt of a request to a protected resource within the protection space requiring DPoP authentication, the server can respond with a challenge to the client to provide DPoP authentication information if the request does not include valid credentials or does not contain an access token sufficient for access.  Such a challenge is made using the 401 (Unauthorized) response status code ([RFC9110], Section 15.5.2) and the WWW-Authenticate header field ([RFC9110], Section 11.6.1).  The server MAY include the WWW-Authenticate header in response to other conditions as well."
     },
     {
-     "id": "7.1-13",
+     "id": "7.1-4854c5b7",
      "kind": "p",
      "en": "In such challenges:"
     },
     {
-     "id": "7.1-14",
+     "id": "7.1-dd3e4b38",
      "kind": "li",
-     "en": "*  The scheme name is DPoP. *  The authentication parameter realm MAY be included to indicate the scope of protection in the manner described in [RFC9110], Section 11.5. *  A scope authentication parameter MAY be included as defined in [RFC6750], Section 3. *  An error parameter ([RFC6750], Section 3) SHOULD be included to indicate the reason why the request was declined, if the request included an access token but failed authentication.  The error parameter values described in [RFC6750], Section 3.1 are suitable, as are any appropriate values defined by extension.  The value use_dpop_nonce can be used as described in Section 9 to signal that a nonce is needed in the DPoP proof of a subsequent request(s).  Additionally, invalid_dpop_proof is used to indicate that the DPoP proof itself was deemed invalid based on the criteria of Section 4.3. *  An error_description parameter ([RFC6750], Section 3) MAY be included along with the error parameter to provide developers a human-readable explanation that is not meant to be displayed to end-users. *  An algs parameter SHOULD be included to signal to the client the JWS algorithms that are acceptable for the DPoP proof JWT.  The value of the parameter is a space-delimited list of JWS alg (Algorithm) header values ([RFC7515], Section 4.1.1). *  Additional authentication parameters MAY be used, and unknown parameters MUST be ignored by recipients."
+     "en": "*  The scheme name is DPoP."
     },
     {
-     "id": "7.1-15",
+     "id": "7.1-627d6280",
+     "kind": "li",
+     "en": "*  The authentication parameter realm MAY be included to indicate the scope of protection in the manner described in [RFC9110], Section 11.5."
+    },
+    {
+     "id": "7.1-e0474ea5",
+     "kind": "li",
+     "en": "*  A scope authentication parameter MAY be included as defined in [RFC6750], Section 3."
+    },
+    {
+     "id": "7.1-9d5eecf5",
+     "kind": "li",
+     "en": "*  An error parameter ([RFC6750], Section 3) SHOULD be included to indicate the reason why the request was declined, if the request included an access token but failed authentication.  The error parameter values described in [RFC6750], Section 3.1 are suitable, as are any appropriate values defined by extension.  The value use_dpop_nonce can be used as described in Section 9 to signal that a nonce is needed in the DPoP proof of a subsequent request(s).  Additionally, invalid_dpop_proof is used to indicate that the DPoP proof itself was deemed invalid based on the criteria of Section 4.3."
+    },
+    {
+     "id": "7.1-9bbe8d77",
+     "kind": "li",
+     "en": "*  An error_description parameter ([RFC6750], Section 3) MAY be included along with the error parameter to provide developers a human-readable explanation that is not meant to be displayed to end-users."
+    },
+    {
+     "id": "7.1-ee8265f9",
+     "kind": "li",
+     "en": "*  An algs parameter SHOULD be included to signal to the client the JWS algorithms that are acceptable for the DPoP proof JWT.  The value of the parameter is a space-delimited list of JWS alg (Algorithm) header values ([RFC7515], Section 4.1.1)."
+    },
+    {
+     "id": "7.1-f43ed679",
+     "kind": "li",
+     "en": "*  Additional authentication parameters MAY be used, and unknown parameters MUST be ignored by recipients."
+    },
+    {
+     "id": "7.1-e5cbc1f8",
      "kind": "p",
      "en": "Figure 15 shows a response to a protected resource request without authentication."
     },
     {
-     "id": "7.1-16",
-     "kind": "p",
-     "en": "HTTP/1.1 401 Unauthorized WWW-Authenticate: DPoP algs=\"ES256 PS256\""
+     "id": "7.1-89f6d7ea",
+     "kind": "pre",
+     "en": "    HTTP/1.1 401 Unauthorized\n    WWW-Authenticate: DPoP algs=\"ES256 PS256\""
     },
     {
-     "id": "7.1-17",
+     "id": "7.1-b5a4c196",
      "kind": "pre",
      "en": "    Figure 15: HTTP 401 Response to a Protected Resource Request without\n                               Authentication"
     },
     {
-     "id": "7.1-18",
+     "id": "7.1-f18393bc",
      "kind": "p",
      "en": "Figure 16 shows a response to a protected resource request that was rejected due to the failed confirmation of the DPoP binding in the access token.  Figure 16 uses \"\\\" line wrapping per [RFC8792]."
     },
     {
-     "id": "7.1-19",
-     "kind": "p",
-     "en": "HTTP/1.1 401 Unauthorized WWW-Authenticate: DPoP error=\"invalid_token\", \\ error_description=\"Invalid DPoP key binding\", algs=\"ES256\""
+     "id": "7.1-7f71cf1f",
+     "kind": "pre",
+     "en": "   HTTP/1.1 401 Unauthorized\n   WWW-Authenticate: DPoP error=\"invalid_token\", \\\n      error_description=\"Invalid DPoP key binding\", algs=\"ES256\""
     },
     {
-     "id": "7.1-20",
+     "id": "7.1-185628d1",
      "kind": "pre",
      "en": "     Figure 16: HTTP 401 Response to a Protected Resource Request with\n                              an Invalid Token"
     },
     {
-     "id": "7.1-21",
+     "id": "7.1-8e1780e8",
      "kind": "p",
      "en": "Note that browser-based client applications using Cross-Origin Resource Sharing (CORS) [WHATWG.Fetch] only have access to CORS- safelisted response HTTP headers by default.  In order for the application to obtain and use the WWW-Authenticate HTTP response header value, the server needs to make it available to the application by including WWW-Authenticate in the Access-Control- Expose-Headers response header list value."
     },
     {
-     "id": "7.1-22",
+     "id": "7.1-3b768524",
      "kind": "p",
      "en": "This authentication scheme is for origin-server authentication only. Therefore, this authentication scheme MUST NOT be used with the Proxy-Authenticate or Proxy-Authorization header fields."
     },
     {
-     "id": "7.1-23",
+     "id": "7.1-a50c662f",
      "kind": "p",
      "en": "Note that the syntax of the Authorization header field for this authentication scheme follows the usage of the Bearer scheme defined in Section 2.1 of [RFC6750].  While it is not the preferred credential syntax of [RFC9110], it is compatible with the general authentication framework therein and is used for consistency and familiarity with the Bearer scheme."
     }
@@ -791,87 +876,87 @@
    "title": "Compatibility with the Bearer Authentication Scheme",
    "paragraphs": [
     {
-     "id": "7.2-1",
+     "id": "7.2-b4bb4ae9",
      "kind": "p",
      "en": "Protected resources simultaneously supporting both the DPoP and Bearer schemes need to update how the evaluation process is performed for bearer tokens to prevent downgraded usage of a DPoP-bound access token.  Specifically, such a protected resource MUST reject a DPoP- bound access token received as a bearer token per [RFC6750]."
     },
     {
-     "id": "7.2-2",
+     "id": "7.2-be049222",
      "kind": "p",
      "en": "Section 11.6.1 of [RFC9110] allows a protected resource to indicate support for multiple authentication schemes (i.e., Bearer and DPoP) with the WWW-Authenticate header field of a 401 (Unauthorized) response."
     },
     {
-     "id": "7.2-3",
+     "id": "7.2-7bb4b0c3",
      "kind": "p",
      "en": "A protected resource that supports only [RFC6750] and is unaware of DPoP would most presumably accept a DPoP-bound access token as a bearer token (JWT [RFC7519] says to ignore unrecognized claims, Introspection [RFC7662] says that other parameters might be present while placing no functional requirements on their presence, and [RFC6750] is effectively silent on the content of the access token since it relates to validity).  As such, a client can send a DPoP- bound access token using the Bearer scheme upon receipt of a WWW- Authenticate: Bearer challenge from a protected resource (or it can send a DPoP-bound access token if it has prior knowledge of the capabilities of the protected resource).  The effect of this likely simplifies the logistics of phased upgrades to protected resources in their support DPoP or prolonged deployments of protected resources with mixed token type support."
     },
     {
-     "id": "7.2-4",
+     "id": "7.2-1a53a441",
      "kind": "p",
      "en": "If a protected resource supporting both Bearer and DPoP schemes elects to respond with multiple WWW-Authenticate challenges, attention should be paid to which challenge(s) should deliver the actual error information.  It is RECOMMENDED that the following rules be adhered to:"
     },
     {
-     "id": "7.2-5",
+     "id": "7.2-17702649",
      "kind": "li",
      "en": "*  If no authentication information has been included with the request, then the challenges SHOULD NOT include an error code or other error information, as per Section 3.1 of [RFC6750] (Figure 17)."
     },
     {
-     "id": "7.2-6",
+     "id": "7.2-a00e2d17",
      "kind": "li",
      "en": "*  If the mechanism used to attempt authentication could be established unambiguously, then the corresponding challenge SHOULD be used to deliver error information (Figure 18)."
     },
     {
-     "id": "7.2-7",
+     "id": "7.2-aeddf0f4",
      "kind": "li",
      "en": "*  Otherwise, both Bearer and DPoP challenges MAY be used to deliver error information (Figure 19)."
     },
     {
-     "id": "7.2-8",
+     "id": "7.2-c045dc99",
      "kind": "p",
      "en": "The following examples use \"\\\" line wrapping per [RFC8792]."
     },
     {
-     "id": "7.2-9",
-     "kind": "p",
-     "en": "GET /protectedresource HTTP/1.1 Host: resource.example.org"
+     "id": "7.2-4e9ed14f",
+     "kind": "pre",
+     "en": "   GET /protectedresource HTTP/1.1\n   Host: resource.example.org"
     },
     {
-     "id": "7.2-10",
-     "kind": "p",
-     "en": "HTTP/1.1 401 Unauthorized WWW-Authenticate: Bearer, DPoP algs=\"ES256 PS256\""
+     "id": "7.2-07eb92f2",
+     "kind": "pre",
+     "en": "   HTTP/1.1 401 Unauthorized\n   WWW-Authenticate: Bearer, DPoP algs=\"ES256 PS256\""
     },
     {
-     "id": "7.2-11",
+     "id": "7.2-e7a1bc00",
      "kind": "pre",
      "en": "    Figure 17: HTTP 401 Response to a Protected Resource Request without\n                               Authentication"
     },
     {
-     "id": "7.2-12",
-     "kind": "p",
-     "en": "GET /protectedresource HTTP/1.1 Host: resource.example.org Authorization: Bearer INVALID_TOKEN"
+     "id": "7.2-1552e7de",
+     "kind": "pre",
+     "en": "   GET /protectedresource HTTP/1.1\n   Host: resource.example.org\n   Authorization: Bearer INVALID_TOKEN"
     },
     {
-     "id": "7.2-13",
-     "kind": "p",
-     "en": "HTTP/1.1 401 Unauthorized WWW-Authenticate: Bearer error=\"invalid_token\", \\ error_description=\"Invalid token\", DPoP algs=\"ES256 PS256\""
+     "id": "7.2-7ec7b93e",
+     "kind": "pre",
+     "en": "   HTTP/1.1 401 Unauthorized\n   WWW-Authenticate: Bearer error=\"invalid_token\", \\\n       error_description=\"Invalid token\", DPoP algs=\"ES256 PS256\""
     },
     {
-     "id": "7.2-14",
+     "id": "7.2-4a39712a",
      "kind": "pre",
      "en": "     Figure 18: HTTP 401 Response to a Protected Resource Request with\n                           Invalid Authentication"
     },
     {
-     "id": "7.2-15",
-     "kind": "p",
-     "en": "GET /protectedresource HTTP/1.1 Host: resource.example.org Authorization: Bearer Kz~8mXK1EalYznwH-LC-1fBAo.4Ljp~zsPE_NeO.gxU Authorization: DPoP Kz~8mXK1EalYznwH-LC-1fBAo.4Ljp~zsPE_NeO.gxU"
+     "id": "7.2-a2f032f6",
+     "kind": "pre",
+     "en": "   GET /protectedresource HTTP/1.1\n   Host: resource.example.org\n   Authorization: Bearer Kz~8mXK1EalYznwH-LC-1fBAo.4Ljp~zsPE_NeO.gxU\n   Authorization: DPoP Kz~8mXK1EalYznwH-LC-1fBAo.4Ljp~zsPE_NeO.gxU"
     },
     {
-     "id": "7.2-16",
-     "kind": "p",
-     "en": "HTTP/1.1 400 Bad Request WWW-Authenticate: Bearer error=\"invalid_request\", \\ error_description=\"Multiple methods used to include access token\", \\ DPoP algs=\"ES256 PS256\", error=\"invalid_request\", \\ error_description=\"Multiple methods used to include access token\""
+     "id": "7.2-6e152469",
+     "kind": "pre",
+     "en": "   HTTP/1.1 400 Bad Request\n   WWW-Authenticate: Bearer error=\"invalid_request\", \\\n    error_description=\"Multiple methods used to include access token\", \\\n    DPoP algs=\"ES256 PS256\", error=\"invalid_request\", \\\n    error_description=\"Multiple methods used to include access token\""
     },
     {
-     "id": "7.2-17",
+     "id": "7.2-434c18e8",
      "kind": "pre",
      "en": "     Figure 19: HTTP 400 Response to a Protected Resource Request with\n                          Ambiguous Authentication"
     }
@@ -882,12 +967,12 @@
    "title": "Client Considerations",
    "paragraphs": [
     {
-     "id": "7.3-1",
+     "id": "7.3-8b36baaa",
      "kind": "p",
      "en": "Authorization including a DPoP proof may not be idempotent (depending on server enforcement of jti, iat, and nonce claims).  Consequently, all previously idempotent requests for protected resources that were previously idempotent may no longer be idempotent.  It is RECOMMENDED that clients generate a unique DPoP proof, even when retrying idempotent requests in response to HTTP errors generally understood as transient."
     },
     {
-     "id": "7.3-2",
+     "id": "7.3-59cef1d1",
      "kind": "p",
      "en": "Clients that encounter frequent network errors may experience additional challenges when interacting with servers with stricter nonce validation implementations."
     }
@@ -898,77 +983,77 @@
    "title": "Authorization Server-Provided Nonce",
    "paragraphs": [
     {
-     "id": "8-1",
+     "id": "8-e045be1d",
      "kind": "p",
      "en": "This section specifies a mechanism using opaque nonces provided by the server that can be used to limit the lifetime of DPoP proofs. Without employing such a mechanism, a malicious party controlling the client (potentially including the end-user) can create DPoP proofs for use arbitrarily far in the future."
     },
     {
-     "id": "8-2",
+     "id": "8-028c8a7e",
      "kind": "p",
      "en": "Including a nonce value contributed by the authorization server in the DPoP proof MAY be used by authorization servers to limit the lifetime of DPoP proofs.  The server determines when to issue a new DPoP nonce challenge and if it is needed, thereby requiring the use of the nonce value in subsequent DPoP proofs.  The logic through which the server makes that determination is out of scope of this document."
     },
     {
-     "id": "8-3",
+     "id": "8-07fb72f0",
      "kind": "p",
      "en": "An authorization server MAY supply a nonce value to be included by the client in DPoP proofs sent.  In this case, the authorization server responds to requests that do not include a nonce with an HTTP 400 (Bad Request) error response per Section 5.2 of [RFC6749] using use_dpop_nonce as the error code value.  The authorization server includes a DPoP-Nonce HTTP header in the response supplying a nonce value to be used when sending the subsequent request.  Nonce values MUST be unpredictable.  This same error code is used when supplying a new nonce value when there was a nonce mismatch.  The client will typically retry the request with the new nonce value supplied upon receiving a use_dpop_nonce error with an accompanying nonce value."
     },
     {
-     "id": "8-4",
+     "id": "8-efe35b87",
      "kind": "p",
      "en": "For example, in response to a token request without a nonce when the authorization server requires one, the authorization server can respond with a DPoP-Nonce value such as the following to provide a nonce value to include in the DPoP proof:"
     },
     {
-     "id": "8-5",
-     "kind": "p",
-     "en": "HTTP/1.1 400 Bad Request DPoP-Nonce: eyJ7S_zG.eyJH0-Z.HX4w-7v"
+     "id": "8-3498791a",
+     "kind": "pre",
+     "en": "    HTTP/1.1 400 Bad Request\n    DPoP-Nonce: eyJ7S_zG.eyJH0-Z.HX4w-7v"
     },
     {
-     "id": "8-6",
+     "id": "8-a870cd60",
      "kind": "pre",
      "en": "    {\n     \"error\": \"use_dpop_nonce\",\n     \"error_description\":\n       \"Authorization server requires nonce in DPoP proof\"\n    }"
     },
     {
-     "id": "8-7",
+     "id": "8-3f53c1f6",
      "kind": "pre",
      "en": "      Figure 20: HTTP 400 Response to a Token Request without a Nonce"
     },
     {
-     "id": "8-8",
+     "id": "8-847d08ad",
      "kind": "p",
      "en": "Other HTTP headers and JSON fields MAY also be included in the error response, but there MUST NOT be more than one DPoP-Nonce header."
     },
     {
-     "id": "8-9",
+     "id": "8-e8097266",
      "kind": "p",
      "en": "Upon receiving the nonce, the client is expected to retry its token request using a DPoP proof including the supplied nonce value in the nonce claim of the DPoP proof.  An example unencoded JWT payload of such a DPoP proof including a nonce is shown below."
     },
     {
-     "id": "8-10",
+     "id": "8-c662d6c9",
      "kind": "pre",
      "en": "    {\n     \"jti\": \"-BwC3ESc6acc2lTc\",\n     \"htm\": \"POST\",\n     \"htu\": \"https://server.example.com/token\",\n     \"iat\": 1562262616,\n     \"nonce\": \"eyJ7S_zG.eyJH0-Z.HX4w-7v\"\n    }"
     },
     {
-     "id": "8-11",
+     "id": "8-cbfa6306",
      "kind": "pre",
      "en": "           Figure 21: DPoP Proof Payload including a Nonce Value"
     },
     {
-     "id": "8-12",
+     "id": "8-d5a6f452",
      "kind": "p",
      "en": "The nonce is opaque to the client."
     },
     {
-     "id": "8-13",
+     "id": "8-22781411",
      "kind": "p",
      "en": "If the nonce claim in the DPoP proof does not exactly match a nonce recently supplied by the authorization server to the client, the authorization server MUST reject the request.  The rejection response MAY include a DPoP-Nonce HTTP header providing a new nonce value to use for subsequent requests."
     },
     {
-     "id": "8-14",
+     "id": "8-104ef6bd",
      "kind": "p",
      "en": "The intent is that clients need to keep only one nonce value and servers need to keep a window of recent nonces.  That said, transient circumstances may arise in which the stored nonce values for the server and the client differ.  However, this situation is self- correcting.  With any rejection message, the server can send the client the nonce value it wants to use to the client, and the client can store that nonce value and retry the request with it.  Even if the client and/or server discard their stored nonce values, that situation is also self-correcting because new nonce values can be communicated when responding to or retrying failed requests."
     },
     {
-     "id": "8-15",
+     "id": "8-345a55e6",
      "kind": "p",
      "en": "Note that browser-based client applications using CORS [WHATWG.Fetch] only have access to CORS-safelisted response HTTP headers by default. In order for the application to obtain and use the DPoP-Nonce HTTP response header value, the server needs to make it available to the application by including DPoP-Nonce in the Access-Control-Expose- Headers response header list value."
     }
@@ -979,17 +1064,17 @@
    "title": "Nonce Syntax",
    "paragraphs": [
     {
-     "id": "8.1-1",
+     "id": "8.1-34db5b2f",
      "kind": "p",
      "en": "The nonce syntax in ABNF as used by [RFC6749] (which is the same as the scope-token syntax) is shown below."
     },
     {
-     "id": "8.1-2",
+     "id": "8.1-3032aca1",
      "kind": "p",
      "en": "nonce = 1*NQCHAR"
     },
     {
-     "id": "8.1-3",
+     "id": "8.1-54ae1f06",
      "kind": "pre",
      "en": "                           Figure 22: Nonce ABNF"
     }
@@ -1000,37 +1085,37 @@
    "title": "Providing a New Nonce Value",
    "paragraphs": [
     {
-     "id": "8.2-1",
+     "id": "8.2-6b939f02",
      "kind": "p",
      "en": "It is up to the authorization server when to supply a new nonce value for the client to use.  The client is expected to use the existing supplied nonce in DPoP proofs until the server supplies a new nonce value."
     },
     {
-     "id": "8.2-2",
+     "id": "8.2-0a1741dc",
      "kind": "p",
      "en": "The authorization server MAY supply the new nonce in the same way that the initial one was supplied: by using a DPoP-Nonce HTTP header in the response.  The DPoP-Nonce HTTP header field uses the nonce syntax defined in Section 8.1.  Each time this happens, it requires an extra protocol round trip."
     },
     {
-     "id": "8.2-3",
+     "id": "8.2-104f8585",
      "kind": "p",
      "en": "A more efficient manner of supplying a new nonce value is also defined by including a DPoP-Nonce HTTP header in the HTTP 200 (OK) response from the previous request.  The client MUST use the new nonce value supplied for the next token request and for all subsequent token requests until the authorization server supplies a new nonce."
     },
     {
-     "id": "8.2-4",
+     "id": "8.2-36a8bfb3",
      "kind": "p",
      "en": "Responses that include the DPoP-Nonce HTTP header should be uncacheable (e.g., using Cache-Control: no-store in response to a GET request) to prevent the response from being used to serve a subsequent request and a stale nonce value from being used as a result."
     },
     {
-     "id": "8.2-5",
+     "id": "8.2-805887ff",
      "kind": "p",
      "en": "An example 200 OK response providing a new nonce value is shown below."
     },
     {
-     "id": "8.2-6",
-     "kind": "p",
-     "en": "HTTP/1.1 200 OK Cache-Control: no-store DPoP-Nonce: eyJ7S_zG.eyJbYu3.xQmBj-1"
+     "id": "8.2-2c63819b",
+     "kind": "pre",
+     "en": "    HTTP/1.1 200 OK\n    Cache-Control: no-store\n    DPoP-Nonce: eyJ7S_zG.eyJbYu3.xQmBj-1"
     },
     {
-     "id": "8.2-7",
+     "id": "8.2-89df061e",
      "kind": "pre",
      "en": "        Figure 23: HTTP 200 Response Providing the Next Nonce Value"
     }
@@ -1041,27 +1126,27 @@
    "title": "Resource Server-Provided Nonce",
    "paragraphs": [
     {
-     "id": "9-1",
+     "id": "9-618bfdf7",
      "kind": "p",
      "en": "Resource servers can also choose to provide a nonce value to be included in DPoP proofs sent to them.  They provide the nonce using the DPoP-Nonce header in the same way that authorization servers do as described in Sections 8 and 8.2.  The error signaling is performed as described in Section 7.1.  Resource servers use an HTTP 401 (Unauthorized) error code with an accompanying WWW-Authenticate: DPoP value and DPoP-Nonce value to accomplish this."
     },
     {
-     "id": "9-2",
+     "id": "9-5000e3c8",
      "kind": "p",
      "en": "For example, in response to a resource request without a nonce when the resource server requires one, the resource server can respond with a DPoP-Nonce value such as the following to provide a nonce value to include in the DPoP proof.  The example below uses \"\\\" line wrapping per [RFC8792]."
     },
     {
-     "id": "9-3",
-     "kind": "p",
-     "en": "HTTP/1.1 401 Unauthorized WWW-Authenticate: DPoP error=\"use_dpop_nonce\", \\ error_description=\"Resource server requires nonce in DPoP proof\" DPoP-Nonce: eyJ7S_zG.eyJH0-Z.HX4w-7v"
+     "id": "9-1c53b51e",
+     "kind": "pre",
+     "en": "    HTTP/1.1 401 Unauthorized\n    WWW-Authenticate: DPoP error=\"use_dpop_nonce\", \\\n      error_description=\"Resource server requires nonce in DPoP proof\"\n    DPoP-Nonce: eyJ7S_zG.eyJH0-Z.HX4w-7v"
     },
     {
-     "id": "9-4",
+     "id": "9-8ab1b385",
      "kind": "pre",
      "en": "     Figure 24: HTTP 401 Response to a Resource Request without a Nonce"
     },
     {
-     "id": "9-5",
+     "id": "9-20e10d0e",
      "kind": "p",
      "en": "Note that the nonces provided by an authorization server and a resource server are different and should not be confused with one another since nonces will be only accepted by the server that issued them.  Likewise, should a client use multiple authorization servers and/or resource servers, a nonce issued by any of them should be used only at the issuing server.  Developers should also be careful to not confuse DPoP nonces with the OpenID Connect [OpenID.Core] ID Token nonce."
     }
@@ -1072,32 +1157,32 @@
    "title": "Authorization Code Binding to a DPoP Key",
    "paragraphs": [
     {
-     "id": "10-1",
+     "id": "10-eb671278",
      "kind": "p",
      "en": "Binding the authorization code issued to the client's proof-of- possession key can enable end-to-end binding of the entire authorization flow.  This specification defines the dpop_jkt authorization request parameter for this purpose.  The value of the dpop_jkt authorization request parameter is the JWK Thumbprint [RFC7638] of the proof-of-possession public key using the SHA-256 hash function, which is the same value as used for the jkt confirmation method defined in Section 6.1."
     },
     {
-     "id": "10-2",
+     "id": "10-f067e76b",
      "kind": "p",
      "en": "When a token request is received, the authorization server computes the JWK Thumbprint of the proof-of-possession public key in the DPoP proof and verifies that it matches the dpop_jkt parameter value in the authorization request.  If they do not match, it MUST reject the request."
     },
     {
-     "id": "10-3",
+     "id": "10-4e67e3bb",
      "kind": "p",
      "en": "An example authorization request using the dpop_jkt authorization request parameter is shown below and uses \"\\\" line wrapping per [RFC8792]."
     },
     {
-     "id": "10-4",
-     "kind": "p",
-     "en": "GET /authorize?response_type=code&client_id=s6BhdRkqt3&state=xyz\\ &redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb\\ &code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM\\ &code_challenge_method=S256\\ &dpop_jkt=NzbLsXh8uDCcd-6MNwXF4W_7noWXFZAfHkxZsRGC9Xs HTTP/1.1 Host: server.example.com"
+     "id": "10-f78699f1",
+     "kind": "pre",
+     "en": "   GET /authorize?response_type=code&client_id=s6BhdRkqt3&state=xyz\\\n       &redirect_uri=https%3A%2F%2Fclient%2Eexample%2Ecom%2Fcb\\\n       &code_challenge=E9Melhoa2OwvFrEMTJguCHaoeK1t8URWbuGJSstw-cM\\\n       &code_challenge_method=S256\\\n       &dpop_jkt=NzbLsXh8uDCcd-6MNwXF4W_7noWXFZAfHkxZsRGC9Xs HTTP/1.1\n   Host: server.example.com"
     },
     {
-     "id": "10-5",
+     "id": "10-a3eab5af",
      "kind": "pre",
      "en": "       Figure 25: Authorization Request Using the dpop_jkt Parameter"
     },
     {
-     "id": "10-6",
+     "id": "10-20d133f4",
      "kind": "p",
      "en": "Use of the dpop_jkt authorization request parameter is OPTIONAL. Note that the dpop_jkt authorization request parameter MAY also be used in combination with Proof Key for Code Exchange (PKCE) [RFC7636], which is recommended by [SECURITY-TOPICS] as a countermeasure to authorization code injection.  The dpop_jkt authorization request parameter only provides similar protections when a unique DPoP key is used for each authorization request."
     }
@@ -1108,22 +1193,27 @@
    "title": "DPoP with Pushed Authorization Requests",
    "paragraphs": [
     {
-     "id": "10.1-1",
+     "id": "10.1-30efeb6b",
      "kind": "p",
      "en": "When Pushed Authorization Requests (PARs) [RFC9126] are used in conjunction with DPoP, there are two ways in which the DPoP key can be communicated in the PAR request:"
     },
     {
-     "id": "10.1-2",
+     "id": "10.1-253fbb40",
      "kind": "li",
-     "en": "*  The dpop_jkt parameter can be used as described in Section 10 to bind the issued authorization code to a specific key.  In this case, dpop_jkt MUST be included alongside other authorization request parameters in the POST body of the PAR request. *  Alternatively, the DPoP header can be added to the PAR request. In this case, the authorization server MUST check the provided DPoP proof JWT as defined in Section 4.3.  It MUST further behave as if the contained public key's thumbprint was provided using dpop_jkt, i.e., reject the subsequent token request unless a DPoP proof for the same key is provided.  This can help to simplify the implementation of the client, as it can \"blindly\" attach the DPoP header to all requests to the authorization server regardless of the type of request.  Additionally, it provides a stronger binding, as the DPoP header contains a proof of possession of the private key."
+     "en": "*  The dpop_jkt parameter can be used as described in Section 10 to bind the issued authorization code to a specific key.  In this case, dpop_jkt MUST be included alongside other authorization request parameters in the POST body of the PAR request."
     },
     {
-     "id": "10.1-3",
+     "id": "10.1-ad575a57",
+     "kind": "li",
+     "en": "*  Alternatively, the DPoP header can be added to the PAR request. In this case, the authorization server MUST check the provided DPoP proof JWT as defined in Section 4.3.  It MUST further behave as if the contained public key's thumbprint was provided using dpop_jkt, i.e., reject the subsequent token request unless a DPoP proof for the same key is provided.  This can help to simplify the implementation of the client, as it can \"blindly\" attach the DPoP header to all requests to the authorization server regardless of the type of request.  Additionally, it provides a stronger binding, as the DPoP header contains a proof of possession of the private key."
+    },
+    {
+     "id": "10.1-e4071815",
      "kind": "p",
      "en": "Both mechanisms MUST be supported by an authorization server that supports PAR and DPoP.  If both mechanisms are used at the same time, the authorization server MUST reject the request if the JWK Thumbprint in dpop_jkt does not match the public key in the DPoP header."
     },
     {
-     "id": "10.1-4",
+     "id": "10.1-45f3c51b",
      "kind": "p",
      "en": "Allowing both mechanisms ensures that clients using dpop_jkt do not need to distinguish between front-channel and pushed authorization requests, and at the same time, clients that only have one code path for protecting all calls to authorization server endpoints do not need to distinguish between requests to the PAR endpoint and the token endpoint."
     }
@@ -1134,7 +1224,7 @@
    "title": "Security Considerations",
    "paragraphs": [
     {
-     "id": "11-1",
+     "id": "11-41f5cd40",
      "kind": "p",
      "en": "In DPoP, the prevention of token replay at a different endpoint (see Section 2) is achieved through authentication of the server per [RFC6125] and the binding of the DPoP proof to a certain URI and HTTP method.  However, DPoP has a somewhat different nature of protection than TLS-based methods such as OAuth Mutual TLS [RFC8705] or OAuth Token Binding [TOKEN-BINDING] (see also Sections 11.1 and 11.7). TLS-based mechanisms can leverage a tight integration between the TLS layer and the application layer to achieve strong message integrity, authenticity, and replay protection."
     }
@@ -1145,27 +1235,27 @@
    "title": "DPoP Proof Replay",
    "paragraphs": [
     {
-     "id": "11.1-1",
+     "id": "11.1-d3df6ccd",
      "kind": "p",
      "en": "If an adversary is able to get hold of a DPoP proof JWT, the adversary could replay that token at the same endpoint (the HTTP endpoint and method are enforced via the respective claims in the JWTs).  To limit this, servers MUST only accept DPoP proofs for a limited time after their creation (preferably only for a relatively brief period on the order of seconds or minutes)."
     },
     {
-     "id": "11.1-2",
+     "id": "11.1-db182785",
      "kind": "p",
      "en": "In the context of the target URI, servers can store the jti value of each DPoP proof for the time window in which the respective DPoP proof JWT would be accepted to prevent multiple uses of the same DPoP proof.  HTTP requests to the same URI for which the jti value has been seen before would be declined.  When strictly enforced, such a single-use check provides a very strong protection against DPoP proof replay, but it may not always be feasible in practice, e.g., when multiple servers behind a single endpoint have no shared state."
     },
     {
-     "id": "11.1-3",
+     "id": "11.1-f618abb0",
      "kind": "p",
      "en": "In order to guard against memory exhaustion attacks, a server that is tracking jti values should reject DPoP proof JWTs with unnecessarily large jti values or store only a hash thereof."
     },
     {
-     "id": "11.1-4",
+     "id": "11.1-c16120c1",
      "kind": "p",
      "en": "Note: To accommodate for clock offsets, the server MAY accept DPoP proofs that carry an iat time in the reasonably near future (on the order of seconds or minutes).  Because clock skews between servers and clients may be large, servers MAY limit DPoP proof lifetimes by using server-provided nonce values containing the time at the server rather than comparing the client-supplied iat time to the time at the server.  Nonces created in this way yield the same result even in the face of arbitrarily large clock skews."
     },
     {
-     "id": "11.1-5",
+     "id": "11.1-75cf36b2",
      "kind": "p",
      "en": "Server-provided nonces are an effective means for further reducing the chances for successful DPoP proof replay.  Unlike cryptographic nonces, it is acceptable for clients to use the same nonce multiple times and for the server to accept the same nonce multiple times.  As long as the jti value is tracked and duplicates are rejected for the lifetime of the nonce, there is no additional risk of token replay."
     }
@@ -1176,17 +1266,17 @@
    "title": "DPoP Proof Pre-generation",
    "paragraphs": [
     {
-     "id": "11.2-1",
+     "id": "11.2-203b39bb",
      "kind": "p",
      "en": "An attacker in control of the client can pre-generate DPoP proofs for specific endpoints arbitrarily far into the future by choosing the iat value in the DPoP proof to be signed by the proof-of-possession key.  Note that one such attacker is the person who is the legitimate user of the client.  The user may pre-generate DPoP proofs to exfiltrate from the machine possessing the proof-of-possession key upon which they were generated and copy them to another machine that does not possess the key.  For instance, a bank employee might pre- generate DPoP proofs on a bank computer and then copy them to another machine for use in the future, thereby bypassing bank audit controls. When DPoP proofs can be pre-generated and exfiltrated, all that is actually being proved in DPoP protocol interactions is possession of a DPoP proof -- not of the proof-of-possession key."
     },
     {
-     "id": "11.2-2",
+     "id": "11.2-3b4764ca",
      "kind": "p",
      "en": "Use of server-provided nonce values that are not predictable by attackers can prevent this attack.  By providing new nonce values at times of its choosing, the server can limit the lifetime of DPoP proofs, preventing pre-generated DPoP proofs from being used.  When server-provided nonces are used, possession of the proof-of- possession key is being demonstrated -- not just possession of a DPoP proof."
     },
     {
-     "id": "11.2-3",
+     "id": "11.2-179d45f0",
      "kind": "p",
      "en": "The ath claim limits the use of pre-generated DPoP proofs to the lifetime of the access token.  Deployments that do not utilize the nonce mechanism SHOULD NOT issue long-lived DPoP constrained access tokens, preferring instead to use short-lived access tokens and refresh tokens.  Whilst an attacker could pre-generate DPoP proofs to use the refresh token to obtain a new access token, they would be unable to realistically pre-generate DPoP proofs to use a newly issued access token."
     }
@@ -1197,7 +1287,7 @@
    "title": "DPoP Nonce Downgrade",
    "paragraphs": [
     {
-     "id": "11.3-1",
+     "id": "11.3-39a4c7a6",
      "kind": "p",
      "en": "A server MUST NOT accept any DPoP proofs without the nonce claim when a DPoP nonce has been provided to the client."
     }
@@ -1208,27 +1298,27 @@
    "title": "Untrusted Code in the Client Context",
    "paragraphs": [
     {
-     "id": "11.4-1",
+     "id": "11.4-d54d9fa1",
      "kind": "p",
      "en": "If an adversary is able to run code in the client's execution context, the security of DPoP is no longer guaranteed.  Common issues in web applications leading to the execution of untrusted code are XSS and remote code inclusion attacks."
     },
     {
-     "id": "11.4-2",
+     "id": "11.4-403adb0a",
      "kind": "p",
      "en": "If the private key used for DPoP is stored in such a way that it cannot be exported, e.g., in a hardware or software security module, the adversary cannot exfiltrate the key and use it to create arbitrary DPoP proofs.  The adversary can, however, create new DPoP proofs as long as the client is online and uses these proofs (together with the respective tokens) either on the victim's device or on a device under the attacker's control to send arbitrary requests that will be accepted by servers."
     },
     {
-     "id": "11.4-3",
+     "id": "11.4-b62afafb",
      "kind": "p",
      "en": "To send requests even when the client is offline, an adversary can try to pre-compute DPoP proofs using timestamps in the future and exfiltrate these together with the access or refresh token."
     },
     {
-     "id": "11.4-4",
+     "id": "11.4-4552a0a5",
      "kind": "p",
      "en": "An adversary might further try to associate tokens issued from the token endpoint with a key pair under the adversary's control.  One way to achieve this is to modify existing code, e.g., by replacing cryptographic APIs.  Another way is to launch a new authorization grant between the client and the authorization server in an iframe. This grant needs to be \"silent\", i.e., not require interaction with the user.  With code running in the client's origin, the adversary has access to the resulting authorization code and can use it to associate their own DPoP keys with the tokens returned from the token endpoint.  The adversary is then able to use the resulting tokens on their own device even if the client is offline."
     },
     {
-     "id": "11.4-5",
+     "id": "11.4-1b80ed81",
      "kind": "p",
      "en": "Therefore, protecting clients against the execution of untrusted code is extremely important even if DPoP is used.  Besides secure coding practices, Content Security Policy [W3C.CSP] can be used as a second layer of defense against XSS."
     }
@@ -1239,7 +1329,7 @@
    "title": "Signed JWT Swapping",
    "paragraphs": [
     {
-     "id": "11.5-1",
+     "id": "11.5-03c4af6f",
      "kind": "p",
      "en": "Servers accepting signed DPoP proof JWTs MUST verify that the typ field is dpop+jwt in the headers of the JWTs to ensure that adversaries cannot use JWTs created for other purposes."
     }
@@ -1250,7 +1340,7 @@
    "title": "Signature Algorithms",
    "paragraphs": [
     {
-     "id": "11.6-1",
+     "id": "11.6-3d27fda4",
      "kind": "p",
      "en": "Implementers MUST ensure that only asymmetric digital signature algorithms (such as ES256) that are deemed secure can be used for signing DPoP proofs.  In particular, the algorithm none MUST NOT be allowed."
     }
@@ -1261,17 +1351,17 @@
    "title": "Request Integrity",
    "paragraphs": [
     {
-     "id": "11.7-1",
+     "id": "11.7-fccd6d28",
      "kind": "p",
      "en": "DPoP does not ensure the integrity of the payload or headers of requests.  The DPoP proof only contains claims for the HTTP URI and method, but not the message body or general request headers, for example."
     },
     {
-     "id": "11.7-2",
+     "id": "11.7-34f648e5",
      "kind": "p",
      "en": "This is an intentional design decision intended to keep DPoP simple to use, but as described, it makes DPoP potentially susceptible to replay attacks where an attacker is able to modify message contents and headers.  In many setups, the message integrity and confidentiality provided by TLS is sufficient to provide a good level of protection."
     },
     {
-     "id": "11.7-3",
+     "id": "11.7-a2e0fbf1",
      "kind": "p",
      "en": "Note: While signatures covering other parts of requests are out of the scope of this specification, additional information to be signed can be added into DPoP proofs."
     }
@@ -1282,12 +1372,12 @@
    "title": "Access Token and Public Key Binding",
    "paragraphs": [
     {
-     "id": "11.8-1",
+     "id": "11.8-ad4f738b",
      "kind": "p",
      "en": "The binding of the access token to the DPoP public key, as specified in Section 6, uses a cryptographic hash of the JWK representation of the public key.  It relies on the hash function having sufficient second-preimage resistance so as to make it computationally infeasible to find or create another key that produces to the same hash output value.  The SHA-256 hash function was used because it meets the aforementioned requirement while being widely available."
     },
     {
-     "id": "11.8-2",
+     "id": "11.8-2cbe16d8",
      "kind": "p",
      "en": "Similarly, the binding of the DPoP proof to the access token uses a hash of that access token as the value of the ath claim in the DPoP proof (see Section 4.2).  This relies on the value of the hash being sufficiently unique so as to reliably identify the access token.  The collision resistance of SHA-256 meets that requirement."
     }
@@ -1298,22 +1388,22 @@
    "title": "Authorization Code and Public Key Binding",
    "paragraphs": [
     {
-     "id": "11.9-1",
+     "id": "11.9-a70c9102",
      "kind": "p",
      "en": "Cryptographic binding of the authorization code to the DPoP public key is specified in Section 10.  This binding prevents attacks in which the attacker captures the authorization code and creates a DPoP proof using a proof-of-possession key other than the one held by the client and redeems the authorization code using that DPoP proof.  By ensuring end to end that only the client's DPoP key can be used, this prevents captured authorization codes from being exfiltrated and used at locations other than the one to which the authorization code was issued."
     },
     {
-     "id": "11.9-2",
+     "id": "11.9-cfa2c6af",
      "kind": "p",
      "en": "Authorization codes can, for instance, be harvested by attackers from places where the HTTP messages containing them are logged.  Even when efforts are made to make authorization codes one-time-use, in practice, there is often a time window during which attackers can replay them.  For instance, when authorization servers are implemented as scalable replicated services, some replicas may temporarily not yet have the information needed to prevent replay. DPoP binding of the authorization code solves these problems."
     },
     {
-     "id": "11.9-3",
+     "id": "11.9-b1820e6c",
      "kind": "p",
      "en": "If an authorization server does not (or cannot) strictly enforce the single-use limitation for authorization codes and an attacker can access the authorization code (and if PKCE is used, the code_verifier), the attacker can create a forged token request, binding the resulting token to an attacker-controlled key.  For example, using XSS, attackers might obtain access to the authorization code and PKCE parameters.  Use of the dpop_jkt parameter prevents this attack."
     },
     {
-     "id": "11.9-4",
+     "id": "11.9-60f3c61a",
      "kind": "p",
      "en": "The binding of the authorization code to the DPoP public key uses a JWK Thumbprint of the public key, just as the access token binding does.  The same JWK Thumbprint considerations apply."
     }
@@ -1324,7 +1414,7 @@
    "title": "Hash Algorithm Agility",
    "paragraphs": [
     {
-     "id": "11.10-1",
+     "id": "11.10-8efe69d8",
      "kind": "p",
      "en": "The jkt confirmation method member, the ath JWT claim, and the dpop_jkt authorization request parameter defined herein all use the output of the SHA-256 hash function as their value.  The use of a single hash function by this specification was intentional and aimed at simplicity and avoidance of potential security and interoperability issues arising from common mistakes implementing and deploying parameterized algorithm agility schemes.  However, the use of a different hash function is not precluded if future circumstances change and make SHA-256 insufficient for the requirements of this specification.  Should that need arise, it is expected that a short specification will be produced that updates this one.  Using the output of an appropriate hash function as the value, that specification will likely define a new confirmation method member, a new JWT claim, and a new authorization request parameter.  These items will be used in place of, or alongside, their respective counterparts in the same message structures and flows of the larger protocol defined by this specification."
     }
@@ -1335,7 +1425,7 @@
    "title": "Binding to Client Identity",
    "paragraphs": [
     {
-     "id": "11.11-1",
+     "id": "11.11-1c2977ac",
      "kind": "p",
      "en": "In cases where DPoP is used with client authentication, it is only bound to authentication by being coincident in the same TLS tunnel. Since the DPoP proof is not directly bound to the authentication cryptographically, it's possible that the authentication or the DPoP messages were copied into the tunnel.  While including the URI in the DPoP can partially mitigate some of this risk, modifying the authentication mechanism to provide cryptographic binding between authentication and DPoP could provide better protection.  However, providing additional binding with authentication through the modification of authentication mechanisms or other means is beyond the scope of this specification."
     }
@@ -1351,32 +1441,32 @@
    "title": "OAuth Access Token Types Registration",
    "paragraphs": [
     {
-     "id": "12.1-1",
+     "id": "12.1-d0ba5ccd",
      "kind": "p",
      "en": "IANA has registered the following access token type in the \"OAuth Access Token Types\" registry [IANA.OAuth.Params] established by [RFC6749]."
     },
     {
-     "id": "12.1-2",
+     "id": "12.1-3d71b989",
      "kind": "p",
      "en": "Name:  DPoP"
     },
     {
-     "id": "12.1-3",
+     "id": "12.1-869e383f",
      "kind": "p",
      "en": "Additional Token Endpoint Response Parameters:  (none)"
     },
     {
-     "id": "12.1-4",
+     "id": "12.1-53e46d7c",
      "kind": "p",
      "en": "HTTP Authentication Scheme(s):  DPoP"
     },
     {
-     "id": "12.1-5",
+     "id": "12.1-3bba4a3e",
      "kind": "p",
      "en": "Change Controller:  IETF"
     },
     {
-     "id": "12.1-6",
+     "id": "12.1-29e275b5",
      "kind": "p",
      "en": "Reference:  RFC 9449"
     }
@@ -1387,69 +1477,69 @@
    "title": "OAuth Extensions Error Registration",
    "paragraphs": [
     {
-     "id": "12.2-1",
+     "id": "12.2-9c55a764",
      "kind": "p",
      "en": "IANA has registered the following error values in the \"OAuth Extensions Error\" registry [IANA.OAuth.Params] established by [RFC6749]."
     },
     {
-     "id": "12.2-2",
+     "id": "12.2-5ecbc32d",
      "kind": "p",
      "en": "Invalid DPoP proof:"
     },
     {
-     "id": "12.2-3",
-     "kind": "p",
-     "en": "Name:  invalid_dpop_proof"
-    },
-    {
-     "id": "12.2-4",
+     "id": "12.2-83a86cff",
      "kind": "pre",
-     "en": "      Usage Location:  token error response, resource access error\n         response"
+     "en": "      Name:  invalid_dpop_proof"
     },
     {
-     "id": "12.2-5",
+     "id": "12.2-9447b38b",
+     "kind": "p",
+     "en": "Usage Location:  token error response, resource access error response"
+    },
+    {
+     "id": "12.2-0cc8d14c",
      "kind": "p",
      "en": "Protocol Extension:  Demonstrating Proof of Possession (DPoP)"
     },
     {
-     "id": "12.2-6",
-     "kind": "p",
-     "en": "Change Controller:  IETF"
+     "id": "12.2-3bba4a3e",
+     "kind": "pre",
+     "en": "      Change Controller:  IETF"
     },
     {
-     "id": "12.2-7",
-     "kind": "p",
-     "en": "Reference:  RFC 9449"
+     "id": "12.2-29e275b5",
+     "kind": "pre",
+     "en": "      Reference:  RFC 9449"
     },
     {
-     "id": "12.2-8",
+     "id": "12.2-17369df1",
      "kind": "p",
      "en": "Use DPoP nonce:"
     },
     {
-     "id": "12.2-9",
-     "kind": "p",
-     "en": "Name:  use_dpop_nonce"
-    },
-    {
-     "id": "12.2-10",
+     "id": "12.2-49df40e4",
      "kind": "pre",
-     "en": "      Usage Location:  token error response, resource access error\n         response"
+     "en": "      Name:  use_dpop_nonce"
     },
     {
-     "id": "12.2-11",
+     "id": "12.2-9447b38b",
+     "kind": "p",
+     "en": "Usage Location:  token error response, resource access error response"
+    },
+    {
+     "id": "12.2-0cc8d14c",
      "kind": "p",
      "en": "Protocol Extension:  Demonstrating Proof of Possession (DPoP)"
     },
     {
-     "id": "12.2-12",
-     "kind": "p",
-     "en": "Change Controller:  IETF"
+     "id": "12.2-3bba4a3e",
+     "kind": "pre",
+     "en": "      Change Controller:  IETF"
     },
     {
-     "id": "12.2-13",
-     "kind": "p",
-     "en": "Reference:  RFC 9449"
+     "id": "12.2-29e275b5",
+     "kind": "pre",
+     "en": "      Reference:  RFC 9449"
     }
    ]
   },
@@ -1458,27 +1548,27 @@
    "title": "OAuth Parameters Registration",
    "paragraphs": [
     {
-     "id": "12.3-1",
+     "id": "12.3-73489687",
      "kind": "p",
      "en": "IANA has registered the following authorization request parameter in the \"OAuth Parameters\" registry [IANA.OAuth.Params] established by [RFC6749]."
     },
     {
-     "id": "12.3-2",
+     "id": "12.3-3d1caccf",
      "kind": "p",
      "en": "Name:  dpop_jkt"
     },
     {
-     "id": "12.3-3",
+     "id": "12.3-946f611e",
      "kind": "p",
      "en": "Parameter Usage Location:  authorization request"
     },
     {
-     "id": "12.3-4",
+     "id": "12.3-3bba4a3e",
      "kind": "p",
      "en": "Change Controller:  IETF"
     },
     {
-     "id": "12.3-5",
+     "id": "12.3-be7fa94f",
      "kind": "p",
      "en": "Reference:  Section 10 of RFC 9449"
     }
@@ -1489,17 +1579,17 @@
    "title": "HTTP Authentication Schemes Registration",
    "paragraphs": [
     {
-     "id": "12.4-1",
+     "id": "12.4-bc4e67c2",
      "kind": "p",
      "en": "IANA has registered the following scheme in the \"HTTP Authentication Schemes\" registry [IANA.HTTP.AuthSchemes] established by [RFC9110], Section 16.4.1."
     },
     {
-     "id": "12.4-2",
+     "id": "12.4-9fa169e5",
      "kind": "p",
      "en": "Authentication Scheme Name:  DPoP"
     },
     {
-     "id": "12.4-3",
+     "id": "12.4-ab615dbb",
      "kind": "p",
      "en": "Reference:  Section 7.1 of RFC 9449"
     }
@@ -1510,92 +1600,92 @@
    "title": "Media Type Registration",
    "paragraphs": [
     {
-     "id": "12.5-1",
+     "id": "12.5-626dfe4c",
      "kind": "p",
      "en": "IANA has registered the application/dpop+jwt media type [RFC2046] in the \"Media Types\" registry [IANA.MediaTypes] in the manner described in [RFC6838], which is used to indicate that the content is a DPoP JWT."
     },
     {
-     "id": "12.5-2",
+     "id": "12.5-04a5566c",
      "kind": "p",
      "en": "Type name:  application"
     },
     {
-     "id": "12.5-3",
+     "id": "12.5-0281d6ce",
      "kind": "p",
      "en": "Subtype name:  dpop+jwt"
     },
     {
-     "id": "12.5-4",
+     "id": "12.5-2b06d35d",
      "kind": "p",
      "en": "Required parameters:  n/a"
     },
     {
-     "id": "12.5-5",
+     "id": "12.5-20604042",
      "kind": "p",
      "en": "Optional parameters:  n/a"
     },
     {
-     "id": "12.5-6",
+     "id": "12.5-d8ac6a8e",
      "kind": "p",
      "en": "Encoding considerations:  binary.  A DPoP JWT is a JWT; JWT values are encoded as a series of base64url-encoded values (some of which may be the empty string) separated by period ('.') characters."
     },
     {
-     "id": "12.5-7",
+     "id": "12.5-96f9bba5",
      "kind": "p",
      "en": "Security considerations:  See Section 11 of RFC 9449"
     },
     {
-     "id": "12.5-8",
+     "id": "12.5-f70e5769",
      "kind": "p",
      "en": "Interoperability considerations:  n/a"
     },
     {
-     "id": "12.5-9",
+     "id": "12.5-7b9f2a30",
      "kind": "p",
      "en": "Published specification:  RFC 9449"
     },
     {
-     "id": "12.5-10",
+     "id": "12.5-ff83666b",
      "kind": "p",
      "en": "Applications that use this media type:  Applications using RFC 9449 for application-level proof of possession"
     },
     {
-     "id": "12.5-11",
+     "id": "12.5-2189b523",
      "kind": "p",
      "en": "Fragment identifier considerations:  n/a"
     },
     {
-     "id": "12.5-12",
+     "id": "12.5-aa5bb416",
      "kind": "p",
      "en": "Additional information:"
     },
     {
-     "id": "12.5-13",
-     "kind": "p",
-     "en": "File extension(s):  n/a Macintosh file type code(s):  n/a"
+     "id": "12.5-6f42ed3a",
+     "kind": "pre",
+     "en": "      File extension(s):  n/a\n      Macintosh file type code(s):  n/a"
     },
     {
-     "id": "12.5-14",
+     "id": "12.5-eae6beb9",
      "kind": "p",
      "en": "Person & email address to contact for further information:  Michael B. Jones, michael_b_jones@hotmail.com"
     },
     {
-     "id": "12.5-15",
+     "id": "12.5-33787ed5",
      "kind": "p",
      "en": "Intended usage:  COMMON"
     },
     {
-     "id": "12.5-16",
+     "id": "12.5-88fcc971",
      "kind": "p",
      "en": "Restrictions on usage:  none"
     },
     {
-     "id": "12.5-17",
+     "id": "12.5-68563336",
      "kind": "p",
      "en": "Author:  Michael B. Jones, michael_b_jones@hotmail.com"
     },
     {
-     "id": "12.5-18",
+     "id": "12.5-46628de2",
      "kind": "p",
      "en": "Change controller:  IETF"
     }
@@ -1606,27 +1696,27 @@
    "title": "JWT Confirmation Methods Registration",
    "paragraphs": [
     {
-     "id": "12.6-1",
+     "id": "12.6-66282201",
      "kind": "p",
      "en": "IANA has registered the following JWT cnf member value in the \"JWT Confirmation Methods\" registry [IANA.JWT] established by [RFC7800]."
     },
     {
-     "id": "12.6-2",
+     "id": "12.6-0d7eb5cf",
      "kind": "p",
      "en": "Confirmation Method Value:  jkt"
     },
     {
-     "id": "12.6-3",
+     "id": "12.6-057e22c5",
      "kind": "p",
      "en": "Confirmation Method Description:  JWK SHA-256 Thumbprint"
     },
     {
-     "id": "12.6-4",
+     "id": "12.6-3bba4a3e",
      "kind": "p",
      "en": "Change Controller:  IETF"
     },
     {
-     "id": "12.6-5",
+     "id": "12.6-e8c7a326",
      "kind": "p",
      "en": "Reference:  Section 6 of RFC 9449"
     }
@@ -1637,84 +1727,84 @@
    "title": "JSON Web Token Claims Registration",
    "paragraphs": [
     {
-     "id": "12.7-1",
+     "id": "12.7-721544bf",
      "kind": "p",
      "en": "IANA has registered the following Claims in the \"JSON Web Token Claims\" registry [IANA.JWT] established by [RFC7519]."
     },
     {
-     "id": "12.7-2",
+     "id": "12.7-85a6ef22",
      "kind": "p",
      "en": "HTTP method:"
     },
     {
-     "id": "12.7-3",
-     "kind": "p",
-     "en": "Claim Name:  htm"
+     "id": "12.7-c2d1bcf7",
+     "kind": "pre",
+     "en": "      Claim Name:  htm"
     },
     {
-     "id": "12.7-4",
-     "kind": "p",
-     "en": "Claim Description:  The HTTP method of the request"
+     "id": "12.7-9d1a07dd",
+     "kind": "pre",
+     "en": "      Claim Description:  The HTTP method of the request"
     },
     {
-     "id": "12.7-5",
-     "kind": "p",
-     "en": "Change Controller:  IETF"
+     "id": "12.7-3bba4a3e",
+     "kind": "pre",
+     "en": "      Change Controller:  IETF"
     },
     {
-     "id": "12.7-6",
-     "kind": "p",
-     "en": "Reference:  Section 4.2 of RFC 9449"
+     "id": "12.7-8a44365f",
+     "kind": "pre",
+     "en": "      Reference:  Section 4.2 of RFC 9449"
     },
     {
-     "id": "12.7-7",
+     "id": "12.7-211eb142",
      "kind": "p",
      "en": "HTTP URI:"
     },
     {
-     "id": "12.7-8",
-     "kind": "p",
-     "en": "Claim Name:  htu"
-    },
-    {
-     "id": "12.7-9",
+     "id": "12.7-d829fe9b",
      "kind": "pre",
-     "en": "      Claim Description:  The HTTP URI of the request (without query and\n         fragment parts)"
+     "en": "      Claim Name:  htu"
     },
     {
-     "id": "12.7-10",
+     "id": "12.7-6b234386",
      "kind": "p",
-     "en": "Change Controller:  IETF"
+     "en": "Claim Description:  The HTTP URI of the request (without query and fragment parts)"
     },
     {
-     "id": "12.7-11",
-     "kind": "p",
-     "en": "Reference:  Section 4.2 of RFC 9449"
+     "id": "12.7-3bba4a3e",
+     "kind": "pre",
+     "en": "      Change Controller:  IETF"
     },
     {
-     "id": "12.7-12",
+     "id": "12.7-8a44365f",
+     "kind": "pre",
+     "en": "      Reference:  Section 4.2 of RFC 9449"
+    },
+    {
+     "id": "12.7-eaa7ea09",
      "kind": "p",
      "en": "Access token hash:"
     },
     {
-     "id": "12.7-13",
-     "kind": "p",
-     "en": "Claim Name:  ath"
-    },
-    {
-     "id": "12.7-14",
+     "id": "12.7-32babf9f",
      "kind": "pre",
-     "en": "      Claim Description:  The base64url-encoded SHA-256 hash of the\n         ASCII encoding of the associated access token's value"
+     "en": "      Claim Name:  ath"
     },
     {
-     "id": "12.7-15",
+     "id": "12.7-2ca8a845",
      "kind": "p",
-     "en": "Change Controller:  IETF"
+     "en": "Claim Description:  The base64url-encoded SHA-256 hash of the ASCII encoding of the associated access token's value"
     },
     {
-     "id": "12.7-16",
-     "kind": "p",
-     "en": "Reference:  Section 4.2 of RFC 9449"
+     "id": "12.7-3bba4a3e",
+     "kind": "pre",
+     "en": "      Change Controller:  IETF"
+    },
+    {
+     "id": "12.7-8a44365f",
+     "kind": "pre",
+     "en": "      Reference:  Section 4.2 of RFC 9449"
     }
    ]
   },
@@ -1723,37 +1813,37 @@
    "title": "\"nonce\" Registration Update",
    "paragraphs": [
     {
-     "id": "12.7.1-1",
+     "id": "12.7.1-4e7a7ca1",
      "kind": "p",
      "en": "The Internet Security Glossary [RFC4949] provides a useful definition of nonce as a random or non-repeating value that is included in data exchanged by a protocol, usually for the purpose of guaranteeing liveness and thus detecting and protecting against replay attacks."
     },
     {
-     "id": "12.7.1-2",
+     "id": "12.7.1-c75d4c9b",
      "kind": "p",
      "en": "However, the initial registration of the nonce claim by [OpenID.Core] used language that was contextually specific to that application, which was potentially limiting to its general applicability."
     },
     {
-     "id": "12.7.1-3",
+     "id": "12.7.1-015d6712",
      "kind": "p",
      "en": "Therefore, IANA has updated the entry for nonce in the \"JSON Web Token Claims\" registry [IANA.JWT] with an expanded definition to reflect that the claim can be used appropriately in other contexts and with the addition of this document as a reference, as follows."
     },
     {
-     "id": "12.7.1-4",
+     "id": "12.7.1-b64f4444",
      "kind": "p",
      "en": "Claim Name:  nonce"
     },
     {
-     "id": "12.7.1-5",
+     "id": "12.7.1-5ed2520b",
      "kind": "p",
      "en": "Claim Description:  Value used to associate a Client session with an ID Token (MAY also be used for nonce values in other applications of JWTs)"
     },
     {
-     "id": "12.7.1-6",
+     "id": "12.7.1-023a04bb",
      "kind": "p",
      "en": "Change Controller:  OpenID Foundation Artifact Binding Working Group, openid-specs-ab@lists.openid.net"
     },
     {
-     "id": "12.7.1-7",
+     "id": "12.7.1-f8ea4aa6",
      "kind": "p",
      "en": "Specification Document(s):  Section 2 of [OpenID.Core] and RFC 9449"
     }
@@ -1764,49 +1854,49 @@
    "title": "Hypertext Transfer Protocol (HTTP) Field Name Registration",
    "paragraphs": [
     {
-     "id": "12.8-1",
+     "id": "12.8-4aec5b52",
      "kind": "p",
      "en": "IANA has registered the following HTTP header fields, as specified by this document, in the \"Hypertext Transfer Protocol (HTTP) Field Name Registry\" [IANA.HTTP.Fields] established by [RFC9110]:"
     },
     {
-     "id": "12.8-2",
-     "kind": "p",
-     "en": "DPoP:"
+     "id": "12.8-7359edee",
+     "kind": "pre",
+     "en": "   DPoP:"
     },
     {
-     "id": "12.8-3",
-     "kind": "p",
-     "en": "Field Name:  DPoP"
+     "id": "12.8-69317793",
+     "kind": "pre",
+     "en": "      Field Name:  DPoP"
     },
     {
-     "id": "12.8-4",
-     "kind": "p",
-     "en": "Status:  permanent"
+     "id": "12.8-bdc1cc2e",
+     "kind": "pre",
+     "en": "      Status:  permanent"
     },
     {
-     "id": "12.8-5",
-     "kind": "p",
-     "en": "Reference:  RFC 9449"
+     "id": "12.8-29e275b5",
+     "kind": "pre",
+     "en": "      Reference:  RFC 9449"
     },
     {
-     "id": "12.8-6",
+     "id": "12.8-3b016d21",
      "kind": "p",
      "en": "DPoP-Nonce:"
     },
     {
-     "id": "12.8-7",
-     "kind": "p",
-     "en": "Field Name:  DPoP-Nonce"
+     "id": "12.8-7d5895e1",
+     "kind": "pre",
+     "en": "      Field Name:  DPoP-Nonce"
     },
     {
-     "id": "12.8-8",
-     "kind": "p",
-     "en": "Status:  permanent"
+     "id": "12.8-bdc1cc2e",
+     "kind": "pre",
+     "en": "      Status:  permanent"
     },
     {
-     "id": "12.8-9",
-     "kind": "p",
-     "en": "Reference:  RFC 9449"
+     "id": "12.8-29e275b5",
+     "kind": "pre",
+     "en": "      Reference:  RFC 9449"
     }
    ]
   },
@@ -1815,27 +1905,27 @@
    "title": "OAuth Authorization Server Metadata Registration",
    "paragraphs": [
     {
-     "id": "12.9-1",
+     "id": "12.9-631fee5d",
      "kind": "p",
      "en": "IANA has registered the following value in the \"OAuth Authorization Server Metadata\" registry [IANA.OAuth.Params] established by [RFC8414]."
     },
     {
-     "id": "12.9-2",
+     "id": "12.9-d7fefa4f",
      "kind": "p",
      "en": "Metadata Name:  dpop_signing_alg_values_supported"
     },
     {
-     "id": "12.9-3",
+     "id": "12.9-3b645662",
      "kind": "p",
      "en": "Metadata Description:  JSON array containing a list of the JWS algorithms supported for DPoP proof JWTs"
     },
     {
-     "id": "12.9-4",
+     "id": "12.9-3bba4a3e",
      "kind": "p",
      "en": "Change Controller:  IETF"
     },
     {
-     "id": "12.9-5",
+     "id": "12.9-8323fb4e",
      "kind": "p",
      "en": "Reference:  Section 5.1 of RFC 9449"
     }
@@ -1846,27 +1936,27 @@
    "title": "OAuth Dynamic Client Registration Metadata",
    "paragraphs": [
     {
-     "id": "12.10-1",
+     "id": "12.10-c4c6e1cf",
      "kind": "p",
      "en": "IANA has registered the following value in the IANA \"OAuth Dynamic Client Registration Metadata\" registry [IANA.OAuth.Params] established by [RFC7591]."
     },
     {
-     "id": "12.10-2",
+     "id": "12.10-53ae94d0",
      "kind": "p",
      "en": "Client Metadata Name:  dpop_bound_access_tokens"
     },
     {
-     "id": "12.10-3",
+     "id": "12.10-52a92c6c",
      "kind": "p",
      "en": "Client Metadata Description:  Boolean value specifying whether the client always uses DPoP for token requests"
     },
     {
-     "id": "12.10-4",
+     "id": "12.10-3bba4a3e",
      "kind": "p",
      "en": "Change Controller:  IETF"
     },
     {
-     "id": "12.10-5",
+     "id": "12.10-1b1b2684",
      "kind": "p",
      "en": "Reference:  Section 5.2 of RFC 9449"
     }
@@ -1882,67 +1972,67 @@
    "title": "Normative References",
    "paragraphs": [
     {
-     "id": "13.1-1",
+     "id": "13.1-e7633541",
      "kind": "pre",
      "en": "   [RFC2119]  Bradner, S., \"Key words for use in RFCs to Indicate\n              Requirement Levels\", BCP 14, RFC 2119,\n              DOI 10.17487/RFC2119, March 1997,\n              <https://www.rfc-editor.org/info/rfc2119>."
     },
     {
-     "id": "13.1-2",
+     "id": "13.1-ba2cf2e7",
      "kind": "pre",
      "en": "   [RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, \"Uniform\n              Resource Identifier (URI): Generic Syntax\", STD 66,\n              RFC 3986, DOI 10.17487/RFC3986, January 2005,\n              <https://www.rfc-editor.org/info/rfc3986>."
     },
     {
-     "id": "13.1-3",
+     "id": "13.1-aec0b3fa",
      "kind": "pre",
      "en": "   [RFC5234]  Crocker, D., Ed. and P. Overell, \"Augmented BNF for Syntax\n              Specifications: ABNF\", STD 68, RFC 5234,\n              DOI 10.17487/RFC5234, January 2008,\n              <https://www.rfc-editor.org/info/rfc5234>."
     },
     {
-     "id": "13.1-4",
+     "id": "13.1-0cdafced",
      "kind": "pre",
      "en": "   [RFC6125]  Saint-Andre, P. and J. Hodges, \"Representation and\n              Verification of Domain-Based Application Service Identity\n              within Internet Public Key Infrastructure Using X.509\n              (PKIX) Certificates in the Context of Transport Layer\n              Security (TLS)\", RFC 6125, DOI 10.17487/RFC6125, March\n              2011, <https://www.rfc-editor.org/info/rfc6125>."
     },
     {
-     "id": "13.1-5",
+     "id": "13.1-3daaaf2d",
      "kind": "pre",
      "en": "   [RFC6749]  Hardt, D., Ed., \"The OAuth 2.0 Authorization Framework\",\n              RFC 6749, DOI 10.17487/RFC6749, October 2012,\n              <https://www.rfc-editor.org/info/rfc6749>."
     },
     {
-     "id": "13.1-6",
+     "id": "13.1-ba301490",
      "kind": "pre",
      "en": "   [RFC6750]  Jones, M. and D. Hardt, \"The OAuth 2.0 Authorization\n              Framework: Bearer Token Usage\", RFC 6750,\n              DOI 10.17487/RFC6750, October 2012,\n              <https://www.rfc-editor.org/info/rfc6750>."
     },
     {
-     "id": "13.1-7",
+     "id": "13.1-1fa64e07",
      "kind": "pre",
      "en": "   [RFC7515]  Jones, M., Bradley, J., and N. Sakimura, \"JSON Web\n              Signature (JWS)\", RFC 7515, DOI 10.17487/RFC7515, May\n              2015, <https://www.rfc-editor.org/info/rfc7515>."
     },
     {
-     "id": "13.1-8",
+     "id": "13.1-2b3b92c3",
      "kind": "pre",
      "en": "   [RFC7517]  Jones, M., \"JSON Web Key (JWK)\", RFC 7517,\n              DOI 10.17487/RFC7517, May 2015,\n              <https://www.rfc-editor.org/info/rfc7517>."
     },
     {
-     "id": "13.1-9",
+     "id": "13.1-8340fbd5",
      "kind": "pre",
      "en": "   [RFC7519]  Jones, M., Bradley, J., and N. Sakimura, \"JSON Web Token\n              (JWT)\", RFC 7519, DOI 10.17487/RFC7519, May 2015,\n              <https://www.rfc-editor.org/info/rfc7519>."
     },
     {
-     "id": "13.1-10",
+     "id": "13.1-c9b3bbde",
      "kind": "pre",
      "en": "   [RFC7638]  Jones, M. and N. Sakimura, \"JSON Web Key (JWK)\n              Thumbprint\", RFC 7638, DOI 10.17487/RFC7638, September\n              2015, <https://www.rfc-editor.org/info/rfc7638>."
     },
     {
-     "id": "13.1-11",
+     "id": "13.1-465b8a68",
      "kind": "pre",
      "en": "   [RFC7800]  Jones, M., Bradley, J., and H. Tschofenig, \"Proof-of-\n              Possession Key Semantics for JSON Web Tokens (JWTs)\",\n              RFC 7800, DOI 10.17487/RFC7800, April 2016,\n              <https://www.rfc-editor.org/info/rfc7800>."
     },
     {
-     "id": "13.1-12",
+     "id": "13.1-414ea991",
      "kind": "pre",
      "en": "   [RFC8174]  Leiba, B., \"Ambiguity of Uppercase vs Lowercase in RFC\n              2119 Key Words\", BCP 14, RFC 8174, DOI 10.17487/RFC8174,\n              May 2017, <https://www.rfc-editor.org/info/rfc8174>."
     },
     {
-     "id": "13.1-13",
+     "id": "13.1-eff270fe",
      "kind": "pre",
      "en": "   [SHS]      National Institute of Standards and Technology, \"Secure\n              Hash Standard (SHS)\", FIPS PUB 180-4,\n              DOI 10.6028/NIST.FIPS.180-4, August 2015,\n              <http://dx.doi.org/10.6028/NIST.FIPS.180-4>."
     }
@@ -1953,164 +2043,164 @@
    "title": "Informative References",
    "paragraphs": [
     {
-     "id": "13.2-1",
+     "id": "13.2-965b6226",
      "kind": "pre",
      "en": "   [BREACH]   CVE, \"CVE-2013-3587\", <https://cve.mitre.org/cgi-bin/\n              cvename.cgi?name=CVE-2013-3587>."
     },
     {
-     "id": "13.2-2",
+     "id": "13.2-09ad78e1",
      "kind": "pre",
      "en": "   [Cloudbleed]\n              Graham-Cumming, J., \"Incident report on memory leak caused\n              by Cloudflare parser bug\", February 2017,\n              <https://blog.cloudflare.com/incident-report-on-memory-\n              leak-caused-by-cloudflare-parser-bug/>."
     },
     {
-     "id": "13.2-3",
+     "id": "13.2-ccb16afb",
      "kind": "pre",
      "en": "   [CRIME]    CVE, \"CVE-2012-4929\", <https://cve.mitre.org/cgi-bin/\n              cvename.cgi?name=cve-2012-4929>."
     },
     {
-     "id": "13.2-4",
-     "kind": "pre",
-     "en": "   [GitHub.Tokens]\n              Hanley, M., \"Security alert: Attack campaign involving\n              stolen OAuth user tokens issued to two third-party\n              integrators\", April 2022, <https://github.blog/2022-04-15-\n              security-alert-stolen-oauth-user-tokens/>."
+     "id": "13.2-6bc8b07e",
+     "kind": "p",
+     "en": "[GitHub.Tokens] Hanley, M., \"Security alert: Attack campaign involving stolen OAuth user tokens issued to two third-party integrators\", April 2022, <https://github.blog/2022-04-15- security-alert-stolen-oauth-user-tokens/>."
     },
     {
-     "id": "13.2-5",
-     "kind": "pre",
-     "en": "   [Heartbleed]\n              \"CVE-2014-0160\", <https://cve.mitre.org/cgi-bin/\n              cvename.cgi?name=cve-2014-0160>."
+     "id": "13.2-25484fb1",
+     "kind": "p",
+     "en": "[Heartbleed] \"CVE-2014-0160\", <https://cve.mitre.org/cgi-bin/ cvename.cgi?name=cve-2014-0160>."
     },
     {
-     "id": "13.2-6",
+     "id": "13.2-ea569074",
      "kind": "pre",
      "en": "   [IANA.HTTP.AuthSchemes]\n              IANA, \"Hypertext Transfer Protocol (HTTP) Authentication\n              Scheme Registry\",\n              <https://www.iana.org/assignments/http-authschemes/>."
     },
     {
-     "id": "13.2-7",
+     "id": "13.2-21e23aaf",
      "kind": "pre",
      "en": "   [IANA.HTTP.Fields]\n              IANA, \"Hypertext Transfer Protocol (HTTP) Field Name\n              Registry\",\n              <https://www.iana.org/assignments/http-fields/>."
     },
     {
-     "id": "13.2-8",
-     "kind": "pre",
-     "en": "   [IANA.JOSE.ALGS]\n              IANA, \"JSON Web Signature and Encryption Algorithms\",\n              <https://www.iana.org/assignments/jose/>."
+     "id": "13.2-b12273ab",
+     "kind": "p",
+     "en": "[IANA.JOSE.ALGS] IANA, \"JSON Web Signature and Encryption Algorithms\", <https://www.iana.org/assignments/jose/>."
     },
     {
-     "id": "13.2-9",
+     "id": "13.2-db3d6024",
      "kind": "pre",
      "en": "   [IANA.JWT] IANA, \"JSON Web Token Claims\",\n              <https://www.iana.org/assignments/jwt/>."
     },
     {
-     "id": "13.2-10",
+     "id": "13.2-22d60b46",
      "kind": "pre",
      "en": "   [IANA.MediaTypes]\n              IANA, \"Media Types\",\n              <https://www.iana.org/assignments/media-types/>."
     },
     {
-     "id": "13.2-11",
+     "id": "13.2-59cb82a8",
      "kind": "pre",
      "en": "   [IANA.OAuth.Params]\n              IANA, \"OAuth Parameters\",\n              <https://www.iana.org/assignments/oauth-parameters/>."
     },
     {
-     "id": "13.2-12",
+     "id": "13.2-8cf8a80c",
      "kind": "pre",
      "en": "   [OpenID.Core]\n              Sakimura, N., Bradley, J., Jones, M., de Medeiros, B., and\n              C. Mortimore, \"OpenID Connect Core 1.0 incorporating\n              errata set 1\", November 2014,\n              <https://openid.net/specs/openid-connect-core-1_0.html>."
     },
     {
-     "id": "13.2-13",
+     "id": "13.2-0a08cc51",
      "kind": "pre",
      "en": "   [RFC2046]  Freed, N. and N. Borenstein, \"Multipurpose Internet Mail\n              Extensions (MIME) Part Two: Media Types\", RFC 2046,\n              DOI 10.17487/RFC2046, November 1996,\n              <https://www.rfc-editor.org/info/rfc2046>."
     },
     {
-     "id": "13.2-14",
+     "id": "13.2-6fb801ed",
      "kind": "pre",
      "en": "   [RFC4122]  Leach, P., Mealling, M., and R. Salz, \"A Universally\n              Unique IDentifier (UUID) URN Namespace\", RFC 4122,\n              DOI 10.17487/RFC4122, July 2005,\n              <https://www.rfc-editor.org/info/rfc4122>."
     },
     {
-     "id": "13.2-15",
+     "id": "13.2-5bae2a12",
      "kind": "pre",
      "en": "   [RFC4949]  Shirey, R., \"Internet Security Glossary, Version 2\",\n              FYI 36, RFC 4949, DOI 10.17487/RFC4949, August 2007,\n              <https://www.rfc-editor.org/info/rfc4949>."
     },
     {
-     "id": "13.2-16",
+     "id": "13.2-9adbd9b0",
      "kind": "pre",
      "en": "   [RFC6838]  Freed, N., Klensin, J., and T. Hansen, \"Media Type\n              Specifications and Registration Procedures\", BCP 13,\n              RFC 6838, DOI 10.17487/RFC6838, January 2013,\n              <https://www.rfc-editor.org/info/rfc6838>."
     },
     {
-     "id": "13.2-17",
+     "id": "13.2-6a26b64b",
      "kind": "pre",
      "en": "   [RFC7523]  Jones, M., Campbell, B., and C. Mortimore, \"JSON Web Token\n              (JWT) Profile for OAuth 2.0 Client Authentication and\n              Authorization Grants\", RFC 7523, DOI 10.17487/RFC7523, May\n              2015, <https://www.rfc-editor.org/info/rfc7523>."
     },
     {
-     "id": "13.2-18",
+     "id": "13.2-c4f40aa7",
      "kind": "pre",
      "en": "   [RFC7591]  Richer, J., Ed., Jones, M., Bradley, J., Machulak, M., and\n              P. Hunt, \"OAuth 2.0 Dynamic Client Registration Protocol\",\n              RFC 7591, DOI 10.17487/RFC7591, July 2015,\n              <https://www.rfc-editor.org/info/rfc7591>."
     },
     {
-     "id": "13.2-19",
+     "id": "13.2-74dfe9b7",
      "kind": "pre",
      "en": "   [RFC7636]  Sakimura, N., Ed., Bradley, J., and N. Agarwal, \"Proof Key\n              for Code Exchange by OAuth Public Clients\", RFC 7636,\n              DOI 10.17487/RFC7636, September 2015,\n              <https://www.rfc-editor.org/info/rfc7636>."
     },
     {
-     "id": "13.2-20",
+     "id": "13.2-9f4dc0ec",
      "kind": "pre",
      "en": "   [RFC7662]  Richer, J., Ed., \"OAuth 2.0 Token Introspection\",\n              RFC 7662, DOI 10.17487/RFC7662, October 2015,\n              <https://www.rfc-editor.org/info/rfc7662>."
     },
     {
-     "id": "13.2-21",
+     "id": "13.2-4523dd96",
      "kind": "pre",
      "en": "   [RFC8414]  Jones, M., Sakimura, N., and J. Bradley, \"OAuth 2.0\n              Authorization Server Metadata\", RFC 8414,\n              DOI 10.17487/RFC8414, June 2018,\n              <https://www.rfc-editor.org/info/rfc8414>."
     },
     {
-     "id": "13.2-22",
+     "id": "13.2-48b8d7ff",
      "kind": "pre",
      "en": "   [RFC8705]  Campbell, B., Bradley, J., Sakimura, N., and T.\n              Lodderstedt, \"OAuth 2.0 Mutual-TLS Client Authentication\n              and Certificate-Bound Access Tokens\", RFC 8705,\n              DOI 10.17487/RFC8705, February 2020,\n              <https://www.rfc-editor.org/info/rfc8705>."
     },
     {
-     "id": "13.2-23",
+     "id": "13.2-b6c9e70a",
      "kind": "pre",
      "en": "   [RFC8707]  Campbell, B., Bradley, J., and H. Tschofenig, \"Resource\n              Indicators for OAuth 2.0\", RFC 8707, DOI 10.17487/RFC8707,\n              February 2020, <https://www.rfc-editor.org/info/rfc8707>."
     },
     {
-     "id": "13.2-24",
+     "id": "13.2-19e87480",
      "kind": "pre",
      "en": "   [RFC8725]  Sheffer, Y., Hardt, D., and M. Jones, \"JSON Web Token Best\n              Current Practices\", BCP 225, RFC 8725,\n              DOI 10.17487/RFC8725, February 2020,\n              <https://www.rfc-editor.org/info/rfc8725>."
     },
     {
-     "id": "13.2-25",
+     "id": "13.2-16270b54",
      "kind": "pre",
      "en": "   [RFC8792]  Watsen, K., Auerswald, E., Farrel, A., and Q. Wu,\n              \"Handling Long Lines in Content of Internet-Drafts and\n              RFCs\", RFC 8792, DOI 10.17487/RFC8792, June 2020,\n              <https://www.rfc-editor.org/info/rfc8792>."
     },
     {
-     "id": "13.2-26",
+     "id": "13.2-3f50afcc",
      "kind": "pre",
      "en": "   [RFC9110]  Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,\n              Ed., \"HTTP Semantics\", STD 97, RFC 9110,\n              DOI 10.17487/RFC9110, June 2022,\n              <https://www.rfc-editor.org/info/rfc9110>."
     },
     {
-     "id": "13.2-27",
+     "id": "13.2-a1add09e",
      "kind": "pre",
      "en": "   [RFC9126]  Lodderstedt, T., Campbell, B., Sakimura, N., Tonge, D.,\n              and F. Skokan, \"OAuth 2.0 Pushed Authorization Requests\",\n              RFC 9126, DOI 10.17487/RFC9126, September 2021,\n              <https://www.rfc-editor.org/info/rfc9126>."
     },
     {
-     "id": "13.2-28",
+     "id": "13.2-b5395ddf",
      "kind": "pre",
      "en": "   [SECURITY-TOPICS]\n              Lodderstedt, T., Bradley, J., Labunets, A., and D. Fett,\n              \"OAuth 2.0 Security Best Current Practice\", Work in\n              Progress, Internet-Draft, draft-ietf-oauth-security-\n              topics-23, 5 June 2023,\n              <https://datatracker.ietf.org/doc/html/draft-ietf-oauth-\n              security-topics-23>."
     },
     {
-     "id": "13.2-29",
+     "id": "13.2-ea7371e5",
      "kind": "pre",
      "en": "   [TOKEN-BINDING]\n              Jones, M., Campbell, B., Bradley, J., and W. Denniss,\n              \"OAuth 2.0 Token Binding\", Work in Progress, Internet-\n              Draft, draft-ietf-oauth-token-binding-08, 19 October 2018,\n              <https://datatracker.ietf.org/doc/html/draft-ietf-oauth-\n              token-binding-08>."
     },
     {
-     "id": "13.2-30",
+     "id": "13.2-552ff695",
      "kind": "pre",
      "en": "   [W3C.CSP]  West, M., \"Content Security Policy Level 3\", W3C Working\n              Draft, July 2023, <https://www.w3.org/TR/CSP3/>."
     },
     {
-     "id": "13.2-31",
+     "id": "13.2-390c87d4",
      "kind": "pre",
      "en": "   [W3C.WebCryptoAPI]\n              Watson, M., \"Web Cryptography API\", W3C Recommendation,\n              January 2017,\n              <https://www.w3.org/TR/2017/REC-WebCryptoAPI-20170126>."
     },
     {
-     "id": "13.2-32",
-     "kind": "pre",
-     "en": "   [WHATWG.Fetch]\n              WHATWG, \"Fetch Living Standard\", July 2023,\n              <https://fetch.spec.whatwg.org/>."
+     "id": "13.2-f39b7d76",
+     "kind": "p",
+     "en": "[WHATWG.Fetch] WHATWG, \"Fetch Living Standard\", July 2023, <https://fetch.spec.whatwg.org/>."
     }
    ]
   },
@@ -2119,17 +2209,17 @@
    "title": "Acknowledgements",
    "paragraphs": [
     {
-     "id": "acknowledgements-1",
+     "id": "acknowledgements-7bca20df",
      "kind": "p",
      "en": "We would like to thank Brock Allen, Annabelle Backman, Dominick Baier, Spencer Balogh, Vittorio Bertocci, Jeff Corrigan, Domingos Creado, Philippe De Ryck, Andrii Deinega, William Denniss, Vladimir Dzhuvinov, Mike Engan, Nikos Fotiou, Mark Haine, Dick Hardt, Joseph Heenan, Bjorn Hjelm, Jacob Ideskog, Jared Jennings, Benjamin Kaduk, Pieter Kasselman, Neil Madden, Rohan Mahy, Karsten Meyer zu Selhausen, Nicolas Mora, Steinar Noem, Mark Nottingham, Rob Otto, Aaron Parecki, Michael Peck, Roberto Polli, Paul Querna, Justin Richer, Joseph Salowey, Rifaat Shekh-Yusef, Filip Skokan, Dmitry Telegin, Dave Tonge, Jim Willeke, and others for their valuable input, feedback, and general support of this work."
     },
     {
-     "id": "acknowledgements-2",
+     "id": "acknowledgements-959aa3df",
      "kind": "p",
      "en": "This document originated from discussions at the 4th OAuth Security Workshop in Stuttgart, Germany.  We thank the organizers of this workshop (Ralf Küsters and Guido Schmitz)."
     }
    ]
   }
  ],
- "content_hash": "86e6f934cc43c10a951ca730264a27549849d94ba4ef8b1080e4b8c6293ebc75"
+ "content_hash": "009dd3c1707acd0dcffa8264c75a93ce9e240c2b34df8635a360d76e7a549f56"
 }

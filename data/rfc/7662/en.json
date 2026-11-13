@@ -2,14 +2,14 @@
  "number": 7662,
  "title": "OAuth 2.0 Token Introspection",
  "url": "https://www.rfc-editor.org/rfc/rfc7662",
- "fetched_at": "2026-11-13T13:50:34+00:00",
+ "fetched_at": "2026-11-13T14:13:45+00:00",
  "sections": [
   {
    "id": "abstract",
    "title": "Abstract",
    "paragraphs": [
     {
-     "id": "abstract-1",
+     "id": "abstract-3d5c763e",
      "kind": "p",
      "en": "This specification defines a method for a protected resource to query an OAuth 2.0 authorization server to determine the active state of an OAuth 2.0 token and to determine meta-information about this token. OAuth 2.0 deployments can use this method to convey information about the authorization context of the token from the authorization server to the protected resource."
     }
@@ -20,19 +20,14 @@
    "title": "Introduction",
    "paragraphs": [
     {
-     "id": "1-1",
+     "id": "1-8086324c",
      "kind": "p",
      "en": "In OAuth 2.0 [RFC6749], the contents of tokens are opaque to clients. This means that the client does not need to know anything about the content or structure of the token itself, if there is any.  However, there is still a large amount of metadata that may be attached to a token, such as its current validity, approved scopes, and information about the context in which the token was issued.  These pieces of information are often vital to protected resources making authorization decisions based on the tokens being presented.  Since OAuth 2.0 does not define a protocol for the resource server to learn meta-information about a token that it has received from an authorization server, several different approaches have been developed to bridge this gap.  These include using structured token formats such as JWT [RFC7519] or proprietary inter-service communication mechanisms (such as shared databases and protected enterprise service buses) that convey token information."
     },
     {
-     "id": "1-2",
+     "id": "1-441272f9",
      "kind": "p",
-     "en": "This specification defines a protocol that allows authorized protected resources to query the authorization server to determine the set of metadata for a given token that was presented to them by an OAuth 2.0 client.  This metadata includes whether or not the token is currently active (or if it has expired or otherwise been revoked), what rights of access the token carries (usually conveyed through OAuth 2.0 scopes), and the authorization context in which the token was granted (including who authorized the token and which client it"
-    },
-    {
-     "id": "1-3",
-     "kind": "p",
-     "en": "was issued to).  Token introspection allows a protected resource to query this information regardless of whether or not it is carried in the token itself, allowing this method to be used along with or independently of structured token values.  Additionally, a protected resource can use the mechanism described in this specification to introspect the token in a particular authorization decision context and ascertain the relevant metadata about the token to make this authorization decision appropriately."
+     "en": "This specification defines a protocol that allows authorized protected resources to query the authorization server to determine the set of metadata for a given token that was presented to them by an OAuth 2.0 client.  This metadata includes whether or not the token is currently active (or if it has expired or otherwise been revoked), what rights of access the token carries (usually conveyed through OAuth 2.0 scopes), and the authorization context in which the token was granted (including who authorized the token and which client it was issued to).  Token introspection allows a protected resource to query this information regardless of whether or not it is carried in the token itself, allowing this method to be used along with or independently of structured token values.  Additionally, a protected resource can use the mechanism described in this specification to introspect the token in a particular authorization decision context and ascertain the relevant metadata about the token to make this authorization decision appropriately."
     }
    ]
   },
@@ -41,12 +36,12 @@
    "title": "Notational Conventions",
    "paragraphs": [
     {
-     "id": "1.1-1",
+     "id": "1.1-f7abb687",
      "kind": "p",
      "en": "The key words 'MUST', 'MUST NOT', 'REQUIRED', 'SHALL', 'SHALL NOT', 'SHOULD', 'SHOULD NOT', 'RECOMMENDED', 'NOT RECOMMENDED', 'MAY', and 'OPTIONAL' in this document are to be interpreted as described in [RFC2119]."
     },
     {
-     "id": "1.1-2",
+     "id": "1.1-51a29bd9",
      "kind": "p",
      "en": "Unless otherwise noted, all the protocol parameter names and values are case sensitive."
     }
@@ -57,27 +52,27 @@
    "title": "Terminology",
    "paragraphs": [
     {
-     "id": "1.2-1",
+     "id": "1.2-e74284ee",
      "kind": "p",
      "en": "This section defines the terminology used by this specification. This section is a normative portion of this specification, imposing requirements upon implementations."
     },
     {
-     "id": "1.2-2",
+     "id": "1.2-a21be804",
      "kind": "p",
      "en": "This specification uses the terms \"access token\", \"authorization endpoint\", \"authorization grant\", \"authorization server\", \"client\", \"client identifier\", \"protected resource\", \"refresh token\", \"resource owner\", \"resource server\", and \"token endpoint\" defined by OAuth 2.0 [RFC6749], and the terms \"claim names\" and \"claim values\" defined by JSON Web Token (JWT) [RFC7519]."
     },
     {
-     "id": "1.2-3",
+     "id": "1.2-093a21cc",
      "kind": "p",
      "en": "This specification defines the following terms:"
     },
     {
-     "id": "1.2-4",
+     "id": "1.2-e09c041b",
      "kind": "p",
      "en": "Token Introspection The act of inquiring about the current state of an OAuth 2.0 token through use of the network protocol defined in this document."
     },
     {
-     "id": "1.2-5",
+     "id": "1.2-dd1fb591",
      "kind": "p",
      "en": "Introspection Endpoint The OAuth 2.0 endpoint through which the token introspection operation is accomplished."
     }
@@ -88,17 +83,12 @@
    "title": "Introspection Endpoint",
    "paragraphs": [
     {
-     "id": "2-1",
+     "id": "2-281f4b4c",
      "kind": "p",
-     "en": "The introspection endpoint is an OAuth 2.0 endpoint that takes a parameter representing an OAuth 2.0 token and returns a JSON [RFC7159] document representing the meta information surrounding the token, including whether this token is currently active.  The"
+     "en": "The introspection endpoint is an OAuth 2.0 endpoint that takes a parameter representing an OAuth 2.0 token and returns a JSON [RFC7159] document representing the meta information surrounding the token, including whether this token is currently active.  The definition of an active token is dependent upon the authorization server, but this is commonly a token that has been issued by this authorization server, is not expired, has not been revoked, and is valid for use at the protected resource making the introspection call."
     },
     {
-     "id": "2-2",
-     "kind": "p",
-     "en": "definition of an active token is dependent upon the authorization server, but this is commonly a token that has been issued by this authorization server, is not expired, has not been revoked, and is valid for use at the protected resource making the introspection call."
-    },
-    {
-     "id": "2-3",
+     "id": "2-68618896",
      "kind": "p",
      "en": "The introspection endpoint MUST be protected by a transport-layer security mechanism as described in Section 4.  The means by which the protected resource discovers the location of the introspection endpoint are outside the scope of this specification."
     }
@@ -109,74 +99,69 @@
    "title": "Introspection Request",
    "paragraphs": [
     {
-     "id": "2.1-1",
-     "kind": "p",
-     "en": "The protected resource calls the introspection endpoint using an HTTP POST [RFC7231] request with parameters sent as \"application/x-www-form-urlencoded\" data as defined in [W3C.REC-html5-20141028].  The protected resource sends a parameter representing the token along with optional parameters representing additional context that is known by the protected resource to aid the authorization server in its response."
+     "id": "2.1-74fa41e8",
+     "kind": "pre",
+     "en": "   The protected resource calls the introspection endpoint using an HTTP\n   POST [RFC7231] request with parameters sent as\n   \"application/x-www-form-urlencoded\" data as defined in\n   [W3C.REC-html5-20141028].  The protected resource sends a parameter\n   representing the token along with optional parameters representing\n   additional context that is known by the protected resource to aid the\n   authorization server in its response."
     },
     {
-     "id": "2.1-2",
+     "id": "2.1-06c511c4",
      "kind": "p",
      "en": "token REQUIRED.  The string value of the token.  For access tokens, this is the \"access_token\" value returned from the token endpoint defined in OAuth 2.0 [RFC6749], Section 5.1.  For refresh tokens, this is the \"refresh_token\" value returned from the token endpoint as defined in OAuth 2.0 [RFC6749], Section 5.1.  Other token types are outside the scope of this specification."
     },
     {
-     "id": "2.1-3",
+     "id": "2.1-6a67209e",
      "kind": "p",
      "en": "token_type_hint OPTIONAL.  A hint about the type of the token submitted for introspection.  The protected resource MAY pass this parameter to help the authorization server optimize the token lookup.  If the server is unable to locate the token using the given hint, it MUST extend its search across all of its supported token types.  An authorization server MAY ignore this parameter, particularly if it is able to detect the token type automatically.  Values for this field are defined in the \"OAuth Token Type Hints\" registry defined in OAuth Token Revocation [RFC7009]."
     },
     {
-     "id": "2.1-4",
+     "id": "2.1-d378822c",
      "kind": "p",
-     "en": "The introspection endpoint MAY accept other OPTIONAL parameters to provide further context to the query.  For instance, an authorization server may desire to know the IP address of the client accessing the protected resource to determine if the correct client is likely to be presenting the token.  The definition of this or any other parameters are outside the scope of this specification, to be defined by service documentation or extensions to this specification.  If the authorization server is unable to determine the state of the token"
+     "en": "The introspection endpoint MAY accept other OPTIONAL parameters to provide further context to the query.  For instance, an authorization server may desire to know the IP address of the client accessing the protected resource to determine if the correct client is likely to be presenting the token.  The definition of this or any other parameters are outside the scope of this specification, to be defined by service documentation or extensions to this specification.  If the authorization server is unable to determine the state of the token without additional information, it SHOULD return an introspection response indicating the token is not active as described in Section 2.2."
     },
     {
-     "id": "2.1-5",
-     "kind": "p",
-     "en": "without additional information, it SHOULD return an introspection response indicating the token is not active as described in Section 2.2."
-    },
-    {
-     "id": "2.1-6",
+     "id": "2.1-dfc0b4aa",
      "kind": "p",
      "en": "To prevent token scanning attacks, the endpoint MUST also require some form of authorization to access this endpoint, such as client authentication as described in OAuth 2.0 [RFC6749] or a separate OAuth 2.0 access token such as the bearer token described in OAuth 2.0 Bearer Token Usage [RFC6750].  The methods of managing and validating these authentication credentials are out of scope of this specification."
     },
     {
-     "id": "2.1-7",
+     "id": "2.1-7717a615",
      "kind": "p",
      "en": "For example, the following shows a protected resource calling the token introspection endpoint to query about an OAuth 2.0 bearer token.  The protected resource is using a separate OAuth 2.0 bearer token to authorize this call."
     },
     {
-     "id": "2.1-8",
+     "id": "2.1-ed280d42",
      "kind": "p",
      "en": "The following is a non-normative example request:"
     },
     {
-     "id": "2.1-9",
-     "kind": "p",
-     "en": "POST /introspect HTTP/1.1 Host: server.example.com Accept: application/json Content-Type: application/x-www-form-urlencoded Authorization: Bearer 23410913-abewfq.123483"
+     "id": "2.1-db7f9d08",
+     "kind": "pre",
+     "en": "     POST /introspect HTTP/1.1\n     Host: server.example.com\n     Accept: application/json\n     Content-Type: application/x-www-form-urlencoded\n     Authorization: Bearer 23410913-abewfq.123483"
     },
     {
-     "id": "2.1-10",
-     "kind": "p",
-     "en": "token=2YotnFZFEjr1zCsicMWpAA"
+     "id": "2.1-7fa12638",
+     "kind": "pre",
+     "en": "     token=2YotnFZFEjr1zCsicMWpAA"
     },
     {
-     "id": "2.1-11",
+     "id": "2.1-8f6b16fc",
      "kind": "p",
      "en": "In this example, the protected resource uses a client identifier and client secret to authenticate itself to the introspection endpoint. The protected resource also sends a token type hint indicating that it is inquiring about an access token."
     },
     {
-     "id": "2.1-12",
+     "id": "2.1-ed280d42",
      "kind": "p",
      "en": "The following is a non-normative example request:"
     },
     {
-     "id": "2.1-13",
-     "kind": "p",
-     "en": "POST /introspect HTTP/1.1 Host: server.example.com Accept: application/json Content-Type: application/x-www-form-urlencoded Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW"
+     "id": "2.1-b28bbca9",
+     "kind": "pre",
+     "en": "     POST /introspect HTTP/1.1\n     Host: server.example.com\n     Accept: application/json\n     Content-Type: application/x-www-form-urlencoded\n     Authorization: Basic czZCaGRSa3F0MzpnWDFmQmF0M2JW"
     },
     {
-     "id": "2.1-14",
-     "kind": "p",
-     "en": "token=mF_9.B5f-4.1JqM&token_type_hint=access_token"
+     "id": "2.1-4bc52ae8",
+     "kind": "pre",
+     "en": "     token=mF_9.B5f-4.1JqM&token_type_hint=access_token"
     }
    ]
   },
@@ -185,122 +170,122 @@
    "title": "Introspection Response",
    "paragraphs": [
     {
-     "id": "2.2-1",
+     "id": "2.2-1fdbe1ea",
      "kind": "p",
      "en": "The server responds with a JSON object [RFC7159] in \"application/ json\" format with the following top-level members."
     },
     {
-     "id": "2.2-2",
+     "id": "2.2-fe4852a1",
      "kind": "p",
      "en": "active REQUIRED.  Boolean indicator of whether or not the presented token is currently active.  The specifics of a token's \"active\" state will vary depending on the implementation of the authorization server and the information it keeps about its tokens, but a \"true\" value return for the \"active\" property will generally indicate that a given token has been issued by this authorization server, has not been revoked by the resource owner, and is within its given time window of validity (e.g., after its issuance time and before its expiration time).  See Section 4 for information on implementation of such checks."
     },
     {
-     "id": "2.2-3",
+     "id": "2.2-7420f7df",
      "kind": "p",
      "en": "scope OPTIONAL.  A JSON string containing a space-separated list of scopes associated with this token, in the format described in Section 3.3 of OAuth 2.0 [RFC6749]."
     },
     {
-     "id": "2.2-4",
+     "id": "2.2-2439fa85",
      "kind": "p",
      "en": "client_id OPTIONAL.  Client identifier for the OAuth 2.0 client that requested this token."
     },
     {
-     "id": "2.2-5",
+     "id": "2.2-882a630f",
      "kind": "p",
      "en": "username OPTIONAL.  Human-readable identifier for the resource owner who authorized this token."
     },
     {
-     "id": "2.2-6",
+     "id": "2.2-0c25bd15",
      "kind": "p",
      "en": "token_type OPTIONAL.  Type of the token as defined in Section 5.1 of OAuth 2.0 [RFC6749]."
     },
     {
-     "id": "2.2-7",
+     "id": "2.2-fe08c56f",
      "kind": "p",
      "en": "exp OPTIONAL.  Integer timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token will expire, as defined in JWT [RFC7519]."
     },
     {
-     "id": "2.2-8",
+     "id": "2.2-e6151cb4",
      "kind": "p",
      "en": "iat OPTIONAL.  Integer timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token was originally issued, as defined in JWT [RFC7519]."
     },
     {
-     "id": "2.2-9",
+     "id": "2.2-1b753ea7",
      "kind": "p",
      "en": "nbf OPTIONAL.  Integer timestamp, measured in the number of seconds since January 1 1970 UTC, indicating when this token is not to be used before, as defined in JWT [RFC7519]."
     },
     {
-     "id": "2.2-10",
+     "id": "2.2-1a19a104",
      "kind": "p",
      "en": "sub OPTIONAL.  Subject of the token, as defined in JWT [RFC7519]. Usually a machine-readable identifier of the resource owner who authorized this token."
     },
     {
-     "id": "2.2-11",
+     "id": "2.2-ac39028d",
      "kind": "p",
      "en": "aud OPTIONAL.  Service-specific string identifier or list of string identifiers representing the intended audience for this token, as defined in JWT [RFC7519]."
     },
     {
-     "id": "2.2-12",
+     "id": "2.2-266d0346",
      "kind": "p",
      "en": "iss OPTIONAL.  String representing the issuer of this token, as defined in JWT [RFC7519]."
     },
     {
-     "id": "2.2-13",
+     "id": "2.2-2b1c421a",
      "kind": "p",
      "en": "jti OPTIONAL.  String identifier for the token, as defined in JWT [RFC7519]."
     },
     {
-     "id": "2.2-14",
+     "id": "2.2-f04bffec",
      "kind": "p",
      "en": "Specific implementations MAY extend this structure with their own service-specific response names as top-level members of this JSON object.  Response names intended to be used across domains MUST be registered in the \"OAuth Token Introspection Response\" registry defined in Section 3.1."
     },
     {
-     "id": "2.2-15",
+     "id": "2.2-2e7e3623",
      "kind": "p",
      "en": "The authorization server MAY respond differently to different protected resources making the same request.  For instance, an authorization server MAY limit which scopes from a given token are returned for each protected resource to prevent a protected resource from learning more about the larger network than is necessary for its operation."
     },
     {
-     "id": "2.2-16",
+     "id": "2.2-b47ffd66",
      "kind": "p",
      "en": "The response MAY be cached by the protected resource to improve performance and reduce load on the introspection endpoint, but at the cost of liveness of the information used by the protected resource to make authorization decisions.  See Section 4 for more information regarding the trade off when the response is cached."
     },
     {
-     "id": "2.2-17",
+     "id": "2.2-fea62ce3",
      "kind": "p",
      "en": "For example, the following response contains a set of information about an active token:"
     },
     {
-     "id": "2.2-18",
+     "id": "2.2-87d148fc",
      "kind": "p",
      "en": "The following is a non-normative example response:"
     },
     {
-     "id": "2.2-19",
-     "kind": "p",
-     "en": "HTTP/1.1 200 OK Content-Type: application/json"
+     "id": "2.2-68cafeeb",
+     "kind": "pre",
+     "en": "     HTTP/1.1 200 OK\n     Content-Type: application/json"
     },
     {
-     "id": "2.2-20",
+     "id": "2.2-44f7ece7",
      "kind": "pre",
      "en": "     {\n      \"active\": true,\n      \"client_id\": \"l238j323ds-23ij4\",\n      \"username\": \"jdoe\",\n      \"scope\": \"read write dolphin\",\n      \"sub\": \"Z5O3upPC88QrAjx00dis\",\n      \"aud\": \"https://protected.example.net/resource\",\n      \"iss\": \"https://server.example.com/\",\n      \"exp\": 1419356238,\n      \"iat\": 1419350238,\n      \"extension_field\": \"twenty-seven\"\n     }"
     },
     {
-     "id": "2.2-21",
+     "id": "2.2-10442457",
      "kind": "p",
      "en": "If the introspection call is properly authorized but the token is not active, does not exist on this server, or the protected resource is not allowed to introspect this particular token, then the authorization server MUST return an introspection response with the \"active\" field set to \"false\".  Note that to avoid disclosing too much of the authorization server's state to a third party, the authorization server SHOULD NOT include any additional information about an inactive token, including why the token is inactive."
     },
     {
-     "id": "2.2-22",
+     "id": "2.2-5b182315",
      "kind": "p",
      "en": "The following is a non-normative example response for a token that has been revoked or is otherwise invalid:"
     },
     {
-     "id": "2.2-23",
-     "kind": "p",
-     "en": "HTTP/1.1 200 OK Content-Type: application/json"
+     "id": "2.2-68cafeeb",
+     "kind": "pre",
+     "en": "     HTTP/1.1 200 OK\n     Content-Type: application/json"
     },
     {
-     "id": "2.2-24",
+     "id": "2.2-ec556624",
      "kind": "pre",
      "en": "     {\n      \"active\": false\n     }"
     }
@@ -311,17 +296,17 @@
    "title": "Error Response",
    "paragraphs": [
     {
-     "id": "2.3-1",
+     "id": "2.3-da208a44",
      "kind": "p",
      "en": "If the protected resource uses OAuth 2.0 client credentials to authenticate to the introspection endpoint and its credentials are invalid, the authorization server responds with an HTTP 401 (Unauthorized) as described in Section 5.2 of OAuth 2.0 [RFC6749]."
     },
     {
-     "id": "2.3-2",
+     "id": "2.3-7767b116",
      "kind": "p",
      "en": "If the protected resource uses an OAuth 2.0 bearer token to authorize its call to the introspection endpoint and the token used for authorization does not contain sufficient privileges or is otherwise invalid for this request, the authorization server responds with an HTTP 401 code as described in Section 3 of OAuth 2.0 Bearer Token Usage [RFC6750]."
     },
     {
-     "id": "2.3-3",
+     "id": "2.3-4f0e0310",
      "kind": "p",
      "en": "Note that a properly formed and authorized query for an inactive or otherwise invalid token (or a token the protected resource is not allowed to know about) is not considered an error response by this specification.  In these cases, the authorization server MUST instead respond with an introspection response with the \"active\" field set to \"false\" as described in Section 2.2."
     }
@@ -337,27 +322,27 @@
    "title": "OAuth Token Introspection Response Registry",
    "paragraphs": [
     {
-     "id": "3.1-1",
+     "id": "3.1-29f30a62",
      "kind": "p",
      "en": "This specification establishes the \"OAuth Token Introspection Response\" registry."
     },
     {
-     "id": "3.1-2",
+     "id": "3.1-466850e3",
      "kind": "p",
      "en": "OAuth registration client metadata names and descriptions are registered by Specification Required [RFC5226] after a two-week review period on the oauth-ext-review@ietf.org mailing list, on the advice of one or more Designated Experts.  However, to allow for the allocation of names prior to publication, the Designated Expert(s) may approve registration once they are satisfied that such a specification will be published."
     },
     {
-     "id": "3.1-3",
+     "id": "3.1-89b9bd15",
      "kind": "p",
      "en": "Registration requests sent to the mailing list for review should use an appropriate subject (e.g., \"Request to register OAuth Token Introspection Response name: example\")."
     },
     {
-     "id": "3.1-4",
+     "id": "3.1-578ae241",
      "kind": "p",
      "en": "Within the review period, the Designated Expert(s) will either approve or deny the registration request, communicating this decision to the review list and IANA.  Denials should include an explanation and, if applicable, suggestions as to how to make the request successful."
     },
     {
-     "id": "3.1-5",
+     "id": "3.1-bfeab927",
      "kind": "p",
      "en": "IANA must only accept registry updates from the Designated Expert(s) and should direct all requests for registration to the review mailing list."
     }
@@ -368,22 +353,22 @@
    "title": "Registration Template",
    "paragraphs": [
     {
-     "id": "3.1.1-1",
+     "id": "3.1.1-5a81ef47",
      "kind": "p",
      "en": "Name: The name requested (e.g., \"example\").  This name is case sensitive.  Names that match other registered names in a case insensitive manner SHOULD NOT be accepted.  Names that match claims registered in the \"JSON Web Token Claims\" registry established by [RFC7519] SHOULD have comparable definitions and semantics."
     },
     {
-     "id": "3.1.1-2",
+     "id": "3.1.1-82a567af",
      "kind": "p",
      "en": "Description: Brief description of the metadata value (e.g., \"Example description\")."
     },
     {
-     "id": "3.1.1-3",
+     "id": "3.1.1-db1ec3c2",
      "kind": "p",
      "en": "Change controller: For Standards Track RFCs, state \"IESG\".  For other documents, give the name of the responsible party.  Other details (e.g., postal address, email address, home page URI) may also be included."
     },
     {
-     "id": "3.1.1-4",
+     "id": "3.1.1-f7437b28",
      "kind": "p",
      "en": "Specification document(s): Reference to the document(s) that specify the token endpoint authorization method, preferably including a URI that can be used to retrieve a copy of the document(s).  An indication of the relevant sections may also be included but is not required."
     }
@@ -394,69 +379,249 @@
    "title": "Initial Registry Contents",
    "paragraphs": [
     {
-     "id": "3.1.2-1",
+     "id": "3.1.2-b42252d9",
      "kind": "p",
      "en": "The initial contents of the \"OAuth Token Introspection Response\" registry are as follows:"
     },
     {
-     "id": "3.1.2-2",
+     "id": "3.1.2-449c8fe8",
      "kind": "li",
-     "en": "o  Name: \"active\" o  Description: Token active status o  Change Controller: IESG o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+     "en": "o  Name: \"active\""
     },
     {
-     "id": "3.1.2-3",
+     "id": "3.1.2-056e79ee",
      "kind": "li",
-     "en": "o  Name: \"username\" o  Description: User identifier of the resource owner o  Change Controller: IESG o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+     "en": "o  Description: Token active status"
     },
     {
-     "id": "3.1.2-4",
+     "id": "3.1.2-e502c81a",
      "kind": "li",
-     "en": "o  Name: \"client_id\" o  Description: Client identifier of the client o  Change Controller: IESG o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+     "en": "o  Change Controller: IESG"
     },
     {
-     "id": "3.1.2-5",
+     "id": "3.1.2-0ec45880",
      "kind": "li",
-     "en": "o  Name: \"scope\" o  Description: Authorized scopes of the token o  Change Controller: IESG o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+     "en": "o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
     },
     {
-     "id": "3.1.2-6",
+     "id": "3.1.2-1259cf28",
      "kind": "li",
-     "en": "o  Name: \"token_type\" o  Description: Type of the token o  Change Controller: IESG o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+     "en": "o  Name: \"username\""
     },
     {
-     "id": "3.1.2-7",
+     "id": "3.1.2-865da0d1",
      "kind": "li",
-     "en": "o  Name: \"exp\" o  Description: Expiration timestamp of the token o  Change Controller: IESG o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+     "en": "o  Description: User identifier of the resource owner"
     },
     {
-     "id": "3.1.2-8",
+     "id": "3.1.2-e502c81a",
      "kind": "li",
-     "en": "o  Name: \"iat\" o  Description: Issuance timestamp of the token o  Change Controller: IESG o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+     "en": "o  Change Controller: IESG"
     },
     {
-     "id": "3.1.2-9",
+     "id": "3.1.2-0ec45880",
      "kind": "li",
-     "en": "o  Name: \"nbf\" o  Description: Timestamp before which the token is not valid o  Change Controller: IESG o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+     "en": "o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
     },
     {
-     "id": "3.1.2-10",
+     "id": "3.1.2-544928dc",
      "kind": "li",
-     "en": "o  Name: \"sub\" o  Description: Subject of the token o  Change Controller: IESG o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+     "en": "o  Name: \"client_id\""
     },
     {
-     "id": "3.1.2-11",
+     "id": "3.1.2-e00837e7",
      "kind": "li",
-     "en": "o  Name: \"aud\" o  Description: Audience of the token o  Change Controller: IESG o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+     "en": "o  Description: Client identifier of the client"
     },
     {
-     "id": "3.1.2-12",
+     "id": "3.1.2-e502c81a",
      "kind": "li",
-     "en": "o  Name: \"iss\" o  Description: Issuer of the token o  Change Controller: IESG o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+     "en": "o  Change Controller: IESG"
     },
     {
-     "id": "3.1.2-13",
+     "id": "3.1.2-0ec45880",
      "kind": "li",
-     "en": "o  Name: \"jti\" o  Description: Unique identifier of the token o  Change Controller: IESG o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+     "en": "o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+    },
+    {
+     "id": "3.1.2-ebc169e3",
+     "kind": "li",
+     "en": "o  Name: \"scope\""
+    },
+    {
+     "id": "3.1.2-28fe17b0",
+     "kind": "li",
+     "en": "o  Description: Authorized scopes of the token"
+    },
+    {
+     "id": "3.1.2-e502c81a",
+     "kind": "li",
+     "en": "o  Change Controller: IESG"
+    },
+    {
+     "id": "3.1.2-0ec45880",
+     "kind": "li",
+     "en": "o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+    },
+    {
+     "id": "3.1.2-d2221856",
+     "kind": "li",
+     "en": "o  Name: \"token_type\""
+    },
+    {
+     "id": "3.1.2-490807ae",
+     "kind": "li",
+     "en": "o  Description: Type of the token"
+    },
+    {
+     "id": "3.1.2-e502c81a",
+     "kind": "li",
+     "en": "o  Change Controller: IESG"
+    },
+    {
+     "id": "3.1.2-0ec45880",
+     "kind": "li",
+     "en": "o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+    },
+    {
+     "id": "3.1.2-4181029c",
+     "kind": "li",
+     "en": "o  Name: \"exp\""
+    },
+    {
+     "id": "3.1.2-6e73ca10",
+     "kind": "li",
+     "en": "o  Description: Expiration timestamp of the token"
+    },
+    {
+     "id": "3.1.2-e502c81a",
+     "kind": "li",
+     "en": "o  Change Controller: IESG"
+    },
+    {
+     "id": "3.1.2-0ec45880",
+     "kind": "li",
+     "en": "o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+    },
+    {
+     "id": "3.1.2-1568520d",
+     "kind": "li",
+     "en": "o  Name: \"iat\""
+    },
+    {
+     "id": "3.1.2-68f1b9cf",
+     "kind": "li",
+     "en": "o  Description: Issuance timestamp of the token"
+    },
+    {
+     "id": "3.1.2-e502c81a",
+     "kind": "li",
+     "en": "o  Change Controller: IESG"
+    },
+    {
+     "id": "3.1.2-0ec45880",
+     "kind": "li",
+     "en": "o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+    },
+    {
+     "id": "3.1.2-82e87649",
+     "kind": "li",
+     "en": "o  Name: \"nbf\""
+    },
+    {
+     "id": "3.1.2-a739b44b",
+     "kind": "li",
+     "en": "o  Description: Timestamp before which the token is not valid"
+    },
+    {
+     "id": "3.1.2-e502c81a",
+     "kind": "li",
+     "en": "o  Change Controller: IESG"
+    },
+    {
+     "id": "3.1.2-0ec45880",
+     "kind": "li",
+     "en": "o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+    },
+    {
+     "id": "3.1.2-2f5e72ff",
+     "kind": "li",
+     "en": "o  Name: \"sub\""
+    },
+    {
+     "id": "3.1.2-636fe38f",
+     "kind": "li",
+     "en": "o  Description: Subject of the token"
+    },
+    {
+     "id": "3.1.2-e502c81a",
+     "kind": "li",
+     "en": "o  Change Controller: IESG"
+    },
+    {
+     "id": "3.1.2-0ec45880",
+     "kind": "li",
+     "en": "o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+    },
+    {
+     "id": "3.1.2-2f10b08f",
+     "kind": "li",
+     "en": "o  Name: \"aud\""
+    },
+    {
+     "id": "3.1.2-c751aed5",
+     "kind": "li",
+     "en": "o  Description: Audience of the token"
+    },
+    {
+     "id": "3.1.2-e502c81a",
+     "kind": "li",
+     "en": "o  Change Controller: IESG"
+    },
+    {
+     "id": "3.1.2-0ec45880",
+     "kind": "li",
+     "en": "o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+    },
+    {
+     "id": "3.1.2-6093d13c",
+     "kind": "li",
+     "en": "o  Name: \"iss\""
+    },
+    {
+     "id": "3.1.2-6f782182",
+     "kind": "li",
+     "en": "o  Description: Issuer of the token"
+    },
+    {
+     "id": "3.1.2-e502c81a",
+     "kind": "li",
+     "en": "o  Change Controller: IESG"
+    },
+    {
+     "id": "3.1.2-0ec45880",
+     "kind": "li",
+     "en": "o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
+    },
+    {
+     "id": "3.1.2-0febd5f2",
+     "kind": "li",
+     "en": "o  Name: \"jti\""
+    },
+    {
+     "id": "3.1.2-6bfd7f5c",
+     "kind": "li",
+     "en": "o  Description: Unique identifier of the token"
+    },
+    {
+     "id": "3.1.2-e502c81a",
+     "kind": "li",
+     "en": "o  Change Controller: IESG"
+    },
+    {
+     "id": "3.1.2-0ec45880",
+     "kind": "li",
+     "en": "o  Specification Document(s): Section 2.2 of RFC 7662 (this document)."
     }
    ]
   },
@@ -465,57 +630,67 @@
    "title": "Security Considerations",
    "paragraphs": [
     {
-     "id": "4-1",
+     "id": "4-3b899386",
      "kind": "p",
      "en": "Since there are many different and valid ways to implement an OAuth 2.0 system, there are consequently many ways for an authorization server to determine whether or not a token is currently \"active\". However, since resource servers using token introspection rely on the authorization server to determine the state of a token, the authorization server MUST perform all applicable checks against a token's state.  For instance, these tests include the following:"
     },
     {
-     "id": "4-2",
+     "id": "4-6f19a41f",
      "kind": "li",
-     "en": "o  If the token can expire, the authorization server MUST determine whether or not the token has expired. o  If the token can be issued before it is able to be used, the authorization server MUST determine whether or not a token's valid period has started yet. o  If the token can be revoked after it was issued, the authorization server MUST determine whether or not such a revocation has taken place. o  If the token has been signed, the authorization server MUST validate the signature. o  If the token can be used only at certain resource servers, the authorization server MUST determine whether or not the token can be used at the resource server making the introspection call."
+     "en": "o  If the token can expire, the authorization server MUST determine whether or not the token has expired."
     },
     {
-     "id": "4-3",
+     "id": "4-6d374bee",
+     "kind": "li",
+     "en": "o  If the token can be issued before it is able to be used, the authorization server MUST determine whether or not a token's valid period has started yet."
+    },
+    {
+     "id": "4-21a54ad4",
+     "kind": "li",
+     "en": "o  If the token can be revoked after it was issued, the authorization server MUST determine whether or not such a revocation has taken place."
+    },
+    {
+     "id": "4-e5b47c58",
+     "kind": "li",
+     "en": "o  If the token has been signed, the authorization server MUST validate the signature."
+    },
+    {
+     "id": "4-afd75e00",
+     "kind": "li",
+     "en": "o  If the token can be used only at certain resource servers, the authorization server MUST determine whether or not the token can be used at the resource server making the introspection call."
+    },
+    {
+     "id": "4-59617c11",
      "kind": "p",
      "en": "If an authorization server fails to perform any applicable check, the resource server could make an erroneous security decision based on that response.  Note that not all of these checks will be applicable to all OAuth 2.0 deployments and it is up to the authorization server to determine which of these checks (and any other checks) apply."
     },
     {
-     "id": "4-4",
+     "id": "4-4990b9d3",
      "kind": "p",
-     "en": "If left unprotected and un-throttled, the introspection endpoint could present a means for an attacker to poll a series of possible token values, fishing for a valid token.  To prevent this, the authorization server MUST require authentication of protected resources that need to access the introspection endpoint and SHOULD require protected resources to be specifically authorized to call the introspection endpoint.  The specifics of such authentication credentials are out of scope of this specification, but commonly these credentials could take the form of any valid client authentication mechanism used with the token endpoint, an OAuth 2.0 access token, or other HTTP authorization or authentication mechanism.  A single piece of software acting as both a client and a"
+     "en": "If left unprotected and un-throttled, the introspection endpoint could present a means for an attacker to poll a series of possible token values, fishing for a valid token.  To prevent this, the authorization server MUST require authentication of protected resources that need to access the introspection endpoint and SHOULD require protected resources to be specifically authorized to call the introspection endpoint.  The specifics of such authentication credentials are out of scope of this specification, but commonly these credentials could take the form of any valid client authentication mechanism used with the token endpoint, an OAuth 2.0 access token, or other HTTP authorization or authentication mechanism.  A single piece of software acting as both a client and a protected resource MAY reuse the same credentials between the token endpoint and the introspection endpoint, though doing so potentially conflates the activities of the client and protected resource portions of the software and the authorization server MAY require separate credentials for each mode."
     },
     {
-     "id": "4-5",
-     "kind": "p",
-     "en": "protected resource MAY reuse the same credentials between the token endpoint and the introspection endpoint, though doing so potentially conflates the activities of the client and protected resource portions of the software and the authorization server MAY require separate credentials for each mode."
-    },
-    {
-     "id": "4-6",
+     "id": "4-e4d9d10d",
      "kind": "p",
      "en": "Since the introspection endpoint takes in OAuth 2.0 tokens as parameters and responds with information used to make authorization decisions, the server MUST support Transport Layer Security (TLS) 1.2 [RFC5246] and MAY support additional transport-layer mechanisms meeting its security requirements.  When using TLS, the client or protected resource MUST perform a TLS/SSL server certificate check, as specified in [RFC6125].  Implementation security considerations can be found in Recommendations for Secure Use of TLS and DTLS [BCP195]."
     },
     {
-     "id": "4-7",
+     "id": "4-7c476710",
      "kind": "p",
      "en": "To prevent the values of access tokens from leaking into server-side logs via query parameters, an authorization server offering token introspection MAY disallow the use of HTTP GET on the introspection endpoint and instead require the HTTP POST method to be used at the introspection endpoint."
     },
     {
-     "id": "4-8",
+     "id": "4-2ff5cd9c",
      "kind": "p",
      "en": "To avoid disclosing the internal state of the authorization server, an introspection response for an inactive token SHOULD NOT contain any additional claims beyond the required \"active\" claim (with its value set to \"false\")."
     },
     {
-     "id": "4-9",
+     "id": "4-42b00f8f",
      "kind": "p",
-     "en": "Since a protected resource MAY cache the response of the introspection endpoint, designers of an OAuth 2.0 system using this protocol MUST consider the performance and security trade-offs inherent in caching security information such as this.  A less aggressive cache with a short timeout will provide the protected resource with more up-to-date information (due to it needing to query the introspection endpoint more often) at the cost of increased network traffic and load on the introspection endpoint.  A more aggressive cache with a longer duration will minimize network traffic and load on the introspection endpoint, but at the risk of stale information about the token.  For example, the token may be revoked while the protected resource is relying on the value of the cached response to make authorization decisions.  This creates a window during which a revoked token could be used at the protected resource. Consequently, an acceptable cache validity duration needs to be carefully considered given the concerns and sensitivities of the protected resource being accessed and the likelihood of a token being revoked or invalidated in the interim period.  Highly sensitive environments can opt to disable caching entirely on the protected resource to eliminate the risk of stale cached information entirely, again at the cost of increased network traffic and server load.  If"
+     "en": "Since a protected resource MAY cache the response of the introspection endpoint, designers of an OAuth 2.0 system using this protocol MUST consider the performance and security trade-offs inherent in caching security information such as this.  A less aggressive cache with a short timeout will provide the protected resource with more up-to-date information (due to it needing to query the introspection endpoint more often) at the cost of increased network traffic and load on the introspection endpoint.  A more aggressive cache with a longer duration will minimize network traffic and load on the introspection endpoint, but at the risk of stale information about the token.  For example, the token may be revoked while the protected resource is relying on the value of the cached response to make authorization decisions.  This creates a window during which a revoked token could be used at the protected resource. Consequently, an acceptable cache validity duration needs to be carefully considered given the concerns and sensitivities of the protected resource being accessed and the likelihood of a token being revoked or invalidated in the interim period.  Highly sensitive environments can opt to disable caching entirely on the protected resource to eliminate the risk of stale cached information entirely, again at the cost of increased network traffic and server load.  If the response contains the \"exp\" parameter (expiration), the response MUST NOT be cached beyond the time indicated therein."
     },
     {
-     "id": "4-10",
-     "kind": "p",
-     "en": "the response contains the \"exp\" parameter (expiration), the response MUST NOT be cached beyond the time indicated therein."
-    },
-    {
-     "id": "4-11",
+     "id": "4-09abef0c",
      "kind": "p",
      "en": "An authorization server offering token introspection must be able to understand the token values being presented to it during this call. The exact means by which this happens is an implementation detail and is outside the scope of this specification.  For unstructured tokens, this could take the form of a simple server-side database query against a data store containing the context information for the token.  For structured tokens, this could take the form of the server parsing the token, validating its signature or other protection mechanisms, and returning the information contained in the token back to the protected resource (allowing the protected resource to be unaware of the token's contents, much like the client).  Note that for tokens carrying encrypted information that is needed during the introspection process, the authorization server must be able to decrypt and validate the token to access this information.  Also note that in cases where the authorization server stores no information about the token and has no means of accessing information about the token by parsing the token itself, it cannot likely offer an introspection service."
     }
@@ -526,17 +701,17 @@
    "title": "Privacy Considerations",
    "paragraphs": [
     {
-     "id": "5-1",
+     "id": "5-269cc227",
      "kind": "p",
      "en": "The introspection response may contain privacy-sensitive information such as user identifiers for resource owners.  When this is the case, measures MUST be taken to prevent disclosure of this information to unintended parties.  One method is to transmit user identifiers as opaque service-specific strings, potentially returning different identifiers to each protected resource."
     },
     {
-     "id": "5-2",
+     "id": "5-c4385c24",
      "kind": "p",
      "en": "If the protected resource sends additional information about the client's request to the authorization server (such as the client's IP address) using an extension of this specification, such information could have additional privacy considerations that the extension should detail.  However, the nature and implications of such extensions are outside the scope of this specification."
     },
     {
-     "id": "5-3",
+     "id": "5-392b9a3b",
      "kind": "p",
      "en": "Omitting privacy-sensitive information from an introspection response is the simplest way of minimizing privacy issues."
     }
@@ -552,59 +727,59 @@
    "title": "Normative References",
    "paragraphs": [
     {
-     "id": "6.1-1",
+     "id": "6.1-ed39da47",
      "kind": "pre",
      "en": "   [RFC2119]  Bradner, S., \"Key words for use in RFCs to Indicate\n              Requirement Levels\", BCP 14, RFC 2119,\n              DOI 10.17487/RFC2119, March 1997,\n              <http://www.rfc-editor.org/info/rfc2119>."
     },
     {
-     "id": "6.1-2",
+     "id": "6.1-c3436a81",
      "kind": "pre",
      "en": "   [RFC5226]  Narten, T. and H. Alvestrand, \"Guidelines for Writing an\n              IANA Considerations Section in RFCs\", BCP 26, RFC 5226,\n              DOI 10.17487/RFC5226, May 2008,\n              <http://www.rfc-editor.org/info/rfc5226>."
     },
     {
-     "id": "6.1-3",
+     "id": "6.1-901b036e",
      "kind": "pre",
      "en": "   [RFC5246]  Dierks, T. and E. Rescorla, \"The Transport Layer Security\n              (TLS) Protocol Version 1.2\", RFC 5246,\n              DOI 10.17487/RFC5246, August 2008,\n              <http://www.rfc-editor.org/info/rfc5246>."
     },
     {
-     "id": "6.1-4",
+     "id": "6.1-ef6c247e",
      "kind": "pre",
      "en": "   [RFC6125]  Saint-Andre, P. and J. Hodges, \"Representation and\n              Verification of Domain-Based Application Service Identity\n              within Internet Public Key Infrastructure Using X.509\n              (PKIX) Certificates in the Context of Transport Layer\n              Security (TLS)\", RFC 6125, DOI 10.17487/RFC6125, March\n              2011, <http://www.rfc-editor.org/info/rfc6125>."
     },
     {
-     "id": "6.1-5",
+     "id": "6.1-c07dd55e",
      "kind": "pre",
      "en": "   [RFC6749]  Hardt, D., Ed., \"The OAuth 2.0 Authorization Framework\",\n              RFC 6749, DOI 10.17487/RFC6749, October 2012,\n              <http://www.rfc-editor.org/info/rfc6749>."
     },
     {
-     "id": "6.1-6",
+     "id": "6.1-7032dc8c",
      "kind": "pre",
      "en": "   [RFC6750]  Jones, M. and D. Hardt, \"The OAuth 2.0 Authorization\n              Framework: Bearer Token Usage\", RFC 6750,\n              DOI 10.17487/RFC6750, October 2012,\n              <http://www.rfc-editor.org/info/rfc6750>."
     },
     {
-     "id": "6.1-7",
+     "id": "6.1-92eb9f20",
      "kind": "pre",
      "en": "   [RFC7009]  Lodderstedt, T., Ed., Dronia, S., and M. Scurtescu, \"OAuth\n              2.0 Token Revocation\", RFC 7009, DOI 10.17487/RFC7009,\n              August 2013, <http://www.rfc-editor.org/info/rfc7009>."
     },
     {
-     "id": "6.1-8",
+     "id": "6.1-967304b4",
      "kind": "pre",
      "en": "   [RFC7159]  Bray, T., Ed., \"The JavaScript Object Notation (JSON) Data\n              Interchange Format\", RFC 7159, DOI 10.17487/RFC7159, March\n              2014, <http://www.rfc-editor.org/info/rfc7159>."
     },
     {
-     "id": "6.1-9",
+     "id": "6.1-ba3dda84",
      "kind": "pre",
      "en": "   [RFC7231]  Fielding, R., Ed. and J. Reschke, Ed., \"Hypertext Transfer\n              Protocol (HTTP/1.1): Semantics and Content\", RFC 7231,\n              DOI 10.17487/RFC7231, June 2014,\n              <http://www.rfc-editor.org/info/rfc7231>."
     },
     {
-     "id": "6.1-10",
+     "id": "6.1-5a13f118",
      "kind": "pre",
      "en": "   [RFC7519]  Jones, M., Bradley, J., and N. Sakimura, \"JSON Web Token\n              (JWT)\", RFC 7519, DOI 10.17487/RFC7519, May 2015,\n              <http://www.rfc-editor.org/info/rfc7519>."
     },
     {
-     "id": "6.1-11",
-     "kind": "pre",
-     "en": "   [W3C.REC-html5-20141028]\n              Hickson, I., Berjon, R., Faulkner, S., Leithead, T.,\n              Navara, E., 0'Connor, E., and S. Pfeiffer, \"HTML5\", World\n              Wide Web Consortium Recommendation\n              REC-html5-20141028, October 2014,\n              <http://www.w3.org/TR/2014/REC-html5-20141028>."
+     "id": "6.1-31dcb089",
+     "kind": "p",
+     "en": "[W3C.REC-html5-20141028] Hickson, I., Berjon, R., Faulkner, S., Leithead, T., Navara, E., 0'Connor, E., and S. Pfeiffer, \"HTML5\", World Wide Web Consortium Recommendation REC-html5-20141028, October 2014, <http://www.w3.org/TR/2014/REC-html5-20141028>."
     }
    ]
   },
@@ -613,7 +788,7 @@
    "title": "Informative References",
    "paragraphs": [
     {
-     "id": "6.2-1",
+     "id": "6.2-c878585a",
      "kind": "pre",
      "en": "   [BCP195]   Sheffer, Y., Holz, R., and P. Saint-Andre,\n              \"Recommendations for Secure Use of Transport Layer\n              Security (TLS) and Datagram Transport Layer Security\n              (DTLS)\", BCP 195, RFC 7525, May 2015,\n              <http://www.rfc-editor.org/info/bcp195>."
     }
@@ -624,7 +799,7 @@
    "title": "Use with Proof-of-Possession Tokens",
    "paragraphs": [
     {
-     "id": "A-1",
+     "id": "A-74ac44af",
      "kind": "p",
      "en": "With bearer tokens such as those defined by OAuth 2.0 Bearer Token Usage [RFC6750], the protected resource will have in its possession the entire secret portion of the token for submission to the introspection service.  However, for proof-of-possession style tokens, the protected resource will have only a token identifier used during the request, along with the cryptographic signature on the request.  To validate the signature on the request, the protected resource could be able to submit the token identifier to the authorization server's introspection endpoint to obtain the necessary key information needed for that token.  The details of this usage are outside the scope of this specification and will be defined in an extension to this specification in concert with the definition of proof-of-possession tokens."
     }
@@ -635,12 +810,12 @@
    "title": "Acknowledgements",
    "paragraphs": [
     {
-     "id": "acknowledgements-1",
+     "id": "acknowledgements-3e8c4530",
      "kind": "p",
      "en": "Thanks to the OAuth Working Group and the User Managed Access Working Group for feedback and review of this document, and to the various implementors of both the client and server components of this specification.  In particular, the author would like to thank Amanda Anganes, John Bradley, Thomas Broyer, Brian Campbell, George Fletcher, Paul Freemantle, Thomas Hardjono, Eve Maler, Josh Mandel, Steve Moore, Mike Schwartz, Prabath Siriwardena, Sarah Squire, and Hannes Tschofennig."
     }
    ]
   }
  ],
- "content_hash": "e1fbfca82682cfaeecbfd76725bd8236a70d32689ab2a72de13f640e5233af3f"
+ "content_hash": "6544c242402b876df2d671333a673e62a911059ca12294428c8f3a2ab53f0edf"
 }

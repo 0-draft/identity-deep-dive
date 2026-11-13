@@ -2,14 +2,14 @@
  "number": 9396,
  "title": "OAuth 2.0 Rich Authorization Requests",
  "url": "https://www.rfc-editor.org/rfc/rfc9396",
- "fetched_at": "2026-11-13T13:50:34+00:00",
+ "fetched_at": "2026-11-13T14:13:45+00:00",
  "sections": [
   {
    "id": "abstract",
    "title": "Abstract",
    "paragraphs": [
     {
-     "id": "abstract-1",
+     "id": "abstract-3ea58f72",
      "kind": "p",
      "en": "This document specifies a new parameter authorization_details that is used to carry fine-grained authorization data in OAuth messages."
     }
@@ -20,42 +20,42 @@
    "title": "Introduction",
    "paragraphs": [
     {
-     "id": "1-1",
+     "id": "1-00618f4b",
      "kind": "p",
      "en": "\"The OAuth 2.0 Authorization Framework\" [RFC6749] defines the scope parameter that allows OAuth clients to specify the requested scope, i.e., the limited capability, of an access token.  This mechanism is sufficient to implement static scenarios and coarse-grained authorization requests, such as \"give me read access to the resource owner's profile.\"  However, it is not sufficient to specify fine- grained authorization requirements, such as \"please let me transfer an amount of 45 Euros to Merchant A\" or \"please give me read access to directory A and write access to file X.\""
     },
     {
-     "id": "1-2",
+     "id": "1-22680b1a",
      "kind": "p",
      "en": "This specification introduces a new parameter authorization_details that allows clients to specify their fine-grained authorization requirements using the expressiveness of JSON [RFC8259] data structures."
     },
     {
-     "id": "1-3",
+     "id": "1-d3e67737",
      "kind": "p",
      "en": "For example, an authorization request for a credit transfer (designated as \"payment initiation\" in several open banking initiatives) can be represented using a JSON object like this:"
     },
     {
-     "id": "1-4",
+     "id": "1-a8d8d5f6",
      "kind": "pre",
      "en": "   {\n      \"type\": \"payment_initiation\",\n      \"locations\": [\n         \"https://example.com/payments\"\n      ],\n      \"instructedAmount\": {\n         \"currency\": \"EUR\",\n         \"amount\": \"123.50\"\n      },\n      \"creditorName\": \"Merchant A\",\n      \"creditorAccount\": {\n         \"bic\":\"ABCIDEFFXXX\",\n         \"iban\": \"DE02100100109307118603\"\n      },\n      \"remittanceInformationUnstructured\": \"Ref Number Merchant\"\n   }"
     },
     {
-     "id": "1-5",
+     "id": "1-994ccdb5",
      "kind": "pre",
      "en": "    Figure 1: Example of an Authorization Request for a Credit Transfer"
     },
     {
-     "id": "1-6",
+     "id": "1-b1cadf18",
      "kind": "p",
      "en": "This object contains detailed information about the intended payment, such as amount, currency, and creditor, that is required to inform the user and obtain their consent.  The authorization server (AS) and the respective resource server (RS) (providing the payment initiation API) will together enforce this consent."
     },
     {
-     "id": "1-7",
+     "id": "1-5e14bd5a",
      "kind": "p",
      "en": "For a comprehensive discussion of the challenges arising from new use cases in the open banking and electronic signing spaces, see [Transaction-Auth]."
     },
     {
-     "id": "1-8",
+     "id": "1-77078c56",
      "kind": "p",
      "en": "In addition to facilitating custom authorization requests, this specification also introduces a set of common data type fields for use across different APIs."
     }
@@ -66,12 +66,12 @@
    "title": "Conventions and Terminology",
    "paragraphs": [
     {
-     "id": "1.1-1",
+     "id": "1.1-e10c0f28",
      "kind": "p",
      "en": "The key words \"MUST\", \"MUST NOT\", \"REQUIRED\", \"SHALL\", \"SHALL NOT\", \"SHOULD\", \"SHOULD NOT\", \"RECOMMENDED\", \"NOT RECOMMENDED\", \"MAY\", and \"OPTIONAL\" in this document are to be interpreted as described in BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all capitals, as shown here."
     },
     {
-     "id": "1.1-2",
+     "id": "1.1-c369c933",
      "kind": "p",
      "en": "This specification uses the terms \"access token\", \"refresh token\", \"authorization server\" (AS), \"resource server\" (RS), \"authorization endpoint\", \"authorization request\", \"authorization response\", \"token endpoint\", \"grant type\", \"access token request\", \"access token response\", and \"client\" defined by \"The OAuth 2.0 Authorization Framework\" [RFC6749]."
     }
@@ -82,57 +82,57 @@
    "title": "Request Parameter \"authorization_details\"",
    "paragraphs": [
     {
-     "id": "2-1",
+     "id": "2-1998fd98",
      "kind": "p",
      "en": "The request parameter authorization_details contains, in JSON notation, an array of objects.  Each JSON object contains the data to specify the authorization requirements for a certain type of resource.  The type of resource or access requirement is determined by the type field, which is defined as follows:"
     },
     {
-     "id": "2-2",
+     "id": "2-36ab0b5a",
      "kind": "p",
      "en": "type:  An identifier for the authorization details type as a string. The value of the type field determines the allowable contents of the object that contains it.  The value is unique for the described API in the context of the AS.  This field is REQUIRED."
     },
     {
-     "id": "2-3",
+     "id": "2-f97e21a5",
      "kind": "p",
      "en": "An authorization_details array MAY contain multiple entries of the same type."
     },
     {
-     "id": "2-4",
+     "id": "2-37a1afcf",
      "kind": "p",
      "en": "Figure 2 shows an authorization_details of type payment_initiation using the example data shown above:"
     },
     {
-     "id": "2-5",
+     "id": "2-a5234dce",
      "kind": "pre",
      "en": "   [\n      {\n         \"type\": \"payment_initiation\",\n         \"actions\": [\n            \"initiate\",\n            \"status\",\n            \"cancel\"\n         ],\n         \"locations\": [\n            \"https://example.com/payments\"\n         ],\n         \"instructedAmount\": {\n            \"currency\": \"EUR\",\n            \"amount\": \"123.50\"\n         },\n         \"creditorName\": \"Merchant A\",\n         \"creditorAccount\": {\n            \"iban\": \"DE02100100109307118603\"\n         },\n         \"remittanceInformationUnstructured\": \"Ref Number Merchant\"\n      }\n   ]"
     },
     {
-     "id": "2-6",
+     "id": "2-bbbe43fa",
      "kind": "pre",
      "en": "     Figure 2: Example of \"authorization_details\" for a Credit Transfer"
     },
     {
-     "id": "2-7",
+     "id": "2-2178e709",
      "kind": "p",
      "en": "Figure 3 shows a combined request asking for access to account information and permission to initiate a payment:"
     },
     {
-     "id": "2-8",
+     "id": "2-58efd457",
      "kind": "pre",
      "en": "   [\n      {\n         \"type\": \"account_information\",\n         \"actions\": [\n            \"list_accounts\",\n            \"read_balances\",\n            \"read_transactions\"\n         ],\n         \"locations\": [\n            \"https://example.com/accounts\"\n         ]\n      },\n      {\n         \"type\": \"payment_initiation\",\n         \"actions\": [\n            \"initiate\",\n            \"status\",\n            \"cancel\"\n         ],\n         \"locations\": [\n            \"https://example.com/payments\"\n         ],\n         \"instructedAmount\": {\n            \"currency\": \"EUR\",\n            \"amount\": \"123.50\"\n         },\n         \"creditorName\": \"Merchant A\",\n         \"creditorAccount\": {\n            \"iban\": \"DE02100100109307118603\"\n         },\n         \"remittanceInformationUnstructured\": \"Ref Number Merchant\"\n      }\n   ]"
     },
     {
-     "id": "2-9",
+     "id": "2-80f4c19a",
      "kind": "pre",
      "en": "    Figure 3: Example of \"authorization_details\" for a Combined Request"
     },
     {
-     "id": "2-10",
+     "id": "2-31c2ac97",
      "kind": "p",
      "en": "The JSON objects with type fields of account_information and payment_initiation represent the different authorization_details to be used by the AS to ask for consent."
     },
     {
-     "id": "2-11",
+     "id": "2-3a11d128",
      "kind": "pre",
      "en": "      |  Note: The AS will make this data subsequently available to the\n      |  respective RSs (see Section 9)."
     }
@@ -143,27 +143,27 @@
    "title": "Authorization Details Types",
    "paragraphs": [
     {
-     "id": "2.1-1",
+     "id": "2.1-b1a60593",
      "kind": "p",
      "en": "The AS controls the interpretation of the value of the type parameter as well as the object fields that the type parameter allows. However, the value of the type parameter is also generally documented and intended to be used by developers.  It is RECOMMENDED that API designers choose type values that are easily copied without ambiguity.  For example, some glyphs have multiple Unicode code points for the same visual character, and a developer could potentially type a different character than what the AS has defined. Possible means of reducing potential confusion are limiting the value to ASCII [RFC0020] characters, providing a machine-readable listing of data type values, or instructing developers to copy and paste directly from the documentation."
     },
     {
-     "id": "2.1-2",
+     "id": "2.1-f688de60",
      "kind": "p",
      "en": "If an application or API is expected to be deployed across different servers, such as the case in an open standard, the API designer is RECOMMENDED to use a collision-resistant namespace under their control, such as a URI that the API designer controls."
     },
     {
-     "id": "2.1-3",
+     "id": "2.1-e1b744f0",
      "kind": "p",
      "en": "The following example shows how an implementation could utilize the namespace https://scheme.example.org/ to ensure collision-resistant type values."
     },
     {
-     "id": "2.1-4",
+     "id": "2.1-3e6784ea",
      "kind": "pre",
      "en": "   {\n      \"type\": \"https://scheme.example.org/files\",\n      \"locations\": [\n         \"https://example.com/files\"\n      ],\n      \"permissions\": [\n         {\n            \"path\": \"/myfiles/A\",\n            \"access\": [\n               \"read\"\n            ]\n         },\n         {\n            \"path\": \"/myfiles/A/X\",\n            \"access\": [\n               \"read\",\n               \"write\"\n            ]\n         }\n      ]\n   }"
     },
     {
-     "id": "2.1-5",
+     "id": "2.1-29ec7e71",
      "kind": "pre",
      "en": "      Figure 4: Example of \"authorization_details\" with a URL as Type\n                                 Identifier"
     }
@@ -174,82 +174,82 @@
    "title": "Common Data Fields",
    "paragraphs": [
     {
-     "id": "2.2-1",
+     "id": "2.2-9bf481d7",
      "kind": "p",
      "en": "This specification defines a set of common data fields that are designed to be usable across different types of APIs.  This specification does not require the use of these common fields by an API definition but, instead, provides them as reusable generic components for API designers to make use of.  The allowable values of all fields are determined by the API being protected, as defined by a particular \"type\" value."
     },
     {
-     "id": "2.2-2",
+     "id": "2.2-56a857fa",
      "kind": "p",
      "en": "locations:  An array of strings representing the location of the resource or RS.  These strings are typically URIs identifying the location of the RS.  This field can allow a client to specify a particular RS, as discussed in Section 12."
     },
     {
-     "id": "2.2-3",
+     "id": "2.2-158dae89",
      "kind": "p",
      "en": "actions:  An array of strings representing the kinds of actions to be taken at the resource."
     },
     {
-     "id": "2.2-4",
+     "id": "2.2-51410f3e",
      "kind": "p",
      "en": "datatypes:  An array of strings representing the kinds of data being requested from the resource."
     },
     {
-     "id": "2.2-5",
+     "id": "2.2-02be34fb",
      "kind": "p",
      "en": "identifier:  A string identifier indicating a specific resource available at the API."
     },
     {
-     "id": "2.2-6",
+     "id": "2.2-277be712",
      "kind": "p",
      "en": "privileges:  An array of strings representing the types or levels of privilege being requested at the resource."
     },
     {
-     "id": "2.2-7",
+     "id": "2.2-fc9042cd",
      "kind": "p",
      "en": "When different common data fields are used in combination, the permissions the client requests are the product of all the values. The object represents a request for all actions values listed within the object to be used at all locations values listed within the object for all datatypes values listed within the object.  In the following example, the client is requesting read and write access to both the contacts and photos belonging to customers in a customer_information API.  If this request is granted, the client would assume it would be able to use any combination of rights defined by the API, such as read access to the photos and write access to the contacts."
     },
     {
-     "id": "2.2-8",
+     "id": "2.2-88bd0806",
      "kind": "pre",
      "en": "   [\n      {\n         \"type\": \"customer_information\",\n         \"locations\": [\n            \"https://example.com/customers\"\n         ],\n         \"actions\": [\n            \"read\",\n            \"write\"\n         ],\n         \"datatypes\": [\n            \"contacts\",\n            \"photos\"\n         ]\n      }\n   ]"
     },
     {
-     "id": "2.2-9",
+     "id": "2.2-0e816c1f",
      "kind": "pre",
      "en": "    Figure 5: Example of \"authorization_details\" with Common Data Fields"
     },
     {
-     "id": "2.2-10",
+     "id": "2.2-d75a097c",
      "kind": "p",
      "en": "If the client wishes to have finer control over its access, it can send multiple objects.  In this example, the client is asking for read access to the contacts and write access to the photos in the same API endpoint.  If this request is granted, the client would not be able to write to the contacts."
     },
     {
-     "id": "2.2-11",
+     "id": "2.2-7c962f56",
      "kind": "pre",
      "en": "   [\n      {\n         \"type\": \"customer_information\",\n         \"locations\": [\n            \"https://example.com/customers\"\n         ],\n         \"actions\": [\n            \"read\"\n         ],\n         \"datatypes\": [\n            \"contacts\"\n         ]\n      },\n      {\n         \"type\": \"customer_information\",\n         \"locations\": [\n            \"https://example.com/customers\"\n         ],\n         \"actions\": [\n            \"write\"\n         ],\n         \"datatypes\": [\n            \"photos\"\n         ]\n      }\n   ]"
     },
     {
-     "id": "2.2-12",
+     "id": "2.2-3c3e529e",
      "kind": "pre",
      "en": "       Figure 6: Example of \"authorization_details\" with Common Data\n                         Fields in Multiple Objects"
     },
     {
-     "id": "2.2-13",
+     "id": "2.2-bded1c5f",
      "kind": "p",
      "en": "An API MAY define its own extensions, subject to the type of the respective authorization object.  It is anticipated that API designers will use a combination of common data fields defined in this specification as well as fields specific to the API itself.  The following non-normative example shows the use of both common and API- specific fields as part of two different fictitious API type values. The first access request includes the actions, locations, and datatypes fields specified here as well as the API-specific geolocation field, indicating access to photos taken at the given coordinates.  The second access request includes the actions and identifier fields specified here as well as the API-specific currency fields."
     },
     {
-     "id": "2.2-14",
+     "id": "2.2-11d88f3c",
      "kind": "pre",
      "en": "   [\n      {\n         \"type\":\"photo-api\",\n         \"actions\":[\n            \"read\",\n            \"write\"\n         ],\n         \"locations\":[\n            \"https://server.example.net/\",\n            \"https://resource.local/other\"\n         ],\n         \"datatypes\":[\n            \"metadata\",\n            \"images\"\n         ],\n         \"geolocation\":[\n            {\n               \"lat\":-32.364,\n               \"lng\":153.207\n            },\n            {\n               \"lat\":-35.364,\n               \"lng\":158.207\n            }\n         ]\n      },\n      {\n         \"type\":\"financial-transaction\",\n         \"actions\":[\n            \"withdraw\"\n         ],\n         \"identifier\":\"account-14-32-32-3\",\n         \"currency\":\"USD\"\n      }\n   ]"
     },
     {
-     "id": "2.2-15",
+     "id": "2.2-9609aac9",
      "kind": "pre",
      "en": "       Figure 7: Example of \"authorization_details\" Using Common and\n                           Extension Data Fields"
     },
     {
-     "id": "2.2-16",
+     "id": "2.2-5e2cee32",
      "kind": "p",
      "en": "If this request is approved, the resulting access token's access rights will be the union of the requested types of access for each of the two APIs, just as above."
     }
@@ -260,67 +260,67 @@
    "title": "Authorization Request",
    "paragraphs": [
     {
-     "id": "3-1",
+     "id": "3-ec4fa56a",
      "kind": "p",
      "en": "The authorization_details authorization request parameter can be used to specify authorization requirements in all places where the scope parameter is used for the same purpose, examples include:"
     },
     {
-     "id": "3-2",
+     "id": "3-85d0bf22",
      "kind": "li",
      "en": "*  authorization requests as specified in [RFC6749]"
     },
     {
-     "id": "3-3",
+     "id": "3-7c695c57",
      "kind": "li",
      "en": "*  device authorization requests as specified in [RFC8628]"
     },
     {
-     "id": "3-4",
+     "id": "3-e7a1e70e",
      "kind": "li",
      "en": "*  backchannel authentication requests as defined in [OID-CIBA]"
     },
     {
-     "id": "3-5",
+     "id": "3-2fb91166",
      "kind": "p",
      "en": "In case of authorization requests as defined in [RFC6749], implementers MAY consider using pushed authorization requests [RFC9126] to improve the security, privacy, and reliability of the flow.  See Sections 12, 13, and 11.4 for details."
     },
     {
-     "id": "3-6",
+     "id": "3-756ab493",
      "kind": "p",
      "en": "Parameter encoding is determined by the respective context.  In the context of an authorization request according to [RFC6749], the parameter is encoded using the application/x-www-form-urlencoded format of the serialized JSON as shown in Figure 8, using the example from Section 2 (line breaks for display purposes only):"
     },
     {
-     "id": "3-7",
-     "kind": "p",
-     "en": "GET /authorize?response_type=code &client_id=s6BhdRkqt3 &state=af0ifjsldkj &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb &code_challenge_method=S256 &code_challenge=K2-ltc83acc4h0c9w6ESC_rEMTJ3bwc-uCHaoeK1t8U &authorization_details=%5B%7B%22type%22%3A%22account%5Finfo rmation%22%2C%22actions%22%3A%5B%22list%5Faccounts%22%2C%22 read%5Fbalances%22%2C%22read%5Ftransactions%22%5D%2C%22loca tions%22%3A%5B%22https%3A%2F%2Fexample%2Ecom%2Faccounts%22% 5D%7D%2C%7B%22type%22%3A%22payment%5Finitiation%22%2C%22act ions%22%3A%5B%22initiate%22%2C%22status%22%2C%22cancel%22%5 D%2C%22locations%22%3A%5B%22https%3A%2F%2Fexample%2Ecom%2Fp ayments%22%5D%2C%22instructedAmount%22%3A%7B%22currency%22% 3A%22EUR%22%2C%22amount%22%3A%22123%2E50%22%7D%2C%22credito rName%22%3A%22Merchant%20A%22%2C%22creditorAccount%22%3A%7B %22iban%22%3A%22DE02100100109307118603%22%7D%2C%22remittanc eInformationUnstructured%22%3A%22Ref%20Number%20Merchant%22 %7D%5D HTTP/1.1 Host: server.example.com"
+     "id": "3-fdc1f401",
+     "kind": "pre",
+     "en": "   GET /authorize?response_type=code\n      &client_id=s6BhdRkqt3\n      &state=af0ifjsldkj\n      &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb\n      &code_challenge_method=S256\n      &code_challenge=K2-ltc83acc4h0c9w6ESC_rEMTJ3bwc-uCHaoeK1t8U\n      &authorization_details=%5B%7B%22type%22%3A%22account%5Finfo\n      rmation%22%2C%22actions%22%3A%5B%22list%5Faccounts%22%2C%22\n      read%5Fbalances%22%2C%22read%5Ftransactions%22%5D%2C%22loca\n      tions%22%3A%5B%22https%3A%2F%2Fexample%2Ecom%2Faccounts%22%\n      5D%7D%2C%7B%22type%22%3A%22payment%5Finitiation%22%2C%22act\n      ions%22%3A%5B%22initiate%22%2C%22status%22%2C%22cancel%22%5\n      D%2C%22locations%22%3A%5B%22https%3A%2F%2Fexample%2Ecom%2Fp\n      ayments%22%5D%2C%22instructedAmount%22%3A%7B%22currency%22%\n      3A%22EUR%22%2C%22amount%22%3A%22123%2E50%22%7D%2C%22credito\n      rName%22%3A%22Merchant%20A%22%2C%22creditorAccount%22%3A%7B\n      %22iban%22%3A%22DE02100100109307118603%22%7D%2C%22remittanc\n      eInformationUnstructured%22%3A%22Ref%20Number%20Merchant%22\n      %7D%5D HTTP/1.1\n   Host: server.example.com"
     },
     {
-     "id": "3-8",
+     "id": "3-3b54ae2b",
      "kind": "pre",
      "en": "              Figure 8: Example of Authorization Request with\n                          \"authorization_details\""
     },
     {
-     "id": "3-9",
+     "id": "3-7405314f",
      "kind": "p",
      "en": "Based on the data provided in the authorization_details parameter, the AS will ask the user for consent to the requested access permissions."
     },
     {
-     "id": "3-10",
+     "id": "3-5d0383a8",
      "kind": "pre",
      "en": "      |  Note: The user may also grant a subset of the requested\n      |  authorization details."
     },
     {
-     "id": "3-11",
+     "id": "3-1b4e4882",
      "kind": "p",
      "en": "In Figure 9, the client wants to get access to account information and initiate a payment:"
     },
     {
-     "id": "3-12",
+     "id": "3-58efd457",
      "kind": "pre",
      "en": "   [\n      {\n         \"type\": \"account_information\",\n         \"actions\": [\n            \"list_accounts\",\n            \"read_balances\",\n            \"read_transactions\"\n         ],\n         \"locations\": [\n            \"https://example.com/accounts\"\n         ]\n      },\n      {\n         \"type\": \"payment_initiation\",\n         \"actions\": [\n            \"initiate\",\n            \"status\",\n            \"cancel\"\n         ],\n         \"locations\": [\n            \"https://example.com/payments\"\n         ],\n         \"instructedAmount\": {\n            \"currency\": \"EUR\",\n            \"amount\": \"123.50\"\n         },\n         \"creditorName\": \"Merchant A\",\n         \"creditorAccount\": {\n            \"iban\": \"DE02100100109307118603\"\n         },\n         \"remittanceInformationUnstructured\": \"Ref Number Merchant\"\n      }\n   ]"
     },
     {
-     "id": "3-13",
+     "id": "3-8f0d6c2e",
      "kind": "pre",
      "en": "               Figure 9: URL Decoded \"authorization_details\""
     }
@@ -331,27 +331,27 @@
    "title": "Relationship to the \"scope\" Parameter",
    "paragraphs": [
     {
-     "id": "3.1-1",
+     "id": "3.1-af3e5758",
      "kind": "p",
      "en": "authorization_details and scope can be used in the same authorization request for carrying independent authorization requirements."
     },
     {
-     "id": "3.1-2",
+     "id": "3.1-451b1676",
      "kind": "p",
      "en": "Combined use of authorization_details and scope is supported by this specification in part to allow existing OAuth-based applications to incrementally migrate towards using authorization_details exclusively.  It is RECOMMENDED that a given API use only one form of requirement specification."
     },
     {
-     "id": "3.1-3",
+     "id": "3.1-5fc55398",
      "kind": "p",
      "en": "The AS MUST process both sets of requirements in combination with each other for the given authorization request.  The details of how the AS combines these parameters are specific to the APIs being protected and outside the scope of this specification."
     },
     {
-     "id": "3.1-4",
+     "id": "3.1-6e6e6410",
      "kind": "p",
      "en": "When gathering user consent, the AS MUST present the merged set of requirements represented by the authorization request."
     },
     {
-     "id": "3.1-5",
+     "id": "3.1-52a2e621",
      "kind": "p",
      "en": "If the resource owner grants the client the requested access, the AS will issue tokens to the client that are associated with the respective authorization_details (and scope values, if applicable)."
     }
@@ -362,7 +362,7 @@
    "title": "Relationship to the \"resource\" Parameter",
    "paragraphs": [
     {
-     "id": "3.2-1",
+     "id": "3.2-074d5ada",
      "kind": "p",
      "en": "The resource authorization request parameter, as defined in [RFC8707], can be used to further determine the resources where the requested scope can be applied.  The resource parameter does not have any impact on the way the AS processes the authorization_details authorization request parameter."
     }
@@ -373,7 +373,7 @@
    "title": "Authorization Response",
    "paragraphs": [
     {
-     "id": "4-1",
+     "id": "4-ef5cf258",
      "kind": "p",
      "en": "This specification does not define extensions to the authorization response."
     }
@@ -384,32 +384,32 @@
    "title": "Authorization Error Response",
    "paragraphs": [
     {
-     "id": "5-1",
+     "id": "5-c2a2ec69",
      "kind": "p",
      "en": "The AS MUST refuse to process any unknown authorization details type or authorization details not conforming to the respective type definition.  The AS MUST abort processing and respond with an error invalid_authorization_details to the client if any of the following are true of the objects in the authorization_details structure:"
     },
     {
-     "id": "5-2",
+     "id": "5-7b8327c7",
      "kind": "li",
      "en": "*  contains an unknown authorization details type value,"
     },
     {
-     "id": "5-3",
+     "id": "5-e5c64cf5",
      "kind": "li",
      "en": "*  is an object of known type but containing unknown fields,"
     },
     {
-     "id": "5-4",
+     "id": "5-3d1e11fd",
      "kind": "li",
      "en": "*  contains fields of the wrong type for the authorization details type,"
     },
     {
-     "id": "5-5",
+     "id": "5-9a3c498c",
      "kind": "li",
      "en": "*  contains fields with invalid values for the authorization details type, or"
     },
     {
-     "id": "5-6",
+     "id": "5-603138b1",
      "kind": "li",
      "en": "*  is missing required fields for the authorization details type."
     }
@@ -420,7 +420,7 @@
    "title": "Token Request",
    "paragraphs": [
     {
-     "id": "6-1",
+     "id": "6-58eb8c2c",
      "kind": "p",
      "en": "The authorization_details token request parameter can be used to specify the authorization details that a client wants the AS to assign to an access token.  The AS checks whether the underlying grant (in case of grant types authorization_code, refresh_token, etc.) or the client's policy (in case of grant type client_credentials) allows the issuance of an access token with the requested authorization details.  Otherwise, the AS refuses the request with the error code invalid_authorization_details (similar to invalid_scope)."
     }
@@ -431,147 +431,147 @@
    "title": "Comparing Authorization Details",
    "paragraphs": [
     {
-     "id": "6.1-1",
+     "id": "6.1-b830eac9",
      "kind": "p",
      "en": "Many actions in the OAuth protocol allow the AS and RS to make security decisions based on whether the request is asking for \"more\" or \"less\" than a previous, existing request.  For example, upon refreshing a token, the client can ask for a new access token with \"fewer permissions\" than had been previously authorized by the resource owner.  The requested access token will convey the reduced permissions, but the resource owner's previous authorization is unchanged by such requests.  Since the semantics of the fields in the authorization_details will be implementation specific to a given API or set of APIs, there is no standardized mechanism to compare two arbitrary authorization detail requests.  An AS should not rely on simple object comparison in most cases, as the intersection of some fields within a request could have side effects on the access rights granted, depending on how the API has been designed and deployed. This is a similar effect to the scope values used with some APIs."
     },
     {
-     "id": "6.1-2",
+     "id": "6.1-c16a6e79",
      "kind": "p",
      "en": "When comparing a new request to an existing request, an AS can use the same processing techniques as used in granting the request in the first place to determine if a resource owner needs to authorize the request.  The details of this comparison are dependent on the definition of the type of authorization request and outside the scope of this specification, but common patterns can be applied."
     },
     {
-     "id": "6.1-3",
+     "id": "6.1-affc4859",
      "kind": "p",
      "en": "This shall be illustrated using our running example.  The example authorization request in Section 3, if approved by the user, resulted in the issuance of an authorization code associated with the privileges to:"
     },
     {
-     "id": "6.1-4",
+     "id": "6.1-35a13a28",
      "kind": "li",
      "en": "*  list accounts,"
     },
     {
-     "id": "6.1-5",
+     "id": "6.1-abf00665",
      "kind": "li",
      "en": "*  access the balance of one or more accounts,"
     },
     {
-     "id": "6.1-6",
+     "id": "6.1-ebdb2734",
      "kind": "li",
      "en": "*  access the transactions of one or more accounts, and"
     },
     {
-     "id": "6.1-7",
+     "id": "6.1-0d4321f6",
      "kind": "li",
      "en": "*  initiate, check the status of, and cancel a payment."
     },
     {
-     "id": "6.1-8",
+     "id": "6.1-6b6307a4",
      "kind": "p",
      "en": "The client could now request the AS to issue an access token assigned with the privilege to just access a list of accounts as follows:"
     },
     {
-     "id": "6.1-9",
+     "id": "6.1-5d2c9507",
      "kind": "pre",
      "en": "   [\n      {\n         \"type\": \"account_information\",\n         \"actions\": [\n            \"list_accounts\"\n         ],\n         \"locations\": [\n            \"https://example.com/accounts\"\n         ]\n      }\n   ]"
     },
     {
-     "id": "6.1-10",
+     "id": "6.1-4c9f7930",
      "kind": "pre",
      "en": "      Figure 10: Example of \"authorization_details\" Reduced Privileges"
     },
     {
-     "id": "6.1-11",
+     "id": "6.1-26bd7711",
      "kind": "p",
      "en": "The example API is designed such that each field used by the account_information type contains additive rights, with each value within the actions and locations arrays specifying a different element of access.  To make a comparison in this instance, the AS would perform the following steps:"
     },
     {
-     "id": "6.1-12",
+     "id": "6.1-6f1af76c",
      "kind": "li",
      "en": "*  verify that the authorization code issued in the previous step contains an authorization details object of type account_information,"
     },
     {
-     "id": "6.1-13",
+     "id": "6.1-2e08c0d3",
      "kind": "li",
      "en": "*  verify whether the approved list of actions contains list_accounts, and"
     },
     {
-     "id": "6.1-14",
+     "id": "6.1-0a0cc83f",
      "kind": "li",
      "en": "*  verify whether the locations value includes only previously approved locations."
     },
     {
-     "id": "6.1-15",
+     "id": "6.1-f7854668",
      "kind": "p",
      "en": "If all checks succeed, the AS would issue the requested access token with the reduced set of access."
     },
     {
-     "id": "6.1-16",
+     "id": "6.1-d49ee852",
      "kind": "p",
      "en": "Note that this comparison is relevant to this specific API type definition.  A different API type definition could have different processing rules.  For example, an actions value could subsume the rights associated with another actions value.  For example, if a client initially asks for a token with write access, this implies both read and write access to this API:"
     },
     {
-     "id": "6.1-17",
+     "id": "6.1-55665432",
      "kind": "pre",
      "en": "   [\n       {\n           \"type\": \"example_api\",\n           \"actions\": [\n               \"write\"\n           ]\n       }\n   ]"
     },
     {
-     "id": "6.1-18",
+     "id": "6.1-79153cf2",
      "kind": "pre",
      "en": "      Figure 11: Example of \"authorization_details\" Requesting \"write\"\n                              Access to an API"
     },
     {
-     "id": "6.1-19",
+     "id": "6.1-ea5fe443",
      "kind": "p",
      "en": "Later, that same client makes a refresh request for read access:"
     },
     {
-     "id": "6.1-20",
+     "id": "6.1-99aec1f9",
      "kind": "pre",
      "en": "   [\n       {\n           \"type\": \"example_api\",\n           \"actions\": [\n               \"read\"\n           ]\n       }\n   ]"
     },
     {
-     "id": "6.1-21",
+     "id": "6.1-b4ed9e72",
      "kind": "pre",
      "en": "      Figure 12: Example of \"authorization_details\" Requesting \"read\"\n                              Access to an API"
     },
     {
-     "id": "6.1-22",
+     "id": "6.1-9f530e85",
      "kind": "p",
      "en": "The AS would compare the type value and the actions value to determine that the read access is already covered by the write access previously granted to the client."
     },
     {
-     "id": "6.1-23",
+     "id": "6.1-802d3cbc",
      "kind": "p",
      "en": "This same API could be designed with a possible value for privileges of admin, used in this example to denote that the resulting token is allowed to perform any of the functions on the resources.  If that client is then granted such admin privileges to the API, the authorization_details would be as follows:"
     },
     {
-     "id": "6.1-24",
+     "id": "6.1-1248186a",
      "kind": "pre",
      "en": "   [\n       {\n           \"type\": \"example_api\",\n           \"privileges\": [\n               \"admin\"\n           ]\n       }\n   ]"
     },
     {
-     "id": "6.1-25",
+     "id": "6.1-e591c6a4",
      "kind": "pre",
      "en": "     Figure 13: Example of \"authorization_details\" with \"admin\" Access\n                                 to an API"
     },
     {
-     "id": "6.1-26",
+     "id": "6.1-4569e26d",
      "kind": "p",
      "en": "The AS would compare the type value and find that the privileges value subsumes any aspects of read or write access that had been granted to the client previously.  Note that other API definitions can use privileges such that values do not subsume one another."
     },
     {
-     "id": "6.1-27",
+     "id": "6.1-b59406a0",
      "kind": "p",
      "en": "The next example shows how the client can use the common data element locations (see Section 2.2) to request the issuance of an access token restricted to a certain RS.  In our running example, the client may ask for all permissions of the approved grant of type payment_initiation applicable to the RS residing at https://example.com/payments as follows:"
     },
     {
-     "id": "6.1-28",
+     "id": "6.1-db64f92a",
      "kind": "pre",
      "en": "   [\n      {\n         \"type\": \"payment_initiation\",\n         \"locations\": [\n            \"https://example.com/payments\"\n         ]\n      }\n   ]"
     },
     {
-     "id": "6.1-29",
+     "id": "6.1-0b0ff98e",
      "kind": "pre",
      "en": "        Figure 14: Example of \"authorization_details\" Requesting an\n                      Audience-Restricted Access Token"
     }
@@ -582,37 +582,37 @@
    "title": "Token Response",
    "paragraphs": [
     {
-     "id": "7-1",
+     "id": "7-b1cca55c",
      "kind": "p",
      "en": "In addition to the token response parameters as defined in [RFC6749], the AS MUST also return the authorization_details as granted by the resource owner and assigned to the respective access token."
     },
     {
-     "id": "7-2",
+     "id": "7-53535142",
      "kind": "p",
      "en": "The authorization details assigned to the access token issued in a token response are determined by the authorization_details parameter of the corresponding token request.  If the client does not specify the authorization_details token request parameters, the AS determines the resulting authorization_details at its discretion."
     },
     {
-     "id": "7-3",
+     "id": "7-2457f7d6",
      "kind": "p",
      "en": "The AS MAY omit values in the authorization_details to the client."
     },
     {
-     "id": "7-4",
+     "id": "7-6427816d",
      "kind": "p",
      "en": "For our running example, it would look like this:"
     },
     {
-     "id": "7-5",
-     "kind": "p",
-     "en": "HTTP/1.1 200 OK Content-Type: application/json Cache-Control: no-store"
+     "id": "7-73e07ea6",
+     "kind": "pre",
+     "en": "   HTTP/1.1 200 OK\n   Content-Type: application/json\n   Cache-Control: no-store"
     },
     {
-     "id": "7-6",
+     "id": "7-ec294199",
      "kind": "pre",
      "en": "   {\n      \"access_token\": \"2YotnFZFEjr1zCsicMWpAA\",\n      \"token_type\": \"example\",\n      \"expires_in\": 3600,\n      \"refresh_token\": \"tGzv3JOkF0XG5Qx2TlKWIA\",\n      \"authorization_details\": [\n         {\n            \"type\": \"payment_initiation\",\n            \"actions\": [\n               \"initiate\",\n               \"status\",\n               \"cancel\"\n            ],\n            \"locations\": [\n               \"https://example.com/payments\"\n            ],\n            \"instructedAmount\": {\n               \"currency\": \"EUR\",\n               \"amount\": \"123.50\"\n            },\n            \"creditorName\": \"Merchant A\",\n            \"creditorAccount\": {\n               \"iban\": \"DE02100100109307118603\"\n            },\n            \"remittanceInformationUnstructured\": \"Ref Number Merchant\"\n         }\n      ]\n   }"
     },
     {
-     "id": "7-7",
+     "id": "7-cb2c46bd",
      "kind": "pre",
      "en": "                     Figure 15: Example Token Response"
     }
@@ -623,82 +623,82 @@
    "title": "Enriched Authorization Details in Token Response",
    "paragraphs": [
     {
-     "id": "7.1-1",
+     "id": "7.1-7e07f4b4",
      "kind": "p",
      "en": "The authorization details attached to the access token MAY differ from what the client requests.  In addition to the user authorizing less than what the client requested, there are some use cases where the AS enriches the data in an authorization details object.  Whether enrichment is allowed and specifics of how it works are necessarily part of the definition of the respective authorization details type."
     },
     {
-     "id": "7.1-2",
+     "id": "7.1-76732323",
      "kind": "p",
      "en": "As one example, a client may ask for access to account information but leave the decision about the specific accounts it will be able to access to the user.  During the course of the authorization process, the user would select the subset of their accounts that they want to allow the client to access.  As one design option to convey the selected accounts, the AS could add this information to the respective authorization details object."
     },
     {
-     "id": "7.1-3",
+     "id": "7.1-9c5377d5",
      "kind": "p",
      "en": "In that example, the requested authorization_details parameter might look like the following.  In this example, the empty arrays serve as placeholders for where data will be added during enrichment by the AS.  This example is illustrative only and is not intended to suggest a preference for designing the specifics of any authorization details type this way."
     },
     {
-     "id": "7.1-4",
+     "id": "7.1-752898d2",
      "kind": "pre",
      "en": "   \"authorization_details\": [\n      {\n         \"type\": \"account_information\",\n         \"access\": {\n            \"accounts\": [],\n            \"balances\": [],\n            \"transactions\": []\n         },\n         \"recurringIndicator\":true\n      }\n   ]"
     },
     {
-     "id": "7.1-5",
+     "id": "7.1-3656c44b",
      "kind": "pre",
      "en": "          Figure 16: Example of Requested \"authorization_details\""
     },
     {
-     "id": "7.1-6",
+     "id": "7.1-6b00958f",
      "kind": "p",
      "en": "The AS then would expand the authorization details object and add the respective account identifiers."
     },
     {
-     "id": "7.1-7",
-     "kind": "p",
-     "en": "HTTP/1.1 200 OK Content-Type: application/json Cache-Control: no-store"
+     "id": "7.1-73e07ea6",
+     "kind": "pre",
+     "en": "   HTTP/1.1 200 OK\n   Content-Type: application/json\n   Cache-Control: no-store"
     },
     {
-     "id": "7.1-8",
+     "id": "7.1-86325a12",
      "kind": "pre",
      "en": "   {\n      \"access_token\":\"2YotnFZFEjr1zCsicMWpAA\",\n      \"token_type\":\"example\",\n      \"expires_in\":3600,\n      \"refresh_token\":\"tGzv3JokF0XG5Qx2TlKWIA\",\n      \"authorization_details\":[\n         {\n            \"type\":\"account_information\",\n            \"access\":{\n               \"accounts\":[\n                  {\n                     \"iban\":\"DE2310010010123456789\"\n                  },\n                  {\n                     \"maskedPan\":\"123456xxxxxx1234\"\n                  }\n               ],\n               \"balances\":[\n                  {\n                     \"iban\":\"DE2310010010123456789\"\n                  }\n               ],\n               \"transactions\":[\n                  {\n                     \"iban\":\"DE2310010010123456789\"\n                  },\n                  {\n                     \"maskedPan\":\"123456xxxxxx1234\"\n                  }\n               ]\n            },\n            \"recurringIndicator\":true\n         }\n      ]\n   }"
     },
     {
-     "id": "7.1-9",
+     "id": "7.1-0d054a6e",
      "kind": "pre",
      "en": "           Figure 17: Example of Enriched \"authorization_details\""
     },
     {
-     "id": "7.1-10",
+     "id": "7.1-8a4e493f",
      "kind": "p",
      "en": "For another example, the client is asking for access to a medical record but does not know the record number at request time.  In this example, the client specifies the type of access it wants but doesn't specify the location or identifier of that access."
     },
     {
-     "id": "7.1-11",
+     "id": "7.1-e4db1914",
      "kind": "pre",
      "en": "   {\n   \"authorization_details\": [\n      {\n         \"type\": \"medical_record\",\n         \"sens\": [ \"HIV\", \"ETH\", \"MART\" ],\n         \"actions\": [ \"read\" ],\n         \"datatypes\": [ \"Patient\", \"Observation\", \"Appointment\" ]\n      }\n   ]}"
     },
     {
-     "id": "7.1-12",
+     "id": "7.1-a18d12a5",
      "kind": "pre",
      "en": "          Figure 18: Example of Requested \"authorization_details\""
     },
     {
-     "id": "7.1-13",
+     "id": "7.1-e2ef2fa0",
      "kind": "p",
      "en": "When the user interacts with the AS, they select which of the medical records they are responsible for giving to the client.  This information gets returned with the access token."
     },
     {
-     "id": "7.1-14",
+     "id": "7.1-d260d040",
      "kind": "pre",
      "en": "   {\n      \"access_token\":\"2YotnFZFEjr1zCsicMWpAA\",\n      \"token_type\":\"example\",\n      \"expires_in\":3600,\n      \"refresh_token\":\"tGzv3JokF0XG5Qx2TlKWIA\",\n      \"authorization_details\":[\n       {\n         \"type\": \"medical_record\",\n         \"sens\": [ \"HIV\", \"ETH\", \"MART\" ],\n         \"actions\": [ \"read\" ],\n         \"datatypes\": [ \"Patient\", \"Observation\", \"Appointment\" ],\n         \"identifier\": \"patient-541235\",\n         \"locations\": [ \"https://records.example.com/\" ]\n        }\n     ]\n   }"
     },
     {
-     "id": "7.1-15",
+     "id": "7.1-679e0e0c",
      "kind": "pre",
      "en": "           Figure 19: Example of Enriched \"authorization_details\""
     },
     {
-     "id": "7.1-16",
+     "id": "7.1-9bec9444",
      "kind": "pre",
      "en": "      |  Note: The client needs to be aware upfront of the possibility\n      |  that a certain authorization details object can be enriched.\n      |  It is assumed that this property is part of the definition of\n      |  the respective authorization details type."
     }
@@ -709,7 +709,7 @@
    "title": "Token Error Response",
    "paragraphs": [
     {
-     "id": "8-1",
+     "id": "8-5b1fe622",
      "kind": "p",
      "en": "The Token Error Response MUST conform to the rules given in Section 5."
     }
@@ -720,7 +720,7 @@
    "title": "Resource Servers",
    "paragraphs": [
     {
-     "id": "9-1",
+     "id": "9-69db2ead",
      "kind": "p",
      "en": "In order to enable the RS to enforce the authorization details as approved in the authorization process, the AS MUST make this data available to the RS.  The AS MAY add the authorization_details field to access tokens in JSON Web Token (JWT) format or to token introspection responses."
     }
@@ -731,47 +731,47 @@
    "title": "JWT-Based Access Tokens",
    "paragraphs": [
     {
-     "id": "9.1-1",
+     "id": "9.1-ff431747",
      "kind": "p",
      "en": "If the access token is a JWT [RFC7519], the AS is RECOMMENDED to add the authorization details object, filtered to the specific audience, as a top-level claim."
     },
     {
-     "id": "9.1-2",
+     "id": "9.1-99407fd6",
      "kind": "p",
      "en": "The AS will typically also add further claims to the JWT that the RS requires request processing, e.g., user ID, roles, and transaction- specific data.  What claims the particular RS requires is defined by the RS-specific policy with the AS."
     },
     {
-     "id": "9.1-3",
+     "id": "9.1-c52f8604",
      "kind": "p",
      "en": "The following shows the contents of an example JWT for the payment initiation example above:"
     },
     {
-     "id": "9.1-4",
+     "id": "9.1-6e3747b5",
      "kind": "pre",
      "en": "   {\n      \"iss\": \"https://as.example.com\",\n      \"sub\": \"24400320\",\n      \"aud\": \"a7AfcPcsl2\",\n      \"exp\": 1311281970,\n      \"acr\": \"psd2_sca\",\n      \"txn\": \"8b4729cc-32e4-4370-8cf0-5796154d1296\",\n      \"authorization_details\": [\n         {\n            \"type\": \"https://scheme.example.com/payment_initiation\",\n            \"actions\": [\n               \"initiate\",\n               \"status\",\n               \"cancel\"\n            ],\n            \"locations\": [\n               \"https://example.com/payments\"\n            ],\n            \"instructedAmount\": {\n               \"currency\": \"EUR\",\n               \"amount\": \"123.50\"\n            },\n            \"creditorName\": \"Merchant A\",\n            \"creditorAccount\": {\n               \"iban\": \"DE02100100109307118603\"\n            },\n            \"remittanceInformationUnstructured\": \"Ref Number Merchant\"\n         }\n      ],\n      \"debtorAccount\": {\n         \"iban\": \"DE40100100103307118608\",\n         \"user_role\": \"owner\"\n      }\n   }"
     },
     {
-     "id": "9.1-5",
+     "id": "9.1-c2753810",
      "kind": "pre",
      "en": "     Figure 20: Example of \"authorization_details\" in JWT-Based Access\n                                   Token"
     },
     {
-     "id": "9.1-6",
+     "id": "9.1-95b9eec6",
      "kind": "p",
      "en": "In this case, the AS added the following example claims to the JWT- based access token:"
     },
     {
-     "id": "9.1-7",
+     "id": "9.1-eaedec12",
      "kind": "p",
      "en": "sub:  indicates the user for which the client is asking for payment initiation."
     },
     {
-     "id": "9.1-8",
+     "id": "9.1-415522ac",
      "kind": "p",
      "en": "txn:  transaction id used to trace the transaction across the services of provider example.com"
     },
     {
-     "id": "9.1-9",
+     "id": "9.1-2bce939f",
      "kind": "p",
      "en": "debtorAccount:  API-specific field containing the debtor account.  In the example, this account was not passed in the authorization_details but was selected by the user during the authorization process.  The field user_role conveys the role the user has with respect to this particular account.  In this case, they are the owner.  This data is used for access control at the payment API (the RS)."
     }
@@ -782,22 +782,22 @@
    "title": "Token Introspection",
    "paragraphs": [
     {
-     "id": "9.2-1",
+     "id": "9.2-ed65deeb",
      "kind": "p",
      "en": "Token introspection [RFC7662] provides a means for an RS to query the AS to determine information about an access token.  If the AS includes authorization detail information for the token in its response, the information MUST be conveyed with authorization_details as a top-level member of the introspection response JSON object.  The authorization_details member MUST contain the same structure defined in Section 2, potentially filtered and extended for the RS making the introspection request."
     },
     {
-     "id": "9.2-2",
+     "id": "9.2-0af685c6",
      "kind": "p",
      "en": "Here is an example introspection response for the payment initiation example:"
     },
     {
-     "id": "9.2-3",
+     "id": "9.2-66ad7710",
      "kind": "pre",
      "en": "   {\n      \"active\": true,\n      \"sub\": \"24400320\",\n      \"aud\": \"s6BhdRkqt3\",\n      \"exp\": 1311281970,\n      \"acr\": \"psd2_sca\",\n      \"txn\": \"8b4729cc-32e4-4370-8cf0-5796154d1296\",\n      \"authorization_details\": [\n         {\n            \"type\": \"https://scheme.example.com/payment_initiation\",\n            \"actions\": [\n               \"initiate\",\n               \"status\",\n               \"cancel\"\n            ],\n            \"locations\": [\n               \"https://example.com/payments\"\n            ],\n            \"instructedAmount\": {\n               \"currency\": \"EUR\",\n               \"amount\": \"123.50\"\n            },\n            \"creditorName\": \"Merchant123\",\n            \"creditorAccount\": {\n               \"iban\": \"DE02100100109307118603\"\n            },\n            \"remittanceInformationUnstructured\": \"Ref Number Merchant\"\n         }\n      ],\n      \"debtorAccount\": {\n         \"iban\": \"DE40100100103307118608\",\n         \"user_role\": \"owner\"\n      }\n   }"
     },
     {
-     "id": "9.2-4",
+     "id": "9.2-3946621f",
      "kind": "pre",
      "en": "       Figure 21: Example of \"authorization_details\" in Introspection\n                                  Response"
     }
@@ -808,47 +808,47 @@
    "title": "Metadata",
    "paragraphs": [
     {
-     "id": "10-1",
+     "id": "10-46ce43b4",
      "kind": "p",
      "en": "To advertise its support for this feature, the supported list of authorization details types is included in the AS metadata response [RFC8414] using the metadata parameter authorization_details_types_supported, which is a JSON array."
     },
     {
-     "id": "10-2",
+     "id": "10-37704268",
      "kind": "p",
      "en": "This is illustrated by the following example:"
     },
     {
-     "id": "10-3",
+     "id": "10-e4cd5986",
      "kind": "pre",
      "en": "   {\n      ...\n      \"authorization_details_types_supported\":[\n         \"payment_initiation\",\n         \"account_information\"\n      ]\n   }"
     },
     {
-     "id": "10-4",
+     "id": "10-d427bcb8",
      "kind": "pre",
      "en": "         Figure 22: Example of Server Metadata about the Supported\n                           Authorization Details"
     },
     {
-     "id": "10-5",
+     "id": "10-6c7aee5f",
      "kind": "p",
      "en": "Clients MAY indicate the authorization details types they will use when requesting authorization with the client registration metadata parameter authorization_details_types, which is a JSON array."
     },
     {
-     "id": "10-6",
+     "id": "10-37704268",
      "kind": "p",
      "en": "This is illustrated by the following example:"
     },
     {
-     "id": "10-7",
+     "id": "10-5b8375e6",
      "kind": "pre",
      "en": "   {\n      ...\n      \"authorization_details_types\":[\n         \"payment_initiation\"\n      ]\n   }"
     },
     {
-     "id": "10-8",
+     "id": "10-35454053",
      "kind": "pre",
      "en": "     Figure 23: Example of Server Metadata about Authorization Details"
     },
     {
-     "id": "10-9",
+     "id": "10-24de896f",
      "kind": "p",
      "en": "The registration of authorization details types with the AS is outside the scope of this specification."
     }
@@ -864,42 +864,42 @@
    "title": "Using Authorization Details in a Certain Deployment",
    "paragraphs": [
     {
-     "id": "11.1-1",
+     "id": "11.1-e8bf9394",
      "kind": "p",
      "en": "Using authorization details in a certain deployment will require the following steps:"
     },
     {
-     "id": "11.1-2",
+     "id": "11.1-a2ee9efe",
      "kind": "li",
      "en": "*  Define authorization details types."
     },
     {
-     "id": "11.1-3",
+     "id": "11.1-850ba933",
      "kind": "li",
      "en": "*  Publish authorization details types in the OAuth server metadata."
     },
     {
-     "id": "11.1-4",
+     "id": "11.1-34930877",
      "kind": "li",
      "en": "*  Determine how authorization details are shown to the user in the user consent prompt."
     },
     {
-     "id": "11.1-5",
+     "id": "11.1-7a061059",
      "kind": "li",
      "en": "*  If needed, enrich authorization details in the user consent process (e.g., add selected accounts or set expirations)."
     },
     {
-     "id": "11.1-6",
+     "id": "11.1-ef8ea0bd",
      "kind": "li",
      "en": "*  If needed, determine how authorization details are reflected in access token content or introspection responses."
     },
     {
-     "id": "11.1-7",
+     "id": "11.1-7ddb7faa",
      "kind": "li",
      "en": "*  Determine how the RSs process the authorization details or token data derived from authorization details."
     },
     {
-     "id": "11.1-8",
+     "id": "11.1-f257043a",
      "kind": "li",
      "en": "*  If needed, entitle clients to use certain authorization details types."
     }
@@ -910,52 +910,52 @@
    "title": "Minimal Implementation Support",
    "paragraphs": [
     {
-     "id": "11.2-1",
+     "id": "11.2-cef10131",
      "kind": "p",
      "en": "General AS implementations supporting this specification should provide the following basic functions:"
     },
     {
-     "id": "11.2-2",
+     "id": "11.2-e3be4489",
      "kind": "li",
      "en": "*  Support advertisement of supported authorization details types in OAuth server metadata"
     },
     {
-     "id": "11.2-3",
+     "id": "11.2-d17599ec",
      "kind": "li",
      "en": "*  Accept the authorization_details parameter in authorization requests in conformance with this specification"
     },
     {
-     "id": "11.2-4",
+     "id": "11.2-c56b0b0b",
      "kind": "li",
      "en": "*  Support storage of consented authorization details as part of a grant"
     },
     {
-     "id": "11.2-5",
+     "id": "11.2-baf79408",
      "kind": "li",
      "en": "*  Implement default behavior for adding authorization details to access tokens and token introspection responses in order to make them available to RSs (similar to scope values).  This should work with any grant type, especially authorization_code and refresh_token."
     },
     {
-     "id": "11.2-6",
+     "id": "11.2-fc00e891",
      "kind": "p",
      "en": "Processing and presentation of authorization details will vary significantly among different authorization details types. Implementations should therefore support customization of the respective behavior.  In particular, implementations should allow deployments to:"
     },
     {
-     "id": "11.2-7",
+     "id": "11.2-477ba489",
      "kind": "li",
      "en": "*  determine presentation of the authorization details;"
     },
     {
-     "id": "11.2-8",
+     "id": "11.2-a32fc524",
      "kind": "li",
      "en": "*  modify requested authorization details in the user consent process, e.g., adding fields; and"
     },
     {
-     "id": "11.2-9",
+     "id": "11.2-fe3c1dcc",
      "kind": "li",
      "en": "*  merge requested and preexisting authorization details."
     },
     {
-     "id": "11.2-10",
+     "id": "11.2-cb2c7049",
      "kind": "p",
      "en": "One approach to supporting such customization would be to have a mechanism allowing the registration of extension modules, each of them responsible for rendering the respective user consent and any transformation needed to provide the data needed to the RS by way of structured access tokens or token introspection responses."
     }
@@ -966,12 +966,12 @@
    "title": "Use of Machine-Readable Type Schemas",
    "paragraphs": [
     {
-     "id": "11.3-1",
+     "id": "11.3-aa70263d",
      "kind": "p",
      "en": "Implementations might allow deployments to use machine-readable schema languages for defining authorization details types to facilitate creating and validating authorization details objects against such schemas.  For example, if an authorization details type were defined using JSON Schemas [JSON.Schema], the JSON Schema identifier could be used as type value in the respective authorization details objects."
     },
     {
-     "id": "11.3-2",
+     "id": "11.3-5016adfd",
      "kind": "p",
      "en": "Note, however, that type values are identifiers understood by the AS and, to the extent necessary, the client and RS.  This specification makes no assumption that a type value would point to a machine- readable schema format or that any party in the system (such as the client, AS, or RS) would dereference or process the contents of the type field in any specific way."
     }
@@ -982,22 +982,22 @@
    "title": "Large Requests",
    "paragraphs": [
     {
-     "id": "11.4-1",
+     "id": "11.4-a391f9ec",
      "kind": "p",
      "en": "Authorization request URIs containing authorization_details in a request parameter or a request object can become very long. Therefore, implementers should consider using the request_uri parameter as defined in [RFC9101] in combination with the pushed request object mechanism as defined in [RFC9126] to pass authorization_details in a reliable and secure manner.  Here is an example of such a pushed authorization request that sends the authorization request data directly to the AS via an HTTPS-protected connection:"
     },
     {
-     "id": "11.4-2",
-     "kind": "p",
-     "en": "POST /as/par HTTP/1.1 Host: as.example.com Content-Type: application/x-www-form-urlencoded Authorization: Basic czZCaGRSa3F0Mzo3RmpmcDBaQnIxS3REUmJuZlZkbUl3"
+     "id": "11.4-3459a886",
+     "kind": "pre",
+     "en": "     POST /as/par HTTP/1.1\n     Host: as.example.com\n     Content-Type: application/x-www-form-urlencoded\n     Authorization: Basic czZCaGRSa3F0Mzo3RmpmcDBaQnIxS3REUmJuZlZkbUl3"
     },
     {
-     "id": "11.4-3",
-     "kind": "p",
-     "en": "response_type=code& client_id=s6BhdRkqt3 &state=af0ifjsldkj &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb &code_challenge_method=S256 &code_challenge=K2-ltc83acc4h0c9w6ESC_rEMTJ3bwc-uCHaoeK1t8U &authorization_details=%5B%7B%22type%22%3A%22account_information%22 %2C%22actions%22%3A%5B%22list_accounts%22%2C%22read_balances%22%2C% 22read_transactions%22%5D%2C%22locations%22%3A%5B%22https%3A%2F%2Fe xample.com%2Faccounts%22%5D%7D%2C%7B%22type%22%3A%22payment_initiat ion%22%2C%22actions%22%3A%5B%22initiate%22%2C%22status%22%2C%22canc el%22%5D%2C%22locations%22%3A%5B%22https%3A%2F%2Fexample.com%2Fpaym ents%22%5D%2C%22instructedAmount%22%3A%7B%22currency%22%3A%22EUR%22 %2C%22amount%22%3A%22123.50%22%7D%2C%22creditorName%22%3A%22Merchan t123%22%2C%22creditorAccount%22%3A%7B%22iban%22%3A%22DE021001001093 07118603%22%7D%2C%22remittanceInformationUnstructured%22%3A%22Ref%2 0Number%20Merchant%22%7D%5D"
+     "id": "11.4-87c132e0",
+     "kind": "pre",
+     "en": "     response_type=code&\n     client_id=s6BhdRkqt3\n     &state=af0ifjsldkj\n     &redirect_uri=https%3A%2F%2Fclient.example.org%2Fcb\n     &code_challenge_method=S256\n     &code_challenge=K2-ltc83acc4h0c9w6ESC_rEMTJ3bwc-uCHaoeK1t8U\n     &authorization_details=%5B%7B%22type%22%3A%22account_information%22\n     %2C%22actions%22%3A%5B%22list_accounts%22%2C%22read_balances%22%2C%\n     22read_transactions%22%5D%2C%22locations%22%3A%5B%22https%3A%2F%2Fe\n     xample.com%2Faccounts%22%5D%7D%2C%7B%22type%22%3A%22payment_initiat\n     ion%22%2C%22actions%22%3A%5B%22initiate%22%2C%22status%22%2C%22canc\n     el%22%5D%2C%22locations%22%3A%5B%22https%3A%2F%2Fexample.com%2Fpaym\n     ents%22%5D%2C%22instructedAmount%22%3A%7B%22currency%22%3A%22EUR%22\n     %2C%22amount%22%3A%22123.50%22%7D%2C%22creditorName%22%3A%22Merchan\n     t123%22%2C%22creditorAccount%22%3A%7B%22iban%22%3A%22DE021001001093\n     07118603%22%7D%2C%22remittanceInformationUnstructured%22%3A%22Ref%2\n     0Number%20Merchant%22%7D%5D"
     },
     {
-     "id": "11.4-4",
+     "id": "11.4-73e07800",
      "kind": "pre",
      "en": "   Figure 24: Example of Large Request including \"authorization_details\""
     }
@@ -1008,27 +1008,27 @@
    "title": "Security Considerations",
    "paragraphs": [
     {
-     "id": "12-1",
+     "id": "12-9d0d72d2",
      "kind": "p",
      "en": "The authorization_details parameter is sent through the user agent in case of an OAuth authorization request, which makes them vulnerable to modifications by the user.  If the integrity of the authorization_details is a concern, clients MUST protect authorization_details against tampering and swapping.  This can be achieved by signing the request using signed request objects as defined in [RFC9101] or using the request_uri authorization request parameter as defined in [RFC9101] in conjunction with [RFC9126] to pass the URI of the request object to the AS."
     },
     {
-     "id": "12-2",
+     "id": "12-c1ee93d6",
      "kind": "p",
      "en": "All string comparisons in an authorization_details parameter are to be done as defined by [RFC8259].  No additional transformation or normalization is to be done in evaluating equivalence of string values."
     },
     {
-     "id": "12-3",
+     "id": "12-7b9d41f2",
      "kind": "p",
      "en": "The common data field locations allows a client to specify where it intends to use a certain authorization, i.e., it is possible to unambiguously assign permissions to RSs.  In situations with multiple RSs, this prevents unintended client authorizations (e.g., a read scope value potentially applicable for an email as well as a cloud service) through audience restriction."
     },
     {
-     "id": "12-4",
+     "id": "12-cd7d7fae",
      "kind": "p",
      "en": "The AS MUST properly sanitize and handle the data passed in the authorization_details in order to prevent injection attacks."
     },
     {
-     "id": "12-5",
+     "id": "12-a14d99a9",
      "kind": "p",
      "en": "The Security Considerations of [RFC6749], [RFC7662], and [RFC8414] also apply."
     }
@@ -1039,22 +1039,22 @@
    "title": "Privacy Considerations",
    "paragraphs": [
     {
-     "id": "13-1",
+     "id": "13-c128e54c",
      "kind": "p",
      "en": "It is especially important for implementers to design and use authorization details in a privacy-preserving manner."
     },
     {
-     "id": "13-2",
+     "id": "13-9f35b661",
      "kind": "p",
      "en": "Any sensitive personal data included in authorization_details must be prevented from leaking, e.g., through referrer headers. Implementation options include encrypted request objects as defined in [RFC9101] or transmission of authorization_details via end-to-end encrypted connections between client and AS by utilizing [RFC9126] and the request_uri authorization request parameter as defined in [RFC9101].  The latter does not require application-level encryption, but it requires another message exchange between the client and the AS."
     },
     {
-     "id": "13-3",
+     "id": "13-8ab8f870",
      "kind": "p",
      "en": "Even if the request data is encrypted, an attacker could use the AS to learn the user's data by injecting the encrypted request data into an authorization request on a device under their control and use the AS's user consent screens to show the (decrypted) user data in the clear.  Implementations need to consider this attack vector and implement appropriate countermeasures, e.g., by only showing portions of the data or, if possible, determining whether the assumed user context is still the same (after user authentication)."
     },
     {
-     "id": "13-4",
+     "id": "13-16d8bb92",
      "kind": "p",
      "en": "The AS needs to take into consideration the privacy implications when sharing authorization_details with the client or RSs.  The AS should share this data with those parties on a \"need to know\" basis as determined by local policy."
     }
@@ -1070,27 +1070,27 @@
    "title": "OAuth Parameters Registration",
    "paragraphs": [
     {
-     "id": "14.1-1",
+     "id": "14.1-612f868f",
      "kind": "p",
      "en": "The following parameter has been registered in the \"OAuth Parameters\" registry [IANA.OAuth.Parameters] established by [RFC6749]."
     },
     {
-     "id": "14.1-2",
+     "id": "14.1-6ef7c375",
      "kind": "p",
      "en": "Name:  authorization_details"
     },
     {
-     "id": "14.1-3",
+     "id": "14.1-72c4000e",
      "kind": "p",
      "en": "Parameter Usage Location:  authorization request, token request, token response"
     },
     {
-     "id": "14.1-4",
+     "id": "14.1-3bba4a3e",
      "kind": "p",
      "en": "Change Controller:  IETF"
     },
     {
-     "id": "14.1-5",
+     "id": "14.1-2ff9f3d0",
      "kind": "p",
      "en": "Reference:  RFC 9396"
     }
@@ -1101,27 +1101,27 @@
    "title": "JSON Web Token Claims Registration",
    "paragraphs": [
     {
-     "id": "14.2-1",
+     "id": "14.2-31c5d35e",
      "kind": "p",
      "en": "The following value has been registered in the IANA \"JSON Web Token Claims\" registry established by [RFC7519]."
     },
     {
-     "id": "14.2-2",
+     "id": "14.2-6b71a8a1",
      "kind": "p",
      "en": "Claim Name:  authorization_details"
     },
     {
-     "id": "14.2-3",
+     "id": "14.2-fafeb504",
      "kind": "p",
      "en": "Claim Description:  The claim authorization_details contains a JSON array of JSON objects representing the rights of the access token. Each JSON object contains the data to specify the authorization requirements for a certain type of resource."
     },
     {
-     "id": "14.2-4",
+     "id": "14.2-3bba4a3e",
      "kind": "p",
      "en": "Change Controller:  IETF"
     },
     {
-     "id": "14.2-5",
+     "id": "14.2-23cd56f0",
      "kind": "p",
      "en": "Reference:  Section 9.1 of RFC 9396"
     }
@@ -1132,27 +1132,27 @@
    "title": "OAuth Token Introspection Response Registration",
    "paragraphs": [
     {
-     "id": "14.3-1",
+     "id": "14.3-0377cacd",
      "kind": "p",
      "en": "The following value has been registered in the IANA \"OAuth Token Introspection Response\" registry established by [RFC7662]."
     },
     {
-     "id": "14.3-2",
+     "id": "14.3-6ef7c375",
      "kind": "p",
      "en": "Name:  authorization_details"
     },
     {
-     "id": "14.3-3",
+     "id": "14.3-ce493412",
      "kind": "p",
      "en": "Description:  The member authorization_details contains a JSON array of JSON objects representing the rights of the access token.  Each JSON object contains the data to specify the authorization requirements for a certain type of resource."
     },
     {
-     "id": "14.3-4",
+     "id": "14.3-3bba4a3e",
      "kind": "p",
      "en": "Change Controller:  IETF"
     },
     {
-     "id": "14.3-5",
+     "id": "14.3-483ac3bd",
      "kind": "p",
      "en": "Reference:  Section 9.2 of RFC 9396"
     }
@@ -1163,27 +1163,27 @@
    "title": "OAuth Authorization Server Metadata Registration",
    "paragraphs": [
     {
-     "id": "14.4-1",
+     "id": "14.4-74af07d7",
      "kind": "p",
      "en": "The following values have been registered in the IANA \"OAuth Authorization Server Metadata\" registry of [IANA.OAuth.Parameters] established by [RFC8414]."
     },
     {
-     "id": "14.4-2",
+     "id": "14.4-6517074a",
      "kind": "p",
      "en": "Metadata Name:  authorization_details_types_supported"
     },
     {
-     "id": "14.4-3",
+     "id": "14.4-ffb91c8d",
      "kind": "p",
      "en": "Metadata Description:  JSON array containing the authorization details types the AS supports"
     },
     {
-     "id": "14.4-4",
+     "id": "14.4-3bba4a3e",
      "kind": "p",
      "en": "Change Controller:  IETF"
     },
     {
-     "id": "14.4-5",
+     "id": "14.4-dce38393",
      "kind": "p",
      "en": "Reference:  Section 10 of RFC 9396"
     }
@@ -1194,27 +1194,27 @@
    "title": "OAuth Dynamic Client Registration Metadata Registration",
    "paragraphs": [
     {
-     "id": "14.5-1",
+     "id": "14.5-5fa088f5",
      "kind": "p",
      "en": "The following value has been registered in the IANA \"OAuth Dynamic Client Registration Metadata\" registry of [IANA.OAuth.Parameters] established by [RFC7591]."
     },
     {
-     "id": "14.5-2",
+     "id": "14.5-3663cb45",
      "kind": "p",
      "en": "Client Metadata Name:  authorization_details_types"
     },
     {
-     "id": "14.5-3",
+     "id": "14.5-cec1b7aa",
      "kind": "p",
      "en": "Client Metadata Description:  Indicates what authorization details types the client uses."
     },
     {
-     "id": "14.5-4",
+     "id": "14.5-3bba4a3e",
      "kind": "p",
      "en": "Change Controller:  IETF"
     },
     {
-     "id": "14.5-5",
+     "id": "14.5-dce38393",
      "kind": "p",
      "en": "Reference:  Section 10 of RFC 9396"
     }
@@ -1225,32 +1225,32 @@
    "title": "OAuth Extensions Error Registration",
    "paragraphs": [
     {
-     "id": "14.6-1",
+     "id": "14.6-2872351d",
      "kind": "p",
      "en": "The following value has been registered in the IANA \"OAuth Extensions Error Registry\" of [IANA.OAuth.Parameters] established by [RFC6749]."
     },
     {
-     "id": "14.6-2",
+     "id": "14.6-79f58346",
      "kind": "p",
      "en": "Name:  invalid_authorization_details"
     },
     {
-     "id": "14.6-3",
+     "id": "14.6-2abc7f36",
      "kind": "p",
      "en": "Usage Location:  token endpoint, authorization endpoint"
     },
     {
-     "id": "14.6-4",
+     "id": "14.6-26355e02",
      "kind": "p",
      "en": "Protocol Extension:  OAuth 2.0 Rich Authorization Requests"
     },
     {
-     "id": "14.6-5",
+     "id": "14.6-3bba4a3e",
      "kind": "p",
      "en": "Change Controller:  IETF"
     },
     {
-     "id": "14.6-6",
+     "id": "14.6-655c4fc4",
      "kind": "p",
      "en": "Reference:  Section 5 of RFC 9396"
     }
@@ -1266,37 +1266,37 @@
    "title": "Normative References",
    "paragraphs": [
     {
-     "id": "15.1-1",
+     "id": "15.1-e7633541",
      "kind": "pre",
      "en": "   [RFC2119]  Bradner, S., \"Key words for use in RFCs to Indicate\n              Requirement Levels\", BCP 14, RFC 2119,\n              DOI 10.17487/RFC2119, March 1997,\n              <https://www.rfc-editor.org/info/rfc2119>."
     },
     {
-     "id": "15.1-2",
+     "id": "15.1-8340fbd5",
      "kind": "pre",
      "en": "   [RFC7519]  Jones, M., Bradley, J., and N. Sakimura, \"JSON Web Token\n              (JWT)\", RFC 7519, DOI 10.17487/RFC7519, May 2015,\n              <https://www.rfc-editor.org/info/rfc7519>."
     },
     {
-     "id": "15.1-3",
+     "id": "15.1-9f4dc0ec",
      "kind": "pre",
      "en": "   [RFC7662]  Richer, J., Ed., \"OAuth 2.0 Token Introspection\",\n              RFC 7662, DOI 10.17487/RFC7662, October 2015,\n              <https://www.rfc-editor.org/info/rfc7662>."
     },
     {
-     "id": "15.1-4",
+     "id": "15.1-414ea991",
      "kind": "pre",
      "en": "   [RFC8174]  Leiba, B., \"Ambiguity of Uppercase vs Lowercase in RFC\n              2119 Key Words\", BCP 14, RFC 8174, DOI 10.17487/RFC8174,\n              May 2017, <https://www.rfc-editor.org/info/rfc8174>."
     },
     {
-     "id": "15.1-5",
+     "id": "15.1-4523dd96",
      "kind": "pre",
      "en": "   [RFC8414]  Jones, M., Sakimura, N., and J. Bradley, \"OAuth 2.0\n              Authorization Server Metadata\", RFC 8414,\n              DOI 10.17487/RFC8414, June 2018,\n              <https://www.rfc-editor.org/info/rfc8414>."
     },
     {
-     "id": "15.1-6",
+     "id": "15.1-55b80c84",
      "kind": "pre",
      "en": "   [RFC8628]  Denniss, W., Bradley, J., Jones, M., and H. Tschofenig,\n              \"OAuth 2.0 Device Authorization Grant\", RFC 8628,\n              DOI 10.17487/RFC8628, August 2019,\n              <https://www.rfc-editor.org/info/rfc8628>."
     },
     {
-     "id": "15.1-7",
+     "id": "15.1-b6c9e70a",
      "kind": "pre",
      "en": "   [RFC8707]  Campbell, B., Bradley, J., and H. Tschofenig, \"Resource\n              Indicators for OAuth 2.0\", RFC 8707, DOI 10.17487/RFC8707,\n              February 2020, <https://www.rfc-editor.org/info/rfc8707>."
     }
@@ -1307,67 +1307,67 @@
    "title": "Informative References",
    "paragraphs": [
     {
-     "id": "15.2-1",
+     "id": "15.2-a58adc28",
      "kind": "pre",
      "en": "   [CSC]      Cloud Signature Consortium, \"Architectures and protocols\n              for remote signature applications\", Version 1.0.4.0, June\n              2019, <https://cloudsignatureconsortium.org/wp-\n              content/uploads/2020/01/CSC_API_V1_1.0.4.0.pdf>."
     },
     {
-     "id": "15.2-2",
+     "id": "15.2-f48faed1",
      "kind": "pre",
      "en": "   [ETSI]     ETSI, \"Electronic Signatures and Infrastructures (ESI);\n              Protocols for remote digital signature creation\", V1.1.1,\n              ETSI TS 119 432, March 2019,\n              <https://www.etsi.org/deliver/\n              etsi_ts/119400_119499/119432/01.01.01_60/\n              ts_119432v010101p.pdf>."
     },
     {
-     "id": "15.2-3",
+     "id": "15.2-f69b973f",
      "kind": "pre",
      "en": "   [IANA.OAuth.Parameters]\n              IANA, \"OAuth Parameters\",\n              <https://www.iana.org/assignments/oauth-parameters>."
     },
     {
-     "id": "15.2-4",
-     "kind": "pre",
-     "en": "   [JSON.Schema]\n              OpenJS Foundation, \"JSON Schema\",\n              <https://json-schema.org/>."
+     "id": "15.2-ef02aa70",
+     "kind": "p",
+     "en": "[JSON.Schema] OpenJS Foundation, \"JSON Schema\", <https://json-schema.org/>."
     },
     {
-     "id": "15.2-5",
+     "id": "15.2-8ae9c308",
      "kind": "pre",
      "en": "   [OID-CIBA] Fernandez, G., Walter, F., Nennker, A., Tonge, D., and B.\n              Campbell, \"OpenID Connect Client-Initiated Backchannel\n              Authentication Flow - Core 1.0\", 1 September 2021,\n              <https://openid.net/specs/openid-client-initiated-\n              backchannel-authentication-core-1_0.html>."
     },
     {
-     "id": "15.2-6",
+     "id": "15.2-234278e7",
      "kind": "pre",
      "en": "   [OIDC]     Sakimura, N., Bradley, J., Jones, M., de Medeiros, B., and\n              C. Mortimore, \"OpenID Connect Core 1.0 incorporating\n              errata set 1\", 8 November 2014,\n              <https://openid.net/specs/openid-connect-core-1_0.html>."
     },
     {
-     "id": "15.2-7",
+     "id": "15.2-08dc4f05",
      "kind": "pre",
      "en": "   [RFC0020]  Cerf, V., \"ASCII format for network interchange\", STD 80,\n              RFC 20, DOI 10.17487/RFC0020, October 1969,\n              <https://www.rfc-editor.org/info/rfc20>."
     },
     {
-     "id": "15.2-8",
+     "id": "15.2-3daaaf2d",
      "kind": "pre",
      "en": "   [RFC6749]  Hardt, D., Ed., \"The OAuth 2.0 Authorization Framework\",\n              RFC 6749, DOI 10.17487/RFC6749, October 2012,\n              <https://www.rfc-editor.org/info/rfc6749>."
     },
     {
-     "id": "15.2-9",
+     "id": "15.2-c4f40aa7",
      "kind": "pre",
      "en": "   [RFC7591]  Richer, J., Ed., Jones, M., Bradley, J., Machulak, M., and\n              P. Hunt, \"OAuth 2.0 Dynamic Client Registration Protocol\",\n              RFC 7591, DOI 10.17487/RFC7591, July 2015,\n              <https://www.rfc-editor.org/info/rfc7591>."
     },
     {
-     "id": "15.2-10",
+     "id": "15.2-4af0c093",
      "kind": "pre",
      "en": "   [RFC8259]  Bray, T., Ed., \"The JavaScript Object Notation (JSON) Data\n              Interchange Format\", STD 90, RFC 8259,\n              DOI 10.17487/RFC8259, December 2017,\n              <https://www.rfc-editor.org/info/rfc8259>."
     },
     {
-     "id": "15.2-11",
+     "id": "15.2-85ce8bcf",
      "kind": "pre",
      "en": "   [RFC9101]  Sakimura, N., Bradley, J., and M. Jones, \"The OAuth 2.0\n              Authorization Framework: JWT-Secured Authorization Request\n              (JAR)\", RFC 9101, DOI 10.17487/RFC9101, August 2021,\n              <https://www.rfc-editor.org/info/rfc9101>."
     },
     {
-     "id": "15.2-12",
+     "id": "15.2-a1add09e",
      "kind": "pre",
      "en": "   [RFC9126]  Lodderstedt, T., Campbell, B., Sakimura, N., Tonge, D.,\n              and F. Skokan, \"OAuth 2.0 Pushed Authorization Requests\",\n              RFC 9126, DOI 10.17487/RFC9126, September 2021,\n              <https://www.rfc-editor.org/info/rfc9126>."
     },
     {
-     "id": "15.2-13",
+     "id": "15.2-1a44cac6",
      "kind": "pre",
      "en": "   [Transaction-Auth]\n              Lodderstedt, T., \"Transaction Authorization or why we need\n              to re-think OAuth scopes\", 20 April 2019,\n              <https://medium.com/oauth-2/transaction-authorization-or-\n              why-we-need-to-re-think-oauth-scopes-2326e2038948>."
     }
@@ -1383,82 +1383,82 @@
    "title": "OpenID Connect",
    "paragraphs": [
     {
-     "id": "A.1-1",
+     "id": "A.1-6f2b31a7",
      "kind": "p",
      "en": "OpenID Connect [OIDC] specifies the JSON-based claims request parameter that can be used to specify the claims a client (acting as an OpenID Connect Relying Party) wishes to receive in a fine-grained and privacy-preserving way as well as assign those claims to certain delivery mechanisms, i.e., ID Token or userinfo response."
     },
     {
-     "id": "A.1-2",
+     "id": "A.1-6235aa4c",
      "kind": "p",
      "en": "The combination of the scope value openid and the additional parameter claims can be used beside authorization_details in the same way as every non-OIDC scope value."
     },
     {
-     "id": "A.1-3",
+     "id": "A.1-2482d2bf",
      "kind": "p",
      "en": "Alternatively, there could be an authorization details type for OpenID Connect.  This section gives an example of what such an authorization details type could look like, but defining this authorization details type is outside the scope of this specification."
     },
     {
-     "id": "A.1-4",
+     "id": "A.1-6c685e34",
      "kind": "p",
      "en": "These hypothetical examples try to encapsulate all details specific to the OpenID Connect part of an authorization process into an authorization JSON object."
     },
     {
-     "id": "A.1-5",
+     "id": "A.1-78b4755d",
      "kind": "p",
      "en": "The top-level fields are based on the definitions given in [OIDC]:"
     },
     {
-     "id": "A.1-6",
+     "id": "A.1-751fae4f",
      "kind": "p",
      "en": "claim_sets:  the names of predefined claim sets, replacement for respective scope values, such as profile"
     },
     {
-     "id": "A.1-7",
+     "id": "A.1-5275a319",
      "kind": "p",
      "en": "max_age:  Maximum Authentication Age"
     },
     {
-     "id": "A.1-8",
+     "id": "A.1-8e8ea784",
      "kind": "p",
      "en": "acr_values:  requested Authentication Context Class Reference (ACR) values"
     },
     {
-     "id": "A.1-9",
+     "id": "A.1-0097dbd8",
      "kind": "p",
      "en": "claims:  the claims JSON structure as defined in [OIDC]"
     },
     {
-     "id": "A.1-10",
+     "id": "A.1-a65e0e85",
      "kind": "p",
      "en": "This is a simple request for some claim sets."
     },
     {
-     "id": "A.1-11",
+     "id": "A.1-177ceeeb",
      "kind": "pre",
      "en": "   [\n      {\n         \"type\": \"openid\",\n         \"locations\": [\n            \"https://op.example.com/userinfo\"\n         ],\n         \"claim_sets\": [\n            \"email\",\n            \"profile\"\n         ]\n      }\n   ]"
     },
     {
-     "id": "A.1-12",
+     "id": "A.1-4897bb7d",
      "kind": "pre",
      "en": "           Figure 25: Example of OpenID Connect Request Utilizing\n                          \"authorization_details\""
     },
     {
-     "id": "A.1-13",
+     "id": "A.1-c90f7ccc",
      "kind": "pre",
      "en": "      |  Note: locations specifies the location of the userinfo endpoint\n      |  since this is the only place where an access token is used by a\n      |  client (Relying Party) in OpenID Connect to obtain claims."
     },
     {
-     "id": "A.1-14",
+     "id": "A.1-5dd979b9",
      "kind": "p",
      "en": "A more sophisticated example is shown in Figure 26."
     },
     {
-     "id": "A.1-15",
+     "id": "A.1-f299a489",
      "kind": "pre",
      "en": "   [\n      {\n         \"type\": \"openid\",\n         \"locations\": [\n            \"https://op.example.com/userinfo\"\n         ],\n         \"max_age\": 86400,\n         \"acr_values\": \"urn:mace:incommon:iap:silver\",\n         \"claims\": {\n            \"userinfo\": {\n               \"given_name\": {\n                  \"essential\": true\n               },\n               \"nickname\": null,\n               \"email\": {\n                  \"essential\": true\n               },\n               \"email_verified\": {\n                  \"essential\": true\n               },\n               \"picture\": null,\n               \"http://example.com/claims/groups\": null\n            },\n            \"id_token\": {\n               \"auth_time\": {\n                  \"essential\": true\n               }\n            }\n         }\n      }\n   ]"
     },
     {
-     "id": "A.1-16",
+     "id": "A.1-83368fbf",
      "kind": "pre",
      "en": "      Figure 26: Advanced Example of OpenID Connect Request Utilizing\n                          \"authorization_details\""
     }
@@ -1469,42 +1469,42 @@
    "title": "Remote Electronic Signing",
    "paragraphs": [
     {
-     "id": "A.2-1",
+     "id": "A.2-b88827a9",
      "kind": "p",
      "en": "The following example is based on the concept laid out for remote electronic signing in ETSI TS 119 432 [ETSI] and the Cloud Signature Consortium (CSC) API for remote signature creation [CSC]."
     },
     {
-     "id": "A.2-2",
+     "id": "A.2-0256cd10",
      "kind": "pre",
      "en": "   [\n      {\n         \"type\": \"sign\",\n         \"locations\": [\n            \"https://signing.example.com/signdoc\"\n         ],\n         \"credentialID\": \"60916d31-932e-4820-ba82-1fcead1c9ea3\",\n         \"documentDigests\": [\n            {\n               \"hash\": \"sTOgwOm+474gFj0q0x1iSNspKqbcse4IeiqlDg/HWuI=\",\n               \"label\": \"Credit Contract\"\n            },\n            {\n               \"hash\": \"HZQzZmMAIWekfGH0/ZKW1nsdt0xg3H6bZYztgsMTLw0=\",\n               \"label\": \"Contract Payment Protection Insurance\"\n            }\n         ],\n         \"hashAlgorithmOID\": \"2.16.840.1.101.3.4.2.1\"\n      }\n   ]"
     },
     {
-     "id": "A.2-3",
+     "id": "A.2-90b0a8ba",
      "kind": "pre",
      "en": "                  Figure 27: Example of Electronic Signing"
     },
     {
-     "id": "A.2-4",
+     "id": "A.2-a8f07091",
      "kind": "p",
      "en": "The top-level fields have the following meaning:"
     },
     {
-     "id": "A.2-5",
+     "id": "A.2-43542bb8",
      "kind": "p",
      "en": "credentialID:  identifier of the certificate to be used for signing"
     },
     {
-     "id": "A.2-6",
+     "id": "A.2-31080d0f",
      "kind": "p",
      "en": "documentDigests:  array containing the hash of every document to be signed (hash fields).  Additionally, the corresponding label field identifies the respective document to the user, e.g., to be used in user consent."
     },
     {
-     "id": "A.2-7",
+     "id": "A.2-918f2567",
      "kind": "p",
      "en": "hashAlgorithm:  algorithm that was used to calculate the hash values"
     },
     {
-     "id": "A.2-8",
+     "id": "A.2-d2bda610",
      "kind": "p",
      "en": "The AS is supposed to ask the user for consent for the creation of signatures for the documents listed in the structure.  The client uses the access token issued as a result of the process to call the document signature API at the respective signing service to actually create the signature.  This access token is bound to the client, the user ID and the hashes (and signature algorithm) as consented by the user."
     }
@@ -1515,37 +1515,37 @@
    "title": "Access to Tax Data",
    "paragraphs": [
     {
-     "id": "A.3-1",
+     "id": "A.3-b5378ed3",
      "kind": "p",
      "en": "This example is inspired by an API allowing third parties to access citizen's tax declarations and income statements, for example, to determine their creditworthiness."
     },
     {
-     "id": "A.3-2",
+     "id": "A.3-c0595a3e",
      "kind": "pre",
      "en": "   [\n       {\n           \"type\": \"tax_data\",\n           \"locations\": [\n               \"https://taxservice.govehub.no.example.com\"\n           ],\n           \"actions\":\"read_tax_declaration\",\n           \"periods\": [\"2018\"],\n           \"duration_of_access\": 30,\n           \"tax_payer_id\": \"23674185438934\"\n       }\n   ]"
     },
     {
-     "id": "A.3-3",
+     "id": "A.3-9c6f7d78",
      "kind": "pre",
      "en": "                   Figure 28: Example of Tax Data Access"
     },
     {
-     "id": "A.3-4",
+     "id": "A.3-a8f07091",
      "kind": "p",
      "en": "The top-level fields have the following meaning:"
     },
     {
-     "id": "A.3-5",
+     "id": "A.3-ba78d509",
      "kind": "p",
      "en": "periods:  the periods the client wants to access"
     },
     {
-     "id": "A.3-6",
+     "id": "A.3-8258544a",
      "kind": "p",
      "en": "duration_of_access:  how long the clients intend to access the data in days"
     },
     {
-     "id": "A.3-7",
+     "id": "A.3-6b29b450",
      "kind": "p",
      "en": "tax_payer_id:  identifier of the taxpayer (if known to the client)"
     }
@@ -1556,72 +1556,72 @@
    "title": "eHealth",
    "paragraphs": [
     {
-     "id": "A.4-1",
+     "id": "A.4-84744990",
      "kind": "p",
      "en": "These two examples are inspired by requirements for APIs used in the Norwegian eHealth system."
     },
     {
-     "id": "A.4-2",
+     "id": "A.4-27e902ea",
      "kind": "p",
      "en": "In this use case, the physical therapist sits in front of their computer using a local Electronic Health Records (EHR) system.  They want to look at the electronic patient records of a certain patient, and they also want to fetch the patient's journal entries in another system, perhaps at another institution or a national service.  Access to this data is provided by an API."
     },
     {
-     "id": "A.4-3",
+     "id": "A.4-b0f47113",
      "kind": "p",
      "en": "The information necessary to authorize the request at the API is only known by the EHR system and must be presented to the API."
     },
     {
-     "id": "A.4-4",
+     "id": "A.4-2c221052",
      "kind": "p",
      "en": "In the first example, the authorization details object contains the identifier of an organization.  In this case, the API needs to know if the given organization has the lawful basis for processing personal health information to give access to sensitive data."
     },
     {
-     "id": "A.4-5",
+     "id": "A.4-8731645b",
      "kind": "pre",
      "en": "   \"authorization_details\": {\n       \"type\": \"patient_record\",\n       \"requesting_entity\": {\n           \"type\": \"Practitioner\",\n           \"identifier\": [\n           {\n               \"system\": \"urn:oid:2.16.578.1.12.4.1.4.4\",\n               \"value\": \"1234567\"\n           }],\n           \"practitioner_role\": {\n               \"organization\": {\n                   \"identifier\": {\n                       \"system\": \"urn:oid:2.16.578.1.12.4.1.2.101\",\n                       \"type\": \"ENH\",\n                       \"value\": \"[organizational number]\"\n                   }\n               }\n           }\n       }\n   }"
     },
     {
-     "id": "A.4-6",
+     "id": "A.4-20963eea",
      "kind": "pre",
      "en": "                         Figure 29: eHealth Example"
     },
     {
-     "id": "A.4-7",
+     "id": "A.4-39179d02",
      "kind": "p",
      "en": "In the second example, the API requires more information to authorize the request.  In this case, the authorization details object contains additional information about the health institution and the current profession the user has at the time of the request.  The additional level of detail could be used for both authorization and data minimization."
     },
     {
-     "id": "A.4-8",
+     "id": "A.4-c769c520",
      "kind": "pre",
      "en": "   [\n      {\n         \"type\": \"patient_record\",\n         \"location\": \"https://fhir.example.com/patient\",\n         \"actions\": [\n            \"read\"\n         ],\n         \"patient_identifier\": [\n            {\n               \"system\": \"urn:oid:2.16.578.1.12.4.1.4.1\",\n               \"value\": \"12345678901\"\n            }\n         ],\n         \"reason_for_request\": \"Clinical treatment\",\n         \"requesting_entity\": {\n            \"type\": \"Practitioner\",\n            \"identifier\": [\n               {\n                  \"system\": \"urn:oid:2.16.578.1.12.4.1.4.4\",\n                  \"value\": \"1234567\"\n               }\n            ],\n            \"practitioner_role\": {\n               \"organization\": {\n                  \"identifier\": [\n                     {\n                        \"system\": \"urn:oid:2.16.578.1.12.4.1.2.101\",\n                        \"type\": \"ENH\",\n                        \"value\": \"<organizational number>\"\n                     }\n                  ],\n                  \"type\": {\n                     \"coding\": [\n                        {\n                           \"system\":\n                              \"http://hl7.example.org/fhir/org-type\",\n                           \"code\": \"dept\",\n                           \"display\": \"Hospital Department\"\n                        }\n                     ]\n                  },\n                  \"name\": \"Akuttmottak\"\n               },\n               \"profession\": {\n                  \"coding\": [\n                     {\n                        \"system\": \"http://snomed.example.org/sct\",\n                        \"code\": \"36682004\",\n                        \"display\": \"Physical therapist\"\n                     }\n                  ]\n               }\n            }\n         }\n      }\n   ]"
     },
     {
-     "id": "A.4-9",
+     "id": "A.4-a7022857",
      "kind": "pre",
      "en": "                    Figure 30: Advanced eHealth Example"
     },
     {
-     "id": "A.4-10",
+     "id": "A.4-537775d8",
      "kind": "p",
      "en": "Description of the fields:"
     },
     {
-     "id": "A.4-11",
+     "id": "A.4-9b826bb6",
      "kind": "p",
      "en": "patient_identifier:  the identifier of the patient composed of a system identifier in OID format (namespace) and the actual value within this namespace."
     },
     {
-     "id": "A.4-12",
+     "id": "A.4-2476afb9",
      "kind": "p",
      "en": "reason_for_request:  the reason why the user wants to access a certain API."
     },
     {
-     "id": "A.4-13",
+     "id": "A.4-8c093b0b",
      "kind": "p",
      "en": "requesting_entity:  specification of the requester by means of identity, role and organizational context.  This data is provided to facilitate authorization and for auditing purposes."
     },
     {
-     "id": "A.4-14",
+     "id": "A.4-76df5c9e",
      "kind": "p",
      "en": "In this use case, the AS authenticates the requester, who is not the patient, and approves access based on policies."
     }
@@ -1632,17 +1632,17 @@
    "title": "Acknowledgements",
    "paragraphs": [
     {
-     "id": "acknowledgements-1",
+     "id": "acknowledgements-e1304b27",
      "kind": "p",
      "en": "We would like to thank Daniel Fett, Sebastian Ebling, Dave Tonge, Mike Jones, Nat Sakimura, and Rob Otto for their valuable feedback during the preparation of this specification."
     },
     {
-     "id": "acknowledgements-2",
+     "id": "acknowledgements-3c36c9cf",
      "kind": "p",
      "en": "We would also like to thank Vladimir Dzhuvinov, Takahiko Kawasaki, Daniel Fett, Dave Tonge, Travis Spencer, Joergen Binningsboe, Aamund Bremer, Steinar Noem, Francis Pouatcha, Jacob Ideskog, Hannes Tschofenig, and Aaron Parecki for their valuable feedback to this specification."
     }
    ]
   }
  ],
- "content_hash": "0bed63429f7efb7ab5366e0a32ac691c51b081c51d4aa3279a50bcfb4883ada8"
+ "content_hash": "3bef51025fde36bb6af2fb0127cf818807cd99e1a5dbbfdf63b97ea8d5f65a17"
 }
