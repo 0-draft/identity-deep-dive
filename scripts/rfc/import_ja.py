@@ -13,8 +13,12 @@ Only ids that exist in en.json are kept. Paragraphs of kind "pre" are never
 translated and are rejected if present. The result records the source hash,
 so a page can tell when the English text changed under a translation.
 
+A translation written against an earlier en.json (positional ids, or a
+parse that split paragraphs differently) is carried over with --map-from:
+each old id is mapped to the current id of the paragraph with the same text.
+
 Usage:
-  import_ja.py 9449 translation.txt [--model NAME]
+  import_ja.py 9449 translation.txt [--model NAME] [--map-from old-en.json]
 """
 from __future__ import annotations
 
@@ -48,12 +52,31 @@ def main() -> int:
     ap.add_argument("number", type=int)
     ap.add_argument("source", type=Path)
     ap.add_argument("--model", default="")
+    ap.add_argument("--map-from", type=Path, help="the en.json the translation was written against")
     args = ap.parse_args()
     d = ROOT / "data" / "rfc" / str(args.number)
     en = json.loads((d / "en.json").read_text(encoding="utf-8"))
     kinds = {p["id"]: p["kind"] for s in en["sections"] for p in s["paragraphs"]}
     section_ids = {s["id"] for s in en["sections"]}
     titles, paragraphs = parse_blocks(args.source.read_text(encoding="utf-8"))
+
+    if args.map_from:
+        old = json.loads(args.map_from.read_text(encoding="utf-8"))
+        norm = lambda t: re.sub(r"\s+", " ", t).strip()  # noqa: E731
+        by_text = {(s["id"], norm(p["en"])): p["id"] for s in en["sections"] for p in s["paragraphs"]}
+        old_text = {p["id"]: (s["id"], norm(p["en"])) for s in old["sections"] for p in s["paragraphs"]}
+        mapped: dict[str, str] = {}
+        unmapped = 0
+        for k, v in paragraphs.items():
+            new = by_text.get(old_text.get(k, ("", "")))
+            if new:
+                mapped[new] = v
+            elif k in kinds:
+                mapped[k] = v
+            else:
+                unmapped += 1
+        print(f"  mapped {len(mapped)} paragraphs from the earlier parse; {unmapped} had no matching text and were dropped")
+        paragraphs = mapped
 
     errors = [f"unknown paragraph id {k}" for k in paragraphs if k not in kinds]
     errors += [f"preformatted paragraph {k} must not be translated" for k in paragraphs if kinds.get(k) == "pre"]
