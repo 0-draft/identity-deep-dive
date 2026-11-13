@@ -1,0 +1,1153 @@
+{
+ "number": 9728,
+ "title": "OAuth 2.0 Protected Resource Metadata",
+ "url": "https://www.rfc-editor.org/rfc/rfc9728",
+ "fetched_at": "2026-11-13T13:50:34+00:00",
+ "sections": [
+  {
+   "id": "abstract",
+   "title": "Abstract",
+   "paragraphs": [
+    {
+     "id": "abstract-1",
+     "kind": "p",
+     "en": "This specification defines a metadata format that an OAuth 2.0 client or authorization server can use to obtain the information needed to interact with an OAuth 2.0 protected resource."
+    }
+   ]
+  },
+  {
+   "id": "1",
+   "title": "Introduction",
+   "paragraphs": [
+    {
+     "id": "1-1",
+     "kind": "p",
+     "en": "This specification defines a metadata format enabling OAuth 2.0 clients and authorization servers to obtain information needed to interact with an OAuth 2.0 protected resource.  The structure and content of this specification are intentionally as parallel as possible to (1) \"OAuth 2.0 Dynamic Client Registration Protocol\" [RFC7591], which enables a client to provide metadata about itself to an OAuth 2.0 authorization server and (2) \"OAuth 2.0 Authorization Server Metadata\" [RFC8414], which enables a client to obtain metadata about an OAuth 2.0 authorization server."
+    },
+    {
+     "id": "1-2",
+     "kind": "p",
+     "en": "The means by which the client obtains the location of the protected resource is out of scope for this document.  In some cases, the location may be manually configured into the client; for example, an email client could provide an interface for a user to enter the URL of their JSON Meta Application Protocol (JMAP) server [RFC8620].  In other cases, it may be dynamically discovered; for example, a user could enter their email address into an email client, the client could perform WebFinger discovery [RFC7033] (in a manner related to the description in Section 2 of [OpenID.Discovery]) to find the resource server, and the client could then fetch the resource server metadata to find the authorization server to use to obtain authorization to access the user's email."
+    },
+    {
+     "id": "1-3",
+     "kind": "p",
+     "en": "The metadata for a protected resource is retrieved from a well-known location as a JSON [RFC8259] document, which declares information about its capabilities and, optionally, its relationships with other services.  This process is described in Section 3."
+    },
+    {
+     "id": "1-4",
+     "kind": "p",
+     "en": "This metadata can be communicated either in a self-asserted fashion or as a set of signed metadata values represented as claims in a JSON Web Token (JWT) [JWT].  In the JWT case, the issuer is vouching for the validity of the data about the protected resource.  This is analogous to the role that the software statement plays in OAuth Dynamic Client Registration [RFC7591]."
+    },
+    {
+     "id": "1-5",
+     "kind": "p",
+     "en": "Each protected resource publishing metadata about itself makes its own metadata document available at a well-known location deterministically derived from the protected resource's URL, even when the resource server implements multiple protected resources. This prevents attackers from publishing metadata that supposedly describes the protected resource but that is not actually authoritative for the protected resource, as described in Section 7.3."
+    },
+    {
+     "id": "1-6",
+     "kind": "p",
+     "en": "Section 2 defines metadata parameters that a protected resource can publish, which includes things like which scopes are supported, how a client can present an access token, and more.  These values, such as the jwks_uri (see Section 2), may be used with other specifications; for example, the public keys published in the jwks_uri can be used to verify the signed resource responses, as described in [FAPI.MessageSigning]."
+    },
+    {
+     "id": "1-7",
+     "kind": "p",
+     "en": "Section 5 describes the use of WWW-Authenticate by protected resources to dynamically inform clients of the URL of their protected resource metadata.  This use of WWW-Authenticate can indicate that the protected resource metadata may have changed."
+    }
+   ]
+  },
+  {
+   "id": "1.1",
+   "title": "Requirements Notation and Conventions",
+   "paragraphs": [
+    {
+     "id": "1.1-1",
+     "kind": "p",
+     "en": "The key words \"MUST\", \"MUST NOT\", \"REQUIRED\", \"SHALL\", \"SHALL NOT\", \"SHOULD\", \"SHOULD NOT\", \"RECOMMENDED\", \"NOT RECOMMENDED\", \"MAY\", and \"OPTIONAL\" in this document are to be interpreted as described in BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all capitals, as shown here."
+    },
+    {
+     "id": "1.1-2",
+     "kind": "p",
+     "en": "All applications of JSON Web Signature (JWS) data structures [JWS] and JSON Web Encryption (JWE) data structures [JWE] as discussed in this specification utilize the JWS Compact Serialization or the JWE Compact Serialization; the JWS JSON Serialization and the JWE JSON Serialization are not used.  Choosing a single serialization is intended to facilitate interoperability."
+    }
+   ]
+  },
+  {
+   "id": "1.2",
+   "title": "Terminology",
+   "paragraphs": [
+    {
+     "id": "1.2-1",
+     "kind": "p",
+     "en": "This specification uses the terms \"access token\", \"authorization code\", \"authorization server\", \"client\", \"client authentication\", \"client identifier\", \"protected resource\", and \"resource server\" defined by OAuth 2.0 [RFC6749], and the terms \"Claim Name\" and \"JSON Web Token (JWT)\" defined by \"JSON Web Token (JWT)\" [JWT]."
+    },
+    {
+     "id": "1.2-2",
+     "kind": "p",
+     "en": "This specification defines the following term:"
+    },
+    {
+     "id": "1.2-3",
+     "kind": "p",
+     "en": "Resource Identifier: The protected resource's resource identifier, which is a URL that uses the https scheme and has no fragment component.  As specified in Section 2 of [RFC8707], it also SHOULD NOT include a query component, but it is recognized that there are cases that make a query component a useful and necessary part of a resource identifier.  Protected resource metadata is published at a .well- known location [RFC8615] derived from this resource identifier, as described in Section 3."
+    }
+   ]
+  },
+  {
+   "id": "2",
+   "title": "Protected Resource Metadata",
+   "paragraphs": [
+    {
+     "id": "2-1",
+     "kind": "p",
+     "en": "Protected resources can have metadata describing their configuration. The following protected resource metadata parameters are used by this specification and are registered in the \"OAuth Protected Resource Metadata\" registry established in Section 8.1:"
+    },
+    {
+     "id": "2-2",
+     "kind": "p",
+     "en": "resource REQUIRED.  The protected resource's resource identifier, as defined in Section 1.2."
+    },
+    {
+     "id": "2-3",
+     "kind": "p",
+     "en": "authorization_servers OPTIONAL.  JSON array containing a list of OAuth authorization server issuer identifiers, as defined in [RFC8414], for authorization servers that can be used with this protected resource.  Protected resources MAY choose not to advertise some supported authorization servers even when this parameter is used. In some use cases, the set of authorization servers will not be enumerable, in which case this metadata parameter would not be used."
+    },
+    {
+     "id": "2-4",
+     "kind": "p",
+     "en": "jwks_uri OPTIONAL.  URL of the protected resource's JSON Web Key (JWK) Set [JWK] document.  This contains public keys belonging to the protected resource, such as signing key(s) that the resource server uses to sign resource responses.  This URL MUST use the https scheme.  When both signing and encryption keys are made available, a use (public key use) parameter value is REQUIRED for all keys in the referenced JWK Set to indicate each key's intended usage."
+    },
+    {
+     "id": "2-5",
+     "kind": "p",
+     "en": "scopes_supported RECOMMENDED.  JSON array containing a list of scope values, as defined in OAuth 2.0 [RFC6749], that are used in authorization requests to request access to this protected resource.  Protected resources MAY choose not to advertise some scope values supported even when this parameter is used."
+    },
+    {
+     "id": "2-6",
+     "kind": "p",
+     "en": "bearer_methods_supported OPTIONAL.  JSON array containing a list of the supported methods of sending an OAuth 2.0 bearer token [RFC6750] to the protected resource.  Defined values are [\"header\", \"body\", \"query\"], corresponding to Sections 2.1, 2.2, and 2.3 of [RFC6750].  The empty array [] can be used to indicate that no bearer methods are supported.  If this entry is omitted, no default bearer methods supported are implied, nor does its absence indicate that they are not supported."
+    },
+    {
+     "id": "2-7",
+     "kind": "p",
+     "en": "resource_signing_alg_values_supported OPTIONAL.  JSON array containing a list of the JWS [JWS] signing algorithms (alg values) [JWA] supported by the protected resource for signing resource responses, for instance, as described in [FAPI.MessageSigning].  No default algorithms are implied if this entry is omitted.  The value none MUST NOT be used."
+    },
+    {
+     "id": "2-8",
+     "kind": "p",
+     "en": "resource_name Human-readable name of the protected resource intended for display to the end user.  It is RECOMMENDED that protected resource metadata include this field.  The value of this field MAY be internationalized, as described in Section 2.1."
+    },
+    {
+     "id": "2-9",
+     "kind": "p",
+     "en": "resource_documentation OPTIONAL.  URL of a page containing human-readable information that developers might want or need to know when using the protected resource.  The value of this field MAY be internationalized, as described in Section 2.1."
+    },
+    {
+     "id": "2-10",
+     "kind": "p",
+     "en": "resource_policy_uri OPTIONAL.  URL of a page containing human-readable information about the protected resource's requirements on how the client can use the data provided by the protected resource.  The value of this field MAY be internationalized, as described in Section 2.1."
+    },
+    {
+     "id": "2-11",
+     "kind": "p",
+     "en": "resource_tos_uri OPTIONAL.  URL of a page containing human-readable information about the protected resource's terms of service.  The value of this field MAY be internationalized, as described in Section 2.1."
+    },
+    {
+     "id": "2-12",
+     "kind": "p",
+     "en": "tls_client_certificate_bound_access_tokens OPTIONAL.  Boolean value indicating protected resource support for mutual-TLS client certificate-bound access tokens [RFC8705].  If omitted, the default value is false."
+    },
+    {
+     "id": "2-13",
+     "kind": "p",
+     "en": "authorization_details_types_supported OPTIONAL.  JSON array containing a list of the authorization details type values supported by the resource server when the authorization_details request parameter [RFC9396] is used."
+    },
+    {
+     "id": "2-14",
+     "kind": "p",
+     "en": "dpop_signing_alg_values_supported OPTIONAL.  JSON array containing a list of the JWS alg values (from the \"JSON Web Signature and Encryption Algorithms\" registry [IANA.JOSE]) supported by the resource server for validating Demonstrating Proof of Possession (DPoP) proof JWTs [RFC9449]."
+    },
+    {
+     "id": "2-15",
+     "kind": "p",
+     "en": "dpop_bound_access_tokens_required OPTIONAL.  Boolean value specifying whether the protected resource always requires the use of DPoP-bound access tokens [RFC9449].  If omitted, the default value is false."
+    },
+    {
+     "id": "2-16",
+     "kind": "p",
+     "en": "Additional protected resource metadata parameters MAY also be used."
+    }
+   ]
+  },
+  {
+   "id": "2.1",
+   "title": "Human-Readable Resource Metadata",
+   "paragraphs": [
+    {
+     "id": "2.1-1",
+     "kind": "p",
+     "en": "Human-readable resource metadata values and resource metadata values that reference human-readable content MAY be represented in multiple languages and scripts.  For example, the values of fields such as resource_name, resource_documentation, resource_tos_uri, and resource_policy_uri might have multiple locale-specific metadata values to facilitate use in different locations."
+    },
+    {
+     "id": "2.1-2",
+     "kind": "p",
+     "en": "To specify the languages and scripts, language tags [BCP47] are added to resource metadata parameter names, delimited by a # character. Since member names as discussed in JSON [RFC8259] are case sensitive, it is RECOMMENDED that language tag values used in Claim Names be spelled using the character case with which they are registered in the \"Language Subtag Registry\" [IANA.Language].  In particular, normally, language names are spelled with lowercase characters, region names are spelled with uppercase characters, and languages are spelled with mixed-case characters.  However, since language tag values are case insensitive per [BCP47], implementations SHOULD interpret the language tag values supplied in a case-insensitive manner.  Per the recommendations in [BCP47], language tag values used in metadata parameter names should only be as specific as is necessary.  For instance, using fr might be sufficient in many contexts, rather than fr-CA or fr-FR."
+    },
+    {
+     "id": "2.1-3",
+     "kind": "p",
+     "en": "For example, a resource could represent its name in English as \"resource_name#en\": \"My Resource\" and its name in Italian as \"resource_name#it\": \"La mia bella risorsa\" within its metadata.  Any or all of these names MAY be displayed to the end user, choosing which names to display based on system configuration, user preferences, or other factors."
+    },
+    {
+     "id": "2.1-4",
+     "kind": "p",
+     "en": "If any human-readable field is sent without a language tag, parties using it MUST NOT make any assumptions about the language, character set, or script of the string value, and the string value MUST be used as is wherever it is presented in a user interface.  To facilitate interoperability, it is RECOMMENDED that each kind of human-readable metadata provided include an instance of its metadata parameter without any language tags in addition to any language-specific parameters, and it is RECOMMENDED that any human-readable fields sent without language tags contain values suitable for display on a wide variety of systems."
+    }
+   ]
+  },
+  {
+   "id": "2.2",
+   "title": "Signed Protected Resource Metadata",
+   "paragraphs": [
+    {
+     "id": "2.2-1",
+     "kind": "p",
+     "en": "In addition to JSON elements, metadata values MAY also be provided as a signed_metadata value, which is a JSON Web Token (JWT) [JWT] that asserts metadata values about the protected resource as a bundle.  A set of metadata parameters that can be used in signed metadata as claims are defined in Section 2.  The signed metadata MUST be digitally signed or MACed (protected with a Message Authentication Code) using a JSON Web Signature (JWS) [JWS] and MUST contain an iss (issuer) claim denoting the party attesting to the claims in the signed metadata.  Consumers of the metadata MAY ignore the signed metadata if they do not support this feature.  If the consumer of the metadata supports signed metadata, metadata values conveyed in the signed metadata MUST take precedence over the corresponding values conveyed using plain JSON elements."
+    },
+    {
+     "id": "2.2-2",
+     "kind": "p",
+     "en": "Signed metadata is included in the protected resource metadata JSON object using this OPTIONAL metadata parameter:"
+    },
+    {
+     "id": "2.2-3",
+     "kind": "p",
+     "en": "signed_metadata A JWT containing metadata parameters about the protected resource as claims.  This is a string value consisting of the entire signed JWT.  A signed_metadata parameter SHOULD NOT appear as a claim in the JWT; it is RECOMMENDED to reject any metadata in which this occurs."
+    }
+   ]
+  },
+  {
+   "id": "3",
+   "title": "Obtaining Protected Resource Metadata",
+   "paragraphs": [
+    {
+     "id": "3-1",
+     "kind": "p",
+     "en": "Protected resources supporting metadata MUST make a JSON document containing metadata as specified in Section 2 available at a URL formed by inserting a well-known URI string into the protected resource's resource identifier between the host component and the path and/or query components, if any.  By default, the well-known URI string used is /.well-known/oauth-protected-resource.  The syntax and semantics of .well-known are defined in [RFC8615].  The well-known URI path suffix used MUST be registered in the \"Well-Known URIs\" registry [IANA.well-known].  Examples of this construction can be found in Section 3.1."
+    },
+    {
+     "id": "3-2",
+     "kind": "p",
+     "en": "The term \"application\", as used below (and as used in [RFC8414]), encompasses all the components used to accomplish the task for the use case.  That can include OAuth clients, authorization servers, protected resources, and non-OAuth components, inclusive of the code running in each of them.  Applications are built to solve particular problems and may utilize many components and services."
+    },
+    {
+     "id": "3-3",
+     "kind": "p",
+     "en": "Different applications utilizing OAuth protected resources in application-specific ways MAY define and register different well- known URI path suffixes for publishing protected resource metadata used by those applications.  For instance, if the Example application uses an OAuth protected resource in an Example-specific way and there are Example-specific metadata values that it needs to publish, then it might register and use the example-protected-resource URI path suffix and publish the metadata document at the URL formed by inserting /.well-known/example-protected-resource between the host and path and/or query components of the protected resource's resource identifier.  Alternatively, many such applications will use the default well-known URI string /.well-known/oauth-protected-resource, which is the right choice for general-purpose OAuth protected resources, and not register an application-specific one."
+    },
+    {
+     "id": "3-4",
+     "kind": "p",
+     "en": "An OAuth 2.0 application using this specification MUST specify what well-known URI suffix it will use for this purpose.  The same protected resource MAY choose to publish its metadata at multiple well-known locations derived from its resource identifier -- for example, publishing metadata at both /.well-known/example-protected- resource and /.well-known/oauth-protected-resource."
+    }
+   ]
+  },
+  {
+   "id": "3.1",
+   "title": "Protected Resource Metadata Request",
+   "paragraphs": [
+    {
+     "id": "3.1-1",
+     "kind": "p",
+     "en": "A protected resource metadata document MUST be queried using an HTTP GET request at the previously specified URL."
+    },
+    {
+     "id": "3.1-2",
+     "kind": "p",
+     "en": "The consumer of the metadata would make the following request when the resource identifier is https://resource.example.com and the well- known URI path suffix is oauth-protected-resource to obtain the metadata, since the resource identifier contains no path component:"
+    },
+    {
+     "id": "3.1-3",
+     "kind": "p",
+     "en": "GET /.well-known/oauth-protected-resource HTTP/1.1 Host: resource.example.com"
+    },
+    {
+     "id": "3.1-4",
+     "kind": "p",
+     "en": "If the resource identifier value contains a path or query component, any terminating slash (/) following the host component MUST be removed before inserting /.well-known/ and the well-known URI path suffix between the host component and the path and/or query components.  The consumer of the metadata would make the following request when the resource identifier is https://resource.example.com/ resource1 and the well-known URI path suffix is oauth-protected- resource to obtain the metadata, since the resource identifier contains a path component:"
+    },
+    {
+     "id": "3.1-5",
+     "kind": "p",
+     "en": "GET /.well-known/oauth-protected-resource/resource1 HTTP/1.1 Host: resource.example.com"
+    },
+    {
+     "id": "3.1-6",
+     "kind": "p",
+     "en": "Using path components enables supporting multiple resources per host. This is required in some multi-tenant hosting configurations.  This use of .well-known is for supporting multiple resources per host; unlike its use in [RFC8615], it does not provide general information about the host."
+    }
+   ]
+  },
+  {
+   "id": "3.2",
+   "title": "Protected Resource Metadata Response",
+   "paragraphs": [
+    {
+     "id": "3.2-1",
+     "kind": "p",
+     "en": "The response is a set of metadata parameters about the protected resource's configuration.  A successful response MUST use the 200 OK HTTP status code and return a JSON object using the application/json content type that contains a set of metadata parameters as its members that are a subset of the metadata parameters defined in Section 2.  Additional metadata parameters MAY be defined and used; any metadata parameters that are not understood MUST be ignored."
+    },
+    {
+     "id": "3.2-2",
+     "kind": "p",
+     "en": "Parameters with multiple values are represented as JSON arrays. Parameters with zero values MUST be omitted from the response."
+    },
+    {
+     "id": "3.2-3",
+     "kind": "p",
+     "en": "An error response uses the applicable HTTP status code value."
+    },
+    {
+     "id": "3.2-4",
+     "kind": "p",
+     "en": "The following is a non-normative example response:"
+    },
+    {
+     "id": "3.2-5",
+     "kind": "p",
+     "en": "HTTP/1.1 200 OK Content-Type: application/json"
+    },
+    {
+     "id": "3.2-6",
+     "kind": "pre",
+     "en": "     {\n      \"resource\":\n        \"https://resource.example.com\",\n      \"authorization_servers\":\n        [\"https://as1.example.com\",\n         \"https://as2.example.net\"],\n      \"bearer_methods_supported\":\n        [\"header\", \"body\"],\n      \"scopes_supported\":\n        [\"profile\", \"email\", \"phone\"],\n      \"resource_documentation\":\n        \"https://resource.example.com/resource_documentation.html\"\n     }"
+    }
+   ]
+  },
+  {
+   "id": "3.3",
+   "title": "Protected Resource Metadata Validation",
+   "paragraphs": [
+    {
+     "id": "3.3-1",
+     "kind": "p",
+     "en": "The resource value returned MUST be identical to the protected resource's resource identifier value into which the well-known URI path suffix was inserted to create the URL used to retrieve the metadata.  If these values are not identical, the data contained in the response MUST NOT be used."
+    },
+    {
+     "id": "3.3-2",
+     "kind": "p",
+     "en": "If the protected resource metadata was retrieved from a URL returned by the protected resource via the WWW-Authenticate resource_metadata parameter, then the resource value returned MUST be identical to the URL that the client used to make the request to the resource server. If these values are not identical, the data contained in the response MUST NOT be used."
+    },
+    {
+     "id": "3.3-3",
+     "kind": "p",
+     "en": "These validation actions can thwart impersonation attacks, as described in Section 7.3."
+    },
+    {
+     "id": "3.3-4",
+     "kind": "p",
+     "en": "The recipient MUST validate that any signed metadata was signed by a key belonging to the issuer and that the signature is valid.  If the signature does not validate or the issuer is not trusted, the recipient SHOULD treat this as an error condition."
+    }
+   ]
+  },
+  {
+   "id": "4",
+   "title": "Authorization Server Metadata",
+   "paragraphs": [
+    {
+     "id": "4-1",
+     "kind": "p",
+     "en": "To support use cases in which the set of legitimate protected resources to use with the authorization server is enumerable, this specification defines the authorization server metadata parameter protected_resources, which enables the authorization server to explicitly list the protected resources.  Note that if the set of legitimate authorization servers to use with a protected resource is also enumerable, lists in the authorization server metadata and protected resource metadata should be cross-checked against one another for consistency when these lists are used by the application profile."
+    },
+    {
+     "id": "4-2",
+     "kind": "p",
+     "en": "The following authorization server metadata parameter is defined by this specification and is registered in the \"OAuth Authorization Server Metadata\" registry established in \"OAuth 2.0 Authorization Server Metadata\" [RFC8414]."
+    },
+    {
+     "id": "4-3",
+     "kind": "p",
+     "en": "protected_resources OPTIONAL.  JSON array containing a list of resource identifiers for OAuth protected resources that can be used with this authorization server.  Authorization servers MAY choose not to advertise some supported protected resources even when this parameter is used.  In some use cases, the set of protected resources will not be enumerable, in which case this metadata parameter will not be present."
+    }
+   ]
+  },
+  {
+   "id": "5",
+   "title": "Use of WWW-Authenticate for Protected Resource Metadata",
+   "paragraphs": [
+    {
+     "id": "5-1",
+     "kind": "p",
+     "en": "A protected resource MAY use the WWW-Authenticate HTTP response header field, as discussed in [RFC9110], to return a URL to its protected resource metadata to the client.  The client can then retrieve protected resource metadata as described in Section 3.  The client might then, for instance, determine what authorization server to use for the resource based on protected resource metadata retrieved."
+    },
+    {
+     "id": "5-2",
+     "kind": "p",
+     "en": "A typical end-to-end flow doing so is as follows.  Note that while this example uses the OAuth 2.0 authorization code flow, a similar sequence could also be implemented with any other OAuth flow."
+    },
+    {
+     "id": "5-3",
+     "kind": "pre",
+     "en": "        +----------+              +----------+    +---------------+\n        |  Client  |              | Resource |    | Authorization |\n        |          |              |  Server  |    |    Server     |\n        +----+-----+              +----+-----+    +-------+-------+\n             |                         |                  |\n             |  1. Resource Request    |                  |\n             | ----------------------> |                  |\n             |  Without Access Token   |                  |\n             |                         |                  |\n             |                         |                  |\n             |   2. WWW-Authenticate   |                  |\n             | <---------------------- |                  |\n             |                         |                  |\n             |                         |                  |\n             |   3. Fetch RS Metadata  |                  |\n             | ----------------------> |                  |\n             |                         |                  |\n             |                         |                  |\n             | 4. RS Metadata Response |                  |\n             | <---------------------- |                  |\n             |                         |                  |\n   +---------+---------------+         |                  |\n   | 5. Validate RS Metadata |         |                  |\n   | Build AS Metadata URL   |         |                  |\n   +---------+---------------+         |                  |\n             |                         |                  |\n             |   6. Fetch AS Metadata  |                  |\n             | ------------------------+----------------> |\n             |                         |                  |\n             |                         |                  |\n             | 7. AS Metadata Response |                  |\n             | <-----------------------+----------------- |\n             |                         |                  |\n           +-+-------------------------+------------------+-+\n           |       8-9. OAuth Authorization Code Flow       |\n           |            Client Obtains Access Token         |\n           +-+-------------------------+------------------+-+\n             |                         |                  |\n             |  10. Resource Request   |                  |\n             | ----------------------> |                  |\n             |  With Access Token      |                  |\n             |                         |                  |\n             |                         |                  |\n             |  11. Resource Response  |                  |\n             | <---------------------- |                  |\n             |                         |                  |\n        +----+-----+              +----+-----+    +-------+-------+\n        |  Client  |              | Resource |    | Authorization |\n        |          |              |  Server  |    |    Server     |\n        +----------+              +----------+    +---------------+"
+    },
+    {
+     "id": "5-4",
+     "kind": "pre",
+     "en": "                         Figure 1: Sequence Diagram"
+    },
+    {
+     "id": "5-5",
+     "kind": "pre",
+     "en": "   1.   The client makes a request to a protected resource without\n        presenting an access token."
+    },
+    {
+     "id": "5-6",
+     "kind": "pre",
+     "en": "   2.   The resource server responds with a WWW-Authenticate header\n        including the URL of the protected resource metadata."
+    },
+    {
+     "id": "5-7",
+     "kind": "pre",
+     "en": "   3.   The client fetches the protected resource metadata from this\n        URL."
+    },
+    {
+     "id": "5-8",
+     "kind": "pre",
+     "en": "   4.   The resource server responds with the protected resource\n        metadata according to Section 3.2."
+    },
+    {
+     "id": "5-9",
+     "kind": "pre",
+     "en": "   5.   The client validates the protected resource metadata, as\n        described in Section 3.3, and builds the authorization server\n        metadata URL from an issuer identifier in the resource metadata\n        according to [RFC8414]."
+    },
+    {
+     "id": "5-10",
+     "kind": "pre",
+     "en": "   6.   The client makes a request to fetch the authorization server\n        metadata."
+    },
+    {
+     "id": "5-11",
+     "kind": "pre",
+     "en": "   7.   The authorization server responds with the authorization server\n        metadata document according to [RFC8414]."
+    },
+    {
+     "id": "5-12",
+     "kind": "pre",
+     "en": "   8.   The client directs the user agent to the authorization server to\n        begin the authorization flow."
+    },
+    {
+     "id": "5-13",
+     "kind": "pre",
+     "en": "   9.   The authorization exchange is completed and the authorization\n        server returns an access token to the client."
+    },
+    {
+     "id": "5-14",
+     "kind": "pre",
+     "en": "   10.  The client repeats the resource request from step 1, presenting\n        the newly obtained access token."
+    },
+    {
+     "id": "5-15",
+     "kind": "li",
+     "en": "11.  The resource server returns the requested protected resource."
+    }
+   ]
+  },
+  {
+   "id": "5.1",
+   "title": "WWW-Authenticate Response",
+   "paragraphs": [
+    {
+     "id": "5.1-1",
+     "kind": "p",
+     "en": "This specification introduces a new parameter in the WWW-Authenticate HTTP response header field to indicate the protected resource metadata URL:"
+    },
+    {
+     "id": "5.1-2",
+     "kind": "p",
+     "en": "resource_metadata: The URL of the protected resource metadata."
+    },
+    {
+     "id": "5.1-3",
+     "kind": "p",
+     "en": "The response below is an example of a WWW-Authenticate header that includes the resource identifier."
+    },
+    {
+     "id": "5.1-4",
+     "kind": "p",
+     "en": "HTTP/1.1 401 Unauthorized WWW-Authenticate: Bearer resource_metadata= \"https://resource.example.com/.well-known/oauth-protected-resource\""
+    },
+    {
+     "id": "5.1-5",
+     "kind": "p",
+     "en": "The HTTP status code in the example response above is defined by [RFC6750]."
+    },
+    {
+     "id": "5.1-6",
+     "kind": "p",
+     "en": "This parameter MAY also be used in WWW-Authenticate responses using authorization schemes other than \"Bearer\" [RFC6750], such as the DPoP scheme defined by [RFC9449]."
+    },
+    {
+     "id": "5.1-7",
+     "kind": "p",
+     "en": "The resource_metadata parameter MAY be combined with other parameters defined in other extensions, such as the max_age parameter defined by [RFC9470]."
+    }
+   ]
+  },
+  {
+   "id": "5.2",
+   "title": "Changes to Resource Metadata",
+   "paragraphs": [
+    {
+     "id": "5.2-1",
+     "kind": "p",
+     "en": "At any point, for any reason determined by the resource server, the protected resource MAY respond with a new WWW-Authenticate challenge that includes a value for the protected resource metadata URL to indicate that its metadata may have changed.  If the client receives such a WWW-Authenticate response, it SHOULD retrieve the updated protected resource metadata and use the new metadata values obtained, after validating them as described in Section 3.3.  Among other things, this enables a resource server to change which authorization servers it uses without any other coordination with clients."
+    }
+   ]
+  },
+  {
+   "id": "5.3",
+   "title": "Client Identifier and Client Authentication",
+   "paragraphs": [
+    {
+     "id": "5.3-1",
+     "kind": "p",
+     "en": "The way in which the client identifier is established at the authorization server is out of scope for this specification."
+    },
+    {
+     "id": "5.3-2",
+     "kind": "p",
+     "en": "This specification is intended to be deployed in scenarios where the client has no prior knowledge about the resource server and where the resource server might or might not have prior knowledge about the client."
+    },
+    {
+     "id": "5.3-3",
+     "kind": "p",
+     "en": "There are some existing methods by which an unrecognized client can make use of an authorization server, such as using Dynamic Client Registration [RFC7591] to register the client prior to initiating the authorization flow.  Future OAuth extensions might define alternatives, such as using URLs to identify clients."
+    }
+   ]
+  },
+  {
+   "id": "5.4",
+   "title": "Compatibility with Other Authentication Methods",
+   "paragraphs": [
+    {
+     "id": "5.4-1",
+     "kind": "p",
+     "en": "Resource servers MAY return other WWW-Authenticate headers indicating various authentication schemes.  This allows the resource server to support clients that may or may not implement this specification and allows clients to choose their preferred authentication scheme."
+    }
+   ]
+  },
+  {
+   "id": "6",
+   "title": "String Operations",
+   "paragraphs": [
+    {
+     "id": "6-1",
+     "kind": "p",
+     "en": "Processing some OAuth 2.0 messages requires comparing values in the messages to known values.  For example, the member names in the metadata response might be compared to specific member names such as resource.  Comparing Unicode strings [UNICODE], however, has significant security implications."
+    },
+    {
+     "id": "6-2",
+     "kind": "p",
+     "en": "Therefore, comparisons between JSON strings and other Unicode strings MUST be performed as specified below:"
+    },
+    {
+     "id": "6-3",
+     "kind": "li",
+     "en": "1.  Remove any JSON-applied escaping to produce an array of Unicode code points."
+    },
+    {
+     "id": "6-4",
+     "kind": "li",
+     "en": "2.  Unicode Normalization [USA15] MUST NOT be applied at any point to either the JSON string or the string it is to be compared against."
+    },
+    {
+     "id": "6-5",
+     "kind": "li",
+     "en": "3.  Comparisons between the two strings MUST be performed as a Unicode code-point-to-code-point equality comparison."
+    },
+    {
+     "id": "6-6",
+     "kind": "p",
+     "en": "Note that this is the same equality comparison procedure as that described in Section 8.3 of [RFC8259]."
+    }
+   ]
+  },
+  {
+   "id": "7",
+   "title": "Security Considerations",
+   "paragraphs": []
+  },
+  {
+   "id": "7.1",
+   "title": "TLS Requirements",
+   "paragraphs": [
+    {
+     "id": "7.1-1",
+     "kind": "p",
+     "en": "Implementations MUST support TLS.  They MUST follow the guidance in [BCP195], which provides recommendations and requirements for improving the security of deployed services that use TLS."
+    },
+    {
+     "id": "7.1-2",
+     "kind": "p",
+     "en": "The use of TLS at the protected resource metadata URLs protects against information disclosure and tampering."
+    }
+   ]
+  },
+  {
+   "id": "7.2",
+   "title": "Scopes",
+   "paragraphs": [
+    {
+     "id": "7.2-1",
+     "kind": "p",
+     "en": "The scopes_supported parameter is the list of scopes the resource server is willing to disclose that it supports.  It is not meant to indicate that an OAuth client should request all scopes in the list. The client SHOULD still follow OAuth best practices and request tokens with as limited a scope as possible for the given operation, as described in Section 2.3 of \"Best Current Practice for OAuth 2.0 Security\" [RFC9700]."
+    }
+   ]
+  },
+  {
+   "id": "7.3",
+   "title": "Impersonation Attacks",
+   "paragraphs": [
+    {
+     "id": "7.3-1",
+     "kind": "p",
+     "en": "TLS certificate checking MUST be performed by the client as described in [RFC9525] when making a protected resource metadata request. Checking that the server certificate is valid for the resource identifier URL prevents adversary-in-the-middle and DNS-based attacks.  These attacks could cause a client to be tricked into using an attacker's resource server, which would enable impersonation of the legitimate protected resource.  If an attacker can accomplish this, they can access the resources that the affected client has access to, using the protected resource that they are impersonating."
+    },
+    {
+     "id": "7.3-2",
+     "kind": "p",
+     "en": "An attacker may also attempt to impersonate a protected resource by publishing a metadata document that contains a resource metadata parameter using the resource identifier URL of the protected resource being impersonated but that contains information of the attacker's choosing.  This would enable it to impersonate that protected resource, if accepted by the client.  To prevent this, the client MUST ensure that the resource identifier URL it is using as the prefix for the metadata request exactly matches the value of the resource metadata parameter in the protected resource metadata document received by the client, as described in Section 3.3."
+    }
+   ]
+  },
+  {
+   "id": "7.4",
+   "title": "Audience-Restricted Access Tokens",
+   "paragraphs": [
+    {
+     "id": "7.4-1",
+     "kind": "p",
+     "en": "If a client expects to interact with multiple resource servers, the client SHOULD request audience-restricted access tokens using [RFC8707], and the authorization server SHOULD support audience- restricted access tokens."
+    },
+    {
+     "id": "7.4-2",
+     "kind": "p",
+     "en": "Without audience-restricted access tokens, a malicious resource server (RS1) may be able to use the WWW-Authenticate header to get a client to request an access token with a scope used by a legitimate resource server (RS2), and after the client sends a request to RS1, then RS1 could reuse the access token at RS2."
+    },
+    {
+     "id": "7.4-3",
+     "kind": "p",
+     "en": "While this attack is not explicitly enabled by this specification and is possible in a plain OAuth 2.0 deployment, it is made somewhat more likely by the use of dynamically configured clients.  As such, the use of audience-restricted access tokens and Resource Indicators [RFC8707] is RECOMMENDED when using the features in this specification."
+    }
+   ]
+  },
+  {
+   "id": "7.5",
+   "title": "Publishing Metadata in a Standard Format",
+   "paragraphs": [
+    {
+     "id": "7.5-1",
+     "kind": "p",
+     "en": "Publishing information about the protected resource in a standard format makes it easier for both legitimate clients and attackers to use the protected resource.  Whether a protected resource publishes its metadata in an ad hoc manner or in the standard format defined by this specification, the same defenses against attacks that might be mounted that use this information should be applied."
+    }
+   ]
+  },
+  {
+   "id": "7.6",
+   "title": "Authorization Servers",
+   "paragraphs": [
+    {
+     "id": "7.6-1",
+     "kind": "p",
+     "en": "To support use cases in which the set of legitimate authorization servers to use with the protected resource is enumerable, this specification defines the authorization_servers metadata parameter, which enables explicitly listing them.  Note that if the set of legitimate protected resources to use with an authorization server is also enumerable, lists in the protected resource metadata and authorization server metadata should be cross-checked against one another for consistency when these lists are used by the application profile."
+    },
+    {
+     "id": "7.6-2",
+     "kind": "p",
+     "en": "Secure determination of appropriate authorization servers to use with a protected resource for all use cases is out of scope for this specification.  This specification assumes that the client has a means of determining appropriate authorization servers to use with a protected resource and that the client is using the correct metadata for each protected resource.  Implementers need to be aware that if an inappropriate authorization server is used by the client, an attacker may be able to act as an adversary-in-the-middle proxy to a valid authorization server without it being detected by the authorization server or the client."
+    },
+    {
+     "id": "7.6-3",
+     "kind": "p",
+     "en": "The ways to determine the appropriate authorization servers to use with a protected resource are, in general, application dependent. For instance, some protected resources are used with a fixed authorization server or a set of authorization servers, the locations of which may be known via out-of-band mechanisms.  Alternatively, as described in this specification, the locations of the authorization servers could be published by the protected resource as metadata values.  In other cases, the set of authorization servers that can be used with a protected resource can be dynamically changed by administrative actions or by changes to the set of authorization servers adhering to a trust framework.  Many other means of determining appropriate associations between protected resources and authorization servers are also possible."
+    }
+   ]
+  },
+  {
+   "id": "7.7",
+   "title": "Server-Side Request Forgery (SSRF)",
+   "paragraphs": [
+    {
+     "id": "7.7-1",
+     "kind": "p",
+     "en": "The OAuth client is expected to fetch the authorization server metadata based on the value of the issuer in the resource server metadata.  Since this specification enables clients to interoperate with RSs and ASes it has no prior knowledge of, this opens a risk for Server-Side Request Forgery (SSRF) attacks by malicious users or malicious resource servers.  Clients SHOULD take appropriate precautions against SSRF attacks, such as blocking requests to internal IP address ranges.  Further recommendations can be found in the Open Worldwide Application Security Project (OWASP) SSRF Prevention Cheat Sheet [OWASP.SSRF]."
+    }
+   ]
+  },
+  {
+   "id": "7.8",
+   "title": "Phishing",
+   "paragraphs": [
+    {
+     "id": "7.8-1",
+     "kind": "p",
+     "en": "This specification may be deployed in a scenario where the desired HTTP resource is identified by a user-selected URL.  If this resource is malicious or compromised, it could mislead the user into revealing their account credentials or authorizing unwanted access to OAuth- controlled capabilities.  This risk is reduced, but not eliminated, by following best practices for OAuth user interfaces, such as providing clear notice to the user, displaying the authorization server's domain name, supporting origin-bound phishing-resistant authenticators, supporting the use of password managers, and applying heuristic checks such as domain reputation."
+    }
+   ]
+  },
+  {
+   "id": "7.9",
+   "title": "Differences Between Unsigned and Signed Metadata",
+   "paragraphs": [
+    {
+     "id": "7.9-1",
+     "kind": "p",
+     "en": "Unsigned metadata is integrity protected by the use of TLS at the site where it is hosted.  This means that its security is dependent upon the Internet Public Key Infrastructure using X.509 (PKIX), as described in [RFC9525].  Signed metadata is additionally integrity protected by the JWS signature applied by the issuer, which is not dependent upon the Internet PKI."
+    },
+    {
+     "id": "7.9-2",
+     "kind": "p",
+     "en": "When using unsigned metadata, the party issuing the metadata is the protected resource itself, which is represented by the resource value in the metadata, whereas when using signed metadata, the party issuing the metadata is represented by the iss (issuer) claim in the signed metadata.  When using signed metadata, applications can make trust decisions based on the issuer that performed the signing -- information that is not available when using unsigned metadata.  How these trust decisions are made is out of scope for this specification."
+    }
+   ]
+  },
+  {
+   "id": "7.10",
+   "title": "Metadata Caching",
+   "paragraphs": [
+    {
+     "id": "7.10-1",
+     "kind": "p",
+     "en": "Protected resource metadata is retrieved using an HTTP GET request, as specified in Section 3.1.  Normal HTTP caching behaviors apply, meaning that the GET request may retrieve a cached copy of the content, rather than the latest copy.  Implementations should utilize HTTP caching directives such as Cache-Control with max-age, as defined in [RFC9111], to enable caching of retrieved metadata for appropriate time periods."
+    }
+   ]
+  },
+  {
+   "id": "8",
+   "title": "IANA Considerations",
+   "paragraphs": [
+    {
+     "id": "8-1",
+     "kind": "p",
+     "en": "Values are registered via Specification Required [RFC8126]. Registration requests should be sent to <oauth-ext-review@ietf.org> to initiate a two-week review period.  However, to allow for the allocation of values prior to publication of the final version of a specification, the designated experts may approve registration once they are satisfied that the specification will be completed and published.  However, if the specification is not completed and published in a timely manner, as determined by the designated experts, the designated experts may request that IANA withdraw the registration."
+    },
+    {
+     "id": "8-2",
+     "kind": "p",
+     "en": "Registration requests sent to the mailing list for review should use an appropriate subject (e.g., \"Request to register OAuth Protected Resource Metadata: example\")."
+    },
+    {
+     "id": "8-3",
+     "kind": "p",
+     "en": "Within the review period, the designated experts will either approve or deny the registration request, communicating this decision to the review list and IANA.  Denials should include an explanation and, if applicable, suggestions as to how to make the request successful.  If the designated experts are not responsive, the registration requesters should contact IANA to escalate the process."
+    },
+    {
+     "id": "8-4",
+     "kind": "p",
+     "en": "Designated experts should apply the following criteria when reviewing proposed registrations: They must be unique -- that is, they should not duplicate existing functionality; they are likely generally applicable, as opposed to being used for a single application; and they are clear and fit the purpose of the registry."
+    },
+    {
+     "id": "8-5",
+     "kind": "p",
+     "en": "IANA must only accept registry updates from the designated experts and should direct all requests for registration to the review mailing list."
+    },
+    {
+     "id": "8-6",
+     "kind": "p",
+     "en": "In order to enable broadly informed review of registration decisions, there should be multiple designated experts to represent the perspectives of different applications using this specification.  In cases where registration may be perceived as a conflict of interest for a particular expert, that expert should defer to the judgment of the other experts."
+    },
+    {
+     "id": "8-7",
+     "kind": "p",
+     "en": "The mailing list is used to enable public review of registration requests, which enables both designated experts and other interested parties to provide feedback on proposed registrations.  Designated experts may allocate values prior to publication of the final specification.  This allows authors to receive guidance from the designated experts early, so any identified issues can be fixed before the final specification is published."
+    }
+   ]
+  },
+  {
+   "id": "8.1",
+   "title": "OAuth Protected Resource Metadata Registry",
+   "paragraphs": [
+    {
+     "id": "8.1-1",
+     "kind": "p",
+     "en": "This specification establishes the \"OAuth Protected Resource Metadata\" registry for OAuth 2.0 protected resource metadata names. The registry records the protected resource metadata parameter and a reference to the specification that defines it."
+    }
+   ]
+  },
+  {
+   "id": "8.1.1",
+   "title": "Registration Template",
+   "paragraphs": [
+    {
+     "id": "8.1.1-1",
+     "kind": "p",
+     "en": "Metadata Name: The name requested (e.g., \"resource\").  This name is case sensitive.  Names may not match other registered names in a case- insensitive manner unless the designated experts state that there is a compelling reason to allow an exception."
+    },
+    {
+     "id": "8.1.1-2",
+     "kind": "p",
+     "en": "Metadata Description: Brief description of the metadata (e.g., \"Resource identifier URL\")."
+    },
+    {
+     "id": "8.1.1-3",
+     "kind": "p",
+     "en": "Change Controller: For IETF Stream RFCs, list \"IETF\".  For others, give the name of the responsible party.  Other details (e.g., postal address, email address, home page URI) may also be included."
+    },
+    {
+     "id": "8.1.1-4",
+     "kind": "p",
+     "en": "Specification Document(s): Reference to the document or documents that specify the parameter, preferably including URIs that can be used to retrieve copies of the documents.  An indication of the relevant sections may also be included but is not required."
+    }
+   ]
+  },
+  {
+   "id": "8.1.2",
+   "title": "Initial Registry Contents",
+   "paragraphs": [
+    {
+     "id": "8.1.2-1",
+     "kind": "p",
+     "en": "Metadata Name:  resource Metadata Description:  Protected resource's resource identifier URL Change Controller:  IETF Specification Document(s):  Section 2 of RFC 9728"
+    },
+    {
+     "id": "8.1.2-2",
+     "kind": "p",
+     "en": "Metadata Name:  authorization_servers Metadata Description:  JSON array containing a list of OAuth authorization server issuer identifiers Change Controller:  IETF Specification Document(s):  Section 2 of RFC 9728"
+    },
+    {
+     "id": "8.1.2-3",
+     "kind": "p",
+     "en": "Metadata Name:  jwks_uri Metadata Description:  URL of the protected resource's JWK Set document Change Controller:  IETF Specification Document(s):  Section 2 of RFC 9728"
+    },
+    {
+     "id": "8.1.2-4",
+     "kind": "p",
+     "en": "Metadata Name:  scopes_supported Metadata Description:  JSON array containing a list of the OAuth 2.0 scope values that are used in authorization requests to request access to this protected resource Change Controller:  IETF Specification Document(s):  Section 2 of RFC 9728"
+    },
+    {
+     "id": "8.1.2-5",
+     "kind": "p",
+     "en": "Metadata Name:  bearer_methods_supported Metadata Description:  JSON array containing a list of the OAuth 2.0 bearer token presentation methods that this protected resource supports Change Controller:  IETF Specification Document(s):  Section 2 of RFC 9728"
+    },
+    {
+     "id": "8.1.2-6",
+     "kind": "p",
+     "en": "Metadata Name:  resource_signing_alg_values_supported Metadata Description:  JSON array containing a list of the JWS signing algorithms (alg values) supported by the protected resource for signed content Change Controller:  IETF Specification Document(s):  Section 2 of RFC 9728"
+    },
+    {
+     "id": "8.1.2-7",
+     "kind": "p",
+     "en": "Metadata Name:  resource_name Metadata Description:  Human-readable name of the protected resource Change Controller:  IETF Specification Document(s):  Section 2 of RFC 9728"
+    },
+    {
+     "id": "8.1.2-8",
+     "kind": "p",
+     "en": "Metadata Name:  resource_documentation Metadata Description:  URL of a page containing human-readable information that developers might want or need to know when using the protected resource Change Controller:  IETF Specification Document(s):  Section 2 of RFC 9728"
+    },
+    {
+     "id": "8.1.2-9",
+     "kind": "p",
+     "en": "Metadata Name:  resource_policy_uri Metadata Description:  URL of a page containing human-readable information about the protected resource's requirements on how the client can use the data provided by the protected resource Change Controller:  IETF Specification Document(s):  Section 2 of RFC 9728"
+    },
+    {
+     "id": "8.1.2-10",
+     "kind": "p",
+     "en": "Metadata Name:  resource_tos_uri Metadata Description:  URL of a page containing human-readable information about the protected resource's terms of service Change Controller:  IETF Specification Document(s):  Section 2 of RFC 9728"
+    },
+    {
+     "id": "8.1.2-11",
+     "kind": "p",
+     "en": "Metadata Name:  tls_client_certificate_bound_access_tokens Metadata Description:  Boolean value indicating protected resource support for mutual-TLS client certificate-bound access tokens Change Controller:  IETF Specification Document(s):  Section 2 of RFC 9728"
+    },
+    {
+     "id": "8.1.2-12",
+     "kind": "p",
+     "en": "Metadata Name:  authorization_details_types_supported Metadata Description:  JSON array containing a list of the authorization details type values supported by the resource server when the authorization_details request parameter is used Change Controller:  IETF Specification Document(s):  Section 2 of RFC 9728"
+    },
+    {
+     "id": "8.1.2-13",
+     "kind": "p",
+     "en": "Metadata Name:  dpop_signing_alg_values_supported Metadata Description:  JSON array containing a list of the JWS alg values supported by the resource server for validating DPoP proof JWTs Change Controller:  IETF Specification Document(s):  Section 2 of RFC 9728"
+    },
+    {
+     "id": "8.1.2-14",
+     "kind": "p",
+     "en": "Metadata Name:  dpop_bound_access_tokens_required Metadata Description:  Boolean value specifying whether the protected resource always requires the use of DPoP-bound access tokens Change Controller:  IETF Specification Document(s):  Section 2 of RFC 9728"
+    },
+    {
+     "id": "8.1.2-15",
+     "kind": "p",
+     "en": "Metadata Name:  signed_metadata Metadata Description:  Signed JWT containing metadata parameters about the protected resource as claims Change Controller:  IETF Specification Document(s):  Section 2.2 of RFC 9728"
+    }
+   ]
+  },
+  {
+   "id": "8.2",
+   "title": "OAuth Authorization Server Metadata Registry",
+   "paragraphs": [
+    {
+     "id": "8.2-1",
+     "kind": "p",
+     "en": "IANA has registered the following authorization server metadata parameter in the \"OAuth Authorization Server Metadata\" registry established in \"OAuth 2.0 Authorization Server Metadata\" [RFC8414]."
+    }
+   ]
+  },
+  {
+   "id": "8.2.1",
+   "title": "Registry Contents",
+   "paragraphs": [
+    {
+     "id": "8.2.1-1",
+     "kind": "p",
+     "en": "Metadata Name:  protected_resources Metadata Description:  JSON array containing a list of resource identifiers for OAuth protected resources Change Controller:  IETF Specification Document(s):  Section 4 of RFC 9728"
+    }
+   ]
+  },
+  {
+   "id": "8.3",
+   "title": "Well-Known URIs Registry",
+   "paragraphs": [
+    {
+     "id": "8.3-1",
+     "kind": "p",
+     "en": "This specification registers the well-known URI defined in Section 3 in the \"Well-Known URIs\" registry [IANA.well-known]."
+    }
+   ]
+  },
+  {
+   "id": "8.3.1",
+   "title": "Registry Contents",
+   "paragraphs": [
+    {
+     "id": "8.3.1-1",
+     "kind": "p",
+     "en": "URI Suffix:  oauth-protected-resource Reference:  Section 3 of RFC 9728 Status:  permanent Change Controller:  IETF Related Information:  (none)"
+    }
+   ]
+  },
+  {
+   "id": "9",
+   "title": "References",
+   "paragraphs": []
+  },
+  {
+   "id": "9.1",
+   "title": "Normative References",
+   "paragraphs": [
+    {
+     "id": "9.1-1",
+     "kind": "pre",
+     "en": "   [BCP195]   Best Current Practice 195,\n              <https://www.rfc-editor.org/info/bcp195>.\n              At the time of writing, this BCP comprises the following:"
+    },
+    {
+     "id": "9.1-2",
+     "kind": "pre",
+     "en": "              Moriarty, K. and S. Farrell, \"Deprecating TLS 1.0 and TLS\n              1.1\", BCP 195, RFC 8996, DOI 10.17487/RFC8996, March 2021,\n              <https://www.rfc-editor.org/info/rfc8996>."
+    },
+    {
+     "id": "9.1-3",
+     "kind": "pre",
+     "en": "              Sheffer, Y., Saint-Andre, P., and T. Fossati,\n              \"Recommendations for Secure Use of Transport Layer\n              Security (TLS) and Datagram Transport Layer Security\n              (DTLS)\", BCP 195, RFC 9325, DOI 10.17487/RFC9325, November\n              2022, <https://www.rfc-editor.org/info/rfc9325>."
+    },
+    {
+     "id": "9.1-4",
+     "kind": "pre",
+     "en": "   [BCP47]    Best Current Practice 47,\n              <https://www.rfc-editor.org/info/bcp47>.\n              At the time of writing, this BCP comprises the following:"
+    },
+    {
+     "id": "9.1-5",
+     "kind": "pre",
+     "en": "              Phillips, A., Ed. and M. Davis, Ed., \"Matching of Language\n              Tags\", BCP 47, RFC 4647, DOI 10.17487/RFC4647, September\n              2006, <https://www.rfc-editor.org/info/rfc4647>."
+    },
+    {
+     "id": "9.1-6",
+     "kind": "pre",
+     "en": "              Phillips, A., Ed. and M. Davis, Ed., \"Tags for Identifying\n              Languages\", BCP 47, RFC 5646, DOI 10.17487/RFC5646,\n              September 2009, <https://www.rfc-editor.org/info/rfc5646>."
+    },
+    {
+     "id": "9.1-7",
+     "kind": "pre",
+     "en": "   [IANA.Language]\n              IANA, \"Language Subtag Registry\",\n              <https://www.iana.org/assignments/language-subtag-\n              registry>."
+    },
+    {
+     "id": "9.1-8",
+     "kind": "pre",
+     "en": "   [JWA]      Jones, M., \"JSON Web Algorithms (JWA)\", RFC 7518,\n              DOI 10.17487/RFC7518, May 2015,\n              <https://www.rfc-editor.org/info/rfc7518>."
+    },
+    {
+     "id": "9.1-9",
+     "kind": "pre",
+     "en": "   [JWE]      Jones, M. and J. Hildebrand, \"JSON Web Encryption (JWE)\",\n              RFC 7516, DOI 10.17487/RFC7516, May 2015,\n              <https://www.rfc-editor.org/info/rfc7516>."
+    },
+    {
+     "id": "9.1-10",
+     "kind": "pre",
+     "en": "   [JWK]      Jones, M., \"JSON Web Key (JWK)\", RFC 7517,\n              DOI 10.17487/RFC7517, May 2015,\n              <https://www.rfc-editor.org/info/rfc7517>."
+    },
+    {
+     "id": "9.1-11",
+     "kind": "pre",
+     "en": "   [JWS]      Jones, M., Bradley, J., and N. Sakimura, \"JSON Web\n              Signature (JWS)\", RFC 7515, DOI 10.17487/RFC7515, May\n              2015, <https://www.rfc-editor.org/info/rfc7515>."
+    },
+    {
+     "id": "9.1-12",
+     "kind": "pre",
+     "en": "   [JWT]      Jones, M., Bradley, J., and N. Sakimura, \"JSON Web Token\n              (JWT)\", RFC 7519, DOI 10.17487/RFC7519, May 2015,\n              <https://www.rfc-editor.org/info/rfc7519>."
+    },
+    {
+     "id": "9.1-13",
+     "kind": "pre",
+     "en": "   [RFC2119]  Bradner, S., \"Key words for use in RFCs to Indicate\n              Requirement Levels\", BCP 14, RFC 2119,\n              DOI 10.17487/RFC2119, March 1997,\n              <https://www.rfc-editor.org/info/rfc2119>."
+    },
+    {
+     "id": "9.1-14",
+     "kind": "pre",
+     "en": "   [RFC6749]  Hardt, D., Ed., \"The OAuth 2.0 Authorization Framework\",\n              RFC 6749, DOI 10.17487/RFC6749, October 2012,\n              <https://www.rfc-editor.org/info/rfc6749>."
+    },
+    {
+     "id": "9.1-15",
+     "kind": "pre",
+     "en": "   [RFC6750]  Jones, M. and D. Hardt, \"The OAuth 2.0 Authorization\n              Framework: Bearer Token Usage\", RFC 6750,\n              DOI 10.17487/RFC6750, October 2012,\n              <https://www.rfc-editor.org/info/rfc6750>."
+    },
+    {
+     "id": "9.1-16",
+     "kind": "pre",
+     "en": "   [RFC7591]  Richer, J., Ed., Jones, M., Bradley, J., Machulak, M., and\n              P. Hunt, \"OAuth 2.0 Dynamic Client Registration Protocol\",\n              RFC 7591, DOI 10.17487/RFC7591, July 2015,\n              <https://www.rfc-editor.org/info/rfc7591>."
+    },
+    {
+     "id": "9.1-17",
+     "kind": "pre",
+     "en": "   [RFC8126]  Cotton, M., Leiba, B., and T. Narten, \"Guidelines for\n              Writing an IANA Considerations Section in RFCs\", BCP 26,\n              RFC 8126, DOI 10.17487/RFC8126, June 2017,\n              <https://www.rfc-editor.org/info/rfc8126>."
+    },
+    {
+     "id": "9.1-18",
+     "kind": "pre",
+     "en": "   [RFC8174]  Leiba, B., \"Ambiguity of Uppercase vs Lowercase in RFC\n              2119 Key Words\", BCP 14, RFC 8174, DOI 10.17487/RFC8174,\n              May 2017, <https://www.rfc-editor.org/info/rfc8174>."
+    },
+    {
+     "id": "9.1-19",
+     "kind": "pre",
+     "en": "   [RFC8259]  Bray, T., Ed., \"The JavaScript Object Notation (JSON) Data\n              Interchange Format\", STD 90, RFC 8259,\n              DOI 10.17487/RFC8259, December 2017,\n              <https://www.rfc-editor.org/info/rfc8259>."
+    },
+    {
+     "id": "9.1-20",
+     "kind": "pre",
+     "en": "   [RFC8414]  Jones, M., Sakimura, N., and J. Bradley, \"OAuth 2.0\n              Authorization Server Metadata\", RFC 8414,\n              DOI 10.17487/RFC8414, June 2018,\n              <https://www.rfc-editor.org/info/rfc8414>."
+    },
+    {
+     "id": "9.1-21",
+     "kind": "pre",
+     "en": "   [RFC8615]  Nottingham, M., \"Well-Known Uniform Resource Identifiers\n              (URIs)\", RFC 8615, DOI 10.17487/RFC8615, May 2019,\n              <https://www.rfc-editor.org/info/rfc8615>."
+    },
+    {
+     "id": "9.1-22",
+     "kind": "pre",
+     "en": "   [RFC8705]  Campbell, B., Bradley, J., Sakimura, N., and T.\n              Lodderstedt, \"OAuth 2.0 Mutual-TLS Client Authentication\n              and Certificate-Bound Access Tokens\", RFC 8705,\n              DOI 10.17487/RFC8705, February 2020,\n              <https://www.rfc-editor.org/info/rfc8705>."
+    },
+    {
+     "id": "9.1-23",
+     "kind": "pre",
+     "en": "   [RFC8707]  Campbell, B., Bradley, J., and H. Tschofenig, \"Resource\n              Indicators for OAuth 2.0\", RFC 8707, DOI 10.17487/RFC8707,\n              February 2020, <https://www.rfc-editor.org/info/rfc8707>."
+    },
+    {
+     "id": "9.1-24",
+     "kind": "pre",
+     "en": "   [RFC9110]  Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,\n              Ed., \"HTTP Semantics\", STD 97, RFC 9110,\n              DOI 10.17487/RFC9110, June 2022,\n              <https://www.rfc-editor.org/info/rfc9110>."
+    },
+    {
+     "id": "9.1-25",
+     "kind": "pre",
+     "en": "   [RFC9111]  Fielding, R., Ed., Nottingham, M., Ed., and J. Reschke,\n              Ed., \"HTTP Caching\", STD 98, RFC 9111,\n              DOI 10.17487/RFC9111, June 2022,\n              <https://www.rfc-editor.org/info/rfc9111>."
+    },
+    {
+     "id": "9.1-26",
+     "kind": "pre",
+     "en": "   [RFC9396]  Lodderstedt, T., Richer, J., and B. Campbell, \"OAuth 2.0\n              Rich Authorization Requests\", RFC 9396,\n              DOI 10.17487/RFC9396, May 2023,\n              <https://www.rfc-editor.org/info/rfc9396>."
+    },
+    {
+     "id": "9.1-27",
+     "kind": "pre",
+     "en": "   [RFC9449]  Fett, D., Campbell, B., Bradley, J., Lodderstedt, T.,\n              Jones, M., and D. Waite, \"OAuth 2.0 Demonstrating Proof of\n              Possession (DPoP)\", RFC 9449, DOI 10.17487/RFC9449,\n              September 2023, <https://www.rfc-editor.org/info/rfc9449>."
+    },
+    {
+     "id": "9.1-28",
+     "kind": "pre",
+     "en": "   [RFC9525]  Saint-Andre, P. and R. Salz, \"Service Identity in TLS\",\n              RFC 9525, DOI 10.17487/RFC9525, November 2023,\n              <https://www.rfc-editor.org/info/rfc9525>."
+    },
+    {
+     "id": "9.1-29",
+     "kind": "pre",
+     "en": "   [UNICODE]  The Unicode Consortium, \"The Unicode Standard\",\n              <https://www.unicode.org/versions/latest/>."
+    },
+    {
+     "id": "9.1-30",
+     "kind": "pre",
+     "en": "   [USA15]    Whistler, K., Ed., \"Unicode Normalization Forms\", Unicode\n              Standard Annex #15, 14 August 2024,\n              <https://www.unicode.org/reports/tr15/>."
+    }
+   ]
+  },
+  {
+   "id": "9.2",
+   "title": "Informative References",
+   "paragraphs": [
+    {
+     "id": "9.2-1",
+     "kind": "pre",
+     "en": "   [FAPI.MessageSigning]\n              Tonge, D. and D. Fett, \"FAPI 2.0 Message Signing (Draft)\",\n              24 March 2023,\n              <https://openid.net/specs/fapi-2_0-message-signing.html>."
+    },
+    {
+     "id": "9.2-2",
+     "kind": "pre",
+     "en": "   [IANA.JOSE]\n              IANA, \"JSON Web Signature and Encryption Algorithms\",\n              <https://www.iana.org/assignments/jose>."
+    },
+    {
+     "id": "9.2-3",
+     "kind": "pre",
+     "en": "   [IANA.well-known]\n              IANA, \"Well-Known URIs\",\n              <https://www.iana.org/assignments/well-known-uris>."
+    },
+    {
+     "id": "9.2-4",
+     "kind": "pre",
+     "en": "   [OpenID.Discovery]\n              Sakimura, N., Bradley, J., Jones, M., and E. Jay, \"OpenID\n              Connect Discovery 1.0 incorporating errata set 2\", 15\n              December 2023, <https://openid.net/specs/openid-connect-\n              discovery-1_0.html>."
+    },
+    {
+     "id": "9.2-5",
+     "kind": "pre",
+     "en": "   [OWASP.SSRF]\n              OWASP Foundation, \"OWASP Server-Side Request Forgery\n              Prevention Cheat Sheet\",\n              <https://cheatsheetseries.owasp.org/cheatsheets/\n              Server_Side_Request_Forgery_Prevention_Cheat_Sheet.html>."
+    },
+    {
+     "id": "9.2-6",
+     "kind": "pre",
+     "en": "   [RFC7033]  Jones, P., Salgueiro, G., Jones, M., and J. Smarr,\n              \"WebFinger\", RFC 7033, DOI 10.17487/RFC7033, September\n              2013, <https://www.rfc-editor.org/info/rfc7033>."
+    },
+    {
+     "id": "9.2-7",
+     "kind": "pre",
+     "en": "   [RFC8620]  Jenkins, N. and C. Newman, \"The JSON Meta Application\n              Protocol (JMAP)\", RFC 8620, DOI 10.17487/RFC8620, July\n              2019, <https://www.rfc-editor.org/info/rfc8620>."
+    },
+    {
+     "id": "9.2-8",
+     "kind": "pre",
+     "en": "   [RFC9470]  Bertocci, V. and B. Campbell, \"OAuth 2.0 Step Up\n              Authentication Challenge Protocol\", RFC 9470,\n              DOI 10.17487/RFC9470, September 2023,\n              <https://www.rfc-editor.org/info/rfc9470>."
+    },
+    {
+     "id": "9.2-9",
+     "kind": "pre",
+     "en": "   [RFC9700]  Lodderstedt, T., Bradley, J., Labunets, A., and D. Fett,\n              \"Best Current Practice for OAuth 2.0 Security\", BCP 240,\n              RFC 9700, DOI 10.17487/RFC9700, January 2025,\n              <https://www.rfc-editor.org/info/rfc9700>."
+    }
+   ]
+  },
+  {
+   "id": "acknowledgements",
+   "title": "Acknowledgements",
+   "paragraphs": [
+    {
+     "id": "acknowledgements-1",
+     "kind": "p",
+     "en": "The authors of this specification would like to thank the attendees of the IETF 115 OAuth and HTTP API Working Group meetings and the attendees of subsequent OAuth Working Group meetings for their input on this specification.  We would also like to thank Amanda Baber, Mike Bishop, Ralph Bragg, Brian Campbell, Deb Cooley, Gabriel Corona, Roman Danyliw, Vladimir Dzhuvinov, George Fletcher, Arnt Gulbrandsen, Pieter Kasselman, Murray Kucherawy, David Mandelberg, Tony Nadalin, Francesca Palombini, John Scudder, Rifaat Shekh-Yusef, Filip Skokan, Orie Steele, Atul Tulshibagwale, Éric Vyncke, Paul Wouters, and Bo Wu for their contributions to the specification."
+    }
+   ]
+  }
+ ],
+ "content_hash": "8b06a66c6b3b9f7a3472167299d1aa144f24ce0f086171ae7166883fec734000"
+}
