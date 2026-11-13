@@ -16,6 +16,12 @@
   --color-muted: #586274;
   --color-rule: #d8dee6;
   --color-link: #24459e;
+  /* Board rows that changed in the last seven days. */
+  --color-recent: #e7f2ef;
+  --color-recent-hover: #d9ebe6;
+  /* Code blocks in rendered reports. */
+  --color-code-bg: #1a2230;
+  --color-code-fg: #ffffff;
 
   --color-sig-substantive: #0b6e60;
   --color-sig-new-proposal: #5845c9;
@@ -32,6 +38,75 @@
   --color-st-openid-draft: #9b8fd9;
   --color-st-other: #6b7586;
   --color-st-unknown: #b4bac4;
+}
+
+/*
+  Dark palette: the same roles, inverted. It follows the system setting unless
+  the viewer chose one with the header toggle (data-theme on <html>). Tokens are
+  redefined, not duplicated, so every component picks them up unchanged.
+*/
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --color-paper: #0f141b;
+    --color-surface: #171d26;
+    --color-ink: #e4e9f0;
+    --color-muted: #9aa6b8;
+    --color-rule: #2b3443;
+    --color-link: #8fb1ff;
+    --color-recent: #15302b;
+    --color-recent-hover: #1b3d36;
+    --color-code-bg: #0a0e14;
+    --color-code-fg: #e4e9f0;
+
+    --color-sig-substantive: #3fbca6;
+    --color-sig-new-proposal: #a99bff;
+    --color-sig-discussion: #e2a23c;
+    --color-sig-editorial: #9aa6b8;
+    --color-sig-routine: #76808f;
+
+    --color-st-rfc: #3fbca6;
+    --color-st-near: #6aa6e8;
+    --color-st-draft: #e0a23a;
+    --color-st-draft-inactive: #a88b57;
+    --color-st-openid-final: #a99bff;
+    --color-st-openid-draft: #8f85c7;
+    --color-st-other: #9aa6b8;
+    --color-st-unknown: #5f6774;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --color-paper: #0f141b;
+      --color-surface: #171d26;
+      --color-ink: #e4e9f0;
+      --color-muted: #9aa6b8;
+      --color-rule: #2b3443;
+      --color-link: #8fb1ff;
+      --color-recent: #15302b;
+      --color-recent-hover: #1b3d36;
+      --color-code-bg: #0a0e14;
+      --color-code-fg: #e4e9f0;
+
+      --color-sig-substantive: #3fbca6;
+      --color-sig-new-proposal: #a99bff;
+      --color-sig-discussion: #e2a23c;
+      --color-sig-editorial: #9aa6b8;
+      --color-sig-routine: #76808f;
+
+      --color-st-rfc: #3fbca6;
+      --color-st-near: #6aa6e8;
+      --color-st-draft: #e0a23a;
+      --color-st-draft-inactive: #a88b57;
+      --color-st-openid-final: #a99bff;
+      --color-st-openid-draft: #8f85c7;
+      --color-st-other: #9aa6b8;
+      --color-st-unknown: #5f6774;
+    }
+  }
 }
 
 @layer base {
@@ -190,7 +265,7 @@
     @apply rounded bg-paper px-1.5 py-0.5 font-mono text-[0.85em];
   }
   .prose-report pre {
-    @apply my-4 overflow-x-auto rounded-md bg-ink p-4 text-[13px] leading-relaxed text-white;
+    @apply my-4 overflow-x-auto rounded-md bg-code-bg p-4 text-[13px] leading-relaxed text-code-fg;
   }
   .prose-report pre code {
     @apply bg-transparent p-0 text-inherit;

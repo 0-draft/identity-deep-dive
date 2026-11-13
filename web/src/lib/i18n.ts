@@ -76,6 +76,9 @@ const STRINGS = {
   },
   footerCadence: { en: "Collected every 6 hours. Weekly digest on Mondays.", ja: "6 時間ごとに収集。週次ダイジェストは月曜。" },
   switchLang: { en: "日本語", ja: "English" },
+  themeDark: { en: "Dark", ja: "ダーク" },
+  themeLight: { en: "Light", ja: "ライト" },
+  themeToggle: { en: "Switch colour theme", ja: "配色を切り替える" },
   navMap: { en: "Spec map", ja: "仕様マップ" },
   mapTitle: { en: "The identity spec map", ja: "アイデンティティ仕様マップ" },
   mapIntro: {

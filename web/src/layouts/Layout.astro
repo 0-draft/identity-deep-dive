@@ -48,6 +48,14 @@ const navLinks = [
     <link rel="alternate" hreflang="ja" href={href("ja", path)} />
     <meta name="description" content={description} />
     <title>{title}</title>
+    <!-- Before first paint, so a stored choice never flashes the other theme.
+         Without a stored choice the system setting applies through CSS. -->
+    <script is:inline>
+      try {
+        const t = localStorage.getItem("theme");
+        if (t === "dark" || t === "light") document.documentElement.dataset.theme = t;
+      } catch {}
+    </script>
   </head>
   <body>
     <div class="flex min-h-screen flex-col">
@@ -77,6 +85,16 @@ const navLinks = [
             >
               {t(lang, "switchLang")}
             </a>
+            <button
+              type="button"
+              data-theme-toggle
+              aria-label={t(lang, "themeToggle")}
+              data-label-dark={t(lang, "themeDark")}
+              data-label-light={t(lang, "themeLight")}
+              class="rounded border border-rule px-2.5 py-1 text-muted hover:bg-paper"
+            >
+              {t(lang, "themeDark")}
+            </button>
           </nav>
         </div>
       </header>
@@ -99,30 +117,37 @@ const navLinks = [
       const frames = document.querySelectorAll<HTMLDetailsElement>("details[data-diagram]");
       if (frames.length) {
         let ready: Promise<typeof import("mermaid").default> | null = null;
+        // Diagram colours come from the same tokens as the page, read at render
+        // time, so they follow the theme toggle.
+        const token = (name: string) => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        const configure = (mermaid: typeof import("mermaid").default) =>
+          mermaid.initialize({
+            startOnLoad: false,
+            securityLevel: "strict",
+            theme: "base",
+            fontFamily: "Public Sans, system-ui, sans-serif",
+            // Natural size, scrolled sideways on a phone. Shrunk to fit,
+            // a sequence diagram's labels become unreadable.
+            sequence: { useMaxWidth: false },
+            flowchart: { useMaxWidth: false },
+            themeVariables: {
+              primaryColor: token("--color-surface"),
+              primaryBorderColor: token("--color-muted"),
+              primaryTextColor: token("--color-ink"),
+              lineColor: token("--color-muted"),
+              actorBkg: token("--color-surface"),
+              actorBorder: token("--color-ink"),
+              noteBkgColor: token("--color-recent"),
+              noteBorderColor: token("--color-sig-substantive"),
+              noteTextColor: token("--color-ink"),
+              textColor: token("--color-ink"),
+              signalColor: token("--color-ink"),
+              signalTextColor: token("--color-ink"),
+            },
+          });
         const load = () =>
           (ready ??= import("mermaid").then(({ default: mermaid }) => {
-            mermaid.initialize({
-              startOnLoad: false,
-              securityLevel: "strict",
-              theme: "base",
-              fontFamily: "Public Sans, system-ui, sans-serif",
-              // Natural size, scrolled sideways on a phone. Shrunk to fit,
-              // a sequence diagram's labels become unreadable.
-              sequence: { useMaxWidth: false },
-              flowchart: { useMaxWidth: false },
-              themeVariables: {
-                primaryColor: "#ffffff",
-                primaryBorderColor: "#586274",
-                primaryTextColor: "#1a2230",
-                lineColor: "#586274",
-                actorBkg: "#ffffff",
-                actorBorder: "#1a2230",
-                noteBkgColor: "#eef3f1",
-                noteBorderColor: "#0b6e60",
-                signalColor: "#1a2230",
-                signalTextColor: "#1a2230",
-              },
-            });
+            configure(mermaid);
             return mermaid;
           }));
         // Shrink a diagram wider than its frame, but not below 70%: smaller
@@ -141,7 +166,7 @@ const navLinks = [
           if (!nodes.length) return;
           const mermaid = await load();
           for (const node of nodes) {
-            const source = node.textContent ?? "";
+            const source = node.dataset.source ?? (node.dataset.source = node.textContent ?? "");
             try {
               await mermaid.parse(source);
               await mermaid.run({ nodes: [node] });
@@ -153,6 +178,18 @@ const navLinks = [
             }
           }
         };
+        // A rendered diagram keeps its colours, so after a theme change the
+        // open ones go back to source and render again with the new tokens.
+        document.addEventListener("themechange", async () => {
+          if (!ready) return;
+          configure(await ready);
+          document.querySelectorAll<HTMLElement>("pre.mermaid[data-processed]").forEach((node) => {
+            if (node.dataset.source === undefined) return;
+            node.textContent = node.dataset.source;
+            node.removeAttribute("data-processed");
+          });
+          frames.forEach((frame) => frame.open && render(frame));
+        });
         // Opened only where there is room; on a phone the map is a tap away.
         const wide = window.matchMedia("(min-width: 768px)").matches;
         frames.forEach((frame) => {
@@ -161,6 +198,37 @@ const navLinks = [
           frame.addEventListener("toggle", () => frame.open && render(frame));
         });
       }
+    </script>
+
+    <script>
+      // The button names the theme it switches to. Without a stored choice the
+      // page follows the system setting; a click stores the opposite of what
+      // is showing, and the choice carries across pages through localStorage.
+      const root = document.documentElement;
+      const system = window.matchMedia("(prefers-color-scheme: dark)");
+      const effective = () => root.dataset.theme ?? (system.matches ? "dark" : "light");
+      const buttons = document.querySelectorAll<HTMLButtonElement>("[data-theme-toggle]");
+      const label = () => {
+        const next = effective() === "dark" ? "light" : "dark";
+        buttons.forEach((b) => (b.textContent = b.dataset[next === "dark" ? "labelDark" : "labelLight"] ?? next));
+      };
+      buttons.forEach((b) =>
+        b.addEventListener("click", () => {
+          const next = effective() === "dark" ? "light" : "dark";
+          root.dataset.theme = next;
+          try {
+            localStorage.setItem("theme", next);
+          } catch {}
+          label();
+          document.dispatchEvent(new Event("themechange"));
+        }),
+      );
+      system.addEventListener("change", () => {
+        if (root.dataset.theme) return;
+        label();
+        document.dispatchEvent(new Event("themechange"));
+      });
+      label();
     </script>
   </body>
 </html>
