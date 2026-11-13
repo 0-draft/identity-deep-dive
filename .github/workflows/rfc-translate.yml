@@ -1,0 +1,214 @@
+name: RFC translation
+
+# Translate one RFC on the spec map into Japanese for its side-by-side page
+# (/map/<spec>/rfc/), and open the result as a draft pull request. Nothing
+# lands on main without a person merging it.
+#
+# Three jobs, so the model never shares a job with a token that can write:
+#
+#   plan       (contents: read)                    fetch the RFC text, cut it
+#                                                  into chunks (stage.py)
+#   translate  (contents: read, matrix per chunk)  run Claude on one chunk,
+#                                                  upload the block text
+#   open       (contents + pull-requests: write)   no model; import the
+#                                                  blocks, push, open the PR
+#
+# Chunks already translated (same English hash) are skipped, so re-running
+# after a partial result only fills the gaps. See deep-dive-draft.yml for the
+# token notes (DEEP_DIVE_PR_TOKEN) that apply here too.
+
+on:
+  workflow_dispatch:
+    inputs:
+      number:
+        description: "RFC number, e.g. 9449"
+        type: string
+        required: true
+      all:
+        description: "Retranslate paragraphs that already have a translation"
+        type: boolean
+        default: false
+
+permissions: {}
+
+concurrency:
+  group: rfc-translate-${{ inputs.number }}
+  cancel-in-progress: false
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    outputs:
+      chunks: ${{ steps.plan.outputs.chunks }}
+      number: ${{ steps.plan.outputs.number }}
+    env:
+      WORK: ${{ github.workspace }}/rfc-work
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - name: Fetch and chunk the RFC
+        id: plan
+        env:
+          NUMBER: ${{ inputs.number }}
+          ALL: ${{ inputs.all }}
+        run: |
+          case "$NUMBER" in ''|*[!0-9]*) echo "::error::RFC number must be digits"; exit 1 ;; esac
+          python scripts/rfc/fetch.py "$NUMBER"
+          python scripts/rfc/stage.py --number "$NUMBER" --out "$WORK" $([ "$ALL" = "true" ] && echo --all)
+          echo "chunks=$(jq -c .chunks "$WORK/plan.json")" >> "$GITHUB_OUTPUT"
+          echo "number=$NUMBER" >> "$GITHUB_OUTPUT"
+          cp "data/rfc/$NUMBER/en.json" "$WORK/en.json"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: rfc-plan
+          path: rfc-work
+          retention-days: 3
+          if-no-files-found: error
+
+  translate:
+    needs: plan
+    if: ${{ needs.plan.outputs.chunks != '[]' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        chunk: ${{ fromJSON(needs.plan.outputs.chunks) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    env:
+      WORK: ${{ github.workspace }}/rfc-work
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: rfc-plan
+          path: rfc-work
+
+      - name: Require the Claude token
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          if [ -z "$CLAUDE_CODE_OAUTH_TOKEN" ]; then
+            echo "::error::CLAUDE_CODE_OAUTH_TOKEN is not set. Generate one with 'claude setup-token', then: gh secret set CLAUDE_CODE_OAUTH_TOKEN"
+            exit 1
+          fi
+
+      - name: Load the output schema
+        id: schema
+        run: |
+          json=$(jq -c . scripts/rfc/schema.json)
+          case "$json" in *"'"*) echo "::error::schema.json must not contain a single quote"; exit 1 ;; esac
+          echo "json=$json" >> "$GITHUB_OUTPUT"
+
+      - name: Translate the chunk
+        id: claude
+        uses: anthropics/claude-code-action@61a9c274fa7110a66dfafc1bbbced03833eb25fe # v1
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          display_report: "false"
+          prompt: |
+            Chunk file: rfc-work/chunks/${{ matrix.chunk }}.json
+
+            Read scripts/rfc/prompt.md and follow it. Then read the chunk
+            file (all of it) and return the translation.
+          claude_args: |
+            --allowedTools "Read"
+            --disallowedTools "Bash,Edit,Write,MultiEdit,NotebookEdit,WebFetch,WebSearch,Task,Glob,Grep,Read(//proc/**),Read(//sys/**),Read(//home/runner/work/_temp/**),Read(//home/runner/.claude/**),Read(//home/runner/.config/**)"
+            --max-turns 20
+            --json-schema '${{ steps.schema.outputs.json }}'
+
+      - name: Save the result
+        env:
+          RESULT: ${{ steps.claude.outputs.structured_output }}
+          CHUNK: ${{ matrix.chunk }}
+        run: |
+          mkdir -p out
+          printf '%s' "$RESULT" | jq -r .blocks > "out/$CHUNK.txt"
+          python scripts/insights/guard.py "out/$CHUNK.txt"
+          test -s "out/$CHUNK.txt"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: rfc-chunk-${{ matrix.chunk }}
+          path: out
+          retention-days: 3
+          if-no-files-found: error
+
+  open:
+    needs: [plan, translate]
+    if: ${{ !cancelled() && needs.plan.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      NUMBER: ${{ needs.plan.outputs.number }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: rfc-plan
+          path: rfc-work
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          pattern: rfc-chunk-*
+          path: chunks
+          merge-multiple: true
+
+      - name: Import the translation
+        id: import
+        run: |
+          cp rfc-work/en.json "data/rfc/$NUMBER/en.json"
+          ls chunks/*.txt > /dev/null 2>&1 || { echo "No chunks translated (nothing missing, or every chunk failed)."; echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0; }
+          cat chunks/*.txt > all.txt
+          python scripts/insights/guard.py all.txt
+          python scripts/rfc/import_ja.py "$NUMBER" all.txt --model "Claude (GitHub Actions)" | tee import.log || true
+          git add "data/rfc/$NUMBER"
+          if git diff --cached --quiet; then echo "changed=false" >> "$GITHUB_OUTPUT"; else echo "changed=true" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Push the branch and open the pull request
+        if: steps.import.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.DEEP_DIVE_PR_TOKEN || github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          BRANCH="rfc/$NUMBER-ja-$(date -u +%Y%m%d%H%M)"
+          git switch -c "$BRANCH"
+          git commit -m "docs(rfc): Japanese translation of RFC $NUMBER"
+          export GIT_CONFIG_COUNT=1
+          export GIT_CONFIG_KEY_0="http.https://github.com/.extraheader"
+          GIT_CONFIG_VALUE_0="AUTHORIZATION: basic $(printf 'x-access-token:%s' "$GH_TOKEN" | base64 -w0)"
+          export GIT_CONFIG_VALUE_0
+          git push "https://github.com/${REPO}.git" "$BRANCH"
+          {
+            echo "Machine translation of RFC $NUMBER for the side-by-side page. Import log:"
+            echo
+            echo '```text'
+            cat import.log
+            echo '```'
+          } > "$RUNNER_TEMP/pr-body.md"
+          gh pr create --repo "$REPO" --base main --head "$BRANCH" --draft \
+            --title "docs(rfc): Japanese translation of RFC $NUMBER" \
+            --body-file "$RUNNER_TEMP/pr-body.md"
