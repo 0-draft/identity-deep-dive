@@ -85,24 +85,28 @@ def main() -> int:
         print(f"  {e}", file=sys.stderr)
     paragraphs = {k: v for k, v in paragraphs.items() if kinds.get(k) in ("p", "li")}
     titles = {k: v for k, v in titles.items() if k in section_ids}
-    wanted = [k for k, kind in kinds.items() if kind != "pre"]
-    missing = [k for k in wanted if k not in paragraphs]
-    if missing:
-        print(f"  {len(missing)} of {len(wanted)} paragraphs untranslated: {', '.join(missing[:10])}{' ...' if len(missing) > 10 else ''}", file=sys.stderr)
-
     previous = {}
     if (d / "ja.json").exists():
         previous = json.loads((d / "ja.json").read_text(encoding="utf-8"))
+    # Merged with what was imported before; entries for ids no longer in
+    # en.json are dropped.
+    merged_p = {k: v for k, v in {**previous.get("paragraphs", {}), **paragraphs}.items() if k in kinds}
+    merged_t = {k: v for k, v in {**previous.get("titles", {}), **titles}.items() if k in section_ids}
+    base = lambda k: re.sub(r"-\d+$", "", k)  # noqa: E731  (a repeated paragraph shares the first one's translation)
+    wanted = [k for k, kind in kinds.items() if kind != "pre"]
+    missing = [k for k in wanted if k not in merged_p and base(k) not in merged_p]
+    if missing:
+        print(f"  {len(missing)} of {len(wanted)} paragraphs untranslated: {', '.join(missing[:10])}{' ...' if len(missing) > 10 else ''}", file=sys.stderr)
     out = {
         "number": args.number,
         "source_hash": en["content_hash"],
         "translated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
         "model": args.model or previous.get("model", ""),
-        "titles": {**previous.get("titles", {}), **titles},
-        "paragraphs": {**previous.get("paragraphs", {}), **paragraphs},
+        "titles": merged_t,
+        "paragraphs": merged_p,
     }
     (d / "ja.json").write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
-    print(f"rfc{args.number}: {len(paragraphs)} paragraphs and {len(titles)} titles imported; {len(missing)} missing")
+    print(f"rfc{args.number}: {len(paragraphs)} paragraphs and {len(titles)} titles imported; {len(merged_p)} of {len(wanted)} translated, {len(missing)} missing")
     return 1 if errors else 0
 
 

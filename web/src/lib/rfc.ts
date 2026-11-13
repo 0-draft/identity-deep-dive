@@ -86,7 +86,9 @@ export function rfc(number: number): RfcDocument | null {
     depth: /^\d/.test(s.id) || /^[A-Z](\.\d+)*$/.test(s.id) ? s.id.split(".").length : 1,
     paragraphs: s.paragraphs.map((p) => {
       if (p.kind !== "pre") translatable++;
-      const t = ja?.paragraphs[p.id];
+      // A repeated paragraph (same text twice in a section) carries a
+      // numeric suffix and shares the first one's translation.
+      const t = ja?.paragraphs[p.id] ?? ja?.paragraphs[p.id.replace(/-\d+$/, "")];
       if (t) translated++;
       return { ...p, ja: t };
     }),

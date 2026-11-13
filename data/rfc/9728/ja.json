@@ -1,7 +1,7 @@
 {
  "number": 9728,
- "source_hash": "5cdd1e81dd68312a0a1312274c286d35e9ceadc757534c023e99db44d3cb7042",
- "translated_at": "2026-11-13T14:13:46+00:00",
+ "source_hash": "e9c10744b73fcb56ef0cad5a220789c90aac751ecf4ef337b694ecbe7fa0f7aa",
+ "translated_at": "2026-11-13T14:19:01+00:00",
  "model": "Claude Fable 5.1",
  "titles": {
   "abstract": "概要",
@@ -78,7 +78,6 @@
   "2-3baac1aa": "追加の保護リソースメタデータパラメーターを使用してもよい (MAY)。",
   "2.1-a58d3805": "人間が読めるリソースメタデータ値、および人間が読めるコンテンツを参照するリソースメタデータ値は、複数の言語および文字体系で表現してもよい (MAY)。たとえば、resource_name、resource_documentation、resource_tos_uri、resource_policy_uri などのフィールドの値は、異なる地域での使用を容易にするため、複数のロケール固有のメタデータ値を持つことがある。",
   "2.1-fb8315cc": "言語と文字体系を指定するために、言語タグ [BCP47] を # 文字で区切ってリソースメタデータパラメーター名に追加する。JSON [RFC8259] で論じられるメンバー名は大文字小文字を区別するため、Claim Name で使用する言語タグ値は「Language Subtag Registry」[IANA.Language] に登録されている大文字小文字どおりに綴ることが推奨される (RECOMMENDED)。特に、通常、言語名は小文字で、地域名は大文字で、用字 (script) 名は大文字小文字混在で綴られる。ただし、[BCP47] により言語タグ値は大文字小文字を区別しないため、実装は提供された言語タグ値を大文字小文字を区別せずに解釈すべきである (SHOULD)。[BCP47] の推奨に従い、メタデータパラメーター名で使用する言語タグ値は必要な範囲でのみ具体的であるべきである。たとえば、多くの文脈では fr-CA や fr-FR ではなく fr を使えば十分であろう。",
-  "2.1-90f59d13": "たとえば、リソースは自身のメタデータ内で、英語の名前を \"resource_name#en\": \"My Resource\" として、イタリア語の名前を \"resource_name#it\": \"La mia bella risorsa\" として表現できる。これらの名前のいずれか、またはすべてをエンドユーザーに表示してもよく (MAY)、どの名前を表示するかはシステム設定、ユーザーの好み、その他の要因に基づいて選択する。",
   "2.1-b699ac3a": "人間が読めるフィールドが言語タグなしで送られた場合、それを使用する当事者は文字列値の言語、文字集合、文字体系について一切の仮定をしてはならず (MUST NOT)、その文字列値はユーザーインターフェースに提示されるあらゆる場所でそのまま使用しなければならない (MUST)。相互運用性を促進するため、提供される人間が読めるメタデータの各種類について、言語固有のパラメーターに加えて言語タグを持たないメタデータパラメーターのインスタンスを含めることが推奨され (RECOMMENDED)、言語タグなしで送られる人間が読めるフィールドには、幅広いシステムでの表示に適した値を含めることが推奨される (RECOMMENDED)。",
   "2.2-42fd6c95": "JSON 要素に加えて、メタデータ値は signed_metadata 値として提供してもよい (MAY)。これは、保護リソースに関するメタデータ値を一束にして主張する JSON Web Token (JWT) [JWT] である。署名付きメタデータ内でクレームとして使用できるメタデータパラメーターの集合は 2 節で定義する。署名付きメタデータは JSON Web Signature (JWS) [JWS] を使用してデジタル署名または MAC (メッセージ認証コードによる保護) されなければならず (MUST)、署名付きメタデータ内のクレームを証明する当事者を示す iss (issuer) クレームを含まなければならない (MUST)。メタデータの利用者は、この機能をサポートしない場合、署名付きメタデータを無視してもよい (MAY)。メタデータの利用者が署名付きメタデータをサポートする場合、署名付きメタデータで伝えられるメタデータ値は、プレーンな JSON 要素で伝えられる対応する値より優先されなければならない (MUST)。",
   "2.2-c3c98266": "署名付きメタデータは、次の OPTIONAL なメタデータパラメーターを使って保護リソースメタデータ JSON オブジェクトに含められる。",
@@ -169,6 +168,19 @@
   "8.2.1-e69e2458": "Metadata Name: protected_resources Metadata Description: OAuth 保護リソースのリソース識別子のリストを含む JSON 配列 Change Controller: IETF Specification Document(s): RFC 9728 の 4 節",
   "8.3-57c977f1": "本仕様は、3 節で定義する well-known URI を「Well-Known URIs」レジストリ [IANA.well-known] に登録する。",
   "8.3.1-7330f3ec": "URI Suffix: oauth-protected-resource Reference: RFC 9728 の 3 節 Status: permanent Change Controller: IETF Related Information: (none)",
-  "acknowledgements-8cb88e35": "本仕様の著者は、IETF 115 の OAuth および HTTP API ワーキンググループ会合の参加者、ならびにその後の OAuth ワーキンググループ会合の参加者に、本仕様への意見について感謝する。また、Amanda Baber、Mike Bishop、Ralph Bragg、Brian Campbell、Deb Cooley、Gabriel Corona、Roman Danyliw、Vladimir Dzhuvinov、George Fletcher、Arnt Gulbrandsen、Pieter Kasselman、Murray Kucherawy、David Mandelberg、Tony Nadalin、Francesca Palombini、John Scudder、Rifaat Shekh-Yusef、Filip Skokan、Orie Steele、Atul Tulshibagwale、Éric Vyncke、Paul Wouters、Bo Wu の各氏の本仕様への貢献に感謝する。"
+  "acknowledgements-8cb88e35": "本仕様の著者は、IETF 115 の OAuth および HTTP API ワーキンググループ会合の参加者、ならびにその後の OAuth ワーキンググループ会合の参加者に、本仕様への意見について感謝する。また、Amanda Baber、Mike Bishop、Ralph Bragg、Brian Campbell、Deb Cooley、Gabriel Corona、Roman Danyliw、Vladimir Dzhuvinov、George Fletcher、Arnt Gulbrandsen、Pieter Kasselman、Murray Kucherawy、David Mandelberg、Tony Nadalin、Francesca Palombini、John Scudder、Rifaat Shekh-Yusef、Filip Skokan、Orie Steele、Atul Tulshibagwale、Éric Vyncke、Paul Wouters、Bo Wu の各氏の本仕様への貢献に感謝する。",
+  "5-fea80d24": "1. クライアントが、アクセストークンを提示せずに保護リソースへリクエストを行う。",
+  "5-da569218": "2. リソースサーバーが、保護リソースメタデータの URL を含む WWW-Authenticate ヘッダー付きで応答する。",
+  "5-c3e1463e": "3. クライアントがこの URL から保護リソースメタデータを取得する。",
+  "5-f9cd748a": "4. リソースサーバーが、3.2 節に従って保護リソースメタデータを応答する。",
+  "5-a316170d": "5. クライアントが、3.3 節に記述されたとおりに保護リソースメタデータを検証し、リソースメタデータ内の発行者識別子から [RFC8414] に従って認可サーバーメタデータの URL を構築する。",
+  "5-f31c12da": "6. クライアントが認可サーバーメタデータを取得するリクエストを行う。",
+  "5-dd6a9218": "7. 認可サーバーが、[RFC8414] に従って認可サーバーメタデータ文書を応答する。",
+  "5-28982b2b": "8. クライアントが、認可フローを開始するためにユーザーエージェントを認可サーバーへ誘導する。",
+  "5-28202e87": "9. 認可のやり取りが完了し、認可サーバーがクライアントにアクセストークンを返す。",
+  "5-66b8fc04": "10. クライアントが、新たに取得したアクセストークンを提示して、ステップ 1 のリソースリクエストを繰り返す。",
+  "9.1-288eff47": "Sheffer, Y., Saint-Andre, P., and T. Fossati, \"Recommendations for Secure Use of Transport Layer Security (TLS) and Datagram Transport Layer Security (DTLS)\", BCP 195, RFC 9325, DOI 10.17487/RFC9325, November 2022, <https://www.rfc-editor.org/info/rfc9325>.",
+  "9.1-3722a921": "Phillips, A., Ed. and M. Davis, Ed., \"Matching of Language Tags\", BCP 47, RFC 4647, DOI 10.17487/RFC4647, September 2006, <https://www.rfc-editor.org/info/rfc4647>.",
+  "9.1-28ef8830": "Phillips, A., Ed. and M. Davis, Ed., \"Tags for Identifying Languages\", BCP 47, RFC 5646, DOI 10.17487/RFC5646, September 2009, <https://www.rfc-editor.org/info/rfc5646>."
  }
 }

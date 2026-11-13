@@ -45,7 +45,9 @@ UNNUMBERED = {
 SKIP = {"Status of This Memo", "Copyright Notice", "Table of Contents", "Authors' Addresses", "Author's Address", "Index"}
 FOOTER = re.compile(r"^\S.*\[Page \d+\]\s*$")
 HEADER = re.compile(r"^RFC \d+\s{2,}.*\s{2,}\S+ \d{4}\s*$")
-LIST_ITEM = re.compile(r"^\s{0,6}(?:[*o+-]|\d{1,2}\.|\(\d{1,2}\)|[a-z]\.|[ivx]+\.)\s+\S")
+LIST_ITEM = re.compile(r"^\s{0,9}(?:[*o+-]|\d{1,2}\.|\(\d{1,2}\)|[a-z]\.|[ivx]+\.)\s+\S")
+# A bibliography entry: a reference tag at the start of the block.
+REFERENCE = re.compile(r"^\s*\[[A-Za-z0-9][A-Za-z0-9.\-_]*\](\s{2,}\S|\s*$)")
 
 
 def fetch_text(number: int) -> str:
@@ -123,8 +125,8 @@ def looks_like_prose(block: list[str]) -> bool:
     return len(stripped) == 1 and len(stripped[0]) >= 60 and stripped[0][-1] in ".:;)\""
 
 
-CODE_LINE = re.compile(r"^\s*(HTTP/\d|GET |POST |PUT |DELETE |PATCH |Host:|Content-Type:|Authorization:|DPoP:|WWW-Authenticate:|Cache-Control:|Location:|[{}\[\]]\s*,?\s*$|\{\s*\"|\.\.\.)")
-LONG_TOKEN = re.compile(r"\S{48,}")
+CODE_LINE = re.compile(r"^\s*(HTTP/\d|GET |POST |PUT |DELETE |PATCH |Host:|Content-Type:|Authorization:|DPoP:|WWW-Authenticate:|Cache-Control:|Location:|[{}\[\]]\s*,?\s*$|\{\s*\"|\"[^\"]*\"\s*:|\.\.\.)")
+LONG_TOKEN = re.compile(r"[A-Za-z0-9_\-=.+]{48,}")
 
 
 def is_pre(block: list[str]) -> bool:
@@ -134,7 +136,9 @@ def is_pre(block: list[str]) -> bool:
     too, so lines that only code starts with (HTTP messages, JSON, long
     base64 runs) count as well."""
     first_indent = len(block[0]) - len(block[0].lstrip())
-    if LIST_ITEM.match(block[0]) and first_indent <= 6:
+    if REFERENCE.match(block[0]):
+        return True
+    if LIST_ITEM.match(block[0]) and first_indent <= 9:
         return False
     if any(CODE_LINE.match(l) or LONG_TOKEN.search(l) for l in block):
         return True
@@ -199,6 +203,13 @@ def parse(text: str, number: int) -> dict:
         # neighbouring paragraphs; only a paragraph whose text changed needs
         # translating again.
         pid = f"{current['id']}-{paragraph_hash(en)}"
+        # Identical text twice in one section (repeated registry lines):
+        # the second gets a suffix, and shares the first one's translation.
+        taken = {p["id"] for p in current["paragraphs"]}
+        base, n = pid, 2
+        while pid in taken:
+            pid = f"{base}-{n}"
+            n += 1
         current["paragraphs"].append({"id": pid, "kind": kind, "en": en})
         block = []
 
