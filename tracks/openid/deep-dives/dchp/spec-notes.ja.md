@@ -26,7 +26,7 @@ README は ISO/IEC 18013-5 (<https://www.iso.org/standard/69084.html>)、OpenID 
 - #64: 「CBOR Encoding」節を追加する。RFC 8949 Section 4.2.1 の core deterministic encoding を必須にし、NaN と無限大を禁じ、transcript は送信されないと明記する。
 - #65: reader authentication に X.509 を使う場合、証明書は `COSE_Signature` の protected header の `x5chain` (RFC 9360) に入れる。先頭の証明書が reader の鍵を持つ。
 - #74: M (Mandatory)、C (Conditional)、O (Optional) の略語表を追加する。
-- #76 (issue #75 を close): CDDL を本文に合わせる。`ChannelBinding` の番号を振り直し、`cce_handover` を足し、`oidc4vp_*` を `openid4vp_*` に、`nfcv2` を `cce` に改名する。`controlled_id` を `controller_id` に直し、使われていない `full-date` を消し、`* (int / tstr) => any` と括弧付きで書く。
+- #76 (issue #75 を close): CDDL を本文に合わせる。`ChannelBinding` の engagement のキー 5〜8 の番号を振り直し、`cce_handover` を足し、`oidc4vp_*` を `openid4vp_*` に、`nfcv2` を `cce` に改名する。`controlled_id` を `controller_id` に直し、使われていない `full-date` を消し、`* (int / tstr) => any` と括弧付きで書く。伝送路フィールドはそのままで、head `ce4ba23` でも本文は `ble_gatt` と `uint` の `ble_l2cap`、CDDL は `ble_uuid` と map 値の `ble_l2cap` のままで、キー 12〜15 も CDDL にしかない。
 - #77 (issue #69 と #70 を close): `Envelope.credentials` を map から配列にし、`CredentialItem` に `query_refs` (キー 3) を足し、`CredentialRef` を `QueryRef` に改名する。1 つのクエリに複数の item を返してよいかは `allow_multiple` で決まる。
 - #81 (issue #67 を close): 「reader」を「verifier」に置き換える。`reader_auth` は `verifier_auth` に、`ReaderTransactionTranscript` は `VerifierTransactionTranscript` になる。
 - #83 (issue #58 を修正): `scenario_sets` や `credential_queries` を snake_case にするなど、大文字小文字をそろえる。ワーキンググループは「map のキーは整数なので」編集上の変更と判断した。
@@ -41,4 +41,4 @@ README は ISO/IEC 18013-5 (<https://www.iso.org/standard/69084.html>)、OpenID 
 
 - Upstream: mdoc の附属書は ISO/IEC 18013-5 の構造 (`Document`、`DeviceAuth`、`SessionTranscript`、`KeyAuthorizations`) をそのまま使う。18013-5 第 2 版との関係を示すのは編集者注の 2 か所である。発行者識別子は「第 2 版で定義中の `IssuerIdentifiers` 構造と同じ規則」に従い、鍵に束縛されていない mdoc は「DIS 投票向けに提案された変更」に従う (issue #56)。SD-JWT VC の附属書は RFC 9901 と draft-ietf-oauth-sd-jwt-vc の上に立つ。issue #53 は `vct` の継承を OpenID4VP と同じように扱うべきかを問い、issue #52 は `path` を OpenID4VP と 18013-5 の claims path pointer にそろえようとしている。
 - Downstream: 近接提示とオンライン提示で 1 つのモデルを使いたい wallet と verifier、そしてこのメッセージを運ぶプロトコル。`ChannelBinding` には OpenID4VP と Digital Credentials API のフィールドがすでにある。リポジトリは実装を挙げていない。
-- Compatibility: #61 より前に作った要求はキー 2 に文字列を入れているので、配列型に合わない。#57 より前の SD-JWT VC のクエリは `vc+sd-jwt` を使っている。#77 がマージされれば、それ以前に作った応答は `Envelope` の CDDL に合わなくなる。#76 がマージされれば、`main` の CDDL から作った `ChannelBinding` のキーが変わり、transcript のバイト列とハッシュ値も変わる。
+- Compatibility: #61 より前に作った要求はキー 2 に文字列を入れているので、配列型に合わない。#57 より前の SD-JWT VC のクエリは `vc+sd-jwt` を使っている。#77 がマージされれば、それ以前に作った応答は `Envelope` の CDDL に合わなくなる。#76 がマージされれば、`main` の CDDL から作った `ChannelBinding` の engagement のキー (OpenID4VP と Digital Credentials API のフィールド) が変わり、transcript のバイト列とハッシュ値も変わる。本文から作った伝送路フィールドと CDDL から作ったものは、#76 の後も食い違う。

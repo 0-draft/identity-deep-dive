@@ -43,7 +43,7 @@ sequenceDiagram
 
 - **Trigger**: radar の注記は「4 日間で 23 コミット、フィールド名の変更と credential_types の配列化を含む」だった。`main` で見ると、rebase マージされた 2 つの pull request で計 31 コミットが入っている。#61 (8 コミット、2026 年 11 月 4 日) が `credential_type` を配列にし、#57 (23 コミット、2026 年 11 月 9 日) が形式固有の事項を附属書に移した。23 コミットは #57 だけのもので、書かれたのは 9 月 7 日から 10 月 22 日にかけてである。
 - **Source evidence**: pull request #57 の説明とコミット (`ce98c33` から `4ddd238`)、pull request #61 (head は `f669188`、issue #46 を close)。issue #72 は「Digital Credentials Harmonized Presentation 1.0 - Draft 00」の公開を提案しているが、2026 年 11 月 4 日の issue へのコメントは、pull request がもっと入ってから「1〜2 か月ほど」後に再検討するとしている。公開に必要な Security Considerations のプレースホルダーと Notices 附属書は、未マージの pull request #85 が追加する。
-- **Expected impact**: Editor's Copy から実装している人は、フィールド単位の変更を追い続ける必要がある。未マージの pull request #77 は応答の `credentials` プールを map から配列に変え、#76 は `ChannelBinding` のキー番号を振り直す。中核の節にはまだ合意がなく、ワイヤー形式は安定していない。
+- **Expected impact**: Editor's Copy から実装している人は、フィールド単位の変更を追い続ける必要がある。未マージの pull request #77 は応答の `credentials` プールを map から配列に変え、#76 は `ChannelBinding` の engagement のキー番号を振り直す。中核の節にはまだ合意がなく、ワイヤー形式は安定していない。
 
 ## 変更点
 
@@ -58,10 +58,11 @@ sequenceDiagram
 ## 技術分析
 
 - Threat model implications: リプレイ対策の中心は transcript である。要求のハッシュと、engagement または起動のチャネルを、reader の署名、応答の暗号化、credential 自体の束縛のすべてに入れることで、「あるセッションのメッセージを別のセッションで再利用できない」ようにしている。Security Considerations 節はまだ存在しない (未マージの pull request #85 が「To be completed」として追加する)。Reader Authentication 節は、reader の鍵をどう伝えるかをまだ定めていない。未マージの pull request #65 は、`COSE_Signature` の protected header に X.509 の `x5chain` (RFC 9360) を入れることを求める。`support_no_cryptographic_binding` を使えば、verifier は holder binding のない credential を受け入れられる。両附属書とも、束縛なしの場合をこのフラグに結び付けている。
-- Protocol flow implications: 応答の暗号化が必須になるのはセッション層の暗号がない場合だけなので、同じメッセージ形式が 18013-5 の BLE/NFC セッションでも Digital Credentials API でも動く。mdoc で `WalletTransactionTranscript` から `SessionTranscript` を導く方法は「to be completed」である (issue #10)。KB-JWT の `nonce` の文字列エンコーディングと `aud` の値も同じく未定なので、どちらの形式の束縛もまだ最後まで実装できない。
+- Protocol flow implications: 応答の暗号化が必須になるのはセッション層の暗号がない場合だけなので、同じメッセージ形式が 18013-5 の BLE/NFC セッションでも Digital Credentials API でも動く。mdoc で `WalletTransactionTranscript` から `SessionTranscript` を導く方法は「to be completed」である (issue #10)。2026 年 11 月 5 日、議長は transcript だけを扱う会議を 2026 年 11 月 16 日 14:00 UTC に開くことを提案した。KB-JWT の `nonce` の文字列エンコーディングと `aud` の値も同じく未定なので、どちらの形式の束縛もまだ最後まで実装できない。
 - Interop concerns:
-  - `main` では本文と CDDL で整数キーが食い違っている。`ChannelBinding` の engagement フィールドは本文の表では 8 個で、`oidc4vp_request_uri` が 6、`oidc4vp_client_id` が 7、`dc_api_origin` が 8 である。CDDL では 7 個で、この 3 つが 5、6、7 になっている。伝送路フィールドも違い、本文は `ble_gatt` と整数の `ble_l2cap`、CDDL は `ble_uuid`、map 値の `ble_l2cap`、キー 12〜15 を持つ。issue #75 がこれらを挙げ、未マージの pull request #76 が修正する。#76 は CDDL を本文の番号に合わせ (キー 5 に `cce_handover` を追加)、`oidc4vp_*` を `openid4vp_*` に、`nfcv2` を `cce` に改名する。
-  - 応答の暗号化に使う transcript について、本文の記述が割れている。transcript の説明の箇条書きと CDDL のコメントは `ReaderTransactionTranscript` を応答の暗号化に使うとし、「Use in Protocol Operations」の表は `WalletTransactionTranscript` を HPKE の info パラメータとしている。
+  - `main` では本文と CDDL で整数キーが食い違っている。`ChannelBinding` の engagement フィールドは本文の表では 8 個で、`oidc4vp_request_uri` が 6、`oidc4vp_client_id` が 7、`dc_api_origin` が 8 である。CDDL では 7 個で、この 3 つが 5、6、7 になっている。issue #75 がこれを挙げ、未マージの pull request #76 が修正する。#76 は CDDL を本文の番号に合わせ (キー 5 に `cce_handover` を追加)、`oidc4vp_*` を `openid4vp_*` に、`nfcv2` を `cce` に改名する。issue #75 と pull request #76 が扱うのは engagement のキー 5〜8 だけである。
+  - 伝送路フィールドも食い違っており、#76 はそこを変えない (その head `ce4ba23` で確認)。キー 10 は本文では `ble_gatt`、CDDL では `ble_uuid` である。`ble_l2cap` (キー 11) の型は、本文では `uint`、CDDL では `uuid` (キー 1) と `psm` (キー 2) の map である。キー 12〜15 (`nfc_static_handover`、`nfc_negotiated_handover`、#76 が `cce` に改名する `nfcv2`、`wifi_aware`) は CDDL にしかない。2026 年 11 月 15 日の時点で、これらの食い違いを挙げたオープンな issue はない。issue #41 は `ChannelBinding` を伝送方式ごとに組み直す提案だが、これらには触れていない。
+  - 応答の暗号化に使う transcript について、本文の記述が割れている。CDDL のコメントは、両方の transcript を応答の暗号化に使うとしている。`ReaderTransactionTranscript` は「as info parameter for response encryption」、`WalletTransactionTranscript` は「for credential authentication ... and response encryption」である。本文の transcript の説明の箇条書きは、応答の暗号化に使うのは `ReaderTransactionTranscript` だけとしている。「Use in Protocol Operations」の表は、その credential の `WalletTransactionTranscript` を HPKE の info パラメータとしている。
   - 未マージの pull request #77 は、`credentials` map を `CredentialItem` の配列に置き換え、各要素に新しい `query_refs` フィールド (キー 3) を足し、`CredentialRef` を `QueryRef` に改名する。これで 1 つの credential を重複させずに複数のクエリへの回答にでき、`allow_multiple` が立っていれば 1 つのクエリに複数の credential を返せる。
   - 本文は決定的 CBOR を「このプロトコル全体で」必須としているが、RFC 8949 Section 4.2 に軽く触れているだけである。未マージの pull request #64 は専用の節を追加する。RFC 8949 Section 4.2.1 の core deterministic encoding を使い、NaN と無限大を禁じ、transcript は送信されないので双方がそれぞれエンコードする、と注記する。
 
@@ -72,6 +73,8 @@ sequenceDiagram
 - SD-JWT VC の `path`。issue #52 は、`[ + tstr ]` では配列の要素を指せないと指摘している。2026 年 11 月 5 日、ワーキンググループは `[ + tstr / int / null / bool / bstr ]` への拡張に「異論なし」とし、11 月 9 日には pull request を書くという申し出があった。2026 年 11 月 11 日時点で該当する pull request は出ていない。
 - `vct` のクエリが継承した type にも一致するか (issue #53)、X.509 を使わない SD-JWT VC 発行者をどう要求するか、両形式の value matching (issue #9) と transaction data (issue #4)。
 - 未マージの pull request #64、#65、#74、#76、#77、#81、#83、#85 のどれが、どういう形で入るか。
+- 2026 年 11 月 16 日 14:00 UTC に提案された transcript の会議 (issue #10) で、transcript の目的、フィールド、ハッシュアルゴリズムの選択の余地、各形式での載せ方について何が決まるか。
+- #75 も #76 も扱っていない `ChannelBinding` の伝送路フィールド (キー 10〜15) を、誰が本文と CDDL でそろえるのか。
 
 ## 実験
 
