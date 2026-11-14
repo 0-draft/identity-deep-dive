@@ -53,7 +53,7 @@ sequenceDiagram
 ## 変更点
 
 - 仕様・文書の変更の要約: リビジョン 00 であり、比較できる以前のリビジョンはない。CTA オブジェクト（Section 3）、三つの検証不変条件 `TAINT_LATTICE_MONOTONICITY`、`CONFUSED_DEPUTY_FAIL_CLOSED`、`CONTEXT_MERKLE_BINDING`（Section 4）、60 秒の時計ずれ規則（Section 5）、メディアタイプ、テイントレベルのレジストリ、二つのヘッダーフィールドの IANA 登録要求（Section 6）を導入する。
-- 互換性・移行上の懸念: 準拠するランタイムは、制御プレーンのすべてのツール呼び出しにヘッダーを付けなければならない（Section 3）ため、既存の MCP クライアントとサーバーはすべて変更が必要になる。ドラフトは、ネゴシエーションも、ヘッダーを理解しないリライングパーティ向けの導入手順も示していない。ヘッダーのない呼び出しに最も近い規則は、「暗号学的バインディングの欠落」でフェイルクローズにするという Section 5 の要件だが、これがすべての効果クラスに適用されるかは書かれていない。
+- 互換性・移行上の懸念: Section 3 は「Every control-plane tool invocation emitted by a conforming agent runtime MUST include an Agent-Ctx-Isolation header (or _meta.ctxIsolation object in JSON-RPC/MCP)」と定める。準拠するエージェントランタイムが出す制御プレーンのツール呼び出しには、すべてこのヘッダー（JSON-RPC/MCP では `_meta.ctxIsolation` オブジェクト）が必要になるため、既存の MCP クライアントとサーバーはすべて変更が必要になる。ドラフトは、ネゴシエーションも、ヘッダーを理解しないリライングパーティ向けの導入手順も示していない。ヘッダーのない呼び出しに最も近い規則は、「暗号学的バインディングの欠落」でフェイルクローズにするという Section 5 の要件だが、これがすべての効果クラスに適用されるかは書かれていない。
 
 ## 技術分析
 
