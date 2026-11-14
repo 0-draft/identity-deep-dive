@@ -12,13 +12,13 @@
     },
     {
       "id": "mail:J309gZABiOnSsvebrwYUWTi1Aow",
-      "why": "Agent Passport -01 will make a cumulative limit valid only if it names one relying party, the same single-writer conclusion the Cred and Hulea threads reached. Implementers should not expect a total to be shared across relying parties.",
-      "why_ja": "Agent Passport -01 は、累積上限を持つ receipt に relying party を一つだけ指定することを求める予定である。Cred の議論と同じく、書き込み元を一つにするという結論だ。実装する側は、合計値を複数の relying party で共有できると想定してはならない。"
+      "why": "Agent Passport -01 will make a cumulative limit valid only if it names one relying party. The Cred and Hulea threads reached the same single-writer conclusion. Implementers should not expect a total to be shared across relying parties.",
+      "why_ja": "Agent Passport -01 は、累積上限を持つ receipt に relying party を一つだけ指定することを求める予定である。Cred や Hulea の議論も、書き込み元を一つにするという同じ結論に至った。実装する側は、合計値を複数の relying party で共有できると想定してはならない。"
     },
     {
-      "id": "mail:CUSo_w53my0EePs-7PdFaqHr0Rk",
-      "why": "The AIMS thread settled on treating state or a permit exactly at its limit as expired, so boundary test vectors change. A delegated-subject value may also be transcribed across trust domains if the transcribing server records it in its audit record.",
-      "why_ja": "AIMS の議論は、期限ちょうどの状態や permit を期限切れとして扱う方針に落ち着き、境界のテストベクタが変わる。委譲された subject の値は、変換を行うサーバーが監査記録に残せば、trust domain をまたぐ際に変換してよいことも決まった。"
+      "id": "pr:oauth-wg/oauth-sd-jwt-vc#457",
+      "why": "The PR says it adds no new requirement, but a Consumer may no longer match a type through extends. A verifier should match only on vct and aka_vcts, as OpenID4VP 1.1 already does. Issuers that rely on extends must list the extended types in aka_vcts.",
+      "why_ja": "PR は新しい要件はないとするが、Consumer は extends を使った型の照合をしてはならなくなる。検証側は、OpenID4VP 1.1 と同じく vct と aka_vcts だけで照合することになる。extends に頼ってきた発行者は、拡張元の型を aka_vcts に載せる必要がある。"
     },
     {
       "id": "pr:oauth-wg/oauth-delegate-sd-jwt#15",
@@ -32,7 +32,7 @@
       "name": "Workload credentials and proof of possession",
       "name_ja": "ワークロードクレデンシャルと proof of possession",
       "summary": "WIMSE's base stack: identifiers, WIT/WIC, WPT, HTTP signatures and mTLS. http-signature is with the IESG; independent test vectors led to a fixed @query error and a chair statement that verifiers should reject MUST NOT parameters. Reviews of identifier, mutual-tls (WGLC seen as possible) and wpt were logged. Issue #416 proposes name-constrained CAs for shared trust anchors.",
-      "summary_ja": "WIMSE の基盤で、識別子、WIT/WIC、WPT、HTTP Signature、mTLS を扱う。http-signature は IESG に提出済みで、独立したテストベクタから @query の誤りが見つかって修正され、座長は検証側が MUST NOT のパラメータを拒否すべきとした。identifier、mutual-tls(WGLC 可能とする見方)、wpt の査読が記録された。issue #416 は信頼アンカー共有時の name constraints 付き CA を求める。",
+      "summary_ja": "WIMSE の基盤で、識別子、WIT/WIC、WPT、HTTP Signature、mTLS を扱う。http-signature は IESG に提出済みで、独立したテストベクタから @query の誤りが見つかって修正され、座長は検証側が MUST NOT のパラメータを拒否すべきとした。identifier、mutual-tls(WGLC 可能とする見方)、wpt の査読が記録された。issue #416 は信頼アンカー共有時の name constraints 付き CA を求める。IETF 127 のハッカソンはこれらの draft の相互運用を試す計画である。",
       "members": [
         {
           "track": "ietf-wimse",
@@ -127,8 +127,8 @@
       "id": "agent-delegation",
       "name": "Agent delegation and attenuation",
       "name_ja": "Agent の委譲と attenuation",
-      "summary": "How authority narrows between agents. AAT, Asor, Cred, Agent Passport, Hulea mandates and Delegate SD-JWT overlap. Authors agree the lowest del_max_depth on a path is the limit but differ on a leaf at the root maximum; a comparison is due for the 16 November side meeting. Cumulative budgets need a single writer; Hulea -02 will drop the unsafe 'expire unused' rule.",
-      "summary_ja": "agent 間で権限をどう狭めるかを扱う。AAT、Asor、Cred、Agent Passport、Hulea の mandate、Delegate SD-JWT は重なり合う。経路上で最小の del_max_depth を上限とする点は一致したが、ルートの上限ちょうどの leaf の扱いは異なり、比較は 11 月 16 日のサイドミーティング向けに用意される。累積予算は書き込み元を一つにする必要がある。Hulea は -02 で「未使用で失効」の安全でない規則を外す。",
+      "summary": "How authority narrows between agents. AAT, Asor, Cred, Agent Passport, Hulea mandates and Delegate SD-JWT overlap. Authors agree the lowest del_max_depth on a path is the limit but differ on a leaf at the root maximum; a comparison is due for the 16 November side meeting. Cumulative budgets need a single writer. Hulea -02 will replace the unsafe 'expire unused' rule.",
+      "summary_ja": "agent 間で権限をどう狭めるかを扱う。AAT、Asor、Cred、Agent Passport、Hulea の mandate、Delegate SD-JWT は重なり合う。経路上で最小の del_max_depth を上限とする点は一致したが、ルートの上限ちょうどの leaf の扱いは異なり、比較は 11 月 16 日のサイドミーティング向けに用意される。累積予算は書き込み元を一つにする必要がある。Hulea は -02 で「未使用で失効」の安全でない規則を置き換え、Cred は -03 で tally の mode marker と status の所在を加える。",
       "members": [
         {
           "track": "ietf-wimse",
@@ -267,10 +267,6 @@
           "name": "draft-ietf-oauth-identity-assertion-authz-grant"
         },
         {
-          "track": "oauth-wg",
-          "name": "draft-ietf-oauth-deferred-token-response"
-        },
-        {
           "track": "ietf-wimse",
           "name": "draft-reddy-wimse-oauth-dialog-binding"
         }
@@ -286,8 +282,8 @@
       "id": "oauth-core-bcp",
       "name": "OAuth core and security BCPs",
       "name_ja": "OAuth コアとセキュリティ BCP",
-      "summary": "OAuth 2.1 and the BCPs around it. RFC 10070 (from rfc7523bis) was published, changing audience handling for JWT client assertions and assertion grants. rfc8725bis is in the RFC Editor queue but blocked; first-party apps awaits write-up. OAuth 2.1 PR #268 drew comments, and PR #283 proposes an author-list change.",
-      "summary_ja": "OAuth 2.1 とその周辺の BCP を扱う。RFC 10070(rfc7523bis 由来)が発行され、JWT クライアントアサーションとアサーショングラントの audience の扱いが変わった。rfc8725bis は RFC Editor キューにあるが blocked で、first-party apps は write-up 待ちである。OAuth 2.1 の PR #268 にはコメントが付き、PR #283 は著者欄の変更を提案している。",
+      "summary": "OAuth 2.1 and the BCPs around it. RFC 10070 (from rfc7523bis) was published, changing audience handling for JWT client assertions and assertion grants. rfc8725bis is in the RFC Editor queue but blocked; first-party apps awaits write-up. Deferred token response received IANA's early review comments. OAuth 2.1 PR #268 drew comments, and PR #283 proposes an author-list change.",
+      "summary_ja": "OAuth 2.1 とその周辺の BCP を扱う。RFC 10070(rfc7523bis 由来)が発行され、JWT クライアントアサーションとアサーショングラントの audience の扱いが変わった。rfc8725bis は RFC Editor キューにあるが blocked で、first-party apps は write-up 待ちである。deferred token response には IANA の事前レビューのコメントが届いた。OAuth 2.1 の PR #268 にはコメントが付き、PR #283 は著者欄の変更を提案している。",
       "members": [
         {
           "track": "oauth-wg",
@@ -408,8 +404,8 @@
       "id": "authorization-apis",
       "name": "Authorization APIs and decision semantics",
       "name_ja": "認可 API と判定セマンティクス",
-      "summary": "Externalised authorization decisions. AuthZEN merged 6 PRs in 30 days, has 22 open and was pushed 1 day ago; the material shows no content of recent changes. The evaluation draft and AIMS touch verifier-side evaluation and policy decision points.",
-      "summary_ja": "外部化された認可判定を扱う。AuthZEN は 30 日で 6 件の PR をマージし、open な PR は 22 件で、最終 push は 1 日前である。最近の変更の内容は資料から確認できない。evaluation draft と AIMS は、検証側の評価とポリシー判定点に関わる。",
+      "summary": "Externalised authorization decisions. AuthZEN merged 6 PRs in 30 days, has 22 open and was pushed 2 days ago; the material shows no content of recent changes. The evaluation draft and AIMS touch verifier-side evaluation and policy decision points.",
+      "summary_ja": "外部化された認可判定を扱う。AuthZEN は 30 日で 6 件の PR をマージし、open な PR は 22 件で、最終 push は 2 日前である。最近の変更の内容は資料から確認できない。evaluation draft と AIMS は、検証側の評価とポリシー判定点に関わる。",
       "members": [
         {
           "track": "openid",
@@ -547,5 +543,5 @@
       ]
     }
   ],
-  "generated_at": "2026-11-14T18:10:47+00:00"
+  "generated_at": "2026-11-14T22:30:25+00:00"
 }
