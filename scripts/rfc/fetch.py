@@ -142,6 +142,9 @@ def is_pre(block: list[str]) -> bool:
         return False
     if any(CODE_LINE.match(l) or LONG_TOKEN.search(l) for l in block):
         return True
+    # ABNF: a rule definition with ABNF operators or core rules.
+    if re.match(r"^\s*[A-Za-z][A-Za-z0-9-]*\s*=/?\s", block[0]) and re.search(r"%x|\bALPHA\b|\bDIGIT\b|\bVCHAR\b|\d\*|\*\(|\*\d", "\n".join(block)):
+        return True
     # A term on its own line with its definition indented under it, as in
     # parameter lists: body text, not an example.
     head = block[0].strip()
