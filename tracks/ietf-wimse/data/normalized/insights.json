@@ -1,16 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-06T06:53:13+00:00",
-      "text": "The list had two review emails from the same reviewer, one on draft-ietf-wimse-workload-creds and one on draft-ietf-wimse-http-signature. Both are mostly wording suggestions. The one normative suggestion is to allow mTLS as well as server-authenticated TLS for carrying a WIT and its proof of possession (PoP).",
-      "text_ja": "メーリングリストには、同一のレビュアーによる draft-ietf-wimse-workload-creds と draft-ietf-wimse-http-signature へのレビューが2通あった。大半は文言の改善提案である。規範的な提案は、WIT と PoP の送信経路に、サーバー認証のみの TLS に加えて mTLS も明記する点だけである。"
-    },
-    {
-      "at": "2026-11-06T19:28:20+00:00",
-      "text": "Kathleen Moriarty posted readability and security reviews of draft-ietf-wimse-workload-creds and draft-ietf-wimse-http-signature, both logged as s2s-protocol issues (#418, #417). A third thread, from the author of an external draft, proposes bounding sentences for the AIMS gap text. No normative change happened.",
-      "text_ja": "Kathleen Moriarty が draft-ietf-wimse-workload-creds と draft-ietf-wimse-http-signature の可読性・セキュリティ面のレビューを投稿し、それぞれ s2s-protocol の issue #418、#417 として登録された。AIMS のギャップ文に関する議論も続いたが、規範的な変更はない。"
-    },
-    {
       "at": "2026-11-07T06:03:19+00:00",
       "text": "Most notable: an independent test-vector set (6 positive, 22 negative) for draft-ietf-wimse-http-signature-08 was posted, and the editor said verifiers should reject messages with MUST NOT parameters. Otherwise it was list discussion on delegation chains and AER-1 audit records, plus a spelling-only commit.",
       "text_ja": "最も重要なのは draft-ietf-wimse-http-signature-08 の独立したテストベクター（正例6件、負例22件）の投稿で、エディタは MUST NOT のパラメーターを含むメッセージは検証側が拒否すべきだと述べた。その他は委任チェーンと AER-1 監査記録に関するメーリングリストの議論と、スペル修正のみのコミットである。"
@@ -64,6 +54,11 @@
       "at": "2026-11-13T19:45:59+00:00",
       "text": "One item: a tooling status announcement from the author of draft-li-rttp-iqa-addressing (not a WIMSE WG draft). It covers package releases, test vector filings and a hosted MCP endpoint. No WIMSE draft text changed, so nothing substantive moved.",
       "text_ja": "今回は draft-li-rttp-iqa-addressing の著者によるツール更新の告知が1件のみである。パッケージのリリース、テストベクターの提出、ホスト型 MCP エンドポイントの公開を伝えるもので、WIMSE の WG ドラフトの本文に変更はなく、実質的な動きはない。"
+    },
+    {
+      "at": "2026-11-14T06:29:04+00:00",
+      "text": "Nothing in the specs changed. The one item is a mailing-list thread in which the IETF 127 Hackathon interop plan for agent call chains attracts extra scenarios and implementations, mostly about revocation and failing closed.",
+      "text_ja": "仕様本文の変更はない。今回は IETF 127 ハッカソンにおけるエージェント呼び出しチェーンの相互運用テスト計画に関するメーリングリストのスレッドのみで、失効とフェイルクローズに関するシナリオや実装が追加で提案された。"
     }
   ],
   "items": {
@@ -169,6 +164,50 @@
       "use_cases_ja": [
         "AIMS Section 11 向けに改ざん検知可能な監査ログを作成する環境では、ポリシーによる拒否と、ポリシー源や状態源に到達できない、または古い場合とを区別する必要がある。",
         "fail-closed のポリシー判断点は、呼び出し元には一様なエラーを返しつつ、拒否の理由を記録に残せる。"
+      ]
+    },
+    "mail:8wNHgFgnEncJymh7TqA_V0cQQ4g": {
+      "diagram": "sequenceDiagram\n participant U as User request\n participant A as Agent A (domain A)\n participant B as Agent B\n participant X as Hop in domain B\n U->>A: Txn-Token issued\n A->>B: WIT + HTTP signature or WPT, Txn-Token bound\n B->>X: identity chaining (Txn-Token, JWT grant, access token)\n Note over A,X: Negative: A revoked mid-transaction\n B->>X: next call\n X-->>B: refused (fail closed)",
+      "first_seen": "2026-11-14",
+      "headline": "Hackathon thread: Alexander Pelov's interop plan for agent call chains draws extra scenarios and implementations, mostly on revocation.",
+      "headline_ja": "ハッカソンのスレッド：Alexander Pelov のエージェント呼び出しチェーン相互運用計画に、失効を中心とした追加シナリオと実装が寄せられた。",
+      "id": "mail:8wNHgFgnEncJymh7TqA_V0cQQ4g",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-transaction-tokens",
+          "note": "The scenario binds a Txn-Token to each hop's proof and keeps it inside its domain.",
+          "note_ja": "このシナリオでは Txn-Token を各ホップの証明に結び付け、ドメイン内に留める。",
+          "track": "oauth-wg"
+        },
+        {
+          "name": "draft-ietf-oauth-identity-chaining",
+          "note": "Crossing from domain A to B uses identity chaining.",
+          "note_ja": "ドメイン A から B への越境に identity chaining を用いる。",
+          "track": "oauth-wg"
+        },
+        {
+          "name": "draft-ietf-oauth-status-list",
+          "note": "Several scenarios test status-list unavailability and revocation timing.",
+          "note_ja": "複数のシナリオがステータスリストの到達不能と失効のタイミングを試験する。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Alexander Pelov plans IETF 127 Hackathon interop of AI-agent chains across two trust domains. The plan uses workload-creds-03, wpt-02, http-signature-08, identifier-04, Txn-Tokens and identity chaining. The normal path is a Txn-Token bound to each hop's WIT plus HTTP signature or WPT, then identity chaining to domain B. Negative cases include missing proof of possession, replay, wrong audience, a swapped Txn-Token and mid-transaction revocation. Replies add material. Kieran offers a final-hop scenario using draft-sweeney-wimse-credential-delegation and reports that the Cred SDK passes all 28 vectors of issue #419. Ben Le proposes six scenarios from draft-le-agent-passport: status list unreachable, revocation after delegation, widening delegation, cumulative limits, rewritten requests and changed tool descriptions. Arun proposes a scenario where the text shown to the user differs from the executed action. Marc of MintID offers a second implementation of the revoked-agent case that uses a zero-knowledge non-revocation proof instead of a status list, with timing from one run. These are offers and proposals only, with no results or spec text changes yet.",
+      "summary_ja": "Alexander Pelov は IETF 127 ハッカソンで、二つのトラストドメインにまたがる AI エージェントのチェーンの相互運用テストを計画している。対象は workload-creds-03、wpt-02、http-signature-08、identifier-04、Txn-Token、identity chaining である。正常系は、各ホップの WIT と HTTP 署名または WPT に Txn-Token を結び付け、identity chaining でドメイン B に渡る流れである。異常系には、所持証明の欠如、リプレイ、誤った audience、署名後の Txn-Token 差し替え、トランザクション途中の失効などがある。返信で追加提案があった。Kieran は draft-sweeney-wimse-credential-delegation を用いた最終ホップのシナリオを提案し、Cred SDK が issue #419 の 28 個のテストベクターすべてに合格したと報告した。Ben Le は draft-le-agent-passport に基づく六つのシナリオ（ステータスリスト到達不能、委任後の失効、委任範囲の拡大、累積上限、リクエストの書き換え、ツール記述の変更）を提案した。Arun は、ユーザーに表示した内容と実行される操作が食い違うシナリオを提案した。MintID の Marc は、ステータスリストではなくゼロ知識の非失効証明を使う、失効済みエージェント事例の第二の実装を申し出て、一回の実行での時間計測を示した。いずれも申し出と提案の段階であり、結果や仕様文面の変更はまだない。",
+      "title": "IETF 127 Hackathon: WIMSE interop scenarios for agent call chains (3 new messages)",
+      "updated_at": "2026-11-14T06:29:04+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/8wNHgFgnEncJymh7TqA_V0cQQ4g/",
+      "use_cases": [
+        "Implementers of WIT, WPT or HTTP signatures can use the scenario list as a ready checklist of negative cases to test against.",
+        "Deployers designing revocation for agent chains can compare the stated bounds on time to first refusal across status-list and non-status-list designs.",
+        "Teams building delegated-credential gateways can test the final hop to a bearer-only third-party API."
+      ],
+      "use_cases_ja": [
+        "WIT、WPT、HTTP 署名の実装者は、このシナリオ一覧を異常系テストのチェックリストとして使える。",
+        "エージェントチェーンの失効を設計する運用者は、ステータスリスト方式とそれ以外の方式で、最初の拒否までの時間の上限を比較できる。",
+        "委任クレデンシャルのゲートウェイを作るチームは、ベアラートークンのみを受け付けるサードパーティ API への最終ホップを試験できる。"
       ]
     },
     "mail:B3VfzW_jlvVT3BI4T4f4oAySBxU": {
@@ -519,23 +558,6 @@
       "use_cases": [],
       "use_cases_ja": []
     },
-    "mail:Vd1-lCWYXdJYkIMMV2z98f3IL5s": {
-      "diagram": "",
-      "first_seen": "2026-11-06",
-      "headline": "Kathleen Moriarty's review of http-signature asks for a one-sentence HTTP scope and a clearer reason for application-layer protection; logged as issue #417.",
-      "headline_ja": "Kathleen Moriarty による http-signature のレビューは、HTTP を明記した冒頭文と、アプリケーション層保護の理由の明確化を求めており、issue #417 として登録された。",
-      "id": "mail:Vd1-lCWYXdJYkIMMV2z98f3IL5s",
-      "kind": "mail",
-      "related": [],
-      "significance": "editorial",
-      "summary": "The review says the draft is clear and in good shape. It suggests adding HTTP to the first sentence of the introduction. It also suggests rewording the paragraph on why deployments prefer application-layer protection. The proposed text says TLS may involve several hops that terminate and restart sessions, such as at a proxy or middlebox, and HTTP signatures with a JWT keep one identifier and credential across the path. It is a wording change only and does not alter the protocol. Yaron noted it as s2s-protocol issue #417.",
-      "summary_ja": "レビューはドラフトが明快で良好な状態だとしている。序文の最初の文に HTTP を加えることを提案し、デプロイ先がアプリケーション層の保護を好む理由の段落の書き換えも提案する。提案文は、TLS がプロキシやミドルボックスなどで終端・再開される複数ホップになり得ること、HTTP 署名と JWT を用いれば経路全体で一貫した識別子とクレデンシャルを保てることを述べる。文言の変更のみでプロトコルは変わらない。Yaron は s2s-protocol の issue #417 として記録した。",
-      "title": "Review of draft-ietf-wimse-http-signature",
-      "updated_at": "2026-11-06T19:28:20+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/Vd1-lCWYXdJYkIMMV2z98f3IL5s/",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
     "mail:XDzEijPg8qT_4X4u7Yl11PHU5og": {
       "diagram": "",
       "first_seen": "2026-11-12",
@@ -559,36 +581,6 @@
         "許可やミッション束縛認可の期限検査を実装する際、有効期限と等しい時点を期限切れとして扱う必要がある場合。",
         "古さと期限のテストベクターを書き、独立した実装が等値の境界で同じ結果になるようにする場合。",
         "リクエストが信頼ドメインをまたぐ際にサーバーが書き換える主体識別子をどう記録するかを決める場合。"
-      ]
-    },
-    "mail:YSabmWandtjPFRSY5R89Ci6OWhA": {
-      "diagram": "",
-      "first_seen": "2026-11-06",
-      "headline": "Kathleen Moriarty's review of workload-creds suggests clearer wording and a few security tweaks; Yaron logged it as issue #418.",
-      "headline_ja": "Kathleen Moriarty による workload-creds のレビューは文言の明確化と数点のセキュリティ面の提案を含み、Yaron が issue #418 として登録した。",
-      "id": "mail:YSabmWandtjPFRSY5R89Ci6OWhA",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-ietf-oauth-status-list",
-          "note": "The review questions deny-list versus allow-list token status in the WIT, which is the area Token Status List covers; the material does not link the two drafts.",
-          "note_ja": "レビューは WIT のトークンステータスにおける deny-list と allow-list を問題にしており、Token Status List が扱う領域に近い。ただし資料は両ドラフトを結びつけていない。",
-          "track": "oauth-wg"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "The review proposes rewording the abstract to say credentials are bound to the identity rather than represent it. It also proposes stating directly in the introduction that the WIT is for application-layer protocols such as HTTP and the WIC is for transport-layer protocols, mainly mTLS. For Section 5 it suggests explaining that TLS termination at a load balancer is a reason to use an application-layer credential. For Section 5.1 it asks whether the exp guidance of hours should be shorter, and why the draft says deny-list rather than allow-list. For Section 9.6 it suggests allowing mTLS as well as server-authenticated TLS. The message is truncated, so later comments are not visible. Yaron recorded it as s2s-protocol issue #418. These are suggestions, not adopted changes.",
-      "summary_ja": "レビューは、アブストラクトを、クレデンシャルがアイデンティティを表すのではなく紐づくものだと言い換えることを提案する。序文では、WIT は HTTP などのアプリケーション層向け、WIC は主に mTLS のトランスポート層向けだと直接述べることも提案する。5 節ではロードバランサでの TLS 終端がアプリケーション層クレデンシャルを使う理由になると説明することを勧める。5.1 節では exp の「数時間」という目安をより短くすべきか、また deny-list ではなく allow-list としない理由を尋ねる。9.6 節では、サーバー認証のみの TLS に加えて mTLS も許容することを提案する。メッセージは途中で切れており、以降のコメントは確認できない。Yaron は s2s-protocol の issue #418 として登録した。これらは提案であり、採用された変更ではない。",
-      "title": "Review of draft-ietf-wimse-workload-creds",
-      "updated_at": "2026-11-06T19:28:20+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/YSabmWandtjPFRSY5R89Ci6OWhA/",
-      "use_cases": [
-        "Implementers choosing between WIT and WIC for a deployment with TLS-terminating load balancers.",
-        "Operators setting WIT lifetimes and deciding between deny-list and allow-list status mechanisms."
-      ],
-      "use_cases_ja": [
-        "TLS を終端するロードバランサがある環境で WIT と WIC のどちらを使うか選ぶ場面。",
-        "WIT の有効期間や、deny-list と allow-list のどちらでステータスを管理するかを決める場面。"
       ]
     },
     "mail:a1elD5SHAy4Yhdf4GkQ4zkrIa78": {
@@ -683,46 +675,6 @@
         "トークンが一度も受理されなかったことを誰が証明できるかを Trust Framework に定める場合。"
       ]
     },
-    "mail:ea6rdI-IV2MeMNWjU_DmY01hU8Y": {
-      "diagram": "",
-      "first_seen": "2026-11-06",
-      "headline": "A reviewer suggests mostly readability edits to workload-creds, plus questions on exp lifetime, deny-list wording and mTLS in Section 9.6.",
-      "headline_ja": "workload-creds に対し、可読性向上の編集提案と、exp の有効期間・deny-list 表現・9.6節の mTLS についての指摘があった。",
-      "id": "mail:ea6rdI-IV2MeMNWjU_DmY01hU8Y",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "The reviewer proposes rewording the abstract so credentials are 'bound to' the workload identity rather than 'represent' it. They also propose restating the WIT (application layer, e.g. HTTP) versus WIC (transport layer, mTLS) split as two recommended patterns, with a rationale. For Section 5 they suggest explaining why TLS termination at a load balancer calls for an application-layer credential that stays unaltered. On Section 5.1 they ask whether the 'hours' guidance for exp should be shorter, since some deployments already use about 5 minutes, and why jti text says deny-list rather than allow-list. They suggest Section 9.2 mention that short exp values mitigate the problem it describes. The one normative edit is in Section 9.6, where the requirement to send the WIT and PoP over a 'server-authenticated TLS' connection would also name mTLS. No WG response is in the material.",
-      "summary_ja": "レビュアーは、抽象で、クレデンシャルがワークロードのアイデンティティを「表す」ではなく「に紐づく」と書き換えることを提案している。WIT（HTTP などのアプリケーション層）と WIC（mTLS などのトランスポート層）の使い分けを、根拠付きの2つの推奨パターンとして書き直すことも提案している。5章には、ロードバランサーで TLS が終端する場合にアプリケーション層のクレデンシャルが改変されずに維持される必要があることの説明を加えるよう提案している。5.1節については、一部で既に5分程度の有効期間が使われていることから exp の「数時間」という目安を短くすべきか、また jti の説明がなぜ allow-list ではなく deny-list なのかを質問している。9.2節には、exp を短くすることがその問題の緩和策であると明記するよう提案している。規範的な修正は9.6節のみで、WIT と PoP を送る「サーバー認証 TLS」接続の要件に mTLS も明記するというものである。WG からの応答はこの資料には含まれていない。",
-      "title": "Review of draft-ietf-wimse-workload-creds",
-      "updated_at": "2026-11-06T06:53:13+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/ea6rdI-IV2MeMNWjU_DmY01hU8Y/",
-      "use_cases": [
-        "An implementer choosing WIT lifetimes would watch whether the WG tightens the 'on the order of hours' guidance for exp.",
-        "A deployer sending WITs over mTLS between services would benefit if Section 9.6 states that mTLS satisfies the channel requirement."
-      ],
-      "use_cases_ja": [
-        "WIT の有効期間を決める実装者は、WG が exp の「数時間程度」という目安を短くするかどうかに注目するとよい。",
-        "サービス間で mTLS 経由で WIT を送る運用者にとっては、9.6節が mTLS をチャネル要件の充足として明記すれば有益である。"
-      ]
-    },
-    "mail:nlwwEHRta3EdrxB--z1NM-Mcp7M": {
-      "diagram": "",
-      "first_seen": "2026-11-06",
-      "headline": "A reviewer suggests wording changes to the http-signature introduction to state the full scope and why application-layer protection is used.",
-      "headline_ja": "http-signature の序文について、適用範囲の明示とアプリケーション層で保護する理由の説明を求める文言修正の提案があった。",
-      "id": "mail:nlwwEHRta3EdrxB--z1NM-Mcp7M",
-      "kind": "mail",
-      "related": [],
-      "significance": "editorial",
-      "summary": "The reviewer notes the draft is past WGLC and judges the rest of the document very good. They propose adding 'HTTP' to the first sentence of the introduction so the full scope is stated at once. They also propose rewriting the introduction's rationale for application-layer protection. The new text says the motivation is consistent identifier and credential handling across the full transit path, including TLS sessions terminated and restarted at proxies or middleboxes, using HTTP signatures with a JWT. No protocol change is proposed, and no WG response is in the material.",
-      "summary_ja": "レビュアーは、この草案が WGLC を過ぎていることを認めた上で、残りの部分は非常に良いと評価している。序文の最初の文に「HTTP」を加え、適用範囲を一文で示すよう提案している。また、序文のアプリケーション層での保護の根拠の説明も書き換えを提案している。新しい文案では、プロキシやミドルボックスで TLS セッションが終端・再開されても、HTTP 署名と JWT により経路全体で一貫した識別子とクレデンシャルを使えることを動機としている。プロトコルの変更提案はなく、WG からの応答もこの資料には含まれていない。",
-      "title": "Review of draft-ietf-wimse-http-signature",
-      "updated_at": "2026-11-06T06:53:13+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/nlwwEHRta3EdrxB--z1NM-Mcp7M/",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
     "mail:pLsPkrtN5tiN7gDW0S9cVG1YHjc": {
       "diagram": "",
       "first_seen": "2026-11-09",
@@ -772,29 +724,6 @@
       "use_cases_ja": [
         "判断レコードを検証する実装者は、効果発生時点で入力が古い場合に、そのレコードを不正形式として扱うのか、参考情報にとどめるのかを知る必要がある。",
         "レコードから行為を再構成する監査担当者は、evaluatedAt を効果発生時点の鮮度の証拠とみなさず、effect.interval.openedAt から効果開始時点の入力の経過時間を計算したい。"
-      ]
-    },
-    "mail:uHj7l43s0fHCCyGLYRnOqvVpfpM": {
-      "diagram": "",
-      "first_seen": "2026-11-06",
-      "headline": "A thread on AIMS -01 converges on two bounding sentences for the gap text, with the rule placed in Section 10.4.",
-      "headline_ja": "AIMS -01 のギャップ文に二つの限定文を置き、規則は 10.4 節に置く方向で議論が収束した。",
-      "id": "mail:uHj7l43s0fHCCyGLYRnOqvVpfpM",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Lee (author of draft-li-rttp-iqa-addressing) and Jiahui Miao agree to put one bounding sentence in the AIMS gap text and the undeterminable-state behaviour in Section 10.4, where the accepting domain's own evaluation is described. The first sentence says that accepting another domain's issuer does not establish authorization for an action. The second says a determination made from observed evidence holds at the time of observation and does not by itself hold after that evidence expires. Lee supports this with his own draft's closed five-value refusal vocabulary and an observation_as_of_ms field. This is a proposal from one participant, not a WG decision. The message is truncated, and the other drafts and conformance sites it cites are self-promotion that I did not verify.",
-      "summary_ja": "Lee（draft-li-rttp-iqa-addressing の著者）と Jiahui Miao は、AIMS のギャップ文に限定文を一つ置き、判定不能な状態での挙動は受け入れ側ドメイン自身の評価を述べる 10.4 節に置くことで合意した。第一の文は、他ドメインの発行者を受け入れても当該操作の認可が成立するわけではないと述べる。第二の文は、観測された証拠に基づく判定は観測時点で成立し、証拠が失効した後はそれだけでは成立しないと述べる。Lee は自身のドラフトの閉じた五値の拒否語彙と observation_as_of_ms を根拠に挙げている。これは一参加者の提案であり、WG の決定ではない。メッセージは途中で切れており、引用された他ドラフトや適合性サイトは未検証である。",
-      "title": "AIMS -01: upstream authorities for Workload Identity Certificates (trust between trust domains)",
-      "updated_at": "2026-11-06T19:28:20+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/uHj7l43s0fHCCyGLYRnOqvVpfpM/",
-      "use_cases": [
-        "Deciding how a verifier treats a certificate from another trust domain's issuer when AIMS leaves authorization undetermined.",
-        "Designing a cross-domain acceptance audit record that includes the age of the evidence relied on."
-      ],
-      "use_cases_ja": [
-        "AIMS で認可が未決定のとき、他のトラストドメインの発行者による証明書を検証側がどう扱うかを決める場面。",
-        "依拠した証拠の経過時間を含むクロスドメイン受け入れの監査記録を設計する場面。"
       ]
     },
     "mail:y26beA9Nql-66MlUvWPSrkepTGM": {
@@ -901,10 +830,10 @@
   "overflow": [],
   "triage": {
     "Diff active WG draft: draft-ietf-wimse-http-signature-08": {
-      "date": "2026-11-11",
+      "date": "2026-11-14",
       "priority": "high",
-      "reason": "Independent vectors (issue #419) and the chair's reject-on-MUST-NOT answer may lead to fixes and clarifications.",
-      "reason_ja": "独立したベクター（issue #419）と、MUST NOT は拒否すべきとの回答により、修正や明確化につながる可能性がある。"
+      "reason": "It is one of the drafts the hackathon exercises, so spec ambiguities may be reported against it.",
+      "reason_ja": "ハッカソンで実際に試験される草案の一つであり、仕様の曖昧さが報告される可能性がある。"
     },
     "Diff active WG draft: draft-ietf-wimse-identifier-04": {
       "date": "2026-11-09",
@@ -919,10 +848,10 @@
       "reason_ja": "レビューで鍵ペア認証の文言が提案され、WGLC が可能との所見が出ている。"
     },
     "Diff active WG draft: draft-ietf-wimse-workload-creds-03": {
-      "date": "2026-11-08",
+      "date": "2026-11-14",
       "priority": "high",
-      "reason": "Active issues on editorial comments (#418), coexistence reconciliation (#414) and overlapping trust roots (#370).",
-      "reason_ja": "編集上のコメント（#418）、共存の整合（#414）、trust root の重複（#370）に関する issue が動いている。"
+      "reason": "It is a core draft in the hackathon scenario, so spec ambiguities may be reported against it.",
+      "reason_ja": "ハッカソンのシナリオの中核となる草案であり、仕様の曖昧さが報告される可能性がある。"
     },
     "Review related draft: draft-asor-wimse-agent-delegation-chain-03": {
       "date": "2026-11-13",
@@ -937,10 +866,10 @@
       "reason_ja": "メーリングリストのコメントが、Section 9.5 に sum_max を回避し得る過小計上の具体的な欠陥があると指摘している。"
     },
     "Review related draft: draft-sweeney-wimse-credential-delegation-02": {
-      "date": "2026-11-12",
+      "date": "2026-11-14",
       "priority": "high",
-      "reason": "Authors are actively revising for -03: tally single-writer limits, status location for user-issued roots, suspension and restoration.",
-      "reason_ja": "著者が-03に向けて、集計の単一書き込み元の制約、ユーザー発行ルートのステータス所在、停止と復旧を改訂中である。"
+      "reason": "The thread names it as the basis for a final-hop hackathon scenario with a working implementation.",
+      "reason_ja": "スレッドで、実装付きの最終ホップのハッカソンシナリオの根拠として挙げられている。"
     },
     "Review related draft: draft-thaha-wimse-agent-evidence-binding-03": {
       "date": "2026-11-13",

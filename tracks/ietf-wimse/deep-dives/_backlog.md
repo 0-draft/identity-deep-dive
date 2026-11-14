@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-13T19:44:59+00:00
+Generated at: 2026-11-14T06:28:13+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -28,12 +28,12 @@ Generated at: 2026-11-13T19:44:59+00:00
 
 Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.
 
-- **high** `Diff active WG draft: draft-ietf-wimse-http-signature-08`: Independent vectors (issue #419) and the chair's reject-on-MUST-NOT answer may lead to fixes and clarifications.
+- **high** `Diff active WG draft: draft-ietf-wimse-http-signature-08`: It is one of the drafts the hackathon exercises, so spec ambiguities may be reported against it.
 - **high** `Diff active WG draft: draft-ietf-wimse-mutual-tls-03`: A review proposes key-pair authentication text and says WGLC looks possible.
-- **high** `Diff active WG draft: draft-ietf-wimse-workload-creds-03`: Active issues on editorial comments (#418), coexistence reconciliation (#414) and overlapping trust roots (#370).
+- **high** `Diff active WG draft: draft-ietf-wimse-workload-creds-03`: It is a core draft in the hackathon scenario, so spec ambiguities may be reported against it.
 - **high** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: Cited as the hop-by-hop verified chain format with status-reference denial (step 7) in the evidence-binding thread.
 - **high** `Review related draft: draft-hulea-wimse-agent-mandate-01`: A list comment identifies a concrete under-counting gap in Section 9.5 that bypasses sum_max.
-- **high** `Review related draft: draft-sweeney-wimse-credential-delegation-02`: Authors are actively revising for -03: tally single-writer limits, status location for user-issued roots, suspension and restoration.
+- **high** `Review related draft: draft-sweeney-wimse-credential-delegation-02`: The thread names it as the basis for a final-hop hackathon scenario with a working implementation.
 - **high** `Review related draft: draft-thaha-wimse-agent-evidence-binding-03`: Authors agreed to reword step 4 and the act-claim statement in the next revision.
 - **low** `Diff active WG draft: draft-ietf-wimse-identifier-04`: The only review comment is a one-phrase terminology nit.
 
