@@ -90,7 +90,7 @@ def main() -> int:
         previous = json.loads((d / "ja.json").read_text(encoding="utf-8"))
     # Merged with what was imported before; entries for ids no longer in
     # en.json are dropped.
-    merged_p = {k: v for k, v in {**previous.get("paragraphs", {}), **paragraphs}.items() if k in kinds}
+    merged_p = {k: v for k, v in {**previous.get("paragraphs", {}), **paragraphs}.items() if kinds.get(k) in ("p", "li")}
     merged_t = {k: v for k, v in {**previous.get("titles", {}), **titles}.items() if k in section_ids}
     base = lambda k: re.sub(r"-\d+$", "", k)  # noqa: E731  (a repeated paragraph shares the first one's translation)
     wanted = [k for k, kind in kinds.items() if kind != "pre"]
