@@ -6,11 +6,11 @@
 
 OpenID4VCI は「Verifiable Credential を発行するための、OAuth で保護された API」を定める。対象のフォーマットは問わず、SD-JWT VC、ISO mdoc、W3C VCDM を含む(1.0 Section 1)。Credential Issuer は OAuth 2.0 の Resource Server として振る舞う。ウォレットは OAuth クライアントとして Authorization Server からアクセストークンを取り、それを使って Credential Endpoint を呼ぶ(1.0 Section 3.2)。OAuth への追加は、Pre-Authorized Code グラント、authorization details の `openid_credential` 型、`issuer_state` パラメーター、ウォレット側の `credential_offer_endpoint` である(1.0 Section 3.2)。
 
-OpenID Foundation の会員投票で OpenID4VCI 1.0 は Final Specification として承認された。告知の日付は 2025 年 9 月 16 日で、賛成 102、反対 1、棄権 12 だった。リポジトリ(コミット `21ffd6c`、2026 年 10 月 27 日)には編集中のドラフトが 3 つあり、どれも OpenID Digital Credentials Protocols ワーキンググループのものである。
+OpenID Foundation の会員投票で OpenID4VCI 1.0 は Final Specification として承認された。告知の日付は 2025 年 9 月 16 日で、賛成 102、反対 1、棄権 12 だった。リポジトリ(コミット `41c8c66`、2026 年 11 月 10 日)には編集中のドラフトが 3 つあり、どれも OpenID Digital Credentials Protocols ワーキンググループのものである。
 
-- `1.0/`: 「1.0 incorporating errata set 1」、リビジョン `-19`。Document History が Final からの変更として挙げるのは、Transaction Code の推測攻撃に関するセキュリティ上の考慮事項の追加と、メタデータ URL を組み立てる際に末尾の `/` を取り除く規則の復活の 2 点である。`1.0/` の git 履歴を見ると、ほかにも小さな修正が入っている。遅延発行の `202` の例の reason phrase(#722)、鍵束縛のないクレデンシャルについての Section 14.2 の段落(#714)、誤字の修正(#731)、エラッタ版のタイトルと新しい Section 1.1「Errata revisions」(#662)である。
+- `1.0/`: 「1.0 incorporating errata set 1」、リビジョン `-19`。Document History が Final からの変更として挙げるのは、Transaction Code の推測攻撃に関するセキュリティ上の考慮事項の追加と、メタデータ URL を組み立てる際に末尾の `/` を取り除く規則の復活の 2 点である。`1.0/` の git 履歴を見ると、ほかにも小さな修正が入っている。遅延発行の `202` の例の reason phrase(#722)、鍵束縛のないクレデンシャルについての Section 14.2 の段落(#714)、誤字の修正(#731)、エラッタ版のタイトル、ドラフト番号 `-19`、Document History の節(#662、2025 年 11 月 20 日マージ)である。Section 1.1「Errata revisions」は新しく加わったものではなく、`1.0-final` タグの本文にすでにある。
 - `1.1/`: リビジョン `-01`。「1.0 Final と同じ本文」から始めて拡張している。最大の追加は Interactive Authorization(Section 6)である。この本文は Final の前に 1.0 ドラフトから外されていた。1.1 はまずそれを戻し、その後 OAuth 2.0 for First-Party Applications(FPA)のプロファイルとして作り直した(Document History、#736)。
-- `s2s/`: 「Server to Server」、リビジョン `-01`。Wallet Server と Issuer Server の間の API で、最初のドラフトは 2026 年 8 月 4 日にマージされた(#753)。
+- `s2s/`: 「Server to Server」、リビジョン `-01`。Wallet Server と Issuer Server の間の API で、最初のドラフトは 2026 年 8 月 4 日にマージされた(#753)。識別子は 2026 年 11 月 10 日に名前が変わった(#810、「変更点」を参照)。
 
 ## 仕組み
 
@@ -74,17 +74,17 @@ sequenceDiagram
 
 ## 変更点
 
-以下はすべて、各プルリクエストの差分と `21ffd6c` 時点のドラフト本文で確認した。
+以下はすべて、各プルリクエストの差分と `41c8c66` 時点のドラフト本文で確認した。`21ffd6c`(2026 年 10 月 27 日)より後の変更は #810 だけで、触れているのは s2s のドラフトだけである。
 
-- **1.0 エラッタ(`-19`)**: Section 12.2.2 に末尾の `/` の規則が戻った(#775、2026 年 9 月 28 日マージ)。Section 13.6.3「Transaction Code Guessing」も加わった。Transaction Code の失敗回数を制限すべきこと(SHOULD)、上限を超えたら Pre-Authorized Code を無効にしてその後の Token Request を拒否すべきこと(SHOULD)、コードが無効だと分かるエラーを返すべきこと(SHOULD)、無効になった Pre-Authorized Code には `invalid_grant` を返すべきこと(SHOULD)を定めている(#686)。
+- **1.0 エラッタ(`-19`)**: Section 12.2.2 に末尾の `/` の規則が戻った(#775、2026 年 9 月 28 日マージ)。Section 13.6.3「Transaction Code Guessing」も加わった。Transaction Code の失敗回数を制限すべきこと(SHOULD)、上限を超えたら Pre-Authorized Code を無効にしてその後の Token Request を拒否すべきこと(SHOULD)、コードが無効だと分かるエラーを返すべきこと(SHOULD)、無効になった Pre-Authorized Code には `invalid_grant` を返すべきこと(SHOULD)を定めている(#686)。エラッタは Section 6.3 には手を入れておらず、そこでは今も「the Client provides the wrong Transaction Code」が `invalid_grant` の項目に挙がっている。1.0 にはこの場合のための別のエラーコードがないので、エラッタに従う AS は、Transaction Code の誤りと使えなくなった Pre-Authorized Code をエラーコードでは区別できない。1.1 はこれを `invalid_tx_code` で解消している(1.1 Section 7.3、14.6.3)。
 - **1.1、Interactive Authorization(Section 6)**: FPA のプロファイルとして作り直され、Authorization Challenge Endpoint を使う(#736)。応答は FPA draft -04 に合わせて 401 ではなく 403 Forbidden になった(#781)。インタラクション種別は URN になり(#712)、今の名前は `urn:openid:dcp:ia:openid4vp_presentation` や `urn:openid:dcp:ia:auth_via_web` である(#736)。`expected_origins` がある場合は、Authorization Challenge Endpoint から導いた Origin だけを含めなければならない(MUST)(Section 6.2.1.1)。期待する URL を使う案の #695 はクローズされた。
 - **1.1、`auth_session`(Section 6.2.1)**: 「インタラクション種別が指定する場合に REQUIRED」となり、独自の種別はこれを必須にするか、リクエストを結び付ける別の方法を定めるかのどちらかにする(#706)。ウォレットは最後に受け取った値を送らなければならない(MUST)。#710 は、これを進行中の認可リクエストの流れの中に限定した。DPoP を使う場合、AS は `auth_session` の値を DPoP 公開鍵と結び付けなければならない(MUST)(#803)。
 - **1.1、`auth_via_web`(Section 6.2.1.2)**: ウォレットは `request_uri` の値を一度だけ使わなければならない(MUST)。AS は一回限りとして扱うべきだが(SHOULD)、再読み込みによる重複は受け入れてもよい(MAY)(#704)。並行セッションを持つウォレットは `state` を送らなければならない(MUST)(#797)。
 - **1.1、Credential Response(Section 9.3)**: 任意の `credential_metadata`(#721)と、推奨の `credential_dataset_id` と `credential_dataset_tag` が加わった。後者によって、ウォレットは保存済みのクレデンシャルが置き換わったかを判断できる(#472、Section 15.4)。
 - **1.1、Token Error Response(Section 7.3)**: Transaction Code の誤りには `invalid_tx_code` を返す。1.0 では `invalid_grant` である(1.0 Section 6.3、#686)。
 - **1.0 と 1.1**: 202 の例が `202 OK` から `202 Accepted` に直った(#722)。鍵バインディングが不要な発行者は `cryptographic_binding_methods_supported` を省く(#714)。
-- **s2s**: 最初のドラフト(#753)、ビルドルール(#799)、バージョン表の修正(#798)、全体の snake_case 化(#809、2026 年 10 月 27 日マージ)。
-- **オープン**: Interaction Required Response の本文で `error_code` を `error` に直す(#819)。s2s の識別子モデルの名前変更で、Session Id を Wallet Id に、Credential Instance Id を Credential Id にする(#810)。s2s の遅延クレデンシャルで、Transaction Id と専用エンドポイントを加える(#816、#810 が前提)。Credential Offer の `issuer_redirect_uri` と、その許可リストになるメタデータ `expected_redirect_uris`(#759)。key attestation の `nonce` と `di_vp` の `challenge` の条件(#678)。
+- **s2s**: 最初のドラフト(#753)、ビルドルール(#799)、バージョン表の修正(#798)、全体の snake_case 化(#809、2026 年 10 月 27 日マージ)、#762 で合意した識別子の名前変更(#810、2026 年 11 月 10 日マージ)。`session_id` は `wallet_id` に、`credential_instance_id` は `credential_id` になり、PR は「aligning with canonical OpenId4VCI」と説明している。s2s のドラフトはまだリビジョン `-01` である。
+- **オープン**: Interaction Required Response の本文で `error_code` を `error` に直す(#819)。s2s の遅延クレデンシャルで、Transaction Id と専用エンドポイントを加える(#816、#810 が前提)。WE BUILD の適合仕様づくりの中で 1.1 `-01` について 2026 年 10 月 12 日に出された 2 つの issue(#811、#812。「相互運用性への含意」を参照)。Credential Offer の `issuer_redirect_uri` と、その許可リストになるメタデータ `expected_redirect_uris`(#759)。key attestation の `nonce` と `di_vp` の `challenge` の条件(#678)。
 - **マージされずにクローズ**: #695(上記)、#699(JOSE を使う VCDM 2 のフォーマットプロファイル)、#716(IA の応答のステータスコード要件)、#723(#759 に置き換え)。
 
 互換性について。#819 は 1 語の修正である。例と FPA draft -04 Section 5.2.2 はすでに `error` を使っているので、直すのは本文の記述で、通信内容は変わらない。s2s の名前変更(#809、#810)は JSON の名前を変えるが、s2s はまだリビジョンが 1 つしかなく、安定版もない。運用中の 1.0 発行者の挙動を変えるのは #775 である。Final の本文には末尾の `/` の規則がない(#744 は「silent」と書いている)ので、文字どおり読めば `https://issuer.example.com/tenant/` は `.../.well-known/openid-credential-issuer/tenant/` になり、エラッタの本文では `.../tenant` になる。元になった issue(#744)は、これを「technically ... a breaking change」と書いている。
@@ -93,7 +93,7 @@ sequenceDiagram
 
 - **脅威モデル**: 1.0 の Security Considerations は、Credential Offer の改ざん(Section 13.5)、Pre-Authorized Code のリプレイと Transaction Code のフィッシングや推測(Section 13.6)、`c_nonce` で防ぐ鍵 proof のリプレイ(Section 13.8)、アクセストークンの保護(Section 13.10)を扱う。ネイティブアプリのウォレットでは、送信者制約の方式として DPoP を推奨している(RECOMMENDED)(Section 13.2)。1.1 は Interactive Authorization 固有の脅威を 2 つ加える。1 つはセッション固定攻撃で、AS は OpenID4VP の `nonce` を `auth_session` と結び付けなければならない(MUST)(Section 6.2.1.4)。もう 1 つは、悪意のある AS が別の AS のプレゼンテーション要求を転送する攻撃で、`expected_origins` とプレゼンテーションの audience の束縛で防ぐ(Section 6.2.1.5)。
 - **プロトコルフロー**: すべてのフォーマットに同じフローを使い、フォーマット固有の部分は Appendix A にまとめている。バッチ発行は複数の proof を付けた 1 回の Credential Request で、フォーマットとデータセットは同じで鍵だけが違うクレデンシャルを受け取る(1.0 Section 3.3.2)。proof の種類は `jwt`、`di_vp`、`attestation` である(Appendix F)。
-- **相互運用性への含意**: 実装が食い違いうるのは、末尾が `/` の識別子のメタデータ URL(1.0 Final とエラッタの違い)、Transaction Code の誤りに返すトークンエラー(1.0 は `invalid_grant`、1.1 は `invalid_tx_code`)、key attestation に `nonce` を入れるかどうか(#678 がオープン)である。1.0 は Final になっていない依存仕様の版も固定している。SD-JWT VC -11、Attestation-Based Client Authentication -07、Token Status List -12、OpenID Federation -43 で、1.1 はこれに FPA -04 を加える(1.0 Section 14.7、1.1 Section 15.9)。
+- **相互運用性への含意**: 実装が食い違いうるのは、末尾が `/` の識別子のメタデータ URL(1.0 Final とエラッタの違い)、Transaction Code の誤りに返すトークンエラー(1.0 は `invalid_grant`、1.1 は `invalid_tx_code`)、key attestation に `nonce` を入れるかどうか(#678 がオープン)である。エラッタの本文の中だけでも、Section 13.6.3 は Transaction Code が無効だと分かるエラーを求め、Section 6.3 は誤ったコードを `invalid_grant` に対応させている。1.1 `-01` では、相手と完全一致で比較する文字列について 2 つの issue がオープンになっている。#811: Document History は `iae:`、`iae_post`、`interactive_authorization_endpoint`、`require_interactive_authorization_request` への名前変更を記録しているが、規範的な本文は `ia:`、`ia_post`、`authorization_challenge_endpoint`、`require_interactive_authorization` を使っている。例外は mdoc の handover で、`OpenID4VCIIAEHandover` という名前である。#812: 提示の束縛がフォーマットごとに違う。SD-JWT VC は KB-JWT の `aud` を Authorization Challenge Endpoint の derived Origin に束縛するが、同じ文の例はエンドポイントの URL 全体を示している。JWT VC JSON(`aud`)と LDP VC(`domain`)は `ia:` 付きのエンドポイント URL、mdoc は `ia:` なしのエンドポイント URL を使う。1.0 は Final になっていない依存仕様の版も固定している。SD-JWT VC -11、Attestation-Based Client Authentication -07、Token Status List -12、OpenID Federation -43 で、1.1 はこれに FPA -04 を加える(1.0 Section 14.7、1.1 Section 15.9)。
 
 ## 未解決の問題
 
@@ -102,6 +102,8 @@ sequenceDiagram
 - #759 で、攻撃者が Credential Offer を書き換えられる前提のもと、`expected_redirect_uris` との一致だけでウォレットは `issuer_redirect_uri` を信頼してよいのか。
 - s2s の遅延クレデンシャル(#816)は、現在の s2s ドラフトがすでに返す PENDING 状態とどう関係するのか。
 - #687 が次の段階とする 1.1 の実装者向けドラフトはいつ出るのか。
+- 1.0 のエラッタは Section 6.3 を Section 13.6.3 に合わせるのか。それとも 1.0 では Transaction Code の誤りは `invalid_grant` のままで、区別はエラーの説明文だけで伝えるつもりなのか。
+- #811 と #812 はどう決着するのか。mdoc の handover も含めてすべての識別子を一つの綴り(`ia` か `iae`)にそろえ、すべてのフォーマットで一つの束縛値(derived Origin かエンドポイント URL)にそろえるのか。どちらの issue にもまだコメントはない(2026 年 11 月 15 日)。
 
 ## 実験
 
@@ -112,7 +114,10 @@ sequenceDiagram
 
 ## 情報源
 
-- <https://github.com/openid/OpenID4VCI>(コミット `21ffd6c74ca83a52eab78841c396619b9f91178c`)
+- <https://github.com/openid/OpenID4VCI>(コミット `41c8c66352e218cbfb80debe42a192a8076b6547`)
+- <https://github.com/openid/OpenID4VCI/pull/810>
+- <https://github.com/openid/OpenID4VCI/issues/811>
+- <https://github.com/openid/OpenID4VCI/issues/812>
 - <https://openid.net/specs/openid-4-verifiable-credential-issuance-1_0-final.html>
 - <https://openid.net/openid-for-verifiable-credential-issuance-1-final-specification-approved/>
 - <https://openid.github.io/OpenID4VCI/openid-4-verifiable-credential-issuance-1_0-wg-draft.html>
