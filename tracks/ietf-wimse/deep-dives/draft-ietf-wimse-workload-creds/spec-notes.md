@@ -20,16 +20,17 @@ Informative references listed in Section 12.2:
 ## Key Changes
 
 - Structure: the section "Use In Other Protocols" is removed, Sections 5 and 6 are retitled "Application-Layer Credentials" and "Transport-Layer Credentials", a Section 5.2 on audience and a Section 5.1.3 on WIT validation are added, and the Security Considerations are renumbered (new Section 9.2).
-- Section 1.2: the mapping API requirement is replaced by caller and callee conditions and a reference to RFC 9525 for server identity.
+- Section 1.2: the mapping API requirement is replaced by caller and callee conditions and a reference to RFC 9525 for server identity. "implementations MUST enforce the URI requirements outlined in Section 4.1 of [WIMSE-ID]" becomes "are expected to conform to" them.
 - Section 3: validation only against anchors bound to the trust domain in the Workload Identifier; the issuer must be known and preconfigured; the explicit prohibition on `iss`-based key lookup is removed in favour of Section 9.1 and the removal of `iss`-based key distribution.
 - Section 4: the paragraph on deployments with several labels for one runtime (a stable service identity and an instance, say) is removed. It put the identity used for the access decision in the one credential and forbade encoding a second identifier for correlation. Exactly one identifier per credential is kept.
 - Section 5.1: `sub` and `jti` definitions reworded, `jti` tied to deny-list or status list deployments, `typ` guidance now cites the RFC 8725 successor draft.
-- Section 5.3: HTTP 401 allowed when a `WWW-Authenticate` mechanism exists.
+- Section 5.3: HTTP 401 allowed when a `WWW-Authenticate` mechanism exists (PR #402, motivated by the WPT's use of 401 with `WWW-Authenticate: WPT`).
 - Section 9: revocation stance for WIT and WIC, exposure after deprovisioning, key-protection wording, and the clarification that WIT and PoP are not used for mutual TLS.
 - Examples use `Ed25519` in `cnf.jwk.alg`; the example WIT was re-signed. The implementation status gains a wimsey entry.
+- Appendix A.1 lists 23 changes for -03.
 
 ## Impact Analysis
 
 - Upstream: depends on the WIMSE architecture draft for terminology and trust domains, on the WIMSE Workload Identifier draft for identifier syntax and the `wimse` URI scheme, and on the JWT best-practices successor draft. A change in any of these drafts can affect this one, because three normative references are still Internet-Drafts.
-- Downstream: the mutual TLS, WPT and HTTP signature drafts supply the proof of possession and must define audience handling that satisfies Section 5.2. Section numbers they cite from this draft may have moved. Identity server and SPIFFE-style implementations that issue WITs and WICs are the main implementers.
+- Downstream: the mutual TLS, WPT and HTTP signature drafts supply the proof of possession and must define audience handling that satisfies Section 5.2. Section numbers they cite from this draft may have moved. Two citations are already off: draft-ietf-wimse-wpt-02 and draft-ietf-wimse-http-signature-08 send readers to "Section 5.1.4" for WIT validation, which exists in neither -02 nor -03 (validation is Section 5.1.3 in -03), and http-signature-08 Section 1.1 cites "Sec. 1.2" for the deployment architecture, which is Section 1.1 in -03. Identity server and SPIFFE-style implementations that issue WITs and WICs are the main implementers.
 - Compatibility: a WIT with `typ` of `wit+jwt`, `sub` and `cnf.jwk.alg` should still validate. Behaviour that changes is `iss`-driven key lookup (no longer supported), the algorithm name in examples (`Ed25519`), the 401 guidance and the removed mapping requirement. `EdDSA` is still allowed by the Section 5.1 `alg` rule; [RFC9864] marks it Deprecated and only the examples moved to `Ed25519`.
