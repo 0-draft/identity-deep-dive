@@ -59,6 +59,11 @@
       "at": "2026-11-14T06:29:04+00:00",
       "text": "Nothing in the specs changed. The one item is a mailing-list thread in which the IETF 127 Hackathon interop plan for agent call chains attracts extra scenarios and implementations, mostly about revocation and failing closed.",
       "text_ja": "仕様本文の変更はない。今回は IETF 127 ハッカソンにおけるエージェント呼び出しチェーンの相互運用テスト計画に関するメーリングリストのスレッドのみで、失効とフェイルクローズに関するシナリオや実装が追加で提案された。"
+    },
+    {
+      "at": "2026-11-14T18:08:33+00:00",
+      "text": "No WG draft diffs this run. The IETF 127 hackathon thread now has eight WIMSE agent call-chain interop scenarios (P1–P8), and the draft-hulea-wimse-agent-mandate author agreed to fix Section 9.5 in -02.",
+      "text_ja": "今回はWGドラフトの差分はない。IETF 127ハッカソンのスレッドでWIMSEエージェント呼び出しチェーンの相互運用シナリオ（P1〜P8）が8件にまとまり、draft-hulea-wimse-agent-mandateの著者は-02でSection 9.5を修正すると同意した。"
     }
   ],
   "items": {
@@ -164,6 +169,31 @@
       "use_cases_ja": [
         "AIMS Section 11 向けに改ざん検知可能な監査ログを作成する環境では、ポリシーによる拒否と、ポリシー源や状態源に到達できない、または古い場合とを区別する必要がある。",
         "fail-closed のポリシー判断点は、呼び出し元には一様なエラーを返しつつ、拒否の理由を記録に残せる。"
+      ]
+    },
+    "mail:7tXnDz__aPxZO9SR2p5zj3elrfc": {
+      "diagram": "",
+      "first_seen": "2026-11-14",
+      "headline": "Hackathon organisers published eight interop scenarios for revocation and delegation in agent call chains, with exact inputs for the approval-display case.",
+      "headline_ja": "ハッカソン主催者が、エージェント呼び出しチェーンにおける失効と委任に関する8件の相互運用シナリオを公開し、承認表示のケースには厳密な入力条件が示された。",
+      "id": "mail:7tXnDz__aPxZO9SR2p5zj3elrfc",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Ben Le posted scenario files P1–P8 as JSON, each with setup, expected decision, log reason and whether any effect occurred. They cover an unreachable status list, revocation before effect, widening delegation, cumulative limits, rewritten requests, changed tools, approval display mismatch (P7) and a bearer-only final hop (P8). Confirmed revocation, stale cache and unavailable status service get separate log reasons (status-revoked, status-stale, status-unavailable). Each expectation is labelled by basis: -00, the planned -01, a fixed test policy or another draft; P1 states the fail-closed behaviour -01 is said to adopt. Arun replied that P7 reproduces only with a fixed clock of 1800000000, fresh replay state and a verifier holding the request-to-action mapping; then his verifier accepts V5 and refuses R2 with display-mismatch. Marc Miro i Rierola offered a second implementation using a zero-knowledge non-revocation proof instead of a status list, so the verifier cannot log confirmed revocation. Results are wanted at a 17 November side meeting.",
+      "summary_ja": "Ben LeがシナリオP1〜P8をJSONファイルで投稿した。各ファイルにはセットアップ、期待される判定、記録する理由、副作用の有無が含まれる。内容は、ステータスリストへの到達不能、効果発生前の失効、権限が拡大する委任、累積上限、書き換えられたリクエスト、ツールの変更、承認表示の不一致（P7）、bearerのみの最終ホップ（P8）である。失効の確認、キャッシュ期限切れ、ステータスサービス利用不能には別々のログ理由（status-revoked、status-stale、status-unavailable）が与えられる。各期待結果は-00、予定される-01、固定テストポリシー、他のドラフトのいずれに基づくかが明記され、P1は-01が採用するとされるフェイルクローズの挙動を示す。Arunは、P7が再現するのは固定時刻1800000000、新しいリプレイ状態、リクエストから操作への対応付けを持つ検証側が揃う場合だけであり、その条件で自分の検証側はV5を受理しR2をdisplay-mismatchで拒否すると返信した。Marc Miro i Rierolaは、ステータスリストの代わりにゼロ知識の非失効証明を使う第2の実装を提案した。この方式では検証側が失効確認をログに残せない。結果は11月17日のサイドミーティングで歓迎されている。",
+      "title": "IETF 127 Hackathon: WIMSE interop scenarios for agent call chains (2 new messages)",
+      "updated_at": "2026-11-14T18:08:33+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/7tXnDz__aPxZO9SR2p5zj3elrfc/",
+      "use_cases": [
+        "Running the P1–P8 JSON scenarios against an enforcement point to check fail-closed behaviour when a status list is unreachable.",
+        "Checking whether a verifier recomputes the approval display digest, using the fixed-clock R2 vector from Arun's reply.",
+        "Comparing log-reason granularity between status-list revocation and a zero-knowledge non-revocation check."
+      ],
+      "use_cases_ja": [
+        "P1〜P8のJSONシナリオをエンフォースメントポイントに対して実行し、ステータスリストに到達できない場合のフェイルクローズの挙動を確認する。",
+        "Arunの返信にある固定時刻のR2ベクターを使い、検証側が承認表示のダイジェストを再計算するかどうかを確認する。",
+        "ステータスリストによる失効と、ゼロ知識による非失効確認とで、ログ理由の粒度を比較する。"
       ]
     },
     "mail:8wNHgFgnEncJymh7TqA_V0cQQ4g": {
@@ -413,6 +443,29 @@
       "url": "https://mailarchive.ietf.org/arch/msg/wimse/L1aB2ez0awvPzFZxxfm-tlZmZ64/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:LSpgfANffv7_btXJjeO6qo3KoIE": {
+      "diagram": "",
+      "first_seen": "2026-11-14",
+      "headline": "The author of draft-hulea-wimse-agent-mandate agreed that the Section 9.5 \"expire unused\" wording is unsafe and will replace it in -02.",
+      "headline_ja": "draft-hulea-wimse-agent-mandateの著者は、Section 9.5の「expire unused」の記述が安全でないと認め、-02で差し替えると述べた。",
+      "id": "mail:LSpgfANffv7_btXJjeO6qo3KoIE",
+      "kind": "mail",
+      "related": [],
+      "significance": "substantive",
+      "summary": "Claudiu accepts Dmitri's objection that the sentence lets the relying party remove a budget contribution on a condition it has no defined way to observe. The only signal in 10.1, the confirmation of execution, fails in the unsafe direction. If it is lost or late, the budget is under-counted and a later request can pass sum_max although the total exceeds value. Draft -02 will take Dmitri's text with two changes. \"Can no longer be accepted\" will mean after the token's exp plus max_clock_skew. The statement will identify the access token, which the resource server can do because 10.2 already requires it to reject a second use of the same token. The removal stays distinct from a refund or reversal, which Open Issues lists separately. Claudiu accepts that a denial that was not strictly needed is the right side to err on for a limit.",
+      "summary_ja": "Claudiuは、Dmitriの指摘を認めた。その指摘とは、この文によって、依拠当事者が観測手段の定義されていない条件で予算への寄与を取り除けてしまうというものである。10.1が与える唯一のシグナルである実行確認は、安全でない方向に失敗する。確認が失われるか遅れると、予算が過少に計上され、合計がvalueを超えていても後続のリクエストがsum_maxを通過しうる。-02ではDmitriの文面を採用し、2点を加える。「can no longer be accepted」は、トークンのexpにmax_clock_skewを加えた時点より後を意味する。また、この記述はアクセストークンを特定する。10.2が同一トークンの2回目の使用の拒否を既に要求しているため、リソースサーバーはこれを行える。この取り除きは、Open Issuesに別項目として挙がっている払い戻しや取り消しとは区別される。Claudiuは、上限に関しては、厳密には不要だった拒否の側に倒すのが正しいという点にも同意した。",
+      "title": "draft-hulea-wimse-agent-mandate-01, Section 9.5: tokens that \"expire unused\"",
+      "updated_at": "2026-11-14T18:08:33+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/LSpgfANffv7_btXJjeO6qo3KoIE/",
+      "use_cases": [
+        "Implementing the budget accounting of draft-hulea-wimse-agent-mandate at a resource server that enforces sum_max across delegated actions.",
+        "Deciding when an unused mandate token's budget contribution may be released, using exp plus max_clock_skew."
+      ],
+      "use_cases_ja": [
+        "委任された操作にわたってsum_maxを強制するリソースサーバーで、draft-hulea-wimse-agent-mandateの予算計上を実装する。",
+        "未使用のmandateトークンの予算への寄与をいつ解放してよいかを、expにmax_clock_skewを加えた時点で判断する。"
+      ]
     },
     "mail:N84c51Qxwe6i1bihDHCklyDphUg": {
       "diagram": "sequenceDiagram\n participant A as Agent A (domain A)\n participant B as Agent B\n participant R as Receiving hop\n A->>B: delegate\n B->>R: first call\n R-->>B: accepted\n Note over A: A is revoked\n B->>R: next call\n R-->>B: rejected (fail closed)",
@@ -860,10 +913,10 @@
       "reason_ja": "evidence-binding のスレッドで、ホップごとに検証する委任チェーン形式かつステータス参照による拒否（ステップ7）の根拠として引用された。"
     },
     "Review related draft: draft-hulea-wimse-agent-mandate-01": {
-      "date": "2026-11-10",
+      "date": "2026-11-14",
       "priority": "high",
-      "reason": "A list comment identifies a concrete under-counting gap in Section 9.5 that bypasses sum_max.",
-      "reason_ja": "メーリングリストのコメントが、Section 9.5 に sum_max を回避し得る過小計上の具体的な欠陥があると指摘している。"
+      "reason": "Author agreed Section 9.5 is unsafe and will change budget-release semantics in -02.",
+      "reason_ja": "著者がSection 9.5は安全でないと認め、-02で予算解放の意味を変更するため。"
     },
     "Review related draft: draft-sweeney-wimse-credential-delegation-02": {
       "date": "2026-11-14",
