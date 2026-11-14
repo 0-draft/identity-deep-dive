@@ -4,7 +4,7 @@
 
 - Runtime: Python 3.15.2 (printed on the first line of `vectors/verify_419.log`)
 - Tooling: `cryptography` 50.0.2 (same line) (Ed25519, ECDSA P-256 with RFC 6979 deterministic signing), `gh` to fetch the draft source
-- Versions: draft-ietf-wimse-http-signature-08 (tag `draft-ietf-wimse-http-signature-08` in ietf-wg-wimse/draft-ietf-wimse-s2s-protocol), issue #419 vectors with the 7 November 2026 regenerated values
+- Versions: draft-ietf-wimse-http-signature-08 (tag `draft-ietf-wimse-http-signature-08` in ietf-wg-wimse/draft-ietf-wimse-s2s-protocol), issue #419 vectors with the 7 November 2026 regenerated values (before the 13 November P-04 correction and the Zenodo v3 and v4 archives)
 
 ## Steps
 
@@ -27,4 +27,5 @@
 ## Next Actions
 
 - Score N-17 and N-20 against a real server, where the error body and the order of checks can be observed.
+- Re-run against Zenodo v4: the corrected P-04 (`@authority` without `:443`) and the new N-09b.
 - Check the WIT validation in the script against the workload credentials draft text. The script follows this repository's reading of it and has not been compared clause by clause.

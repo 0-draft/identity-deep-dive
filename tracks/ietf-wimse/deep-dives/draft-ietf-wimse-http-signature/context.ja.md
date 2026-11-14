@@ -2,7 +2,7 @@
 
 ## きっかけ
 
-新しい版が出て差分を取れる活動中の WG ドラフトとして、draft-ietf-wimse-http-signature-08 を選んだ。選定時のメモによれば、このドラフトには新しい issue が三つ立っている。テストベクター（#419）、例における nonce のエントロピー（#420）、編集上のコメント（#417）である。Datatracker の状態は Active、Publication Requested、Submitted to IESG for Publication である。
+新しい版が出て差分を取れる活動中の WG ドラフトとして、draft-ietf-wimse-http-signature-08 を選んだ。選定時のメモによれば、このドラフトには新しい issue が三つ立っている。テストベクター（#419）、例における nonce のエントロピー（#420）、編集上のコメント（#417）である。Datatracker の状態は Active、Publication Requested、Submitted to IESG for Publication だった。2026 年 11 月 12 日に IESG の状態が AD Evaluation に変わり、担当 AD は Charles Eckel、ドキュメントシェパードは Justin Richer である。最新版は今も -08 である（2026 年 11 月 15 日に確認）。
 
 ## なぜ重要か
 
@@ -11,6 +11,7 @@
 ## 未解決の問題
 
 - `keyid` と `alg` が存在する場合に、検証側が拒否するのか無視するのか。ドラフトは送信者が使ってはならないとだけ述べている（Section 3）。リストでの Yaron Sheffer の返信（2026 年 11 月 7 日）は拒否を支持しているが、本文には書かれていない。
+- PR #421 が -09 に入るかどうか。CONNECT の `@authority` を RFC 9421 の既定ポート省略に従わせるもので、issue #419 の作者は 2026 年 11 月 13 日に P-04 へ同じ扱いをすでに適用している。
 - authority-form を対象とする CONNECT で、既定の `wimse-aud` が何になるか（Section 3、3.2）。
 - 相手が problem details を受け付けない場合に、署名の「未対応」と「利用不能」をどう区別するか（Section 3.6）。
 - issue #420 がいつ反映されるか。Section 3.7 の例の nonce（`abcd1111` など）は説明用で 64 ビットの下限を満たさない、という編集上の注記を求めている。issue は open である。

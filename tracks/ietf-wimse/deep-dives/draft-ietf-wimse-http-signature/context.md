@@ -2,7 +2,7 @@
 
 ## Trigger
 
-The subject was picked as an active working-group draft with a new revision to diff: draft-ietf-wimse-http-signature-08. The pick note says three new issues target this draft: test vectors (#419), nonce entropy in examples (#420) and editorial comments (#417). The datatracker states are Active, Publication Requested and Submitted to IESG for Publication.
+The subject was picked as an active working-group draft with a new revision to diff: draft-ietf-wimse-http-signature-08. The pick note says three new issues target this draft: test vectors (#419), nonce entropy in examples (#420) and editorial comments (#417). The datatracker states were Active, Publication Requested and Submitted to IESG for Publication. On 12 November 2026 the IESG state changed to AD Evaluation, with Charles Eckel as responsible AD and Justin Richer as document shepherd; -08 is still the latest revision (checked 15 November 2026).
 
 ## Why This Matters
 
@@ -11,6 +11,7 @@ The draft is close to the end of the working-group process, so the -08 changes a
 ## Open Questions
 
 - Whether a verifier rejects or ignores `keyid` and `alg` when present: the draft only says senders MUST NOT use them (Section 3). Yaron Sheffer's reply on the list (7 November 2026) favours rejecting, but the text does not say so.
+- Whether PR #421 lands in -09: it would make CONNECT `@authority` follow RFC 9421 default-port omission, which the issue #419 author already applied to P-04 on 13 November 2026.
 - What the default `wimse-aud` is for CONNECT, whose target is in authority-form (Sections 3, 3.2).
 - How to tell "unsupported" from "unavailable" signing when the peer does not accept problem details (Section 3.6).
 - When issue #420 lands: it asks for an editorial note that the Section 3.7 example nonces (such as `abcd1111`) are illustrative and below the 64-bit minimum. It is open.
