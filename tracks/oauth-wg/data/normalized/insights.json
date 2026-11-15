@@ -59,6 +59,11 @@
       "at": "2026-11-14T18:08:33+00:00",
       "text": "One item: an IANA early review of draft-ietf-oauth-deferred-token-response-01 asking for clarifications to the IANA Considerations. No protocol change.",
       "text_ja": "IANAが draft-ietf-oauth-deferred-token-response-01 の早期レビューを送り、IANA Considerations の明確化を求めた。プロトコルの変更はない。"
+    },
+    {
+      "at": "2026-11-15T18:54:47+00:00",
+      "text": "No draft text changed this run. The most substantive activity is on the identity-assertion-authz-grant issue tracker, where an Audience-to-client_id mismatch was reported (#161) and the CIMD digest issue (#121) was closed. A new individual draft for batch agent delegation also appeared.",
+      "text_ja": "今回はドラフト本文の変更はない。最も実質的な動きは identity-assertion-authz-grant の issue で、Audience と client_id の対応の不整合が報告され（#161）、CIMD ダイジェストの issue（#121）がクローズされた。マルチエージェント向けのバッチ委任に関する個人ドラフトも新たに告知された。"
     }
   ],
   "items": {
@@ -83,6 +88,29 @@
       "use_cases_ja": [
         "特定の高額なアクションについて人間の承認を求め、ユーザーに提示した正確なパラメーターに結び付いた署名付き証明を必要とするリソースサーバー。",
         "承認のリスクレベルに応じて、ブラウザーのみのセッション鍵とハードウェアに裏付けられたオーセンティケーターを使い分けたい運用者（Tier 1 と Tier 2、3）。"
+      ]
+    },
+    "mail:1__U02DObNtvWmF2Is4p9-j5qH8": {
+      "diagram": "",
+      "first_seen": "2026-11-15",
+      "headline": "Weekly GitHub digest: a rule conflict reported in the identity assertion grant, CIMD discussion, and two open PRs.",
+      "headline_ja": "週次 GitHub ダイジェスト: identity assertion grant の規則の矛盾の報告、CIMD の議論、オープンな PR 二件。",
+      "id": "mail:1__U02DObNtvWmF2Is4p9-j5qH8",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "For oauth-identity-assertion-authz-grant, issue #161 was opened saying that the §4.3.3 processing rule (SAML Audience matches the client_id) conflicts with the Audience to Client ID mapping required in §4.5. Issue #121 (optional client metadata digest so the IdP can vouch for the client's CIMD) got one comment from mcguinness and was closed. For client-id-metadata-document, #112 (security considerations for fetching client metadata) and #78 (whether the AS may provide iss when fetching the client_id) drew 7 comments in total, both tagged ietf-127. In oauth-sd-jwt-vc a PR was submitted and #457 (clarify that the types of an SD-JWT VC are those asserted in vct and aka_vcts) got a comment. In oauth-v2-1, PR #273 (restrict access token values to the token68 syntax) received 2 comments. The digest contains only titles and counts, so the outcomes are not visible.",
+      "summary_ja": "oauth-identity-assertion-authz-grant では、§4.3.3 の処理規則（SAML の Audience が client_id と一致すること）が §4.5 で要求される Audience から Client ID への対応付けと矛盾するとして issue #161 が起票された。issue #121（IdP がクライアントの CIMD を保証できるようにするための任意のクライアントメタデータダイジェスト）は mcguinness のコメントの後にクローズされた。client-id-metadata-document では #112（クライアントメタデータ取得時のセキュリティ考慮事項）と #78（client_id 取得時に AS が iss を提供できるか）に合計7件のコメントが付き、いずれも ietf-127 ラベルが付いている。oauth-sd-jwt-vc では PR が一件提出され、#457（SD-JWT VC の型は vct と aka_vcts で表明されたものであることの明確化）にコメントが付いた。oauth-v2-1 では PR #273（アクセストークン値を token68 構文に制限する）に2件のコメントが付いた。ダイジェストはタイトルと件数のみで、議論の結論は読み取れない。",
+      "title": "Weekly github digest (OAuth Activity Summary)",
+      "updated_at": "2026-11-15T18:54:47+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/1__U02DObNtvWmF2Is4p9-j5qH8/",
+      "use_cases": [
+        "An implementer of the identity assertion authorization grant who maps SAML Audience values to client IDs should watch #161 before fixing the processing rules.",
+        "A client-ID-metadata-document implementer can follow #78 and #112 for the iss and fetch-security outcomes expected around IETF 127."
+      ],
+      "use_cases_ja": [
+        "SAML の Audience を client ID に対応付ける identity assertion 認可グラントの実装者は、処理規則を固める前に #161 を確認するとよい。",
+        "client-id-metadata-document の実装者は、IETF 127 前後の iss と取得時セキュリティに関する結論を #78 と #112 で追える。"
       ]
     },
     "mail:CAJtRQ9c4tUCaB70TUVbzBvEejk": {
@@ -360,6 +388,29 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "mail:Rkn-L9TK6x2wtWhLhcA3H9CHr9Y": {
+      "diagram": "",
+      "first_seen": "2026-11-15",
+      "headline": "A list member asks how a retained KYAPay token can be verified months later when the issuer key may no longer be published.",
+      "headline_ja": "保存した KYAPay トークンを数か月後に検証する際、発行者の鍵がすでに公開されていない可能性をどう扱うかについて、メーリングリストで質問があった。",
+      "id": "mail:Rkn-L9TK6x2wtWhLhcA3H9CHr9Y",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Francesco Marinoni Moretto notes that the KYAPay Using draft (Section 4.2) says recipients may retain a token for audit or dispute resolution and re-verify it later, and the token draft's editor's copy now allows retention. Section 6.4 already says exp is checked against the time the request was received. The gap is the verification key: Section 8.10 only asks issuers to keep superseded keys for the maximum token lifetime after rotation, which may not cover a chargeback months later. He proposes stating the receipt-time rule in the token draft's validation section, and having either recipients keep the key they used or issuers keep retired keys for a stated period. He also asks whether disputes are meant to rely on the issuer's own record through jti and verification_id. No answer is included.",
+      "summary_ja": "Francesco Marinoni Moretto は、KYAPay の Using ドラフト（4.2節）が、受信者は監査や紛争解決のためにトークンを保存して後から再検証できるとしており、トークンドラフトのエディタ版でも保存が認められるようになったと指摘している。6.4節にはすでに、exp はリクエストを受信した時刻に対して確認するという規則がある。欠けているのは検証鍵の入手先である。8.10節は発行者にローテーション後も最大トークン有効期間のあいだ旧鍵を保持するよう求めるだけで、数か月後のチargeback には足りない可能性がある。提案は、受信時刻の規則をトークンドラフトの検証の節に書くこと、そして受信者が使用した鍵を保持するか、発行者が退役した鍵を一定期間保持すると明記することである。紛争時は jti と verification_id による発行者自身の記録に頼る想定なのかも質問している。回答は含まれていない。",
+      "title": "KYAPay: verifying a retained token later",
+      "updated_at": "2026-11-15T18:54:47+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/Rkn-L9TK6x2wtWhLhcA3H9CHr9Y/",
+      "use_cases": [
+        "A payment recipient handling a chargeback long after a token expired needs the original issuer key to re-verify it.",
+        "An issuer planning key rotation needs to know how long retired keys must stay published."
+      ],
+      "use_cases_ja": [
+        "トークンの期限切れからかなり後にチャージバックを処理する決済の受信者は、再検証のために当時の発行者の鍵が必要になる。",
+        "鍵のローテーションを計画する発行者は、退役した鍵をどのくらいの期間公開し続けるべきかを知る必要がある。"
+      ]
+    },
     "mail:TBcBJFPZ9FOUaegDVgM2Lyg82MY": {
       "diagram": "",
       "first_seen": "2026-11-09",
@@ -443,6 +494,36 @@
       ],
       "use_cases_ja": [
         "エージェントの認可・委任ドラフトの著者が、自分たちのレコードを監査証拠として使えるようにするよう求められる可能性がある場合。"
+      ]
+    },
+    "mail:awq69VLm0U5Cb0ohVKXLg5LLLDY": {
+      "diagram": "sequenceDiagram\n participant U as User\n participant L as Leader Agent\n participant AS as Authorization Server\n participant S as Sub-Agent\n L->>AS: RAR request with may_act per item\n AS->>U: Approve all, some or none\n U-->>AS: Decision\n AS-->>L: Batch Token\n L->>S: Delegate\n S->>AS: Token Exchange with Batch Token\n AS-->>S: Access token with its own permissions only",
+      "first_seen": "2026-11-15",
+      "headline": "A hackathon team shows a batch authorization demo that uses RAR and token exchange, with may_act per authorization item to split permissions between sub-agents.",
+      "headline_ja": "ハッカソンのチームが、RAR とトークン交換を組み合わせ、認可項目ごとの may_act でサブエージェント間の権限を分ける一括認可のデモを紹介した。",
+      "id": "mail:awq69VLm0U5Cb0ohVKXLg5LLLDY",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-asor-wimse-agent-delegation-chain",
+          "note": "Also addresses delegation to AI agent chains, though the message does not reference it.",
+          "note_ja": "AI エージェントの連鎖への委任を扱う点で近いが、メッセージ中に直接の言及はない。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "new-proposal",
+      "summary": "The authors announce an individual draft (draft-ni-oauth-batch-authorization-delegation) and a working demo from the IETF 127 Hackathon. A leader agent requests permissions for several sub-agents in one batch, and the user approves them together, selects some, or rejects all. The draft combines OAuth RAR and Token Exchange and adds a may_act field to each authorization_details item to name the sub-agent allowed to use it. Each sub-agent then exchanges the batch token for its own access token containing only its assigned permissions. The demo has a personal assistant coordinating calendar and email agents. The authors ask for review and contributions.",
+      "summary_ja": "著者らは IETF 127 ハッカソンの成果として、個人ドラフト draft-ni-oauth-batch-authorization-delegation と動作するデモを告知した。リーダーエージェントが複数のサブエージェント分の権限を一括で要求し、ユーザーはそれらをまとめて承認するか、一部を選ぶか、すべて拒否できる。ドラフトは OAuth RAR とトークン交換を組み合わせ、authorization_details の各項目に、その権限を使えるサブエージェントを示す may_act フィールドを加える。各サブエージェントはバッチトークンを交換し、自分に割り当てられた権限だけを含む独自のアクセストークンを得る。デモではパーソナルアシスタントがカレンダーエージェントとメールエージェントを調整する。著者はレビューと貢献を求めている。",
+      "title": "IETF 127 Hackathon: Batch Authorization Delegation Demo",
+      "updated_at": "2026-11-15T18:54:47+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/awq69VLm0U5Cb0ohVKXLg5LLLDY/",
+      "use_cases": [
+        "An orchestrator agent that needs calendar and email permissions can ask for both in one consent prompt instead of one prompt per agent.",
+        "A deployer who wants each sub-agent token limited to its own permissions can use the per-item may_act binding."
+      ],
+      "use_cases_ja": [
+        "カレンダーとメールの権限が必要なオーケストレーターエージェントは、エージェントごとに同意画面を出さず、一度の同意で両方を要求できる。",
+        "各サブエージェントのトークンを自身の権限だけに限定したい運用者は、項目ごとの may_act による紐付けを使える。"
       ]
     },
     "mail:bdZNYx7-PNM1utAtW6X1mNjGVxk": {
@@ -742,10 +823,10 @@
   "overflow": [],
   "triage": {
     "draft-ietf-oauth-client-id-metadata-document": {
-      "date": "2026-11-08",
+      "date": "2026-11-15",
       "priority": "high",
-      "reason": "11 issues closed and a new response_types issue (#131) this week, with PRs adding a Client Authentication section.",
-      "reason_ja": "今週は11件のissueがクローズされ、response_typesに関する新規issue（#131）が立ち、クライアント認証セクションを追加するPRもあった。"
+      "reason": "Issues #78 and #112 drew 7 comments and are tagged ietf-127.",
+      "reason_ja": "issue #78 と #112 に7件のコメントが付き、ietf-127 ラベルが付いている。"
     },
     "draft-ietf-oauth-delegate-sd-jwt": {
       "date": "2026-11-10",
@@ -754,10 +835,10 @@
       "reason_ja": "PR #15 が KB-SD-JWT 内のセキュリティクレームの配置を変更し、委任時の意味を定義している。"
     },
     "draft-ietf-oauth-identity-assertion-authz-grant": {
-      "date": "2026-11-08",
+      "date": "2026-11-15",
       "priority": "high",
-      "reason": "Two new issues (#159, #160) on jwt-dpop and client authentication point to open design questions.",
-      "reason_ja": "jwt-dpopとクライアント認証に関する新規issue（#159、#160）が、未解決の設計上の論点を示している。"
+      "reason": "New issue #161 reports a conflict between the §4.3.3 and §4.5 rules, and #121 was closed this week.",
+      "reason_ja": "新規 issue #161 で §4.3.3 と §4.5 の規則の矛盾が報告され、#121 もクローズされた。"
     },
     "draft-ietf-oauth-sd-jwt-vc": {
       "date": "2026-11-09",

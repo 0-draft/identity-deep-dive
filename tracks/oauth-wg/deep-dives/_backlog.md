@@ -1,6 +1,6 @@
 # OAuth WG Backlog (2026-11-15)
 
-- generated_at_utc: `2026-11-15T06:38:10+00:00`
+- generated_at_utc: `2026-11-15T18:53:46+00:00`
 
 - [ ] `draft-ietf-oauth-sd-jwt-vc` score=108 updated=2026-11-06T19:07:22Z
 - [ ] `draft-ietf-oauth-status-list` score=90 updated=2026-11-12T21:31:43Z
@@ -24,9 +24,9 @@
 
 Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.
 
-- **high** `draft-ietf-oauth-client-id-metadata-document`: 11 issues closed and a new response_types issue (#131) this week, with PRs adding a Client Authentication section.
+- **high** `draft-ietf-oauth-client-id-metadata-document`: Issues #78 and #112 drew 7 comments and are tagged ietf-127.
 - **high** `draft-ietf-oauth-delegate-sd-jwt`: PR #15 restructures where security claims live in the KB-SD-JWT and defines their delegation semantics.
-- **high** `draft-ietf-oauth-identity-assertion-authz-grant`: Two new issues (#159, #160) on jwt-dpop and client authentication point to open design questions.
+- **high** `draft-ietf-oauth-identity-assertion-authz-grant`: New issue #161 reports a conflict between the §4.3.3 and §4.5 rules, and #121 was closed this week.
 - **high** `draft-ietf-oauth-sd-jwt-vc`: PR #457 changes how credential types are matched (vct and aka_vcts only, no extends matching), with ISO/IEC 18013-5 about to cite a dated draft.
 - **low** `draft-ietf-oauth-transaction-tokens`: PR #374 fixes a missing IANA registration for the required req_wl claim, a small editorial fix.
 
