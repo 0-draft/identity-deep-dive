@@ -1,16 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-07T06:03:19+00:00",
-      "text": "Most notable: an independent test-vector set (6 positive, 22 negative) for draft-ietf-wimse-http-signature-08 was posted, and the editor said verifiers should reject messages with MUST NOT parameters. Otherwise it was list discussion on delegation chains and AER-1 audit records, plus a spelling-only commit.",
-      "text_ja": "最も重要なのは draft-ietf-wimse-http-signature-08 の独立したテストベクター（正例6件、負例22件）の投稿で、エディタは MUST NOT のパラメーターを含むメッセージは検証側が拒否すべきだと述べた。その他は委任チェーンと AER-1 監査記録に関するメーリングリストの議論と、スペル修正のみのコミットである。"
-    },
-    {
-      "at": "2026-11-07T21:55:17+00:00",
-      "text": "Only one item: a mailing-list follow-up on community-contributed test vectors for draft-ietf-wimse-http-signature-08, fixing a missing \"?\" in the @query component of three vectors. No draft text changed.",
-      "text_ja": "今回は一件のみで、draft-ietf-wimse-http-signature-08 のテストベクターに関するメーリングリストの続報である。三つのベクターで @query コンポーネントの先頭の「?」が欠けていた誤りが修正された。ドラフト本文の変更はない。"
-    },
-    {
       "at": "2026-11-08T22:10:15+00:00",
       "text": "The only item is the weekly GitHub digest for WIMSE. It shows new issues on the s2s-protocol repo (HTTP-Sig test vectors, nonce examples, trust-anchor sharing across domains) and no draft text changes.",
       "text_ja": "今回の対象は WIMSE の週次 GitHub ダイジェスト一件のみである。s2s-protocol リポジトリに新しい issue（HTTP-Sig のテストベクター、nonce の例、トラストドメイン間でのトラストアンカー共有）が立ったが、ドラフト本文の変更はない。"
@@ -69,6 +59,11 @@
       "at": "2026-11-14T22:28:19+00:00",
       "text": "Only one item this run: a WIMSE list post from the author of draft-li-rttp-iqa-addressing. It corrects an earlier claim, and the earlier tooling note it corrects is quoted below it. No WG draft text changed.",
       "text_ja": "今回は WIMSE メーリングリストへの投稿が1件のみである。draft-li-rttp-iqa-addressing の著者が、先の投稿の記述を訂正する内容で、訂正対象のツール更新の連絡も引用されている。WG ドラフトの本文に変更はない。"
+    },
+    {
+      "at": "2026-11-15T06:38:45+00:00",
+      "text": "The only item is an IETF 127 hackathon thread that turns agent call-chain failure cases into eight shared test scenarios, P1–P8, with fixed inputs so implementations can compare results. No WG draft text changed.",
+      "text_ja": "今回の対象は IETF 127 ハッカソンのメールスレッド 1 件のみである。エージェント呼び出しチェーンの失敗ケースを 8 つの共通テストシナリオ（P1〜P8）にまとめ、入力を固定して実装間で結果を比較できるようにしている。WG ドラフト本文の変更はない。"
     }
   ],
   "items": {
@@ -169,29 +164,6 @@
       "url": "https://mailarchive.ietf.org/arch/msg/wimse/6VaKtnp6UKkzbw2teJZ334Uv8Is/",
       "use_cases": [],
       "use_cases_ja": []
-    },
-    "mail:7hhLkU1MMoQJJoahXOS2T17YiQk": {
-      "diagram": "",
-      "first_seen": "2026-11-07",
-      "headline": "In short, the AER-1 mapping for AIMS audit records will separate denied decisions from decisions that could not be evaluated.",
-      "headline_ja": "AIMS 監査記録向けの AER-1 マッピングで、拒否された判断と評価できなかった判断を区別する方針が固まった。",
-      "id": "mail:7hhLkU1MMoQJJoahXOS2T17YiQk",
-      "kind": "mail",
-      "related": [],
-      "significance": "substantive",
-      "summary": "In a thread on draft-zambo-aer1-wimse-mapping, Girish Konda argued that a rejection receipt cannot distinguish a policy denial from a check that could not be completed, since the producer's reason sits outside the committed hash. The -02 added a committed decision_reason member (denied or not_evaluated) with decision_reason_detail. Konda then noted that fail-closed denials after an unreachable or stale input would still be recorded as denied. The author agreed: -03 will use not_evaluated whenever an input the decision depended on could not be established, even if a fail-closed rule denies. The reason is committed for the audit reader and not returned to the caller. -03 will be posted on November 15 after the submission tool reopens.",
-      "summary_ja": "draft-zambo-aer1-wimse-mapping のスレッドで Girish Konda は、提供側の理由がコミットされるハッシュの外にあるため、拒否レシートではポリシーによる拒否と確認を完了できなかった場合を区別できないと指摘した。-02 では、コミットされる decision_reason メンバー（denied または not_evaluated）と decision_reason_detail が追加された。Konda はさらに、到達不能または古い入力の後に fail-closed で拒否した場合も denied と記録されてしまうと指摘した。著者はこれに同意し、-03 では、判断が依存する入力を確定できなかった場合は fail-closed の規則で拒否しても not_evaluated とする。この理由は監査の読み手のためにコミットされ、呼び出し元には返されない。-03 は投稿ツールの再開後の 11 月 15 日に投稿される。",
-      "title": "draft-zambo-aer1-wimse-mapping-01: AER-1 as a candidate format for AIMS Section 11 audit records",
-      "updated_at": "2026-11-07T06:03:19+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/7hhLkU1MMoQJJoahXOS2T17YiQk/",
-      "use_cases": [
-        "A deployment producing tamper-evident audit logs for AIMS Section 11 needs to tell policy denials from unreachable or stale policy and status sources.",
-        "A fail-closed policy point can keep returning a uniform error to callers while still recording why it denied."
-      ],
-      "use_cases_ja": [
-        "AIMS Section 11 向けに改ざん検知可能な監査ログを作成する環境では、ポリシーによる拒否と、ポリシー源や状態源に到達できない、または古い場合とを区別する必要がある。",
-        "fail-closed のポリシー判断点は、呼び出し元には一様なエラーを返しつつ、拒否の理由を記録に残せる。"
-      ]
     },
     "mail:7tXnDz__aPxZO9SR2p5zj3elrfc": {
       "diagram": "",
@@ -302,36 +274,6 @@
         "委任主体の識別子を書き換えつつ監査可能性を保つ必要があるドメイン間エージェントゲートウェイ。"
       ]
     },
-    "mail:EDluDjc325ZvOf2QXX9rj3kJM7o": {
-      "diagram": "",
-      "first_seen": "2026-11-07",
-      "headline": "In short, Rob Zagarella commented on Cred delegation -02: keep human-approval evidence separate in a user-minted root, and specify suspend/restore semantics.",
-      "headline_ja": "Rob Zagarella が draft-sweeney-wimse-credential-delegation-02 にコメントし、ユーザー発行ルートでの人間承認の証跡の分離と、停止・復元時の挙動の明確化を提案した。",
-      "id": "mail:EDluDjc325ZvOf2QXX9rj3kJM7o",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-ietf-oauth-transaction-tokens",
-          "note": "Both carry delegated authority across call chains, but the material does not link them explicitly; weak connection.",
-          "note_ja": "どちらも呼び出しチェーン上で委任された権限を扱うが、資料に明示的な関連は無く、関連は弱い。",
-          "track": "oauth-wg"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "The thread carries Kieran Sweeney's -02 announcement. The draft is a profile where a Delegation Server holds user-deposited credentials and agents exercise them by proxy under a delegation token. Main changes are a sub-delegation exchange, rank order in the token, cumulative bounds (max_lifetime, max_subtree) with the DS as single writer, a chain-verifiable profile adopting draft-asor-wimse-agent-delegation-chain's agent_delegation format, and revocation framed as invalidation, not closure. Zagarella's reply, the new message, suggests that -03 distinguish who minted a root from evidence of natural-person approval, recording only method and assurance. It also asks Section 7 to say what a verifier sees for actions during a suspension and whether a restored delegation is the same grant, with the 1-hour cap presented as a bound on exposure.",
-      "summary_ja": "このスレッドには Kieran Sweeney による -02 の告知が含まれる。このドラフトは、Delegation Server がユーザーの預けた資格情報を保持し、エージェントが委任トークンの下でそれを代理で行使するプロファイルである。主な変更は、サブ委任の交換、トークン内の順位、DS を単一の書き込み元とする累積上限（max_lifetime、max_subtree）、draft-asor-wimse-agent-delegation-chain の agent_delegation 形式を採用したチェーン検証プロファイル、および失効を「閉鎖ではなく無効化」とする整理である。新しい返信で Zagarella は、-03 でルートの発行者と、自然人の承認の証跡（方法と保証レベルのみ）を分けることを提案した。また Section 7 に、停止中の操作が検証側にどう見えるか、復元された委任が同一の許可か新規かを明記し、1時間の上限は露出の上限として示すよう求めた。",
-      "title": "draft-sweeney-wimse-credential-delegation-02",
-      "updated_at": "2026-11-07T06:03:19+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/EDluDjc325ZvOf2QXX9rj3kJM7o/",
-      "use_cases": [
-        "An agent platform that lets users deposit upstream credentials and delegate to agents without exposing them.",
-        "A verifier away from the Delegation Server needs a fixed place to check human-approval evidence for a user-minted root."
-      ],
-      "use_cases_ja": [
-        "ユーザーが上流の資格情報を預け、それを露出させずにエージェントへ委任させるエージェント基盤。",
-        "Delegation Server から離れた検証側が、ユーザー発行ルートに対する人間承認の証跡を確認する場所が必要となる場合。"
-      ]
-    },
     "mail:G81dpzTWMQgyCzshUmHHbzr8bzU": {
       "diagram": "",
       "first_seen": "2026-11-11",
@@ -400,29 +342,6 @@
       "use_cases_ja": [
         "identity chaining で信頼ドメインをまたぐエージェントチェーンで、監査者が記録だけから元のユーザーを復元する必要がある場合。",
         "S+L の失効受理境界を実装する検証者が、ちょうど期限の入力を受理するか判断する場合。"
-      ]
-    },
-    "mail:IcH0Hq5968-TzSxLL7Wpi4pl-7k": {
-      "diagram": "",
-      "first_seen": "2026-11-07",
-      "headline": "Independent test vectors for http-signature-08 were posted; the chair says verifiers should reject sender-side MUST NOT parameters.",
-      "headline_ja": "http-signature-08 の独立したテストベクターが投稿され、送信側 MUST NOT のパラメータは受信者が拒否すべきとの回答があった",
-      "id": "mail:IcH0Hq5968-TzSxLL7Wpi4pl-7k",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Jiahui Miao posted 6 positive and 22 negative vectors for draft-ietf-wimse-http-signature-08 (issue #419 in the s2s-protocol repository), each negative case tied to a MUST in the draft, with keys, signature bases and a fixed clock. Two questions: whether a verifier should reject or ignore keyid/alg parameters, and whether the Section 3.7 example nonces, which carry less than the 64-bit minimum, deserve an editorial note. Yaron replies that a MUST NOT in a security RFC should be rejected by the recipient, an issue to add that note has been opened, and a few vectors may need fixing (details in the issue). The nonce question is not answered in this reply.",
-      "summary_ja": "Jiahui Miao は draft-ietf-wimse-http-signature-08 向けに、正例 6 件と負例 22 件のテストベクターを投稿した（s2s-protocol リポジトリの issue #419）。各負例はドラフトの MUST に対応付けられ、鍵、署名ベース、固定時計が含まれる。質問は二つで、keyid/alg パラメータを検証者が拒否すべきか無視すべきか、および 64 ビットの最小値を満たさない Section 3.7 の例の nonce に編集上の注記が要るかである。Yaron は、セキュリティ RFC の MUST NOT は受信者が拒否すべきであり、その注記を加える issue を起こしたと回答し、一部のベクターは修正が必要かもしれないと述べた（詳細は issue）。nonce の質問にはこの返信では答えていない。",
-      "title": "Test vectors for draft-ietf-wimse-http-signature-08 — request for review",
-      "updated_at": "2026-11-11T19:40:15+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/IcH0Hq5968-TzSxLL7Wpi4pl-7k/",
-      "use_cases": [
-        "Implementers of WIMSE HTTP message signatures who want interop test cases for rejecting malformed requests.",
-        "Verifiers deciding whether to reject or silently ignore forbidden signature parameters."
-      ],
-      "use_cases_ja": [
-        "不正なリクエストを拒否する相互運用テストを求める WIMSE HTTP メッセージ署名の実装者。",
-        "禁止されたシグネチャパラメータを拒否するか無視するか決める検証者。"
       ]
     },
     "mail:KhTvcCX802aq2nWC2d1fB7kU4Mg": {
@@ -616,23 +535,6 @@
         "判定結果の報告が遅れる判定点で、報告時刻ではなく評価時点で経過時間を検査する必要がある場合。"
       ]
     },
-    "mail:VCH1w0y6OuR-koGRiJYakzmtGAo": {
-      "diagram": "",
-      "first_seen": "2026-11-07",
-      "headline": "Test vectors for the WIMSE HTTP signature draft were fixed: @query values lacked the leading ? required by RFC 9421.",
-      "headline_ja": "WIMSE HTTP署名ドラフトのテストベクターで、RFC 9421が要求する先頭の「?」を欠いていた @query の値が修正された。",
-      "id": "mail:VCH1w0y6OuR-koGRiJYakzmtGAo",
-      "kind": "mail",
-      "related": [],
-      "significance": "routine",
-      "summary": "An individual contributor reports on the mailing list that test vectors P-01 and P-02 wrote the @query component value without the leading ? required by RFC 9421 Section 2.2.7. An independent run found the same defect in P-06's WIMSE signature. All three were regenerated over corrected signature bases with the same keys, parameters and fixed clock. The literal signature in N-15 was also regenerated because it was computed over a P-01-shaped base. Its expected outcome (reject, Section 3.1) is unchanged. Old signatures fail against the corrected bases, and other cases are unaffected. The author also confirms that N-06/N-07 record reject for the keyid / alg MUST NOT parameters, now backed by the draft author's stated intent. An issue was opened to add an example-nonce note. The author will contact the chairs about how to contribute the vectors. Nothing in the draft itself changed.",
-      "summary_ja": "個人参加者がメーリングリストで報告した。テストベクター P-01 と P-02 では、RFC 9421 Section 2.2.7 が要求する先頭の「?」を付けずに @query コンポーネントの値が記載されていた。独立した実行により、P-06 の WIMSE 署名にも同じ誤りが見つかった。三つとも、同じ鍵、パラメーター、固定時刻で、修正後の署名ベースに対して再生成された。N-15 のリテラル署名も P-01 と同形の署名ベースから計算されていたため再生成されたが、期待される結果(拒否、Section 3.1)は変わらない。旧署名は修正後の署名ベースでは検証に失敗し、他のケースは影響を受けない。また、N-06/N-07 が keyid / alg の MUST NOT パラメーターに対して拒否を記録していることは、ドラフト著者の意図の表明によって裏付けられた。例示用 nonce に関する注記を追加する issue が起票された。ベクターの提供形式については、投稿者がチェアに連絡する予定である。ドラフト本文自体に変更はない。",
-      "title": "Test vectors for draft-ietf-wimse-http-signature-08 — request for review",
-      "updated_at": "2026-11-07T21:55:17+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/VCH1w0y6OuR-koGRiJYakzmtGAo/",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
     "mail:XDzEijPg8qT_4X4u7Yl11PHU5og": {
       "diagram": "",
       "first_seen": "2026-11-12",
@@ -704,29 +606,6 @@
         "ドラフトが推奨にとどめている WPT の jti 再利用検出を、強制するかどうか判断する実装者。"
       ]
     },
-    "mail:cTEAHakgjO-revheF0EDR8Am5RA": {
-      "diagram": "",
-      "first_seen": "2026-11-07",
-      "headline": "In short, the AAT and Asor drafts disagree on del_max_depth, and the thread favours a shared definition that lets a holder cap depth below its own position.",
-      "headline_ja": "AAT と Asor のドラフトで del_max_depth の意味が異なり、保持者が自身より下の深さに上限を設けられる共通定義にする方向で議論されている。",
-      "id": "mail:cTEAHakgjO-revheF0EDR8Am5RA",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "This thread compares delegation-constraint drafts ahead of IETF 127. AAT accepts a leaf at del_depth equal to the root's del_max_depth (test vector J.10.f) while asor -03 rejects it. A second difference from Azat's implementation report: if a root has del_max_depth 8 and its holder delegates with 2, AAT rejects depth 3 while Asor checks only against 8. Niki argued the shared definition should keep the cap, and Rob Zagarella's new reply agrees. Zagarella also asked that the comparison record whether each draft can bind a leaf to a digest of the exact request, and that the AAT Section 9.8 companion document state a revocation freshness bound in terms comparable to Cred -02 Section 7. The material shown is truncated.",
-      "summary_ja": "このスレッドは IETF 127 に向けて委任制約のドラフトを比較している。AAT は del_depth がルートの del_max_depth と等しい末端を受理する（テストベクター J.10.f）が、asor -03 は拒否する。Azat の実装報告による二つ目の差異として、ルートの del_max_depth が 8 で保持者が 2 で委任した場合、AAT は深さ 3 を拒否するが Asor は 8 に対してのみ検査する。Niki は共通定義でこの上限を維持すべきだと述べ、Rob Zagarella の新しい返信も同意した。Zagarella はさらに、比較表に各ドラフトが正確なリクエストのダイジェストに末端を束縛できるかを記録すること、および AAT Section 9.8 の補足文書で失効の鮮度の上限を Cred -02 Section 7 と比較可能な形で示すことを求めた。提示された資料は途中で切れている。",
-      "title": "AAT -02 announcement",
-      "updated_at": "2026-11-07T06:03:19+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/cTEAHakgjO-revheF0EDR8Am5RA/",
-      "use_cases": [
-        "Implementers of offline-verifiable delegation chains need identical depth-limit behaviour across drafts to avoid interoperability failures.",
-        "Deployments requiring fresh human approval want a leaf bound to one exact request."
-      ],
-      "use_cases_ja": [
-        "オフラインで検証可能な委任チェーンを実装する者は、相互運用性の問題を避けるため、ドラフト間で深さ制限の挙動が同一である必要がある。",
-        "新たな人間承認を必要とする環境では、一つの正確なリクエストに束縛された末端が求められる。"
-      ]
-    },
     "mail:cmB6Ar7ozE1T2IqSG9BpuL0NoWk": {
       "diagram": "sequenceDiagram\n participant RP\n participant RS as Resource server\n RP->>RP: record contribution when token is issued\n Note over RP: token expires, no confirmation seen\n RP->>RS: ask whether the token was ever accepted\n RS-->>RP: never accepted, stated after expiry\n RP->>RP: remove contribution\n Note over RP: without this statement the contribution stays",
       "first_seen": "2026-11-10",
@@ -748,6 +627,31 @@
       "use_cases_ja": [
         "委任トークンを用いて AI エージェントの期間ごとの支出や操作回数の上限を強制する RP で、実行確認が遅延または欠落し得る場合。",
         "トークンが一度も受理されなかったことを誰が証明できるかを Trust Framework に定める場合。"
+      ]
+    },
+    "mail:nPDAthCFZZP1OsSsJPKmto0qNdY": {
+      "diagram": "",
+      "first_seen": "2026-11-15",
+      "headline": "In short, the hackathon organisers published eight reproducible agent call-chain test scenarios and fixed how to run P7 so results compare.",
+      "headline_ja": "ハッカソン主催者がエージェント呼び出しチェーンの再現可能なテストシナリオ 8 件を公開し、P7 の実行条件を固定して結果を比較可能にした",
+      "id": "mail:nPDAthCFZZP1OsSsJPKmto0qNdY",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Ben Le (Redthread Security) shared one JSON file per scenario, P1–P8, each with setup, expected decision, log reason and whether any effect occurred. They cover an unreachable status list, revocation before effect, a widening delegation, a cumulative limit across services, a rewritten request, a tool or build change between hops, an approval display that differs from the executed action (P7), and a bearer-only final hop. Revoked, stale and unavailable status get separate log reasons (status-revoked, status-stale, status-unavailable). For P7, Arun Thallapelly (OmniArx) gave four conditions to reproduce his result: verify at time 1800000000, use the given key, action and request, start with fresh replay state, and use a verifier that holds the action. Ben Le notes that action binding alone would accept R2, so the root receipt signed by the principal's authenticator, left open in Appendix B of the passport draft, matters. He proposes discussing it at the side meeting on 17 November, 18:45–19:45 PT, Plaza A. Marc Miro i Rierola offered a second implementation using a zero-knowledge non-revocation proof instead of a status list. The material is truncated.",
+      "summary_ja": "Ben Le（Redthread Security）が、シナリオごとに 1 つの JSON ファイル（P1〜P8）を共有した。各ファイルにはセットアップ、期待される判定、ログ理由、効果の発生有無が記されている。対象は、ステータスリストへの到達不能、効果発生前の失効、権限が広がる委任、複数サービスにまたがる累積上限、書き換えられたリクエスト、ホップ間のツールやビルドの変更、承認画面と実行アクションの不一致（P7）、ベアラートークンのみの最終ホップである。失効、キャッシュ期限切れ、サービス利用不能には別々のログ理由（status-revoked、status-stale、status-unavailable）が与えられている。P7 について Arun Thallapelly（OmniArx）は、結果を再現する 4 条件を示した。時刻 1800000000 で検証すること、指定の鍵・アクション・リクエストを使うこと、リプレイ状態を新規にすること、アクションを保持する検証者を使うことである。Ben Le は、アクションへの束縛だけでは R2 が受理されると指摘し、passport ドラフトの Appendix B で未決のルートレシートが重要になるとしている。この点を 11 月 17 日 18:45〜19:45 PT、Plaza A のサイドミーティングで議論することを提案している。Marc Miro i Rierola は、ステータスリストではなくゼロ知識の非失効証明を使う 2 つ目の実装を提案した。資料は途中で切れている。",
+      "title": "IETF 127 Hackathon: WIMSE interop scenarios for agent call chains (2 new messages)",
+      "updated_at": "2026-11-15T06:38:45+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/nPDAthCFZZP1OsSsJPKmto0qNdY/",
+      "use_cases": [
+        "Run your agent-delegation verifier against P1–P8 to check it fails closed and logs the right reason when a status list is unreachable, stale or revoked.",
+        "Test whether an enforcement point with no request-to-action mapping can catch an approval display that differs from the executed action (P7).",
+        "Compare a status-list revocation design with a zero-knowledge non-revocation design by refusal timing and log reasons (P2)."
+      ],
+      "use_cases_ja": [
+        "エージェント委任の検証実装を P1〜P8 で試し、ステータスリストが到達不能・古い・失効済みのときにフェイルクローズし、正しい理由を記録するかを確認する。",
+        "リクエストからアクションへの対応付けを持たない強制ポイントが、承認画面と実行アクションの不一致を検出できるかを確認する（P7）。",
+        "ステータスリスト方式とゼロ知識による非失効証明方式を、拒否までの時間とログ理由で比較する（P2）。"
       ]
     },
     "mail:pLsPkrtN5tiN7gDW0S9cVG1YHjc": {
@@ -883,23 +787,6 @@
         "ユーザーが OAuth 資格情報をプロキシに預け、エージェントが上流トークンを保持しないエージェント基盤。",
         "DS から離れた検証者が、累積上限を超えたか判断する場合。"
       ]
-    },
-    "repo:ietf-wg-wimse/draft-ietf-wimse-s2s-protocol:499f0608fc22": {
-      "diagram": "",
-      "first_seen": "2026-11-07",
-      "headline": "In short, one commit fixing three spelling errors in the s2s-protocol repository.",
-      "headline_ja": "s2s-protocol リポジトリで、スペルミス3件を修正したコミットが1件あった。",
-      "id": "repo:ietf-wg-wimse/draft-ietf-wimse-s2s-protocol:499f0608fc22",
-      "kind": "repo-activity",
-      "related": [],
-      "significance": "routine",
-      "summary": "Commit 499f0608fc22 (#415) fixes three spelling errors in the wpt directory or component, going by the message 'wpt: fix three spelling errors'. No further detail is available and no protocol behaviour is indicated.",
-      "summary_ja": "コミット 499f0608fc22（#415）は、メッセージ「wpt: fix three spelling errors」のとおり wpt でのスペルミス3件を修正するものである。詳細は無く、プロトコルの挙動への影響は示されていない。",
-      "title": "1 new commit(s) in ietf-wg-wimse/draft-ietf-wimse-s2s-protocol",
-      "updated_at": "2026-11-07T06:03:19+00:00",
-      "url": "https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol",
-      "use_cases": [],
-      "use_cases_ja": []
     }
   },
   "overflow": [],
