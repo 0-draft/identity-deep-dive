@@ -11,6 +11,6 @@ The repository is the working area of the OpenID Foundation's Digital Credential
 
 ## Open Questions
 
-- Will the prose and the CDDL be aligned before any WG Draft? Today they disagree on `ChannelBinding` keys and on `purpose_id` (`controller_id` in the prose, `controlled_id` in the CDDL). Open pull request #76 fixes this.
-- How will the transcript be carried into the mdoc `SessionTranscript`, and how will the KB-JWT `nonce` and `aud` be encoded (issue #10)?
+- Will the prose and the CDDL be aligned before any WG Draft? Today they disagree on `ChannelBinding` keys and on `purpose_id` (`controller_id` in the prose, `controlled_id` in the CDDL). Open pull request #76 fixes `purpose_id` and the engagement keys 5 to 8. It does not touch the transmission fields (`ble_gatt` versus `ble_uuid`, `ble_l2cap` as `uint` versus a map, keys 12 to 15 only in the CDDL), and no issue tracks them.
+- How will the transcript be carried into the mdoc `SessionTranscript`, and how will the KB-JWT `nonce` and `aud` be encoded (issue #10)? The chairs proposed a dedicated transcript call for 16 November 2026, 14:00 UTC.
 - When will the first Working Group Draft be published (issue #72, deferred on 4 November 2026 by about one to two months), and through which ISO/IEC route (issue #13: PAS or PSDO)?

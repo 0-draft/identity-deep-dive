@@ -13,4 +13,5 @@ The draft is the credential layer for the WIMSE companion documents on mutual TL
 - Does Section 5.1.3 give enough for interoperable validators without an explicit `exp`, algorithm or `iss` check?
 - Is the shorter Section 4 enough once the guidance on stable versus instance identities is gone?
 - How do callers and callees learn the expected callee identifier and their own audience value (Sections 1.2, 5.2)?
+- When will the companion drafts fix their references to this draft? draft-ietf-wimse-wpt-02 and draft-ietf-wimse-http-signature-08 both cite a nonexistent "Section 5.1.4" for WIT validation (Section 5.1.3 in -03), and http-signature-08 cites "Sec. 1.2" for the deployment architecture, which is Section 1.1 in -03.
 - Which changes does the working group regard as substantive? As of 1 November 2026 the chair's request had no replies.

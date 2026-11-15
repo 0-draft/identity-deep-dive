@@ -22,8 +22,8 @@
 - [ ] WIC のチェーンは、URI SAN のトラストドメインのトラストアンカーに対してのみ検証し、識別子がそのドメインとアンカーの外にある証明書を拒否する（Section 3、Section 9.4）。
 - [ ] 認可ポリシーは、パスだけではなく、トラストドメインの範囲での完全な Workload Identifier で照合する（Section 7、Section 9.4）。
 - [ ] TLS 上で提示された WIT が相互 TLS のクライアント資格情報として扱われないこと、および相互 TLS の認証が WIC を使うことを確認する（Section 1、Section 9.3）。
-- [ ] WIT の検証エラーには 400 を返し、`WWW-Authenticate` の仕組みを提示できる場合に限り 401 を使う（Section 5.3）。
+- [ ] WIT の検証エラーには 400 を返し、`WWW-Authenticate` の仕組みを提示できる場合に限り 401 を使う（Section 5.3）。WPT ではその仕組みは `WPT` スキーム（`WWW-Authenticate: WPT`、draft-ietf-wimse-wpt-02 Section 2.1）である。HTTP 署名にはそれがなく、http-signature-08 の Section 3.6 は 400 を使い、401 を NOT RECOMMENDED としている。
 - [ ] ベアラートークンから WIT への移行中に両方のトークンを受け入れる場合は、認証手順の後で呼び出し元のアイデンティティを再検証する（Section 5.4）。
 - [ ] WIT と WIC の寿命が短く（WIT は時間単位。Section 5.1、9.3.1）、発行が止まっていても期限後に既存の資格情報が拒否されることを確認する（Section 9.2。WIC の寿命は Section 9.4.1）。
 - [ ] 資格情報の期限後に鍵が再利用されないこと、およびエクスポート不可かつハードウェアに束縛されている場合を除き資格情報ごとに再生成されること、さらに検証者が資格情報から鍵の保護状態を推定しないことを確認する（Section 9.5）。
-- [ ] 他の文書からこのドラフトへの参照に旧セクション番号が残っていないか確認する。たとえば旧 Section 1.3（現 1.2）、旧 Section 5.1.3（`iss` の注記。削除）、旧 Section 9.2.1〜9.2.5（現 9.3.1〜9.3.5）が該当する。
+- [ ] 他の文書からこのドラフトへの参照に旧セクション番号が残っていないか確認する。たとえば旧 Section 1.2（配置アーキテクチャ。現 1.1）、旧 Section 1.3（現 1.2）、旧 Section 5.1.3（`iss` の注記。削除）、旧 Section 9.2.1〜9.2.5（現 9.3.1〜9.3.5）が該当する。分かっている例は、draft-ietf-wimse-wpt-02 と draft-ietf-wimse-http-signature-08 の「Section 5.1.4」（WIT の検証は Section 5.1.3）と、http-signature-08 Section 1.1 の「Sec. 1.2」（現 Section 1.1）である。

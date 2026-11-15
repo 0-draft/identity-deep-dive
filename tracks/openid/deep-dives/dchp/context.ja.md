@@ -11,6 +11,6 @@
 
 ## 未解決の問い
 
-- WG Draft より前に、本文と CDDL はそろうのか。現状は `ChannelBinding` のキーと `purpose_id` (本文は `controller_id`、CDDL は `controlled_id`) で食い違っている。未マージの pull request #76 がこれを直す。
-- mdoc の `SessionTranscript` に transcript をどう入れるのか。KB-JWT の `nonce` と `aud` はどうエンコードするのか (issue #10)。
+- WG Draft より前に、本文と CDDL はそろうのか。現状は `ChannelBinding` のキーと `purpose_id` (本文は `controller_id`、CDDL は `controlled_id`) で食い違っている。未マージの pull request #76 は `purpose_id` と engagement のキー 5〜8 を直す。伝送路フィールド (`ble_gatt` と `ble_uuid`、`uint` と map の `ble_l2cap`、CDDL にしかないキー 12〜15) には触れておらず、これを追う issue もない。
+- mdoc の `SessionTranscript` に transcript をどう入れるのか。KB-JWT の `nonce` と `aud` はどうエンコードするのか (issue #10)。議長は、transcript だけを扱う会議を 2026 年 11 月 16 日 14:00 UTC に提案している。
 - 最初の Working Group Draft はいつ出るのか (issue #72。2026 年 11 月 4 日に 1〜2 か月ほど先送り)。ISO/IEC 側はどの経路で出すのか (issue #13: PAS か PSDO)。

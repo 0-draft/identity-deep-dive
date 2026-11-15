@@ -4,7 +4,7 @@
 
 ## 概要
 
-HTTP で互いを呼び出すワークロードには認証が要る。相互 TLS は選択肢の一つだが、認証局（Certification Authority）の基盤がない場合や、呼び出しが複数の TLS ホップを経由する場合には、アプリケーション層での保護が好まれる（Section 1）。本ドラフトは、そのようなアプリケーション層の方式を HTTP Message Signatures（[RFC9421]）のプロファイルとして定義する。呼び出し側は Workload Identity Token（WIT）を送り、WIT 内の鍵に対応する秘密鍵でリクエストに署名することで、その鍵の保持を証明する。署名はメソッド、パス、クエリ、選択したヘッダー、および本文がある場合の Content-Digest を対象とし、三つの新しい署名パラメーターを持つ。宛先を示す `wimse-aud`、署名付きレスポンスを要求する `wimse-sign-response`、レスポンスをリクエストに結び付ける `wimse-req-nonce` である。本ドラフトは（CONNECT を除き）`@authority` に署名しないので、authority を書き換えるプロキシを挟んでも検証は壊れない。Datatracker 上の状態は Active、Publication Requested、Submitted to IESG for Publication である（`subject.json`）。
+HTTP で互いを呼び出すワークロードには認証が要る。相互 TLS は選択肢の一つだが、認証局（Certification Authority）の基盤がない場合や、呼び出しが複数の TLS ホップを経由する場合には、アプリケーション層での保護が好まれる（Section 1）。本ドラフトは、そのようなアプリケーション層の方式を HTTP Message Signatures（[RFC9421]）のプロファイルとして定義する。呼び出し側は Workload Identity Token（WIT）を送り、WIT 内の鍵に対応する秘密鍵でリクエストに署名することで、その鍵の保持を証明する。署名はメソッド、パス、クエリ、選択したヘッダー、および本文がある場合の Content-Digest を対象とし、三つの新しい署名パラメーターを持つ。宛先を示す `wimse-aud`、署名付きレスポンスを要求する `wimse-sign-response`、レスポンスをリクエストに結び付ける `wimse-req-nonce` である。本ドラフトは（CONNECT を除き）`@authority` に署名しないので、authority を書き換えるプロキシを挟んでも検証は壊れない。Datatracker 上の状態は Active、Publication Requested、Submitted to IESG for Publication である（`subject.json`）。2026 年 11 月 12 日、担当 AD の Charles Eckel が IESG の状態を AD Evaluation に進めた（2026 年 11 月 15 日に Datatracker で確認）。ドキュメントシェパードは Justin Richer で、最新版は今も -08 である。
 
 ## 仕組み
 
@@ -47,8 +47,8 @@ sequenceDiagram
 
 ## なぜ今重要か
 
-- **きっかけ**: `subject.json` によれば、本ドラフトに対して三つの新しい issue が立てられている。テストベクター（#419）、例における nonce のエントロピー（#420）、編集上のコメント（#417）である。またドラフトは Publication Requested と Submitted to IESG for Publication の状態にあり、ここでの文言はほぼ最終形になる。
-- **根拠となる資料**: -08 の差分は、CONNECT の例外、`wimse-aud` への Simple String Comparison、64 ビット以上の nonce エントロピー、三つの登録済み問題タイプによる一様なエラー処理、およびシェパードレビューへの対応を加えている（Appendix B.1）。2026 年 11 月 6 日には、個人参加者が -08 向けのテストベクター一式（正例 6 件、負例 22 件、所見 3 件）を issue #419 に投稿し、WIMSE メーリングリストで告知した。issue 上での Yaron Sheffer のレビューと別の参加者による独立した検証を受けて、作者は 11 月 7 日に P-01、P-02、P-06、N-15 を再生成した。これらは `@query` の値に先頭の `?` が欠けていた。11 月 5 日には Kathleen Moriarty が導入部への編集上のレビューを送り、Yaron Sheffer が issue #417 として記録した。
+- **きっかけ**: `subject.json` によれば、本ドラフトに対して三つの新しい issue が立てられている。テストベクター（#419）、例における nonce のエントロピー（#420）、編集上のコメント（#417）である。またドラフトは Publication Requested と Submitted to IESG for Publication の状態にあり、2026 年 11 月 12 日からは Charles Eckel のもとで AD Evaluation に入っているので、ここでの文言はほぼ最終形になる。
+- **根拠となる資料**: -08 の差分は、CONNECT の例外、`wimse-aud` への Simple String Comparison、64 ビット以上の nonce エントロピー、三つの登録済み問題タイプによる一様なエラー処理、およびシェパードレビューへの対応を加えている（Appendix B.1）。2026 年 11 月 6 日には、個人参加者が -08 向けのテストベクター一式（正例 6 件、負例 22 件、所見 3 件）を issue #419 に投稿し、WIMSE メーリングリストで告知した。issue 上での Yaron Sheffer のレビューと別の参加者による独立した検証を受けて、作者は 11 月 7 日に P-01、P-02、P-06、N-15 を再生成した。これらは `@query` の値に先頭の `?` が欠けていた。11 月 13 日には、作者が `@authority` に既定のポート `:443` を残していた P-04 も修正し（「未解決の問題」を参照）、ベクター一式を Zenodo に保存した。v4（2026 年 11 月 13 日、DOI 10.5281/zenodo.24203971）は、署名の有効期間だけを T0+301 で切り分ける境界ベクター N-09b を加えている。11 月 5 日には Kathleen Moriarty が導入部への編集上のレビューを送り、Yaron Sheffer が issue #417 として記録した。
 - **期待される影響**: 検証実装を共通の入力でテストできるようになり、これまで SHOULD や暗黙だった複数の挙動（nonce の生成とエントロピー、エラー時のステータスコード、`wimse-aud` の比較方法）が MUST になる。TLS の要件は新しくない。-07 でもすでに MUST で、Section 5.1 から Section 3 に移っただけである。-07 の実装は、nonce、エラー処理、audience の比較、CONNECT の経路を確認する必要がある。Section 4（Implementation Status）には二つの実装が最終更新日付きで載っているが、対応する版は書かれていない。Cofide（2025 年 11 月 13 日）と wimsey（2026 年 9 月 8 日）である。Cofide のリポジトリは前身の draft-ietf-wimse-s2s-protocol の実装だと説明しており、最終 push は 2025 年 11 月 14 日なので、-08 の変更より前のものである。-08 の後、ドラフトの main ブランチでは wimsey の項目が「signed responses as per version -08 of the draft」に更新された（PR #406）。
 
 ## 変更点
@@ -77,6 +77,7 @@ sequenceDiagram
 - `keyid` と `alg` に対する検証側の挙動（Section 3）: ドラフトは送信者に対して「使ってはならない」と述べているが、検証側がそれらを含むメッセージを拒否するのか無視するのかは、ドラフトの本文に書かれていない。テストベクターの作者は「reject」と記録し（issue #419 の N-06 と N-07）、リストで尋ねた。-08 のヘッダーに載る著者 2 人（Joe Salowey と Yaron Sheffer）のうち Sheffer が、2026 年 11 月 7 日に個人の意見として「IMO a MUST NOT in any security RFC should be rejected by the recipient.」と返信した。これはリスト上の一著者の意見で、ドラフトが採用した規定ではない。-08 後の main ブランチも含め、ドラフトの本文にはまだ書かれていない。
 - 例の nonce（Section 3.7）: issue #420 は、#419 の所見 O-2 を受けて Yaron Sheffer が 2026 年 11 月 7 日に立てたもので、例の nonce は説明用でエントロピーの下限を満たさないという編集上の注記を例の近くに加えるよう求めている。例の生成コードは変えない方針である。issue は open のままで、注記はまだドラフトにない。
 - nonce の形式（Section 3）: ドラフトはエントロピーのビット数を定めているが、nonce 文字列の符号化や長さは定めておらず、受信者がエントロピーをどう確認できるかも述べていない。-08 の後、main ブランチでは、同じ要件を満たすならクライアントが Accept-Signature にあるサーバー生成の nonce を使ってもよいことになった（PR #404、-09 向け）。
+- CONNECT の `@authority` と既定のポート（Section 3）: -08 は値を「the host and port of the CONNECT target」とするが、RFC 9421 の Section 2.2.3 は既定のポートを省く。issue #419 の作者は 2026 年 11 月 13 日にこれに同意し、P-04 を `svcb.example.com:443` ではなく `svcb.example.com` で署名し直した。Yaron Sheffer のオープンな PR #421（11 月 11 日に作成）は、この文を、値は RFC 9421 の Section 2.2.3 に従い（「hostname lowercased; default port omitted」）、したがって CONNECT のリクエストターゲットとは異なり得る、という内容に変え、-09 の変更として記載する。まだマージされていない。
 - CONNECT の audience（Section 3、3.2）: `wimse-aud` の既定値はクエリとフラグメントを除いた対象 URI だが、CONNECT の対象は authority-form である。CONNECT の場合の既定の audience が何かは、ドラフトに書かれていない。
 - 一様な 400 と別個の問題タイプ（Section 3.6）: サーバーはどの検査が失敗したかを示してはならないが、署名付きレスポンスが利用できない場合の 400 は別のエラーである。problem details を受け付けないクライアントは両者を区別できず、ドラフトはこれを論じていない。
 - 中間者による再署名（Section 5.2）: WIMSE 署名を剥がして置き換える処理は、デプロイ環境ごとのポリシーに委ねられている。
@@ -87,7 +88,7 @@ sequenceDiagram
 ## 実験
 
 - [ ] Lab 1: Section 3.7.1 の Figure 2 のリクエストと Figure 4 のレスポンスについて、RFC 9421 のライブラリで署名ベースを再構築し、WIT 内の公開鍵で署名を検証して、`@query` が先頭の `?` を含む `?flavor=vanilla` になっていることを確認する。
-- [ ] Lab 2: issue #419 のテストベクター一式（P-01、P-02、P-06、N-15 は作者の 11 月 7 日のコメントにある再生成後の署名）に対して検証実装を実行し、受理と拒否の判断を期待結果と比較する。特に `wimse-aud` の変種（末尾のスラッシュ、明示的な既定ポート）、`wimse-workload-to-workload` の tag の重複、`keyid` と `alg` の存在、CONNECT の各ケースを見る。2026 年 11 月 11 日に一部を実施した（検証ログを参照）。受理か拒否かを判定する 22 本は実行したが、負例の入力の多くは issue の説明文から再構成したもので、N-17 と N-20 は未了である。
+- [ ] Lab 2: issue #419 のテストベクター一式（P-01、P-02、P-06、N-15 は作者の 11 月 7 日のコメントにある再生成後の署名）に対して検証実装を実行し、受理と拒否の判断を期待結果と比較する。特に `wimse-aud` の変種（末尾のスラッシュ、明示的な既定ポート）、`wimse-workload-to-workload` の tag の重複、`keyid` と `alg` の存在、CONNECT の各ケースを見る。2026 年 11 月 11 日に一部を実施した（検証ログを参照）。受理か拒否かを判定する 22 本は実行したが、負例の入力の多くは issue の説明文から再構成したもので、N-17 と N-20 は未了である。この実行で使った P-04 の署名は 11 月 13 日の修正前のもので、修正後の P-04 と N-09b（Zenodo v4）は含んでいない。
 - [ ] Lab 3: `Host` を書き換える TLS 終端プロキシをサーバーの前に置き、`wimse-sign-response` を true にした署名付きリクエストを送る。検証が引き続き成功すること、署名できない（ストリーミングの）サーバーが `wimse-signed-response-unavailable` を付けた 400 を返すこと、署名に対応しないサーバーが `wimse-signed-response-unsupported` を付けた 501 を返すことを確認する。
 
 ## 情報源
@@ -101,5 +102,8 @@ sequenceDiagram
 - [issue #385: シェパードレビュー](https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol/issues/385)
 - [issue #417: 導入部への編集上のコメント](https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol/issues/417)
 - [issue #419: -08 のテストベクター](https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol/issues/419)
+- [Datatracker: draft-ietf-wimse-http-signature（IESG の状態は AD Evaluation）](https://datatracker.ietf.org/doc/draft-ietf-wimse-http-signature/)
+- [PR #421: CONNECT の `@authority` は既定のポートを省く](https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol/pull/421)
+- [Zenodo: issue #419 のテストベクター v4](https://zenodo.org/records/24203971)
 - [issue #420: エントロピーの下限を満たさない例の nonce](https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol/issues/420)
 - [ドラフトのソースリポジトリと issue トラッカー](https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol)

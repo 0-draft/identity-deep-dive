@@ -53,7 +53,7 @@ sequenceDiagram
 ## What Changed
 
 - Spec/document change summary: This is revision 00, so there is no previous revision to compare with. It introduces the CTA object (Section 3), three verification invariants `TAINT_LATTICE_MONOTONICITY`, `CONFUSED_DEPUTY_FAIL_CLOSED` and `CONTEXT_MERKLE_BINDING` (Section 4), a 60-second skew rule (Section 5), and IANA requests for a media type, a taint level registry and two header fields (Section 6).
-- Compatibility or migration concerns: Conforming runtimes MUST attach the header to every control-plane tool invocation (Section 3), so existing MCP clients and servers would all need changes. The draft gives no negotiation and no rollout path for relying parties that do not understand the header. For a call with no header, the nearest rule is the Section 5 requirement to fail closed on a "missing cryptographic binding", which does not say whether it applies to every effect class.
+- Compatibility or migration concerns: Section 3 says "Every control-plane tool invocation emitted by a conforming agent runtime MUST include an Agent-Ctx-Isolation header (or _meta.ctxIsolation object in JSON-RPC/MCP)", so existing MCP clients and servers would all need changes. The draft gives no negotiation and no rollout path for relying parties that do not understand the header. For a call with no header, the nearest rule is the Section 5 requirement to fail closed on a "missing cryptographic binding", which does not say whether it applies to every effect class.
 
 ## Technical Analysis
 

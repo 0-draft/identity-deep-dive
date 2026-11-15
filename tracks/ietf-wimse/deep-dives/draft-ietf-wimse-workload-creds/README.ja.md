@@ -39,7 +39,7 @@ sequenceDiagram
 ## なぜ今重要か
 
 - **きっかけ**: WIMSE ワーキンググループの中核ドラフトのリビジョン 03（Datatracker の状態は Active、I-D Exists、WG Document）で、構成の再編、トラストアンカーの結び付けの厳格化、proof の audience に関する節の追加、1 つのランタイムに複数の識別子がある場合の独立した段落の削除が行われた。ワーキンググループの議長は、追加の議論が必要になる実質的な変更があれば指摘するようメーリングリストで求めた。
-- **根拠となる資料**: ドラフトの Appendix A.1 に、課題番号付きで変更点が列挙されている（#173、#175、#256、#269、#270、#290、#294、#303、#370、#393、#395、#402、#411）。メールアーカイブには、著者による告知と議長のレビュー依頼（2026 年 10 月 30 日 18:29 UTC。いずれも出典に掲載）がある。2026 年 11 月 1 日時点で、どちらにも返信はない。
+- **根拠となる資料**: ドラフトの Appendix A.1 に 23 の変更点が列挙され、一部には課題番号が付いている（#173、#175、#256、#269、#270、#290、#294、#303、#370、#393、#395、#402、#411）。メールアーカイブには、著者による告知と議長のレビュー依頼（2026 年 10 月 30 日 18:29 UTC。いずれも出典に掲載）がある。2026 年 11 月 1 日時点で、どちらにも返信はない。
 - **想定される影響**: 関連文書（相互 TLS、WPT、HTTP 署名）の実装者と Identity Server の実装者は、受信側の具体的なチェックリストと、失効、audience、鍵の扱いに関するより明確な規則を得る。旧セクション番号を引用していた文書や、リビジョン 02 が求めていたアクセスパスと識別子の対応付け API を実装していた場合は、03 に照らして再確認が必要になる。
 
 ## 変更点
@@ -48,16 +48,16 @@ sequenceDiagram
   - Section 3: 資格情報は、その Workload Identifier のトラストドメインに結び付けられたアンカーに対してのみ検証しなければならない（MUST）。トークンから `iss` を使って JWKS を取得することの明示的な禁止は削除された。Section 9.1 は、資格情報自体から鍵を取得する検証者は任意の発行者を受け入れてしまうと説明しており、Appendix A.1 には「remove iss-based key distribution (#411)」とある。`iss` と `jwks_uri` の利用を扱っていたリビジョン 02 の Section 5.1.3 は「Validating the WIT」に置き換えられた。
   - Section 5.1.3（新規）: 受信側は、単一の整形式 JWS コンパクト形式 JWT であること、`sub` が単一の Workload Identifier でありトラストアンカーの選択に使うこと、`typ` が `wit+jwt` であること、署名が有効であること、`alg` を持つ `jwk` を含む `cnf` があることを確認しなければならず（MUST）、未知のクレームは無視する。
   - Section 5.2（新規）: proof of possession の audience は意図した受信者を示し、受信側は audience が自分を指していることを検証しなければならない（MUST）。仕組みの詳細は [I-D.ietf-wimse-wpt] と [I-D.ietf-wimse-http-signature] に委ねられている。
-  - Section 1.2: リビジョン 02 の「実装はアクセスパスから Workload Identifier への対応付けを定義できなければならない（MUST）」という要件は、3 つの条件（ワークロードが自分の識別子を知っていること、被呼び出し側が要求が自分宛てであると検証できること、呼び出し側が期待する識別子を知っていること）と、サーバー証明書に関する [RFC9525] への参照に置き換えられた。
+  - Section 1.2: リビジョン 02 の「implementations MUST enforce the URI requirements outlined in Section 4.1 of [WIMSE-ID]」という文は「implementations are expected to conform to the URI requirements」になった。Workload Identifier の構文そのものについて、このドラフトはもう BCP 14 の要件を述べず、[WIMSE-ID] に任せている。リビジョン 02 の「実装はアクセスパスから Workload Identifier への対応付けを定義できなければならない（MUST）」という要件は、3 つの条件（ワークロードが自分の識別子を知っていること、被呼び出し側が要求が自分宛てであると検証できること、呼び出し側が期待する識別子を知っていること）と、サーバー証明書に関する [RFC9525] への参照に置き換えられた。
   - Section 4: 1 つのランタイムに複数のラベルを持つデプロイメントについての段落は削除された。この段落は、アクセス判断に使う識別子を 1 つの資格情報に入れ、相関のための 2 つ目のワークロード識別子を禁じていた。資格情報ごとにちょうど 1 つの Workload Identifier とする規則は、Section 4 の最初の段落、`sub`、Section 6.1 に残っており、同じ識別子を持つ複数の資格情報は `jti` などで区別できる。
   - Section 9.3.1 と Section 9.4.1: このドラフトは WIT や WIC の失効に依存しない。デプロイメントはトークンステータスリストや `jti` 拒否リストを運用してもよく（MAY）、その場合はすべての WIT に `jti` を含めなければならない（MUST）。WIC については CRL や OCSP に依存しない。
   - Section 9.2（新規）: トラストドメインのアンカーに対する検証は、そのドメインへの所属を示すだけで、どのワークロードかを示すものではない。proof of possession はこれを解決しない。プロビジョニング解除後も、既存の資格情報は有効期限まで使える。
   - Section 9.5: 秘密鍵は、十分に保護されている場合（例: エクスポート不可かつハードウェアに束縛）を除き、新しい資格情報ごとに再生成すべきである（SHOULD）。「鍵を秘密に保つ」ことの定義が加わり、検証者は資格情報だけからより強い鍵保護を推定してはならない。
-  - Section 5.3: HTTP 401 は、`WWW-Authenticate` で返せる適切な HTTP 認証方式が存在する場合に限り、WIT のエラーに使うことが認められた。リビジョン 02 では 401 は NOT RECOMMENDED であった。
+  - Section 5.3: HTTP 401 は、`WWW-Authenticate` で返せる適切な HTTP 認証方式が存在する場合に限り、WIT のエラーに使うことが認められた。リビジョン 02 では 401 は NOT RECOMMENDED であった。この変更は PR #402（2026 年 10 月 16 日マージ）によるもので、理由は「WPT uses 401 and I believe it's valid. So the creds draft should also allow it.」と書かれている。
   - Section 1 と 9.3: TLS 上で WIT を送ること、あるいは proof を TLS の性質に結び付けることは、WIT をトランスポート層の資格情報にはしない。相互 TLS は WIC を使う。
   - 例と参照文献: 例の `cnf.jwk.alg` は `EdDSA` から `Ed25519` に変わった（[RFC9864]）。WIT の例は再署名された。[RFC8725] は [I-D.ietf-oauth-rfc8725bis] に置き換えられ、[RFC8414] は削除された。[RFC9525]、[RFC6960]、[RFC9864]、[I-D.ietf-oauth-status-list] が新たに参照されている。実装状況に wimsey が追加された。旧 Section 1.1（「Use In Other Protocols」）は削除され、アーキテクチャ図から Identity Server、PEP、PDP が除かれた。
 - 互換性・移行上の懸念:
-  - セクション番号が変わったため（例: 旧 Section 1.3 は 1.2 に、旧 Section 9.2 は 9.3 に）、番号で参照している外部文書は更新が必要である。すでに食い違いが 1 つある。[draft-ietf-wimse-http-signature-08](https://www.ietf.org/archive/id/draft-ietf-wimse-http-signature-08.txt)（Section 3、3.6）は、受信側に本ドラフトの「Section 5.1.4」に従って WIT を検証するよう求めているが、Section 5.1.4 は -02 にも -03 にも存在しない。-03 で WIT の検証を定めているのは Section 5.1.3 である。
+  - セクション番号が変わったため（例: 旧 Section 1.3 は 1.2 に、旧 Section 9.2 は 9.3 に）、番号で参照している外部文書は更新が必要である。すでに食い違いが 1 つある。[draft-ietf-wimse-http-signature-08](https://www.ietf.org/archive/id/draft-ietf-wimse-http-signature-08.txt)（Section 3、3.6）は、受信側に本ドラフトの「Section 5.1.4」に従って WIT を検証するよう求めているが、Section 5.1.4 は -02 にも -03 にも存在しない。-03 で WIT の検証を定めているのは Section 5.1.3 である。同じ存在しない参照は [draft-ietf-wimse-wpt-02](https://www.ietf.org/archive/id/draft-ietf-wimse-wpt-02.txt) にもある。WPT の検証の記述が「the recipient MUST first validate the WIT as specified in Section 5.1.4 of [I-D.ietf-wimse-workload-creds]」と書き、参照先はリビジョン 02 である。また http-signature-08 の Section 1.1 は「Refer to Sec. 1.2 of [I-D.ietf-wimse-workload-creds] for the deployment architecture」と書く。-02 ではこれで正しかったが、-03 では「Deployment Architecture and Message Flow」は Section 1.1 で、Section 1.2 は「Workload Identifiers and Authentication Granularity」である。
   - `EdDSA` は禁止されていない。Section 5.1 の `alg` の規則は、`none`、対称鍵のアルゴリズム、暗号化アルゴリズムを除き、IANA の JOSE レジストリにある署名アルゴリズムを引き続き認めている。[RFC9864] はこのレジストリで `EdDSA` を Deprecated とし、例は完全に指定された `Ed25519` に移った。新しい識別子しか受け付けない検証者は、従来の `EdDSA` の鍵を拒否する。
   - `iss` による鍵の発見に依存していたデプロイメントは、事前設定済みトラストアンカーへ移行する必要がある。
   - リビジョン 02 のアクセスパス対応付けフックを公開していた実装には、期待される被呼び出し側の識別子をどう与えるかについて、規範的な指針がなくなった。
@@ -89,7 +89,7 @@ sequenceDiagram
 - Section 3 は、トラストドメインごとに既知の事前設定済み発行者を求めるが、`iss` がある場合に受信側がそれをその発行者と比較しなければならないかどうかは書かれていない。
 - Section 4 は資格情報ごとに識別子を 1 つとする規則を維持する一方、安定したサービス識別子とインスタンス識別子についての指針を削除した。Section 9.2 は、識別子を共有するインスタンスは区別できないと警告している。短くなった文面で足りるかどうかは、議長が求める実質的変更のレビューの対象になり得る。
 - Section 1.2 と Section 5.2 は、被呼び出し側に audience の検証を、呼び出し側に期待する被呼び出し側の識別子の把握を求めるが、どちらの値も知る手段を示していない。関連ドラフトでは、audience は WPT の `aud` クレーム（HTTP の対象 URI とすることが SHOULD。[draft-ietf-wimse-wpt-02](https://www.ietf.org/archive/id/draft-ietf-wimse-wpt-02.txt) Section 2、3.1.7）と、必須の `wimse-aud` 署名パラメータ（[draft-ietf-wimse-http-signature-08](https://www.ietf.org/archive/id/draft-ietf-wimse-http-signature-08.txt) Section 3.2）として運ばれる。audience を持たない proof の仕組みの場合にどうなるかも書かれていない。
-- Section 5.3 は、「適切な HTTP 認証方式が存在する場合」に `WWW-Authenticate` 付きの 401 を認めている。ドラフトは WIT 向けのそのような方式を挙げておらず、Section 5.1 は WIT を `Authorization` ヘッダーに使わないとしている。
+- ドラフトの外で答えが出ている: Section 5.3 は「適切な HTTP 認証方式が存在する場合」に `WWW-Authenticate` 付きの 401 を認めるが、その方式を挙げておらず、Section 5.1 は WIT 自体を `Authorization` ヘッダーに使わないとしている。その方式は WPT である。この変更を入れた PR #402 は WPT が 401 を使うことを理由に挙げており、draft-ietf-wimse-wpt-02 は proof を `Authorization: WPT ...` として送り、WPT に関わる理由で要求を拒否する受信側は `WWW-Authenticate: WPT` のようなチャレンジ付きの 401 を返すべき（SHOULD）としている（wpt-02 Section 2、2.1）。HTTP 署名には認証スキームがなく、http-signature-08 の Section 3.6 は 400 を使い、401 を NOT RECOMMENDED としている。-04 で WPT の場合を明記すべきかは、メーリングリストで議論されていない。
 - Section 9.3.1 は、拒否リストやトークンステータスリストを運用するデプロイメントに `jti` を必須とするが、Section 5.1 は `jti` を OPTIONAL のままにしている。検証者は、発行者がそのような仕組みを運用しているかどうかを、トークンからは判別できない。
 - Section 9.5 は、鍵がハードウェアに束縛されエクスポート不可であれば資格情報間での鍵の再利用を認めるが、検証者はそれを資格情報から推定できないとする。検証者がそれをどう知るかは、デプロイメントのプロファイルに委ねられている。
 - 2026 年 11 月 1 日時点で、WIMSE のメーリングリストには告知と議長のレビュー依頼しかなく、返信はない。ワーキンググループがどの変更を実質的と見ているかは、まだ分からない。

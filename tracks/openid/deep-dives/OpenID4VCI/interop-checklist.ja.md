@@ -1,12 +1,12 @@
 # Interop Checklist
 
-節番号は、1.1 または s2s と書いたもの以外は 1.0 のもので、コミット `21ffd6c` 時点である。
+節番号は、1.1 または s2s と書いたもの以外は 1.0 のもので、コミット `41c8c66` 時点である。
 
 - [ ] 各ピアがどの本文を実装しているかを確認する: 1.0 Final、1.0 のエラッタ版ドラフト、1.1、s2s。以下の項目でそれぞれ挙動が違う。
 - [ ] `https://<host>/tenant` と `https://<host>/tenant/` からメタデータ URL を組み立てる。エラッタ版と 1.1 では、どちらも `/.well-known/openid-credential-issuer/tenant` になる。1.0 Final には末尾の `/` の規則がなく、文字どおり読めば後者は末尾に `/` が残る(Section 12.2.2、#744、#775)。
 - [ ] Credential Offer を値渡し(`credential_offer`)と参照渡し(`credential_offer_uri`)で送り、両方を含む Offer をウォレットが拒否することを確認する(Section 4.1)。
 - [ ] 誤った `tx_code` で Pre-Authorized Code の Token Request を送る。1.0 の AS は `invalid_grant`、1.1 の AS は `invalid_tx_code` を返すはずである(1.0 Section 6.3、1.1 Section 7.3)。
-- [ ] 誤った `tx_code` を繰り返し送り、AS がエラッタ版の SHOULD に従うかを確かめる。上限までは、コードが無効だと分かるエラーを返し、上限を超えたら Pre-Authorized Code を無効にして `invalid_grant` を返す(エラッタ版 Section 13.6.3)。いずれも SHOULD なので、不合格にはせず挙動を記録する。
+- [ ] 誤った `tx_code` を繰り返し送り、AS がエラッタ版の SHOULD に従うかを確かめる。上限までは、コードが無効だと分かるエラーを返し、上限を超えたら Pre-Authorized Code を無効にして `invalid_grant` を返す(エラッタ版 Section 13.6.3)。いずれも SHOULD なので、不合格にはせず挙動を記録する。Section 6.3 は今も誤った Transaction Code を `invalid_grant` の項目に挙げ、1.0 には別のコードがないので、どちらの場合も `invalid_grant` を想定し、区別は `error_description` で確かめる。
 - [ ] 発行者が Nonce Endpoint を持つ場合、`nonce` のない `jwt` proof が `invalid_proof` で、古い `c_nonce` を使った proof が `invalid_nonce` で拒否されることを確認する(Section 8.3.1.2、Appendix F.1)。
 - [ ] `cryptographic_binding_methods_supported` のない設定で、ウォレットが `proofs` を省き、発行者がそのリクエストを受け付けることを確認する(Section 14.2、#714)。
 - [ ] 遅延レスポンスを返し、ウォレットが `202`、`transaction_id`、`interval` に従い、Deferred Credential Endpoint からクレデンシャルを受け取ることを確認する(Sections 8.3 と 9)。
@@ -15,4 +15,7 @@
 - [ ] 1.1 の `auth_via_web`: ウォレットが `request_uri` を一度だけ使い、並行セッションを持つときに `state` を送ること、AS が期限切れの `request_uri` を拒否することを確認する(Section 6.2.1.2、#704、#797)。
 - [ ] 1.1: プレゼンテーション要求に `expected_origins` がある場合、それが Authorization Challenge Endpoint から導いた Origin だけを含み、ウォレットがそれを検証することを確認する(Section 6.2.1.1)。
 - [ ] 1.1: `credential_dataset_id` があるときは `credential_dataset_tag` もあること、タグが変わったらウォレットが保存済みのクレデンシャルを置き換えることを確認する(Sections 9.3 と 15.4)。
+- [ ] 1.1: Interactive Authorization の識別子について、相手がどちらの綴りを使うかを確かめる。束縛の接頭辞 `ia:` か `iae:`、`ia_post` か `iae_post`、`authorization_challenge_endpoint` か `interactive_authorization_endpoint`、`require_interactive_authorization` か `require_interactive_authorization_request`、および mdoc の `OpenID4VCIIAEHandover` のラベル(#811、オープン)。
+- [ ] 1.1: フォーマットごとに提示の束縛値を確かめる。SD-JWT VC の KB-JWT の `aud`(本文は derived Origin、例はエンドポイント URL)、JWT VC JSON の `aud` と LDP VC の `domain`(`ia:` 付きのエンドポイント URL)、mdoc の handover(`ia:` なしのエンドポイント URL)。複数の値を受け入れる AS は、中継攻撃への防御を失う(#812、オープン)。
+- [ ] s2s: 両方のサーバーが、#810 より前の `session_id` と `credential_instance_id` ではなく、`wallet_id` と `credential_id` を使うことを確かめる。
 - [ ] s2s: 両方のサーバーが mTLS を使い、`Api-Version` を送り、未対応の版には HTTP 400 と Problem Details で応答することを確認する(s2s Sections 5.1 と 5.3)。

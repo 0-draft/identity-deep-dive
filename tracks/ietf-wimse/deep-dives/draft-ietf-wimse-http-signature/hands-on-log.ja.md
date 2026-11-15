@@ -4,7 +4,7 @@
 
 - ランタイム: Python 3.15.2（`vectors/verify_419.log` の 1 行目に出力される）
 - ツール: `cryptography` 50.0.2（同じ行）（Ed25519、RFC 6979 の決定論的署名による ECDSA P-256）、ドラフトのソース取得に `gh`
-- バージョン: draft-ietf-wimse-http-signature-08（ietf-wg-wimse/draft-ietf-wimse-s2s-protocol のタグ `draft-ietf-wimse-http-signature-08`）、issue #419 のベクター（2026 年 11 月 7 日の再生成後の値）
+- バージョン: draft-ietf-wimse-http-signature-08（ietf-wg-wimse/draft-ietf-wimse-s2s-protocol のタグ `draft-ietf-wimse-http-signature-08`）、issue #419 のベクター（2026 年 11 月 7 日の再生成後の値。11 月 13 日の P-04 の修正と Zenodo の v3、v4 より前）
 
 ## 手順
 
@@ -27,4 +27,5 @@
 ## 次にやること
 
 - N-17 と N-20 を、エラー本文と検査の順序を観測できる実際のサーバーに対して採点する。
+- Zenodo v4 で再実行する。修正後の P-04（`:443` のない `@authority`）と新しい N-09b。
 - スクリプトの WIT 検証を、ワークロード資格情報ドラフトの本文と突き合わせる。スクリプトはこのリポジトリの読み方に従っており、条項ごとの照合はしていない。

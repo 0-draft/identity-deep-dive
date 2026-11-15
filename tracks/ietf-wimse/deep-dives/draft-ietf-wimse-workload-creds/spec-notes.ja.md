@@ -20,16 +20,17 @@ Section 12.2 に挙げられた参考参照文献:
 ## 主な変更
 
 - 構成: 「Use In Other Protocols」の節が削除され、Section 5 と 6 は「Application-Layer Credentials」と「Transport-Layer Credentials」に改題され、audience に関する Section 5.2 と WIT の検証に関する Section 5.1.3 が追加され、セキュリティ上の考慮事項が番号振り直しされた（新しい Section 9.2）。
-- Section 1.2: 対応付け API の要件は、呼び出し側と被呼び出し側の条件、およびサーバーの同一性に関する RFC 9525 への参照に置き換えられた。
+- Section 1.2: 対応付け API の要件は、呼び出し側と被呼び出し側の条件、およびサーバーの同一性に関する RFC 9525 への参照に置き換えられた。「implementations MUST enforce the URI requirements outlined in Section 4.1 of [WIMSE-ID]」は「are expected to conform to」に変わった。
 - Section 3: Workload Identifier のトラストドメインに結び付けられたアンカーに対してのみ検証する。発行者は既知かつ事前設定済みでなければならない。`iss` に基づく鍵の検索の明示的な禁止は削除され、Section 9.1 と `iss` に基づく鍵配布の削除に委ねられた。
 - Section 4: 1 つのランタイムに複数のラベル（安定したサービス識別子とインスタンスなど）を持つデプロイメントについての段落は削除された。この段落は、アクセス判断に使う識別子を 1 つの資格情報に入れ、相関のための 2 つ目の識別子を入れることを禁じていた。資格情報ごとにちょうど 1 つの識別子とする規則は維持された。
 - Section 5.1: `sub` と `jti` の定義が書き換えられ、`jti` は拒否リストやステータスリストを運用するデプロイメントと結び付けられ、`typ` の指針は RFC 8725 の後継ドラフトを引用するようになった。
-- Section 5.3: `WWW-Authenticate` の仕組みがある場合に HTTP 401 を認める。
+- Section 5.3: `WWW-Authenticate` の仕組みがある場合に HTTP 401 を認める（PR #402。WPT が `WWW-Authenticate: WPT` 付きの 401 を使うことが理由）。
 - Section 9: WIT と WIC の失効に関する方針、プロビジョニング解除後の露出、鍵保護に関する文言、および WIT と PoP は相互 TLS に使わないという明確化。
 - 例では `cnf.jwk.alg` に `Ed25519` を使い、WIT の例は再署名された。実装状況には wimsey の項目が加わった。
+- Appendix A.1 は -03 の変更を 23 項目挙げている。
 
 ## 影響分析
 
 - 上流: 用語とトラストドメインは WIMSE アーキテクチャのドラフトに、識別子の構文と `wimse` URI スキームは WIMSE Workload Identifier のドラフトに、JWT ベストプラクティスの後継ドラフトに依存する。規範的参照文献のうち 3 つがまだインターネットドラフトであるため、これらのいずれかの変更がこのドラフトに影響し得る。
-- 下流: 相互 TLS、WPT、HTTP 署名の各ドラフトが proof of possession を提供し、Section 5.2 を満たす audience の扱いを定めなければならない。これらが引用しているこのドラフトのセクション番号は移動している可能性がある。WIT と WIC を発行する Identity Server や SPIFFE 系の実装が主な実装者である。
+- 下流: 相互 TLS、WPT、HTTP 署名の各ドラフトが proof of possession を提供し、Section 5.2 を満たす audience の扱いを定めなければならない。これらが引用しているこのドラフトのセクション番号は移動している可能性がある。すでに 2 つずれている。draft-ietf-wimse-wpt-02 と draft-ietf-wimse-http-signature-08 は WIT の検証に「Section 5.1.4」を挙げるが、これは -02 にも -03 にもない（-03 では検証は Section 5.1.3）。http-signature-08 の Section 1.1 は配置アーキテクチャに「Sec. 1.2」を挙げるが、-03 では Section 1.1 である。WIT と WIC を発行する Identity Server や SPIFFE 系の実装が主な実装者である。
 - 互換性: `typ` が `wit+jwt` で、`sub` と `cnf.jwk.alg` を持つ WIT は、引き続き検証できるはずである。挙動が変わるのは、`iss` による鍵検索（サポートされなくなった）、例中のアルゴリズム名（`Ed25519`）、401 に関する指針、削除された対応付け要件である。`EdDSA` は Section 5.1 の `alg` の規則で引き続き認められている。[RFC9864] はこれを Deprecated とし、例だけが `Ed25519` に移った。
