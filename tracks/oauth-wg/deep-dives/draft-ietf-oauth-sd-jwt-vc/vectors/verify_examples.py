@@ -80,7 +80,7 @@ def check(blob):
     acc = set(); digests(pl, acc)
     for d in discs: digests(json.loads(b64d(d)), acc)
     missing = [d for d in discs if b64e(hashlib.sha256(d.encode()).digest()) not in acc]
-    line = (f"typ={hdr.get('typ')} issuer-sig={'OK (' + good[0] + ')' if good else 'FAIL'} "
+    line = (f"typ={hdr.get('typ')} kid={hdr.get('kid', '-')} issuer-sig={'OK (' + good[0] + ')' if good else 'FAIL'} "
             f"disclosures={len(discs)} digests-not-found={len(missing)}")
     ok = bool(good) and not missing
     if kb:
@@ -111,6 +111,9 @@ kh, kp, ks = parts[-1].split(".")
 kpl = json.loads(b64d(kp)); kpl["sd_hash"] = b64e(b"\0" * 32)
 mut_kb = "~".join(parts[:-1] + [f"{kh}.{b64e(json.dumps(kpl).encode())}.{ks}"])
 print("self-test on Figure 8:")
+selftest_ok = True
 for name, m in (("Disclosure value changed", mut_disc), ("Issuer signature bit flipped", mut_sig), ("KB-JWT sd_hash replaced", mut_kb)):
     ok, line = check(m)
+    selftest_ok &= not ok
     print(f"  {name}: {'rejected' if not ok else 'NOT REJECTED'} ({line})")
+sys.exit(0 if all_ok and selftest_ok else 1)
