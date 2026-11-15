@@ -10,11 +10,11 @@
 
 1. ドラフトを取得する: `curl -sfL -o draft-ietf-oauth-sd-jwt-vc-26.txt https://www.ietf.org/archive/id/draft-ietf-oauth-sd-jwt-vc-26.txt` (-24、-25 も同様)。
 2. 各版で `python3 -I vectors/verify_examples.py draft-ietf-oauth-sd-jwt-vc-26.txt 7 8 10 24 26` を実行する。スクリプトは各 Figure の見出しの直前にあるコンパクト形式を読み、Figure 14 から Issuer の鍵を取り、ES256 の Issuer 署名を検証する。各 Disclosure の SHA-256 ダイジェストを、ペイロードの `_sd` 配列、配列の `...` 要素、入れ子の Disclosure の中から探す。KB-JWT があれば `cnf.jwk` で検証し、最後の `~` までの SD-JWT から `sd_hash` を計算し直す。
-3. スクリプトが失敗を検出できることを確かめる。Figure 7 の Disclosure を 1 文字変えると `digests-not-found=1`、Figure 10 の署名を 1 文字変えると `issuer-sig=FAIL` になる。
+3. スクリプトが失敗を検出できることを確かめる。スクリプトは各 Figure の後に、Figure 8 を 3 通りに改変したもの (Disclosure の値を変える、Issuer 署名を 1 ビット反転する、KB-JWT の `sd_hash` を差し替える) で自己テストを行い、それぞれ `rejected` と出力する。
 
 ## 結果
 
-- 出力は `vectors/verify_examples.log` にある。3 つの版すべてで `ALL OK` が出た。
+- 出力は `vectors/verify_examples.log` にある。3 つの版すべてで `ALL OK` が出て、どの版でも自己テストの改変 3 通りがすべて拒否された。
 - -26: Figure 7、8、10、24、26 の `typ` は `dc+sd-jwt` で、Issuer 署名は `doc-signer-05-25-2022` で検証できる (`kid` でこれを名指ししているのは Figure 7 と 8 だけ)。Disclosure は 9、2、2、28、3 個で、どれもダイジェストが所定の場所にある。Figure 8 と 26 の KB-JWT は検証でき、`sd_hash` も一致する (`iat` は 1793905352)。
 - -25 は -26 と同じ出力になる。
 - -24 も検証には通るが、エンコード済みの例はすべて `typ` が `vc+sd-jwt` で、KB-JWT の `iat` は 1724705969 (2024 年 8 月 26 日)、Figure 24 の Disclosure は 28 個ではなく 21 個である。

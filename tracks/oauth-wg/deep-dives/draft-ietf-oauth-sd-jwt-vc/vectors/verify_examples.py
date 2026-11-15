@@ -70,9 +70,8 @@ text = "\n".join(lines)
 keys = {m.group(1): {"x": m.group(2), "y": m.group(3)} for m in re.finditer(
     r'"kid":\s*"([^"]+)",\s*"kty": "EC", "crv": "P-256",\s*"x":\s*"([^"]+)",\s*"y":\s*"([^"]+)"', text)}
 print("issuer keys (Figure 14):", ", ".join(keys))
-all_ok = True
-for n in map(int, sys.argv[2:]):
-    blob = figure_blob(n)
+def check(blob):
+    """Return (ok, description) for one compact SD-JWT (+KB) string."""
     parts = blob.split("~")
     jwt, discs, kb = parts[0], [d for d in parts[1:-1] if d], parts[-1]
     hdr, pl = json.loads(b64d(jwt.split(".")[0])), json.loads(b64d(jwt.split(".")[1]))
@@ -81,14 +80,37 @@ for n in map(int, sys.argv[2:]):
     acc = set(); digests(pl, acc)
     for d in discs: digests(json.loads(b64d(d)), acc)
     missing = [d for d in discs if b64e(hashlib.sha256(d.encode()).digest()) not in acc]
-    line = (f"Figure {n}: typ={hdr.get('typ')} issuer-sig={'OK (' + good[0] + ')' if good else 'FAIL'} "
+    line = (f"typ={hdr.get('typ')} issuer-sig={'OK (' + good[0] + ')' if good else 'FAIL'} "
             f"disclosures={len(discs)} digests-not-found={len(missing)}")
-    all_ok &= bool(good) and not missing
+    ok = bool(good) and not missing
     if kb:
         kbp = json.loads(b64d(kb.split(".")[1]))
         kb_ok = es256_ok(pl["cnf"]["jwk"], kb)
         sd_ok = b64e(hashlib.sha256(blob[:blob.rindex("~") + 1].encode()).digest()) == kbp["sd_hash"]
         line += f" | KB-JWT sig={'OK' if kb_ok else 'FAIL'} sd_hash={'OK' if sd_ok else 'FAIL'} iat={kbp.get('iat')}"
-        all_ok &= kb_ok and sd_ok
-    print(line)
+        ok = ok and kb_ok and sd_ok
+    return ok, line
+
+
+all_ok = True
+for n in map(int, sys.argv[2:]):
+    ok, line = check(figure_blob(n))
+    all_ok &= ok
+    print(f"Figure {n}: {line}")
 print("ALL OK" if all_ok else "SOMETHING FAILED")
+
+# Self-test: the checks must fail on altered input (Figure 8 has a KB-JWT and Disclosures).
+blob = figure_blob(8)
+parts = blob.split("~")
+d0 = json.loads(b64d(parts[1])); d0[2] = str(d0[2]) + "x"
+mut_disc = "~".join([parts[0], b64e(json.dumps(d0).encode())] + parts[2:])
+h, p, s = parts[0].split(".")
+sig = bytearray(b64d(s)); sig[-1] ^= 1
+mut_sig = "~".join([f"{h}.{p}.{b64e(bytes(sig))}"] + parts[1:])
+kh, kp, ks = parts[-1].split(".")
+kpl = json.loads(b64d(kp)); kpl["sd_hash"] = b64e(b"\0" * 32)
+mut_kb = "~".join(parts[:-1] + [f"{kh}.{b64e(json.dumps(kpl).encode())}.{ks}"])
+print("self-test on Figure 8:")
+for name, m in (("Disclosure value changed", mut_disc), ("Issuer signature bit flipped", mut_sig), ("KB-JWT sd_hash replaced", mut_kb)):
+    ok, line = check(m)
+    print(f"  {name}: {'rejected' if not ok else 'NOT REJECTED'} ({line})")
