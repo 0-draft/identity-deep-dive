@@ -19,13 +19,15 @@
 - Most negative vectors are this repository's reconstructions of the change the issue describes, not the issue's bytes. spec-notes lists which vectors used which inputs.
 - No vector disagreed with its expected outcome. 22 accept/reject vectors and 4 behaviour vectors matched. N-17 and N-20 were not scored. The findings are in spec-notes, "Test Vector Re-run".
 
+- 15 November 2026: `python3 -I vectors/verify_419_v4.py vectors/verify_419.py s01-vector-set-v4-publication-2026-11-13.md > vectors/verify_419_v4.log` against the Zenodo v4 file (DOI 10.5281/zenodo.24203971, md5 `5df4f19a8a4a7f0ddd0ff792d0f09bc4`). The corrected P-04 verifies only with `@authority` `svcb.example.com`, N-02 on it is rejected, and N-09b accepts at T0+300 and rejects at T0+301. Findings in spec-notes.
+
 ## Failure Modes
 
 - Taking the issue body's original P-01, P-02, P-06 and N-15 signatures instead of the 7 November values: they verify only over an `@query` without the leading `?`.
 - Reporting N-04 as a signature failure: the signature is valid, and only the recomputed digest fails.
+- Computing CONNECT `@authority` as `host:port` (the -08 wording): the v4 P-04 signature then fails.
 
 ## Next Actions
 
 - Score N-17 and N-20 against a real server, where the error body and the order of checks can be observed.
-- Re-run against Zenodo v4: the corrected P-04 (`@authority` without `:443`) and the new N-09b.
 - Check the WIT validation in the script against the workload credentials draft text. The script follows this repository's reading of it and has not been compared clause by clause.
