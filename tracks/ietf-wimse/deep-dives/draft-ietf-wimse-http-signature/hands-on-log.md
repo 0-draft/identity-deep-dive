@@ -4,7 +4,7 @@
 
 - Runtime: Python 3.15.2 (printed on the first line of `vectors/verify_419.log`)
 - Tooling: `cryptography` 50.0.2 (same line) (Ed25519, ECDSA P-256 with RFC 6979 deterministic signing), `gh` to fetch the draft source
-- Versions: draft-ietf-wimse-http-signature-08 (tag `draft-ietf-wimse-http-signature-08` in ietf-wg-wimse/draft-ietf-wimse-s2s-protocol), issue #419 vectors with the 7 November 2026 regenerated values (before the 13 November P-04 correction and the Zenodo v3 and v4 archives)
+- Versions: draft-ietf-wimse-http-signature-08 (tag `draft-ietf-wimse-http-signature-08` in ietf-wg-wimse/draft-ietf-wimse-s2s-protocol), issue #419 vectors: the 11 November run used the 7 November 2026 regenerated values (before the 13 November P-04 correction); the 15 November re-run under Results used the Zenodo v4 file
 
 ## Steps
 

@@ -4,7 +4,7 @@
 
 - ランタイム: Python 3.15.2（`vectors/verify_419.log` の 1 行目に出力される）
 - ツール: `cryptography` 50.0.2（同じ行）（Ed25519、RFC 6979 の決定論的署名による ECDSA P-256）、ドラフトのソース取得に `gh`
-- バージョン: draft-ietf-wimse-http-signature-08（ietf-wg-wimse/draft-ietf-wimse-s2s-protocol のタグ `draft-ietf-wimse-http-signature-08`）、issue #419 のベクター（2026 年 11 月 7 日の再生成後の値。11 月 13 日の P-04 の修正と Zenodo の v3、v4 より前）
+- バージョン: draft-ietf-wimse-http-signature-08（ietf-wg-wimse/draft-ietf-wimse-s2s-protocol のタグ `draft-ietf-wimse-http-signature-08`）、issue #419 のベクター。11 月 11 日の実行は 2026 年 11 月 7 日の再生成後の値（11 月 13 日の P-04 の修正より前）を使い、「結果」にある 11 月 15 日の再実行は Zenodo v4 のファイルを使った
 
 ## 手順
 
