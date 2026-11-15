@@ -4,7 +4,7 @@
 
 - ランタイム: Python 3.15.2（`vectors/verify_419.log` の 1 行目に出力される）
 - ツール: `cryptography` 50.0.2（同じ行）（Ed25519、RFC 6979 の決定論的署名による ECDSA P-256）、ドラフトのソース取得に `gh`
-- バージョン: draft-ietf-wimse-http-signature-08（ietf-wg-wimse/draft-ietf-wimse-s2s-protocol のタグ `draft-ietf-wimse-http-signature-08`）、issue #419 のベクター（2026 年 11 月 7 日の再生成後の値。11 月 13 日の P-04 の修正と Zenodo の v3、v4 より前）
+- バージョン: draft-ietf-wimse-http-signature-08（ietf-wg-wimse/draft-ietf-wimse-s2s-protocol のタグ `draft-ietf-wimse-http-signature-08`）、issue #419 のベクター。11 月 11 日の実行は 2026 年 11 月 7 日の再生成後の値（11 月 13 日の P-04 の修正より前）を使い、「結果」にある 11 月 15 日の再実行は Zenodo v4 のファイルを使った
 
 ## 手順
 
@@ -19,13 +19,15 @@
 - 負例の多くは、issue が説明する変更をこのリポジトリが再構成したもので、issue のバイト列ではない。どのベクターがどの入力を使ったかは仕様メモに書いた。
 - 期待結果と食い違ったベクターはなかった。受理か拒否かを判定する 22 本と、振る舞いを扱う 4 本が一致した。N-17 と N-20 は採点していない。所見は仕様メモの「テストベクターの再実行」にまとめた。
 
+- 2026 年 11 月 15 日: Zenodo v4 のファイル（DOI 10.5281/zenodo.24203971、md5 `5df4f19a8a4a7f0ddd0ff792d0f09bc4`）に対して `python3 -I vectors/verify_419_v4.py vectors/verify_419.py s01-vector-set-v4-publication-2026-11-13.md > vectors/verify_419_v4.log` を実行した。修正後の P-04 は `@authority` を `svcb.example.com` にした場合だけ検証に通り、それを元にした N-02 は拒否され、N-09b は T0+300 で受理、T0+301 で拒否される。所見は仕様メモにまとめた。
+
 ## 失敗パターン
 
 - P-01、P-02、P-06、N-15 に、11 月 7 日の値ではなく issue 本文の元の署名を使う: 元の署名は、先頭の `?` を欠いた `@query` でしか検証に通らない。
 - N-04 を署名の失敗として報告する: 署名は正しく、失敗するのは計算し直したダイジェストだけである。
+- CONNECT の `@authority` を `host:port`（-08 の文言）で計算する: v4 の P-04 の署名が検証に失敗する。
 
 ## 次にやること
 
 - N-17 と N-20 を、エラー本文と検査の順序を観測できる実際のサーバーに対して採点する。
-- Zenodo v4 で再実行する。修正後の P-04（`:443` のない `@authority`）と新しい N-09b。
 - スクリプトの WIT 検証を、ワークロード資格情報ドラフトの本文と突き合わせる。スクリプトはこのリポジトリの読み方に従っており、条項ごとの照合はしていない。

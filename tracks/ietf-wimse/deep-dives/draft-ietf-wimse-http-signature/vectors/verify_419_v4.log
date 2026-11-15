@@ -1,0 +1,59 @@
+python 3.15.2, cryptography 50.0.2; v4 file md5 5df4f19a8a4a7f0ddd0ff792d0f09bc4
+== literal signatures, v4 vs 11 Nov script
+  N-15: same
+  P-01: same
+  P-02: same
+  P-03: same
+  P-04: CHANGED
+  P-05: same
+  P-06: same
+  WIT_A in v4: True
+  WIT_B in v4: True
+  WIT_C in v4: True
+
+== P-04
+  draft-08 reading (host:port)             old sig: accept=True []
+  draft-08 reading (host:port)             v4 sig: accept=False ['HTTP signature invalid under cnf.jwk (Ed25519) (S3.1)']
+  RFC 9421 2.2.3 (default port omitted)    old sig: accept=False ['HTTP signature invalid under cnf.jwk (Ed25519) (S3.1)']
+  RFC 9421 2.2.3 (default port omitted)    v4 sig: accept=True []
+  base line: ['"@authority": svcb.example.com']
+
+== N-02 on v4 P-04 (cover @path too, re-signed with svcA)
+  accept=False ['CONNECT request covers @path (S3 MUST NOT)']  (expected reject)
+
+== N-09b (P-01 bytes, verify at T0+300 and T0+301)
+  T0+300: accept=True expected=True MATCH []
+  T0+301: accept=False expected=False MATCH ['outside validity window (expires=1795000300, now=1795000301) (S3)']
+
+== full 11 Nov run with the v4 P-04 and the RFC 9421 @authority reading (summary only)
+ID     expected                   got                                      match
+P-01   accept                     accept                                   yes
+P-03   accept                     accept                                   yes
+P-04   accept                     accept                                   yes
+P-05   accept                     accept                                   yes
+P-06   accept                     accept                                   yes
+P-02   accept                     accept                                   yes
+N-01   reject                     reject                                   yes
+N-02   reject                     reject                                   yes
+N-03   reject                     reject                                   yes
+N-04   reject                     reject                                   yes
+N-05   reject                     reject                                   yes
+N-06   reject                     reject                                   yes
+N-07   reject                     reject                                   yes
+N-08   reject                     reject                                   yes
+N-09   reject                     reject                                   yes
+N-10   reject                     reject                                   yes
+N-11   reject                     reject                                   yes
+N-12   reject                     reject                                   yes
+N-13   reject                     reject                                   yes
+N-14   reject                     reject                                   yes
+N-15   reject                     reject                                   yes
+N-16   sender not conformant      sender not conformant (harness)          yes
+N-17   server not conformant      n/a (server behaviour)                   n/a
+N-18   server not conformant      server not conformant (checker)          yes
+N-19   sender not conformant      sender not conformant (checker)          yes
+N-20   verifier not conformant    probe rejected (my verifier)             n/a
+N-21   reject                     reject                                   yes
+N-22   verifier not conformant    label-picker diverges from tag-picker    yes
+mismatches: none
+exit status will be 0

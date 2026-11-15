@@ -26,13 +26,13 @@ RFC 6890 は -25 までは規範的な参照だった。-26 で削除された�
 - Section 2.5: `x5c` のチェーンを "according to Section 4.1.6 of [RFC7515] and [RFC5280]" に検証する。`x5c` の証明書は "is not a trust anchor merely because it is included there"。`x5c` の下では `iss` は認証されず、受信者は証明書に結び付いていない `iss` を拒否してよく (MAY)、Issuer はそうした結び付きのない `iss` を含めるべきでない (SHOULD NOT)。"The recipient's policy determines which mechanism applies to an Issuer; the SD-JWT VC does not"。受信者は、ポリシーが結び付けてその結び付きを検証した場合を除き、別の方式の入力を Issuer の識別に使ってはならない (MUST NOT)。
 - Section 7.3: Issuer は使っている方式が識別するものとなり、MUST の対象は "for any given Issuer" になり、方式は "authenticates only its own inputs" とされた。
 - Section 4: `iss` のスキームとホストの小文字化を推奨 (RECOMMENDED)。
-- Section 2.2、2.2.2.5、5.3.3、5.5.1.2.1、7.6 のキーワード修正。RFC 5280 と [W3C.SVG] を規範的な参照に追加。Appendix A.1 の例のデータを差し替え。
+- Section 2.2、2.2.2.5、5.3.3、5.5.1.2.1、7.6 のキーワード修正。RFC 5280 と [W3C.SVG] を規範的な参照に追加。エンコード済みの例は `typ` が `vc+sd-jwt` (Figure 2 は `dc+sd-jwt`)、KB-JWT の `iat` が 1724705969 で、Appendix A.1 は別のデータ (Erika Mustermann)。
 
 -25 (2026 年 11 月 5 日) の変更:
 
 - Section 2.2.2.2: "SHOULD treat an SD-JWT VC as being of a given type" が "treats" になった。
 - Section 2.4: status の確認は SHOULD のまま。status を確認しない Verifier は失効や一時停止を検知できず "and accepts that risk according to its policy" とする一文を追加。
-- Appendix A.1 の例を拡充。履歴: "working on Éric Vyncke's Discuss"。
+- 例を `dc+sd-jwt` と -23 のデータに戻して署名し直した (KB-JWT の `iat` は 1793905352)。履歴: "working on Éric Vyncke's Discuss"。
 
 -26 (2026 年 11 月 6 日) の変更:
 
@@ -46,4 +46,4 @@ Appendix C の文書履歴によるそれ以前の経緯: HTTP 取得の一般�
 
 - 上流: ドラフトは、SD-JWT の形式と処理を RFC 9901 に、JWT と JWS の規則を RFC 7519 と RFC 7515 に、`x5c` のチェーン検証を RFC 5280 に、`cnf` を RFC 7800 に、HTTP 取得とキャッシュを RFC 9110 と RFC 9111 に依存する。-24 からは RFC 7800 を更新する。`cnf` と並んで `sub` または `iss` を求める RFC 7800 Section 3 の第 2 段落は、すべての JWT について無効になる (Section 2.2.2.3.1)。status list の参照は -22 から規範的である。
 - 下流: SD-JWT VC を実装するウォレット、Issuer、Verifier、および `vct` 値、Type Metadata、追加の鍵探索方式を定義するエコシステムのプロファイル (Section 2.2.2.1、2.5)。公開されれば、RFC 7800 の更新は `cnf` を使うすべての JWT プロファイルにも及ぶ。IANA には、`vct`、`vct#integrity`、`aka_vcts`、メディアタイプ `application/dc+sd-jwt`、well-known URI の接尾辞 `jwt-vc-issuer` の登録が求められている (Section 9)。-26 の本文にも、まだ文書参照のプレースホルダーが残っている。
-- 互換性: JWT VC Issuer Metadata と `x5c` の両方に対応する受信者は、方式を選ぶのが資格情報ではなく自分のポリシーであること、`x5c` の下で認証されていない `iss` を Issuer として後段に渡していないことを確かめる必要がある (Section 2.5、-24 以降)。テストベクターは -24 と -25 で変わり、-26 の例は -25 と同じである。ドラフトの `typ` 値は `dc+sd-jwt` で、`vc+sd-jwt` に関する移行期間の注記は -19 で削除された。
+- 互換性: JWT VC Issuer Metadata と `x5c` の両方に対応する受信者は、方式を選ぶのが資格情報ではなく自分のポリシーであること、`x5c` の下で認証されていない `iss` を Issuer として後段に渡していないことを確かめる必要がある (Section 2.5、-24 以降)。テストベクターは、例が同じ -25 か -26 から取り、エンコード済みの例が `typ` に `vc+sd-jwt` を使う -24 からは取らない。-26 の例は検証に通る (検証ログ)。ドラフトの `typ` 値は `dc+sd-jwt` で、`vc+sd-jwt` に関する移行期間の注記は -19 で削除された。
