@@ -53,3 +53,13 @@ ok, f = v.verify(n02, now); print(f"  accept={ok} {f}  (expected reject)")
 print("\n== N-09b (P-01 bytes, verify at T0+300 and T0+301)")
 for t, exp in ((300, True), (301, False)):
     ok, f = v.verify(v.P01(), v.T0 + t); print(f"  T0+{t}: accept={ok} expected={exp} {'MATCH' if ok == exp else 'MISMATCH'} {f}")
+
+print("\n== full 11 Nov run with the v4 P-04 and the RFC 9421 @authority reading (summary only)")
+import io, contextlib
+v.SIG["P-04"] = NEW_P04
+v.component_value = rfc9421_cv
+v.LOG.clear()
+with contextlib.redirect_stdout(io.StringIO()):
+    results = v.run()
+print("\n".join(v.LOG[next(i for i, s in enumerate(v.LOG) if "=== summary" in s) + 1:]))
+print("mismatches:", [r[0] for r in results if r[3] is False] or "none")
