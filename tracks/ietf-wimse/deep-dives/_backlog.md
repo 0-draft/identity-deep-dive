@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-15T06:37:50+00:00
+Generated at: 2026-11-15T18:53:30+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -28,7 +28,7 @@ Generated at: 2026-11-15T06:37:50+00:00
 
 Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.
 
-- **high** `Diff active WG draft: draft-ietf-wimse-http-signature-08`: It is one of the drafts the hackathon exercises, so spec ambiguities may be reported against it.
+- **high** `Diff active WG draft: draft-ietf-wimse-http-signature-08`: The digest shows active work on its test vectors (#419), a closed server-nonce issue (#369) and a new dangling-reference issue (#422).
 - **high** `Diff active WG draft: draft-ietf-wimse-mutual-tls-03`: A review proposes key-pair authentication text and says WGLC looks possible.
 - **high** `Diff active WG draft: draft-ietf-wimse-workload-creds-03`: It is a core draft in the hackathon scenario, so spec ambiguities may be reported against it.
 - **high** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: Cited as the hop-by-hop verified chain format with status-reference denial (step 7) in the evidence-binding thread.

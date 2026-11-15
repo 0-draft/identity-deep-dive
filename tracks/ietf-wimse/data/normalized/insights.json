@@ -64,9 +64,37 @@
       "at": "2026-11-15T06:38:45+00:00",
       "text": "The only item is an IETF 127 hackathon thread that turns agent call-chain failure cases into eight shared test scenarios, P1–P8, with fixed inputs so implementations can compare results. No WG draft text changed.",
       "text_ja": "今回の対象は IETF 127 ハッカソンのメールスレッド 1 件のみである。エージェント呼び出しチェーンの失敗ケースを 8 つの共通テストシナリオ（P1〜P8）にまとめ、入力を固定して実装間で結果を比較できるようにしている。WG ドラフト本文の変更はない。"
+    },
+    {
+      "at": "2026-11-15T18:54:47+00:00",
+      "text": "No WG draft text changed. The most notable item is a mailing-list thread where an individual draft (draft-zambo-aer1-wimse-mapping) tightened how it records \"not_evaluated\" versus \"denied\" for AIMS Section 11 audit records. The weekly GitHub digest shows s2s-protocol activity on http-signature-08 test vectors, a closed server-nonce issue, and a new dangling-reference issue.",
+      "text_ja": "WGドラフトの本文に変更はない。最も注目すべきは、個人ドラフト draft-zambo-aer1-wimse-mapping が AIMS Section 11 の監査記録で \"not_evaluated\" と \"denied\" の区別を厳密化したメーリングリストのやり取りである。週次の GitHub ダイジェストでは、s2s-protocol で http-signature-08 のテストベクターに関する議論、サーバー生成 nonce の issue のクローズ、参照先の節が存在しないという新規 issue が報告された。"
     }
   ],
   "items": {
+    "mail:1Lm1pnMFKTIDQA0c_0yQUio9k3Q": {
+      "diagram": "",
+      "first_seen": "2026-11-15",
+      "headline": "The AER-1 mapping draft now records a fail-closed denial as not_evaluated when an input was unreachable or stale, as agreed with a reviewer on the list.",
+      "headline_ja": "AER-1 マッピングドラフトは、入力が到達不能または古い場合、fail-closed による拒否を not_evaluated として記録するようにした。",
+      "id": "mail:1Lm1pnMFKTIDQA0c_0yQUio9k3Q",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Brennan Zambo announces -03 of draft-zambo-aer1-wimse-mapping, which maps AER-1 receipts to the audit records required by AIMS Section 11. After review by Girish Konda, Section 3 now says that not_evaluated applies whenever an input the decision depended on could not be established, whether it was unreachable or reached but not current, even if a fail-closed rule then denies. decision_reason_detail names that input, and denied is reserved for decisions evaluated on established inputs. The decision reason is committed in the receipt for the audit reader but not returned to the caller, so the error does not become an oracle. The thread also shows the -02 step, which added the committed decision_reason member. The message is truncated, and the author asks the reviewer to confirm that -03 separates the cases as intended.",
+      "summary_ja": "Brennan Zambo が、AER-1 レシートを AIMS Section 11 の監査記録に対応付ける draft-zambo-aer1-wimse-mapping の -03 を発表した。Girish Konda のレビューを受け、Section 3 は、判断が依存した入力を確立できなかった場合（到達不能、または到達したが最新でない場合）は、fail-closed ルールが拒否した場合でも not_evaluated を適用すると定めた。decision_reason_detail がその入力を示し、denied は確立された入力で評価された判断に限られる。判断理由は監査の読み手のためにレシートにコミットされるが、呼び出し元には返されないため、エラーがオラクルになることはない。スレッドには、decision_reason メンバーを追加した -02 の経緯も含まれる。メッセージは途中で切れており、著者はレビュー担当者に -03 が意図どおりに区別できているかの確認を求めている。",
+      "title": "draft-zambo-aer1-wimse-mapping-01: AER-1 as a candidate format for AIMS Section 11 audit records",
+      "updated_at": "2026-11-15T18:54:47+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/1Lm1pnMFKTIDQA0c_0yQUio9k3Q/",
+      "use_cases": [
+        "An AIMS deployment whose policy point denies when a revocation or status source does not answer, and whose auditors must tell that apart from a real policy denial.",
+        "A reviewer reconstructing Section 11 audit records who needs to know whether a decision used stale inputs."
+      ],
+      "use_cases_ja": [
+        "失効情報やステータス情報の取得元が応答しないときに拒否するポリシーポイントを持つ AIMS 環境で、監査担当者が実際のポリシー拒否と区別する必要がある場合。",
+        "Section 11 の監査記録を再構成する担当者が、判断に古い入力が使われたかどうかを知る必要がある場合。"
+      ]
+    },
     "mail:33_tdetI9AjZMcqhQnnnUdJTNCs": {
       "diagram": "",
       "first_seen": "2026-11-11",
@@ -629,6 +657,23 @@
         "トークンが一度も受理されなかったことを誰が証明できるかを Trust Framework に定める場合。"
       ]
     },
+    "mail:mZYP9JeCKECx5uPLLcvsAbthxNg": {
+      "diagram": "",
+      "first_seen": "2026-11-15",
+      "headline": "Weekly GitHub digest: s2s-protocol closes the server-nonce issue and gets a report of a dangling workload-creds section reference.",
+      "headline_ja": "週次 GitHub ダイジェスト: s2s-protocol でサーバー生成 nonce の issue がクローズされ、workload-creds の節参照が存在しないとの報告が出た。",
+      "id": "mail:mZYP9JeCKECx5uPLLcvsAbthxNg",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "The digest covers the s2s-protocol repository only. A new issue (#422, by kanywst) says that http-signature and wpt point to workload-creds Section 5.1.4, which -03 does not have. Issue #419 (test vectors for draft-ietf-wimse-http-signature-08) received six comments from HUIIIM, kanywst and yaronf. Issue #369 (server generated nonce, labelled draft-ietf-wimse-http-signature) received one comment from yaronf and was closed. One pull request was opened by yaronf, with no title or body shown in the digest. The digest gives no outcome for the nonce issue and no text of the PR, so the effect on the draft cannot be determined from this material.",
+      "summary_ja": "このダイジェストは s2s-protocol リポジトリのみを対象としている。新規 issue #422（kanywst）は、http-signature と wpt が workload-creds の Section 5.1.4 を参照しているが、-03 にはその節がないと指摘している。issue #419（draft-ietf-wimse-http-signature-08 のテストベクター）には HUIIIM、kanywst、yaronf から6件のコメントが付いた。issue #369（サーバー生成 nonce、draft-ietf-wimse-http-signature ラベル）には yaronf から1件のコメントが付き、クローズされた。yaronf が pull request を1件作成したが、ダイジェストにはタイトルも本文も示されていない。nonce の issue のクローズ理由や PR の内容は資料に含まれないため、ドラフトへの影響は判断できない。",
+      "title": "Weekly github digest (WIMSE Weekly GitHub Activity Summary)",
+      "updated_at": "2026-11-15T18:54:47+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/mZYP9JeCKECx5uPLLcvsAbthxNg/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "mail:nPDAthCFZZP1OsSsJPKmto0qNdY": {
       "diagram": "",
       "first_seen": "2026-11-15",
@@ -792,10 +837,10 @@
   "overflow": [],
   "triage": {
     "Diff active WG draft: draft-ietf-wimse-http-signature-08": {
-      "date": "2026-11-14",
+      "date": "2026-11-15",
       "priority": "high",
-      "reason": "It is one of the drafts the hackathon exercises, so spec ambiguities may be reported against it.",
-      "reason_ja": "ハッカソンで実際に試験される草案の一つであり、仕様の曖昧さが報告される可能性がある。"
+      "reason": "The digest shows active work on its test vectors (#419), a closed server-nonce issue (#369) and a new dangling-reference issue (#422).",
+      "reason_ja": "ダイジェストにテストベクター（#419）、クローズされたサーバー nonce の issue（#369）、参照先が存在しないという新規 issue（#422）の動きがある。"
     },
     "Diff active WG draft: draft-ietf-wimse-identifier-04": {
       "date": "2026-11-09",
