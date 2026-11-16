@@ -69,9 +69,108 @@
       "at": "2026-11-16T06:35:17+00:00",
       "text": "The only item is a mailing-list comment on draft-ietf-wimse-aims-01 that proposes an explanatory paragraph in Section 10.8. It is a discussion with no text change yet, so nothing substantive moved in this track.",
       "text_ja": "今回の対象は draft-ietf-wimse-aims-01 の第10.8節に説明文を追加する提案のメーリングリスト投稿のみである。議論の段階でテキストの変更はなく、このトラックに実質的な動きはない。"
+    },
+    {
+      "at": "2026-11-16T22:09:24+00:00",
+      "text": "Two new Cisco drafts landed: delegator-bound delegation chains (each hop signed by the key its parent confirms, no authorization server) and message binding for WPTs (mth claim for non-HTTP transports). The only WG repo change is a small clarification in s2s-protocol.",
+      "text_ja": "Cisco の新規ドラフト二件が登場した。一つは各ホップを親トークンが確認する鍵で署名させる delegator-bound な委任チェーン（認可サーバー不要）、もう一つは HTTP 以外のトランスポート向けに mth クレームで WPT をメッセージに結び付けるドラフトである。WG リポジトリの変更は s2s-protocol の小さな明確化のみである。"
     }
   ],
   "items": {
+    "draft:draft-nandakumar-wimse-delegator-bound-chains-00": {
+      "diagram": "sequenceDiagram\n participant AS as Root issuer\n participant A as agent-a\n participant B as agent-b\n participant C as agent-c\n participant V as Verifier\n AS->>A: DT_0 (cnf key A, del_bind)\n A->>B: DT_1 signed by key A (cnf key B)\n B->>C: DT_2 signed by key B (cnf key C)\n C->>V: DT_0, DT_1, DT_2 plus proof of key C\n V->>V: check each signature against parent cnf",
+      "first_seen": "2026-11-16",
+      "headline": "Adds a rule that each child delegation token must be signed by the key its parent confirms, so chains prove who granted each hop offline.",
+      "headline_ja": "各子委任トークンを親が cnf で確認した鍵で署名させ、チェーン自体が各ホップの付与元を示すようにする拡張である。",
+      "id": "draft:draft-nandakumar-wimse-delegator-bound-chains-00",
+      "kind": "new-draft",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-delegate-sd-jwt",
+          "note": "Section 8 maps the same rules onto Delegate SD-JWT, which already chains key-binding JWTs but has no authority comparison rule.",
+          "note_ja": "第8節で同じ規則を Delegate SD-JWT に対応付けている。同ドラフトは鍵バインディング JWT を連鎖させるが、権限比較の規則を持たない。",
+          "track": "oauth-wg"
+        },
+        {
+          "name": "draft-ietf-oauth-transaction-tokens",
+          "note": "ctx can carry a Transaction Token txn to bind a chain to a transaction.",
+          "note_ja": "ctx に Transaction Token の txn を載せて、チェーンをトランザクションに結び付けられる。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "new-proposal",
+      "summary": "The draft extends Delegation Tokens (draft-asor-wimse-agent-delegation-chain). A root token with del_bind=delegator requires every child to be signed with the key in the parent's cnf, with iss equal to the parent's client_id, so only the root relies on a trust anchor. It also adds an optional per-chain HMAC pseudonym for the principal (sub_kind), rejection of chains where a client_id repeats, audience that can only narrow (aud of a child must be within its parent's), and a ctx claim binding a chain to a dialog or Transaction Token txn. A section maps the rules onto Delegate SD-JWT. The text is truncated in the source, so later sections are not covered here.",
+      "summary_ja": "本ドラフトは Delegation Tokens（draft-asor-wimse-agent-delegation-chain）を拡張する。ルートトークンに del_bind=delegator を置くと、すべての子トークンは親の cnf の鍵で署名され、iss は親の client_id と等しくなければならない。このため信頼アンカーに依存するのはルートのみとなる。加えて、主体のチェーンごとの HMAC 仮名（sub_kind）、client_id の重複するチェーンの拒否、子の aud が親の範囲内に限られる audience の縮小、チェーンをダイアログや Transaction Token の txn に結び付ける ctx クレームを定義する。Delegate SD-JWT への対応付けの節もある。原文は途中で切れており、後半の節は扱っていない。",
+      "title": "draft-nandakumar-wimse-delegator-bound-chains-00: Delegator-Bound Delegation Chains for AI Agents",
+      "updated_at": "2026-11-16T22:09:24+00:00",
+      "url": "https://datatracker.ietf.org/doc/draft-nandakumar-wimse-delegator-bound-chains/00/",
+      "use_cases": [
+        "Agents in different organizations delegating directly to each other, where the final receiver must verify the whole chain without an authorization server.",
+        "A payment service that must confirm each agent in a chain was actually granted authority by the previous agent, and that the chain has no loop."
+      ],
+      "use_cases_ja": [
+        "組織をまたいでエージェント同士が直接委任し、最終受信者が認可サーバーなしでチェーン全体を検証する場合。",
+        "決済サービスが、チェーン内の各エージェントが直前のエージェントから実際に権限を付与されたこと、およびループがないことを確認する場合。"
+      ]
+    },
+    "draft:draft-nandakumar-wimse-wpt-message-binding-00": {
+      "diagram": "sequenceDiagram\n participant W as Workload\n participant R as Relay\n participant V as Verifier\n V->>W: nonce\n W->>W: hash JSON via json-jcs, sign WPT with mth and nonce\n W->>R: message with WIT and WPT in credential member\n R->>V: forward unchanged\n V->>V: recompute mth, check nonce and aud",
+      "first_seen": "2026-11-16",
+      "headline": "Defines an mth claim so a Workload Proof Token can be bound to a non-HTTP message, plus a verifier nonce and a registry of canonicalization profiles.",
+      "headline_ja": "HTTP 以外のメッセージに Workload Proof Token を結び付ける mth クレーム、検証者 nonce、正規化プロファイルのレジストリを定義する。",
+      "id": "draft:draft-nandakumar-wimse-wpt-message-binding-00",
+      "kind": "new-draft",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-sd-jwt-vc",
+          "note": "The mth and nonce claims can also be used in an SD-JWT Key Binding JWT.",
+          "note_ja": "mth と nonce は SD-JWT の Key Binding JWT でも使える。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "new-proposal",
+      "summary": "A WPT today binds the request target and tokens but not the content, and is defined only for HTTP. This draft says a WPT can travel in a message's credential member with aud naming the receiver, and MUST carry mth, a {p, h} object holding a profile name and the SHA-256 of the canonicalized message (credential member excluded). A nonce claim echoes a verifier-supplied value, so freshness does not depend on intermediaries and jti need not be stored beyond the nonce's validity. A new IANA registry of profiles starts with json-jcs (RFC 8785). On HTTP, mth can bind the body, but header fields still need HTTP Message Signatures. The same claims may appear in an SD-JWT KB-JWT.",
+      "summary_ja": "現行の WPT はリクエスト先とトークンを結び付けるがコンテンツは対象外であり、HTTP のみを対象とする。本ドラフトは、WPT をメッセージの credential member に載せ、aud に受信者を指定する方式を示す。WPT は mth を含まなければならず、mth はプロファイル名 p と正規化後のメッセージ（credential member を除く）の SHA-256 h からなるオブジェクトである。nonce クレームは検証者が与えた値を返すもので、中継者に頼らず鮮度を確認でき、nonce の有効期間を超えて jti を保持する必要もなくなる。IANA に正規化プロファイルのレジストリを新設し、最初の項目は json-jcs（RFC 8785）である。HTTP では mth でボディを結び付けられるが、ヘッダーフィールドの保護には引き続き HTTP Message Signatures が必要である。同じクレームを SD-JWT の KB-JWT でも使える。",
+      "title": "draft-nandakumar-wimse-wpt-message-binding-00: Message Binding for Workload Proof Tokens",
+      "updated_at": "2026-11-16T22:09:24+00:00",
+      "url": "https://datatracker.ietf.org/doc/draft-nandakumar-wimse-wpt-message-binding/00/",
+      "use_cases": [
+        "Agent control messages sent over Media over QUIC or WebSocket through relays that terminate TLS, where the receiver needs proof the key holder sent this exact message.",
+        "JSON-RPC over HTTP such as A2A or MCP, where an intermediary may re-serialize the body and byte-level signatures would break."
+      ],
+      "use_cases_ja": [
+        "TLS を終端する中継を経由する Media over QUIC や WebSocket 上のエージェント制御メッセージで、受信者が鍵の保有者がこのメッセージそのものを送ったことを確認したい場合。",
+        "A2A や MCP のような HTTP 上の JSON-RPC で、中継がボディを再シリアライズしうるため、バイト列への署名が使えない場合。"
+      ]
+    },
+    "mail:-jp1HV34AzcmNjhxSr9hPSkdZMU": {
+      "diagram": "sequenceDiagram\n participant C as Client\n participant Ac as Actor\n participant AS as Authorization server\n Ac->>C: actor_proof (agrees, key bound)\n C->>AS: token exchange with actor and actor_proof\n AS->>AS: verify proof, bind token to actor key\n AS->>C: token not for client\n C->>Ac: pass token",
+      "first_seen": "2026-11-16",
+      "headline": "Announces a Token Exchange extension where an actor signs a proof so the issued token is bound to the actor's key rather than the requesting client's.",
+      "headline_ja": "アクターが署名した証明により、要求したクライアントではなくアクターの鍵に結び付いたトークンを発行する Token Exchange 拡張の告知である。",
+      "id": "mail:-jp1HV34AzcmNjhxSr9hPSkdZMU",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-identity-assertion-authz-grant",
+          "note": "The message says the same binding works for ID-JAG assertions.",
+          "note_ja": "同じ結び付けが ID-JAG のアサーションにも使えると述べられている。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "new-proposal",
+      "summary": "In RFC 8693 the requester gets the token, and with DPoP it is bound to that client's key. The proposed draft lets the client name an actor and include the actor's credential. The actor signs an actor_proof agreeing that a token be issued to its key, optionally naming what it agreed to, without contacting the authorization server. The server binds the token to the actor's key and tells the client it is not for it. If an approver narrows the request, the server checks the change only reduces what the actor agreed to. Resource servers are unchanged, and without actor_proof the request is plain RFC 8693. It also applies to ID-JAG assertions and to tokens issued after CIBA approval.",
+      "summary_ja": "RFC 8693 ではリクエストした側がトークンを受け取り、DPoP を使う場合もそのクライアントの鍵に結び付く。提案ドラフトでは、クライアントがアクターを指名し、そのクレデンシャルを添える。アクターは、自身の鍵宛にトークンを発行してよいという actor_proof に署名し、同意した内容を任意で指定でき、認可サーバーと通信する必要はない。サーバーはトークンをアクターの鍵に結び付け、クライアントにはそのトークンが自分向けでないことを伝える。承認者がリクエストを絞り込んだ場合、サーバーはその変更がアクターの同意内容を狭めるだけであることを検査する。リソースサーバーは変更不要で、actor_proof がなければ通常の RFC 8693 である。ID-JAG のアサーションや CIBA 承認後に発行されるトークンにも適用できる。",
+      "title": "New draft: OAuth 2.0 Token Exchange with Actor-Bound Tokens:",
+      "updated_at": "2026-11-16T22:09:24+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/-jp1HV34AzcmNjhxSr9hPSkdZMU/",
+      "use_cases": [
+        "An approving agent that needs an access token usable only by the different agent that will perform the action, without holding a usable token itself."
+      ],
+      "use_cases_ja": [
+        "承認するエージェントが、自身は使えるトークンを保持せず、実行する別のエージェントだけが使えるアクセストークンを得たい場合。"
+      ]
+    },
     "mail:1Lm1pnMFKTIDQA0c_0yQUio9k3Q": {
       "diagram": "",
       "first_seen": "2026-11-15",
@@ -260,6 +359,34 @@
         "WIT、WPT、HTTP 署名の実装者は、このシナリオ一覧を異常系テストのチェックリストとして使える。",
         "エージェントチェーンの失効を設計する運用者は、ステータスリスト方式とそれ以外の方式で、最初の拒否までの時間の上限を比較できる。",
         "委任クレデンシャルのゲートウェイを作るチームは、ベアラートークンのみを受け付けるサードパーティ API への最終ホップを試験できる。"
+      ]
+    },
+    "mail:9Oo3h5DF81u2k4qrPDFHXxryH-I": {
+      "diagram": "sequenceDiagram\n participant A as Agent\n participant P as Approver\n participant R as Resource\n A->>A: delegation bound to dialog\n A->>P: signed check action\n P->>A: token for that one action\n A->>R: act with token\n R->>R: check against approved scope",
+      "first_seen": "2026-11-16",
+      "headline": "The same authors announced PACE Authorization, a draft on delegation and per-action approval for agent dialogs built on existing OAuth and WIMSE pieces.",
+      "headline_ja": "同じ著者が、既存の OAuth と WIMSE の部品を用いてエージェントのダイアログにおける委任と操作単位の承認を扱う PACE Authorization を告知した。",
+      "id": "mail:9Oo3h5DF81u2k4qrPDFHXxryH-I",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-transaction-tokens",
+          "note": "Named as one possible delegation credential.",
+          "note_ja": "委任クレデンシャルの選択肢の一つとして挙げられている。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "new-proposal",
+      "summary": "The announcement describes four steps. Delegate binds a delegation credential to the dialog it opens, with options including OAuth Actor Profile tokens, Transaction Tokens or delegator-bound chains. Ask has a paused agent send a signed check action. Approve has the approver issue an access token for that one action, bound to the performing agent's key, via token exchange or CIBA. Act has the resource check the token against what was approved, such as a payment up to an amount. Revoking a delegation ends dependent dialogs. The message is partly garbled in the archive, and the draft itself is not included, so details are unverified.",
+      "summary_ja": "告知は四つの段階を述べている。Delegate では委任クレデンシャルを、それが開くダイアログに結び付け、OAuth Actor Profile トークン、Transaction Token、delegator-bound チェーンなどから選ぶ。Ask では停止したエージェントが署名付きの確認アクションを送る。Approve では承認者が、実行するエージェントの鍵に結び付いた、その一操作限りのアクセストークンをトークン交換または CIBA で発行する。Act では、リソースがトークンを承認内容（たとえば上限額までの支払い）と照合する。委任を失効させると依存するダイアログも終了する。メッセージはアーカイブ上で一部欠落しており、ドラフト本文もないため、詳細は未確認である。",
+      "title": "New draft: PACE Authorization: delegation and action approval for agent dialogs:",
+      "updated_at": "2026-11-16T22:09:24+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/9Oo3h5DF81u2k4qrPDFHXxryH-I/",
+      "use_cases": [
+        "An agent that needs a human or policy approval before a payment, then must act only within the approved amount."
+      ],
+      "use_cases_ja": [
+        "支払いの前に人またはポリシーによる承認を必要とし、承認された金額の範囲でのみ実行するエージェントの場合。"
       ]
     },
     "mail:B3VfzW_jlvVT3BI4T4f4oAySBxU": {
@@ -657,6 +784,44 @@
         "トークンが一度も受理されなかったことを誰が証明できるかを Trust Framework に定める場合。"
       ]
     },
+    "mail:fMPFKSpMHoji68UYn5W3bcNh_NE": {
+      "diagram": "",
+      "first_seen": "2026-11-16",
+      "headline": "The delegator-bound chains announcement drew a review asking for conditions on pseudonym resolution and a note on withdrawing a principal.",
+      "headline_ja": "delegator-bound チェーンの告知に対し、仮名解決の条件付けと主体の撤回に関する追記を求めるレビューが寄せられた。",
+      "id": "mail:fMPFKSpMHoji68UYn5W3bcNh_NE",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The authors (Suhas/Cullen) announced the draft and asked three things: whether delegator binding belongs in the Delegation Tokens draft as a flag or default, whether it fits the Actor Profile's companion-profile idea, and whether using one key for both signing the next hop and proof of possession is acceptable. Marc replied that the pseudonym and the pairwise-identifier rule look sound, but that issuer resolution of the pseudonym is unconditioned. He asked for text on when and to whom it is resolved, with a record of each resolution. He also asked for a note that withdrawing a principal means revoking every DT_0, with the bound measured from the issuer's decision. He supports making delegator binding a flag in the Delegation Tokens draft.",
+      "summary_ja": "著者（Suhas/Cullen）は、delegator binding を Delegation Tokens ドラフト内のフラグまたは既定にすべきか、Actor Profile の補完プロファイルの考え方に合うか、次ホップの署名と所有証明に同じ鍵を使うことが許容されるか、の三点を問うた。Marc は、仮名と pairwise 識別子の規則は妥当としつつ、発行者による仮名の解決に条件がないと指摘した。いつ、誰に結果を返すかを明記し、解決ごとに記録を残す文言を求めた。また、主体の撤回はすべての DT_0 の失効を意味する点と、その期限を各検証者の設定ではなく発行者の決定時点から測る点の追記も求めた。delegator binding は拡張でなく Delegation Tokens ドラフトのフラグとすることを支持している。",
+      "title": "New draft: Delegator-Bound Delegation Chains for AI Agents: (2 new messages)",
+      "updated_at": "2026-11-16T22:09:24+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/fMPFKSpMHoji68UYn5W3bcNh_NE/",
+      "use_cases": [
+        "Deployers choosing how to resolve per-chain pseudonyms for audit without creating a sensitive mapping record that is queried freely."
+      ],
+      "use_cases_ja": [
+        "監査のために仮名を解決する際、自由に参照できる機微なマッピング記録を作らない運用を検討する場合。"
+      ]
+    },
+    "mail:frclj3SHeVIbbFU8tbt1rhMO3Wo": {
+      "diagram": "",
+      "first_seen": "2026-11-16",
+      "headline": "Announcement of the WPT message-binding draft, asking for review from agent-protocol and WPT people.",
+      "headline_ja": "WPT メッセージバインディングのドラフトの告知であり、エージェントプロトコルと WPT の関係者にレビューを求めている。",
+      "id": "mail:frclj3SHeVIbbFU8tbt1rhMO3Wo",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The authors say a WPT currently covers who calls and where but not the request content, and that agents are moving traffic to Media over QUIC, WebSocket and QUIC streams through relays that terminate TLS, so a proof could be lifted onto another message while valid. They summarize the draft: the mth claim, carrying a WPT outside HTTP, a verifier nonce, a registry of canonicalization profiles starting with JSON, body binding on HTTP for JSON-RPC such as A2A and MCP, and use in an SD-JWT KB-JWT. HTTP Message Signatures remain the choice when headers must be protected. The archived text has some gaps.",
+      "summary_ja": "著者は、現行の WPT は誰がどこへ呼び出すかを対象とするがリクエストの内容は対象外であり、エージェントが Media over QUIC、WebSocket、QUIC ストリームへ移行し、TLS を終端する中継を通るため、有効な証明が別のメッセージに付け替えられうると述べている。ドラフトの要点は、mth クレーム、HTTP 外での WPT の運搬、検証者の nonce、JSON から始まる正規化プロファイルのレジストリ、A2A や MCP のような JSON-RPC 向けの HTTP ボディの結び付け、SD-JWT KB-JWT での利用である。ヘッダーを保護する場合は引き続き HTTP Message Signatures を選ぶとしている。アーカイブ本文には一部欠落がある。",
+      "title": "New draft: Message Binding for Workload Proof Tokens",
+      "updated_at": "2026-11-16T22:09:24+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/frclj3SHeVIbbFU8tbt1rhMO3Wo/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "mail:mZYP9JeCKECx5uPLLcvsAbthxNg": {
       "diagram": "",
       "first_seen": "2026-11-15",
@@ -832,6 +997,23 @@
         "ユーザーが OAuth 資格情報をプロキシに預け、エージェントが上流トークンを保持しないエージェント基盤。",
         "DS から離れた検証者が、累積上限を超えたか判断する場合。"
       ]
+    },
+    "repo:ietf-wg-wimse/draft-ietf-wimse-s2s-protocol:1a2ad8c16daa": {
+      "diagram": "",
+      "first_seen": "2026-11-16",
+      "headline": "A one-line commit clarifies that a CONNECT request's @authority omits a default port.",
+      "headline_ja": "CONNECT リクエストの @authority がデフォルトポートを含まないことを明確化する一件のコミットである。",
+      "id": "repo:ietf-wg-wimse/draft-ietf-wimse-s2s-protocol:1a2ad8c16daa",
+      "kind": "repo-activity",
+      "related": [],
+      "significance": "routine",
+      "summary": "The only material is the commit title, 'Clarify CONNECT @authority omits a default port (#419). (#421)'. It appears to clarify how @authority is formed for CONNECT in the HTTP signature profile, but no diff is provided, so the effect on the wire format cannot be confirmed.",
+      "summary_ja": "資料はコミットタイトル「Clarify CONNECT @authority omits a default port (#419). (#421)」のみである。CONNECT における @authority の構成を明確化するものと思われるが、差分がないため、ワイヤ形式への影響は確認できない。",
+      "title": "1 new commit(s) in ietf-wg-wimse/draft-ietf-wimse-s2s-protocol",
+      "updated_at": "2026-11-16T22:09:24+00:00",
+      "url": "https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol",
+      "use_cases": [],
+      "use_cases_ja": []
     }
   },
   "overflow": [],
@@ -861,16 +1043,28 @@
       "reason_ja": "ハッカソンのシナリオの中核となる草案であり、仕様の曖昧さが報告される可能性がある。"
     },
     "Review related draft: draft-asor-wimse-agent-delegation-chain-03": {
-      "date": "2026-11-13",
+      "date": "2026-11-16",
       "priority": "high",
-      "reason": "Cited as the hop-by-hop verified chain format with status-reference denial (step 7) in the evidence-binding thread.",
-      "reason_ja": "evidence-binding のスレッドで、ホップごとに検証する委任チェーン形式かつステータス参照による拒否（ステップ7）の根拠として引用された。"
+      "reason": "The delegator-bound chains draft extends its Delegation Tokens format and asks whether binding belongs in it.",
+      "reason_ja": "delegator-bound チェーンのドラフトが本ドラフトの Delegation Tokens 形式を拡張し、結び付けを本体に含めるべきか問うている。"
     },
     "Review related draft: draft-hulea-wimse-agent-mandate-01": {
       "date": "2026-11-14",
       "priority": "high",
       "reason": "Author agreed Section 9.5 is unsafe and will change budget-release semantics in -02.",
       "reason_ja": "著者がSection 9.5は安全でないと認め、-02で予算解放の意味を変更するため。"
+    },
+    "Review related draft: draft-nandakumar-wimse-delegator-bound-chains-00": {
+      "date": "2026-11-16",
+      "priority": "high",
+      "reason": "New draft adding signer-key binding, pseudonyms and audience attenuation to delegation chains, with live list review today.",
+      "reason_ja": "委任チェーンに署名鍵の結び付け、仮名、audience の縮小を加える新規ドラフトで、本日メーリングリスト上でレビューも出ている。"
+    },
+    "Review related draft: draft-nandakumar-wimse-wpt-message-binding-00": {
+      "date": "2026-11-16",
+      "priority": "high",
+      "reason": "New draft extending WPT to non-HTTP messages with the mth claim and a profile registry.",
+      "reason_ja": "mth クレームとプロファイルのレジストリにより WPT を HTTP 以外のメッセージへ拡張する新規ドラフトである。"
     },
     "Review related draft: draft-sweeney-wimse-credential-delegation-02": {
       "date": "2026-11-14",
