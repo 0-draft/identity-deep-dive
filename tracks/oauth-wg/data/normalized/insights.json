@@ -1,21 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-08T06:07:15+00:00",
-      "text": "The only item is the chairs' announcement of the draft OAuth WG agenda for the San Francisco meeting (IETF 127). The message has no agenda content, so nothing substantive can be reported.",
-      "text_ja": "唯一の項目は、サンフランシスコ会合（IETF 127）向けOAuth WGの議題案を知らせるチェアの連絡である。本文に議題の内容はなく、実質的な変化は確認できない。"
-    },
-    {
-      "at": "2026-11-08T13:29:24+00:00",
-      "text": "No substantive protocol change: a reply on the list proposes carrying a PSEA token as the attestation in the new draft-williams-oauth-poi-core-00, and a small PR fixes a missing IANA registration for req_wl in the Transaction Tokens draft.",
-      "text_ja": "プロトコル上の実質的な変更はない。新規ドラフト draft-williams-oauth-poi-core-00 のアテステーションとして PSEA トークンを使う案がメーリングリストで提示され、Transaction Tokens ドラフトでは req_wl の IANA 登録漏れを直す小さな PR が出た。"
-    },
-    {
-      "at": "2026-11-08T22:10:15+00:00",
-      "text": "The weekly GitHub digest shows a cleanup of the client-id-metadata-document issue tracker: 11 issues closed, 1 opened. mcguinness also filed two new issues against the ID-JAG draft. No draft text is included, so this is activity only.",
-      "text_ja": "週次GitHubダイジェストでは、client-id-metadata-documentのissueが11件クローズされ1件が新規作成された。ID-JAGドラフトにもmcguinnessが2件のissueを起票している。ドラフト本文の差分は含まれず、活動の記録のみである。"
-    },
-    {
       "at": "2026-11-09T06:38:02+00:00",
       "text": "A new individual draft, draft-williams-oauth-poi-core-00 (Proof-of-Intent Core), is being aligned with draft-yossif-psea so that its envelope can carry a PSEA token. Separately, the Secdir telechat review of draft-ietf-oauth-sd-jwt-vc-26 came back \"Ready\".",
       "text_ja": "新規個人ドラフト draft-williams-oauth-poi-core-00（Proof-of-Intent Core）について、PoIE が draft-yossif-psea の PSEA トークンを運ぶ形で整合を取る議論が進んでいる。また、draft-ietf-oauth-sd-jwt-vc-26 の Secdir telechat レビューは「Ready」だった。"
@@ -64,6 +49,11 @@
       "at": "2026-11-15T18:54:47+00:00",
       "text": "No draft text changed this run. The most substantive activity is on the identity-assertion-authz-grant issue tracker, where an Audience-to-client_id mismatch was reported (#161) and the CIMD digest issue (#121) was closed. A new individual draft for batch agent delegation also appeared.",
       "text_ja": "今回はドラフト本文の変更はない。最も実質的な動きは identity-assertion-authz-grant の issue で、Audience と client_id の対応の不整合が報告され（#161）、CIMD ダイジェストの issue（#121）がクローズされた。マルチエージェント向けのバッチ委任に関する個人ドラフトも新たに告知された。"
+    },
+    {
+      "at": "2026-11-16T06:35:17+00:00",
+      "text": "A quiet run: the only item is a wording PR on the deferred token response draft that simplifies the definition of the deferral code. No protocol behaviour changed.",
+      "text_ja": "今回は静かな更新である。唯一の項目は、deferred token response ドラフトの deferral code の定義を簡潔にする文言修正の PR であり、プロトコルの挙動は変わっていない。"
     }
   ],
   "items": {
@@ -111,29 +101,6 @@
       "use_cases_ja": [
         "SAML の Audience を client ID に対応付ける identity assertion 認可グラントの実装者は、処理規則を固める前に #161 を確認するとよい。",
         "client-id-metadata-document の実装者は、IETF 127 前後の iss と取得時セキュリティに関する結論を #78 と #112 で追える。"
-      ]
-    },
-    "mail:CAJtRQ9c4tUCaB70TUVbzBvEejk": {
-      "diagram": "",
-      "first_seen": "2026-11-08",
-      "headline": "Weekly digest: big issue cleanup on the client-id-metadata-document draft, two new ID-JAG issues, and several sd-jwt-vc PRs.",
-      "headline_ja": "週次ダイジェスト: client-id-metadata-documentのissue大量整理、ID-JAGの新規issue2件、sd-jwt-vcのPR複数。",
-      "id": "mail:CAJtRQ9c4tUCaB70TUVbzBvEejk",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "The digest lists GitHub activity only, with no spec text. In draft-ietf-oauth-client-id-metadata-document, 11 issues were closed, including those on token_endpoint_auth_method with private_key_jwt (#100), guidance on omitting token_endpoint_auth_method (#92), unsupported metadata values (#71), AS error returns (#85), disallowing the root path as a URL (#86) and data URIs for logo_uri (#19). One new issue (#131) says the response_types intersection rejects otherwise usable token-endpoint grants. Three PRs were opened, and PR #99 (Add Client Authentication section) got a comment. For oauth-identity-assertion-authz-grant, mcguinness opened #160 (sender-constrained ID-JAG should not replace required client authentication) and #159 (sections 7.2 and 8 require jwt-bearer but omit jwt-dpop). oauth-sd-jwt-vc got 7 new PRs, and PR #450 (Mike Bishop's ballot) got a comment. oauth-v2-1 PR #268 (supporting OAuth 2.0 and 2.1 clients concurrently) got 3 comments. oauth-transaction-tokens got 1 new PR. The digest does not show the reasons for the closures or the content of the PRs.",
-      "summary_ja": "このダイジェストはGitHub上の活動一覧のみで、仕様本文は含まれない。draft-ietf-oauth-client-id-metadata-documentでは11件のissueがクローズされた。内訳には、private_key_jwtにおけるtoken_endpoint_auth_method（#100）、token_endpoint_auth_method省略時のガイダンス（#92）、未対応メタデータ値（#71）、ASのエラー返却（#85）、ルートパスのURL禁止（#86）、logo_uriのdata URI（#19）が含まれる。新規issue #131は、response_typesの積集合により、本来使えるトークンエンドポイントのグラントが拒否されると指摘している。PRは3件作成され、PR #99（Add Client Authentication section）にコメントが付いた。oauth-identity-assertion-authz-grantでは、mcguinnessが#160（sender-constrained ID-JAGは必須のクライアント認証を置き換えるべきでない）と#159（7.2節と8節がjwt-bearerを要求しjwt-dpopに言及していない）を起票した。oauth-sd-jwt-vcでは新規PRが7件あり、PR #450（Mike Bishop's ballot）にコメントが付いた。oauth-v2-1のPR #268（OAuth 2.0クライアントと2.1クライアントの併存対応）には3件のコメントがあった。oauth-transaction-tokensでは新規PRが1件あった。クローズの理由やPRの内容はダイジェストからは分からない。",
-      "title": "Weekly github digest (OAuth Activity Summary)",
-      "updated_at": "2026-11-08T22:10:15+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/CAJtRQ9c4tUCaB70TUVbzBvEejk/",
-      "use_cases": [
-        "An authorization server implementing client ID metadata documents wants to know whether the client authentication and response_types handling rules are still changing.",
-        "An implementer of the ID-JAG grant who plans to use DPoP should watch #159 and #160 on the jwt-dpop gap and on client authentication."
-      ],
-      "use_cases_ja": [
-        "client ID metadata documentを実装する認可サーバーの開発者は、クライアント認証とresponse_typesの扱いの規則がまだ変わりつつあるかを把握できる。",
-        "DPoPの利用を予定しているID-JAGグラントの実装者は、jwt-dpopの欠落とクライアント認証に関する#159と#160を注視すべきである。"
       ]
     },
     "mail:FmOt_z3_BXJBWtpSdLxxtPV6wMs": {
@@ -221,23 +188,6 @@
         "承認者が署名したダイジェストを、AS が記録した disclosure オブジェクトと照合したい検証者。"
       ]
     },
-    "mail:H_h0W8yp2srlIk_-UN01zYkH1MI": {
-      "diagram": "",
-      "first_seen": "2026-11-08",
-      "headline": "The chair posted a link to the draft OAuth WG agenda for the San Francisco meeting and asked for comments.",
-      "headline_ja": "チェアがサンフランシスコ会合向けOAuth WG議題案へのリンクを投稿し、意見を求めた。",
-      "id": "mail:H_h0W8yp2srlIk_-UN01zYkH1MI",
-      "kind": "mail",
-      "related": [],
-      "significance": "routine",
-      "summary": "Rifaat posted a short message linking to the draft agenda for the OAuth WG session in San Francisco (datatracker agenda-127-oauth) and asked participants to send questions or comments. The message itself lists no agenda items, so which drafts will be discussed cannot be determined from this material.",
-      "summary_ja": "Rifaatが、サンフランシスコでのOAuth WGセッションの議題案（datatracker の agenda-127-oauth）へのリンクを示す短いメッセージを投稿し、質問や意見を求めた。本文には議題項目が記載されておらず、どのドラフトが扱われるかはこの資料からは判断できない。",
-      "title": "OAuth WG Draft Agenda for San Francisco",
-      "updated_at": "2026-11-08T06:07:15+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/H_h0W8yp2srlIk_-UN01zYkH1MI/",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
     "mail:HgHlAofjYWaRfRhhN5v3-jqmw48": {
       "diagram": "",
       "first_seen": "2026-11-11",
@@ -310,29 +260,6 @@
         "RAR に対応済みの認可サーバーは、新しい authorization_details タイプを使ってエージェント向けのルート委任レシートを発行できる。",
         "エージェントのチェーンに累積の支出上限や呼び出し回数上限を適用する依拠当事者は、レシート内で指名された唯一のカウンターとなる必要がある。",
         "複数のエージェント委任ドラフトを実装する者は、制約種別ごとの縮小規則表を共通のテストベクトルの出発点にできる。"
-      ]
-    },
-    "mail:JAOcNgwRIJuiIxUVCIy2iSJMQIg": {
-      "diagram": "",
-      "first_seen": "2026-11-08",
-      "headline": "A reply on the Proof-of-Intent Core draft suggests carrying a PSEA token as its attestation.",
-      "headline_ja": "Proof-of-Intent Core ドラフトのアテステーションに PSEA トークンを使う案が提案された。",
-      "id": "mail:JAOcNgwRIJuiIxUVCIy2iSJMQIg",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "The message is addressed to the author of draft-williams-oauth-poi-core-00 (the thread is titled as the new draft announcement). The sender says the attestation in PoI Core is close to the token defined in draft-yossif-psea, an EAT profile in RATS. In PSEA, the approver's enrolled authenticator signs, after user verification, over the SHA-256 of the RFC 8785 form of the exact action parameters. The sender cites 31 public conformance cases and one independent verifier. PSEA does not cover how the resource server requests approval or how the client key is certified, which PoI Core does define. The sender therefore proposes that the PoIE carry a PSEA token as its attestation and asks whether the author is open to checking the fit. The draft text itself is not in the material, so nothing more about PoI Core is claimed.",
-      "summary_ja": "このメッセージは draft-williams-oauth-poi-core-00 の著者に宛てたもので、新規ドラフト告知のスレッドに付いている。送信者は、PoI Core のアテステーションが RATS の EAT プロファイルである draft-yossif-psea のトークンに近いと述べている。PSEA では、登録済みの承認者の認証器が、ユーザー検証の後に、対象操作のパラメーターを RFC 8785 で正規化した形の SHA-256 に対して署名する。送信者は 31 件の公開適合テストケースと、それを再現する独立した検証実装が一つあると述べている。PSEA は、リソースサーバーが承認を要求する方法やクライアント鍵の証明方法を定めていないが、PoI Core はその両方を定めている。そのため送信者は、PoIE が独自のアテステーションを定める代わりに PSEA トークンを運ぶ案を示し、適合するか確認する意向を著者に尋ねている。ドラフト本文は資料に含まれないため、PoI Core についてこれ以上のことは述べない。",
-      "title": "New Draft: draft-williams-oauth-poi-core-00 (Proof-of-Intent Core)",
-      "updated_at": "2026-11-08T13:29:24+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/JAOcNgwRIJuiIxUVCIy2iSJMQIg/",
-      "use_cases": [
-        "A resource server that wants user-verified approval of one exact action (for example a payment) and must choose between a bespoke attestation format and an existing EAT profile.",
-        "An implementer building a verifier who wants shared conformance cases rather than a draft-specific attestation format."
-      ],
-      "use_cases_ja": [
-        "特定の操作（例えば支払い）についてユーザー検証付きの承認をリソースサーバーが求める場合に、独自のアテステーション形式と既存の EAT プロファイルのどちらを使うか選ぶ場面。",
-        "ドラフト固有のアテステーション形式ではなく、共有された適合テストケースに基づいて検証実装を作りたい実装者。"
       ]
     },
     "mail:Nk-LW0yXArpzKDtHhnMrpiC31Fw": {
@@ -730,6 +657,23 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "pr:oauth-wg/oauth-deferred-token-response#82": {
+      "diagram": "",
+      "first_seen": "2026-11-16",
+      "headline": "In short, this PR rewrites the definition of the deferral code to focus on its purpose and lifecycle.",
+      "headline_ja": "deferral code の定義を、その目的とライフサイクルに焦点を当てて書き直す PR である。",
+      "id": "pr:oauth-wg/oauth-deferred-token-response#82",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The PR reworks the Section 2 definition of the deferral code. The author found the existing text confusing: it never says the code is used to obtain a token, yet it includes a fragment about the revocation endpoint. The PR simplifies the definition around its intended purpose and lifecycle. The source gives only the PR description, not the diff, so the exact new wording is unknown. It appears to be an editorial change.",
+      "summary_ja": "この PR は、Section 2 にある deferral code の定義を書き直す。既存の文は、コードがトークン取得に使われることに触れていない一方で、revocation endpoint に関する記述を含んでおり、分かりにくいと指摘されている。PR は目的とライフサイクルを中心に定義を簡潔にする。ソースには PR の説明のみがあり差分は含まれないため、新しい文言の詳細は不明である。編集上の変更と見られる。",
+      "title": "oauth-wg/oauth-deferred-token-response#82: Simplify definition of deferral code parameter",
+      "updated_at": "2026-11-16T06:35:17+00:00",
+      "url": "https://github.com/oauth-wg/oauth-deferred-token-response/pull/82",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "pr:oauth-wg/oauth-delegate-sd-jwt#15": {
       "diagram": "",
       "first_seen": "2026-11-10",
@@ -785,23 +729,6 @@
         "型の照合を本文書に委ねている ISO/IEC 18013-5 の mdoc プロファイル。"
       ]
     },
-    "pr:oauth-wg/oauth-transaction-tokens#374": {
-      "diagram": "",
-      "first_seen": "2026-11-08",
-      "headline": "A PR adds the required req_wl claim to the JWT Claims registry entries in the Transaction Tokens draft.",
-      "headline_ja": "Transaction Tokens ドラフトの JWT Claims レジストリ登録に、必須の req_wl クレームを追加する PR。",
-      "id": "pr:oauth-wg/oauth-transaction-tokens#374",
-      "kind": "pull-request",
-      "related": [],
-      "significance": "editorial",
-      "summary": "The contributor noticed that req_wl is a REQUIRED claim but is missing from the JWT Claims Registry Contents in the IANA section, where only tctx and rctx are listed. The PR adds the registration. It is an IANA considerations fix and does not change the token format or processing.",
-      "summary_ja": "投稿者は、req_wl が必須クレームであるにもかかわらず、IANA の節の JWT Claims Registry Contents には tctx と rctx しか載っていないことに気付いた。この PR はその登録を追加する。IANA 考慮事項の修正であり、トークン形式や処理は変わらない。",
-      "title": "oauth-wg/oauth-transaction-tokens#374: Register the req_wl claim in the JWT Claims registry",
-      "updated_at": "2026-11-08T13:29:24+00:00",
-      "url": "https://github.com/oauth-wg/oauth-transaction-tokens/pull/374",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
     "pr:oauth-wg/oauth-v2-1#283": {
       "diagram": "",
       "first_seen": "2026-11-13",
@@ -845,12 +772,6 @@
       "priority": "high",
       "reason": "PR #457 changes how credential types are matched (vct and aka_vcts only, no extends matching), with ISO/IEC 18013-5 about to cite a dated draft.",
       "reason_ja": "PR #457 が型の照合方法（vct と aka_vcts のみで extends 照合は行わない）を変更し、ISO/IEC 18013-5 が日付付きドラフトを引用する予定である。"
-    },
-    "draft-ietf-oauth-transaction-tokens": {
-      "date": "2026-11-08",
-      "priority": "low",
-      "reason": "PR #374 fixes a missing IANA registration for the required req_wl claim, a small editorial fix.",
-      "reason_ja": "PR #374 は必須クレーム req_wl の IANA 登録漏れを直すもので、編集上の小さな修正にとどまる。"
     }
   }
 }
