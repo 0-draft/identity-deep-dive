@@ -1,9 +1,9 @@
 # OAuth WG Backlog (2026-11-16)
 
-- generated_at_utc: `2026-11-16T06:34:32+00:00`
+- generated_at_utc: `2026-11-16T22:07:44+00:00`
 
-- [ ] `draft-ietf-oauth-sd-jwt-vc` score=108 updated=2026-11-06T19:07:22Z
-- [ ] `draft-ietf-oauth-status-list` score=90 updated=2026-11-12T21:31:43Z
+- [ ] `draft-ietf-oauth-sd-jwt-vc` score=125 updated=2026-11-16T10:45:13Z
+- [ ] `draft-ietf-oauth-status-list` score=83 updated=2026-11-12T21:31:43Z
 - [ ] `draft-ietf-oauth-identity-chaining` score=83 updated=2026-11-12T02:07:35Z
 - [ ] `draft-ietf-oauth-rfc8725bis` score=73 updated=2026-11-06T22:32:52Z
 - [ ] `draft-ietf-oauth-client-id-metadata-document` score=73 updated=2026-11-02T22:02:56Z
@@ -24,9 +24,9 @@
 
 Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.
 
-- **high** `draft-ietf-oauth-client-id-metadata-document`: Issues #78 and #112 drew 7 comments and are tagged ietf-127.
+- **high** `draft-ietf-oauth-client-id-metadata-document`: A deployment report proposes seven text changes, including SSRF limits, cache clamping and public-client restriction.
 - **high** `draft-ietf-oauth-delegate-sd-jwt`: PR #15 restructures where security claims live in the KB-SD-JWT and defines their delegation semantics.
 - **high** `draft-ietf-oauth-identity-assertion-authz-grant`: New issue #161 reports a conflict between the §4.3.3 and §4.5 rules, and #121 was closed this week.
-- **high** `draft-ietf-oauth-sd-jwt-vc`: PR #457 changes how credential types are matched (vct and aka_vcts only, no extends matching), with ISO/IEC 18013-5 about to cite a dated draft.
+- **high** `draft-ietf-oauth-sd-jwt-vc`: -27 changes how type matching works: types come only from vct and aka_vcts, and extends no longer adds types.
 
 <!-- triage:end -->
