@@ -1,16 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-09T06:38:02+00:00",
-      "text": "A new individual draft, draft-williams-oauth-poi-core-00 (Proof-of-Intent Core), is being aligned with draft-yossif-psea so that its envelope can carry a PSEA token. Separately, the Secdir telechat review of draft-ietf-oauth-sd-jwt-vc-26 came back \"Ready\".",
-      "text_ja": "新規個人ドラフト draft-williams-oauth-poi-core-00（Proof-of-Intent Core）について、PoIE が draft-yossif-psea の PSEA トークンを運ぶ形で整合を取る議論が進んでいる。また、draft-ietf-oauth-sd-jwt-vc-26 の Secdir telechat レビューは「Ready」だった。"
-    },
-    {
-      "at": "2026-11-09T22:26:02+00:00",
-      "text": "The most substantive item is the oauth-sd-jwt-vc PR #457, which makes the types of an SD-JWT VC exactly those the Issuer asserts in vct and aka_vcts. The Attenuating Authorization Tokens (AAT) thread is converging on a single del_max_depth meaning across the delegation chain drafts, with a side meeting at IETF 127.",
-      "text_ja": "最も実質的なのは oauth-sd-jwt-vc の PR #457 で、SD-JWT VC の型を発行者が vct と aka_vcts で表明したものに限定する変更である。Attenuating Authorization Tokens（AAT）のスレッドでは、委任チェーン系ドラフト間で del_max_depth の意味を一つに揃える方向で議論が進み、IETF 127 でサイドミーティングが開かれる。"
-    },
-    {
       "at": "2026-11-10T07:23:46+00:00",
       "text": "One mailing-list message this run, with no draft text changes. It suggests splitting audit records between OAuth (the AS's record of an approval) and RATS (the approver's own signature), with the proposed AUDIT effort profiling how a record references both.",
       "text_ja": "今回はメーリングリストの投稿が1件のみで、ドラフト本文の変更はない。認可サーバーによる承認の記録は OAuth、承認者自身の署名は RATS に置き、AUDIT がその両方を参照する記録の形式を規定する、という分担案が示された。"
@@ -59,6 +49,11 @@
       "at": "2026-11-16T22:09:25+00:00",
       "text": "The only text change to an adopted draft is draft-ietf-oauth-sd-jwt-vc-27, which now says an SD-JWT VC's types come only from the issuer's vct and aka_vcts claims, not from Type Metadata extends. The rest of the run is mostly new individual drafts on agent delegation and a field report on client-id-metadata-document.",
       "text_ja": "採択済みドラフトで本文が変わったのは draft-ietf-oauth-sd-jwt-vc-27 のみで、SD-JWT VC の型は Type Metadata の extends ではなく、発行者が asserts する vct と aka_vcts だけで決まると明確化された。そのほかは、エージェント委任に関する新しい個人ドラフトの告知と、client-id-metadata-document の実装報告が中心である。"
+    },
+    {
+      "at": "2026-11-17T07:59:41+00:00",
+      "text": "The main activity is an implementation report on draft-ietf-oauth-client-id-metadata-document from an AS serving native apps and MCP clients. The thread produced suggestions on SSRF hardening, caching and RFC 8252 pointers, but no draft text changed. Two other messages: a question on the PACE Authorization draft and a new individual draft on OIDC crypto agility.",
+      "text_ja": "最も動きがあったのは、ネイティブアプリと MCP クライアントを扱う認可サーバーからの draft-ietf-oauth-client-id-metadata-document の実装報告である。SSRF 対策、キャッシュ、RFC 8252 への参照などの提案が出たが、ドラフト本文の変更はない。ほかに PACE Authorization ドラフトへの質問と、OIDC の暗号アジリティに関する新規個人ドラフトの投稿がある。"
     }
   ],
   "items": {
@@ -83,29 +78,6 @@
       "use_cases_ja": [
         "要求されたクレデンシャルの型を照合する検証者は、受け取った vct を Type Metadata の extends で展開せず、vct と aka_vcts だけを確認する必要がある。",
         "発行者は、vct の型が他の型を extends している場合、それらの型を照合の対象にしたいなら aka_vcts に列挙する必要がある。extends では追加されなくなったためである。"
-      ]
-    },
-    "mail:0Pv9TvfR3IVh92IfjOTnzUZr1Ng": {
-      "diagram": "sequenceDiagram\n participant C as Client\n participant RS as Resource Server\n participant A as Authenticator\n C->>RS: Request action\n RS-->>C: HTTP 403 step-up challenge\n RS-->>C: Opaque ID resolved to signed display_facts\n C->>A: Parameters plus display_facts\n A-->>C: PSEA token signed after user verification\n C->>RS: Retry with PoIE carrying PSEA token",
-      "first_seen": "2026-11-09",
-      "headline": "In short, the PoI Core author agrees to let the Proof-of-Intent Envelope carry a PSEA token as its device-bound attestation.",
-      "headline_ja": "PoI Core の著者が、Proof-of-Intent Envelope にデバイスバインドの証明として PSEA トークンを載せる方針に同意した。",
-      "id": "mail:0Pv9TvfR3IVh92IfjOTnzUZr1Ng",
-      "kind": "mail",
-      "related": [],
-      "significance": "new-proposal",
-      "summary": "This message is Paul Williams's reply in the thread about the new draft draft-williams-oauth-poi-core-00. Mohamad Khalil Yossif had suggested that the attestation in PoI Core is close to draft-yossif-psea, an EAT profile in RATS in which the enrolled authenticator signs, after user verification, over the SHA-256 of the RFC 8785 form of the action parameters. Paul agrees the two are complementary. The PoIE attestation block would be extensible by media type, with PSEA as the primary profile for device-bound Tier 2 and Tier 3 assertions, while Tier 1 in-memory Web Crypto session keys stay decoupled from hardware enclaves. He describes the split: PSEA handles the device-bound signature, PoI Core defines the two-phase challenge flow (HTTP 403 with step-up negotiation) and Tier 1 browser keys via IdP certification and PoP chaining, and display integrity is handled by the Resource Server resolving opaque IDs into signed display_facts. He proposes testing an application/psea+jwt token in the PoIE node assertion schema and asks for a sample token from the conformance suite. Nothing is specified yet; this is an early alignment discussion.",
-      "summary_ja": "このメッセージは、新規ドラフト draft-williams-oauth-poi-core-00 に関するスレッドでの Paul Williams の返信である。Mohamad Khalil Yossif は、PoI Core の attestation が draft-yossif-psea（RATS の EAT プロファイルで、登録済みオーセンティケーターがユーザー検証後に、アクションパラメーターの RFC 8785 形式の SHA-256 に署名する）に近いと指摘していた。Paul は両者が補完的であることに同意している。PoIE の attestation ブロックはメディアタイプで拡張可能とし、デバイスバインドの Tier 2 と Tier 3 のアサーションでは PSEA を主要プロファイルとする。一方、Tier 1 のメモリ上の Web Crypto セッション鍵はハードウェアエンクレーブから切り離したままにする。役割分担は次のとおりである。PSEA はデバイスバインドの署名を担い、PoI Core は二段階のチャレンジフロー（HTTP 403 とステップアップのネゴシエーション）と、IdP 証明および PoP チェーンによる Tier 1 ブラウザー鍵を定義する。表示の完全性は、リソースサーバーが不透明な ID を署名付きの display_facts に解決することで扱う。Paul は application/psea+jwt トークンを PoIE のノードアサーションスキーマに入れる試行を提案し、conformance suite のサンプルトークンを求めている。まだ仕様化されておらず、初期段階の整合の議論である。",
-      "title": "New Draft: draft-williams-oauth-poi-core-00 (Proof-of-Intent Core)",
-      "updated_at": "2026-11-09T06:38:02+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/0Pv9TvfR3IVh92IfjOTnzUZr1Ng/",
-      "use_cases": [
-        "A resource server that needs a human to approve a specific high-value action and wants a signed proof tied to the exact parameters shown to the user.",
-        "A deployer weighing browser-only session keys against hardware-backed authenticators for different approval risk levels (Tier 1 versus Tier 2 and 3)."
-      ],
-      "use_cases_ja": [
-        "特定の高額なアクションについて人間の承認を求め、ユーザーに提示した正確なパラメーターに結び付いた署名付き証明を必要とするリソースサーバー。",
-        "承認のリスクレベルに応じて、ブラウザーのみのセッション鍵とハードウェアに裏付けられたオーセンティケーターを使い分けたい運用者（Tier 1 と Tier 2、3）。"
       ]
     },
     "mail:1__U02DObNtvWmF2Is4p9-j5qH8": {
@@ -178,42 +150,29 @@
       "use_cases": [],
       "use_cases_ja": []
     },
-    "mail:GM_oPEx2T7s6WgXQgtQOv7AsXqA": {
-      "diagram": "",
-      "first_seen": "2026-11-09",
-      "headline": "The AAT thread is converging on one del_max_depth meaning, with a comparison of three delegation-chain drafts due before IETF 127.",
-      "headline_ja": "AAT のスレッドは del_max_depth の意味を一つにまとめる方向で進み、IETF 127 までに委任チェーン系ドラフト三件の比較が用意される。",
-      "id": "mail:GM_oPEx2T7s6WgXQgtQOv7AsXqA",
+    "mail:Gg-XRhIkKakzC1ay6QhKkRimrw8": {
+      "diagram": "sequenceDiagram\nparticipant C as Client\nparticipant AS as Authorization Server\nparticipant H as client_id URL host\nC->>AS: authorization request with URL client_id\nAS->>H: fetch metadata document\nH-->>AS: document with redirect_uris\nAS->>AS: check client_id equality, redirect URIs, scope intersection\nAS-->>C: continue flow",
+      "first_seen": "2026-11-17",
+      "headline": "An AS operator's implementation report on Client ID Metadata Documents gets editor replies. Most points are withdrawn, and a few possible additions remain.",
+      "headline_ja": "Client ID Metadata Document の実装報告に編集者が回答し、多くの指摘は取り下げられ、追加の可能性が残るのは数点である。",
+      "id": "mail:Gg-XRhIkKakzC1ay6QhKkRimrw8",
       "kind": "mail",
-      "related": [
-        {
-          "name": "draft-asor-wimse-agent-delegation-chain",
-          "note": "Its agent_delegation format and del_max_depth registry entry are the semantics being compared with AAT.",
-          "note_ja": "agent_delegation 形式と del_max_depth のレジストリ項目が、AAT との比較対象になっている。",
-          "track": "ietf-wimse"
-        },
-        {
-          "name": "draft-sweeney-wimse-credential-delegation",
-          "note": "Cred -02 is discussed for its Delegation Server ledger and revocation limits, and it adopts the Asor format unchanged for tokens verified away from the DS.",
-          "note_ja": "Cred -02 は Delegation Server の台帳と失効の限界の観点で議論され、DS 外で検証されるトークンには Asor 形式をそのまま採用している。",
-          "track": "ietf-wimse"
-        }
-      ],
+      "related": [],
       "significance": "discussion",
-      "summary": "Participants discuss aligning AAT, the Asor agent_delegation format and Cred -02 (a Delegation Server design). Niki argues that a holder who sets a smaller del_max_depth than the root (root 8, holder 2) should cap everything below it, so a token at depth 3 is rejected, whereas Asor checks depth only against the root's 8. Kieran notes that a leaf at del_depth equal to the root maximum is accepted by AAT (J.10.f) but rejected under Asor semantics, and wants the test vectors reconciled. Rob agrees the cap should stay and asks the comparison to record whether each draft can bind a leaf to a digest of the exact request. Kieran and Rob both want the companion document for AAT Section 9.8 to state a revocation freshness bound, ideally in terms comparable to Cred -02 Section 7. Niki confirms the comparison and a side meeting. The thread is truncated in the source, so earlier messages are only partly visible.",
-      "summary_ja": "AAT、Asor の agent_delegation 形式、Cred -02（Delegation Server 方式）の整合が議論されている。Niki は、ルートより小さい del_max_depth を設定した保持者（ルート 8、保持者 2）は配下全体の深さを制限できるべきで、深さ 3 のトークンは拒否されると主張する。Asor はルートの 8 に対してのみ深さを検査する。Kieran は、del_depth がルートの最大値に等しいリーフを AAT（J.10.f）は受理し、Asor の意味論では拒否される点を指摘し、テストベクターの調整を求めている。Rob はこの制限を維持すべきだとし、各ドラフトがリクエストのダイジェストにリーフを束縛できるかを比較表に記録するよう求めた。Kieran と Rob は、AAT 第 9.8 節の補足文書に失効状態の鮮度の上限を明記することを望んでおり、Cred -02 第 7 節と比較できる表現が望ましいとしている。Niki は比較表の作成とサイドミーティングを確認した。ソースは途中で切れているため、以前のメッセージは一部しか見えない。",
-      "title": "AAT -02 announcement",
-      "updated_at": "2026-11-09T22:26:02+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/GM_oPEx2T7s6WgXQgtQOv7AsXqA/",
+      "summary": "Sean MacGuire runs an OAuth 2.1 AS used by MCP clients and a native app. They listed seven observations, and Emelia (an author or editor) answered each. Sean withdrew point 1 (client_id comparison is already simple string comparison per RFC 3986 section 6.2.1) and point 2 (one document per AS host was their own choice). Point 5 (restricting client authentication methods) is covered by the new Client Authentication section. Sean will file an issue on cache bounds (point 4). On SSRF (point 3), they suggest adding DNS rebinding and a fetch timeout. Emelia says rebinding is covered by the referenced OWASP cheat sheet, so restating it is open. On point 6, the draft does not reference RFC 8252, and a pointer for native clients may help. On point 7, Emelia says the AS should read the document's scope and intersect it with what it is willing to grant. Sean's AS ignores that member and says that if this is the intent, nothing needs adding. No draft text changed. The source was truncated.",
+      "summary_ja": "Sean MacGuire は MCP クライアントとネイティブアプリが利用する OAuth 2.1 の認可サーバーを運用しており、7 点の所見を挙げた。それに対して Emelia（著者または編集者）が各点に回答した。Sean は 1 点目（client_id の比較は RFC 3986 6.2.1 節の単純な文字列比較で既に規定されている）と 2 点目（認可サーバーのホストごとに 1 文書とするのは自分たちの選択である）を取り下げた。5 点目（クライアント認証方式の制限）は、新設の Client Authentication 節で扱われている。Sean はキャッシュ期間の上下限（4 点目）について issue を立てる予定である。SSRF 対策（3 点目）については、DNS rebinding とフェッチのタイムアウトを追記する案が出ている。Emelia は rebinding が参照先の OWASP チートシートで扱われているため、再掲するかは未決としている。6 点目については、ドラフトが RFC 8252 を参照しておらず、ネイティブクライアント向けの参照があると有用かもしれない。7 点目について Emelia は、認可サーバーは文書内の scope を読み、許可する範囲との積集合を取るべきだと述べた。Sean の認可サーバーはそのメンバーを無視しており、それが意図なら追記は不要としている。ドラフト本文の変更はない。資料は途中で切り詰められている。",
+      "title": "Implementation report:draft-ietf-oauth-client-id-metadata-document at an AS serving native apps and MCP clients (3 new messages)",
+      "updated_at": "2026-11-17T07:59:41+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/Gg-XRhIkKakzC1ay6QhKkRimrw8/",
       "use_cases": [
-        "Implementers of delegation-chain verifiers who must decide whether a leaf at the root maximum depth is valid.",
-        "Deployers who need a human approval to bind to one exact action inside a broader delegated grant.",
-        "Enforcement points that must state how fresh their revocation state has to be."
+        "An AS that accepts MCP clients and native apps by URL-based client IDs and must harden its metadata fetcher against SSRF and DNS rebinding.",
+        "A deployer deciding whether to bound the AS-side cache of client metadata documents, or to limit metadata-document clients to public clients.",
+        "A native app that publishes redirect URIs in its document and the AS that must apply RFC 8252 rules to that list."
       ],
       "use_cases_ja": [
-        "ルートの最大深さにあるリーフを有効とするか判断する必要がある、委任チェーン検証器の実装者。",
-        "より広い委任許可の中で、人による承認を一つの具体的な操作に束縛したい運用者。",
-        "失効状態をどの程度新しく保つべきかを定める必要がある、実施ポイントの実装者。"
+        "URL ベースのクライアント ID で MCP クライアントやネイティブアプリを受け入れる認可サーバーが、メタデータ取得処理を SSRF や DNS rebinding に対して堅牢にしたい場合。",
+        "クライアントメタデータ文書の認可サーバー側キャッシュに上下限を設けるか、メタデータ文書クライアントを公開クライアントに限定するかを検討する場合。",
+        "ネイティブアプリが文書内にリダイレクト URI を公開し、認可サーバーがその一覧に RFC 8252 の規則を適用する必要がある場合。"
       ]
     },
     "mail:GmKE3c79_SYg6u67lPViOq2L_Eo": {
@@ -449,40 +408,6 @@
         "鍵のローテーションを計画する発行者は、退役した鍵をどのくらいの期間公開し続けるべきかを知る必要がある。"
       ]
     },
-    "mail:TBcBJFPZ9FOUaegDVgM2Lyg82MY": {
-      "diagram": "",
-      "first_seen": "2026-11-09",
-      "headline": "A reply on draft-williams-oauth-poi-core-00 supplies a sample PSEA token and two schema details, but the message is thin.",
-      "headline_ja": "draft-williams-oauth-poi-core-00 への返信で、PSEA トークンのサンプルとスキーマ上の二点が示されているが、内容は限られている。",
-      "id": "mail:TBcBJFPZ9FOUaegDVgM2Lyg82MY",
-      "kind": "mail",
-      "related": [],
-      "significance": "routine",
-      "summary": "The message is a reply from Mohamad to Paul, with the subject announcing draft-williams-oauth-poi-core-00 but no text of that draft in the file. It attaches a -03 baseline token produced and verified with a reference verifier, with action payload, RFC 8785 bytes, op, tier, iss, aud and the enrolled public key, stated to be a test key and not a conformance vector. It notes the media type is application/psea+jwt while the protected-header typ is psea-proof+jwt, and that the token is valid for 300 seconds from iat. The 31 conformance cases are in the psea-spec repository. What draft-williams-oauth-poi-core-00 defines cannot be determined from this file.",
-      "summary_ja": "件名は draft-williams-oauth-poi-core-00 の発表だが、本文は Mohamad から Paul への返信であり、そのドラフトの内容は含まれていない。リファレンス検証器で生成・検証した -03 のベースライントークン（アクションペイロード、RFC 8785 バイト列、op、tier、iss、aud、登録済み公開鍵）が添付されており、テスト用の鍵で適合性ベクターではないと明記されている。メディアタイプは application/psea+jwt で、保護ヘッダーの typ は psea-proof+jwt であること、トークンは iat から 300 秒間有効であることが述べられている。31 件の適合性ケースは psea-spec リポジトリにある。draft-williams-oauth-poi-core-00 自体の内容はこのファイルからは判断できない。",
-      "title": "New Draft: draft-williams-oauth-poi-core-00 (Proof-of-Intent Core)",
-      "updated_at": "2026-11-09T22:26:02+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/TBcBJFPZ9FOUaegDVgM2Lyg82MY/",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
-    "mail:UMe0spt0IDpINAbNX19Ss-r5Dcc": {
-      "diagram": "",
-      "first_seen": "2026-11-09",
-      "headline": "A side meeting on Attenuating Authorization Tokens is set for IETF 127 on Monday 16 November.",
-      "headline_ja": "IETF 127 の 11 月 16 日（月）に Attenuating Authorization Tokens のサイドミーティングが開かれる。",
-      "id": "mail:UMe0spt0IDpINAbNX19Ss-r5Dcc",
-      "kind": "mail",
-      "related": [],
-      "significance": "routine",
-      "summary": "Niki Aimable Niyikiza announces a side meeting on Monday 16 November, 11:15 to 12:15 PST in Continental 7, also on Webex. The agenda covers implementation experience, integrations with HTTP APIs, MCP, A2A and agent frameworks, what belongs in the core document versus profiles, and alignment with related delegation chain drafts in OAuth and WIMSE, including common test vectors. This is an announcement only and contains no technical change.",
-      "summary_ja": "Niki Aimable Niyikiza が、11 月 16 日（月）11:15〜12:15 PST に Continental 7 と Webex でサイドミーティングを開くと告知した。議題は、実装経験、HTTP API・MCP・A2A・エージェントフレームワークとの統合、コア文書とプロファイルの切り分け、OAuth と WIMSE の関連する委任チェーン系ドラフトとの整合（共通テストベクターを含む）である。告知のみで、技術的な変更はない。",
-      "title": "IETF 127 side meeting: Attenuating Authorization Tokens, Monday 11:15",
-      "updated_at": "2026-11-09T22:26:02+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/UMe0spt0IDpINAbNX19Ss-r5Dcc/",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
     "mail:WixDZ1_uCFhHcyVW7y0ao-hXWpQ": {
       "diagram": "",
       "first_seen": "2026-11-12",
@@ -504,6 +429,29 @@
       "use_cases_ja": [
         "エージェント向け認可トークンの作成者が、リクエスト単位の承認をトークン内に持たせるか、外部の証明を参照させるかを決める場合。",
         "同一の検証ドメインに複数の強制点を置く運用者が、リプレイ状態をそれらの間で共有する必要があるかを判断する場合。"
+      ]
+    },
+    "mail:Y6RNjJVYx4DVyPbMWZX6EmA-424": {
+      "diagram": "",
+      "first_seen": "2026-11-17",
+      "headline": "A new individual draft proposes that OIDC metadata publish supported JWT signing algorithms and let clients request one, to ease PQC adoption.",
+      "headline_ja": "OIDC のメタデータでサポートする JWT 署名アルゴリズムを公開し、クライアントが 1 つを要求できるようにする新規個人ドラフトの提案で、PQC への移行を容易にすることを狙う。",
+      "id": "mail:Y6RNjJVYx4DVyPbMWZX6EmA-424",
+      "kind": "mail",
+      "related": [],
+      "significance": "new-proposal",
+      "summary": "Breno announced draft-demedeiros-oidc-crypto-agility. It would let OIDC authorization metadata publish the supported JWT signing algorithms and let the client request one of them in the authorization request. It also adds a parameter to filter algorithms out of the published key sets at the jwks URI. The stated motivation is to reduce friction for adopting new algorithms, particularly post-quantum cryptography in open federation contexts. The message is only an announcement, and no detailed mechanism is in the material.",
+      "summary_ja": "Breno が draft-demedeiros-oidc-crypto-agility を投稿した。OIDC の認可メタデータでサポートする JWT 署名アルゴリズムを公開し、クライアントが認可リクエストでそのうちの 1 つを要求できるようにする。加えて、jwks の URI で公開される鍵セットからアルゴリズムを絞り込むパラメーターも導入する。動機は、新しいアルゴリズムの採用時の摩擦を減らすことであり、特にオープンなフェデレーションでの耐量子暗号の採用を容易にすることである。メッセージは告知のみで、詳細な仕組みは資料に含まれていない。",
+      "title": "Submitted new I-D proposal regarding OIDC crypto agility improvement",
+      "updated_at": "2026-11-17T07:59:41+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/Y6RNjJVYx4DVyPbMWZX6EmA-424/",
+      "use_cases": [
+        "An OpenID Provider in open federation that needs to add post-quantum signature algorithms without breaking existing relying parties.",
+        "A relying party that wants to choose which signing algorithm it receives."
+      ],
+      "use_cases_ja": [
+        "オープンなフェデレーションの OpenID Provider が、既存の Relying Party を壊さずに耐量子署名アルゴリズムを追加したい場合。",
+        "Relying Party が受け取る署名アルゴリズムを選択したい場合。"
       ]
     },
     "mail:YAF9uJPEYv_O3UnckcVcEJ0zLDA": {
@@ -623,36 +571,6 @@
         "複数の RP にまたがるエージェントシステムで、共有の支出上限や呼び出し上限をどこで集計するかを決める設計者。"
       ]
     },
-    "mail:bfpR7SKa2oUmlJ0GLfNwLhyC_m8": {
-      "diagram": "sequenceDiagram\n  participant P as Approver\n  participant AS as Authorization server\n  participant V as Verifier\n  AS->>P: show disclosure object\n  P->>AS: PSEA token signed over SHA-256 of JCS bytes\n  AS->>V: authorization_evidence with as_signature and optional PSEA token\n  V->>V: compare PSEA digest with disclosure digest",
-      "first_seen": "2026-11-09",
-      "headline": "A proposal to add an optional approver-signed PSEA token to authorization_evidence, so the person's own key covers what the AS says it showed.",
-      "headline_ja": "承認者自身の署名を持つ PSEA トークンを authorization_evidence の任意メンバーとして加える提案で、AS が提示したと記録する内容に承認者の鍵の署名を付ける。",
-      "id": "mail:bfpR7SKa2oUmlJ0GLfNwLhyC_m8",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-munoz-wimse-authorization-evidence",
-          "note": "Also defines signed authorization-evidence records for agent actions, though the message does not reference it.",
-          "note_ja": "エージェント操作に対する署名付き認可証跡レコードを定義する別ドラフトだが、このメッセージでは言及されていない。",
-          "track": "ietf-wimse"
-        }
-      ],
-      "significance": "new-proposal",
-      "summary": "Mohamad comments on draft-liu-oauth-authorization-evidence-02. Section 9.4 says as_signature proves only that the AS recorded an approval, and that deployments needing more SHOULD add approver-side signatures. He cites a case reported on the AUDIT list where a server signed text the person was never shown and still passed the -02 checks. He suggests draft-yossif-psea, an EAT profile in RATS in which the approver's enrolled authenticator signs, after user verification, over the SHA-256 of RFC 8785 bytes. If those bytes are the disclosure object's JCS form, a verifier can compare the digest with the disclosure's. This would not close 9.5, since PSEA leaves trusted display out of scope. He offers proposed text and a worked example against Appendix B.",
-      "summary_ja": "Mohamad が draft-liu-oauth-authorization-evidence-02 にコメントしている。第 9.4 節は、as_signature は AS が承認を記録したことしか証明せず、それ以上が必要な運用では承認者側の署名を追加すべき（SHOULD）としている。AUDIT リストで報告された、本人に提示されていない文面にサーバーが署名しても -02 の検査を通ってしまう事例を挙げている。提案は draft-yossif-psea の利用で、これは RATS の EAT プロファイルであり、承認者の登録済み認証器がユーザー検証の後、RFC 8785 のバイト列の SHA-256 に署名する。そのバイト列を disclosure オブジェクトの JCS 形式にすれば、検証者はダイジェストを disclosure と比較できる。PSEA は信頼できる表示を対象外とするため、第 9.5 節は解決しない。任意メンバーの提案文と Appendix B に対する実例の提供を申し出ている。",
-      "title": "draft-liu-oauth-authorization-evidence-02: an approver-side signature for 9.4",
-      "updated_at": "2026-11-09T22:26:02+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/bfpR7SKa2oUmlJ0GLfNwLhyC_m8/",
-      "use_cases": [
-        "A deployment where a human approval of an agent action must be provable against a compromised or careless authorization server.",
-        "Auditors checking that the text a person approved matches the recorded disclosure."
-      ],
-      "use_cases_ja": [
-        "侵害された、または不注意な認可サーバーに対しても、エージェントの操作に対する人の承認を証明できなければならない運用。",
-        "承認された文面が記録された disclosure と一致することを確認する監査担当者。"
-      ]
-    },
     "mail:bkPyMtzoqpZhgI1RuttdKJ9RZNE": {
       "diagram": "sequenceDiagram\n participant A as Approver device\n participant AS as Authorization server\n participant V as Verifier\n AS->>A: Show disclosure and bounds\n A->>A: User verification, sign digest of canonical bytes\n A->>AS: Approver proof\n AS->>V: authorization_evidence with as_signature and optional proof\n V->>V: Compare digest, check binding, audience, freshness",
       "first_seen": "2026-11-11",
@@ -759,44 +677,6 @@
         "支払いの運用者が、短いトークン有効期間で足りるのか、オンラインの失効確認が必要かを判断する場合。"
       ]
     },
-    "mail:gcLkOg4kdUT_OAP1T3tSnKoDWGA": {
-      "diagram": "",
-      "first_seen": "2026-11-09",
-      "headline": "The AUDIT BoF proponents ask whether the OAuth WG will define record formats for authorization state that AUDIT could reuse.",
-      "headline_ja": "AUDIT BoF の提案者が、AUDIT で再利用できる認可状態の記録フォーマットを OAuth WG が作成する予定かを尋ねている。",
-      "id": "mail:gcLkOg4kdUT_OAP1T3tSnKoDWGA",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Henk, writing for the AUDIT BoF proponents, notes that the OAuth WG rechartered to include authorization and delegation of autonomous agents, which fits the AUDIT BoF at IETF 127. They ask whether the WG plans tangible record formats that an AUDIT WG could reuse, and say the BoF stance is to reuse as many existing record formats as possible. They invite cross-review and feedback from the WG experts. No answer is included and no text changed.",
-      "summary_ja": "AUDIT BoF の提案者を代表して Henk が、OAuth WG が自律エージェントの認可と委任を含むようにチャーターを改定したことは、IETF 127 の AUDIT BoF と相性が良いと述べている。AUDIT WG が再利用できる具体的な記録フォーマットを OAuth WG が作る予定があるかを尋ね、BoF の方針は既存の記録フォーマットをできるだけ再利用することだとしている。WG の専門家にクロスレビューと意見を求めている。回答は含まれず、文書の変更もない。",
-      "title": "OAUTH record formats & the AUDIT BoF",
-      "updated_at": "2026-11-09T22:26:02+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/gcLkOg4kdUT_OAP1T3tSnKoDWGA/",
-      "use_cases": [
-        "Authors of agent authorization drafts who want their records usable for auditing who authorized which action."
-      ],
-      "use_cases_ja": [
-        "誰がどの操作を認可したかを監査に使えるようにしたい、エージェント認可ドラフトの著者。"
-      ]
-    },
-    "mail:hh3_9z2RzgF3LPcvuGhNWy7IuIA": {
-      "diagram": "",
-      "first_seen": "2026-11-09",
-      "headline": "In short, the Secdir reviewer rates draft-ietf-oauth-sd-jwt-vc-26 as Ready, with all earlier concerns resolved.",
-      "headline_ja": "Secdir の査読者が draft-ietf-oauth-sd-jwt-vc-26 を「Ready」と評価し、以前の指摘はすべて解決済みとされた。",
-      "id": "mail:hh3_9z2RzgF3LPcvuGhNWy7IuIA",
-      "kind": "mail",
-      "related": [],
-      "significance": "routine",
-      "summary": "Ionuț Mihalcea posted the Secdir telechat review of draft-ietf-oauth-sd-jwt-vc-26 with the result Ready. It updates the review of -19, and the reviewer says all issues raised there were resolved or explained by the authors. The message contains no new technical findings and no text change.",
-      "summary_ja": "Ionuț Mihalcea が draft-ietf-oauth-sd-jwt-vc-26 の Secdir telechat レビューを投稿し、結果は Ready だった。-19 に対するレビューの更新であり、そこで挙げた問題はすべて著者により解決または説明されたと述べている。新たな技術的指摘や本文の変更はない。",
-      "title": "draft-ietf-oauth-sd-jwt-vc-26 telechat Secdir review",
-      "updated_at": "2026-11-09T06:38:02+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/hh3_9z2RzgF3LPcvuGhNWy7IuIA/",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
     "mail:kIBSOEWMsXmmvZy9Vh7EJBJrzV4": {
       "diagram": "",
       "first_seen": "2026-11-10",
@@ -813,6 +693,29 @@
       "url": "https://mailarchive.ietf.org/arch/msg/oauth/kIBSOEWMsXmmvZy9Vh7EJBJrzV4/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:mtGdBEyIMgDdrP7RnK89AVpcuRM": {
+      "diagram": "",
+      "first_seen": "2026-11-17",
+      "headline": "A reviewer asks whether the first hop of a PACE delegation chain could be signed with the user's own key, so a later verifier can tell the user set the limit.",
+      "headline_ja": "PACE Authorization の委任チェーンの最初のホップをユーザー自身の鍵で署名し、後続の検証者が上限をユーザーが設定したと判別できるか、という質問。",
+      "id": "mail:mtGdBEyIMgDdrP7RnK89AVpcuRM",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Blake replies to the authors of the PACE Authorization draft (addressed to Suhas and Cullen) with a scenario: a user tells an agent to book a flight with an aisle seat for at most $800, and the agent later rebooks with a second airline. Section 3.3 lets the second airline check that no hop raised the $800 limit. But section 6 says the agent's approval shows only that the agent agreed. Blake asks whether the first hop could be signed with the user's own key from section 6.3, so the second airline can tell the user set the limit. This is a question, with no answer or text change. The draft text itself is not in the material.",
+      "summary_ja": "Blake が PACE Authorization ドラフトの著者（Suhas 宛てと Cullen 宛て）に質問している。想定は、ユーザーが通路側の座席で 800 ドル以内の航空券をエージェントに予約させ、エージェントが後で別の航空会社に予約し直すという場面である。3.3 節により、2 社目の航空会社は、どのホップも 800 ドルの上限を引き上げていないことを確認できる。しかし 6 節は、エージェントの承認はエージェントが同意したことしか示さないと述べている。そこで Blake は、最初のホップを 6.3 節のユーザー自身の鍵で署名すれば、2 社目の航空会社が上限をユーザー自身が設定したと判別できるのではないか、と尋ねている。これは質問であり、回答もテキストの変更もない。ドラフトの本文自体はこの資料に含まれていない。",
+      "title": "New draft: PACE Authorization: delegation and action approval for agent dialogs:",
+      "updated_at": "2026-11-17T07:59:41+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/mtGdBEyIMgDdrP7RnK89AVpcuRM/",
+      "use_cases": [
+        "An agent re-delegating a user's constrained task, such as a booking with a price cap, to a second service that must tell who set the constraint.",
+        "A verifier of a delegation chain that must tell user-originated limits from limits the agent set."
+      ],
+      "use_cases_ja": [
+        "価格上限付きの予約のように、ユーザーが制約を付けたタスクを、エージェントが別のサービスに再委任する場面で、その制約を誰が設定したかをサービス側が判別したい場合。",
+        "委任チェーンの検証者が、ユーザー由来の制約とエージェントが設定した制約を区別したい場合。"
+      ]
     },
     "mail:r4KE4aYluE03Z7oQel0WMVgisgY": {
       "diagram": "sequenceDiagram\nparticipant C as Client\nparticipant A as Actor agent\nparticipant AS as Authorization server\nA-->>C: actor_proof signed with actor key\nC->>AS: token exchange with actor and actor_proof\nAS->>AS: verify proof, check any narrowing\nAS-->>C: token bound to actor key, marked not for client",
@@ -907,38 +810,6 @@
         "クレデンシャルを別のホルダーへ再委任するエージェントが、audience と nonce の意味を明確にする必要がある場合。"
       ]
     },
-    "pr:oauth-wg/oauth-sd-jwt-vc#457": {
-      "diagram": "",
-      "first_seen": "2026-11-09",
-      "headline": "This PR makes the types of an SD-JWT VC exactly those the Issuer asserts in vct and aka_vcts, and drops the extends-based matching.",
-      "headline_ja": "この PR は SD-JWT VC の型を発行者が vct と aka_vcts で表明したものに限定し、extends に基づく照合を削除する。",
-      "id": "pr:oauth-wg/oauth-sd-jwt-vc#457",
-      "kind": "pull-request",
-      "related": [
-        {
-          "name": "openid/OpenID4VP",
-          "note": "The PR states OpenID4VP 1.1 already matches vct_values on vct and aka_vcts and treats type extension as out of band knowledge.",
-          "note_ja": "PR は、OpenID4VP 1.1 が既に vct と aka_vcts で vct_values を照合し、型の拡張は帯域外の知識として扱うと述べている。",
-          "track": "openid"
-        }
-      ],
-      "significance": "substantive",
-      "summary": "Since -25, Section 2.2.2.2 says a credential is of a type if it is the vct value or listed in aka_vcts. The PR removes two leftovers in Section 5.4: a MAY that let a Consumer also match types through the extends property of Type Metadata, and a SHOULD that the vct type extend each type in aka_vcts, which cannot hold for unrelated types since a type can extend only one other. extends now only determines which Type Metadata is inherited. Section 5.4 points to the recommendation in 2.2.2.2 to list extended types in aka_vcts, and Section 7.7 now says aka_vcts types are asserted by the Issuer like the vct type, with the MUST NOT unchanged. The PR says there is no new requirement, that OpenID4VP 1.1 already matches vct_values on vct and aka_vcts, and that ISO/IEC 18013-5 will cite a dated draft at the end of November.",
-      "summary_ja": "-25 以降、第 2.2.2.2 節は、クレデンシャルの型は vct の値であるか aka_vcts に列挙されたものであると定めている。この PR は第 5.4 節に残っていた二点を削除する。一つは、Consumer が Type Metadata の extends プロパティでも型を照合してよいとする MAY、もう一つは vct の型が aka_vcts の各型を extends すべきとする SHOULD で、型は他の一つの型しか extends できないため、無関係な型が並ぶ場合には満たせない。extends は継承する Type Metadata を決めるだけになる。第 5.4 節は、拡張した型を aka_vcts に列挙するという第 2.2.2.2 節の推奨を参照し、第 7.7 節は aka_vcts の型を vct の型と同様に発行者が表明したものと記述する。後続の MUST NOT は変更されない。PR は、新しい要件はないこと、OpenID4VP 1.1 は既に vct と aka_vcts で vct_values を照合していること、ISO/IEC 18013-5 が 11 月末に日付付きドラフトを引用する予定であることを述べている。",
-      "title": "oauth-wg/oauth-sd-jwt-vc#457: Clarify that the types of an SD-JWT VC are those asserted in vct and aka_vcts",
-      "updated_at": "2026-11-09T22:26:02+00:00",
-      "url": "https://github.com/oauth-wg/oauth-sd-jwt-vc/pull/457",
-      "use_cases": [
-        "A verifier matching vct_values must not infer extra types from Type Metadata extends, so results do not depend on which side fetched metadata.",
-        "An Issuer whose credential type extends a parent type that verifiers request should list that parent in aka_vcts.",
-        "An ISO/IEC 18013-5 mdoc profile that delegates type matching to this document."
-      ],
-      "use_cases_ja": [
-        "vct_values を照合する検証者は、Type Metadata の extends から追加の型を推定してはならず、どちら側がメタデータを取得したかで結果が変わらなくなる。",
-        "検証者が要求する親の型を extends している型の発行者は、その親の型を aka_vcts に列挙すべきである。",
-        "型の照合を本文書に委ねている ISO/IEC 18013-5 の mdoc プロファイル。"
-      ]
-    },
     "pr:oauth-wg/oauth-v2-1#283": {
       "diagram": "",
       "first_seen": "2026-11-13",
@@ -960,10 +831,10 @@
   "overflow": [],
   "triage": {
     "draft-ietf-oauth-client-id-metadata-document": {
-      "date": "2026-11-16",
+      "date": "2026-11-17",
       "priority": "high",
-      "reason": "A deployment report proposes seven text changes, including SSRF limits, cache clamping and public-client restriction.",
-      "reason_ja": "実装報告が SSRF 対策、キャッシュ期間の制限、公開クライアントへの限定など七つの本文変更を提案している。"
+      "reason": "Fresh implementation report with editor replies. It raises possible additions on SSRF/DNS rebinding, cache bounds, RFC 8252 and scope handling.",
+      "reason_ja": "編集者の回答付きの新しい実装報告があり、SSRF や DNS rebinding、キャッシュの上下限、RFC 8252、スコープの扱いについて追記の可能性が出ている。"
     },
     "draft-ietf-oauth-delegate-sd-jwt": {
       "date": "2026-11-10",

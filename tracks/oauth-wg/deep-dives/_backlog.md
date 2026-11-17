@@ -1,6 +1,6 @@
-# OAuth WG Backlog (2026-11-16)
+# OAuth WG Backlog (2026-11-17)
 
-- generated_at_utc: `2026-11-16T22:07:44+00:00`
+- generated_at_utc: `2026-11-17T07:58:05+00:00`
 
 - [ ] `draft-ietf-oauth-sd-jwt-vc` score=125 updated=2026-11-16T10:45:13Z
 - [ ] `draft-ietf-oauth-status-list` score=83 updated=2026-11-12T21:31:43Z
@@ -24,7 +24,7 @@
 
 Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.
 
-- **high** `draft-ietf-oauth-client-id-metadata-document`: A deployment report proposes seven text changes, including SSRF limits, cache clamping and public-client restriction.
+- **high** `draft-ietf-oauth-client-id-metadata-document`: Fresh implementation report with editor replies. It raises possible additions on SSRF/DNS rebinding, cache bounds, RFC 8252 and scope handling.
 - **high** `draft-ietf-oauth-delegate-sd-jwt`: PR #15 restructures where security claims live in the KB-SD-JWT and defines their delegation semantics.
 - **high** `draft-ietf-oauth-identity-assertion-authz-grant`: New issue #161 reports a conflict between the §4.3.3 and §4.5 rules, and #121 was closed this week.
 - **high** `draft-ietf-oauth-sd-jwt-vc`: -27 changes how type matching works: types come only from vct and aka_vcts, and extends no longer adds types.
