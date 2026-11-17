@@ -34,6 +34,11 @@
       "at": "2026-11-17T07:59:42+00:00",
       "text": "Quiet run: AppAuth-iOS added instance-method variants of OIDAuthorizationService APIs, and openid/fapi merged one PR on structure of implementation advice. Neither shows protocol or wire-format changes.",
       "text_ja": "動きは小さい。AppAuth-iOS に OIDAuthorizationService のインスタンスメソッド版が追加され、openid/fapi では実装アドバイスの構成に関する PR が1件マージされた。プロトコルやワイヤフォーマットの変更は確認できない。"
+    },
+    {
+      "at": "2026-11-17T20:59:40+00:00",
+      "text": "The openid/claims-aggregation repo had 32 commits in a week, adding a dedicated Claim Set Endpoint, privacy controls, and RP request validation. Only commit titles are available, so details are unverified. sharedsignals has one commit titled \"Drop event signatures (#368)\".",
+      "text_ja": "openid/claims-aggregation で1週間に32コミットがあり、専用の Claim Set Endpoint、プライバシー制御、RP リクエスト検証が追加された。ただし入手できたのはコミットタイトルのみで、詳細は未確認である。sharedsignals には \"Drop event signatures (#368)\" という1コミットがあった。"
     }
   ],
   "items": {
@@ -179,6 +184,31 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "repo:openid/claims-aggregation:2026-11-17T16:27:16Z": {
+      "diagram": "",
+      "first_seen": "2026-11-17",
+      "headline": "claims-aggregation merged several PRs covering a Claim Set Endpoint, CP token security, subject privacy controls and RP request validation.",
+      "headline_ja": "claims-aggregation で Claim Set Endpoint、CP のトークン保護、Subject のプライバシー制御、RP リクエスト検証に関する複数の PR がマージされた。",
+      "id": "repo:openid/claims-aggregation:2026-11-17T16:27:16Z",
+      "kind": "repo-activity",
+      "related": [],
+      "significance": "substantive",
+      "summary": "Only commit titles are available (15 of 32 are shown). PR #50 defines a dedicated CP Claim Set Endpoint and a subless JWT profile, restores Claims Endpoint names, and requires RS256 interoperability. PR #49 defines privacy limits and Subject controls for stored Claim Sets, including deletion intent protection, disclosure history, export controls, and legal retention. PR #48 defines CP authentication, token protection and Claim Set storage. PR #47 defines RP request validation and per-RP consent, with tighter PKCE enforcement and source-aware consent. PR #46 concerns claim set freshness. The actual spec text is not in the material, so exact behaviour is not verified.",
+      "summary_ja": "入手できたのはコミットタイトルのみである（32件中15件）。PR #50 は専用の CP Claim Set Endpoint と subless JWT プロファイルを定義し、Claims Endpoint の名称を戻し、RS256 の相互運用性を必須とする。PR #49 は保存された Claim Set に対するプライバシー上の制限と Subject の制御（削除意図の保護、開示履歴、エクスポート制御、法的保持の考慮）を定義する。PR #48 は CP の認証、トークン保護、Claim Set の保管を定義する。PR #47 は RP リクエスト検証と RP ごとの同意を定義し、PKCE の強制と取得元を考慮した同意を厳格化する。PR #46 は claim set の鮮度に関するものである。仕様本文は資料に含まれないため、具体的な挙動は未確認である。",
+      "title": "openid/claims-aggregation: 32 new commits on the default branch",
+      "updated_at": "2026-11-17T20:59:40+00:00",
+      "url": "https://github.com/openid/claims-aggregation",
+      "use_cases": [
+        "A claims provider implementer deciding how to expose stored Claim Sets and authenticate callers.",
+        "An RP integrating with a claims aggregation service that needs to know PKCE and consent requirements.",
+        "A privacy reviewer assessing deletion, disclosure history and retention handling for Subjects."
+      ],
+      "use_cases_ja": [
+        "保存された Claim Set の公開方法と呼び出し元の認証方法を決める claims provider の実装者。",
+        "claims aggregation サービスと連携し、PKCE と同意の要件を把握する必要がある RP。",
+        "Subject の削除、開示履歴、保持の扱いを評価するプライバシーのレビュー担当者。"
+      ]
+    },
     "repo:openid/fapi:2026-11-17T07:18:28Z": {
       "diagram": "",
       "first_seen": "2026-11-17",
@@ -267,6 +297,23 @@
       "use_cases_ja": [
         "Shared Signals の送信側・受信側の実装者は、安定した 1.0 の文書とは別に、1.1 の変更が書かれる場所を追えるようになる。"
       ]
+    },
+    "repo:openid/sharedsignals:2026-11-17T18:12:29Z": {
+      "diagram": "",
+      "first_seen": "2026-11-17",
+      "headline": "sharedsignals merged a commit titled \"Drop event signatures (#368)\"; no further detail is available.",
+      "headline_ja": "sharedsignals で \"Drop event signatures (#368)\" というコミットがマージされたが、詳細は不明である。",
+      "id": "repo:openid/sharedsignals:2026-11-17T18:12:29Z",
+      "kind": "repo-activity",
+      "related": [],
+      "significance": "routine",
+      "summary": "The material is a single commit title, \"Drop event signatures (#368)\". It suggests per-event signatures are being removed from the Shared Signals spec, but the diff and rationale are not included, so the scope is unverified.",
+      "summary_ja": "資料は \"Drop event signatures (#368)\" という1件のコミットタイトルのみである。Shared Signals 仕様からイベント単位の署名が削除されることを示唆するが、差分と理由は含まれず、範囲は未確認である。",
+      "title": "openid/sharedsignals: 1 new commit on the default branch",
+      "updated_at": "2026-11-17T20:59:40+00:00",
+      "url": "https://github.com/openid/sharedsignals",
+      "use_cases": [],
+      "use_cases_ja": []
     }
   },
   "overflow": [],
@@ -276,6 +323,12 @@
       "priority": "high",
       "reason": "Identifier renames and snake_case change in the S2S work are breaking for implementers.",
       "reason_ja": "S2S作業における識別子の改名とsnake_case化は、実装者にとって互換性を破る変更である。"
+    },
+    "openid/claims-aggregation": {
+      "date": "2026-11-17",
+      "priority": "high",
+      "reason": "32 commits in a week, including a new Claim Set Endpoint, privacy controls and RP request validation.",
+      "reason_ja": "1週間で32コミットあり、新しい Claim Set Endpoint、プライバシー制御、RP リクエスト検証が含まれる。"
     }
   }
 }
