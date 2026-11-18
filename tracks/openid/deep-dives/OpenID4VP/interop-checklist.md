@@ -1,17 +1,27 @@
 # Interop Checklist
 
-- [ ] Check which of the 1.0 and 1.1 drafts the implementation targets, and confirm that each merged change (for example #744, #782, #790, #800) is applied in that version's text.
-- [ ] Test age_over_nn claim matching (#800) with a query for one age threshold against a credential that holds a different threshold, and record what the wallet returns.
-- [ ] Test `vct` matching and `doctype` matching (#744, #803), including the `vct_values` and `doctype_value` parameters, with a matching and a non-matching credential.
-- [ ] Return an SD-JWT VC in `vp_token` as defined after #782, and confirm the verifier accepts it. Also test a credential without Holder Binding (#783).
-- [ ] Confirm that an empty object in a VP Token is not accepted by the verifier as an error signal (#745).
-- [ ] Send a request with unsupported `transaction_data` and check that the wallet follows the terminate/reject/return behaviour of #790. Re-check after #808 is resolved.
-- [ ] Send verifier metadata that is invalid and check that the wallet returns `invalid_request` (#801).
-- [ ] Check that client metadata lists `encrypted_response_enc_values_supported` (#802) and that the wallet picks an encryption method from it.
-- [ ] For each Client Identifier Prefix, check whether a Request URI response may be unsigned (#788), and reject an unsigned one where the prefix requires a signed request.
-- [ ] Check the signed Request Object example in Section 5.4 against the final text (#809) before using it as a test vector.
-- [ ] Test nonce handling with a short nonce (#722) and confirm the wallet or verifier rejects or flags it as the final text requires.
-- [ ] Over the DC API, check that `expected_origins` processing and platform-specific origins follow #719 and #761.
-- [ ] Verify that a direct post response is matched to the correct user session (#734), including a response replayed from another session.
-- [ ] Check that the `openid_federation` prefix is used consistently in examples (#776) and cross-references (#775).
-- [ ] Run the OpenID conformance tests for wallets and verifiers linked from the README against the target version.
+Every item tests a MUST or MUST NOT. Section numbers are for 1.0 Final unless marked errata (the `1.0/` draft at `66f5ff9`) or 1.1. SHOULD-level behaviour, such as `age_over_NN` selection and HTTP redirect handling, is in the README's Experiments instead.
+
+- [ ] Send a Request Object without `typ: oauth-authz-req+jwt` and check that the Wallet does not process it (Section 5).
+- [ ] Send a Request Object whose `client_id` differs from the `client_id` URL parameter, including a different prefix, and check that the Wallet terminates request processing (Section 5.10.1). Under the errata text, terminating means the Wallet returns no response at all (errata Section 5.10.1, #790).
+- [ ] With `request_uri_method=post`, send a `wallet_nonce` and return a Request Object without it, then answer the POST with an HTTP error. In both cases the Wallet MUST terminate (Sections 5.10.1 and 5.10.2).
+- [ ] For `x509_san_dns`, `x509_hash`, `decentralized_identifier` and `verifier_attestation`, check that the Wallet validates the signature with the key the prefix names and validates the certificate chain or attestation. Send an unsigned request with each and expect `invalid_request` (Sections 5.9.3 and 8.5).
+- [ ] For `x509_san_dns` outside the DC API, check that a `redirect_uri` whose FQDN differs from the Client Identifier is rejected unless the Wallet trusts the Client Identifier (Section 5.9.3).
+- [ ] For `openid_federation`, send `client_metadata` that contradicts the Trust Chain and check that the Wallet ignores it (Section 5.9.3).
+- [ ] Send `client_id=origin:...` in a request and check that the Wallet rejects it (Section 5.9.3).
+- [ ] For `redirect_uri` with a Request URI, return an `alg: none` Request Object and check that an errata or 1.1 Wallet accepts it. A Final-text Wallet expects a signed object, which the `redirect_uri` prefix cannot provide (Section 5.10.1, errata Section 5.10.1, #788).
+- [ ] Replay a Verifiable Presentation from another transaction and one made for another Client Identifier, and check that the Verifier rejects the response (Section 14.1.2).
+- [ ] Request a Credential with `require_cryptographic_holder_binding: false` outside the DC API and check that the Verifier sends a fresh `state` and rejects a response whose `state` differs (Section 5.3).
+- [ ] Check the VP Token shape: keys are Credential Query `id` values, exactly one Presentation per key unless `multiple` is `true`, and no key for an optional query with no match (Section 8.1). Under the errata text, the VP Token MUST NOT be empty, and a Wallet with nothing to return sends an error response (errata Sections 8 and 8.1, #745).
+- [ ] Send a DCQL query with `claim_sets` that the Wallet cannot satisfy, and one with a required `credential_sets` option it cannot satisfy. Check that the Wallet does not return that Credential in the first case and returns no Credentials at all in the second (Sections 6.4.1 and 6.4.2).
+- [ ] Return a Credential that violates the query's `values` or `trusted_authorities` and check that the Verifier rejects it on its own checks (Sections 6.4.1 and 14.9).
+- [ ] With `response_mode=direct_post`, send both `response_uri` and `redirect_uri` and expect `invalid_request` (Section 8.2). Check that the Response URI answers 200 with JSON, and that the Wallet redirects when the JSON has a `redirect_uri` (Section 8.2).
+- [ ] With `direct_post` and a returned `redirect_uri`, fetch the response from the Verifier frontend without the Response Code and check that the Verifier refuses (Section 14.2).
+- [ ] With `direct_post.jwt` or `dc_api.jwt`, check that the JWE `alg` equals the `alg` of the chosen JWK, that the JWE header repeats the key's `kid` when the key has one, and that `enc` is `A128GCM` when `encrypted_response_enc_values_supported` is absent (Section 8.3).
+- [ ] Send `transaction_data` to a Wallet that does not support it and check that it rejects the request (Sections 5 and 8.4). Under the errata text it MUST NOT return a VP Token; an error response SHOULD use `invalid_transaction_data`, or the Wallet may cancel the flow (errata Sections 8.4 and 8.5, #790). Re-check after #808, which is open.
+- [ ] DC API: check that the request uses `openid4vp-v1-unsigned`, `openid4vp-v1-signed` or `openid4vp-v1-multisigned` to match its form (Section A.1).
+- [ ] DC API, signed request: check that it carries `client_id` and `expected_origins`, then send one whose `expected_origins` does not include the calling Origin and check that the Wallet returns an error (Section A.2). Under the errata text, the comparison is a simple string comparison, so `https://verifier.example.com/` does not match `https://verifier.example.com` (errata Section A.2, #719).
+- [ ] DC API: check that the Presentation's audience is `origin:` plus the Origin, also for signed requests, and not the Client Identifier (Section A.4).
+- [ ] SD-JWT VC under the errata text: check that each Presentation is a compact SD-JWT or SD-JWT+KB string and that the JWS JSON Serialization is not used (errata Section B.3.6, #782).
+- [ ] W3C VC with `require_cryptographic_holder_binding: false`: check that the Wallet returns the Verifiable Credential itself, not wrapped in a Verifiable Presentation (Section B.1; errata Section B.1, #783).
+- [ ] 1.1 only: check that a Credential whose `vct` and `aka_vcts` are not in `vct_values`, and an mdoc whose `docType` is not `doctype_value`, do not satisfy the Credential Query (1.1 Sections B.3.5 and B.2.3, #744). 1.0 peers do not have this rule until #803 merges.
