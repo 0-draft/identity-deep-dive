@@ -2,7 +2,7 @@
 
 Collect, score, and surface deep-dive candidates across OAuth WG, WIMSE, and OpenID Foundation specs.
 
-**Site: <https://0-draft.github.io/identity-deep-dive/>** (English, [日本語](https://0-draft.github.io/identity-deep-dive/ja/))
+**Site: <https://0-draft.github.io/identity-deep-dive/>** (English, [日本語](https://0-draft.github.io/identity-deep-dive/ja/)) · README: [日本語](README.ja.md)
 
 This repo watches identity standards work, explains what changed with Claude, and keeps the results as data and a site:
 
