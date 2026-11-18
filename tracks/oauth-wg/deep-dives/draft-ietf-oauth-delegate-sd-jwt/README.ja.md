@@ -2,11 +2,11 @@
 
 > 一言で言うと: Delegate SD-JWT は SD-JWT (RFC 9901) を拡張し、Key Binding JWT 自体を SD-JWT にできるようにする。これにより Holder は以後の提示を Delegate Holder に委任でき、Verifier は連鎖をたどって元の Issuer まで結び付けられる。
 
-## 仕組みの概要
+## 概要
 
 SD-JWT では、Holder は Verifier に見せる claim を選び、`cnf` 鍵の所持を証明できる。Verifier は SD-JWT を転送し、さらに絞り込むことはできるが、元の SD-JWT+KB の提示を自分が受け取ったことは証明できず、トランザクションデータの一部を絞り込むこともできない (Section 1)。この draft は委任を扱う。たとえばユーザーに代わって購入する AI エージェントのような Delegate Holder に、Holder が後の提示を任せたい場合である。仕組みの中心は新しい Key Binding SD-JWT (KB-SD-JWT) である。KB-SD-JWT は KB-JWT の代わりになり、選択的開示可能な claim を持てる Delegate Payload に署名し、連鎖の次の段では Issuer 署名 JWT の役割を果たす (Section 1、4)。最後に通常の KB-JWT を付けると、Delegate Holder は最後の Delegate Payload に記された鍵の所持を証明できる (Section 4.2)。この構造を dSD-JWT と呼び、末尾に KB-JWT が付くものを dSD-JWT+KB と呼ぶ。対象は採択後最初の Working Group 版である -00 (2026 年 10 月 26 日) である (Appendix C)。
 
-## 動作
+## 仕組み
 
 ```mermaid
 sequenceDiagram
@@ -45,7 +45,7 @@ sequenceDiagram
 - 仕様・文書の変更の要約: -00 は draft-gco-oauth-delegate-sd-jwt から採択された「Initial Working Group Draft」である。Appendix C には、採択前の -01 で編集上の修正と `kb+sd-jwt+kb` から `kb-sd-jwt+kb` への名称変更が行われたとある。draft のリポジトリにあるタグは draft-gco-oauth-delegate-sd-jwt-00 (2026-03-06) と draft-ietf-oauth-delegate-sd-jwt-00 (2026-10-22) だけなので、以下の変更はこの 2 つのタグの間で見たものであり、個人 draft の -01 と WG の -00 のどちらで入ったかは区別していない。Compact Serialization では、連鎖した KB-SD-JWT 同士の間も含め、すべての KB-SD-JWT の前に空の要素がちょうど 1 つ必要になった (`~` ではなく `~~`) (Section 5.1.1)。JSON Serialization のダイジェストは、等価な Compact Serialization に対して計算する (Section 5.1.2)。最後の Delegate KB-JWT の `sd_hash` は REQUIRED になった (Section 5.1.3)。dSD-JWT の最後の KB-SD-JWT の `typ` は `kb+sd-jwt` または `kb-sd-jwt+kb` となり、どちらの登録メディアタイプとも一致しなかった `kb-sd-jwt` を置き換えた (Section 6、手順 4)。Key Binding が必要な場合、Key Binding のない dSD-JWT は拒否される (Section 6、手順 5)。`delegate_disclosures` は選択的開示可能な claim の Disclosure を持つようになった (Section 7.1)。この draft は dSD-JWT と dSD-JWT+KB の形式、`delegate_payload` claim、`issuer_jwt_hash` claim、`kb+sd-jwt` と `kb-sd-jwt+kb` の種別、検証手順、OpenID4VP のトランザクションデータ種別を定義する。
 - 互換性・移行上の懸念: この draft は RFC 9901 に基づき、KB-JWT の解析方法を変える。以前の `kb+sd-jwt+kb` という名前に依存していた実装は `kb-sd-jwt+kb` へ移行する必要がある。RFC 9901 Section 4 の ABNF では Disclosure は 1 文字以上の base64url であり、SD-JWT+KB は 1 つの JWT で終わるので、dSD-JWT はこの文法に合わず、文法どおりの RFC 9901 解析器は受け付けない。この点は draft 自体には書かれていない。Verifier が委任トークンを受け付けることをどう示すかも、draft には記載がない。
 
-## 技術的分析
+## 技術分析
 
 - 脅威モデルへの影響: Section 8.1 は、Verifier がすべての KB-SD-JWT と直前のトークンへの結び付きを検証することが極めて重要 (critical) だと述べる。そうしないと、Holder の `cnf` 鍵が再利用された場合に、悪意のある Delegate Holder が連鎖の部品を取り違えられるためである。検査を必須にしているのは Section 6 で、どの手順が失敗しても処理を中止しなければならない (MUST)。Section 8 は、委任する Holder は Issuer として振る舞うため、Issuer の考慮事項がすべて適用されると述べる。Section 8.2 は、委任の制限を可視の claim として入れてよい (MAY) と述べるだけである。Delegate Payload は前のトークンが許した範囲を狭めることしかできない、という規則は draft にない。Section 8.3 は、個人の Holder には失効が難しく、短い `exp` と制約 claim でこの問題を緩和できると述べる。
 - プロトコルフローへの影響: `sd_hash` は Disclosure を含めて直前のトークンに結び付く。Holder が Delegate Holder に以前の Disclosure の省略を許したい場合は、`sd_hash` を省き、Issuer 署名 JWT または KB-SD-JWT+KB のみを対象とする `issuer_jwt_hash` を入れなければならない (MUST) (Section 4.1、5.1.4)。検証は Section 6 に従い、各段で RFC 9901 Section 7.1 を再利用する。Section 7.1 の OpenID4VP バインディングでは、`transaction_data` に `format`、`delegate_payload_disclosure`、OPTIONAL の `delegate_disclosures` を含める。
