@@ -10,16 +10,17 @@ Section 1 によると、AI エージェントはタスクを分割して他の�
 
 ```mermaid
 sequenceDiagram
-    participant R as Root issuer
-    participant P as Parent agent
-    participant C as Child agent
-    participant E as Enforcement Point
-    R->>P: Mint DT_0 with Principal, scopes, constraints, del_max_depth
-    P->>C: Mint DT_1 with par_hash of DT_0 and narrower Authority
-    C->>E: Present chain DT_0..DT_n, DPoP proof and action
-    E->>E: Verify signatures, par_hash, depth, principal, subsumption, time
-    E->>E: Check holder binding, status list, audience and action against DT_n
-    E-->>C: Permit or deny with an outcome name
+    participant R as ルート発行者
+    participant P as 親エージェント
+    participant C as 子エージェント
+    participant E as 執行点
+    R->>P: DT_0 を発行<br/>（Principal、Authority、del_max_depth）
+    P->>C: DT_1 を発行<br/>（DT_0 の par_hash、より狭い Authority）
+    C->>E: チェーン DT_0..DT_n、<br/>DPoP 証明と操作
+    E->>E: 署名、par_hash、<br/>深さ、主体を検証
+    E->>E: 包含関係と有効期間を検証
+    E->>E: 保持者バインディング、ステータス、<br/>audience と操作を検証
+    E-->>C: 許可、または<br/>結果名付きの拒否
 ```
 
 1. ルート発行者がルート鍵で DT_0 を発行する。"sub" に Principal を、"del_depth" に 0 を設定し、"del_max_depth" と初期の Authority を設定する（Section 3、4）。

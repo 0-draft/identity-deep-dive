@@ -14,12 +14,13 @@ sequenceDiagram
     participant P as Parent agent
     participant C as Child agent
     participant E as Enforcement Point
-    R->>P: Mint DT_0 with Principal, scopes, constraints, del_max_depth
-    P->>C: Mint DT_1 with par_hash of DT_0 and narrower Authority
-    C->>E: Present chain DT_0..DT_n, DPoP proof and action
-    E->>E: Verify signatures, par_hash, depth, principal, subsumption, time
-    E->>E: Check holder binding, status list, audience and action against DT_n
-    E-->>C: Permit or deny with an outcome name
+    R->>P: Issue DT_0<br/>(Principal, Authority, del_max_depth)
+    P->>C: Issue DT_1<br/>(par_hash of DT_0, narrower Authority)
+    C->>E: Chain DT_0..DT_n,<br/>DPoP proof and action
+    E->>E: Signatures, par_hash,<br/>depth and principal
+    E->>E: Subsumption and time
+    E->>E: Holder binding, status,<br/>audience and action
+    E-->>C: Permit, or deny<br/>with an outcome name
 ```
 
 1. The root issuer mints DT_0 under a root key. It sets "sub" to the Principal, "del_depth" to 0, "del_max_depth", and the initial Authority (Sections 3, 4).
