@@ -1,0 +1,23 @@
+# Interop Checklist
+
+- [ ] Reject a token whose header or payload bytes are not exactly the JCS serialization of the parsed object, and report non_canonical (Section 3).
+- [ ] Reject duplicate member names, non-finite numbers, lone UTF-16 surrogates and integers whose magnitude exceeds 2^53-1 as malformed or under the Table 2 names (Sections 3, 6.2).
+- [ ] Reject a token missing "client_id", "cnf" or "aud", or with a null or empty-array "aud", as malformed. If -01 chains are also accepted, report which revision's rules were applied (Sections 3, 3.1).
+- [ ] Deny a chain when any token's "alg" is not on the verifier's own list, even if the signature verifies, and when the header "alg" differs from the one configured for the key (step 1).
+- [ ] Check that the built-in signer uses the fully specified "Ed25519" of RFC 9864 and not the polymorphic "EdDSA", which the reference libraries still use (Sections 3, 11).
+- [ ] Recompute "par_hash" over the exact JWS Signing Input of the parent, compare in constant time, and deny a child presented with a re-issued parent (Sections 5, 9.2).
+- [ ] Confirm del_depth is 0 at DT_0 and i at DT_i, and that n is strictly less than DT_0.del_max_depth. Test a leaf whose del_depth equals del_max_depth, which Section 10 says the niyikiza draft permits and which -03 denies as depth_invalid (Section 10, step 3).
+- [ ] Deny a chain in which any "sub" differs from DT_0's, and treat a missing or empty DT_0 "sub" as malformed (step 3, Section 3).
+- [ ] Reject a token with a second authorization detail, a detail type other than "agent_delegation", or an unknown member in the detail or in a constraint. This includes a child that adds a detail type its parent lacked (Section 4.4, vector reject_child_adds_detail_type).
+- [ ] Classify scopes by bytes in the order literal, wildcard, opaque. Reject crm.re*, crm.*.read and bare *, and check that crm.* does not cover crm or crmx.read (Section 4.1).
+- [ ] Check that a wildcard does not cover an opaque scope, an opaque scope does not cover a wildcard, and an opaque scope covers only a byte-identical child. Test a provider scope that looks like a dotted literal (Section 4.1).
+- [ ] Deny a child that omits a constraint (key, type) present in the parent, and a child that swaps types, such as "max_lifetime" under a parent "max" (Section 4.3).
+- [ ] Deny a "rank" child whose "order" differs from the parent's, and reject a "rank" whose value is not in its "order" (Sections 4.2, 4.3).
+- [ ] Reject two constraints with the same key and type in one detail, but allow a "min" and a "max" on one key (Section 4.2).
+- [ ] Treat unknown constraint types as not subsumed unless byte-identical to the parent's, and still deny at step 8 (Sections 4.2, 4.3).
+- [ ] Check step 5 at the boundary now equal to exp, which -03 denies as expired and -02 allowed (Section 6, Appendix C).
+- [ ] Deny when a present status reference cannot be fetched or its cached answer is past its time to live, and report status_unknown. Do not deny a token issued with no status reference for that reason alone (step 7).
+- [ ] Deny a cumulative constraint at step 8 when no component holds the running total, and ensure the total is not taken from the request (Sections 4.2, 6).
+- [ ] When no request is present, report the chain's validity together with the steps not performed, and do not report any action as permitted (Section 6.1).
+- [ ] Do not combine authority across chains, and let one failed chain leave another unaffected (Section 6.3).
+- [ ] Report denials with the Table 2 outcome name that matches the first failed check, and run the vectors against a -03 set, not the -01 set, which does not conform (Section 6.2, Appendix B).
