@@ -15,8 +15,8 @@ sequenceDiagram
     participant D as Delegate Holder
     participant V as Verifier
     I->>H: SD-JWT+KB と全 Disclosure
-    H->>D: KB-SD-JWT と新しい Disclosure を含む dSD-JWT または dSD-JWT+KB
-    D->>V: 選択した Disclosure を含む dSD-JWT または dSD-JWT+KB
+    H->>D: KB-SD-JWT と新しい Disclosure を含む<br/>dSD-JWT または dSD-JWT+KB
+    D->>V: 選択した Disclosure を含む<br/>dSD-JWT または dSD-JWT+KB
     V->>V: Issuer までの連鎖を検証
 ```
 

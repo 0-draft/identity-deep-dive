@@ -15,8 +15,8 @@ sequenceDiagram
     participant D as Delegate Holder
     participant V as Verifier
     I->>H: SD-JWT+KB and all Disclosures
-    H->>D: dSD-JWT or dSD-JWT+KB with KB-SD-JWT and new Disclosures
-    D->>V: dSD-JWT or dSD-JWT+KB with selected Disclosures
+    H->>D: dSD-JWT or dSD-JWT+KB<br/>with KB-SD-JWT and new Disclosures
+    D->>V: dSD-JWT or dSD-JWT+KB<br/>with selected Disclosures
     V->>V: Verify the chain back to the Issuer
 ```
 
