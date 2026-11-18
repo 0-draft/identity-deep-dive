@@ -65,9 +65,9 @@ sequenceDiagram
 
 ## 実験
 
-- [ ] Lab 1: RFC 9901 の SD-JWT から 1 段の委任を持つ dSD-JWT を作り、標準の RFC 9901 解析器が拒否すること、Section 6 のプロトタイプ Verifier が受理することを確認する。
-- [ ] Lab 2: 同じ委任を `sd_hash` 版と `issuer_jwt_hash` 版で作り、前の SD-JWT から Disclosure を 1 つ除いたとき、どちらが検証に通るかを確認する。
-- [ ] Lab 3: 1 つの Holder `cnf` 鍵を 2 つの委任で再利用し、KB-SD-JWT を連鎖の間で入れ替えて、Section 8.1 の検査が不一致を検出するかを試す。
+- [x] Lab 1: RFC 9901 の SD-JWT から 1 段の委任を持つ dSD-JWT を作り、標準の RFC 9901 解析器が拒否すること、Section 6 のプロトタイプ Verifier が受理することを確認する。
+- [x] Lab 2: 同じ委任を `sd_hash` 版と `issuer_jwt_hash` 版で作り、前の SD-JWT から Disclosure を 1 つ除いたとき、どちらが検証に通るかを確認する。
+- [x] Lab 3: 1 つの Holder `cnf` 鍵を 2 つの委任で再利用し、KB-SD-JWT を連鎖の間で入れ替えて、Section 8.1 の検査が不一致を検出するかを試す。
 
 ## 出典
 

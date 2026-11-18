@@ -1,0 +1,73 @@
+draft-ietf-oauth-delegate-sd-jwt-00 hands-on labs (RFC 9901 + draft Sections 5.1, 6, 8.1)
+Python 3.15.2, cryptography 50.0.2
+verifier clock 1794960000, Ed25519 keys from fixed labels, SHA-256 everywhere
+
+== Lab 1: one delegation; RFC 9901 parser vs Section 6 prototype
+  dSD-JWT+KB components (10): JWT ~ D ~ D ~ D ~ empty ~ JWT ~ D ~ D ~ D ~ JWT
+  dSD-JWT+KB length 2056, sha256 KAa_1iz1VZZGw3sz-eWEX74Sjw-gZjnm2xpBfFldZdY
+  KB-SD-JWT header {"alg":"EdDSA","typ":"kb-sd-jwt+kb"}
+  KB-SD-JWT payload {"iat":1794956400,"aud":"https://agent.example","nonce":"del-a-nonce","sd_hash":"5LjA9SMNo7yrNPk6fjqwMsEzNCoSqok7WW1KmZZ25Cw","_sd_alg":"sha-256","delegate_payload":[{"...":"8PuQFsisIjk6BDNqApyNB2nSt2hozt6em7yTPMUwXvk"}]}
+  Delegate Payload Disclosure ["t97sxZH7CpZpzf2FLso-IQ",{"iss":"holder","exp":1795046400,"cnf":{"jwk":{"kty":"OKP","crv":"Ed25519","x":"OKSmdUEYBf6fKzEqsBggVFfiljBBKnp0yKZQ3jQTh6Y"}},"max_amount":50,"_sd":["LSNQ_zIWGY8i61cfRnrFCjphOM7ZSU46LCjcBNUXu6U","RseZtKF7cbkpw0Apf1vAxd1tFUe3JZsLaniNKqlxv10"]}]
+  dSD-JWT+KB: eyJhbGciOiJFZERTQSIsInR5cCI6ImV4YW1wbGUrc2Qtand0In0.eyJpc3MiOiJodHRwczovL2lzc3Vlci5leGFtcGxlIiwiaWF0IjoxNzk0ODczNjAwLCJleHAiOjE3OTc0NjU2MDAsInZjdCI6Imh0dHBzOi8vaXNzdWVyLmV4YW1wbGUvcGF5bWVudC1jYXJkIiwiX3NkIjpbIlY3Tk9vYUhlY0kwUUVuSC1lX01IYlBuR1dJY2NWWnFFZUluOUFkcExEQ1kiLCJna3FsVXVLNGdMLXZPRkkzQlZXaGFHSmtYOTZxVlVzUWRXck5oQzNNVU5RIiwickZBMDFYdDcyV2dTbGxPLUhCTU1OLVNnYVlBWjJqM3c4UFRJazNseFV3SSJdLCJfc2RfYWxnIjoic2hhLTI1NiIsImNuZiI6eyJqd2siOnsia3R5IjoiT0tQIiwiY3J2IjoiRWQyNTUxOSIsIngiOiJmRnlLQTZTVERKUUwtdFBXWjU4OU1wd2FPUlJLUndKQU45cXppc0VIRVRFIn19fQ.Z3_2q0Pdhcw1c9k1q1_mlOM_UMim-xYxC0Fr4iOoXYnp1XUQJAepLfpanltDnKmc-dbmSQmaDI9CWDydPOfoBg~WyJKdTZTQnpJVjU1cUF0YzVrejFqeHNRIiwiZ2l2ZW5fbmFtZSIsIkVyaWthIl0~WyJDdjJOYkg2bWdwY2dLSDFPQ3p1RG5nIiwiZmFtaWx5X25hbWUiLCJNdXN0ZXJtYW5uIl0~WyJBN29TTVZqNmtFSHRzM2w1UXdFTnhBIiwiY2FyZF9sYXN0NCIsIjExMTEiXQ~~eyJhbGciOiJFZERTQSIsInR5cCI6ImtiLXNkLWp3dCtrYiJ9.eyJpYXQiOjE3OTQ5NTY0MDAsImF1ZCI6Imh0dHBzOi8vYWdlbnQuZXhhbXBsZSIsIm5vbmNlIjoiZGVsLWEtbm9uY2UiLCJzZF9oYXNoIjoiNUxqQTlTTU5vN3lyTlBrNmZqcXdNc0V6TkNvU3FvazdXVzFLbVpaMjVDdyIsIl9zZF9hbGciOiJzaGEtMjU2IiwiZGVsZWdhdGVfcGF5bG9hZCI6W3siLi4uIjoiOFB1UUZzaXNJams2QkROcUFweU5CMm5TdDJob3p0NmVtN3lUUE1Vd1h2ayJ9XX0.Z_oyaAkDOM1gN22-DKja-GPupY2S9SjiMa0_RfRPQSlauxKQ5dQEA5EQbnrJUdrs00d9JyOVkVWb-ECytRHNDg~WyJ0OTdzeFpIN0NwWnB6ZjJGTHNvLUlRIix7ImlzcyI6ImhvbGRlciIsImV4cCI6MTc5NTA0NjQwMCwiY25mIjp7Imp3ayI6eyJrdHkiOiJPS1AiLCJjcnYiOiJFZDI1NTE5IiwieCI6Ik9LU21kVUVZQmY2Zkt6RXFzQmdnVkZmaWxqQkJLbnAweUtaUTNqUVRoNlkifX0sIm1heF9hbW91bnQiOjUwLCJfc2QiOlsiTFNOUV96SVdHWThpNjFjZlJuckZDanBoT003WlNVNDZMQ2pjQk5VWHU2VSIsIlJzZVp0S0Y3Y2JrcHcwQXBmMXZBeGQxdEZVZTNKWnNMYW5pTktxbHh2MTAiXX1d~WyJjM3NSM3lab29vdWpWMGNvQnNCcG9RIiwibWVyY2hhbnQiLCJzaG9wLWEiXQ~WyJwYzgxZC1ZcGxOZDlibEdYYUNpYnN3IiwiaXRlbSIsInJ1bm5pbmcgc2hvZXMiXQ~eyJhbGciOiJFZERTQSIsInR5cCI6ImtiK2p3dCJ9.eyJpYXQiOjE3OTQ5NTk5NDAsImF1ZCI6Imh0dHBzOi8vc2hvcC1hLmV4YW1wbGUiLCJub25jZSI6Im4tMFM2X1d6QTJNaiIsInNkX2hhc2giOiJVWVVvQWppNWFNQWk2bWQ1RGt0S0RtT0JDQkJ2U05kc3pEOENaSHdsUGZVIn0.N_D1cdLMwNKBk_u9SUdYHy00883n4fGvreNokaYjbbmHCl-RYeY_dWvkQyG9rwFEraEuQWAEl9m-bRw-qsJyDA
+  [PASS] baseline: plain SD-JWT+KB, RFC 9901 verifier: accept (expected accept) -- SD-JWT+KB, given_name,family_name,card_last4
+  [PASS] dSD-JWT+KB, RFC 9901 verifier: reject (expected reject) -- RFC 9901 Section 4 ABNF: component '' between Issuer JWT and KB-JWT is not a DISCLOSURE
+  [PASS] dSD-JWT (trailing ~), RFC 9901 verifier, KB not required: reject (expected reject) -- RFC 9901 Section 4 ABNF: component '' between Issuer JWT and KB-JWT is not a DISCLOSURE
+  [PASS] RFC 9901 parser that drops empty/JWT components first: reject (expected reject) -- SD-JWT (empty and JWT components dropped): Disclosure not referenced by any digest (7.1 step 5)
+  [PASS] dSD-JWT+KB, Section 6 prototype: accept (expected accept) -- dSD-JWT+KB, 1 delegation(s)
+    processed chain: [{"iss":"https://issuer.example","iat":1794873600,"exp":1797465600,"vct":"https://issuer.example/payment-card","cnf":{"jwk":{"kty":"OKP","crv":"Ed25519","x":"fFyKA6STDJQL-tPWZ589MpwaORRKRwJAN9qzisEHETE"}},"given_name":"Erika","card_last4":"1111","family_name":"Mustermann"},{"iss":"holder","exp":1795046400,"cnf":{"jwk":{"kty":"OKP","crv":"Ed25519","x":"OKSmdUEYBf6fKzEqsBggVFfiljBBKnp0yKZQ3jQTh6Y"}},"max_amount":50,"merchant":"shop-a","item":"running shoes"}]
+  [PASS] dSD-JWT (trailing ~), Section 6 prototype, KB not required: accept (expected accept) -- dSD-JWT, 1 delegation(s)
+  [PASS] dSD-JWT (trailing ~), Section 6 prototype, KB required (step 5.1): reject (expected reject) -- step 5.1: Key Binding required but this is a dSD-JWT
+  [PASS] plain SD-JWT+KB, Section 6 prototype: reject (expected reject) -- Section 6 step 1: no KB-SD-JWT, so this is not a dSD-JWT
+  [PASS] two empty components before the KB-SD-JWT (5.1.1): reject (expected reject) -- 5.1.1: empty component not followed by exactly one KB-SD-JWT
+  [PASS] no empty component before the KB-SD-JWT (5.1.1): reject (expected reject) -- 5.1.1: JWT in a Disclosure position without a preceding empty component
+  [PASS] KB-SD-JWT signed by the agent key, not the Holder cnf (step 3.1): reject (expected reject) -- KB-SD-JWT #1: signature invalid
+  [PASS] KB-SD-JWT with typ kb+jwt (step 4.2): reject (expected reject) -- KB-SD-JWT #1: step 4.2 typ 'kb+jwt' not allowed for dSD-JWT+KB
+  [PASS] dSD-JWT+KB whose KB-SD-JWT has typ kb+sd-jwt (step 4.2): reject (expected reject) -- KB-SD-JWT #1: step 4.2 typ 'kb+sd-jwt' not allowed for dSD-JWT+KB
+  [PASS] dSD-JWT whose KB-SD-JWT has typ kb+sd-jwt, KB not required: accept (expected accept) -- dSD-JWT, 1 delegation(s)
+  [PASS] final KB-JWT signed by the Holder key, not the agent cnf (step 5.2): reject (expected reject) -- final KB-JWT: signature invalid
+  [PASS] two delegate_payload elements, one disclosed (5.1.4, step 3.2): accept (expected accept) -- dSD-JWT+KB, 1 delegation(s)
+  [PASS] two delegate_payload elements, both disclosed (step 3.2): reject (expected reject) -- KB-SD-JWT #1: step 3.2 expects exactly one disclosed delegate_payload element, got 2
+  [PASS] Delegate Holder omits the merchant/item Disclosures (4.1): accept (expected accept) -- Delegate Payload keys iss,exp,cnf,max_amount
+
+== Lab 2: sd_hash vs issuer_jwt_hash, drop one Issuer Disclosure
+  sd_hash: KB-SD-JWT payload {"iat":1794956400,"aud":"https://agent.example","nonce":"lab2-sd_hash-nonce","sd_hash":"5LjA9SMNo7yrNPk6fjqwMsEzNCoSqok7WW1KmZZ25Cw","_sd_alg":"sha-256","delegate_payload":[{"...":"RXn7VJ7xTEsZJUJn5T1VQzQdT3Zh5aBCHm044xUTmb0"}]}
+  issuer_jwt_hash: KB-SD-JWT payload {"iat":1794956400,"aud":"https://agent.example","nonce":"lab2-issuer_jwt_hash-nonce","issuer_jwt_hash":"1reFkamgzjrjb_X39PrKGUdyOevrCeq2yFXNjSjKidw","_sd_alg":"sha-256","delegate_payload":[{"...":"KzhJVP7nqKuc5Y5DJ_PkALGIitbDwXeyWxDILUVY0yk"}]}
+  dropped Issuer Disclosure: ["Ju6SBzIV55qAtc5kz1jxsQ","given_name","Erika"]
+  [PASS] sd_hash: all Issuer Disclosures: accept (expected accept) -- dSD-JWT+KB, 1 delegation(s)
+  [PASS] sd_hash: given_name dropped by the Delegate Holder before its KB-JWT: reject (expected reject) -- KB-SD-JWT #1: step 3.3 sd_hash does not match the preceding token and Disclosures
+  [PASS] sd_hash: given_name stripped from the finished dSD-JWT+KB in transit: reject (expected reject) -- KB-SD-JWT #1: step 3.3 sd_hash does not match the preceding token and Disclosures
+  [PASS] sd_hash: all Issuer Disclosures dropped: reject (expected reject) -- KB-SD-JWT #1: step 3.3 sd_hash does not match the preceding token and Disclosures
+  [PASS] sd_hash: a Disclosure the Issuer never signed added: reject (expected reject) -- SD-JWT: Disclosure not referenced by any digest (7.1 step 5)
+  [PASS] issuer_jwt_hash: all Issuer Disclosures: accept (expected accept) -- dSD-JWT+KB, 1 delegation(s)
+  [PASS] issuer_jwt_hash: given_name dropped by the Delegate Holder before its KB-JWT: accept (expected accept) -- family_name,card_last4
+  [PASS] issuer_jwt_hash: given_name stripped from the finished dSD-JWT+KB in transit: accept (expected accept) -- family_name,card_last4
+  [PASS] issuer_jwt_hash: all Issuer Disclosures dropped: accept (expected accept) -- (none)
+  [PASS] issuer_jwt_hash: a Disclosure the Issuer never signed added: reject (expected reject) -- SD-JWT: Disclosure not referenced by any digest (7.1 step 5)
+
+== Lab 3: one Holder cnf key, two delegations, swap the KB-SD-JWT (Section 8.1)
+  SD-JWT A (card 1111) and SD-JWT B (card 2222) carry the same Holder cnf: True
+  [PASS] sd_hash: chain A (card 1111, max 50): accept (expected accept) -- dSD-JWT+KB, 1 delegation(s)
+  [PASS] sd_hash: chain B (card 2222, max 5000): accept (expected accept) -- dSD-JWT+KB, 1 delegation(s)
+  [PASS] sd_hash: SD-JWT A + KB-SD-JWT B, full Section 6: reject (expected reject) -- KB-SD-JWT #1: step 3.3 sd_hash does not match the preceding token and Disclosures
+  [PASS] sd_hash: SD-JWT A + KB-SD-JWT B, lax verifier (signature only, no 3.3/3.4): accept (expected accept) -- ["1111",5000]
+  [PASS] sd_hash: chain A with chain B's final KB-JWT, full Section 6: reject (expected reject) -- step 5.3: final KB-JWT sd_hash does not match the final KB-SD-JWT and Disclosures
+  [PASS] sd_hash: chain A with chain B's final KB-JWT, lax verifier (no 5.3): accept (expected accept) -- dSD-JWT+KB, 1 delegation(s)
+  [PASS] issuer_jwt_hash: chain A (card 1111, max 50): accept (expected accept) -- dSD-JWT+KB, 1 delegation(s)
+  [PASS] issuer_jwt_hash: chain B (card 2222, max 5000): accept (expected accept) -- dSD-JWT+KB, 1 delegation(s)
+  [PASS] issuer_jwt_hash: SD-JWT A + KB-SD-JWT B, full Section 6: reject (expected reject) -- KB-SD-JWT #1: step 3.4 issuer_jwt_hash missing or does not match the preceding JWT
+  [PASS] issuer_jwt_hash: SD-JWT A + KB-SD-JWT B, lax verifier (signature only, no 3.3/3.4): accept (expected accept) -- ["1111",5000]
+  [PASS] issuer_jwt_hash: chain A with chain B's final KB-JWT, full Section 6: reject (expected reject) -- step 5.3: final KB-JWT sd_hash does not match the final KB-SD-JWT and Disclosures
+  [PASS] issuer_jwt_hash: chain A with chain B's final KB-JWT, lax verifier (no 5.3): accept (expected accept) -- dSD-JWT+KB, 1 delegation(s)
+  [PASS] control, distinct Holder keys: SD-JWT A + KB-SD-JWT C, lax verifier: reject (expected reject) -- KB-SD-JWT #1: signature invalid
+  [PASS] same SD-JWT delegated to agent and agent-2: agent presents agent-2's KB-SD-JWT: reject (expected reject) -- final KB-JWT: signature invalid
+  [PASS] same SD-JWT delegated twice, dSD-JWT without KB: anyone holding KB-SD-JWT #2 presents it: accept (expected accept) -- dSD-JWT, 1 delegation(s)
+
+== self-test: the verifiers and the harness can fail
+  [PASS] Issuer signature bit flipped, Section 6 prototype: reject (expected reject) -- Issuer-signed JWT: signature invalid
+  [PASS] Issuer signature bit flipped, RFC 9901 verifier on plain SD-JWT+KB: reject (expected reject) -- Issuer-signed JWT: signature invalid
+  [PASS] KB-SD-JWT sd_hash zeroed (signature now invalid): reject (expected reject) -- KB-SD-JWT #1: signature invalid
+  [FAIL] harness told a tampered token should be accepted (this line must say FAIL): reject (expected accept) -- Issuer-signed JWT: signature invalid
+  harness reports a wrong expectation as FAIL: yes
+
+46 cases, 0 unexpected; self-test OK
+ALL OK
