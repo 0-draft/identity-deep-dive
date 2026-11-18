@@ -14,7 +14,7 @@
 3. Lab 1: `python3 -I vectors/three_hop.py > vectors/three_hop.log`。固定のシードから alg `Ed25519` で 3 トークンのチェーン（planner、researcher、formatter）を発行し、ステップ 1 から 5 だけを実行する。
 4. Lab 2: `python3 -I vectors/overspend.py > vectors/overspend.log`。ルートの max を 100、2 つの子を 60 として発行し、両方のチェーンを検証したうえで、2 つのゲートウェイ、共有台帳、単一書き込み者の割り当て器をプロセス内でモデル化する（2 つのゲートウェイはスレッドで代用する）。
 5. Lab 3: `gh api repos/tenuo-ai/tenuo/contents/ietf/draft-niyikiza-oauth-attenuating-agent-tokens-02.txt -H "Accept: application/vnd.github.raw"` で niyikiza の本文を取得し、`python3 -I vectors/depth_rules.py > vectors/depth_rules.log` を実行する。niyikiza-02 の Section 8 のうち深さの検査（ステップ 3c、3i、4b4、4d から 4g、4m、5。MAX_DELEGATION_DEPTH は 8）と asor の深さの規則だけを実装し、各事例を発行したチェーンで asor の検証器全体にも通す。
-6. Lab 4: `python3 -I vectors/full_verify.py <dir>/attenu-guard-v0.22.0-draft02 > vectors/full_verify.log`。葉が 8 種類すべての制約型を持つ 3 トークンの Ed25519 チェーンを発行し、ステップ 1 から 5 を `verify_vectors.py` で実行したあと、ステップ 6（RFC 9449 Section 4.3 に従って検査し、RFC 9449 Section 6.1 と RFC 7638 に従って DT_2 の `cnf.jkt` に結び付ける DPoP 証明）、ステップ 7（有効期間を持つキャッシュ済みのステータスリスト）、ステップ 8（audience、スコープ、アクションごとの制約、累積の制約）を実行する。累積の合計値はリクエストとは別に渡す dict から読み、アクションのパラメーターからは読まない。最後に `valid_unknown_constraint_identical.json` に対してステップ 8 のアクションの検査を実行する。RFC 9449 の検査は RFC の記憶から書いた。RFC 本文とステータスリストのドラフトは取得していない。
+6. Lab 4: `python3 -I vectors/full_verify.py <dir>/attenu-guard-v0.22.0-draft02 > vectors/full_verify.log`。葉が 8 種類すべての制約型を持つ 3 トークンの Ed25519 チェーンを発行し、ステップ 1 から 5 を `verify_vectors.py` で実行したあと、ステップ 6（RFC 9449 Section 4.3 に従って検査し、RFC 9449 Section 6.1 と RFC 7638 に従って DT_2 の `cnf.jkt` に結び付ける DPoP 証明）、ステップ 7（有効期間を持つキャッシュ済みのステータスリスト）、ステップ 8（audience、スコープ、アクションごとの制約、累積の制約）を実行する。累積の合計値はリクエストとは別に渡す dict から読み、アクションのパラメーターからは読まない。最後に `valid_unknown_constraint_identical.json` に対してステップ 8 のアクションの検査を実行する。RFC 9449 の検査は RFC 本文（Section 4.3、6.1、11.1。2026 年 11 月 18 日に照合）に従っている。ステータスリストのドラフトは取得していない。
 7. Lab 4 の自己テスト: `python3 -I vectors/full_verify.py --break <dir>/attenu-guard-v0.22.0-draft02 > vectors/full_verify.break.log` は、max_rows 101 に accept を期待する事例を 1 つ加える。この事例は FAIL と報告され、終了コードは 1 になる。
 8. `python3 -m compileall -q vectors/*.py`。Lab 4 の 2 つの実行はそれぞれ 2 回行い、出力を `cmp` で比べる。
 
@@ -38,7 +38,7 @@
 - -02 の時刻規則（now <= exp）を使うと、now == exp のチェーンを受理してしまう。
 - `python3 -I` はスクリプトのディレクトリを `sys.path` から外すので、`three_hop.py`、`overspend.py`、`depth_rules.py` は `verify_vectors.py` をパスで読み込む。
 - Lab 2 はプロセス内のモデルである。割り込みを強制したスレッドであり、ネットワーク上の実際の 2 つのゲートウェイではない。
-- Lab 4: htu をリクエストの URI 全体と比べると、クエリを持つリクエストはすべて失敗する。記憶している RFC 9449 Section 4.3（RFC 本文とは未照合）では、クエリとフラグメントを除いて比べる。
+- Lab 4: htu をリクエストの URI 全体と比べると、クエリを持つリクエストはすべて失敗する。RFC 9449 Section 4.3 では、クエリとフラグメントを除いて比べる。
 - Lab 4: 累積の合計値をアクション自身のパラメーターから読むと、リクエストが自分の消費量を申告できてしまう。Section 4.2 とステップ 8 は合計値を別の経路に置く。スクリプトは合計値を (型, DT_n の jti, key) をキーにした dict に置き、アクションからは届かないようにした。
 - Lab 4: アクションがキーを名指ししたときだけ未知の制約型を検査すると、(quota, units) の下でアクションを許可してしまう。Section 4.2 はすべてのアクションを拒否する。
 - -03 が決めていない点についての Lab 4 の選択（`vectors/full_verify.log` の冒頭に A1 から A12 として出力される）: (A1) ath は DT_n のコンパクト形式のハッシュとした。-03 は、チェーンのどのトークンがアクセストークンなのかも、チェーンをどう送るのかも書いていない。(A2) DPoP の iat の許容幅は前後 60 秒とし、nonce は発行しない。(A3) htu はクエリとフラグメントを除いたうえでバイト単位で比べ、RFC 3986 の正規化はしない。(A4) 一度使われた証明の jti は拒否する（記憶している RFC 9449 Section 11.1 では、再利用の記録はサーバーに任されている。RFC 本文とは未照合）。(A5) ステータス参照は `"status": {"status_list": {"uri", "idx"}}` とした。-03 はクレーム名を決めていない。キャッシュしたリストはメモリ上のモデルで、署名付きのステータスリストトークンではない。(A6) キャッシュした答えは now < fetched_at + ttl の間だけ信頼する。(A7) 使える uri と idx を持たない参照と、リストの外を指す idx は status_unknown とした。(A8) "suspended" は revoked とした。(A9) アクションごとの量がない、または型が違う場合は ceiling_exceeded とした。(A10) 渡される合計値は A を含むものとし、合計値がない場合は ceiling_exceeded とした。(A11) ステップ 8 の中の順序は audience、スコープ、未知の型、アクションごとの制約、累積の制約とした。このため未知の型が上限違反より先に報告される。ステップ 8 は audience の検査の「あと」にスコープ、アクションごとの制約、累積の制約を挙げているが、Section 4.2 の未知の型による拒否をその中のどこに置くかは書いていない。(A12) 合計値は DT_n の jti についてだけ引く。ステップ 8 が見るのは DT_n の権限なので、祖先の max_subtree の合計は参照しない。Lab 2 の兄弟による過剰消費は、Section 9.4 が述べる仕組みに任される。
@@ -46,7 +46,7 @@
 ## 次にやること
 
 - ステップ 7 はメモリ上のリストに対して動いている。このログのためにステータスリストのドラフトを読んだうえで、署名付きのステータスリストトークンに置き換える。
-- Lab 4 で使った RFC 9449 の検査と節番号（4.3、6.1、11.1）は記憶から書いたもので、RFC 本文とは照合していない。Lab 4 の内容を著者に伝える前に照合する。-03 の側は本文を検索して確かめた。"ath"、"htu"、"nonce"、"idx"、"suspend" はどれも出てこず、ステータス参照のクレーム名もなく、DPoP に触れているのは Section 3、6（ステップ 6）、7、参考文献、変更履歴だけである。
+- Lab 4 の RFC 9449 の側は、2026 年 11 月 18 日に RFC 本文と照合した。検査は Section 4.3 の一覧に従っており（nonce は発行しないので nonce の検査は対象外）、節番号 4.3、6.1、11.1 も正しい。-03 の側は本文を検索して確かめた。"ath"、"htu"、"nonce"、"idx"、"suspend" はどれも出てこず、ステータス参照のクレーム名もなく、DPoP に触れているのは Section 3、6（ステップ 6）、7、参考文献、変更履歴だけである。
 - Lab 4 で選択が必要だった -03 の点（ath がどのトークンを対象とするか、ステータスのクレーム、ステップ 8 の中の順序、合計値がない場合・量がない場合・"suspended" の結果名）は、下の "del_max_depth" の 2 点とあわせて著者に伝える候補である。まだ何も送っていない。
 - 新しいセットが作り直していない事例（"del_max_depth" より長いチェーン、裸のワイルドカードと末尾以外のワイルドカード、RFC 8785 の数値の形式）について、-01 の 20 ファイルのセットを採点する。-01 のクレーム規則が要る。
 - "del_max_depth" に関する 2 点（規則 5 でクレームを持たない子、ステップ 3 が一切適用しない子の下げた値）は著者に伝える候補である。まだ何も送っていない。

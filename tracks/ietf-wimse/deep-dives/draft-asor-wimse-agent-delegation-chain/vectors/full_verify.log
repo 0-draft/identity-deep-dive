@@ -1,9 +1,9 @@
 python 3.15.2, cryptography 50.0.2
 lab choices where the -03 is silent:
   A1 ath is SHA-256 of DT_n's compact serialization; the -03 does not say which token of a chain is 'the access token'.
-  A2 iat window is |now - iat| <= 60 s, and no server nonce is issued; RFC 9449 (from memory) leaves the window to the server.
-  A3 htu is compared byte-for-byte with the request URI after dropping query and fragment (RFC 9449 4.3, from memory); no RFC 3986 normalization.
-  A4 jti replay cache: a proof jti accepted once is refused afterwards (RFC 9449 Section 11.1, from memory, makes this a server choice).
+  A2 iat window is |now - iat| <= 60 s, and no server nonce is issued; RFC 9449 Section 11.1 leaves the window to the server.
+  A3 htu is compared byte-for-byte with the request URI after dropping query and fragment (RFC 9449 4.3); no RFC 3986 normalization.
+  A4 jti replay cache: a proof jti accepted once is refused afterwards (RFC 9449 Section 11.1 makes this a server choice).
   A5 status reference claim is 'status': {'status_list': {'uri', 'idx'}}; the -03 names no claim. The cached list is an in-memory model (fetched_at, ttl, statuses), not a signed status list token.
   A6 a cached answer is trusted while now < fetched_at + ttl (same half-open form as now < exp).
   A7 a status reference that is not of the shape in A5, or whose idx is outside the list, is status_unknown.
