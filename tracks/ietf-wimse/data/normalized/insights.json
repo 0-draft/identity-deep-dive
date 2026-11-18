@@ -1,16 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-10T07:23:46+00:00",
-      "text": "One mailing-list comment on draft-hulea-wimse-agent-mandate-01 argues that Section 9.5 should not let a relying party drop a token's budget contribution just because the token \"expired unused\". No other WIMSE material moved.",
-      "text_ja": "draft-hulea-wimse-agent-mandate-01 の Section 9.5 について、トークンが「未使用のまま失効した」ことだけを理由に RP が予算への寄与を削除できるのは問題だとするメーリングリスト上のコメントが1件あった。他の WIMSE 関連の動きはない。"
-    },
-    {
-      "at": "2026-11-10T19:47:45+00:00",
-      "text": "No draft text changed in this run: the two items are mailing-list messages. The more substantive one is a review comment asking that section 5.4 of an unnamed record format say its entries are valid only at the evaluation instant. The other is a procedural reply about a joint WIMSE/OAuth session at IETF 127.",
-      "text_ja": "今回はドラフト本文の変更はなく、メーリングリストの投稿が2件のみである。主な内容は、名前の明示されていないレコード形式の5.4節について、各エントリが評価時点のみを表すと明記するよう求めるレビューコメントである。もう1件は、IETF 127の WIMSE/OAuth 合同セッションに関する手続き上の返信である。"
-    },
-    {
       "at": "2026-11-11T19:40:15+00:00",
       "text": "The most concrete movement is on the delegation-chain drafts: AAT, Asor and Cred -02 are converging on one meaning for del_max_depth, and the AIMS thread agreed the delegated subject may be transcribed across trust domains if the mapping is in the signed audit record. Several threads also moved a freshness boundary to \"at or past\" (refused at exactly the limit).",
       "text_ja": "委任チェーン系ドラフト（AAT、Asor、Cred -02）で del_max_depth の意味を一つに揃える流れが進み、AIMS のスレッドでは、信頼ドメインをまたぐ際に委任対象の識別子を書き換えてよいが、その対応関係を署名された監査記録に残すことで合意した。鮮度の境界を「ちょうど期限なら拒否」に改める動きも複数のスレッドで見られた。"
@@ -74,6 +64,11 @@
       "at": "2026-11-17T20:59:40+00:00",
       "text": "The IPR poll on draft-ietf-wimse-workload-creds started, which suggests the draft is moving toward publication. The same day brought several new individual agent drafts, including a WPT message-binding draft and a partition-tolerant renewal draft, plus a large interop matrix result.",
       "text_ja": "draft-ietf-wimse-workload-creds の IPR 確認が始まり、公開に向けた段階に進んだとみられる。同日には WPT メッセージバインディングや分断耐性のある更新を扱う個人ドラフトが複数投稿され、大規模な相互運用性マトリクスの結果も報告された。"
+    },
+    {
+      "at": "2026-11-18T07:34:29+00:00",
+      "text": "No draft text changed. The most substantive thread is on the WIMSE list: AIMS delegation context, where the participants agreed a transcribed identifier needs a signed audit record at the transcribing server. A large interop matrix for the IETF 127 hackathon B_CHAIN flow was also reported.",
+      "text_ja": "ドラフト本文の変更はない。最も重要なのはメーリングリストでの AIMS の委任コンテキストに関する議論で、変換された識別子は変換を行うサーバーの署名付き監査記録に残すべきだという点で参加者が一致した。IETF 127 ハッカソンの B_CHAIN フローに対する大規模な相互運用性マトリクスの結果も報告された。"
     }
   ],
   "items": {
@@ -472,6 +467,36 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "mail:BwGCvOXBxqAVBqOG_prlM3nwZUg": {
+      "diagram": "",
+      "first_seen": "2026-11-18",
+      "headline": "Hackathon: an external interop matrix reports the two-domain B_CHAIN flow passing in all 12,288 published substitutions.",
+      "headline_ja": "ハッカソン：外部の相互運用性マトリクスで、二つの信頼ドメインにまたがる B_CHAIN フローが公開された 12,288 通りの置換すべてで成功したと報告された。",
+      "id": "mail:BwGCvOXBxqAVBqOG_prlM3nwZUg",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-transaction-tokens",
+          "note": "The B_CHAIN flow checks that a Domain A transaction token stays in its domain and keeps its transaction ID when scope is narrowed.",
+          "note_ja": "B_CHAIN フローは、Domain A のトランザクショントークンがそのドメイン内に留まり、スコープを絞ってもトランザクション ID が維持されることを確認している。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Jacob Stewart reported a WIMSE interop matrix of 161,370 execution IDs: 151,069 passed, 182 failed, 10,119 blocked. It covers WIC/mTLS, WIT with WPT, and WIT with HTTP Message Signatures bindings. The two-domain B_CHAIN success path passed all 12,288 published substitutions across 27 role bindings and 94 directional handoffs. Each run checks that the original Domain A transaction token stays in Domain A, the transaction ID survives scope narrowing, and the File Tool verifies the WPT binding to both the WIT and the narrowed transaction token before permitting one protected read. Alexander replies that he will record this in the hackathon repository as a separate external run, outside their own totals. He asks Jacob to confirm the wording and how to be named, and to supply a commit-pinned revision. He also says P7 need not stay blocked, since a verifier that holds the action can run the Appendix A vectors.",
+      "summary_ja": "Jacob Stewart は、161,370 件の実行 ID からなる WIMSE の相互運用性マトリクスの結果を報告した。成功 151,069 件、失敗 182 件、ブロック 10,119 件である。対象は WIC/mTLS、WIT と WPT、WIT と HTTP Message Signatures のバインディングである。二つの信頼ドメインにまたがる B_CHAIN の成功経路は、27 のロールバインディングと 94 の方向付きハンドオフにわたる、公開された 12,288 通りの置換すべてで成功した。各実行では、元の Domain A のトランザクショントークンが Domain A に留まること、スコープを絞ってもトランザクション ID が維持されること、File Tool が WIT と絞り込み後のトランザクショントークンの両方への WPT の結びつきを検証したうえで保護対象の読み取りを一回だけ許可することを確認している。Alexander は、この結果をハッカソンのリポジトリに、自分たちの集計に含めない外部の実行として記録すると返答した。文言と掲載名の確認、およびコミットを固定した版の提供を求めている。また、アクションを保持する検証者が Appendix A のベクターを実行できるため、P7 はブロックされたままにしなくてよいと述べた。",
+      "title": "IETF 127 Hackathon: WIMSE interop scenarios for agent call chains",
+      "updated_at": "2026-11-18T07:34:29+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/BwGCvOXBxqAVBqOG_prlM3nwZUg/",
+      "use_cases": [
+        "Implementers of WIT/WPT or HTTP Message Signatures bindings who want to compare their peers against a public interop matrix.",
+        "Teams building multi-hop agent call chains across two trust domains that need to check transaction token containment."
+      ],
+      "use_cases_ja": [
+        "WIT/WPT や HTTP Message Signatures のバインディングを実装し、公開された相互運用性マトリクスと自分たちのピアを比較したい実装者。",
+        "二つの信頼ドメインにまたがる複数ホップのエージェント呼び出しで、トランザクショントークンの封じ込めを確認したい開発チーム。"
+      ]
+    },
     "mail:CUSo_w53my0EePs-7PdFaqHr0Rk": {
       "diagram": "",
       "first_seen": "2026-11-13",
@@ -565,6 +590,23 @@
         "S+L の失効受理境界を実装する検証者が、ちょうど期限の入力を受理するか判断する場合。"
       ]
     },
+    "mail:INsYufjtYsijqhJNn-01dG7ogqU": {
+      "diagram": "",
+      "first_seen": "2026-11-18",
+      "headline": "PACE Authorization thread: one reply on what the delegation root must carry, and a list-etiquette complaint about the poster.",
+      "headline_ja": "PACE Authorization のスレッド：委任のルートに何を持たせるべきかについての返信一通と、投稿者への投稿作法に関する苦情。",
+      "id": "mail:INsYufjtYsijqhJNn-01dG7ogqU",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Blake Morrison replied on the PACE Authorization draft that, without a wallet, they favour option 2. It only beats option 3 if the root records the passkey tap at the user's own provider, when it happened, and the grant the user was viewing at that moment. The next revision would need to tie the grant to that moment. Two open problems remain: the same grant spent at two airlines, and wallet trust. A separate message from another participant objects to the posting style: cross-posting to several lists and no quoted history. They suggest it may be an AI-assisted autoresponder and ask Blake to reconsider. The options themselves are not defined in the material, so the substance is thin.",
+      "summary_ja": "Blake Morrison は PACE Authorization ドラフトについて、ウォレットがない場合は選択肢 2 を支持すると返信した。選択肢 2 が選択肢 3 より優れるのは、ルートに、ユーザー自身のプロバイダーでのパスキー操作、その時刻、操作時にユーザーが見ていたグラントが含まれる場合に限る。次の改訂ではグラントをその時点に結びつける必要がある。未解決の問題として、同一のグラントが二つの航空会社で使われる場合と、ウォレットの信頼が残っている。別の参加者は、複数のメーリングリストへの同時投稿と引用履歴の欠如を指摘し、AI 支援の自動応答の可能性に触れたうえで、投稿の仕方を見直すよう求めた。選択肢の中身は資料に定義がなく、内容は乏しい。",
+      "title": "New draft: PACE Authorization: delegation and action approval for agent dialogs: (2 new messages)",
+      "updated_at": "2026-11-18T07:34:29+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/INsYufjtYsijqhJNn-01dG7ogqU/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "mail:K2UmfplxhXtGxnNrDlv6hPCM2Qs": {
       "diagram": "",
       "first_seen": "2026-11-17",
@@ -587,30 +629,6 @@
         "エージェントの委譲や承認を実装し、共通のテストシナリオと再現可能な結果を求めるチーム。",
         "失効ステータスの取得元に到達できない場合の fail-closed 動作を確認する実装者。"
       ]
-    },
-    "mail:L1aB2ez0awvPzFZxxfm-tlZmZ64": {
-      "diagram": "",
-      "first_seen": "2026-11-10",
-      "headline": "Chairs say a competing cross-domain transaction token proposal may ask questions at the IETF 127 joint session but may not co-present",
-      "headline_ja": "競合するクロスドメイン・トランザクショントークン提案は、IETF 127 合同セッションで質問できるが共同発表はできないとされた",
-      "id": "mail:L1aB2ez0awvPzFZxxfm-tlZmZ64",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-ietf-oauth-transaction-tokens",
-          "note": "The joint session item concerns transaction tokens extended across domains, and the competing draft targets the same use case.",
-          "note_ja": "合同セッションの議題はドメインをまたぐトランザクショントークンであり、競合ドラフトも同じユースケースを対象としている。",
-          "track": "oauth-wg"
-        }
-      ],
-      "significance": "routine",
-      "summary": "This is a short reply from Sean to Yuan, quoting an earlier thread. Yuan had asked for five minutes at the joint WIMSE/OAuth session to present draft-liu-oauth-cross-domain-txn-token, which targets the same use case as the Cross-Domain Transaction Tokens item already on the agenda. Sean says that after talking with Pieter and George, Yuan is welcome to ask questions but co-presenting is not an option for now. The quoted call for agenda items says the OAuth chairs requested two two-hour slots plus a joint WIMSE/OAuth session. It also says items with demonstrated interest from several parties get priority, and gives 2 November 2026 as the draft submission cut-off. No protocol text changed.",
-      "summary_ja": "Sean から Yuan への短い返信であり、過去のやり取りを引用している。Yuan は、合同セッションで既にアジェンダにある Cross-Domain Transaction Tokens と同じユースケースを対象とする draft-liu-oauth-cross-domain-txn-token を発表するため、5分の枠を求めていた。Sean は、Pieter と George と相談した結果、Yuan が質問することは歓迎するが、共同発表は現時点では認められないと述べている。引用されたアジェンダ募集の文面によれば、OAuth チェアは2時間枠を2つと、WIMSE/OAuth の合同セッションを要請している。複数の関係者の関心が示された案件を優先すること、およびドラフト提出の締切が2026年11月2日であることも書かれている。プロトコル本文の変更はない。",
-      "title": "OAuth IETF 127 Call for Agenda Items",
-      "updated_at": "2026-11-10T19:47:45+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/L1aB2ez0awvPzFZxxfm-tlZmZ64/",
-      "use_cases": [],
-      "use_cases_ja": []
     },
     "mail:LSpgfANffv7_btXJjeO6qo3KoIE": {
       "diagram": "",
@@ -778,6 +796,29 @@
         "複数ドメインにまたがる委任フローの作者は、B_CHAIN の置換をテストケースとして再利用できる。"
       ]
     },
+    "mail:SHso1Zyz_O4N_fiIhRoh_i8IgZA": {
+      "diagram": "",
+      "first_seen": "2026-11-18",
+      "headline": "AIMS thread: a transcribed identifier's old-to-new mapping goes in the transcribing server's signed audit record, not in the token.",
+      "headline_ja": "AIMS の議論：識別子を変換する場合、新旧の対応は変換を行うサーバーの署名付き監査記録に残し、トークンには載せない。",
+      "id": "mail:SHso1Zyz_O4N_fiIhRoh_i8IgZA",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Kieran confirms Marc's reading of the AIMS delegation-context rules. The delegated principal must stay the same, but not necessarily the same bytes. Within one trust domain the value stays identical at every hop. Across a trust domain a transcribed value is acceptable if the transcription is recorded. The mapping (old value, new value, server identity) belongs in the transcribing server's own audit record, signed and fixed at transcription time. It should not travel in the token across the boundary, since that would hand the original identifier back to the receiving domain and defeat the correlation limit. A signed record can be checked by an auditor, while a retained mapping can only be requested. Marc plans to suggest two changes on PR #176: record the mapping in the audit record rather than retain it, and let the value differ only where a request crosses a trust domain. They also agree an input is refused at or past the instant its validity ends. The boundary wording and the 21 test vectors are left with their authors.",
+      "summary_ja": "Kieran は、AIMS の委任コンテキストに関する Marc の解釈を確認した。委任された主体は同一でなければならないが、バイト列まで同一である必要はない。同一の信頼ドメイン内では値はすべてのホップで同一のままとし、信頼ドメインをまたぐ場合は、変換が記録されていれば変換後の値を用いてよい。対応関係（旧値、新値、サーバーの識別子）は、変換を行うサーバー自身の監査記録に、変換時点で署名して固定する。境界を越えるトークンに載せると、受け取る側のドメインが元の識別子を再び得ることになり、相関を抑える効果が失われる。署名済みの記録は監査者が検証できるが、保持されただけの対応関係は要求することしかできない。Marc は PR #176 に二つの変更を提案する予定である。対応関係は保持ではなく監査記録に残すこと、値が異なってよいのはリクエストが信頼ドメインをまたぐ場合に限ることである。また、入力は有効期間が終わる時点以降は拒否するという点でも一致した。境界の文言と 21 件のテストベクターは、それぞれの作成者に委ねられた。",
+      "title": "Subject: AIMS-00: multi-hop delegation context across agent, tool and resource boundaries",
+      "updated_at": "2026-11-18T07:34:29+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/SHso1Zyz_O4N_fiIhRoh_i8IgZA/",
+      "use_cases": [
+        "Deployments where an agent call crosses trust domains and the subject identifier is remapped to limit correlation.",
+        "Auditors who need to verify after the fact how a delegated subject was mapped between domains."
+      ],
+      "use_cases_ja": [
+        "エージェントの呼び出しが信頼ドメインをまたぎ、相関を抑えるために主体識別子を付け替える構成。",
+        "委任された主体がドメイン間でどう対応付けられたかを、後から監査者が検証する必要がある場合。"
+      ]
+    },
     "mail:XDzEijPg8qT_4X4u7Yl11PHU5og": {
       "diagram": "",
       "first_seen": "2026-11-12",
@@ -891,29 +932,6 @@
         "サービスの前にリバースプロキシがある場合に、署名で対象とするリクエストの要素を決めようとするチーム。"
       ]
     },
-    "mail:cmB6Ar7ozE1T2IqSG9BpuL0NoWk": {
-      "diagram": "sequenceDiagram\n participant RP\n participant RS as Resource server\n RP->>RP: record contribution when token is issued\n Note over RP: token expires, no confirmation seen\n RP->>RS: ask whether the token was ever accepted\n RS-->>RP: never accepted, stated after expiry\n RP->>RP: remove contribution\n Note over RP: without this statement the contribution stays",
-      "first_seen": "2026-11-10",
-      "headline": "A reviewer says the agent-mandate draft should only let an RP un-count an unused token on positive evidence, not on missing confirmation.",
-      "headline_ja": "agent-mandate ドラフトでは、未使用トークンの除外を、確認がないことではなく積極的な証拠がある場合に限るべきだとの指摘",
-      "id": "mail:cmB6Ar7ozE1T2IqSG9BpuL0NoWk",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Dmitri Chistyakov comments on Section 9.5 of draft-hulea-wimse-agent-mandate-01. The draft treats unresolvable status as indeterminate and denies by default, but says that if a token expires unused the RP MAY remove its contribution to a cumulative limit. The contribution is recorded when the token is issued (Section 10.2), yet the draft does not say how the RP learns the token was unused. If the RP infers this from a missing or late execution confirmation, it can remove the contribution of an action that did run. The budget is then under-counted and a later request can pass the sum_max check wrongly. The proposed text allows removal only on positive evidence trusted under RP policy or the Trust Framework, such as a statement from the resource server that it never accepted the token. Absence of a confirmation does not count. Without such evidence the contribution stays recorded, which may cause an unneeded denial until it leaves the period window. The sender notes the message was prepared with AI assistance. This is a review comment, not a change to the draft.",
-      "summary_ja": "Dmitri Chistyakov が draft-hulea-wimse-agent-mandate-01 の Section 9.5 にコメントした。同ドラフトは、解決できないステータスを不確定として扱い既定で拒否するが、トークンが未使用のまま失効した場合は RP が累積上限への寄与を削除してもよい(MAY)としている。寄与はトークン発行時に記録される(Section 10.2)が、トークンが未使用だったことを RP がどう知るのかは書かれていない。実行確認の欠如や遅延から未使用と判断すると、実際に実行された操作の寄与を削除してしまい、予算が過小に数えられ、後続のリクエストが sum_max の検査を誤って通過し得る。提案は、RP のポリシーまたは Trust Framework で信頼される積極的な証拠(例えばリソースサーバーがそのトークンを受理していないと述べる声明)がある場合に限って削除を認め、確認の欠如は証拠に当たらないとするものである。証拠がなければ寄与は記録されたままとなり、期間ウィンドウから外れるまで不要な拒否が生じ得る。送信者は、このメッセージが AI の支援を受けて作成されたと述べている。これはレビューコメントであり、ドラフト本文の変更ではない。",
-      "title": "draft-hulea-wimse-agent-mandate-01, Section 9.5: tokens that \"expire unused\"",
-      "updated_at": "2026-11-10T07:23:46+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/cmB6Ar7ozE1T2IqSG9BpuL0NoWk/",
-      "use_cases": [
-        "An RP enforcing a per-period spending or action limit on an AI agent using mandate tokens, where execution confirmations can arrive late or be lost.",
-        "A Trust Framework author defining which party may attest that a token was never accepted."
-      ],
-      "use_cases_ja": [
-        "委任トークンを用いて AI エージェントの期間ごとの支出や操作回数の上限を強制する RP で、実行確認が遅延または欠落し得る場合。",
-        "トークンが一度も受理されなかったことを誰が証明できるかを Trust Framework に定める場合。"
-      ]
-    },
     "mail:fMPFKSpMHoji68UYn5W3bcNh_NE": {
       "diagram": "",
       "first_seen": "2026-11-16",
@@ -992,29 +1010,6 @@
         "エージェント委任の検証実装を P1〜P8 で試し、ステータスリストが到達不能・古い・失効済みのときにフェイルクローズし、正しい理由を記録するかを確認する。",
         "リクエストからアクションへの対応付けを持たない強制ポイントが、承認画面と実行アクションの不一致を検出できるかを確認する（P7）。",
         "ステータスリスト方式とゼロ知識による非失効証明方式を、拒否までの時間とログ理由で比較する（P2）。"
-      ]
-    },
-    "mail:suAzkd-0n9Luwa_CCR5n0JKA53Q": {
-      "diagram": "",
-      "first_seen": "2026-11-10",
-      "headline": "A reviewer asks that section 5.4 state that its entries describe the evaluation instant only, not the moment of the effect",
-      "headline_ja": "レビュアーが、5.4節のエントリは効果発生時ではなく評価時点のみを表すと明記するよう求めている",
-      "id": "mail:suAzkd-0n9Luwa_CCR5n0JKA53Q",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Cliff supports adding an optional decision.evaluatedAt field, alongside Marc's malformed case. He notes this does not settle the gap between freshness at evaluation and freshness at the effect. Because the record already carries effect.interval.openedAt, a reader can compute an input's age when the effect began. He asks for one sentence in 5.4 saying the entries speak to the evaluation instant only. He also asks for a test record whose standing is fresh at evaluatedAt but past maxAge at openedAt, to be accepted as well formed. The message does not name the draft, and the thread's earlier context is not included, so the surrounding proposal is only partly visible.",
-      "summary_ja": "Cliff は、Marc の不正形式のケースと併せて、任意の decision.evaluatedAt フィールドを追加することに賛成している。ただし、評価時点での鮮度と効果発生時点での鮮度の差は、これだけでは解消しないと指摘している。レコードには既に effect.interval.openedAt があるため、読み手は効果開始時点での入力の経過時間を計算できる。そこで、5.4節に「エントリは評価時点のみを表す」という一文を加えることを求めている。また、standing が evaluatedAt 時点では新鮮だが openedAt 時点では maxAge を超えているテストレコードを、整形式として受理するよう求めている。投稿はドラフト名を示しておらず、スレッドの前後の文脈も含まれないため、元の提案は一部しか分からない。",
-      "title": "A principal-standing name for the 5.4 closed set",
-      "updated_at": "2026-11-10T19:47:45+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/suAzkd-0n9Luwa_CCR5n0JKA53Q/",
-      "use_cases": [
-        "An implementer validating decision records needs to know whether a stale input at effect time makes the record malformed or only informational.",
-        "An auditor reconstructing an action from a record wants to compute input age at effect start from effect.interval.openedAt, without treating evaluatedAt as proof of freshness at that time."
-      ],
-      "use_cases_ja": [
-        "判断レコードを検証する実装者は、効果発生時点で入力が古い場合に、そのレコードを不正形式として扱うのか、参考情報にとどめるのかを知る必要がある。",
-        "レコードから行為を再構成する監査担当者は、evaluatedAt を効果発生時点の鮮度の証拠とみなさず、effect.interval.openedAt から効果開始時点の入力の経過時間を計算したい。"
       ]
     },
     "mail:sviwRJYSDP-WF48dUT83xoyTJ5c": {
@@ -1137,6 +1132,12 @@
   },
   "overflow": [],
   "triage": {
+    "Diff active WG draft: draft-ietf-wimse-aims-01": {
+      "date": "2026-11-18",
+      "priority": "high",
+      "reason": "The AIMS thread is settling transcription and audit-record rules, with a PR #176 change proposed.",
+      "reason_ja": "AIMS のスレッドで、識別子変換と監査記録の規則が固まりつつあり、PR #176 への変更が提案されている。"
+    },
     "Diff active WG draft: draft-ietf-wimse-arch-09": {
       "date": "2026-11-17",
       "priority": "high",

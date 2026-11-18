@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-17T20:57:52+00:00
+Generated at: 2026-11-18T07:33:10+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -31,6 +31,7 @@ Generated at: 2026-11-17T20:57:52+00:00
 
 Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.
 
+- **high** `Diff active WG draft: draft-ietf-wimse-aims-01`: The AIMS thread is settling transcription and audit-record rules, with a PR #176 change proposed.
 - **high** `Diff active WG draft: draft-ietf-wimse-arch-09`: -09 adds Issuer/Trust Anchor definitions, a Trust Domain Separation section and a SHOULD NOT on shared agent identities.
 - **high** `Diff active WG draft: draft-ietf-wimse-http-signature-08`: The digest shows active work on its test vectors (#419), a closed server-nonce issue (#369) and a new dangling-reference issue (#422).
 - **high** `Diff active WG draft: draft-ietf-wimse-workload-creds-03`: The IPR poll to its authors started today, which suggests the draft is moving toward publication.
