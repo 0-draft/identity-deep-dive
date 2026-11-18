@@ -77,9 +77,9 @@ sequenceDiagram
 
 ## 実験
 
-- [ ] Lab 1: 参照ベクターまたは独自の発行コードで 3 ホップのチェーンを作り、ステップ 1 から 5 のみを実行して、Table 2 の各結果名（not_narrower、principal_altered、par_hash_mismatch、expired）を確認する。-03 が拒否する now が exp に等しい境界の事例も含める。
-- [ ] Lab 2: ルートの "max" を 100、2 つの子を 60 として、Section 9.4 の 2 ゲートウェイでの過剰消費を再現し、次に共有のアトミックな台帳または単一書き込み者の割り当て器を加えて、各ハザードがどこに現れるかを確認する。
-- [ ] Lab 3: 同じ深さの値（葉の "del_depth" がルートの "del_max_depth" に等しい）を、このドラフト向けの検証者と draft-niyikiza-oauth-attenuating-agent-tokens-02 向けの検証者に与え、結果が食い違う箇所を記録する（本ドラフトの Section 10、および child.del_depth が parent.del_max_depth 以下であることを許す niyikiza のドラフトの Section 4.3 と 8）。
+- [x] Lab 1: 参照ベクターまたは独自の発行コードで 3 ホップのチェーンを作り、ステップ 1 から 5 のみを実行して、Table 2 の各結果名（not_narrower、principal_altered、par_hash_mismatch、expired）を確認する。-03 が拒否する now が exp に等しい境界の事例も含める。2026 年 11 月 18 日に実施（検証ログを参照）: `vectors/three_hop.py` で 17 事例すべてが期待どおりの結果名になり、now が exp に等しいときは expired、-02 の規則では受理になった。`vectors/verify_vectors.py` はステップ 6、7、ステップ 8 のアクションの検査を行わずに Appendix B の 36 本すべてと一致した。
+- [x] Lab 2: ルートの "max" を 100、2 つの子を 60 として、Section 9.4 の 2 ゲートウェイでの過剰消費を再現し、次に共有のアトミックな台帳または単一書き込み者の割り当て器を加えて、各ハザードがどこに現れるかを確認する。2026 年 11 月 18 日にプロセス内のモデル `vectors/overspend.py` で実施: 集計なしでは 100 に対して 120 を消費し、不可分の台帳では 60、ハザードは、100 の予算から 120 の割り当て（重複割り当て）、60 の割り当てに対して 120 の許可（ローカルなロールバック）、40 の割り当てに対して 80 の許可（早すぎる再利用）として再現した。
+- [x] Lab 3: 同じ深さの値（葉の "del_depth" がルートの "del_max_depth" に等しい）を、このドラフト向けの検証者と draft-niyikiza-oauth-attenuating-agent-tokens-02 向けの検証者に与え、結果が食い違う箇所を記録する（本ドラフトの Section 10、および child.del_depth が parent.del_max_depth 以下であることを許す niyikiza のドラフトの Section 4.3 と 8）。2026 年 11 月 18 日に深さの検査だけを `vectors/depth_rules.py` で実施: 格子 49 マス中 7 マスが食い違い、すべて葉の深さがルートの上限に等しいマスだった。名前付きの事例では、ルートの上限 0、クレームを持たない子、下げた子の上限、8 を超えるルートの上限でも食い違った。
 
 ## 出典
 

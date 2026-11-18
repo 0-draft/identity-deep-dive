@@ -1,0 +1,62 @@
+python 3.15.2, cryptography 50.0.2
+MAX_DELEGATION_DEPTH (niyikiza) = 8; '-' = claim absent
+
+named cases: (del_depth, del_max_depth) per token
+  DIFF leaf del_depth == root del_max_depth (m=2, n=2), all carry 2
+       tokens (0,2) (1,2) (2,2)
+       asor: depth_invalid (n=2 not < 2)                niyikiza-02: accept
+       asor full verifier on minted chain: depth_invalid (n=2 not < DT_0.del_max_depth=2)
+  same leaf one below the bound (m=2, n=1)
+       tokens (0,2) (1,2)
+       asor: accept                                     niyikiza-02: accept
+       asor full verifier on minted chain: accept
+  same leaf past the bound (m=2, n=3)
+       tokens (0,2) (1,2) (2,2) (3,2)
+       asor: depth_invalid (n=3 not < 2)                niyikiza-02: deny 4e (DT_3 depth 3 > parent max 2)
+       asor full verifier on minted chain: depth_invalid (n=3 not < DT_0.del_max_depth=2)
+  DIFF terminal root, del_max_depth 0 (m=0, n=0)
+       tokens (0,0)
+       asor: malformed (del_max_depth not positive)     niyikiza-02: accept
+       asor full verifier on minted chain: malformed (DT_0 del_max_depth not a positive integer)
+  same root only (m=1, n=0)
+       tokens (0,1)
+       asor: accept                                     niyikiza-02: accept
+       asor full verifier on minted chain: accept
+  DIFF children omit del_max_depth (m=3, n=2)
+       tokens (0,3) (1,-) (2,-)
+       asor: accept                                     niyikiza-02: deny 4b4 (DT_1)
+       asor full verifier on minted chain: accept
+  DIFF DT_1 lowers del_max_depth to 1, DT_2 at depth 2 (root m=5)
+       tokens (0,5) (1,1) (2,1)
+       asor: accept                                     niyikiza-02: deny 4e (DT_2 depth 2 > parent max 1)
+       asor full verifier on minted chain: accept
+  DIFF root del_max_depth 9 above MAX_DELEGATION_DEPTH 8 (n=1)
+       tokens (0,9) (1,9)
+       asor: accept                                     niyikiza-02: deny 3i
+       asor full verifier on minted chain: accept
+  same child sets del_max_depth = own depth, terminal (m=3, n=1)
+       tokens (0,3) (1,1)
+       asor: accept                                     niyikiza-02: accept
+       asor full verifier on minted chain: accept
+  same depth sequence skips 1 (0, 2)
+       tokens (0,3) (2,3)
+       asor: depth_invalid (sequence)                   niyikiza-02: deny 4d (DT_1)
+       asor full verifier on minted chain: depth_invalid (DT_1 del_depth 2 != 1)
+named cases: 5 of 10 disagree on accept/deny
+
+grid: every token carries m; rows m = root del_max_depth, columns n = leaf del_depth
+      cell = asor/niyikiza, A = accept, D = deny, * marks a disagreement
+       n=0     n=1     n=2     n=3     n=4     n=5     n=6     
+  m=0  D/A*    D/D     D/D     D/D     D/D     D/D     D/D     
+  m=1  A/A     D/A*    D/D     D/D     D/D     D/D     D/D     
+  m=2  A/A     A/A     D/A*    D/D     D/D     D/D     D/D     
+  m=3  A/A     A/A     A/A     D/A*    D/D     D/D     D/D     
+  m=4  A/A     A/A     A/A     A/A     D/A*    D/D     D/D     
+  m=5  A/A     A/A     A/A     A/A     A/A     D/A*    D/D     
+  m=6  A/A     A/A     A/A     A/A     A/A     A/A     D/A*    
+grid: 7 of 49 cells disagree: m=0 n=0, m=1 n=1, m=2 n=2, m=3 n=3, m=4 n=4, m=5 n=5, m=6 n=6
+every disagreeing cell has n == m: True
+
+self-test (the comparison must be able to fail):
+  checks: [True, True, True, True, True, True]
+self-test: PASS

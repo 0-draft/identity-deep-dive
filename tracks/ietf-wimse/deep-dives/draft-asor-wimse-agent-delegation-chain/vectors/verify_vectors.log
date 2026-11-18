@@ -1,0 +1,68 @@
+python 3.15.2, cryptography 50.0.2
+vector set: attenu-guard-v0.22.0-draft02 (36 files)
+aggregate sha256 over per-file sha256: 701185892b906e2155d893667e24c630bb42c9dd0a74bee050c79c811438c81c
+
+OK   reject_alg_not_accepted.json             expected=signature_invalid  got=signature_invalid  DT_0 alg HS256 not on the accepted list
+OK   reject_altered_sub_and_par_hash.json     expected=par_hash_mismatch  got=par_hash_mismatch  DT_2
+OK   reject_aud_empty_array.json              expected=malformed          got=malformed          DT_2 aud absent, null, empty or not string(s)
+OK   reject_aud_null.json                     expected=malformed          got=malformed          DT_2 aud absent, null, empty or not string(s)
+OK   reject_audience_mismatch.json            expected=audience_mismatch  got=audience_mismatch  'https://files.example.com' not in 'https://crm.example.com'
+OK   reject_child_adds_detail_type.json       expected=malformed          got=malformed          DT_2 authorization_details is not exactly one detail
+OK   reject_child_exp_exceeds_parent.json     expected=expired            got=expired            DT_2 exp 910 > parent exp 900 (rule 4)
+OK   reject_child_raises_del_max_depth.json   expected=not_narrower       got=not_narrower       DT_2: del_max_depth raised 60 > 7
+OK   reject_cnf_without_confirmation.json     expected=malformed          got=malformed          DT_2 cnf carries no jkt (Section 7: JWK thumbprint)
+OK   reject_constraint_extra_member.json      expected=malformed          got=malformed          constraint members ['max', 'note']
+OK   reject_cross_type_lifetime_for_max.json  expected=not_narrower       got=not_narrower       DT_2: constraint ('max_rows', 'max') absent in child
+OK   reject_detail_extra_member.json          expected=malformed          got=malformed          DT_2 detail carries unknown member(s) ['actions']
+OK   reject_duplicate_key_type.json           expected=malformed          got=malformed          DT_2 repeated constraint (max_rows, max)
+OK   reject_max_lifetime_widened.json         expected=not_narrower       got=not_narrower       DT_2: constraint ('max_calls', 'max_lifetime') widened
+OK   reject_max_subtree_widened.json          expected=not_narrower       got=not_narrower       DT_2: constraint ('max_spend', 'max_subtree') widened
+OK   reject_missing_client_id.json            expected=malformed          got=malformed          DT_2 client_id absent or not a string
+OK   reject_missing_cnf.json                  expected=malformed          got=malformed          DT_1 cnf carries no jkt (Section 7: JWK thumbprint)
+OK   reject_mixed_case_wildcard.json          expected=malformed          got=malformed          DT_1 invalid scope 'User.*'
+OK   reject_newline_scope.json                expected=malformed          got=malformed          DT_1 invalid scope 'crm.read\n'
+OK   reject_opaque_case_folded.json           expected=not_narrower       got=not_narrower       DT_1: scope 'user.read' not covered
+OK   reject_opaque_over_wildcard.json         expected=not_narrower       got=not_narrower       DT_1: scope 'drive.*' not covered
+OK   reject_principal_altered.json            expected=principal_altered  got=principal_altered  DT_1
+OK   reject_rank_order_mismatch.json          expected=not_narrower       got=not_narrower       DT_2: constraint ('egress', 'rank') widened
+OK   reject_rank_outside_order.json           expected=malformed          got=malformed          rank not a member of order
+OK   reject_rank_without_order.json           expected=malformed          got=malformed          rank constraint members ['rank']
+OK   reject_reissued_parent.json              expected=par_hash_mismatch  got=par_hash_mismatch  DT_2
+OK   reject_root_without_principal.json       expected=malformed          got=malformed          DT_0 root sub is empty (no Principal)
+OK   reject_second_detail.json                expected=malformed          got=malformed          DT_2 authorization_details is not exactly one detail
+OK   reject_unknown_detail_type.json          expected=malformed          got=malformed          DT_0 detail type is not agent_delegation
+OK   reject_unsafe_integer.json               expected=malformed          got=malformed          integer magnitude exceeds 2^53-1
+OK   reject_wildcard_over_opaque.json         expected=not_narrower       got=not_narrower       DT_1: scope 'drive.Read' not covered
+OK   valid_audience_array.json                expected=accept             got=accept             
+OK   valid_chain.json                         expected=accept             got=accept             
+OK   valid_opaque_exact.json                  expected=accept             got=accept             
+OK   valid_range_min_max.json                 expected=accept             got=accept             
+OK   valid_unknown_constraint_identical.json  expected=accept             got=accept             
+
+per expected outcome: name matched/mismatched
+  accept             5/0
+  audience_mismatch  1/0
+  expired            1/0
+  malformed          17/0
+  not_narrower       8/0
+  par_hash_mismatch  2/0
+  principal_altered  1/0
+  signature_invalid  1/0
+total: 36/36 matched
+steps not performed: 6 (holder binding), 7 (status list), 8 action check
+
+self-test (mutations of valid_chain.json):
+  OK   unmodified                                         expected=accept             got=accept             
+  OK   flip leaf signature bytes                          expected=signature_invalid  got=signature_invalid  DT_2 signature does not verify
+  OK   insert a space in DT_1 payload (not re-signed)     expected=non_canonical      got=non_canonical      {"aud":"https://crm.example.com", "autho
+  OK   duplicate sub member in DT_1                       expected=duplicate_member   got=duplicate_member   sub
+  OK   exp NaN in DT_1                                    expected=non_finite         got=non_finite         NaN
+  OK   leaf max_rows widened, re-signed                   expected=not_narrower       got=not_narrower       DT_2: constraint ('max_rows', 'max') widened
+  OK   leaf scope crm.* under crm.read, re-signed         expected=not_narrower       got=not_narrower       DT_2: scope 'crm.*' not covered
+  OK   now == leaf exp (300), -03 rule                    expected=expired            got=expired            DT_2 now=300 exp=300 (-03 rule)
+  OK   now == leaf exp (300), -02 rule                    expected=accept             got=accept             
+  OK   now == leaf exp - 1 (299), -03 rule                expected=accept             got=accept             
+  OK   unknown kid                                        expected=signature_invalid  got=signature_invalid  DT_0 kid 'interop-02' is not a trusted key
+  OK   swap DT_0 and DT_1                                 expected=malformed          got=malformed          DT_0 del_max_depth absent in DT_0
+  OK   drop DT_1                                          expected=par_hash_mismatch  got=par_hash_mismatch  DT_1
+self-test: PASS
