@@ -40,7 +40,7 @@ sequenceDiagram
 
 ## なぜ今重要か
 
-- **きっかけ**: `subject.json` では「Review related draft: draft-asor-wimse-agent-delegation-chain-03」として挙げられている。ai_note は、委任元に束縛されたチェーンのドラフトがこのドラフトの Delegation Token 形式を拡張し、その束縛をこの形式に含めるべきかを問うている、と述べている。リポジトリの候補データは、そのドラフトを draft-nandakumar-wimse-delegator-bound-chains-00（2026-11-16）としている。その Abstract は、このドラフトの名前を挙げずに「既存の権限縮小委任トークン形式」の上に構築すると述べており、本文は読んでいないため、ai_note の読みはここでは確認していない。
+- **きっかけ**: ietf-wimse トラックの候補一覧に「Review related draft: draft-asor-wimse-agent-delegation-chain-03」があり、そのトリアージのメモは、委任元に束縛されたチェーンのドラフトがこのドラフトの Delegation Token 形式を拡張し、その束縛をこの形式に含めるべきかを問うている。そのドラフトは draft-nandakumar-wimse-delegator-bound-chains-00（2026 年 11 月 16 日）である。このドラフトの -03 を [DELEGATION-TOKENS] として引き、Delegation Token に 5 つの要素を足す、と述べている。委任元への束縛、発信者の仮名、循環の検出、audience の縮小、コンテキストへの束縛である（Section 1）。
 - **根拠となる資料**: リビジョン 03 の日付は 2026 年 10 月 27 日で、有効期限は 2027 年 4 月 30 日である。Section 1.2（OAuth の actor ドラフトとの関係）、Principal の資格に関する Table 1 の新しい行、3 つのクレーム登録を要求しなくなった Section 10 が加わり、ベクター集合は 35 ファイルから 36 ファイルに増えた（Appendix B、C と Section 11）。
 - **期待される影響**: ドラフトは、draft-niyikiza-oauth-attenuating-agent-tokens および draft-coetzee-oauth-spt-txn-tokens と手法を共有し、収束を目指すと述べている（Section 1.1、Appendix A）。用意された資料には、それに関するワーキンググループの決定は示されていない。エージェントゲートウェイの実装者は、試験に使える具体的な検証順序と結果名を得られる。個人提出のドラフトであるため、ワーキンググループの採択状態はない。
 
@@ -72,7 +72,7 @@ sequenceDiagram
 - "del_depth"、"del_max_depth"、"par_hash" の登録を、"del_max_depth" の意味が異なる draft-niyikiza-oauth-attenuating-agent-tokens とどう調整して 1 つにするか（Section 10）。どちらかの定義が変わるかどうかは、ドラフトに記載されていない。
 - 再発行をまたいで存続する親の識別子を設けるべきか。ドラフトは定義していない（Section 5）。
 - "act" チェーンと Delegation Chain に定義された対応付けを設けるべきかは、現状では定義がなく、未決である（Section 1.2）。
-- ドラフトは、委任元に束縛されたチェーンを扱うかどうか、またそのような束縛がこのトークン形式に属するかどうかを述べていない。これは `subject.json` の ai_note にある問いである。draft-nandakumar-wimse-delegator-bound-chains-00 の Abstract は、技術的分析で触れたステップ 1 の点を対象にしている。子トークンは検証者が受け入れる任意の鍵で署名できると述べ、親トークンが確認する鍵での署名を要求することを提案している。読んだのはその Abstract だけで、本文は読んでいない。
+- ドラフトは、委任元に束縛されたチェーンを扱うかどうか、またそのような束縛がこのトークン形式に属するかどうかを述べていない。draft-nandakumar-wimse-delegator-bound-chains-00 は、技術的分析で触れたステップ 1 の点を対象にしている。その Section 1 は、このドラフトの検証者はルート以外のすべてのトークンの署名を確かめるが「子トークンをどの鍵で署名すべきかは仕様に書かれていない」と述べる。委任元への束縛（Section 3）は、各子トークンを親トークンが確認する鍵で署名することを要求する。
 
 ## 実験
 

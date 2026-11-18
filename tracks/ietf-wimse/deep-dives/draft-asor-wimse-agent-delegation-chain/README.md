@@ -40,7 +40,7 @@ sequenceDiagram
 
 ## Why This Matters Now
 
-- **Trigger**: `subject.json` lists this as "Review related draft: draft-asor-wimse-agent-delegation-chain-03". Its ai_note says the delegator-bound chains draft extends this draft's Delegation Tokens format and asks whether binding belongs in it. The repository's candidate data names that draft as draft-nandakumar-wimse-delegator-bound-chains-00 (2026-11-16). Its abstract says it builds on "an existing attenuated delegation token format" without naming this draft, and its body was not read, so the ai_note's reading is not checked here.
+- **Trigger**: The ietf-wimse track's candidate list has "Review related draft: draft-asor-wimse-agent-delegation-chain-03", with a triage note that the delegator-bound chains draft extends this draft's Delegation Tokens format and asks whether binding belongs in it. That draft is draft-nandakumar-wimse-delegator-bound-chains-00 (16 November 2026). It cites this draft's -03 as [DELEGATION-TOKENS] and says it "extends Delegation Tokens with five things": delegator binding, an originator pseudonym, cycle detection, audience attenuation and context binding (Section 1).
 - **Source evidence**: revision 03 is dated 27 October 2026 and expires 30 April 2027. It adds Section 1.2 on the OAuth actor drafts, a Table 1 row on the Principal's standing, a Section 10 that no longer requests the three claim registrations, and a vector set that grows from thirty-five to thirty-six files (Appendices B, C and Section 11).
 - **Expected impact**: the draft says it shares its approach with, and is intended to converge with, draft-niyikiza-oauth-attenuating-agent-tokens and draft-coetzee-oauth-spt-txn-tokens (Section 1.1, Appendix A); nothing in the staged material shows a working-group decision on that. Implementers of agent gateways get a concrete verification order and outcome names to test against. As an individual draft it has no working-group adoption state.
 
@@ -72,7 +72,7 @@ sequenceDiagram
 - How should the single registration of "del_depth", "del_max_depth" and "par_hash" be reconciled with draft-niyikiza-oauth-attenuating-agent-tokens, given the differing "del_max_depth" semantics (Section 10)? The draft does not say whether either definition will change.
 - Should a parent identity that survives re-issuance exist? The draft defines none (Section 5).
 - Whether an "act" chain and a Delegation Chain should have a defined mapping is left open, since none is defined (Section 1.2).
-- The draft does not say whether it will carry delegator-bound chains or whether such binding belongs in this token format, which is the question in the `subject.json` ai_note. The abstract of draft-nandakumar-wimse-delegator-bound-chains-00 targets the step 1 point noted under Technical Analysis: it says a child token can be signed by any key the verifier accepts and proposes requiring the key its parent token confirms. Only that abstract was read, not the draft body.
+- The draft does not say whether it will carry delegator-bound chains or whether such binding belongs in this token format. draft-nandakumar-wimse-delegator-bound-chains-00 targets the step 1 point noted under Technical Analysis. Its Section 1 says this draft's verifier checks the signature of every non-root token "but the specification does not say which key must sign a child token", and its delegator binding (Section 3) requires each child token to be signed with the key confirmed by its parent token.
 
 ## Experiments
 

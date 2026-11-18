@@ -2,7 +2,7 @@
 
 ## きっかけ
 
-`subject.json` では、ietf-wimse トラックの「Review related draft: draft-asor-wimse-agent-delegation-chain-03」として挙げられている。ai_note は、委任元に束縛されたチェーンのドラフトがこのドラフトの Delegation Token 形式を拡張し、その束縛をこの形式に含めるべきかを問うている、と述べている。リポジトリの候補データは、そのドラフトを draft-nandakumar-wimse-delegator-bound-chains-00（2026-11-16）としている。`subject.json` に Datatracker の状態はなく、これはワーキンググループが採択していない個人提出のドラフト（draft-ietf-wimse- ではなく draft-asor-）であることと合っている。リポジトリの WIMSE のメールデータは 2026 年 11 月 10 日から 17 日を対象としており、このドラフトに関するメッセージはない。手元にあるメーリングリストの日付は、Appendix A が挙げる 2026 年 10 月 23 日と 24 日のメッセージだけである。
+ietf-wimse トラックの候補一覧では「Review related draft: draft-asor-wimse-agent-delegation-chain-03」として挙げられている。そのトリアージのメモは、委任元に束縛されたチェーンのドラフトがこのドラフトの Delegation Token 形式を拡張し、その束縛をこの形式に含めるべきかを問うている、と述べている。そのドラフトは draft-nandakumar-wimse-delegator-bound-chains-00（2026 年 11 月 16 日）で、このドラフトの -03 を規範参照 [DELEGATION-TOKENS] として引いている。収集した Datatracker のデータにこのドラフトの状態はなく、これはワーキンググループが採択していない個人提出のドラフト（draft-ietf-wimse- ではなく draft-asor-）であることと合っている。リポジトリの WIMSE のメールデータは 2026 年 11 月 10 日から 17 日を対象としており、このドラフトに関するメッセージはない。手元にあるメーリングリストの日付は、Appendix A が挙げる 2026 年 10 月 23 日と 24 日のメッセージだけである。
 
 ## なぜ重要か
 
@@ -10,7 +10,7 @@
 
 ## 未解決の問い
 
-- ai_note が問うように、チェーンの委任元への束縛はこのトークン形式に属するのか。ドラフトはすでに全ホップで "sub" と "client_id" を運んでいる（Section 3.1）が、Section 6 のステップ 1 は子トークンをどの鍵で検証すべきかを定めていない。nandakumar のドラフトは Abstract しか読んでいない。
+- チェーンの委任元への束縛はこのトークン形式に属するのか。ドラフトはすでに全ホップで "sub" と "client_id" を運んでいる（Section 3.1）が、Section 6 のステップ 1 は子トークンをどの鍵で検証すべきかを定めていない。draft-nandakumar-wimse-delegator-bound-chains-00 は、この規則を別形式ではなくこの形式の拡張として足している。Section 9 は、著者らの以前の形式を「[DELEGATION-TOKENS] を拡張することで置き換え、権限縮小の定義を一か所にする」と述べている。このドラフトがその規則を取り込むかどうかは、まだ述べられていない。
 - 各クレーム名の登録を 1 つにするために、draft-niyikiza-oauth-attenuating-agent-tokens との "del_max_depth" の差異はどう解消されるのか（Section 10）。
 - スコープの語彙、トラストアンカーの出所、Principal の資格の確認を誰が定義するのか。ドラフトは、1 つ目を補完文書に期待し（Section 4.5）、2 つ目は著者の考えとしてワーキンググループに委ね（Section 6.4）、3 つ目を配備環境に委ねている（Section 6.1）。
 - -03 は提案された規則を記録しているだけだが、複数型の認可詳細はどのように機能するのか（Section 4.4）。
