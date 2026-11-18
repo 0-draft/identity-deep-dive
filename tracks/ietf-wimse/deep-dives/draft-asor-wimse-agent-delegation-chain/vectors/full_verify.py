@@ -71,6 +71,7 @@ LAB_CHOICES = [
     "A11 order inside step 8: aud, scope, unknown constraint type, per-action, cumulative; the -03 says aud 'then' "
     "scope, per-action and cumulative, and does not place the unknown-type deny of Section 4.2 in that sequence.",
     "A12 cumulative totals are keyed by DT_n's jti; ancestors' max_subtree totals are not consulted (step 8 checks DT_n only).",
+    "A13 DPoP proof alg must be 'Ed25519' (RFC 9864), as Section 3 requires for Delegation Tokens; 'EdDSA' (RFC 8037) is denied. The -03 does not say which alg a DPoP proof may use.",
 ]
 
 NOW = 1500
