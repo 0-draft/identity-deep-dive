@@ -2,7 +2,7 @@
 
 - [ ] Compact 形式の文字列を `~` で分割したとき、各 SD-JWT または KB-SD-JWT の末尾と次の KB-SD-JWT の間に空の要素がちょうど 1 つあり、空の要素が 0 個または 2 個の文字列は拒否される (Section 5.1.1)。
 - [ ] 末尾の `~` は dSD-JWT を、その不在は dSD-JWT+KB を示し、それぞれが期待される最後の要素と照合される (Section 5.1.1、6)。
-- [ ] 最終でない各 KB-SD-JWT の `typ` は `kb-sd-jwt+kb` であり、dSD-JWT の最終のものは `kb+sd-jwt` または `kb-sd-jwt+kb`、dSD-JWT+KB の最終のものは `kb-sd-jwt+kb` である (Section 6)。
+- [ ] 最終でない各 KB-SD-JWT の `typ` は `kb-sd-jwt+kb` であり、dSD-JWT の最終のものは `kb+sd-jwt` または `kb-sd-jwt+kb`、dSD-JWT+KB の最終のものは `kb-sd-jwt+kb` である (Section 6、手順 1、3、4)。
 - [ ] `typ` が `kb-sd-jwt+kb` の KB-SD-JWT は Delegate Payload に `cnf` claim を持ち、持たないものは拒否される (Section 5.1.4)。
 - [ ] 以前の名前 `kb+sd-jwt+kb` が誤って受理されない (Appendix C)。
 - [ ] 各要素は直前の `cnf` 鍵を Issuer の鍵として検証され、`_sd_alg` を除くすべての claim について Delegate Payload が使われる (Section 6、手順 3)。
@@ -12,10 +12,10 @@
 - [ ] `issuer_jwt_hash` を使う場合、Delegate Holder は以前の Disclosure を除いても連鎖が検証に通り、`sd_hash` の場合は通らない (Section 4.1)。
 - [ ] 同じ Holder の `cnf` 鍵を使う別の連鎖に移した KB-SD-JWT は、ハッシュによる結び付きの検査で拒否される (Section 8.1)。
 - [ ] RFC 9901 が Issuer 署名ペイロードに置く claim は、`_sd_alg` を除き、Delegate Payload の中にあり、その外にはない (Section 5.1.4)。
-- [ ] Delegate Payload Disclosure は base64url でエンコードした `[salt, object]` 配列であり、RFC 9901 Section 4.1 の規則に従う (Section 5.1.3)。
+- [ ] Delegate Payload Disclosure は base64url でエンコードした `[salt, object]` 配列であり、その JSON オブジェクトは Issuer 署名 JWT のペイロードに関する RFC 9901 Section 4.1 の規則に従う (Section 5.1.3)。
 - [ ] JSON Serialization では、`kb_jwt` は General または Flattened の SD-JWT を持ち、ダイジェストは等価な Compact Serialization に対して計算される (Section 5.1.2)。
 - [ ] Verifier が Key Binding を必要とする場合、Key Binding のない dSD-JWT は拒否される (Section 6、手順 5)。
 - [ ] dSD-JWT+KB では、最後の KB-JWT は最後の Delegate Payload の鍵で検証され、その `sd_hash` は最終の KB-SD-JWT とその Disclosure を対象とする (Section 6、手順 5)。
 - [ ] OpenID4VP バインディングでは、`transaction_data` の種別 `delegate` が `format` と `delegate_payload_disclosure` を持ち、ペイロードに `delegate_disclosures` にない Disclosure が含まれず、複数の `delegate` がある場合は各ダイジェストが `delegate_payload` に含まれる (Section 7.1)。
 - [ ] `issuer_jwt_hash` という claim 名と、`kb+sd-jwt`、`kb-sd-jwt+kb` の種別が、Appendix A で要求された登録と一致する。
-- [ ] 失効の代わりにこの draft が頼っているため、短い `exp` と制約 claim が尊重される (Section 8.2、8.3)。
+- [ ] Section 8.3 が個人の Holder における失効の問題を緩和する手段として挙げているため、短い `exp` と制約 claim が尊重される (Section 8.2、8.3)。

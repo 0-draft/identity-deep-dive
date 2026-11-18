@@ -2,7 +2,7 @@
 
 - [ ] The compact string splits on `~` with exactly one empty component between the end of each SD-JWT or KB-SD-JWT and the next KB-SD-JWT, and a string with zero or two empty components is rejected (Section 5.1.1).
 - [ ] A trailing `~` marks a dSD-JWT and its absence marks a dSD-JWT+KB, and each form is checked against the expected final component (Sections 5.1.1, 6).
-- [ ] Every non-final KB-SD-JWT has `typ` `kb-sd-jwt+kb`, the final one of a dSD-JWT has `kb+sd-jwt` or `kb-sd-jwt+kb`, and the final one of a dSD-JWT+KB has `kb-sd-jwt+kb` (Section 6).
+- [ ] Every non-final KB-SD-JWT has `typ` `kb-sd-jwt+kb`, the final one of a dSD-JWT has `kb+sd-jwt` or `kb-sd-jwt+kb`, and the final one of a dSD-JWT+KB has `kb-sd-jwt+kb` (Section 6, steps 1, 3 and 4).
 - [ ] A KB-SD-JWT with `typ` `kb-sd-jwt+kb` has a `cnf` claim in its Delegate Payload, and one without it is rejected (Section 5.1.4).
 - [ ] The earlier name `kb+sd-jwt+kb` is not accepted by accident (Appendix C).
 - [ ] Each link is validated with the previous `cnf` key as the issuer key, and the Delegate Payload is used for all claims except `_sd_alg` (Section 6, step 3).
@@ -12,10 +12,10 @@
 - [ ] When `issuer_jwt_hash` is used, the Delegate Holder can drop earlier Disclosures and the chain still verifies, and with `sd_hash` it cannot (Section 4.1).
 - [ ] A KB-SD-JWT moved to another chain that uses the same Holder `cnf` key is rejected by the hash binding checks (Section 8.1).
 - [ ] The claims that RFC 9901 puts in the Issuer-signed payload, except `_sd_alg`, are found in the Delegate Payload and not beside it (Section 5.1.4).
-- [ ] The Delegate Payload Disclosure is a base64url encoded `[salt, object]` array and follows RFC 9901 Section 4.1 rules (Section 5.1.3).
+- [ ] The Delegate Payload Disclosure is a base64url encoded `[salt, object]` array and its JSON object follows the RFC 9901 Section 4.1 rules for an Issuer-signed JWT payload (Section 5.1.3).
 - [ ] In JSON Serialization, `kb_jwt` holds a General or Flattened SD-JWT, and the digests are computed over the equivalent Compact Serialization (Section 5.1.2).
 - [ ] A dSD-JWT without Key Binding is rejected when the Verifier requires Key Binding (Section 6, step 5).
 - [ ] For a dSD-JWT+KB, the final KB-JWT is checked with the key from the last Delegate Payload, and its `sd_hash` covers the final KB-SD-JWT and its Disclosures (Section 6, step 5).
 - [ ] In the OpenID4VP binding, `transaction_data` type `delegate` has `format` and `delegate_payload_disclosure`, the payload has no Disclosure missing from `delegate_disclosures`, and several `delegate` entries each have their digest in `delegate_payload` (Section 7.1).
 - [ ] The `issuer_jwt_hash` claim name and the `kb+sd-jwt` and `kb-sd-jwt+kb` types match the registrations requested in Appendix A.
-- [ ] Short `exp` values and constraint claims are honored, because the draft relies on them in place of revocation (Sections 8.2, 8.3).
+- [ ] Short `exp` values and constraint claims are honored, because Section 8.3 names them as the way to limit the revocation problem for individual Holders (Sections 8.2, 8.3).

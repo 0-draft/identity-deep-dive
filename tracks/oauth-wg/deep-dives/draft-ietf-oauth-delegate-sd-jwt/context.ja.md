@@ -2,7 +2,7 @@
 
 ## きっかけ
 
-`subject.json` は次の理由を挙げている: 「PR #15 restructures where security claims live in the KB-SD-JWT and defines their delegation semantics.」この pull request は用意された資料に含まれず、確認していない。対象は oauth-wg トラックの draft-ietf-oauth-delegate-sd-jwt の revision 00 であり、Datatracker の状態は Active、I-D Exists、WG Document である。
+draft のリポジトリの [PR #15](https://github.com/oauth-wg/oauth-delegate-sd-jwt/pull/15)「Move security claims to base KB-SD-JWT payload and define claim semantics」。2026-11-10 に作成され、2026-11-18 時点で open である。Issue #3 と #10 を解決するもので、`cnf`、`exp`、`nbf` などのセキュリティ claim を `delegate_payload` からベースの KB-SD-JWT ペイロードへ移し、連鎖の各段で各 claim が何を意味するかを定め、Verification 節を更新する。対象は oauth-wg トラックの draft-ietf-oauth-delegate-sd-jwt の revision 00 であり、Datatracker の状態は Active、I-D Exists、WG Document である。
 
 ## なぜ重要か
 
@@ -10,7 +10,7 @@
 
 ## 未解決の問題
 
-- `delegate_payload` 配列、Delegate Payload オブジェクト、Disclosure のダイジェストの対応は、例で示されていない (Section 5.1.3、5.1.4)。
-- 委任が前の付与を狭める方向にしか行えないかどうかは記載されていない (Section 8.2)。
-- プライバシーに関する節は RFC 9901 を指すだけである (Section 9)。
-- PR #15 の内容は資料に含まれないため、-00 との関係は不明である。
+- `delegate_payload` 配列、Delegate Payload オブジェクト、Disclosure のダイジェストの対応は、例で示されていない (Section 5.1.3、5.1.4)。PR #14 が具体例を提案している。
+- 委任が前の付与を狭める方向にしか行えないかどうかは、-00 には書かれていない (Section 8.2)。Issue #8 がこれを求めており、PR #15 が狭めることを求めるのは `exp` と `nbf` だけである。
+- プライバシーに関する節は RFC 9901 Section 10 を指すだけである (Section 9)。
+- PR #15 はマージされていないため、-00 のどこが変わるかはまだ確定していない。
