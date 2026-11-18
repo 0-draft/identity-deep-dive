@@ -3,8 +3,10 @@
 draft-asor-wimse-agent-delegation-chain-03, on top of steps 1 to 5 and the
 audience check in verify_vectors.py.
 
-Written from the -03 text and RFC 9449 only (no code from attenu-guard,
-attenu-guard-ts or Cred). What each step does here:
+Written from the -03 text and a recollection of RFC 9449, not re-checked
+against the RFC text; every "RFC 9449 Section ..." below is from memory (no
+code from attenu-guard, attenu-guard-ts or Cred). The status list is an
+in-memory model, not a signed status list token. What each step does here:
 
   6  Holder binding (Section 6 step 6, Section 7): a DPoP proof checked as
      RFC 9449 Section 4.3 lists (typ dpop+jwt, asymmetric alg on the local list,
@@ -52,9 +54,11 @@ Deny = vv.Deny
 
 LAB_CHOICES = [
     "A1 ath is SHA-256 of DT_n's compact serialization; the -03 does not say which token of a chain is 'the access token'.",
-    "A2 iat window is |now - iat| <= 60 s, and no server nonce is issued; RFC 9449 leaves the window to the server.",
-    "A3 htu is compared byte-for-byte with the request URI after dropping query and fragment; no RFC 3986 normalization.",
-    "A4 jti replay cache: a proof jti accepted once is refused afterwards (RFC 9449 Section 11.1 makes this a server choice).",
+    "A2 iat window is |now - iat| <= 60 s, and no server nonce is issued; RFC 9449 (from memory) leaves the window to the server.",
+    "A3 htu is compared byte-for-byte with the request URI after dropping query and fragment (RFC 9449 4.3, from memory); "
+    "no RFC 3986 normalization.",
+    "A4 jti replay cache: a proof jti accepted once is refused afterwards (RFC 9449 Section 11.1, from memory, makes "
+    "this a server choice).",
     "A5 status reference claim is 'status': {'status_list': {'uri', 'idx'}}; the -03 names no claim. The cached list is "
     "an in-memory model (fetched_at, ttl, statuses), not a signed status list token.",
     "A6 a cached answer is trusted while now < fetched_at + ttl (same half-open form as now < exp).",
