@@ -1,12 +1,12 @@
 # Interop Checklist
 
 - [ ] ヘッダーまたはペイロードのバイト列が、解析したオブジェクトの JCS シリアライズと正確に一致しないトークンを拒否し、non_canonical を報告する（Section 3）。
-- [ ] 重複したメンバー名、非有限数、単独の UTF-16 サロゲート、2^53-1 を超える整数を、malformed として、または Table 2 の名前で拒否する（Section 3、6.2）。
-- [ ] "client_id"、"cnf"、"aud" を欠くトークン、または "aud" が null もしくは空配列のトークンを malformed として拒否する。-01 の規則を黙って適用しない（Section 3.1）。
+- [ ] 重複したメンバー名、非有限数、単独の UTF-16 サロゲート、絶対値が 2^53-1 を超える整数を、malformed として、または Table 2 の名前で拒否する（Section 3、6.2）。
+- [ ] "client_id"、"cnf"、"aud" を欠くトークン、または "aud" が null もしくは空配列のトークンを malformed として拒否する。-01 のチェーンも受け入れる場合は、どのリビジョンの規則を適用したかを報告する（Section 3、3.1）。
 - [ ] 署名が検証できる場合でも、いずれかのトークンの "alg" が検証者自身の一覧にないとき、およびヘッダーの "alg" がその鍵に設定された値と異なるときは、チェーンを拒否する（ステップ 1）。
 - [ ] 組み込みの署名器が、参照実装がなお使っている多態的な "EdDSA" ではなく、RFC 9864 の完全指定の "Ed25519" を使っているか確認する（Section 3、11）。
 - [ ] 親の JWS Signing Input の正確なバイト列に対して "par_hash" を再計算し、定数時間で比較し、再発行された親と共に提示された子を拒否する（Section 5、9.2）。
-- [ ] DT_0 で del_depth が 0、DT_i で i であること、n が DT_0.del_max_depth 未満であることを確認する。niyikiza のドラフトが許す、葉の del_depth が del_max_depth に等しい場合を試験する（Section 10、ステップ 3）。
+- [ ] DT_0 で del_depth が 0、DT_i で i であること、n が DT_0.del_max_depth 未満であることを確認する。Section 10 が niyikiza のドラフトでは許されるとし、-03 では depth_invalid として拒否される、葉の del_depth が del_max_depth に等しい場合を試験する（Section 10、ステップ 3）。
 - [ ] いずれかの "sub" が DT_0 と異なるチェーンを拒否し、DT_0 の "sub" の欠落または空を malformed として扱う（ステップ 3、Section 3）。
 - [ ] 2 つ目の認可詳細、"agent_delegation" 以外の詳細型、詳細または制約内の未知のメンバーを持つトークンを拒否する。これには、親が持たない詳細型を加える子も含まれる（Section 4.4、ベクター reject_child_adds_detail_type）。
 - [ ] スコープを、リテラル、ワイルドカード、不透明の順にバイト列で分類する。crm.re*、crm.*.read、単独の * を拒否し、crm.* が crm や crmx.read を包含しないことを確認する（Section 4.1）。

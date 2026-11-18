@@ -1,12 +1,12 @@
 # Interop Checklist
 
 - [ ] Reject a token whose header or payload bytes are not exactly the JCS serialization of the parsed object, and report non_canonical (Section 3).
-- [ ] Reject duplicate member names, non-finite numbers, lone UTF-16 surrogates and integers above 2^53-1 as malformed or under the Table 2 names (Sections 3, 6.2).
-- [ ] Reject a token missing "client_id", "cnf" or "aud", or with a null or empty-array "aud", as malformed. Do not apply -01 rules silently (Section 3.1).
+- [ ] Reject duplicate member names, non-finite numbers, lone UTF-16 surrogates and integers whose magnitude exceeds 2^53-1 as malformed or under the Table 2 names (Sections 3, 6.2).
+- [ ] Reject a token missing "client_id", "cnf" or "aud", or with a null or empty-array "aud", as malformed. If -01 chains are also accepted, report which revision's rules were applied (Sections 3, 3.1).
 - [ ] Deny a chain when any token's "alg" is not on the verifier's own list, even if the signature verifies, and when the header "alg" differs from the one configured for the key (step 1).
 - [ ] Check that the built-in signer uses the fully specified "Ed25519" of RFC 9864 and not the polymorphic "EdDSA", which the reference libraries still use (Sections 3, 11).
 - [ ] Recompute "par_hash" over the exact JWS Signing Input of the parent, compare in constant time, and deny a child presented with a re-issued parent (Sections 5, 9.2).
-- [ ] Confirm del_depth is 0 at DT_0 and i at DT_i, and that n is strictly less than DT_0.del_max_depth. Test a leaf whose del_depth equals del_max_depth, which the niyikiza draft permits (Section 10, step 3).
+- [ ] Confirm del_depth is 0 at DT_0 and i at DT_i, and that n is strictly less than DT_0.del_max_depth. Test a leaf whose del_depth equals del_max_depth, which Section 10 says the niyikiza draft permits and which -03 denies as depth_invalid (Section 10, step 3).
 - [ ] Deny a chain in which any "sub" differs from DT_0's, and treat a missing or empty DT_0 "sub" as malformed (step 3, Section 3).
 - [ ] Reject a token with a second authorization detail, a detail type other than "agent_delegation", or an unknown member in the detail or in a constraint. This includes a child that adds a detail type its parent lacked (Section 4.4, vector reject_child_adds_detail_type).
 - [ ] Classify scopes by bytes in the order literal, wildcard, opaque. Reject crm.re*, crm.*.read and bare *, and check that crm.* does not cover crm or crmx.read (Section 4.1).

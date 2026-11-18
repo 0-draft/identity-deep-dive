@@ -27,11 +27,12 @@
 - Section 6 のステップ 5 は、now が exp 未満であることを要求する。
 - Section 7 は DPoP による保持者バインディングのみを規定する。mTLS は後のリビジョンに委ねられる。
 - Section 4.4 は、親が持たない詳細型を子が加えた場合は拡大として扱うという規則を、後のリビジョン向けに記録している。-03 ではそのトークンは不正（malformed）である。
-- Appendix B のベクターは 36 個で、-01 の 20 個の集合は変更されない。Appendix C は「Changes Since -02」に改称され、従来の一覧は Appendix D になった。
-- Section 11 は、ライブラリのバージョン attenu-guard 0.22.0 と attenu-guard-ts 0.16.0、および -02 のベクターに対する独立した実行結果（成功 20、失敗 5、宣言済みの未対応 10）を報告している。
+- Appendix B は 35 個から 36 個に増えたベクターファイルの集合を説明し、-01 の 20 個の集合は変更されない。新しい Appendix C「Changes Since -02」が追加され、-01 からの変更一覧は Appendix D に移った。
+- 参考的参照文献の版が上がった: draft-hamr-oauth-agent-delegation は -02 から -03、draft-ietf-wimse-identifier は -03 から -04、draft-niyikiza-oauth-attenuating-agent-tokens は -01 から -02。
+- Section 11 は、ライブラリのバージョン attenu-guard 0.22.0 と attenu-guard-ts 0.16.0（0.20.0 と 0.14.0 から更新）を報告し、組み込みの署名器がなお "EdDSA" を使うと述べ、Cred の適合性ハーネスが 2026-10-20 に -02 の 35 個のベクターに対して実行した結果（成功 20、失敗 5、宣言済みの未対応 10）を、その作者の報告として伝えている。36 個すべてに対する実行は報告されていない。attenu-guard リポジトリの v0.22.0 タグ（2026-10-27 リリース）には src/attenu_guard/vectors/draft02 に 36 個の JSON ファイル（v0.21.0 では 35 個）、src/attenu_guard/vectors に -01 の 20 個のファイルがある。Cred の結果は再現していない。
 
 ## 影響分析
 
-- 上流: RFC 9068、RFC 9396、RFC 9449、RFC 7800、RFC 8785、RFC 9864 の上に構築され、失効には draft-ietf-oauth-status-list を用いる。draft-reece-wimse-cross-org-delegation の要件 R1 と R5 を満たすと主張し、"client_id" と "sub" については draft-ietf-wimse-aims に従う。クレーム名は draft-niyikiza-oauth-attenuating-agent-tokens と重なる。
+- 上流: RFC 9068、RFC 9396、RFC 9449、RFC 7800、RFC 8785、RFC 9864 の上に構築され、失効には draft-ietf-oauth-status-list を用いる。draft-reece-wimse-cross-org-delegation の要件 R1 と R5 を満たす権限縮小の仕組みとして設計されたと述べ、"client_id" と "sub" については draft-ietf-wimse-aims に従う。クレーム名は draft-niyikiza-oauth-attenuating-agent-tokens と重なる。
 - 下流: エージェントのチェーンを検証するゲートウェイや執行点、記録済みのチェーンを再検査する監査者、スコープの語彙や監査記録に関する補完文書。ドラフトはスコープの語彙について補完文書を想定しており（Section 4.5）、ルート鍵の材料の保持には draft-gilda-audit-agent-audit-record を参照している。
-- 互換性: -03 は -01 の形のチェーンのための移行モードを定義していない。-01 の 20 個のベクターは新しいリビジョンに適合せず、バイト単位で固定されている。now が exp 未満という変更と mTLS の削除は、-02 からの挙動の変更である。"del_max_depth" の意味は niyikiza のドラフトと異なるため、同じ深さの値がそちらでは通り、本ドラフトのステップ 3 では失敗しうる。
+- 互換性: -03 は -01 の形のチェーンのための移行モードを定義していない。-01 の 20 個のベクターは新しいリビジョンに適合せず、バイト単位で固定されている。now が exp 未満という変更と mTLS の削除は、-02 からの挙動の変更である。"del_max_depth" の意味は niyikiza のドラフトと異なるため、同じ深さの値がそちらでは通り、本ドラフトのステップ 3 では失敗しうる（Section 10。draft-niyikiza-oauth-attenuating-agent-tokens-02 の Section 4.3 は、子の del_depth が親の del_max_depth 以下であることを許す）。
