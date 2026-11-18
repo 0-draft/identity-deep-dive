@@ -40,7 +40,7 @@
   | Issuer の Disclosure をすべて除く | 拒否 (step 3.3) | 受理。Issuer のクレームは見えない |
   | Issuer が署名していない Disclosure を足す | 拒否 (RFC 9901 7.1 step 5) | 拒否 (RFC 9901 7.1 step 5) |
 
-  `issuer_jwt_hash` 版では、dSD-JWT+KB のどの署名も Issuer の Disclosure を覆っていない。KB-SD-JWT は Issuer 署名付き JWT だけをハッシュし (Section 5.1.4)、最後の KB-JWT の `sd_hash` は最後の KB-SD-JWT とその Disclosure しか覆わない (Section 5.1.3、Section 6 step 5.3)。そのため、完成したプレゼンテーションを扱う誰でも Issuer の Disclosure を取り除けて、それでも検証に通る。Disclosure を足すことはやはり検出される。普通の RFC 9901 の SD-JWT+KB では、KB-JWT の `sd_hash` が提示された Disclosure を覆う。`sd_hash` 版では、Delegate Holder は Holder が選んだ Issuer の Disclosure をそのまま提示するしかなく、減らすことはできない。
+  `issuer_jwt_hash` 版では、dSD-JWT+KB のどの署名も Issuer の Disclosure を覆っていない。KB-SD-JWT は Issuer 署名付き JWT だけをハッシュし (Section 5.1.4)、最後の KB-JWT の `sd_hash` は最後の KB-SD-JWT とその Disclosure しか覆わない (Section 5.1.3、Section 6 step 5.3)。Section 4.1 は、Holder が Delegate Holder に Issuer の Disclosure を省かせる手段として `issuer_jwt_hash` を定めているので、省けること自体は意図どおりである。Lab で分かったのは、省けるのが Delegate Holder に限られないことで、完成したプレゼンテーションを扱う誰でも Issuer の Disclosure を取り除けて、それでも検証に通る。Disclosure を足すことはやはり検出される。普通の RFC 9901 の SD-JWT+KB では、KB-JWT の `sd_hash` が提示された Disclosure を覆う。`sd_hash` 版では、Delegate Holder は Holder が選んだ Issuer の Disclosure をそのまま提示するしかなく、減らすことはできない。
 - Lab 3 (カード `1111` の SD-JWT A と カード `2222` の SD-JWT B が同じ Holder の `cnf` を持つ。委任 A は `max_amount` 50、委任 B は 5000 で、どちらも同じエージェントの鍵に委任する):
   - どちらの連鎖も単独なら検証に通る。
   - SD-JWT A に KB-SD-JWT B をつないだものは、Section 6 どおりの Verifier では拒否される (`sd_hash` 版は step 3.3、`issuer_jwt_hash` 版は step 3.4)。前の `cnf` での署名しか見ない甘い Verifier は受理し、カード `1111` と `max_amount` 5000 を出力する。Section 8.1 が警告している取り違えがこれにあたる。
