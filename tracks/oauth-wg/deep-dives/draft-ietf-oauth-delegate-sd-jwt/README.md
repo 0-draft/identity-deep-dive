@@ -65,9 +65,9 @@ sequenceDiagram
 
 ## Experiments
 
-- [ ] Lab 1: Build a dSD-JWT with one delegation from an RFC 9901 SD-JWT, then check that a standard RFC 9901 parser rejects it and that a prototype Section 6 verifier accepts it.
-- [ ] Lab 2: Make the same delegation once with `sd_hash` and once with `issuer_jwt_hash`, then drop a Disclosure from the earlier SD-JWT and see which variant still verifies.
-- [ ] Lab 3: Reuse one Holder `cnf` key for two delegations, swap the KB-SD-JWT between chains, and test whether the Section 8.1 checks catch the mismatch.
+- [x] Lab 1: Build a dSD-JWT with one delegation from an RFC 9901 SD-JWT, then check that a standard RFC 9901 parser rejects it and that a prototype Section 6 verifier accepts it.
+- [x] Lab 2: Make the same delegation once with `sd_hash` and once with `issuer_jwt_hash`, then drop a Disclosure from the earlier SD-JWT and see which variant still verifies.
+- [x] Lab 3: Reuse one Holder `cnf` key for two delegations, swap the KB-SD-JWT between chains, and test whether the Section 8.1 checks catch the mismatch.
 
 ## Sources
 
