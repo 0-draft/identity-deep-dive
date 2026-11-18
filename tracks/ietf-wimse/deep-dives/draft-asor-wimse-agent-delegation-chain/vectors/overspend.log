@@ -1,0 +1,31 @@
+python 3.15.2, cryptography 50.0.2
+A. Section 9.4 overspend: root max_spend max 100, two children at 60, two gateways
+  OK   both chains verify (60 <= 100 on each edge)                        gw-a=accept gw-b=accept
+  OK   each gateway permits a 60 action under its per-action max          combined spend 120 against a root ceiling of 100
+  OK   a single child at 120 is caught at step 4                          not_narrower DT_1: constraint ('max_spend', 'max') widened
+  OK   with max_subtree 100 -> 60 + 60 both chains still verify           children's max_subtree sum 120 > 100; a chain-only verifier checks each edge only
+  OK   step 8 at gateways that hold no subtree total (MUST deny)          gw-a permit=False gw-b permit=False, spend 0
+  OK   gateways that skip the cumulative check                            gw-a permit=True gw-b permit=True, spend 120
+
+B. Shared accounting: one ledger keyed by the root's subtree, balance 100
+  OK   atomic check-and-debit, 2 gateways x 60, 500 races                 combined spend per race: {60: 500}
+  OK   read at authorization, debit afterwards (forced interleave)        combined spend per race: {120: 50}; balance ends at -20
+  OK   two uncoordinated writers (one replica per gateway)                combined spend 120
+
+C. Coordinated allocation with local enforcement (single-writer allocator, 100 units)
+  OK   allocate 60 to A, then 60 to B refused, then 40 to B               results (True, False, True), parent remaining 0
+  OK   gw-a spends 60 then 1; gw-b spends 40 then 1                       results (True, False, True, False), total honored 100
+  OK   hazard 1, duplicate allocation: two offline allocators, 60 + 60    both succeed; allocated 120 > 100
+  OK   hazard 2, local rollback: debit not persisted, gateway restarts    gw-a honors 120 against an allocation of 60
+  OK     same with the debit persisted before honoring                    second 60 refused; honored 60
+  OK   hazard 3, premature reuse: reservation released before settlement  gw-b honors 80 against an allocation of 40
+  OK     same with the reservation held until settled                     second 40 refused while pending; honored 40
+
+self-test (the checks above must be able to fail):
+  OK   allocator refuses 70 + 40                                          remaining 30
+  OK   atomic ledger refuses the 101st unit                               balance 0
+  OK   tampered child signature is rejected                               signature_invalid
+  OK   child-a chain at gw-b is rejected                                  audience_mismatch
+self-test: PASS
+
+lab2: PASS

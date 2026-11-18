@@ -1,0 +1,32 @@
+python 3.15.2, cryptography 50.0.2
+steps run: 1-5 only (no audience, no holder binding, no status list, no action)
+chain: DT_0 planner {crm.*, mail.send} max_rows 10000 exp 4600 del_max_depth 3
+       DT_1 researcher {crm.read, crm.list} max_rows 1000 exp 2800
+       DT_2 formatter {crm.read} max_rows 100 exp 1900; iat 1000 on all; default now 1500
+  DT_0 672 bytes, sha256(signing input)=SLFkiygfPo89irgBsRL2B1bQoMTVx48WKv3lBL5fDjo
+  DT_1 730 bytes, sha256(signing input)=VpKjP2EFn0Q8mFNiF4V6IJ-f55FkFtJ1iOHCWOxnTZo
+  DT_2 712 bytes, sha256(signing input)=5mhoCxYroOvOhnIpWrwgZwjrcrzYZqfmmQ-WOA0Uxps
+
+  OK   baseline                                                       expected=accept             got=accept             
+  OK   DT_2 adds mail.send (DT_1 lacks it), re-signed                 expected=not_narrower       got=not_narrower       DT_2: scope 'mail.send' not covered
+  OK   DT_1 max_rows 20000 > DT_0 10000, re-signed                    expected=not_narrower       got=not_narrower       DT_1: constraint ('max_rows', 'max') widened
+  OK   DT_1 drops max_rows (absent = unbounded, rule 3)               expected=not_narrower       got=not_narrower       DT_1: constraint ('max_rows', 'max') absent in child
+  OK   DT_2 del_max_depth 4 > inherited 3 (rule 5)                    expected=not_narrower       got=not_narrower       DT_2: del_max_depth raised 4 > 3
+  OK   DT_1 sub altered, re-signed, par_hash repaired                 expected=principal_altered  got=principal_altered  DT_1
+  OK   DT_2 presented with a re-issued DT_1 (new jti/exp)             expected=par_hash_mismatch  got=par_hash_mismatch  DT_2
+  OK   DT_2 par_hash points at DT_0, re-signed                        expected=par_hash_mismatch  got=par_hash_mismatch  DT_2
+  OK   now = 1899 (DT_2 exp - 1)                                      expected=accept             got=accept             
+  OK   now = 1900 = DT_2 exp, -03 rule (now < exp)                    expected=expired            got=expired            DT_2 now=1900 exp=1900 (-03 rule)
+  OK   now = 1900 = DT_2 exp, -02 rule (now <= exp)                   expected=accept             got=accept             
+  OK   now = 1901, -02 rule                                           expected=expired            got=expired            DT_2 now=1901 exp=1900 (-02 rule)
+  OK   DT_2 exp 2900 > DT_1 exp 2800 (rule 4), now 1500               expected=expired            got=expired            DT_2 exp 2900 > parent exp 2800 (rule 4)
+  OK   DT_1 nbf 2000 > now 1500                                       expected=expired            got=expired            DT_1 not yet valid
+  OK   DT_1 signed by an untrusted key under kid root-1               expected=signature_invalid  got=signature_invalid  DT_1 signature does not verify
+  OK   DT_0 del_max_depth 2: n = 2 is not < 2                         expected=depth_invalid      got=depth_invalid      n=2 not < DT_0.del_max_depth=2
+  OK   DT_2 del_depth 3 (skips 2)                                     expected=depth_invalid      got=depth_invalid      DT_2 del_depth 3 != 2
+
+lab1: 17/17 as expected -> PASS
+
+self-test (a mutated chain scored as 'accept' must FAIL):
+  FAIL DT_2 widens crm.read to crm.* (deliberately wrong expectation) expected=accept             got=not_narrower       DT_2: scope 'crm.*' not covered
+self-test: PASS (mismatch detected)
