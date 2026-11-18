@@ -39,6 +39,11 @@
       "at": "2026-11-18T07:34:29+00:00",
       "text": "The only notable change is in openid/claims-aggregation, which had 10 commits (4 merged PRs) that clarify the Claims Endpoint, trust boundaries and IANA registration templates. AppAuth-iOS made `OIDAuthorizationService` a protocol.",
       "text_ja": "主な動きは openid/claims-aggregation で、10件のコミット(マージされたPR 4件)により Claims Endpoint、信頼境界、IANA登録テンプレートが明確化された。AppAuth-iOS では `OIDAuthorizationService` がプロトコルになった。"
+    },
+    {
+      "at": "2026-11-18T20:37:08+00:00",
+      "text": "Two OpenID repositories were active, and both items are commit lists only. openid/claims-aggregation had 38 commits that rewrite and simplify its spec text. openid/fapi merged seven PRs that touch FAPI CIBA publication and related clean-ups.",
+      "text_ja": "OpenIDの二つのリポジトリに動きがあったが、材料はどちらもコミット一覧のみである。openid/claims-aggregation は仕様文面を書き直し簡素化する38コミット、openid/fapi は FAPI CIBA の公開準備などに関わる七件のPRのマージであった。"
     }
   ],
   "items": {
@@ -186,6 +191,29 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "repo:openid/claims-aggregation:2026-11-18T20:32:29Z": {
+      "diagram": "",
+      "first_seen": "2026-11-18",
+      "headline": "The claims-aggregation spec was heavily reworded and simplified across 38 commits, with PRs #71, #72, #74 and #75 merged.",
+      "headline_ja": "claims-aggregation の仕様が38コミットで大幅に書き直され、簡素化された（PR #71・#72・#74・#75 をマージ）。",
+      "id": "repo:openid/claims-aggregation:2026-11-18T20:32:29Z",
+      "kind": "repo-activity",
+      "related": [],
+      "significance": "substantive",
+      "summary": "Only commit titles are available, not diffs. The merged PRs restructure the text: trust model and baseline requirements were consolidated, issuer validation and RP requirements were made atomic, and PKCE and error-handling references were pinned. Client authentication, Setup and Claims Endpoint requirements were simplified, duplicate private_key_jwt obligations and a redundant nonce explanation were removed, and actor requirements were moved into their protocol clauses. One commit states that the Claim Set profile requires CP support for RS256 signing, which may be a requirement change. Without diffs, the extent of behavioural change cannot be confirmed, and 23 commits are not listed.",
+      "summary_ja": "材料はコミットのタイトルのみで、差分は含まれない。マージされたPRにより文面が再構成されており、信頼モデルと基本要件の統合、発行者検証とRP要件の原子化、PKCEとエラー処理の参照の固定が行われた。クライアント認証、Setup、Claims Endpoint の要件は簡素化され、private_key_jwt の重複した義務と冗長な nonce の説明は削除され、アクターの要件は各プロトコル節へ移された。Claim Set プロファイルで CP が RS256 署名に対応することを明記するコミットがあり、要件の変更である可能性がある。差分がないため挙動変更の範囲は確認できず、23件のコミットは列挙されていない。",
+      "title": "openid/claims-aggregation: 38 new commits on the default branch",
+      "updated_at": "2026-11-18T20:37:08+00:00",
+      "url": "https://github.com/openid/claims-aggregation",
+      "use_cases": [
+        "Implementers of a claims provider or relying party who want to track which normative requirements moved or were removed before the next draft.",
+        "Reviewers who need to check whether the RS256 statement for the Claim Set profile affects their signing configuration."
+      ],
+      "use_cases_ja": [
+        "次のドラフトの前に、どの規範的要件が移動または削除されたかを追跡したい、クレーム提供者または Relying Party の実装者。",
+        "Claim Set プロファイルの RS256 に関する記述が自らの署名設定に影響するかを確認したいレビュアー。"
+      ]
+    },
     "repo:openid/fapi:2026-11-17T07:18:28Z": {
       "diagram": "",
       "first_seen": "2026-11-17",
@@ -199,6 +227,23 @@
       "summary_ja": "ブランチ davetonge/impl-advice/871-structure からの PR #873 のマージコミットが1件ある。ブランチ名からは実装アドバイスの構成変更と推測されるが、差分や説明がないため内容は確認できない。",
       "title": "openid/fapi: 1 new commit on the default branch",
       "updated_at": "2026-11-17T07:59:42+00:00",
+      "url": "https://github.com/openid/fapi",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "repo:openid/fapi:2026-11-18T14:43:22Z": {
+      "diagram": "",
+      "first_seen": "2026-11-18",
+      "headline": "Seven PRs were merged into openid/fapi, mostly on FAPI CIBA publication, with the exact text changes not shown.",
+      "headline_ja": "openid/fapi に七件のPRがマージされた。主に FAPI CIBA の公開に関するもので、具体的な文面の変更は材料に示されていない。",
+      "id": "repo:openid/fapi:2026-11-18T14:43:22Z",
+      "kind": "repo-activity",
+      "related": [],
+      "significance": "routine",
+      "summary": "The material lists seven merge commits and no diffs. PR titles are branch names only. They point to FAPI CIBA draft publication and housekeeping (#869, #868), unsigned CIBA requests for FAPI 2.0 (#865), binding message security (#866), inheriting TLS algorithms (#867), an implementation-advice item on interaction ID (#874), and a patch (#888). What each PR changes in the normative text cannot be determined from this material.",
+      "summary_ja": "材料にはマージコミット七件が列挙されているのみで、差分はない。PRの題名はブランチ名だけである。内容は、FAPI CIBA ドラフトの公開と整理（#869、#868）、FAPI 2.0 における署名なし CIBA リクエスト（#865）、binding message のセキュリティ（#866）、TLS アルゴリズムの継承（#867）、interaction ID に関する実装上の助言（#874）、パッチ（#888）を指すと読み取れる。各PRが規範的な文面をどう変えるかは、この材料からは判断できない。",
+      "title": "openid/fapi: 7 new commits on the default branch",
+      "updated_at": "2026-11-18T20:37:08+00:00",
       "url": "https://github.com/openid/fapi",
       "use_cases": [],
       "use_cases_ja": []
@@ -304,8 +349,8 @@
     "openid/claims-aggregation": {
       "date": "2026-11-18",
       "priority": "high",
-      "reason": "Ten commits and four merged PRs in a day, covering Claims Endpoint validation, nonce generation and IANA registration.",
-      "reason_ja": "1日で10件のコミットとPR 4件がマージされ、Claims Endpoint の検証、nonce 生成、IANA登録に及んでいる。"
+      "reason": "38 commits and four merged PRs in a day rewrite its requirements, including an RS256 statement for the Claim Set profile.",
+      "reason_ja": "一日で38コミット・四件のPRのマージにより要件が書き直され、Claim Set プロファイルの RS256 に関する記述も加わった。"
     }
   }
 }
