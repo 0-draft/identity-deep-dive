@@ -18,7 +18,7 @@
 - [ ] `response_mode=direct_post` で `response_uri` と `redirect_uri` の両方を送り、`invalid_request` を期待する(Section 8.2)。Response URI が 200 と JSON で応え、JSON に `redirect_uri` があればウォレットがリダイレクトすることを確かめる(Section 8.2)。
 - [ ] `direct_post` で `redirect_uri` が返された場合に、Response Code なしで Verifier のフロントエンドからレスポンスを取り出そうとし、Verifier が拒むことを確かめる(Section 14.2)。
 - [ ] `direct_post.jwt` または `dc_api.jwt` で、JWE の `alg` が選んだ JWK の `alg` と同じであること、鍵に `kid` があれば JWE ヘッダーがそれを繰り返すこと、`encrypted_response_enc_values_supported` がなければ `enc` が `A128GCM` であることを確かめる(Section 8.3)。
-- [ ] `transaction_data` に対応しないウォレットにそれを送り、リクエストを拒否することを確かめる(Section 5、8.4)。エラッタの本文では VP Token を返してはならず(MUST NOT)、エラーレスポンスは `invalid_transaction_data` を使うべきで(SHOULD)、ウォレットはフローを取り消してもよい(エラッタ Section 8.4、8.5、#790)。オープンな #808 の後に再確認する。
+- [ ] `transaction_data` に対応しないウォレットにそれを送り、リクエストを拒否することを確かめる(Section 5、8.4)。エラッタの本文では VP Token を返してはならない(MUST NOT)(エラッタ Section 8.4、8.5、#790)。どのエラーコードを使うかは SHOULD の水準なので、ここでは確かめない。オープンな #808 の後に再確認する。
 - [ ] DC API: リクエストがその形に合わせて `openid4vp-v1-unsigned`、`openid4vp-v1-signed`、`openid4vp-v1-multisigned` のいずれかを使うことを確かめる(Section A.1)。
 - [ ] DC API の署名付きリクエスト: `client_id` と `expected_origins` を含むことを確かめ、次に呼び出し元の Origin を含まない `expected_origins` のリクエストを送り、ウォレットがエラーを返すことを確かめる(Section A.2)。エラッタの本文では比較は単純な文字列比較なので、`https://verifier.example.com/` は `https://verifier.example.com` に一致しない(エラッタ Section A.2、#719)。
 - [ ] DC API: Presentation の audience が、署名付きリクエストの場合も、Client Identifier ではなく `origin:` に Origin を続けたものであることを確かめる(Section A.4)。
