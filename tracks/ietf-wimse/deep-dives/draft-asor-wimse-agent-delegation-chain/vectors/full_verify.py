@@ -64,8 +64,8 @@ LAB_CHOICES = [
     "denies as ceiling_exceeded; the -03 does not say what a missing quantity means.",
     "A10 the running-total channel supplies the total including A; a cumulative constraint with no total "
     "denies as ceiling_exceeded (the -03 requires the deny but assigns no Table 2 name).",
-    "A11 order inside step 8: aud, scope, unknown constraint type, per-action, cumulative; the -03 lists the "
-    "checks but not their order beyond aud first.",
+    "A11 order inside step 8: aud, scope, unknown constraint type, per-action, cumulative; the -03 says aud 'then' "
+    "scope, per-action and cumulative, and does not place the unknown-type deny of Section 4.2 in that sequence.",
     "A12 cumulative totals are keyed by DT_n's jti; ancestors' max_subtree totals are not consulted (step 8 checks DT_n only).",
 ]
 
