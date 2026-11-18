@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-18T07:33:10+00:00
+Generated at: 2026-11-18T20:35:36+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -14,17 +14,18 @@ Generated at: 2026-11-18T07:33:10+00:00
 | 8 | 6 | Review related draft: draft-hulea-wimse-agent-mandate-01 | draft-hulea-wimse-agent-mandate-01 (2026-11-01) |
 | 9 | 6 | Review related draft: draft-jackson-wimse-evaluation-05 | draft-jackson-wimse-evaluation-05 (2026-10-28) |
 | 10 | 6 | Review related draft: draft-lee-wimse-local-tool-call-proof-01 | draft-lee-wimse-local-tool-call-proof-01 (2026-10-11) |
-| 11 | 6 | Review related draft: draft-nandakumar-wimse-delegator-bound-chains-00 | draft-nandakumar-wimse-delegator-bound-chains-00 (2026-11-16) |
-| 12 | 6 | Review related draft: draft-nandakumar-wimse-wpt-message-binding-00 | draft-nandakumar-wimse-wpt-message-binding-00 (2026-11-16) |
-| 13 | 6 | Review related draft: draft-ni-wimse-ai-agent-identity-04 | draft-ni-wimse-ai-agent-identity-04 (2026-10-27) |
-| 14 | 6 | Review related draft: draft-reddy-wimse-oauth-dialog-binding-00 | draft-reddy-wimse-oauth-dialog-binding-00 (2026-10-30) |
-| 15 | 6 | Review related draft: draft-sweeney-wimse-credential-delegation-02 | draft-sweeney-wimse-credential-delegation-02 (2026-10-30) |
-| 16 | 6 | Review related draft: draft-thaha-wimse-agent-evidence-binding-03 | draft-thaha-wimse-agent-evidence-binding-03 (2026-11-01) |
-| 17 | 6 | Review related draft: draft-uppalapati-wimse-pq-agent-identity-01 | draft-uppalapati-wimse-pq-agent-identity-01 (2026-10-27) |
-| 18 | 5 | Diff active WG draft: draft-ietf-wimse-arch-09 | draft-ietf-wimse-arch-09 (2026-11-16) |
-| 19 | 5 | Diff active WG draft: draft-ietf-wimse-identifier-04 | draft-ietf-wimse-identifier-04 (2026-10-23) |
-| 20 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-08 | draft-ietf-wimse-workload-identity-practices-08 (2026-10-30) |
-| 21 | 4 | Review related draft: draft-heigh-wimse-workload-identity-metadata-00 | draft-heigh-wimse-workload-identity-metadata-00 (2026-10-16) |
+| 11 | 6 | Review related draft: draft-miao-wimse-http-signature-test-vectors-00 | draft-miao-wimse-http-signature-test-vectors-00 (2026-11-18) |
+| 12 | 6 | Review related draft: draft-nandakumar-wimse-delegator-bound-chains-00 | draft-nandakumar-wimse-delegator-bound-chains-00 (2026-11-16) |
+| 13 | 6 | Review related draft: draft-nandakumar-wimse-wpt-message-binding-00 | draft-nandakumar-wimse-wpt-message-binding-00 (2026-11-16) |
+| 14 | 6 | Review related draft: draft-ni-wimse-ai-agent-identity-04 | draft-ni-wimse-ai-agent-identity-04 (2026-10-27) |
+| 15 | 6 | Review related draft: draft-reddy-wimse-oauth-dialog-binding-00 | draft-reddy-wimse-oauth-dialog-binding-00 (2026-10-30) |
+| 16 | 6 | Review related draft: draft-sweeney-wimse-credential-delegation-02 | draft-sweeney-wimse-credential-delegation-02 (2026-10-30) |
+| 17 | 6 | Review related draft: draft-thaha-wimse-agent-evidence-binding-03 | draft-thaha-wimse-agent-evidence-binding-03 (2026-11-01) |
+| 18 | 6 | Review related draft: draft-uppalapati-wimse-pq-agent-identity-01 | draft-uppalapati-wimse-pq-agent-identity-01 (2026-10-27) |
+| 19 | 5 | Diff active WG draft: draft-ietf-wimse-arch-09 | draft-ietf-wimse-arch-09 (2026-11-16) |
+| 20 | 5 | Diff active WG draft: draft-ietf-wimse-identifier-04 | draft-ietf-wimse-identifier-04 (2026-10-23) |
+| 21 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-08 | draft-ietf-wimse-workload-identity-practices-08 (2026-10-30) |
+| 22 | 4 | Review related draft: draft-heigh-wimse-workload-identity-metadata-00 | draft-heigh-wimse-workload-identity-metadata-00 (2026-10-16) |
 
 <!-- triage:start -->
 ## Triage
@@ -35,8 +36,9 @@ Moved by this week's material. candidates.json and the site list raised candidat
 - **high** `Diff active WG draft: draft-ietf-wimse-arch-09`: -09 adds Issuer/Trust Anchor definitions, a Trust Domain Separation section and a SHOULD NOT on shared agent identities.
 - **high** `Diff active WG draft: draft-ietf-wimse-http-signature-08`: The digest shows active work on its test vectors (#419), a closed server-nonce issue (#369) and a new dangling-reference issue (#422).
 - **high** `Diff active WG draft: draft-ietf-wimse-workload-creds-03`: The IPR poll to its authors started today, which suggests the draft is moving toward publication.
-- **high** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: The delegator-bound chains draft extends its Delegation Tokens format and asks whether binding belongs in it.
+- **high** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: Discussed as near wire-identical to niyikiza on par_hash and del_depth, with an open question on signature octets in the hash.
 - **high** `Review related draft: draft-hulea-wimse-agent-mandate-01`: Author agreed Section 9.5 is unsafe and will change budget-release semantics in -02.
+- **high** `Review related draft: draft-miao-wimse-http-signature-test-vectors-00`: New draft with 29 vectors and 3 observations on spec ambiguity in draft-ietf-wimse-http-signature.
 - **high** `Review related draft: draft-nandakumar-wimse-delegator-bound-chains-00`: New draft adding signer-key binding, pseudonyms and audience attenuation to delegation chains, with live list review today.
 - **high** `Review related draft: draft-nandakumar-wimse-wpt-message-binding-00`: Announced today and already drawing questions on authority hashing behind gateways and registry profiles.
 - **high** `Review related draft: draft-sweeney-wimse-credential-delegation-02`: The thread names it as the basis for a final-hop hackathon scenario with a working implementation.

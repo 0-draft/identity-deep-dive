@@ -69,6 +69,11 @@
       "at": "2026-11-18T07:34:29+00:00",
       "text": "No draft text changed. The most substantive thread is on the WIMSE list: AIMS delegation context, where the participants agreed a transcribed identifier needs a signed audit record at the transcribing server. A large interop matrix for the IETF 127 hackathon B_CHAIN flow was also reported.",
       "text_ja": "ドラフト本文の変更はない。最も重要なのはメーリングリストでの AIMS の委任コンテキストに関する議論で、変換された識別子は変換を行うサーバーの署名付き監査記録に残すべきだという点で参加者が一致した。IETF 127 ハッカソンの B_CHAIN フローに対する大規模な相互運用性マトリクスの結果も報告された。"
+    },
+    {
+      "at": "2026-11-18T20:37:07+00:00",
+      "text": "A new individual draft, draft-miao-wimse-http-signature-test-vectors-00, publishes 29 judged test vectors (6 positive, 23 negative) for the WIMSE HTTP Message Signatures protocol. The rest is list activity: a hackathon interop repo and a convergence report on agent-token drafts.",
+      "text_ja": "最も重要なのは、WIMSE の HTTP Message Signatures プロトコル向けに 29 件（正例 6、負例 23）の判定対象ベクターを示す個人ドラフト draft-miao-wimse-http-signature-test-vectors-00 の登場である。その他は、ハッカソンの相互運用リポジトリと、エージェントトークン各ドラフトの収束に関する報告である。"
     }
   ],
   "items": {
@@ -131,6 +136,29 @@
         "中央のクレデンシャルサービスが複数の trust domain 向けに WIT を発行する基盤で、署名鍵を一つにするか domain ごとに分けるかを判断する場合。",
         "多数の論理エージェントが一つの workload credential で動作し、エージェント単位の監査や失効が必要なエージェント基盤。",
         "ML-DSA への移行中を含め、relying party が trust domain ごとに受け入れる issuer と trust anchor を設定する場合。"
+      ]
+    },
+    "draft:draft-miao-wimse-http-signature-test-vectors-00": {
+      "diagram": "",
+      "first_seen": "2026-11-18",
+      "headline": "In short, a new informational draft gives reproducible test vectors for the WIMSE HTTP Message Signatures protocol, including 23 negative cases.",
+      "headline_ja": "WIMSE の HTTP Message Signatures プロトコル向けに、負例 23 件を含む再現可能なテストベクターを示す情報提供ドラフトが登場した。",
+      "id": "draft:draft-miao-wimse-http-signature-test-vectors-00",
+      "kind": "new-draft",
+      "related": [],
+      "significance": "new-proposal",
+      "summary": "The draft defines no new protocol behavior. It records 6 positive and 23 negative vectors for draft-ietf-wimse-http-signature, plus 3 non-judged observations where the base spec's text, read literally, does not support a pass/fail judgment. Test keys (Ed25519 and ES256) are published in full and derived from fixed seeds, with a fixed verification clock (T0=1795000000, verify at T0+60, expires = created+300). Positive vectors give the full RFC 9421 signature base. Each negative vector is a single mutation mapped to a quoted normative requirement, such as missing @query coverage, Content-Digest mismatch, a keyid or alg parameter present, two signatures carrying the WIMSE tag, wimse-aud differing only by URI normalization, a wrong wimse-req-nonce, or processing before the WIT is validated. Failures are expected to surface as HTTP 400 with the wimse-signature-invalid problem type. The set was earlier posted as issue #419 and on Zenodo, and reproduced by independent implementers. The text provided is truncated, so the observations were not seen.",
+      "summary_ja": "本ドラフトは新たなプロトコル動作を定義しない。draft-ietf-wimse-http-signature に対する正例 6 件、負例 23 件のベクターに加え、基本仕様の文面を文字どおり読むと合否を判定できない箇所を 3 件の観察事項（判定対象外）として記録している。テスト用の鍵（Ed25519 と ES256）は固定シードから導出して全て公開され、検証時刻も固定されている（T0=1795000000、検証は T0+60、expires は created+300）。正例には RFC 9421 の署名ベース全文が付く。負例は正例を 1 か所だけ変異させたもので、基本仕様の規範的要件の引用に対応付けられている。例は @query の網羅漏れ、Content-Digest の不一致、keyid や alg パラメーターの存在、WIMSE の tag を持つ署名が 2 つあるケース、URI 正規化のみが異なる wimse-aud、誤った wimse-req-nonce、WIT 検証前の処理などである。失敗は wimse-signature-invalid の problem type を伴う HTTP 400 として返すことが期待される。このセットは先に issue #419 と Zenodo で公開され、独立した実装者によって再現されている。入手できた本文は途中で切れており、観察事項は確認できていない。",
+      "title": "draft-miao-wimse-http-signature-test-vectors-00: Test Vectors for the WIMSE HTTP Message Signatures Protocol",
+      "updated_at": "2026-11-18T20:37:07+00:00",
+      "url": "https://datatracker.ietf.org/doc/draft-miao-wimse-http-signature-test-vectors/00/",
+      "use_cases": [
+        "An implementer of the WIMSE S2S HTTP signature scheme checking a verifier against rejection cases such as wimse-aud normalization or nonce mismatch.",
+        "A library author wanting a deterministic, byte-reproducible signature base to regression-test Ed25519 and ES256 handling."
+      ],
+      "use_cases_ja": [
+        "wimse-aud の正規化や nonce の不一致といった拒否ケースに対して、WIMSE S2S の HTTP 署名方式の検証側を確認する実装者。",
+        "Ed25519 と ES256 の処理を回帰テストするために、バイト単位で再現できる決定的な署名ベースを必要とするライブラリ作者。"
       ]
     },
     "draft:draft-nandakumar-wimse-delegator-bound-chains-00": {
@@ -653,6 +681,23 @@
         "未使用のmandateトークンの予算への寄与をいつ解放してよいかを、expにmax_clock_skewを加えた時点で判断する。"
       ]
     },
+    "mail:LzzNtpzX0jzim9cEqlQWBgihSR8": {
+      "diagram": "",
+      "first_seen": "2026-11-18",
+      "headline": "In short, the IETF 127 hackathon team published a repo with WIMSE interop scenarios, PCAP traces and a Wireshark dissector that others can test against.",
+      "headline_ja": "IETF 127 のハッカソンチームが、WIMSE の相互運用シナリオ、PCAP トレース、Wireshark ディセクターを含むリポジトリを公開し、他の実装者が試せるようにした。",
+      "id": "mail:LzzNtpzX0jzim9cEqlQWBgihSR8",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "The team reports substantial testing of WIMSE scenarios, done in the AI2II project, an approach where coding agents from different model families build the test peers, checkers and reviews. Everything is on GitHub with a browsable scenario site, PCAP files and a Wireshark dissector. They invite others to run their implementations against the scenarios and contribute use cases or results by pull request or issue. Code and documents are under Apache-2.0 or MIT, and partner traces keep their owners' terms. The authors suggest the main take-away is a repo participants can use to check interoperability over time. No protocol text changes.",
+      "summary_ja": "チームは、AI2II プロジェクトで行った WIMSE シナリオの相当量のテストを報告している。AI2II は、異なるモデルファミリーのコーディングエージェントがテスト用ピア、チェッカー、レビューを構築する手法である。成果は GitHub にあり、閲覧用のシナリオサイト、PCAP ファイル、Wireshark ディセクターが提供されている。自分の実装をこれらのシナリオに対して実行すること、ユースケースや結果をプルリクエストか issue で寄せることを歓迎している。コードと文書は Apache-2.0 または MIT で提供され、パートナーのトレースは各所有者の条件に従う。作者らは、参加者が長期的に相互運用性を確認できるリポジトリが存在することが主な成果だと述べている。プロトコル本文の変更はない。",
+      "title": "Hackathon results - website you can explore",
+      "updated_at": "2026-11-18T20:37:07+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/LzzNtpzX0jzim9cEqlQWBgihSR8/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "mail:N84c51Qxwe6i1bihDHCklyDphUg": {
       "diagram": "sequenceDiagram\n participant A as Agent A (domain A)\n participant B as Agent B\n participant R as Receiving hop\n A->>B: delegate\n B->>R: first call\n R-->>B: accepted\n Note over A: A is revoked\n B->>R: next call\n R-->>B: rejected (fail closed)",
       "first_seen": "2026-11-13",
@@ -818,6 +863,23 @@
         "エージェントの呼び出しが信頼ドメインをまたぎ、相関を抑えるために主体識別子を付け替える構成。",
         "委任された主体がドメイン間でどう対応付けられたかを、後から監査者が検証する必要がある場合。"
       ]
+    },
+    "mail:V3Coqv_8g1tHFl7nV2gq-Lppf5o": {
+      "diagram": "",
+      "first_seen": "2026-11-18",
+      "headline": "In short, the author announces the test-vector draft to the WIMSE list, asks for more negative cases and verification results, and offers to edit it.",
+      "headline_ja": "作者が WIMSE のメーリングリストでテストベクターのドラフトを告知し、追加の負例と検証結果を求め、編集者の担当も申し出た。",
+      "id": "mail:V3Coqv_8g1tHFl7nV2gq-Lppf5o",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The announcement describes 29 vectors (6 positive, 23 negative) and 3 observation items, with a machine-readable anchor layer so implementations can consume the set directly. The author says the emphasis is on negative cases where implementations most often diverge, naming expiry windows, @authority normalization and caller-reference reuse. The set is also on Zenodo (v4) and was earlier raised as issue #419. The author asks for additional negative cases and independent verification results, and volunteers to serve as editor if the WG finds the document useful.",
+      "summary_ja": "告知メールでは、29 件のベクター（正例 6、負例 23）と 3 件の観察事項を挙げ、実装がそのまま利用できる機械可読のアンカー層を備えるとしている。作者は、実装間で差が出やすい負例に重点を置いたと述べ、有効期間、@authority の正規化、caller-reference の再利用を例に挙げている。このセットは Zenodo（v4）でも公開され、先に issue #419 として提起されている。作者は追加の負例と独立した検証結果を求め、WG が有用と判断すれば編集者を務める意向を示している。",
+      "title": "New draft: draft-miao-wimse-http-signature-test-vectors-00 — test vectors for the S2S HTTP signature scheme",
+      "updated_at": "2026-11-18T20:37:07+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/V3Coqv_8g1tHFl7nV2gq-Lppf5o/",
+      "use_cases": [],
+      "use_cases_ja": []
     },
     "mail:XDzEijPg8qT_4X4u7Yl11PHU5og": {
       "diagram": "",
@@ -1065,6 +1127,29 @@
         "ホップごとの権限を、act クレーム(帰属のみ)から確認するか、ステータス参照を持つ別途検証された委任トークンから確認するかを選ぶ場合。"
       ]
     },
+    "mail:zFrXzOgjgybe9xQ2TrVTyb7Z7uU": {
+      "diagram": "",
+      "first_seen": "2026-11-18",
+      "headline": "In short, an implementer argues that the offline-attenuated agent-token drafts already agree on much of the wire format and lists the few forks left.",
+      "headline_ja": "実装者が、オフライン減衰型のエージェントトークンの各ドラフトはワイヤ形式の多くで既に一致していると論じ、残る相違点を挙げた。",
+      "id": "mail:zFrXzOgjgybe9xQ2TrVTyb7Z7uU",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Cleiton Augusto Correa Bezerra reports an independent implementation of draft-niyikiza-oauth-attenuating-agent-tokens that reproduces its Appendix A vectors byte for byte, and compares it with asor-wimse-agent-delegation-chain and fane-opena2a-aap. The three agree on authority in RFC 9396 authorization_details, fail-closed handling of unknown types, Ed25519 as baseline, PoP via cnf, and rejecting RFC 8693's nested act claim. niyikiza and asor are near wire-identical on chain linkage: par_hash is the base64url SHA-256 of the parent's JWS Signing Input, with del_depth and del_max_depth. Open: whether the parent's signature octets are in the hashed input (asor-00 leaves this slightly open). Real forks: offline-derived chains versus broker-mediated RFC 8693 exchange (fane), and constraint vocabulary, where only niyikiza gives a full algebra. They offer shared test vectors, not a new draft. Kamin Chung adds that a receipt assembled after execution cannot show that what ran is what the person confirmed.",
+      "summary_ja": "Cleiton Augusto Correa Bezerra は、draft-niyikiza-oauth-attenuating-agent-tokens の独立実装が同ドラフトの Appendix A のベクターをバイト単位で再現したと報告し、asor-wimse-agent-delegation-chain および fane-opena2a-aap と比較している。3 つのドラフトは、権限を RFC 9396 の authorization_details で表現すること、未知の type を fail-closed で扱うこと、Ed25519 を基準とすること、cnf による PoP、RFC 8693 のネストした act クレームを退けることで一致している。チェーン連結では niyikiza と asor がほぼ同一のワイヤ形式で、par_hash は親の JWS Signing Input の SHA-256 を base64url にしたもの、位置は del_depth と del_max_depth で追跡する。未確定なのは、親の署名オクテットをハッシュ入力に含めるかで、asor-00 ではやや曖昧である。実際の相違点は、オフライン導出のチェーンとブローカー仲介の RFC 8693 交換（fane）の対立、および制約の語彙で、完全な代数を示すのは niyikiza のみである。提案は新ドラフトではなく共有テストベクターである。Kamin Chung は、実行後に作成したレシートでは、実行されたものが本人の確認した内容と一致することを示せないと付け加えている。",
+      "title": "Implementation report: convergence across the offline-attenuated agent-token drafts (niyikiza / asor / fane) (2 new messages)",
+      "updated_at": "2026-11-18T20:37:07+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/zFrXzOgjgybe9xQ2TrVTyb7Z7uU/",
+      "use_cases": [
+        "Agent platforms deciding between offline-derived delegation chains and broker-mediated token exchange for sub-agent delegation.",
+        "Implementers of MCP tool-call authorization who need interoperable par_hash and del_depth handling across drafts."
+      ],
+      "use_cases_ja": [
+        "サブエージェントへの委任に、オフライン導出のチェーンとブローカー仲介のトークン交換のどちらを採用するか検討するエージェント基盤の担当者。",
+        "MCP のツール呼び出しの認可で、ドラフトをまたいで par_hash と del_depth を相互運用可能に扱う必要がある実装者。"
+      ]
+    },
     "mail:zLDfwOIkylaaI4vS97LSdAt4RYw": {
       "diagram": "sequenceDiagram\n participant U as User\n participant DS as Delegation Server\n participant AG as Agent\n participant UP as Upstream resource\n U->>DS: deposit credential\n DS->>AG: delegation token\n AG->>DS: exercise under token\n DS->>UP: call with deposited credential\n DS->>AG: result and receipt",
       "first_seen": "2026-11-11",
@@ -1157,16 +1242,22 @@
       "reason_ja": "本日、著者への IPR 確認が始まっており、公開に向けて動いているとみられる。"
     },
     "Review related draft: draft-asor-wimse-agent-delegation-chain-03": {
-      "date": "2026-11-16",
+      "date": "2026-11-18",
       "priority": "high",
-      "reason": "The delegator-bound chains draft extends its Delegation Tokens format and asks whether binding belongs in it.",
-      "reason_ja": "delegator-bound チェーンのドラフトが本ドラフトの Delegation Tokens 形式を拡張し、結び付けを本体に含めるべきか問うている。"
+      "reason": "Discussed as near wire-identical to niyikiza on par_hash and del_depth, with an open question on signature octets in the hash.",
+      "reason_ja": "par_hash と del_depth で niyikiza とほぼ同一のワイヤ形式と評され、ハッシュ入力に署名オクテットを含めるかが未確定と指摘された。"
     },
     "Review related draft: draft-hulea-wimse-agent-mandate-01": {
       "date": "2026-11-14",
       "priority": "high",
       "reason": "Author agreed Section 9.5 is unsafe and will change budget-release semantics in -02.",
       "reason_ja": "著者がSection 9.5は安全でないと認め、-02で予算解放の意味を変更するため。"
+    },
+    "Review related draft: draft-miao-wimse-http-signature-test-vectors-00": {
+      "date": "2026-11-18",
+      "priority": "high",
+      "reason": "New draft with 29 vectors and 3 observations on spec ambiguity in draft-ietf-wimse-http-signature.",
+      "reason_ja": "draft-ietf-wimse-http-signature について、29 件のベクターと仕様の曖昧さに関する 3 件の観察事項を含む新規ドラフトである。"
     },
     "Review related draft: draft-nandakumar-wimse-delegator-bound-chains-00": {
       "date": "2026-11-16",
