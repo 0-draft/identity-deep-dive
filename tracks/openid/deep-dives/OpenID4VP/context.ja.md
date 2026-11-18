@@ -2,7 +2,7 @@
 
 ## きっかけ
 
-`subject.json` には選定理由がない(`ai_note` は空)。OpenID4VP は、`tracks/openid/data/normalized/candidates.json` でディープダイブのない `openid` の候補の 2 番目だった。`tracks/openid/data/normalized/insights.json` の日次ブリーフィングは、#800(ブランチ `718-age-over-nn`)のマージを差分なしで記録していた。#800 は 2026 年 11 月 11 日にマージされ、`age_over_NN` のデータ要素選択規則を 1.0 のエラッタ版ドラフトと 1.1 の両方に加えた(どちらも Section B.2.5)。このディープダイブは、1.0 Final の本文(タグ `1.0-final`)、コミット `66f5ff9`(2026 年 11 月 11 日)時点のドラフト、引用したプルリクエストと issue で確認した。
+下書きのパイプラインは選定理由を記録していない。OpenID4VP は、`tracks/openid/data/normalized/candidates.json` でディープダイブのない `openid` の候補の 2 番目だった。`tracks/openid/data/normalized/insights.json` の日次ブリーフィングは、#800(ブランチ `718-age-over-nn`)のマージを差分なしで記録していた。#800 は 2026 年 11 月 11 日にマージされ、`age_over_NN` のデータ要素選択規則を 1.0 のエラッタ版ドラフトと 1.1 の両方に加えた(どちらも Section B.2.5)。このディープダイブは、1.0 Final の本文(タグ `1.0-final`)、コミット `66f5ff9`(2026 年 11 月 11 日)時点のドラフト、引用したプルリクエストと issue で確認した。
 
 ## なぜ重要か
 

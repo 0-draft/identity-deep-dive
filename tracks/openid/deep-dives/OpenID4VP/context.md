@@ -2,7 +2,7 @@
 
 ## Trigger
 
-`subject.json` gives no reason for the pick (`ai_note` is empty). OpenID4VP was the second `openid` candidate in `tracks/openid/data/normalized/candidates.json` without a deep dive. The daily briefing in `tracks/openid/data/normalized/insights.json` recorded the merge of #800 (branch `718-age-over-nn`) without its diff. #800 merged on 11 November 2026 and adds the `age_over_NN` data element selection rule to both the 1.0 errata draft and 1.1 (Section B.2.5 in both). This deep dive was checked against the 1.0 Final text (tag `1.0-final`), the drafts at commit `66f5ff9` (11 November 2026), and the pull requests and issues it cites.
+The drafting pipeline recorded no reason for the pick. OpenID4VP was the second `openid` candidate in `tracks/openid/data/normalized/candidates.json` without a deep dive. The daily briefing in `tracks/openid/data/normalized/insights.json` recorded the merge of #800 (branch `718-age-over-nn`) without its diff. #800 merged on 11 November 2026 and adds the `age_over_NN` data element selection rule to both the 1.0 errata draft and 1.1 (Section B.2.5 in both). This deep dive was checked against the 1.0 Final text (tag `1.0-final`), the drafts at commit `66f5ff9` (11 November 2026), and the pull requests and issues it cites.
 
 ## Why This Matters
 
