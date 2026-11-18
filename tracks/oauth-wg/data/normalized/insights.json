@@ -54,6 +54,11 @@
       "at": "2026-11-18T07:34:29+00:00",
       "text": "The sd-jwt-vc draft cleared another IESG ballot: Éric Vyncke moved to No Objection on -27 after his DISCUSS was resolved. A new CIMD pull request would tighten Client Identifier URL rules and limit who can trigger metadata fetches. There was also a list discussion of a new PACE Authorization draft.",
       "text_ja": "sd-jwt-vc の -27 で Éric Vyncke の DISCUSS が解消され、No Objection に変わった。CIMD ドラフトには、Client Identifier URL の規則を厳格化し、メタデータ取得の起点を制限するプルリクエストが出た。新しい PACE Authorization ドラフトに関するメーリングリストでの議論もあった。"
+    },
+    {
+      "at": "2026-11-18T20:37:07+00:00",
+      "text": "The busiest thread is the new draft-demedeiros-oidc-crypto-agility proposal. Filip Skokan says it breaks servers that already use JOSE algorithm agility correctly, and he sketches non-breaking alternatives based on jku or a jkuqs header. Nothing substantive changed in a WG draft text this run.",
+      "text_ja": "最も動きがあったのは、新しい draft-demedeiros-oidc-crypto-agility の提案をめぐる議論である。Filip Skokan は、既存のアルゴリズム敏捷性を正しく使っているサーバーを壊すと指摘し、jku または jkuqs ヘッダーによる非破壊の代替案を示した。ワーキンググループのドラフト本文に実質的な変更はない。"
     }
   ],
   "items": {
@@ -469,6 +474,31 @@
         "鍵のローテーションを計画する発行者は、退役した鍵をどのくらいの期間公開し続けるべきかを知る必要がある。"
       ]
     },
+    "mail:UwVKZ7yQZhs7baTJmQdzZEKIpME": {
+      "diagram": "flowchart LR\n AS[AS discovery lists jwks_uri and jwks_uris] --> JWT[AS signs token with jku header]\n JWT --> V[Verifier matches jku against discovery]\n V --> K[Fetch key set for that jku URI]",
+      "first_seen": "2026-11-18",
+      "headline": "Reviewers push back on the new OIDC crypto agility draft and float jku-based or query-string alternatives for selecting key types.",
+      "headline_ja": "新しいOIDC暗号敏捷性ドラフトに対し、レビュアーが懸念を示し、鍵の種類を選ぶjkuベースやクエリ文字列方式の代替案を提示した。",
+      "id": "mail:UwVKZ7yQZhs7baTJmQdzZEKIpME",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Breno de Medeiros announced draft-demedeiros-oidc-crypto-agility. It lets OIDC metadata publish supported JWT signing algorithms and lets the client request one in the authorization request. It also adds a parameter to filter algorithms in the published key set, to ease PQC adoption in open federation. Filip Skokan objects that it breaks servers, clients and RSs that already use the existing agility mechanisms correctly, and that the real problem is faulty client software. He prefers out-of-band client opt-in and sketches two non-breaking options. One is `jwks_uris` in discovery plus a `jku` header matched against it. The other is a `jkuqs` header that replaces the query string of `jwks_uri`, gated by a discovery flag. He notes ID Tokens currently say SHOULD NOT use `jku`. Warren Parad asks whether a parameter would open a downgrade path, and Skokan replies that advertising non-PQ algorithms leaves that option open anyway. Frederik points to the overlapping OpenID AB/Connect issue on PQ OpenID Connect (openid/connect#2153) and invites Breno to join that WG.",
+      "summary_ja": "Breno de Medeirosは draft-demedeiros-oidc-crypto-agility を発表した。OIDCメタデータで対応するJWT署名アルゴリズムを公開し、クライアントが認可リクエストでその一つを要求できるようにする。公開鍵セットのアルゴリズムを絞り込むパラメーターも加え、オープンフェデレーションでのPQC導入を容易にする狙いである。Filip Skokanは、既存の暗号敏捷性の仕組みを正しく使っているサーバー、クライアント、RSを壊すこと、問題の本質は不具合のあるクライアントソフトウェアであることを指摘し、帯域外でのクライアントのオプトインを推している。非破壊の案を二つ示した。一つは、ディスカバリーに`jwks_uris`を置き、`jku`ヘッダーをそれと照合する方式である。もう一つは、`jwks_uri`のクエリ文字列を置き換える`jkuqs`ヘッダーで、ディスカバリーのフラグで対応を明示させる方式である。IDトークンでは現状`jku`はSHOULD NOTとされている点にも触れている。Warren Parad氏はパラメーターがダウングレード攻撃の経路にならないかと問い、Skokanは非PQアルゴリズムを広告している限りその選択肢は残ると答えた。Frederikは、PQ OpenID Connectに関するOpenID AB/Connectの課題（openid/connect#2153）と重なると指摘し、Brenoに同WGへの参加を求めた。",
+      "title": "Submitted new I-D proposal regarding OIDC crypto agility improvement (4 new messages)",
+      "updated_at": "2026-11-18T20:37:07+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/UwVKZ7yQZhs7baTJmQdzZEKIpME/",
+      "use_cases": [
+        "An AS operator planning PQC signing keys who must avoid breaking clients that only handle RS256 keys in jwks_uri.",
+        "A library maintainer who verifies ID Tokens or JWT access tokens and would need to handle a jku header or jkuqs profile safely.",
+        "A deployer weighing per-client or per-redirect_uri opt-in against a new authorization request parameter."
+      ],
+      "use_cases_ja": [
+        "PQC署名鍵の導入を計画し、jwks_uri内のRS256鍵しか扱えないクライアントを壊したくない認可サーバーの運用者。",
+        "IDトークンやJWTアクセストークンを検証し、jkuヘッダーやjkuqsのプロファイルを安全に扱う必要が出るライブラリのメンテナー。",
+        "新しい認可リクエストパラメーターと、クライアント単位やredirect_uri単位のオプトインのどちらを採るか検討する導入者。"
+      ]
+    },
     "mail:WixDZ1_uCFhHcyVW7y0ao-hXWpQ": {
       "diagram": "",
       "first_seen": "2026-11-12",
@@ -750,6 +780,31 @@
         "データ消去の要請に応じつつ、監査可能な判断記録を残したい運用者。"
       ]
     },
+    "mail:kZ2o-_Nzvrq7do-K973oaTWPqK0": {
+      "diagram": "",
+      "first_seen": "2026-11-18",
+      "headline": "The author of the native-clients profile for open protocols defends its username response parameter and refresh_key against review feedback.",
+      "headline_ja": "オープンプロトコル向けネイティブクライアントプロファイルの著者が、レビュー指摘に対しusernameレスポンスパラメーターとrefresh_keyを擁護した。",
+      "id": "mail:kZ2o-_Nzvrq7do-K973oaTWPqK0",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Replying to a reviewer (Nick), the author explains why the profile adds a token-response `username` parameter instead of using the OIDC `email` scope. The profile should not require OIDC, a username is not necessarily an email address, `preferred_username` is not guaranteed unique or stable, and email may not be in the ID token when an access token is issued. The author agrees to relax the rule that the username must stay the same, so a client can update its account label, and to add a maximum length for `refresh_key`. The author argues `refresh_key` needs only one extra string per authorization, and that a generation counter plus MAC avoids storing old refresh tokens. The author declines to mandate DPoP in place of refresh token rotation. DPoP does not work with non-HTTP protocols, it raises the adoption bar, and without hardware-backed keys it does not stop an attacker who copies device storage.",
+      "summary_ja": "レビュアー（Nick）への返信で、著者はOIDCの`email`スコープを使わずにトークンレスポンスへ`username`パラメーターを加える理由を説明している。プロファイルはOIDCを必須とすべきでないこと、ユーザー名は必ずしもメールアドレスではないこと、`preferred_username`は一意性や安定性が保証されないこと、アクセストークンが発行される場合にemailがIDトークンに含まれるとは限らないことが理由である。著者は、ユーザー名を常に同一とする要件を緩めてクライアントがアカウント表示名を更新できるようにすること、`refresh_key`に最大長を定めることに同意している。`refresh_key`は認可ごとに追加の文字列を一つ保存するだけでよく、世代カウンターとMACを使えば古いリフレッシュトークンを保存せずに検出できると主張している。リフレッシュトークンのローテーションをDPoPで置き換えることは義務化しない。DPoPは非HTTPプロトコルでは使えず、導入の障壁を上げ、ハードウェアに保護された鍵がなければ端末ストレージを複製した攻撃者を防げないためである。",
+      "title": "mailmaint's OAuth Profile for Native Clients of Open Protocols",
+      "updated_at": "2026-11-18T20:37:07+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/kZ2o-_Nzvrq7do-K973oaTWPqK0/",
+      "use_cases": [
+        "An email, calendar or contacts server on plain OAuth (no OIDC) that wants native clients to move off username/password.",
+        "A client for IMAP, SMTP or CalDAV that needs the account name from the token response to label the account.",
+        "An AS deciding between refresh token rotation and DPoP-bound refresh tokens on devices without non-extractable key storage."
+      ],
+      "use_cases_ja": [
+        "OIDCを使わない素のOAuthで、ネイティブクライアントにユーザー名/パスワードをやめさせたいメール、カレンダー、連絡先サーバー。",
+        "IMAP、SMTP、CalDAV向けクライアントが、トークンレスポンスのアカウント名でアカウント表示名を付ける場合。",
+        "非エクスポート鍵ストレージのない端末で、リフレッシュトークンのローテーションとDPoPバインドのどちらを選ぶか検討する認可サーバー。"
+      ]
+    },
     "mail:mtGdBEyIMgDdrP7RnK89AVpcuRM": {
       "diagram": "",
       "first_seen": "2026-11-17",
@@ -931,6 +986,23 @@
       "url": "https://github.com/oauth-wg/oauth-v2-1/pull/284",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "pr:oauth-wg/oauth-v2-1#286": {
+      "diagram": "",
+      "first_seen": "2026-11-18",
+      "headline": "A pull request adds RFC 10027 references on consent phishing and cross-device flows to OAuth 2.1 and updates the Device Authorization Grant security text.",
+      "headline_ja": "OAuth 2.1に、同意フィッシングとクロスデバイスフローに関するRFC 10027への参照を加え、デバイス認可グラントのセキュリティ記述を更新するプルリクエストが出た。",
+      "id": "pr:oauth-wg/oauth-v2-1#286",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The PR body says it adds references to RFC 10027 on consent phishing and cross-device flows and updates the security considerations for the Device Authorization Grant. It refers to issue #285. The material gives no diff or text, so the exact wording changes are not visible.",
+      "summary_ja": "PR本文によると、同意フィッシングとクロスデバイスフローに関するRFC 10027への参照を追加し、デバイス認可グラントのセキュリティに関する考慮事項を更新する。課題#285に言及している。差分や本文は含まれておらず、具体的な文言の変更は確認できない。",
+      "title": "oauth-wg/oauth-v2-1#286: Add RFC 10027 references and update security sections",
+      "updated_at": "2026-11-18T20:37:07+00:00",
+      "url": "https://github.com/oauth-wg/oauth-v2-1/pull/286",
+      "use_cases": [],
+      "use_cases_ja": []
     }
   },
   "overflow": [],
@@ -946,12 +1018,6 @@
       "priority": "high",
       "reason": "New issue #161 reports a conflict between the §4.3.3 and §4.5 rules, and #121 was closed this week.",
       "reason_ja": "新規 issue #161 で §4.3.3 と §4.5 の規則の矛盾が報告され、#121 もクローズされた。"
-    },
-    "draft-ietf-oauth-v2-1": {
-      "date": "2026-11-17",
-      "priority": "low",
-      "reason": "Only a citation fix (PR 284) landed; no protocol change.",
-      "reason_ja": "PR 284 による参照の修正のみで、プロトコルの変更はない。"
     }
   }
 }
