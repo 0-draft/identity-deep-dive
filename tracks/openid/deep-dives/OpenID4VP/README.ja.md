@@ -125,7 +125,7 @@ DC API(Appendix A)では、リクエストはリダイレクトではなくブ�
 - [ ] Request URI と Response URI に HTTP 307 のリダイレクトを返させ、ウォレットがそれに従うかを記録する。エラッタの本文は、従うべきでなく(SHOULD NOT)、エラーとして扱うべきである(SHOULD)としている(エラッタ Section 14.8、#753)。
 - [ ] ウォレットと Verifier を OpenID4VP 向けの OpenID 適合性テストにかける(Section 14.7)。
 
-## 情報源
+## 出典
 
 - <https://github.com/openid/OpenID4VP>(コミット `66f5ff93130128d1662cc60fcd79185ffe0a2d30`、タグ `1.0-final`)
 - <https://openid.net/specs/openid-4-verifiable-presentations-1_0-final.html>
