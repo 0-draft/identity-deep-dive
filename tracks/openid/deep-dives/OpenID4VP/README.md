@@ -119,7 +119,7 @@ Compatibility. A Wallet or Verifier on the Final text and one on the errata text
 
 ## Experiments
 
-- [ ] Build 1.0 Final (tag `1.0-final`) and the `1.0/` errata draft and diff the rendered text, to check that the Document History lists every normative change.
+- [x] Build 1.0 Final (tag `1.0-final`) and the `1.0/` errata draft and diff the rendered text, to check that the Document History lists every normative change. Done on the markdown source instead of the rendered text: three pull requests have normative changes the Document History does not list (`hands-on-log.md`).
 - [ ] Send an mDL request for `age_over_18` to a Wallet whose mDL holds only `age_over_21`, and record which element comes back and whether the Verifier accepts it (errata Section B.2.5).
 - [ ] Send the same request with `request_uri_method=post` and with an unknown value such as `put`, and record whether the Wallet POSTs, falls back to GET, or returns `invalid_request_uri_method` (Section 5.1, #798).
 - [ ] Have the Request URI and the Response URI answer with an HTTP 307 redirect, and record whether the Wallet follows it. The errata text says it SHOULD NOT and SHOULD treat it as an error (errata Section 14.8, #753).

@@ -119,7 +119,7 @@ DC API(Appendix A)では、リクエストはリダイレクトではなくブ�
 
 ## 実験
 
-- [ ] 1.0 Final(タグ `1.0-final`)と `1.0/` のエラッタ版ドラフトをビルドし、出力された本文の差分を取って、Document History が規範的な変更をすべて挙げているか確かめる。
+- [x] 1.0 Final(タグ `1.0-final`)と `1.0/` のエラッタ版ドラフトをビルドし、出力された本文の差分を取って、Document History が規範的な変更をすべて挙げているか確かめる。出力された本文ではなく markdown のソースで実施した。Document History に載っていない規範的な変更を含む PR が 3 件あった(`hands-on-log.ja.md`)。
 - [ ] `age_over_21` しか持たない mDL のウォレットに `age_over_18` の要求を送り、どの要素が返るか、Verifier がそれを受け入れるかを記録する(エラッタ Section B.2.5)。
 - [ ] 同じリクエストを `request_uri_method=post` と、`put` のような未知の値で送り、ウォレットが POST するか、GET に戻るか、`invalid_request_uri_method` を返すかを記録する(Section 5.1、#798)。
 - [ ] Request URI と Response URI に HTTP 307 のリダイレクトを返させ、ウォレットがそれに従うかを記録する。エラッタの本文は、従うべきでなく(SHOULD NOT)、エラーとして扱うべきである(SHOULD)としている(エラッタ Section 14.8、#753)。

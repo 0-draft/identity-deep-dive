@@ -1,0 +1,679 @@
+$ python3 -I vectors/errata_history_check.py OpenID4VP 1.0-final 66f5ff9 prs.json
+repo: openid/OpenID4VP
+base: 1.0-final = e819ed379abe9b0f6e93037e22d678837992e8b2
+head: 66f5ff9 = 66f5ff93130128d1662cc60fcd79185ffe0a2d30
+head date: 2026-11-11T14:08:12-07:00
+
+normative sentences: base 379, head 404
+head Document History bullets under -31: 26
+BASE..HEAD: added 33, removed 8, changed-keywords 4, changed-wording 11, moved 2
+
+== per pull request (first-parent order)
+#699 9029f30 2026-02-19 chore: set up version 1.1 (#699)
+  normative: 0; prose without keyword: 0; example files: 38; history added: 0, removed: 0 -> no normative change, no history entry
+    example: 1.0/examples/client_metadata/mso_mdoc_verifier_metadata.json
+    example: 1.0/examples/client_metadata/sd_jwt_vc_verifier_metadata.json
+    example: 1.0/examples/client_metadata/w3c_jwt_verifier_metadata.json
+    example: 1.0/examples/client_metadata/w3c_ldp_verifier_metadata.json
+    example: 1.0/examples/credentials/jwt_vc.json
+    example: 1.0/examples/credentials/ldp_vc.json
+    example: 1.0/examples/credentials/sd_jwt_vc.json
+    example: 1.0/examples/credentials/sd_jwt_vc_unsecured.json
+    example: 1.0/examples/digital_credentials_api/error_invalid_request.json
+    example: 1.0/examples/digital_credentials_api/signed_request_payload.json
+    example: 1.0/examples/digital_credentials_api/signed_request_payload_compact.json
+    example: 1.0/examples/query_lang/claims_alternatives.json
+    example: 1.0/examples/query_lang/complex_mdoc.json
+    example: 1.0/examples/query_lang/credentials_alternatives.json
+    example: 1.0/examples/query_lang/multi_credentials.json
+    example: 1.0/examples/query_lang/simple.json
+    example: 1.0/examples/query_lang/simple_mdoc.json
+    example: 1.0/examples/query_lang/value_matching_simple.json
+    example: 1.0/examples/request/dcql_jwt_vc.json
+    example: 1.0/examples/request/dcql_ldp_vc.json
+    example: 1.0/examples/request/request_header_client_id_did.json
+    example: 1.0/examples/request/request_object_client_id_did.json
+    example: 1.0/examples/response/jwt_vc.json
+    example: 1.0/examples/response/kb_jwt_unsecured.json
+    example: 1.0/examples/response/ldp_vc.json
+    example: 1.0/examples/sd_jwt_vcld/01/disclosures.md
+    example: 1.0/examples/sd_jwt_vcld/01/kb_jwt_header.json
+    example: 1.0/examples/sd_jwt_vcld/01/kb_jwt_payload.json
+    example: 1.0/examples/sd_jwt_vcld/01/kb_jwt_serialized.txt
+    example: 1.0/examples/sd_jwt_vcld/01/sd_jwt_issuance.txt
+    example: 1.0/examples/sd_jwt_vcld/01/sd_jwt_jws_part.txt
+    example: 1.0/examples/sd_jwt_vcld/01/sd_jwt_payload.json
+    example: 1.0/examples/sd_jwt_vcld/01/sd_jwt_presentation.txt
+    example: 1.0/examples/sd_jwt_vcld/01/specification.yml
+    example: 1.0/examples/sd_jwt_vcld/01/user_claims.json
+    example: 1.0/examples/sd_jwt_vcld/01/verified_contents.json
+    example: 1.0/examples/sd_jwt_vcld/README.md
+    example: 1.0/examples/sd_jwt_vcld/settings.yml
+#700 fd11d72 2026-02-19 chore: prepare 1.1 and 1.0 for editor's drafts (#700)
+  normative: 0; prose without keyword: 0; example files: 0; history added: 2, removed: 0 -> HISTORY ONLY
+    history+ [-31] TBD
+    history+ [-final] https://openid.net/specs/openid-4-verifiable-presentations-1_0-final.html
+#698 c39f50e 2026-02-26 add HPKE exception for enc values supported (#698)
+  normative: 0; prose without keyword: 1; example files: 0; history added: 1, removed: 1 -> HISTORY, PROSE CHANGE
+    history+ [-31] Clarify that `encrypted_response_enc_values_supported` applies only if JWE content encryption algorithm is used
+    history- [-31] TBD
+    [prose added] new_parameters
+      + () This parameter is only applicable when a JWE content encryption algorithm is used.
+#663 7c72471 2026-03-12 Consistently use given_name and family_name in examples (#663)
+  normative: 0; prose without keyword: 4; example files: 5; history added: 0, removed: 0 -> no normative change, no history entry
+    [prose changed-wording] more_dcql_query_examples
+      - () The following is a non-normative example of a DCQL query that requests a Verifiable Credential in the format `mso_mdoc` with the claims `vehicle_holder` and `first_name`:
+      + () The following is a non-normative example of a DCQL query that requests a Verifiable Credential in the format `mso_mdoc` with the claims `vehicle_holder` and `given_name`:
+    [prose changed-wording] more_dcql_query_examples
+      - () The following example shows a query that uses the `values` constraints to request a Credential with specific values for the `last_name` and `postal_code` claims:
+      + () The following example shows a query that uses the `values` constraints to request a Credential with specific values for the `family_name` and `postal_code` claims:
+    [prose changed-wording] dcql_query_example
+      - () The following is a non-normative example of a DCQL query that requests a Credential of the format `dc+sd-jwt` with a type value of `https://credentials.example.com/identity_credential` and the claims `last_name`, `first_name`, and `address.street_address`:
+      + () The following is a non-normative example of a DCQL query that requests a Credential of the format `dc+sd-jwt` with a type value of `https://credentials.example.com/identity_credential` and the claims `family_name`, `given_name`, and `address.street_address`:
+    [prose changed-wording] more_dcql_query_examples
+      - () - the mandatory claims `last_name` and `date_of_birth`, and
+      + () - the mandatory claims `family_name` and `date_of_birth`, and
+    example: 1.0/examples/query_lang/claims_alternatives.json
+    example: 1.0/examples/query_lang/multi_credentials.json
+    example: 1.0/examples/query_lang/simple.json
+    example: 1.0/examples/query_lang/simple_mdoc.json
+    example: 1.0/examples/query_lang/value_matching_simple.json
+#716 71db477 2026-04-26 fix: aud must match issuer metadata in dynamic discovery (#716)
+  normative: 1; prose without keyword: 0; example files: 0; history added: 1, removed: 0 -> ok
+    history+ [-31] Clarify that `aud` corresponds to `issuer` Wallet Metadata paremeter if Dynamic Discovery is used
+    [changed-wording] `aud` of a Request Object
+      - (MUST) - the `aud` claim MUST be equal to the `iss` (issuer) claim value, when Dynamic Discovery is performed.
+      + (MUST) - the `aud` claim MUST be equal to the `issuer` parameter in the Wallet Metadata, when Dynamic Discovery is performed.
+#712 4b3d301 2026-05-06 Merge pull request #712 from openid/dpostnikov-patch-2
+  normative: 0; prose without keyword: 5; example files: 0; history added: 0, removed: 0 -> no normative change, no history entry
+    [prose changed-wording] dc_api_security_considerations
+      - () * Always Use the Full Client Identifier as described in (#full-client-identifier) for signed requests.
+      + () * Always use the Full Client Identifier as described in (#full-client-identifier) for signed requests.
+    [prose added] privacy_trusted_authorities
+      + () <reference anchor="secanalysis.openid4vp.dc" target="https://openid.net/wp-content/uploads/2025/08/Report-Deliverable-A_1_B_.pdf"> <front> <title>Formal Security Analysis of the OpenID for Verifiable Presentations Specification (with DC API)</title> <author fullname="Fabian Hauck"></author> <author fullname="Pedram Hosseyni"></author> <author fullname="Ralf Küsters"></author> <author fullname="Tim Würtele"></author> <date day="15" month="July" year="2025"/> </front> </reference>
+    [prose added] privacy_trusted_authorities
+      + () <reference anchor="secanalysis.openid4vc" target="https://dx.doi.org/10.18419/opus-13772"> <front> <title>OpenID for Verifiable Credentials: Formal Security Analysis using the Web Infrastructure Model</title> <author fullname="Fabian Hauck"> </author> <date day="2" month="October" year="2023"/> </front> </reference>
+    [prose added] dc_api_security_considerations
+      + () The security properties of the OpenID4VP protocol, when used in conjunction with the Digital Credentials API (DC API) [@!W3C.Digital_Credentials_API], have been formally analyzed, see [@secanalysis.openid4vp.dc].
+    [prose added] Formal Security Analysis
+      + () The security properties of the OpenID for Verifiable Credentials family of specifications have been formally analyzed, see [@secanalysis.openid4vc].
+#725 7249ec8 2026-05-07 Merge pull request #725 from openid/editorial-2
+  normative: 0; prose without keyword: 0; example files: 1; history added: 0, removed: 0 -> no normative change, no history entry
+    example: 1.0/examples/digital_credentials_api/signed_request_payload_compact.json
+#728 a3eebb3 2026-05-07 Merge pull request #728 from openid/scopes
+  normative: 0; prose without keyword: 2; example files: 0; history added: 0, removed: 0 -> no normative change, no history entry
+    [prose changed-wording] response
+      - () A VP Token is only returned if the corresponding Authorization Request contained a `dcql_query` parameter or a `scope` parameter representing a DCQL Query (#vp_token_request).
+      + () A VP Token is only returned if the corresponding Authorization Request contained a `dcql_query` parameter or a `scope` parameter representing a DCQL Query (as defined in #vp_token_request).
+    [prose changed-wording] vp_token_request
+      - () The Verifier articulates requirements of the Credential(s) that are requested using the `dcql_query` parameter.
+      + () The Verifier articulates requirements of the Credential(s) that are requested using either the `dcql_query` or `scope` parameters.
+#733 2eabd89 2026-05-07 Merge pull request #733 from openid/request_uri_method
+  normative: 1; prose without keyword: 1; example files: 0; history added: 1, removed: 0 -> ok
+    history+ [-31] Clarified that request_uri_method is a case-sensitive string
+    [changed-wording] new_parameters
+      - (OPTIONAL) `request_uri_method`: : OPTIONAL. A string determining the HTTP method to be used when the `request_uri` parameter is included in the same request.
+      + (OPTIONAL) `request_uri_method`: : OPTIONAL. A case-sensitive string determining the HTTP method to be used when the `request_uri` parameter is included in the same request.
+    [prose added] new_parameters
+      + () `response_uri`: : As defined in (#security_considerations_direct_post).
+#727 de622a9 2026-05-07 Update origin examples to remove trailing slash to resolve #683 (#727)
+  normative: 1; prose without keyword: 1; example files: 0; history added: 1, removed: 0 -> ok
+    history+ [-31] Updated origin examples to remove trailing slash
+    [changed-wording] dc_api_response
+      - (MUST) The audience for the response (for example, the `aud` value in a Key Binding JWT) MUST be the Origin, prefixed with `origin:`, for example `origin:https://verifier.example.com/`.
+      + (MUST) The audience for the response (for example, the `aud` value in a Key Binding JWT) MUST be the Origin, prefixed with `origin:`, for example `origin:https://verifier.example.com`.
+    [prose changed-wording] client_identifier_prefixes
+      - () In OpenID4VP over the Digital Credentials API, the audience of the Credential Presentation is always the origin value prefixed by `origin:`, for example `origin:https://verifier.example.com/`.
+      + () In OpenID4VP over the Digital Credentials API, the audience of the Credential Presentation is always the origin value prefixed by `origin:`, for example `origin:https://verifier.example.com`.
+#724 de04ff5 2026-05-07 Merge pull request #724 from openid/editoria
+  normative: 0; prose without keyword: 1; example files: 0; history added: 1, removed: 0 -> HISTORY, PROSE CHANGE
+    history+ [-31] Clarified that Multi-RP-sig section means Verifier Info instead of attestations
+    [prose changed-wording] multi_signed_request
+      - () It also allows the Verifier to add different attestations for each Client Identifier.
+      + () It also allows the Verifier to add different Verifier Info for each Client Identifier.
+#729 9f0a7cc 2026-05-07 Merge pull request #729 from openid/remove-error-code
+  normative: 0; prose without keyword: 2; example files: 0; history added: 1, removed: 0 -> HISTORY, PROSE CHANGE
+    history+ [-31] Removed invalid_scope error guidance as duplicate of RFC6749
+    [prose removed] error-response
+      - () `invalid_scope`:
+    [prose removed] error-response
+      - () - Requested scope value is invalid, unknown, or malformed.
+#731 0b5d0d2 2026-05-07 Merge pull request #731 from openid/editorial-3
+  normative: 1; prose without keyword: 0; example files: 0; history added: 0, removed: 0 -> NO HISTORY ENTRY
+    [changed-wording] Additional Wallet Metadata Parameters
+      - (REQUIRED) `vp_formats_supported`: : REQUIRED. An object containing a list of name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Wallet supports.
+      + (REQUIRED) `vp_formats_supported`: : REQUIRED. An object containing name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Wallet supports.
+#734 b0356f7 2026-05-07 Merge pull request #734 from openid/708-better-guidance-how-the-verifier-matches-the-incoming-direct_post-request-with-the-user-session
+  normative: 2; prose without keyword: 0; example files: 0; history added: 1, removed: 0 -> ok
+    history+ [-31] Clarify that state is recommended to match text from Section 14.3.2. Protection of the Response URI
+    [changed-keywords] existing_parameters
+      - (MUST,OPTIONAL) Otherwise, `state` is OPTIONAL. `state` values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
+      + (MUST) `state` values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
+    [added] existing_parameters
+      + (RECOMMENDED) Otherwise, `state` is RECOMMENDED, see (#security_considerations_direct_post).
+#722 cd4c7c8 2026-05-07 Clarify nonce entropy requirements (#722)
+  normative: 2; prose without keyword: 0; example files: 0; history added: 1, removed: 0 -> ok
+    history+ [-31] Clarify nonce entropy requirements
+    [changed-wording] existing_parameters
+      - (MUST) The Verifier MUST create a fresh, cryptographically random number with sufficient entropy for every Authorization Request, store it with its current session, and pass it in the `nonce` Authorization Request Parameter to the Wallet.
+      + (MUST) The Verifier MUST create a fresh, cryptographically random number with sufficient entropy for every Authorization Request and store it with its current session.
+    [added] existing_parameters
+      + (SHOULD) The nonce SHOULD contain at least 128 bits of entropy.
+#730 27e5974 2026-06-22 Clarified intent_to_retain value when not present (#730)
+  normative: 0; prose without keyword: 1; example files: 0; history added: 1, removed: 0 -> HISTORY, PROSE CHANGE
+    history+ [-31] Clarified intent_to_retain value when not present
+    [prose added] mdocs_claims_query
+      + () If absent, the Verifier makes no statement on `IntentToRetain`.
+#719 ce27409 2026-07-09 Merge pull request #719 from openid/awoie/fix-224
+  normative: 4; prose without keyword: 10; example files: 0; history added: 2, removed: 0 -> ok
+    history+ [-31] Clarify provided Origin is a string without prior interpretation and validation is based on simple string comparison
+    history+ [-31] Add assumption that the platform that provides the Origin is trusted
+    [changed-wording] dc_api_request
+      - (MUST) The Wallet MUST compare values in this parameter to the Origin to detect replay of the request from a malicious Verifier.
+      + (MUST) The Wallet MUST compare values in this parameter to the provided Origin, treated as a string, using simple string comparison, without any prior processing or interpretation of either the `expected_origins` values or the provided Origin, to detect replay of the request from a malicious Verifier.
+    [added] dc_api_request
+      + (MUST NOT) Values using unsafe or unsupported URI schemes, including `ftp`, `javascript`, `data`, `ws`, and `wss`, MUST NOT be used.
+    [added] dc_api_request
+      + (MUST NOT) Values using the http scheme MUST NOT be used unless they are explicitly allowed for constrained scenarios such as local development or equivalent non-production environments.
+    [added] Terminology
+      + (MUST) The Origin provided by the underlying platform is outside the scope of this specification and MUST be treated as an opaque string.
+    [prose changed-wording] dc_api
+      - () And lastly, as part of the request, the Wallet is provided with information about the Verifier's Origin as authenticated by the user agent, which is important for phishing resistance.
+      + () And lastly, as part of the request, the Wallet is provided with information about the Verifier's Origin as authenticated by the trusted platform (i.e. user agent), which is important for phishing resistance.
+    [prose changed-wording] Terminology
+      - () Origin: : An identifier for the calling website or native application, asserted by the web or app platform.
+      + () Origin: : An identifier for the calling website or native application, asserted by the underlying web or application platform.
+    [prose changed-wording] Terminology
+      - () An app platform may use a linked web origin, or use a platform-specific URI for the app origin.
+      + () Some platforms use a linked web origin, while others use a platform-specific application origin.
+    [prose changed-wording] Terminology
+      - () The native applications origin on some platforms will also be `https://verify.example.com` and on other platforms, may be `platform:pkg-key-hash:Z4OFzVVSZrzTRa3eg79hUuHy12MVW0vzPDf4q4zaPs0`.
+      + () On some platforms, a native application uses the same Origin, while on others it uses a platform-specific value such as platform:pkg-key-hash:Z4OFzVVSZrzTRa3eg79hUuHy12MVW0vzPDf4q4zaPs0.
+    [prose removed] Terminology
+      - () A web origin is the combination of a scheme/protocol, host, and port, with port being omitted when it matches the default port of the scheme.
+    [prose removed] Terminology
+      - () The web origin is `https://verify.example.com` with `https` being the scheme, `verify.example.com` being the host, and the port is not explicitly included as `443` is the default port for the protocol `https`.
+    [prose added] Terminology
+      + () For Web-based callers, the Origin is an opaque `origin` or `tuple origin` as defined in the "Origins" section of [@!whatwg.html].
+    [prose added] Terminology
+      + () For native application callers, the Origin follows a platform-specific convention.
+    [prose added] Terminology
+      + () The corresponding web Origin is https://verify.example.com, where https is the scheme, verify.example.com is the host, and the port is not explicitly included because 443 is the default port for https.
+    [prose added] privacy_trusted_authorities
+      + () <reference anchor="whatwg.html" target="https://html.spec.whatwg.org#concept-origin"> <front> <title>HTML - Living Standard</title> <author> <organization>WHATWG</organization> </author> <date day="22" month="June" year="2026"/> </front> <annotation>Commit snapshot: https://html.spec.whatwg.org/commit-snapshots/c560a56704e7a31887ab79299d30e6f68d696cf4/#concept-origin</annotation> </reference>
+#752 a4313b1 2026-07-13 Merge pull request #752 from openid/642-clarify-jwks-use
+  normative: 2; prose without keyword: 2; example files: 0; history added: 1, removed: 0 -> ok
+    history+ [-31] Clarify jwks use parameter
+    [added] new_parameters
+      + (SHOULD) If the Verifier includes keys intended for different purposes, it SHOULD set the `use` parameter in each key of the set to avoid ambiguity about which key to use for which purpose.
+    [added] response_encryption
+      + (SHOULD NOT) The Wallet SHOULD NOT select a key whose `use` parameter indicates a different purpose (e.g., `sig`).
+    [prose added] new_parameters
+      + () JWKs in this set that do not contain a `use` parameter are intended to be used for encryption of the Authorization Response.
+    [prose added] response_encryption
+      + () JWKs whose `use` parameter is absent or has the value `enc` are for encryption of the Authorization Response.
+#753 46f6965 2026-07-13 Merge pull request #753 from openid/680-http-redirects
+  normative: 4; prose without keyword: 8; example files: 0; history added: 1, removed: 0 -> ok
+    history+ [-31] Clarify that the Wallet does not follow HTTP redirects
+    [added] Request URI Response
+      + (SHOULD,SHOULD NOT) The Wallet SHOULD NOT follow HTTP redirects and SHOULD treat them as an error response (see (#http_redirects)).
+    [added] response_mode_post
+      + (SHOULD,SHOULD NOT) The Wallet SHOULD NOT follow HTTP redirects returned by the Response URI and SHOULD treat them as an error response (see (#http_redirects)).
+    [added] http_redirects
+      + (SHOULD,SHOULD NOT) If the Wallet receives an HTTP redirect in response to one of these requests, it SHOULD NOT follow the redirect and SHOULD treat the response as an error.
+    [added] http_redirects
+      + (MAY) Extensions and profiles of this specification MAY define the use of HTTP redirects for specific requests.
+    [prose added] http_redirects
+      + () This specification does not use HTTP redirects (HTTP status codes 3xx) for the HTTP requests defined in this specification that the Wallet sends directly to the Verifier, i.e.:
+    [prose added] http_redirects
+      + () - the request to retrieve the Request Object from the Request URI (whether using the `get` method as defined in [@RFC9101] or the `post` method defined in (#request_uri_method_post))
+    [prose added] http_redirects
+      + () - the request transmitting the Authorization Response to the Response URI (see (#response_mode_post))
+    [prose added] http_redirects
+      + () Following redirects for the request to the Response URI would allow an Authorization Response containing personally identifiable information to be re-sent (e.g., in the case of an HTTP 307 or 308 redirect) to a URL that was not validated according to the rules for the Response URI (see (#security_considerations_direct_post)).
+    [prose added] http_redirects
+      + () Similarly, following redirects when retrieving the Request Object could disclose request parameters, such as `wallet_metadata` and `wallet_nonce`, to a host that was not validated.
+    [prose added] http_redirects
+      + () In both cases, following redirects could expose the Wallet to redirect loops.
+    [prose added] http_redirects
+      + () Note: This requirement applies only to HTTP-level redirects.
+    [prose added] http_redirects
+      + () It does not affect redirection of the user agent as part of the protocol, e.g., when the Authorization Response is returned via the Redirect URI or when the Wallet redirects the user agent to the `redirect_uri` returned from the Response URI (see (#response_mode_post)); that `redirect_uri` is conveyed as a response parameter in an HTTP 200 response, not as an HTTP-level redirect.
+#759 88216a2 2026-07-30 Add text on untrusted input to 1.0 (#759)
+  normative: 4; prose without keyword: 2; example files: 0; history added: 1, removed: 0 -> ok
+    history+ [-31] add security considerations on untrusted input
+    [added] Parsing of untrusted inputs
+      + (MUST) Wallets MUST treat all incoming requests as untrusted input.
+    [added] Parsing of untrusted inputs
+      + (MUST) To mitigate injection and resource exhaustion attacks, Wallets MUST implement input validation on the Authorization Request and its enclosed DCQL query.
+    [added] Parsing of untrusted inputs
+      + (SHOULD) Wallets SHOULD implement at least the following steps:
+    [added] Parsing of untrusted inputs
+      + (MUST) Unknown parameters MUST be ignored.
+    [prose added] Parsing of untrusted inputs
+      + () * Enforce input validation: Verify that the Authorization Request and DCQL query contain no malformed properties.
+    [prose added] Parsing of untrusted inputs
+      + () * Apply resource limits: Enforce maximum length restrictions on strings, maximum depths for nested objects, and maximum item counts for arrays within the query.
+#750 bbf672f 2026-08-03 723 duplicate claims entry (#750)
+  normative: 2; prose without keyword: 0; example files: 0; history added: 1, removed: 0 -> ok
+    history+ [-31] Remove requirements for duplicate claim entries
+    [removed] credential_query
+      - (MUST NOT) Verifiers MUST NOT point to the same claim more than once in a single query.
+    [removed] credential_query
+      - (SHOULD) Wallets SHOULD ignore such duplicate claim queries.
+#775 5f6f2ee 2026-08-26 Merge pull request #775 from openid/eng/fix-origin-prefix-xref
+  normative: 0; prose without keyword: 1; example files: 0; history added: 0, removed: 0 -> no normative change, no history entry
+    [prose changed-wording] client_identifier_prefixes
+      - () * `origin`: This reserved Client Identifier Prefix is defined in (#dc_api_request).
+      + () * `origin`: This reserved Client Identifier Prefix is defined in (#dc_api_response).
+#776 85ed882 2026-08-26 Merge pull request #776 from openid/eng/fix-stale-https-prefix-example
+  normative: 0; prose without keyword: 1; example files: 0; history added: 0, removed: 0 -> no normative change, no history entry
+    [prose changed-wording] error-response
+      - () - The Client Identifier passed in the request did not belong to its Client Identifier Prefix, or requirements of a certain prefix were violated, for example an unsigned request was sent with Client Identifier Prefix `https`.
+      + () - The Client Identifier passed in the request did not belong to its Client Identifier Prefix, or requirements of a certain prefix were violated, for example an unsigned request was sent with Client Identifier Prefix `openid_federation`.
+#745 4bf9155 2026-08-26 Merge pull request #745 from openid/awoie/fix-743
+  normative: 14; prose without keyword: 11; example files: 0; history added: 2, removed: 0 -> ok
+    history+ [-31] Clarify that a VP Token cannot be empty and that empty objects in VP Tokens cannot be used to signify an error response; an error response is returned instead
+    history+ [-31] Editorial improvement of the `vp_token` section
+    [moved] privacy-dc-api-error -> Error Responses
+      - (SHOULD NOT) A Wallet SHOULD NOT return any OpenID4VP protocol errors without End-User interaction either with the platform or the Wallet.
+      + (SHOULD NOT) A Wallet SHOULD NOT return any OpenID4VP protocol errors without End-User interaction either with the platform or the Wallet.
+    [moved] privacy-dc-api-error -> Error Responses
+      - (SHOULD NOT) A Wallet SHOULD NOT return any OpenID4VP protocol errors before obtaining End-User consent, when processing a request containing value matching (to avoid revealing values of claims without consent), or issuer selection (to avoid revealing that the End-User has a Credential from a particular authority).
+      + (SHOULD NOT) A Wallet SHOULD NOT return any OpenID4VP protocol errors before obtaining End-User consent, when processing a request containing value matching (to avoid revealing values of claims without consent), or issuer selection (to avoid revealing that the End-User has a Credential from a particular authority).
+    [changed-wording] response-parameters
+      - (MUST) When `multiple` is omitted, or set to `false`, the array MUST contain only one Presentation.
+      + (MUST) * When `multiple` was omitted in the DCQL query or set to `false`, the array MUST contain exactly one Presentation.
+    [changed-wording] response-parameters
+      - (MUST NOT) There MUST NOT be any entry in the JSON-encoded object for optional Credential Queries when there are no matching Credentials for the respective Credential Query.
+      + (MUST NOT) * The object MUST NOT contain an entry for an optional Credential Query when there are no matching Credentials for that Credential Query.
+    [removed] response-parameters
+      - (REQUIRED) `vp_token`: : REQUIRED. This is a JSON-encoded object containing entries where the key is the `id` value used for a Credential Query in the DCQL query and the value is an array of one or more Presentations that match the respective Credential Query.
+    [added] response-parameters
+      + (REQUIRED) `vp_token`: : REQUIRED. A JSON-encoded object subject to the following requirements:
+    [added] response-parameters
+      + (MUST) * Each key MUST be the `id` of a Credential Query in the DCQL query.
+    [added] response-parameters
+      + (MUST) * Each value MUST be an array containing one or more Presentations matching the corresponding Credential Query.
+    [added] response-parameters
+      + (MUST) * Each Presentation MUST be encoded as a string or object according to (#format_specific_parameters).
+    [added] response-parameters
+      + (MUST,MUST NOT) * The object MUST NOT be empty: it MUST contain at least one entry.
+    [added] response-parameters
+      + (MUST) If there is no Presentation to return and the Wallet returns a response, it MUST be an error response as defined in (#error-response) instead of a VP Token.
+    [added] response
+      + (MUST) The Wallet MUST return a VP Token only if it contains a set of Presentations that satisfy the requirements of the DCQL query according to (#dcql_query_lang_processing_rules).
+    [added] response
+      + (MUST,MUST NOT) If the Wallet does not return any Presentation, for example, because the End-User did not give consent, the requested Credentials are not available, or the DCQL query can be satisfied without returning any Presentation (i.e., all Credential Queries that cannot be fulfilled are optional), the Wallet MUST NOT return a VP Token; if the Wallet returns a response, it MUST be an error response as defined in (#error-response).
+    [added] response
+      + (MUST NOT) In particular, an empty VP Token (a JSON object without any entries) MUST NOT be used to signify an error.
+    [prose changed-wording] response
+      - () A VP Token is only returned if the corresponding Authorization Request contained a `dcql_query` parameter or a `scope` parameter representing a DCQL Query (as defined in #vp_token_request).
+      + () A VP Token is only returned if the corresponding Authorization Request contained a `dcql_query` parameter or a `scope` parameter representing a DCQL Query, as defined in (#vp_token_request).
+    [prose changed-wording] privacy-dc-api-error
+      - () For example, platform implementations could only allow Wallets to be selected that satisfy the request.
+      + () For example, platform implementations could allow only Wallets that satisfy the request to be selected.
+    [prose changed-wording] dc_api_response
+      - () Privacy considerations specific to returning error responses over the Digital Credentials API can be found in (#privacy-dc-api-error).
+      + () Privacy considerations that apply to returning error responses can be found in (#error-responses) and (#privacy-dc-api-error).
+    [prose removed] response-parameters
+      - () The same rules as above apply for encoding the Presentations.
+    [prose removed] privacy-dc-api-error
+      - () The narrower a request is, the more information is revealed:
+    [prose added] response
+      + () Privacy considerations that apply when returning an error response, in particular with regard to End-User consent, are defined in (#error-responses).
+    [prose added] Error Responses
+      + () The following considerations apply irrespective of the mechanism used to invoke the Wallet, i.e., to both redirect-based flows and the Digital Credentials API.
+    [prose added] Error Responses
+      + () The considerations in the subsections below apply only to the mechanism they refer to.
+    [prose added] Error Responses
+      + () Where the fact that an error response is returned, or the content of that error response, depends on the Wallet's ability to satisfy the request, the narrower a request is, the more information is revealed:
+    [prose added] Error Responses
+      + () Note that when the Digital Credentials API is used, this can be the case even if the Wallet behaves identically in all cases, as described in (#privacy-dc-api-error).
+    [prose added] dc_api_privacy_considerations
+      + () * Error Responses as described in (#error-responses) and (#privacy-dc-api-error).
+#782 39fa073 2026-08-31 Normatively define how an SD-JWT VC is returned in vp_token (#782)
+  normative: 1; prose without keyword: 1; example files: 0; history added: 1, removed: 0 -> ok
+    history+ [-31] Clarify `dc+sd-jwt` presentations use the compact serialized SD-JWT format
+    [added] Presentation Response
+      + (MUST NOT) The JWS JSON Serialization defined in Section 8 of [@!I-D.ietf-oauth-selective-disclosure-jwt] MUST NOT be used with the `dc+sd-jwt` Credential Format Identifier.
+    [prose added] Presentation Response
+      + () Each Presentation is represented as a string containing an SD-JWT or SD-JWT+KB in the compact serialized format defined in Section 4 of [@!I-D.ietf-oauth-selective-disclosure-jwt].
+#787 a6de19b 2026-09-09 Fix LDP VP proof example saying it doesn't contain a proof when it does (#787)
+  normative: 0; prose without keyword: 1; example files: 0; history added: 0, removed: 0 -> no normative change, no history entry
+    [prose changed-wording] verifiable-presentations-considerations
+      - () The following is a non-normative example of a Verifiable Presentation following a request with the Credential Format Identifier `ldp_vc` without a `proof` property:
+      + () The following is a non-normative example of a Verifiable Presentation following a request with the Credential Format Identifier `ldp_vc`, containing a `proof` property:
+#788 ef91545 2026-09-09 Clarify Request URI response can be unsigned for prefixes requiring unsigned requests (#788)
+  normative: 1; prose without keyword: 1; example files: 0; history added: 1, removed: 0 -> ok
+    history+ [-31] Clarify that the Request URI response is unsigned (JWT with `alg` value `none`) when the Client Identifier Prefix in use requires unsigned requests
+    [changed-wording] Request URI Response
+      - (MUST) The Request URI response MUST be an HTTP response with the content type `application/oauth-authz-req+jwt` and the body being a signed, optionally encrypted, request object as defined in [@RFC9101].
+      + (MUST) The Request URI response MUST be an HTTP response with the content type `application/oauth-authz-req+jwt` and the body being a request object as defined in [@RFC9101], optionally encrypted.
+    [prose added] Request URI Response
+      + () The request object is signed unless the Client Identifier Prefix in use requires an unsigned request (e.g., `redirect_uri`), in which case the JWT uses the `alg` value `none`.
+#783 5c7cc02 2026-09-10 Merge pull request #783 from openid/clarify-vc-without-holder-binding
+  normative: 2; prose without keyword: 2; example files: 0; history added: 1, removed: 0 -> ok
+    history+ [-31] Clarify that a W3C Verifiable Credential requested without Cryptographic Holder Binding is returned directly in the VP Token, without a Verifiable Presentation
+    [removed] W3C Verifiable Credentials
+      - (MUST) Otherwise, a Verifiable Credential without Holder Binding MUST be returned.
+    [added] W3C Verifiable Credentials
+      + (MUST) If set to `false`, a Verifiable Credential without Holder Binding MUST be returned, i.e., the Wallet includes the Verifiable Credential itself directly in the VP Token, without wrapping it in a Verifiable Presentation.
+    [prose changed-wording] Presentation Response
+      - () The following requirements apply to the `challenge` and `domain` claims within the `proof` object in the Verifiable Presentation:
+      + () When a Verifiable Presentation is returned, the following requirements apply to the `challenge` and `domain` claims within its `proof` object:
+    [prose changed-wording] Presentation Response
+      - () The following requirements apply to the `nonce` and `aud` claims of the Verifiable Presentation:
+      + () When a Verifiable Presentation is returned, the following requirements apply to its `nonce` and `aud` claims:
+#735 9efad1e 2026-09-23 Merge pull request #735 from openid/dpostnikov-patch-3
+  normative: 7; prose without keyword: 5; example files: 0; history added: 0, removed: 0 -> NO HISTORY ENTRY
+    [changed-keywords] Source of Verifier Metadata
+      - (MUST) All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter as defined in (#new_parameters).
+      + (MAY) Profiles of this specification MAY define additional `client_metadata` parameters, as described in (#new_parameters).
+    [removed] client_identifier_prefixes
+      - (MUST) All Verifier metadata parameters MUST be passed using the `client_metadata` parameter defined in (#new_parameters).
+    [removed] client_identifier_prefixes
+      - (MUST) All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter.
+    [removed] client_identifier_prefixes
+      - (MUST) All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter.
+    [removed] client_identifier_prefixes
+      - (MUST) All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter.
+    [added] Source of Verifier Metadata
+      + (RECOMMENDED) It is RECOMMENDED that such parameters are limited to client-supplied values that can safely be used without being trusted.
+    [added] Source of Verifier Metadata
+      + (MAY) Wallets MAY use other ecosystem-specific trusted sources of Verifier metadata, provided the Wallet is able to establish trust in those sources.
+    [prose changed-wording] client_identifier_prefixes
+      - () Example Client Identifier: `x509_hash:Uvo3HtuIxuhC92rShpgqcT3YXwrqRxWEviRiA0OZszk`
+      + () Example Client Identifier: `x509_hash:Uvo3HtuIxuhC92rShpgqcT3YXwrqRxWEviRiA0OZszk`.
+    [prose added] Source of Verifier Metadata
+      + () Wallet implementers need to choose a source of Verifier metadata they can trust within their own ecosystem or implementation, including determining whether metadata is safe to use or display to an End-User.
+    [prose added] Source of Verifier Metadata
+      + () For example, a Verifier name obtained from an X.509 leaf certificate that chains to a trust anchor the Wallet trusts may be suitable to display to an End-User, whereas a Verifier name from the `client_metadata` parameter is not suitable to display.
+    [prose added] Source of Verifier Metadata
+      + () One example of such a value is a public key used to encrypt the Authorization Response.
+    [prose added] Source of Verifier Metadata
+      + () As described in (#new_parameters), authoritative data obtained from such sources takes precedence over the values passed in the `client_metadata` parameter.
+#798 8768911 2026-09-24 Merge pull request #798 from openid/779-may-jar
+  normative: 1; prose without keyword: 0; example files: 0; history added: 1, removed: 0 -> ok
+    history+ [-31] fix inconsistency on the JAR fallback from post to get if unsupported
+    [changed-keywords] vp_token_request
+      - (MAY) The Wallet MAY continue with JAR when it receives `request_uri_method` parameter with the value `post` but does not support this feature.
+      + (MUST) If the Wallet receives a request with the `request_uri_method` parameter set to the value `post` (or any other unrecognized value) but does not support this feature, it MUST fall back to a GET request to the Request URI.
+#790 be70794 2026-10-12 Merge pull request #790 from openid/clarify-terminate-reject-error
+  normative: 6; prose without keyword: 2; example files: 0; history added: 2, removed: 0 -> ok
+    history+ [-31] Clarify that a Wallet terminating request processing does not return a response to the Verifier
+    history+ [-31] Clarify that a Wallet rejecting a request containing an unsupported `transaction_data` parameter uses the `invalid_transaction_data` error code if it returns an error response
+    [changed-wording] vp_token_request
+      - (MUST) The Wallet MUST ignore any unrecognized parameters, other than the `transaction_data` parameter.
+      + (MUST) The Wallet MUST ignore any unrecognized parameters.
+    [changed-wording] vp_token_request
+      - (MUST) Wallets that do not support this parameter MUST reject requests that contain it.
+      + (MUST) One exception to this rule is the `transaction_data` parameter: a Wallet that does not support this parameter MUST reject requests that contain it, as defined in (#transaction_data).
+    [removed] transaction_data
+      - (MUST) If the Wallet does not support `transaction_data` parameter, it MUST return an error upon receiving a request that includes it.
+    [added] Request URI Response
+      + (MUST NOT) When this specification requires the Wallet to terminate request processing (or terminate the process), the Wallet stops processing the request and MUST NOT return an Authorization Response or Authorization Error Response to the Verifier.
+    [added] transaction_data
+      + (MUST,MUST NOT,SHOULD) If the Wallet does not support the `transaction_data` parameter, it MUST reject a request that includes it: the Wallet MUST NOT return a VP Token for such a request, and any response returned SHOULD be an error response using the error code `invalid_transaction_data` (see (#error-response)).
+    [added] transaction_data
+      + (MAY) As described in (#error-responses), the Wallet MAY instead cancel the flow without returning a response to the Verifier.
+    [prose removed] vp_token_request
+      - () One exception to this rule is the `transaction_data` parameter.
+    [prose added] Request URI Response
+      + () In these situations, the Wallet was unable to obtain an authentic Authorization Request, so there is no trusted endpoint to which an Authorization Error Response could be sent.
+#802 57931ce 2026-10-12 Merge pull request #802 from openid/fkj/fix-796
+  normative: 1; prose without keyword: 0; example files: 0; history added: 1, removed: 0 -> ok
+    history+ [-31] List `encrypted_response_enc_values_supported` in the Additional Verifier Metadata Parameters section
+    [added] client_metadata_parameters
+      + (OPTIONAL) `encrypted_response_enc_values_supported`: : OPTIONAL. As defined for the `client_metadata` parameter in (#new_parameters).
+#801 aaf6163 2026-10-12 Merge pull request #801 from openid/clarify-format-mismatch-access-denied
+  normative: 0; prose without keyword: 1; example files: 0; history added: 1, removed: 0 -> HISTORY, PROSE CHANGE
+    history+ [-31] Clarify that `invalid_request` is used when the `dcql_query` requests a Credential Format not included in the Verifier's `vp_formats_supported` metadata
+    [prose added] error-response
+      + () - The `dcql_query` parameter requests a Credential Format that is not included in the Verifier's `vp_formats_supported` metadata.
+#800 66f5ff9 2026-11-11 Merge pull request #800 from openid/718-age-over-nn
+  normative: 2; prose without keyword: 13; example files: 0; history added: 1, removed: 0 -> ok
+    history+ [-31] Allow special matching rules on a credential type basis (age_over_NN)
+    [added] mdocs_data_element_selection
+      + (SHOULD) When processing a claims path pointer for an mdoc where its second component refers to a data element that does not exist in the mdoc, the Wallet SHOULD apply any such rule defined for the document type and namespace of the mdoc.
+    [added] mdocs_data_element_selection
+      + (SHOULD) Verifiers SHOULD be prepared to receive a different data element identifier and evaluate it according to the document type's rules.
+    [prose changed-wording] Processing
+      - () If the data element does not exist in the Credential then abort processing and return an error.
+      + () If no data element was selected, abort processing and return an error.
+    [prose added] claims_path_pointer
+      + () Credential Format-specific rules as introduced in (#format_specific_parameters) can define special cases in which processing a claims path pointer selects a claim other than the one identified by the direct interpretation of the pointer, especially on the basis of special behavior for claims in specific credential types.
+    [prose added] claims_path_pointer
+      + () For example, see (#mdocs_data_element_selection) for the handling of `age_over_NN` data elements in an ISO mdoc of type mDL (org.iso.18013.5.1).
+    [prose added] Processing
+      + () If the data element does not exist in the Credential, apply any supported data element selection rule defined for the document type and namespace of the mdoc, as described in (#mdocs_data_element_selection).
+    [prose added] Processing
+      + () If such a rule identifies a data element, select that data element instead.
+    [prose added] mdocs_data_element_selection
+      + () Document types can define special rules under which a data element other than the one requested can be returned.
+    [prose added] mdocs_data_element_selection
+      + () For example, [@ISO.18013-5] defines that when an mDL does not contain a requested `age_over_NN` data element, a different `age_over_NN` data element can be returned by the Wallet - see Section 7.2.5 of [@ISO.18013-5] for the definition on how the `age_over_NN` matching works.
+    [prose added] mdocs_data_element_selection
+      + () If these rules do not identify a data element, the requested data element is treated as not existing in the Credential.
+    [prose added] mdocs_data_element_selection
+      + () The following rules apply to a data element selected in this way:
+    [prose added] mdocs_data_element_selection
+      + () * The selected data element is treated as if it were the requested claim when evaluating `claims`, `claim_sets`, and `values` (see (#selecting_claims)).
+    [prose added] mdocs_data_element_selection
+      + () Value matching, if requested, is applied to the value of the selected data element.
+    [prose added] mdocs_data_element_selection
+      + () * The Presentation contains the data element that was selected under its own data element identifier, not the identifier used in the Claims Query.
+    [prose added] mdocs_data_element_selection
+      + () Note that this means that a valid response might contain the data element identifiers in the Presentation that differ from the ones in the claims path pointer of the Claims Query.
+
+== BASE..HEAD normative changes, attributed to the pull request that first touched the sentence
+  [moved] privacy-dc-api-error -> Error Responses
+    - (SHOULD NOT) A Wallet SHOULD NOT return any OpenID4VP protocol errors without End-User interaction either with the platform or the Wallet.
+    + (SHOULD NOT) A Wallet SHOULD NOT return any OpenID4VP protocol errors without End-User interaction either with the platform or the Wallet.
+      by: #745
+  [moved] privacy-dc-api-error -> Error Responses
+    - (SHOULD NOT) A Wallet SHOULD NOT return any OpenID4VP protocol errors before obtaining End-User consent, when processing a request containing value matching (to avoid revealing values of claims without consent), or issuer selection (to avoid revealing that the End-User has a Credential from a particular authority).
+    + (SHOULD NOT) A Wallet SHOULD NOT return any OpenID4VP protocol errors before obtaining End-User consent, when processing a request containing value matching (to avoid revealing values of claims without consent), or issuer selection (to avoid revealing that the End-User has a Credential from a particular authority).
+      by: #745
+  [changed-wording] dc_api_response
+    - (MUST) The audience for the response (for example, the `aud` value in a Key Binding JWT) MUST be the Origin, prefixed with `origin:`, for example `origin:https://verifier.example.com/`.
+    + (MUST) The audience for the response (for example, the `aud` value in a Key Binding JWT) MUST be the Origin, prefixed with `origin:`, for example `origin:https://verifier.example.com`.
+      by: #727
+  [changed-wording] Additional Wallet Metadata Parameters
+    - (REQUIRED) `vp_formats_supported`: : REQUIRED. An object containing a list of name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Wallet supports.
+    + (REQUIRED) `vp_formats_supported`: : REQUIRED. An object containing name/value pairs, where the name is a Credential Format Identifier and the value defines format-specific parameters that a Wallet supports.
+      by: #731
+  [changed-wording] new_parameters
+    - (OPTIONAL) `request_uri_method`: : OPTIONAL. A string determining the HTTP method to be used when the `request_uri` parameter is included in the same request.
+    + (OPTIONAL) `request_uri_method`: : OPTIONAL. A case-sensitive string determining the HTTP method to be used when the `request_uri` parameter is included in the same request.
+      by: #733
+  [changed-keywords] existing_parameters
+    - (MUST,OPTIONAL) Otherwise, `state` is OPTIONAL. `state` values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
+    + (MUST) `state` values MUST only contain ASCII URL safe characters (uppercase and lowercase letters, decimal digits, hyphen, period, underscore, and tilde).
+      by: #734
+  [changed-wording] Request URI Response
+    - (MUST) The Request URI response MUST be an HTTP response with the content type `application/oauth-authz-req+jwt` and the body being a signed, optionally encrypted, request object as defined in [@RFC9101].
+    + (MUST) The Request URI response MUST be an HTTP response with the content type `application/oauth-authz-req+jwt` and the body being a request object as defined in [@RFC9101], optionally encrypted.
+      by: #788
+  [changed-wording] response-parameters
+    - (MUST) When `multiple` is omitted, or set to `false`, the array MUST contain only one Presentation.
+    + (MUST) * When `multiple` was omitted in the DCQL query or set to `false`, the array MUST contain exactly one Presentation.
+      by: #745
+  [changed-wording] `aud` of a Request Object
+    - (MUST) - the `aud` claim MUST be equal to the `iss` (issuer) claim value, when Dynamic Discovery is performed.
+    + (MUST) - the `aud` claim MUST be equal to the `issuer` parameter in the Wallet Metadata, when Dynamic Discovery is performed.
+      by: #716
+  [changed-wording] existing_parameters
+    - (MUST) The Verifier MUST create a fresh, cryptographically random number with sufficient entropy for every Authorization Request, store it with its current session, and pass it in the `nonce` Authorization Request Parameter to the Wallet.
+    + (MUST) The Verifier MUST create a fresh, cryptographically random number with sufficient entropy for every Authorization Request and store it with its current session.
+      by: #722
+  [changed-wording] response-parameters
+    - (MUST NOT) There MUST NOT be any entry in the JSON-encoded object for optional Credential Queries when there are no matching Credentials for the respective Credential Query.
+    + (MUST NOT) * The object MUST NOT contain an entry for an optional Credential Query when there are no matching Credentials for that Credential Query.
+      by: #745
+  [changed-wording] vp_token_request
+    - (MUST) The Wallet MUST ignore any unrecognized parameters, other than the `transaction_data` parameter.
+    + (MUST) The Wallet MUST ignore any unrecognized parameters.
+      by: #790
+  [changed-keywords] Source of Verifier Metadata
+    - (MUST) All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter as defined in (#new_parameters).
+    + (MAY) Profiles of this specification MAY define additional `client_metadata` parameters, as described in (#new_parameters).
+      by: #735
+  [changed-wording] vp_token_request
+    - (MUST) Wallets that do not support this parameter MUST reject requests that contain it.
+    + (MUST) One exception to this rule is the `transaction_data` parameter: a Wallet that does not support this parameter MUST reject requests that contain it, as defined in (#transaction_data).
+      by: #790
+  [changed-keywords] vp_token_request
+    - (MAY) The Wallet MAY continue with JAR when it receives `request_uri_method` parameter with the value `post` but does not support this feature.
+    + (MUST) If the Wallet receives a request with the `request_uri_method` parameter set to the value `post` (or any other unrecognized value) but does not support this feature, it MUST fall back to a GET request to the Request URI.
+      by: #798
+  [changed-keywords] client_metadata_parameters
+    - (MUST) All Verifier metadata parameters MUST be passed using the `client_metadata` parameter defined in (#new_parameters).
+    + (OPTIONAL) `encrypted_response_enc_values_supported`: : OPTIONAL. As defined for the `client_metadata` parameter in (#new_parameters).
+      by: #735 #802
+  [changed-wording] dc_api_request
+    - (MUST) The Wallet MUST compare values in this parameter to the Origin to detect replay of the request from a malicious Verifier.
+    + (MUST) The Wallet MUST compare values in this parameter to the provided Origin, treated as a string, using simple string comparison, without any prior processing or interpretation of either the `expected_origins` values or the provided Origin, to detect replay of the request from a malicious Verifier.
+      by: #719
+  [removed] client_identifier_prefixes
+    - (MUST) All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter.
+      by: #735
+  [removed] client_identifier_prefixes
+    - (MUST) All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter.
+      by: #735
+  [removed] client_identifier_prefixes
+    - (MUST) All Verifier metadata other than the public key MUST be obtained from the `client_metadata` parameter.
+      by: #735
+  [removed] credential_query
+    - (MUST NOT) Verifiers MUST NOT point to the same claim more than once in a single query.
+      by: #750
+  [removed] credential_query
+    - (SHOULD) Wallets SHOULD ignore such duplicate claim queries.
+      by: #750
+  [removed] response-parameters
+    - (REQUIRED) `vp_token`: : REQUIRED. This is a JSON-encoded object containing entries where the key is the `id` value used for a Credential Query in the DCQL query and the value is an array of one or more Presentations that match the respective Credential Query.
+      by: #745
+  [removed] transaction_data
+    - (MUST) If the Wallet does not support `transaction_data` parameter, it MUST return an error upon receiving a request that includes it.
+      by: #790
+  [removed] W3C Verifiable Credentials
+    - (MUST) Otherwise, a Verifiable Credential without Holder Binding MUST be returned.
+      by: #783
+  [added] new_parameters
+    + (SHOULD) If the Verifier includes keys intended for different purposes, it SHOULD set the `use` parameter in each key of the set to avoid ambiguity about which key to use for which purpose.
+      by: #752
+  [added] existing_parameters
+    + (SHOULD) The nonce SHOULD contain at least 128 bits of entropy.
+      by: #722
+  [added] existing_parameters
+    + (RECOMMENDED) Otherwise, `state` is RECOMMENDED, see (#security_considerations_direct_post).
+      by: #734
+  [added] Request URI Response
+    + (SHOULD,SHOULD NOT) The Wallet SHOULD NOT follow HTTP redirects and SHOULD treat them as an error response (see (#http_redirects)).
+      by: #753
+  [added] Request URI Response
+    + (MUST NOT) When this specification requires the Wallet to terminate request processing (or terminate the process), the Wallet stops processing the request and MUST NOT return an Authorization Response or Authorization Error Response to the Verifier.
+      by: #790
+  [added] response-parameters
+    + (REQUIRED) `vp_token`: : REQUIRED. A JSON-encoded object subject to the following requirements:
+      by: #745
+  [added] response-parameters
+    + (MUST) * Each key MUST be the `id` of a Credential Query in the DCQL query.
+      by: #745
+  [added] response-parameters
+    + (MUST) * Each value MUST be an array containing one or more Presentations matching the corresponding Credential Query.
+      by: #745
+  [added] response-parameters
+    + (MUST) * Each Presentation MUST be encoded as a string or object according to (#format_specific_parameters).
+      by: #745
+  [added] response-parameters
+    + (MUST,MUST NOT) * The object MUST NOT be empty: it MUST contain at least one entry.
+      by: #745
+  [added] response-parameters
+    + (MUST) If there is no Presentation to return and the Wallet returns a response, it MUST be an error response as defined in (#error-response) instead of a VP Token.
+      by: #745
+  [added] response_mode_post
+    + (SHOULD,SHOULD NOT) The Wallet SHOULD NOT follow HTTP redirects returned by the Response URI and SHOULD treat them as an error response (see (#http_redirects)).
+      by: #753
+  [added] response_encryption
+    + (SHOULD NOT) The Wallet SHOULD NOT select a key whose `use` parameter indicates a different purpose (e.g., `sig`).
+      by: #752
+  [added] transaction_data
+    + (MUST,MUST NOT,SHOULD) If the Wallet does not support the `transaction_data` parameter, it MUST reject a request that includes it: the Wallet MUST NOT return a VP Token for such a request, and any response returned SHOULD be an error response using the error code `invalid_transaction_data` (see (#error-response)).
+      by: #790
+  [added] transaction_data
+    + (MAY) As described in (#error-responses), the Wallet MAY instead cancel the flow without returning a response to the Verifier.
+      by: #790
+  [added] dc_api_request
+    + (MUST NOT) Values using unsafe or unsupported URI schemes, including `ftp`, `javascript`, `data`, `ws`, and `wss`, MUST NOT be used.
+      by: #719
+  [added] dc_api_request
+    + (MUST NOT) Values using the http scheme MUST NOT be used unless they are explicitly allowed for constrained scenarios such as local development or equivalent non-production environments.
+      by: #719
+  [added] W3C Verifiable Credentials
+    + (MUST) If set to `false`, a Verifiable Credential without Holder Binding MUST be returned, i.e., the Wallet includes the Verifiable Credential itself directly in the VP Token, without wrapping it in a Verifiable Presentation.
+      by: #783
+  [added] Presentation Response
+    + (MUST NOT) The JWS JSON Serialization defined in Section 8 of [@!I-D.ietf-oauth-selective-disclosure-jwt] MUST NOT be used with the `dc+sd-jwt` Credential Format Identifier.
+      by: #782
+  [added] Terminology
+    + (MUST) The Origin provided by the underlying platform is outside the scope of this specification and MUST be treated as an opaque string.
+      by: #719
+  [added] response
+    + (MUST) The Wallet MUST return a VP Token only if it contains a set of Presentations that satisfy the requirements of the DCQL query according to (#dcql_query_lang_processing_rules).
+      by: #745
+  [added] response
+    + (MUST,MUST NOT) If the Wallet does not return any Presentation, for example, because the End-User did not give consent, the requested Credentials are not available, or the DCQL query can be satisfied without returning any Presentation (i.e., all Credential Queries that cannot be fulfilled are optional), the Wallet MUST NOT return a VP Token; if the Wallet returns a response, it MUST be an error response as defined in (#error-response).
+      by: #745
+  [added] response
+    + (MUST NOT) In particular, an empty VP Token (a JSON object without any entries) MUST NOT be used to signify an error.
+      by: #745
+  [added] http_redirects
+    + (SHOULD,SHOULD NOT) If the Wallet receives an HTTP redirect in response to one of these requests, it SHOULD NOT follow the redirect and SHOULD treat the response as an error.
+      by: #753
+  [added] http_redirects
+    + (MAY) Extensions and profiles of this specification MAY define the use of HTTP redirects for specific requests.
+      by: #753
+  [added] Source of Verifier Metadata
+    + (RECOMMENDED) It is RECOMMENDED that such parameters are limited to client-supplied values that can safely be used without being trusted.
+      by: #735
+  [added] Source of Verifier Metadata
+    + (MAY) Wallets MAY use other ecosystem-specific trusted sources of Verifier metadata, provided the Wallet is able to establish trust in those sources.
+      by: #735
+  [added] Parsing of untrusted inputs
+    + (MUST) Wallets MUST treat all incoming requests as untrusted input.
+      by: #759
+  [added] Parsing of untrusted inputs
+    + (MUST) To mitigate injection and resource exhaustion attacks, Wallets MUST implement input validation on the Authorization Request and its enclosed DCQL query.
+      by: #759
+  [added] Parsing of untrusted inputs
+    + (SHOULD) Wallets SHOULD implement at least the following steps:
+      by: #759
+  [added] Parsing of untrusted inputs
+    + (MUST) Unknown parameters MUST be ignored.
+      by: #759
+  [added] mdocs_data_element_selection
+    + (SHOULD) When processing a claims path pointer for an mdoc where its second component refers to a data element that does not exist in the mdoc, the Wallet SHOULD apply any such rule defined for the document type and namespace of the mdoc.
+      by: #800
+  [added] mdocs_data_element_selection
+    + (SHOULD) Verifiers SHOULD be prepared to receive a different data element identifier and evaluate it according to the document type's rules.
+      by: #800
+
+NO HISTORY ENTRY: #731 #735
+HISTORY, PROSE CHANGE: #698 #724 #729 #730 #801
+HISTORY ONLY: #700
+no normative change, no history entry: #699 #663 #712 #725 #728 #775 #776 #787
+ok: #716 #733 #727 #734 #722 #719 #752 #753 #759 #750 #745 #782 #788 #783 #798 #790 #802 #800
+
+self-test:
+  whitespace only: no normative change, no history entry (normative 0, prose 0, history+ 0) -> pass
+  change inside a code block: no normative change, no history entry (normative 0, prose 0, history+ 0) -> pass
+  keyword MAY -> SHOULD, no history: NO HISTORY ENTRY (normative 1, prose 0, history+ 0) -> pass
+  OPTIONAL -> RECOMMENDED with history: ok (normative 1, prose 0, history+ 1) -> pass
+  new MUST sentence, no history: NO HISTORY ENTRY (normative 1, prose 0, history+ 0) -> pass
+  history bullet only: HISTORY ONLY (normative 0, prose 0, history+ 1) -> pass
+  prose sentence without keyword, with history: HISTORY, PROSE CHANGE (normative 0, prose 1, history+ 1) -> pass
+  keyword sentence moved to another section, no history: NO HISTORY ENTRY (normative 1, prose 0, history+ 0) -> pass
+  sentences reordered inside a section: no normative change, no history entry (normative 0, prose 0, history+ 0) -> pass
+self-test: 9/9 pass
+exit status: 0
