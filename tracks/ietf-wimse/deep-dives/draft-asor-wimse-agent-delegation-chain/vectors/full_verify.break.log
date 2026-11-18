@@ -1,0 +1,102 @@
+python 3.15.2, cryptography 50.0.2
+lab choices where the -03 is silent:
+  A1 ath is SHA-256 of DT_n's compact serialization; the -03 does not say which token of a chain is 'the access token'.
+  A2 iat window is |now - iat| <= 60 s, and no server nonce is issued; RFC 9449 Section 11.1 leaves the window to the server.
+  A3 htu is compared byte-for-byte with the request URI after dropping query and fragment (RFC 9449 4.3); no RFC 3986 normalization.
+  A4 jti replay cache: a proof jti accepted once is refused afterwards (RFC 9449 Section 11.1 makes this a server choice).
+  A5 status reference claim is 'status': {'status_list': {'uri', 'idx'}}; the -03 names no claim. The cached list is an in-memory model (fetched_at, ttl, statuses), not a signed status list token.
+  A6 a cached answer is trusted while now < fetched_at + ttl (same half-open form as now < exp).
+  A7 a status reference that is not of the shape in A5, or whose idx is outside the list, is status_unknown.
+  A8 status 'suspended' denies under the name revoked; the -03 names only revoked and unknown.
+  A9 a per-action constraint whose key the action does not state, or states with a value of the wrong kind, denies as ceiling_exceeded; the -03 does not say what a missing quantity means.
+  A10 the running-total channel supplies the total including A; a cumulative constraint with no total denies as ceiling_exceeded (the -03 requires the deny but assigns no Table 2 name).
+  A11 order inside step 8: aud, scope, unknown constraint type, per-action, cumulative; the -03 says aud 'then' scope, per-action and cumulative, and does not place the unknown-type deny of Section 4.2 in that sequence.
+  A12 cumulative totals are keyed by DT_n's jti; ancestors' max_subtree totals are not consulted (step 8 checks DT_n only).
+  A13 DPoP proof alg must be 'Ed25519' (RFC 9864), as Section 3 requires for Delegation Tokens; 'EdDSA' (RFC 8037) is denied. The -03 does not say which alg a DPoP proof may use.
+
+chain: DT_0 planner {crm.*, mail.send} status idx 0; DT_1 researcher {crm.read, crm.list} status idx 1;
+       DT_2 formatter {crm.read}, no status reference; now 1500; EP https://crm.example.com
+       DT_2 constraints: [{"key":"max_rows","max":100},{"key":"batch","min":10},{"key":"region","one_of":["eu"]},{"key":"table","not_one_of":["salaries","ssn"]},{"key":"path","prefix":"/crm/accounts/"},{"key":"egress","rank":"none","order":["none","internal","any"]},{"key":"max_calls","max_lifetime":5},{"key":"max_spend","max_subtree":100}]
+  holder planner    jkt HrVjFokV8uI2jX8TkifuwiSj3Ny-_QMkfOGvBNviOq0
+  holder researcher jkt WsTseBWbV931i7UJZFLaqVupeAkekmnKTNU7BlZJ_Nk
+  holder formatter  jkt ho2xjbnQbjT7k368yJPM0XsPbjIHCA88Ist37qC6PbQ
+  DT_0 1150 bytes, sha256(signing input)=59W1BbG2Mlc2F_E8mvFNN1HupB7PFmPARrwRmeZpVyQ
+  DT_1 1226 bytes, sha256(signing input)=yRHRlgOMaLNGZAocexWKSHCkjLagM_L80jqlkvn-Q2g
+  DT_2 1095 bytes, sha256(signing input)=luQGDBG_1X_v7O3IssW2nHmv7vEfVUDl1LiiNAtbRto
+request: GET https://crm.example.com/accounts/42?fields=name#top, action {"scope":"crm.read","params":{"max_rows":50,"batch":20,"region":"eu","table":"accounts","path":"/crm/accounts/42","egress":"none"}}
+totals channel: max_lifetime/lab4:2/max_calls=3, max_subtree/lab4:2/max_spend=40
+
+positive
+  OK   1-8  baseline: all eight steps                                  expected=accept                got=accept                [Table 2] 
+  OK   8    every bound met with equality (rows 100, batch 10, totals 5, 100) expected=accept                got=accept                [Table 2] 
+  OK   6    second request with a new proof jti on the same context    expected=accept                got=accept                [Table 2] 
+  OK   6    proof iat = now - 60 (edge of the A2 window)               expected=accept                got=accept                [Table 2] 
+  OK   7    cached list at now = fetched_at + ttl - 1 (1699)           expected=accept                got=accept                [Table 2] 
+  OK   7    stale cache (fetched 1000, ttl 300), refresh succeeds      expected=accept                got=accept                [Table 2] 
+
+step 6 (holder binding), one mutation per check
+  OK   6    no DPoP proof                                              expected=holder_binding_failed got=holder_binding_failed [Table 2] no DPoP proof
+  OK   6    proof signed by the researcher key (DT_1 holder)           expected=holder_binding_failed got=holder_binding_failed [Table 2] proof key thumbprint != DT_n.cnf.jkt
+  OK   6    htm POST, request GET                                      expected=holder_binding_failed got=holder_binding_failed [Table 2] htm POST != request method GET
+  OK   6    htu names another path                                     expected=holder_binding_failed got=holder_binding_failed [Table 2] htu https://crm.example.com/accounts/43 != https://crm.example.com/accounts/42
+  OK   6    htu keeps the query string                                 expected=holder_binding_failed got=holder_binding_failed [Table 2] htu https://crm.example.com/accounts/42?fields=name != https://crm.example.com/accounts/42
+  OK   6    iat = now - 61                                             expected=holder_binding_failed got=holder_binding_failed [Table 2] iat 1439 outside now 1500 +/- 60
+  OK   6    iat = now + 61                                             expected=holder_binding_failed got=holder_binding_failed [Table 2] iat 1561 outside now 1500 +/- 60
+  OK   6    ath is the hash of DT_1                                    expected=holder_binding_failed got=holder_binding_failed [Table 2] ath is not the hash of DT_n
+  OK   6    ath absent                                                 expected=holder_binding_failed got=holder_binding_failed [Table 2] ath absent
+  OK   6    jti absent                                                 expected=holder_binding_failed got=holder_binding_failed [Table 2] jti absent or of the wrong type
+  OK   6    typ jwt                                                    expected=holder_binding_failed got=holder_binding_failed [Table 2] typ 'jwt' is not dpop+jwt
+  OK   6    alg none                                                   expected=holder_binding_failed got=holder_binding_failed [Table 2] alg 'none' is not on the accepted asymmetric list
+  OK   6    jwk carries d                                              expected=holder_binding_failed got=holder_binding_failed [Table 2] jwk carries a private key
+  OK   6    proof signature bytes flipped                              expected=holder_binding_failed got=holder_binding_failed [Table 2] proof signature does not verify under its jwk
+  OK   6    the same proof replayed (jti p-1 seen)                     expected=holder_binding_failed got=holder_binding_failed [Table 2] jti 'p-1' already used
+
+step 7 (status list)
+  OK   7    DT_1 idx 1 revoked                                         expected=revoked               got=revoked               [Table 2] DT_1 idx 1 is revoked
+  OK   7    DT_0 idx 0 revoked                                         expected=revoked               got=revoked               [Table 2] DT_0 idx 0 is revoked
+  OK   7    no cached list, endpoint unreachable                       expected=status_unknown        got=status_unknown        [Table 2] DT_0 no cached list and https://as.example.com/status/1 cannot be fetched
+  OK   7    now = fetched_at + ttl (1700), refresh fails               expected=status_unknown        got=status_unknown        [Table 2] DT_0 cached list outlived ttl (fetched 1400 + ttl 300 <= now 1700) and https://as.example.com/status/1 cannot be fetched
+  OK   7    DT_1 idx 1 outside a one-entry list                        expected=status_unknown        got=status_unknown        [Table 2, A7] DT_1 idx 1 outside a list of 1
+  OK   7    DT_1 idx 1 suspended                                       expected=revoked               got=revoked               [lab A8, draft names none] DT_1 idx 1 is suspended
+  OK   7    DT_1 status reference without idx                          expected=status_unknown        got=status_unknown        [lab A7, draft names none] DT_1 status reference has no usable uri/idx
+
+step 8 (audience and action)
+  OK   8    EP is https://billing.example.com                          expected=audience_mismatch     got=audience_mismatch     [Table 2] 'https://billing.example.com' not in 'https://crm.example.com'
+  OK   8    scope crm.write                                            expected=scope_not_granted     got=scope_not_granted     [Table 2] 'crm.write' not covered by ['crm.read']
+  OK   8    scope mail.send (held by DT_0 only)                        expected=scope_not_granted     got=scope_not_granted     [Table 2] 'mail.send' not covered by ['crm.read']
+  OK   8    scope crm.* (a wildcard is not an action)                  expected=scope_not_granted     got=scope_not_granted     [Table 2; wildcard action is lab] 'crm.*' not covered by ['crm.read']
+  OK   8    max: max_rows 101 > 100                                    expected=ceiling_exceeded      got=ceiling_exceeded      [Table 2] max_rows=101 against max 100
+  OK   8    min: batch 9 < 10                                          expected=ceiling_exceeded      got=ceiling_exceeded      [Table 2] batch=9 against min 10
+  OK   8    one_of: region us                                          expected=ceiling_exceeded      got=ceiling_exceeded      [Table 2] region='us' not in one_of ['eu']
+  OK   8    not_one_of: table ssn                                      expected=ceiling_exceeded      got=ceiling_exceeded      [Table 2] table='ssn' in not_one_of ['salaries', 'ssn']
+  OK   8    prefix: path /crm/leads/7                                  expected=ceiling_exceeded      got=ceiling_exceeded      [Table 2] path='/crm/leads/7' lacks prefix '/crm/accounts/'
+  OK   8    rank: egress internal above none                           expected=ceiling_exceeded      got=ceiling_exceeded      [Table 2] egress='internal' above rank 'none' in ['none', 'internal', 'any']
+  OK   8    rank: egress external, not in order                        expected=ceiling_exceeded      got=ceiling_exceeded      [Table 2] egress='external' not in order ['none', 'internal', 'any']
+  OK   8    max: max_rows given as the string '50'                     expected=ceiling_exceeded      got=ceiling_exceeded      [lab A9] max_rows='50' is not a number
+  OK   8    action states no max_rows                                  expected=ceiling_exceeded      got=ceiling_exceeded      [lab A9, draft names none] action states no max_rows for (max_rows, max)
+  OK   8    max_lifetime: running max_calls 6 > 5                      expected=ceiling_exceeded      got=ceiling_exceeded      [Table 2] running max_calls total 6 against max_lifetime 5
+  OK   8    max_subtree: running max_spend 101 > 100                   expected=ceiling_exceeded      got=ceiling_exceeded      [Table 2] running max_spend total 101 against max_subtree 100
+  OK   8    no running total for max_spend (MUST deny)                 expected=ceiling_exceeded      got=ceiling_exceeded      [lab A10, draft names none] no running total for max_subtree/lab4:2/max_spend reaches this point (MUST deny)
+  OK   8    same, with the request asserting max_spend 0 and max_calls 0 expected=ceiling_exceeded      got=ceiling_exceeded      [lab A10, draft names none] no running total for max_subtree/lab4:2/max_spend reaches this point (MUST deny)
+  OK   8    max_spend subtree total supplied for DT_1's jti only       expected=ceiling_exceeded      got=ceiling_exceeded      [lab A10/A12, draft names none] no running total for max_subtree/lab4:2/max_spend reaches this point (MUST deny)
+  OK   1-5  DT_1 and DT_2 carry an identical {quota, units 5}: steps 1-5 expected=accept                got=accept                [Table 2] 
+  OK   8    same chain, full verification                              expected=unknown_constraint    got=unknown_constraint    [Table 2] (quota, units) is not implemented; every action is denied
+
+order (deny on the first failure)
+  OK   6<7  no proof and DT_1 revoked                                  expected=holder_binding_failed got=holder_binding_failed [Table 2] no DPoP proof
+  OK   7<8  DT_1 revoked and scope crm.write                           expected=revoked               got=revoked               [Table 2] DT_1 idx 1 is revoked
+  OK   5<6  now 1900 (DT_2 exp) and no proof                           expected=expired               got=expired               [Table 2] DT_2 now=1900 exp=1900 (-03 rule)
+  OK   8    unknown type and max_rows 101: unknown_constraint first (A11) expected=unknown_constraint    got=unknown_constraint    [lab A11] (quota, units) is not implemented; every action is denied
+
+--break: a mutated case scored with a wrong expectation (must FAIL and exit non-zero)
+  FAIL 8    max_rows 101 scored as accept                              expected=accept                got=ceiling_exceeded      [Table 2] max_rows=101 against max 100
+
+vector valid_unknown_constraint_identical.json (sha256 de44145eafa975d5ca81a0841f78539baf528893dcd64448a1d9ecaa70e8dbe3)
+  steps 6 and 7 not performed: the vector holds no DPoP key and its tokens carry no status reference
+  OK   steps 1-5 + aud, as the vector expects            got=accept 
+  sample action {"scope":"crm.read","params":{"max_rows":10,"egress":"none","max_spend":5}}
+  totals channel max_calls=1 (bound 2), max_spend subtree=5 (bound 100)
+  OK   step 8 action on DT_2                              got=unknown_constraint (quota, units) is not implemented; every action is denied
+  OK   control: same action, DT_2 payload with quota removed in memory (not re-signed)  got=accept 
+
+lab4: 52/53 cases as expected, vector check PASS -> FAIL
