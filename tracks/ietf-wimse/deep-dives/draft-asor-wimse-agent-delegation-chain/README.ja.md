@@ -47,9 +47,9 @@ sequenceDiagram
 
 ## 変更点
 
-- Section 1.2 が新設された。"act" クレームを使うドラフト（draft-mcguinness-oauth-actor-profile と draft-mw-oauth-actor-chain）は誰が動作したかを記録するのに対し、このドラフトは各ホップが何をしてよいかをチェーン内で制限する、と述べている。"act" クレームは要求せず、両者の対応付けも定義しない。両ドラフトの内容の説明は、このドラフト自身によるものである。
+- Section 1.2 が新設された。"act" クレームを使うドラフト（draft-mcguinness-oauth-actor-profile と draft-mw-oauth-actor-chain）は誰が動作したかを記録するのに対し、このドラフトは各ホップが何をしてよいかをチェーン内で制限する、と述べている。"act" クレームは要求せず、両者の対応付けも定義しない。この説明は両ドラフトの本文と合っている。draft-mcguinness-oauth-actor-profile-01 は "act" クレームをプロファイルし、内側の actor をアクセス制御の判断に使わない。draft-mw-oauth-actor-chain-02 の検証付きプロファイルは、actor の各段で actor proof を 1 つ作り、認可サーバーがそれを 1 回受け入れる。
 - Section 6.1 に Table 1 の行と段落が追加された。Principal が DT_0 で付与された権限をなお保持しているかは、チェーンからもリクエストからも分からない。資格を知る必要がある配備環境は、ルート発行時（Section 9.7）に確認し、発行後の隙間が許容できない場合は、行使時に呼び出し経路上のオンラインサーバーで再度確認する。
-- Section 6.4 は、バインディングの隙間（ルート鍵が、信頼される主体にどう結び付くか）と、記録の隙間（後の読み手がチェーンの拠り所を再構成できないこと）を区別するようになった。ルートの材料の保持については draft-gilda-audit-agent-audit-record の Section 4.6、4.7、5.2 を参照し、トラストアンカーのトポロジーは強制しない。
+- Section 6.4 は、バインディングの隙間（ルート鍵が、信頼される主体にどう結び付くか）と、記録の隙間（後の読み手がチェーンの拠り所を再構成できないこと）を区別するようになった。ルートの材料の保持については draft-gilda-audit-agent-audit-record-02 の Section 4.6、4.7、5.2（記録の検証、保持する記録、識別子と委任のフィールド）を参照し、トラストアンカーのトポロジーは強制しない。
 - Section 10 は、"del_depth"、"del_max_depth"、"par_hash" の登録を要求しなくなった。draft-niyikiza-oauth-attenuating-agent-tokens が同じ名前の登録を要求しているためである。Section 10 によると、そのドラフトは "del_max_depth" をすべてのトークンで必須とし、葉の "del_depth" がルートの "del_max_depth" に等しくなることを許すが、本ドラフトのステップ 3 は未満であることを要求する。
 - ステップ 5 は、RFC 7519 の JWT "exp" クレームと同じく、now が exp 未満であることを要求するようになった。-02 は now が exp に等しい場合を許していた（Appendix C）。
 - Section 7 は、-02 がトランスポートをエンドツーエンドで制御できる場合に許していた mTLS バインドトークンを削除し、mTLS のプロファイルは後のリビジョンに委ねた。

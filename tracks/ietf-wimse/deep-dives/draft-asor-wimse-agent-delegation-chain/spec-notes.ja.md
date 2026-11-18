@@ -29,7 +29,8 @@
 - Section 4.4 は、親が持たない詳細型を子が加えた場合は拡大として扱うという規則を、後のリビジョン向けに記録している。-03 ではそのトークンは不正（malformed）である。
 - Appendix B は 35 個から 36 個に増えたベクターファイルの集合を説明し、-01 の 20 個の集合は変更されない。新しい Appendix C「Changes Since -02」が追加され、-01 からの変更一覧は Appendix D に移った。
 - 参考的参照文献の版が上がった: draft-hamr-oauth-agent-delegation は -02 から -03、draft-ietf-wimse-identifier は -03 から -04、draft-niyikiza-oauth-attenuating-agent-tokens は -01 から -02。
-- Section 11 は、ライブラリのバージョン attenu-guard 0.22.0 と attenu-guard-ts 0.16.0（0.20.0 と 0.14.0 から更新）を報告し、組み込みの署名器がなお "EdDSA" を使うと述べ、Cred の適合性ハーネスが 2026-10-20 に -02 の 35 個のベクターに対して実行した結果（成功 20、失敗 5、宣言済みの未対応 10）を、その作者の報告として伝えている。36 個すべてに対する実行は報告されていない。attenu-guard リポジトリの v0.22.0 タグ（2026-10-27 リリース）には src/attenu_guard/vectors/draft02 に 36 個の JSON ファイル（v0.21.0 では 35 個）、src/attenu_guard/vectors に -01 の 20 個のファイルがある。Cred の結果は再現していない。
+- Section 11 は、ライブラリのバージョン attenu-guard 0.22.0 と attenu-guard-ts 0.16.0（0.20.0 と 0.14.0 から更新）を報告し、組み込みの署名器がなお "EdDSA" を使うと述べ、Cred の適合性ハーネスが 2026-10-20 に -02 の 35 個のベクターに対して実行した結果（成功 20、失敗 5、宣言済みの未対応 10）を伝えている。36 個すべてに対する実行はまだ報告されていない、とドラフトは述べる。attenu-guard リポジトリの v0.22.0 タグ（2026-10-27 リリース）には src/attenu_guard/vectors/draft02 に 36 個の JSON ファイル（v0.21.0 では 35 個）、src/attenu_guard/vectors に -01 の 20 個のファイルがある。
+- Cred の数字は cred-ninja/protocol に保存された出力（`conformance/asor-delegation-chain/results/`）と一致する。-01 の集合は SDK `b1bfec0`（2026-10-07）で 20 個中 20 個、-02 の集合は SDK `87eabb7`（2026-10-20）で成功 20、失敗 5、未対応 10。これらはクレームを対応付けるアダプター経由の実行である。ドラフトの公開後、同じリポジトリに SDK `42b39f4`（2026-10-30）での実行が加わった。アダプターは 36 個の -03 の集合で成功 21、失敗 4、未対応 11、ネイティブの `verifyAgentDelegationChain()` は -02 の 35 個中 35 個、-03 の 36 個中 36 個で期待どおりの結果になる。いずれもハーネスの作者がリポジトリに残した出力を読んだもので、ここで実行したものではない。
 
 ## 影響分析
 
