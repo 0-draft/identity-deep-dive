@@ -8,7 +8,7 @@ OpenID4VP "defines a mechanism on top of OAuth 2.0 for requesting and delivering
 
 The OpenID Foundation approved OpenID4VP 1.0 as an OpenID Final Specification; the announcement is dated 10 July 2025 (`data/landscape-sources.json`). The Final text is revision `-30`, tagged `1.0-final` in the repository. The repository (commit `66f5ff9`, 11 November 2026) holds two editor's drafts of the OpenID Digital Credentials Protocols working group:
 
-- `1.0/`: "OpenID for Verifiable Presentations 1.0 incorporating errata set 1", revision `-31`. Its Document History lists 26 changes against the Final, from the empty-VP-Token rule to the `age_over_NN` matching rule (see What Changed). It is a draft and has not been approved as errata.
+- `1.0/`: "OpenID for Verifiable Presentations 1.0 incorporating errata set 1", revision `-31`. Its Document History lists 26 changes against the Final, from the empty-VP-Token rule to the `age_over_NN` matching rule (see What Changed). It does not list every normative change: #735 has no entry, and the `expected_origins` scheme rules of #719 and the move of the privacy error rules in #745 are not mentioned (see `hands-on-log.md`). It is a draft and has not been approved as errata.
 - `1.1/`: revision `-01`. It carries the same changes plus a few that are only in 1.1: an HPKE `session_info` structure for encrypted responses (1.1 Section 8.3.1, #703), a rule that ecosystems MUST NOT use the VP Token as an Access Token (1.1 Section 14.6, #702), platform requirements for application Origins on the DC API (1.1 Section A.5.1, #761), and stricter `vct_values` and `doctype_value` matching (1.1 Sections B.3.5 and B.2.3, #744).
 
 Section numbers below are for 1.0 Final unless marked "errata" (the `1.0/` draft) or "1.1". The two drafts number Sections 14.x and B.2.5 onwards differently from the Final.
@@ -119,7 +119,7 @@ Compatibility. A Wallet or Verifier on the Final text and one on the errata text
 
 ## Experiments
 
-- [ ] Build 1.0 Final (tag `1.0-final`) and the `1.0/` errata draft and diff the rendered text, to check that the Document History lists every normative change.
+- [x] Build 1.0 Final (tag `1.0-final`) and the `1.0/` errata draft and diff the rendered text, to check that the Document History lists every normative change. Done on the markdown source instead of the rendered text: three pull requests have normative changes the Document History does not list (`hands-on-log.md`).
 - [ ] Send an mDL request for `age_over_18` to a Wallet whose mDL holds only `age_over_21`, and record which element comes back and whether the Verifier accepts it (errata Section B.2.5).
 - [ ] Send the same request with `request_uri_method=post` and with an unknown value such as `put`, and record whether the Wallet POSTs, falls back to GET, or returns `invalid_request_uri_method` (Section 5.1, #798).
 - [ ] Have the Request URI and the Response URI answer with an HTTP 307 redirect, and record whether the Wallet follows it. The errata text says it SHOULD NOT and SHOULD treat it as an error (errata Section 14.8, #753).

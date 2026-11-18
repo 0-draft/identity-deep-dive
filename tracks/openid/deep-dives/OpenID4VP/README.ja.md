@@ -8,7 +8,7 @@ OpenID4VP は「OAuth 2.0 の上で、クレデンシャルの Presentation を�
 
 OpenID Foundation は OpenID4VP 1.0 を OpenID Final Specification として承認した。告知の日付は 2025 年 7 月 10 日である(`data/landscape-sources.json`)。Final の本文はリビジョン `-30` で、リポジトリでは `1.0-final` タグが付いている。リポジトリ(コミット `66f5ff9`、2026 年 11 月 11 日)には、OpenID Digital Credentials Protocols ワーキンググループの編集中ドラフトが 2 つある。
 
-- `1.0/`: 「OpenID for Verifiable Presentations 1.0 incorporating errata set 1」、リビジョン `-31`。Document History は Final からの変更を 26 件挙げており、空の VP Token の禁止から `age_over_NN` の照合規則まで含む(「変更点」を参照)。これはドラフトで、エラッタとしてはまだ承認されていない。
+- `1.0/`: 「OpenID for Verifiable Presentations 1.0 incorporating errata set 1」、リビジョン `-31`。Document History は Final からの変更を 26 件挙げており、空の VP Token の禁止から `age_over_NN` の照合規則まで含む(「変更点」を参照)。ただし規範的な変更をすべて挙げてはいない。#735 には項目がなく、#719 の `expected_origins` のスキームの規則と、#745 によるプライバシー上のエラー規則の移動にも触れていない(`hands-on-log.ja.md` を参照)。これはドラフトで、エラッタとしてはまだ承認されていない。
 - `1.1/`: リビジョン `-01`。同じ変更に加え、1.1 だけの変更がいくつかある。暗号化レスポンス用の HPKE の `session_info` 構造(1.1 Section 8.3.1、#703)、エコシステムは VP Token をアクセストークンとして使ってはならない(MUST NOT)という規則(1.1 Section 14.6、#702)、DC API でのアプリケーション Origin についてのプラットフォームへの要件(1.1 Section A.5.1、#761)、より厳密な `vct_values` と `doctype_value` の照合(1.1 Section B.3.5 と B.2.3、#744)である。
 
 以下の節番号は、「エラッタ」(`1.0/` のドラフト)または「1.1」と書いたもの以外は 1.0 Final のものである。2 つのドラフトでは、Section 14.x と B.2.5 以降の番号が Final と違う。
@@ -119,7 +119,7 @@ DC API(Appendix A)では、リクエストはリダイレクトではなくブ�
 
 ## 実験
 
-- [ ] 1.0 Final(タグ `1.0-final`)と `1.0/` のエラッタ版ドラフトをビルドし、出力された本文の差分を取って、Document History が規範的な変更をすべて挙げているか確かめる。
+- [x] 1.0 Final(タグ `1.0-final`)と `1.0/` のエラッタ版ドラフトをビルドし、出力された本文の差分を取って、Document History が規範的な変更をすべて挙げているか確かめる。出力された本文ではなく markdown のソースで実施した。Document History に載っていない規範的な変更を含む PR が 3 件あった(`hands-on-log.ja.md`)。
 - [ ] `age_over_21` しか持たない mDL のウォレットに `age_over_18` の要求を送り、どの要素が返るか、Verifier がそれを受け入れるかを記録する(エラッタ Section B.2.5)。
 - [ ] 同じリクエストを `request_uri_method=post` と、`put` のような未知の値で送り、ウォレットが POST するか、GET に戻るか、`invalid_request_uri_method` を返すかを記録する(Section 5.1、#798)。
 - [ ] Request URI と Response URI に HTTP 307 のリダイレクトを返させ、ウォレットがそれに従うかを記録する。エラッタの本文は、従うべきでなく(SHOULD NOT)、エラーとして扱うべきである(SHOULD)としている(エラッタ Section 14.8、#753)。
