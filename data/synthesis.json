@@ -2,23 +2,23 @@
   "picks": [
     {
       "id": "draft:draft-ietf-wimse-arch-09",
-      "why": "Relying parties MUST now bind each trust domain to its authorized issuers and trust anchors. A signing key shared across domains lets one compromise forge credentials in all of them, and distinct agents needing separate audit or revocation SHOULD NOT share one workload identity.",
-      "why_ja": "relying party は trust domain ごとに認可された issuer と trust anchor を対応づけることが必須になった。署名鍵を複数の domain で共有すると一つの侵害で全 domain の資格情報を偽造でき、監査や失効を分けたい agent は workload identity を共有すべきでない。鍵の使い回しを見直す必要がある。"
+      "why": "Relying parties MUST now bind each trust domain to its authorized issuers and trust anchors. A signing key shared across domains lets one compromise forge credentials in all of them, and agents needing separate audit or revocation SHOULD NOT share a workload identity.",
+      "why_ja": "relying party は trust domain ごとに認可された issuer と trust anchor を対応づけることが必須になった。署名鍵を複数の domain で共有すると一つの侵害で全 domain の資格情報を偽造でき、監査や失効を分けたい agent は workload identity を共有すべきでない。"
     },
     {
       "id": "pr:oauth-wg/draft-ietf-oauth-client-id-metadata-document#132",
-      "why": "Authorization servers fetching Client ID Metadata Documents would have to reject URLs with a query, a port or over 2048 octets before fetching, and layer rate limits. The list is also debating isolating the fetcher from signing keys. Nothing here is agreed text yet.",
-      "why_ja": "client ID metadata document を取得する認可サーバーは、クエリ、ポート、2048 オクテット超の URL を取得前に拒否し、取得頻度も段階的に制限することになる。メーリングリストでは、取得処理を署名鍵から隔離することを必須にするかも議論中である。いずれもまだ合意された文言ではない。"
+      "why": "Authorization servers that fetch client metadata would have to reject URLs with a query, a port or over 2048 octets before fetching, and layer rate limits. The list is still split on mandating fetcher isolation. Nothing here is agreed text yet.",
+      "why_ja": "client ID metadata document を取得する認可サーバーは、クエリ、ポート、2048 オクテット超の URL を取得前に拒否し、取得頻度も段階的に制限することになる。取得処理の隔離を必須にするかはメーリングリストで意見が分かれており、合意された文言ではない。"
     },
     {
       "id": "draft:draft-ietf-oauth-sd-jwt-vc-27",
-      "why": "Verifiers can no longer match types through Type Metadata extends, only through vct and aka_vcts, so issuers that relied on extends must list types explicitly. The draft is in IESG Evaluation and Éric Vyncke moved to No Objection this week.",
-      "why_ja": "検証側は Type Metadata の extends では型を照合できず、vct と aka_vcts だけで照合する。extends に頼ってきた発行者は型を明示的に列挙する必要がある。draft は IESG Evaluation にあり、今週 Éric Vyncke が No Objection に変わった。"
+      "why": "Verifiers can no longer match types through Type Metadata extends, only through vct and aka_vcts, so issuers that relied on extends must list types explicitly. The draft is in IESG Evaluation and Éric Vyncke moved to No Objection.",
+      "why_ja": "検証側は Type Metadata の extends では型を照合できず、vct と aka_vcts だけで照合する。extends に頼ってきた発行者は型を明示的に列挙する必要がある。draft は IESG Evaluation にあり、Éric Vyncke は No Objection に変わった。"
     },
     {
-      "id": "mail:zFrXzOgjgybe9xQ2TrVTyb7Z7uU",
-      "why": "An independent implementation finds the offline-attenuated agent-token drafts already agree on authorization_details, Ed25519, PoP via cnf and rejecting nested act. The real forks are offline versus broker-mediated chains and the constraint vocabulary.",
-      "why_ja": "独立した実装により、オフラインで attenuation する agent トークンの各 draft は、authorization_details、Ed25519、cnf による PoP、入れ子の act の拒否で既に一致していると分かった。実際の分岐はオフライン導出かブローカー経由の連鎖か、および制約の語彙だけである。"
+      "id": "mail:NIGoNNBqfgDfIs-MvDSFKy9QAY0",
+      "why": "asor -03 now hashes the parent's JWS Signing Input for par_hash like AAT -02, but the two count del_max_depth differently, so one token can pass in one and fail in the other. Anyone implementing both needs to resolve that before interop.",
+      "why_ja": "asor -03 は par_hash で AAT -02 と同じく親の JWS Signing Input をハッシュするようになったが、del_max_depth の数え方が異なり、同じトークンが一方で通り他方で失敗しうる。両方を実装する場合は相互運用の前に解消が必要である。"
     },
     {
       "id": "mail:3SuQvGEjYQh4oFBhKyjcpPrqQmQ",
@@ -31,8 +31,8 @@
       "id": "workload-credentials",
       "name": "Workload credentials and proof of possession",
       "name_ja": "ワークロード資格情報と proof of possession",
-      "summary": "WIMSE's base stack: identifiers, credentials, WPT, HTTP signatures and mTLS. http-signature and workload-identity-practices are submitted to the IESG. This week arch -09 added issuer and trust anchor terms and trust domain separation; individual drafts add HTTP signature test vectors, WPT message binding beyond HTTP and partition-tolerant renewal.",
-      "summary_ja": "WIMSE の基盤で、識別子、資格情報、WPT、HTTP Signature、mTLS を扱う。http-signature と workload-identity-practices は IESG に提出済みである。今週は arch -09 が issuer と trust anchor の用語および trust domain 分離を加え、個人 draft が HTTP Signature のテストベクター、HTTP 以外への WPT のメッセージ結びつけ、分断時の期限延長を提案した。",
+      "summary": "WIMSE's base stack: identifiers, credentials, WPT, HTTP signatures and mTLS. http-signature and workload-identity-practices are submitted to the IESG. Arch -09 added issuer and trust anchor terms and trust domain separation; the chairs polled workload-creds authors for IPR (none disclosed so far). Individual drafts add test vectors, WPT message binding and partition-tolerant renewal.",
+      "summary_ja": "WIMSE の基盤で、識別子、資格情報、WPT、HTTP Signature、mTLS を扱う。http-signature と workload-identity-practices は IESG に提出済みである。arch -09 は issuer と trust anchor の用語および trust domain 分離を加え、workload-creds では議長が IPR の確認を行い、これまで開示はない。個人 draft はテストベクター、WPT のメッセージ結びつけ、分断時の期限延長を提案している。",
       "members": [
         {
           "track": "ietf-wimse",
@@ -114,8 +114,8 @@
       "id": "client-metadata",
       "name": "Client identification and metadata",
       "name_ja": "クライアント識別とメタデータ",
-      "summary": "How an authorization server learns who a client is. For the client ID metadata document, PR #132 proposes pre-fetch URL validation and fetch-trigger limits, and the list is debating mandatory isolation of the fetcher (no draft text change yet). An operator's report left cache bounds, SSRF details and RFC 8252 open. Attestation-based client auth awaits write-up.",
-      "summary_ja": "認可サーバーがクライアントをどう識別するかを扱う。client ID metadata document では、PR #132 が取得前の URL 検証と取得契機の制限を提案し、取得処理の隔離を必須にするかがメーリングリストで議論中である(draft 本文は未変更)。運営者の報告では、キャッシュの上限、SSRF 対策の詳細、RFC 8252 への言及が未決である。attestation-based client auth は write-up 待ちである。",
+      "summary": "How an authorization server learns who a client is. For the client ID metadata document, PR #132 proposes pre-fetch URL validation and fetch limits, and the list is split on mandating fetcher isolation. No draft text has changed on that yet. An operator's report left cache bounds, SSRF details and RFC 8252 open. Attestation-based client auth awaits write-up.",
+      "summary_ja": "認可サーバーがクライアントをどう識別するかを扱う。client ID metadata document では、PR #132 が取得前の URL 検証と取得の制限を提案し、取得処理の隔離を必須にするかはメーリングリストで意見が分かれている(OAuth の範囲外とする意見もある)。この点で draft 本文は未変更である。運営者の報告では、キャッシュの上限、SSRF 対策、RFC 8252 への言及が未決である。attestation-based client auth は write-up 待ちである。",
       "members": [
         {
           "track": "oauth-wg",
@@ -140,8 +140,8 @@
       "id": "agent-delegation",
       "name": "Agent delegation and attenuation",
       "name_ja": "Agent の委譲と attenuation",
-      "summary": "How authority narrows between agents. Asor, Cred, Agent Passport, Hulea and Delegate SD-JWT overlap; an implementer reports wide agreement on wire format, with forks on offline versus broker-mediated chains and constraint vocabulary. Delegator-bound chains extend Asor. A cumulative limit across relying parties needs one enforcing party. Hulea -02 will replace its 'expire unused' wording.",
-      "summary_ja": "agent 間で権限をどう狭めるかを扱う。Asor、Cred、Agent Passport、Hulea、Delegate SD-JWT は内容が重なる。実装者の報告では wire format の多くが一致し、オフライン導出とブローカー経由の連鎖、制約の語彙が分岐として残る。delegator-bound chains は Asor を拡張する。複数 relying party にまたがる累計上限は、強制する主体を一つにする必要がある。Hulea は -02 で「未使用で失効」の文言を置き換える。",
+      "summary": "How authority narrows between agents. Asor, Cred, Agent Passport, Hulea and Delegate SD-JWT overlap. An implementer finds wide wire-format agreement among the offline-attenuated drafts; asor -03 matches AAT -02 on par_hash but del_max_depth is counted differently. Cumulative limits need one enforcing party. Delegator-bound chains extend Asor; Hulea -02 will replace its 'expire unused' wording.",
+      "summary_ja": "agent 間で権限をどう狭めるかを扱う。Asor、Cred、Agent Passport、Hulea、Delegate SD-JWT は内容が重なる。オフラインで attenuation する各 draft は wire format の多くが一致し、asor -03 は par_hash で AAT -02 と揃ったが、del_max_depth の数え方は異なる。累計上限は強制する主体を一つにする必要がある。delegator-bound chains は Asor を拡張し、Hulea は -02 で「未使用で失効」の文言を置き換える。",
       "members": [
         {
           "track": "ietf-wimse",
@@ -191,8 +191,8 @@
       "id": "agent-authorization-oauth",
       "name": "Agent authorization in OAuth",
       "name_ja": "OAuth における agent の認可",
-      "summary": "Proposals for authorizing AI agents with OAuth, mostly new individual drafts: PACE Authorization (user-confirmed root grant planned; double spending across airlines open), actor-bound Token Exchange, subject-proof callers, batch delegation with RAR and may_act, Transactional Access Tokens, a RAR payment-mandate profile. Transaction Tokens await write-up.",
-      "summary_ja": "AI agent を OAuth で認可する提案を扱い、多くは新しい個人 draft である。PACE Authorization(利用者が確認した root グラントを次版で提案予定で、複数の航空会社での二重使用は未解決)、actor-bound な Token Exchange、subject-proof caller、RAR と may_act によるバッチ委譲、Transactional Access Tokens、支払い mandate 向けの RAR プロファイルがある。Transaction Tokens は write-up 待ちである。",
+      "summary": "Proposals for authorizing AI agents with OAuth, mostly new individual drafts: PACE Authorization (user-confirmed root grant planned; cross-airline total unresolved), actor-bound Token Exchange, subject-proof callers, batch delegation, Transactional Access Tokens (now RAR-aligned), a RAR payment-mandate profile. Transaction Tokens await write-up.",
+      "summary_ja": "AI agent を OAuth で認可する提案を扱い、多くは新しい個人 draft である。PACE Authorization(利用者が確認した root グラントを次版で提案予定で、複数の航空会社にまたがる合計の管理は未解決)、actor-bound な Token Exchange、subject-proof caller、バッチ委譲、RAR に合わせた Transactional Access Tokens、支払い mandate 向けの RAR プロファイルがある。Transaction Tokens は write-up 待ちである。",
       "members": [
         {
           "track": "openid",
@@ -226,8 +226,8 @@
       "id": "agent-evidence-audit",
       "name": "Agent identity, context and audit evidence",
       "name_ja": "Agent の identity・コンテキスト・監査証跡",
-      "summary": "Identity, context and audit for AI agent actions. AIMS threads settled on an at-or-past expiry rule and on transcribing the delegated subject across domains, with the mapping in the transcribing server's signed audit record. Evidence-binding will narrow its suspended-actor claim to fit RFC 8693. A new draft seeks review on separating untrusted context from tool calls.",
-      "summary_ja": "AI agent の行動について、identity、コンテキスト、監査を扱う。AIMS の議論では、期限ちょうどを期限切れとする規則と、ドメインをまたぐ際に委譲対象の subject 値を変換してよく、その対応は変換した側の署名付き監査記録に残すことが固まった。evidence-binding は停止された actor に関する記述を RFC 8693 に合わせて狭める。信頼できないコンテキストをツール呼び出しから分離する新しい draft が査読を求めている。",
+      "summary": "Identity, context and audit for AI agent actions. AIMS threads settled on an at-or-past expiry rule and on recording transcribed delegated-subject mappings in the server's signed audit record. One commenter asks AIMS 10.8 to say what a human confirmation meant. Evidence-binding will narrow its claim to fit RFC 8693; the AER-1 mapping reached -03.",
+      "summary_ja": "AI agent の行動について、identity、コンテキスト、監査を扱う。AIMS の議論では、期限ちょうどを期限切れとする規則と、変換した subject 値の対応を変換した側の署名付き監査記録に残すことが固まった。AIMS 10.8 に人間の確認の意味を書くよう求める意見もある。evidence-binding は主張を RFC 8693 に合わせて狭め、AER-1 のマッピングは -03 に進んだ。",
       "members": [
         {
           "track": "ietf-wimse",
@@ -305,8 +305,8 @@
       "id": "oauth-core-bcp",
       "name": "OAuth core and security BCPs",
       "name_ja": "OAuth コアとセキュリティ BCP",
-      "summary": "OAuth 2.1 and the BCPs around it. rfc8725bis is in the RFC Editor queue but blocked; first-party apps awaits write-up. OAuth 2.1 saw editorial PRs (#283, #284, #286) and PR #273 (token68) drew comments. Deferred token response got IANA early review comments and PR #82. The mailmaint native-client profile will drop username and refresh_key to reach last call.",
-      "summary_ja": "OAuth 2.1 とその周辺の BCP を扱う。rfc8725bis は RFC Editor キューにあるが blocked で、first-party apps は write-up 待ちである。OAuth 2.1 には編集上の PR(#283、#284、RFC 10027 への参照を加える #286)があり、PR #273(token68)にはコメントが付いた。deferred token response には IANA の事前レビューのコメントと PR #82 が出た。mailmaint のネイティブクライアント向けプロファイルは last call に進むため username と refresh_key を取り下げる。",
+      "summary": "OAuth 2.1 and the BCPs around it. rfc8725bis is in the RFC Editor queue but blocked; first-party apps awaits write-up. OAuth 2.1 saw editorial PRs (#283, #284, #286), a report that section 7.13.1 cites RFC 9700 4.1.1 wrongly (no reply yet), and comments on PR #273. Deferred token response got IANA review comments. The mailmaint native-client profile will drop username and refresh_key.",
+      "summary_ja": "OAuth 2.1 とその周辺の BCP を扱う。rfc8725bis は RFC Editor キューにあるが blocked で、first-party apps は write-up 待ちである。OAuth 2.1 には編集上の PR(#283、#284、#286)があり、7.13.1 節が RFC 9700 の 4.1.1 節を誤って参照しているとの指摘も出たが、まだ返答はない。PR #273 にはコメントが付いた。deferred token response には IANA の事前レビューのコメントが出た。mailmaint のネイティブクライアント向けプロファイルは username と refresh_key を取り下げる。",
       "members": [
         {
           "track": "oauth-wg",
@@ -344,8 +344,8 @@
       "id": "verifiable-credentials",
       "name": "Verifiable credentials and SD-JWT",
       "name_ja": "Verifiable Credentials と SD-JWT",
-      "summary": "SD-JWT VC -27 is in IESG Evaluation, takes types only from vct and aka_vcts, and Éric Vyncke moved to No Objection. Token Status List is in the RFC Editor queue. OpenID4VP merged PR #800 and Federation Wallet -06 was published; OpenID4VCI had no explained change this week. HAIP's last push was 55 days ago.",
-      "summary_ja": "SD-JWT VC -27 は IESG Evaluation にあり、型は vct と aka_vcts だけから決まる。Éric Vyncke は No Objection に変わった。Token Status List は RFC Editor キューにある。OpenID4VP は PR #800 をマージし、Federation Wallet -06 が公開された。OpenID4VCI は今週説明のある変更がない。HAIP の最終 push は 55 日前である。",
+      "summary": "SD-JWT VC -27 is in IESG Evaluation and takes types only from vct and aka_vcts; Éric Vyncke moved to No Objection. Token Status List is in the RFC Editor queue. OpenID4VP merged PR #800 and Federation Wallet -06 was published; OpenID4VCI had no explained change this week (last push 7 days ago, 2 PRs merged in 30 days). HAIP's last push was 56 days ago.",
+      "summary_ja": "SD-JWT VC -27 は IESG Evaluation にあり、型は vct と aka_vcts だけから決まる。Éric Vyncke は No Objection に変わった。Token Status List は RFC Editor キューにある。OpenID4VP は PR #800 をマージし、Federation Wallet -06 が公開された。OpenID4VCI は今週説明のある変更がない(最終 push は 7 日前、30 日間で 2 件をマージ)。HAIP の最終 push は 56 日前である。",
       "members": [
         {
           "track": "oauth-wg",
@@ -394,8 +394,8 @@
       "id": "identity-assurance",
       "name": "Identity assurance and proofing",
       "name_ja": "身元保証と本人確認",
-      "summary": "Verified identity data in OpenID: eKYC-IDA with its authority profile, the identity proofing extension, and government and national trust profiles. None of these repositories merged a PR in the last 30 days. Last pushes: igov 2 days ago (3 open PRs), cg-australian-digital-trust 17 days, Identity-Proofing-Extension 36, eKYC-IDA 56, eKYC-IDA-Authority 63.",
-      "summary_ja": "OpenID における検証済み identity データを扱う。対象は eKYC-IDA とその authority プロファイル、identity proofing extension、政府・国単位の trust プロファイルである。どのリポジトリも直近 30 日にマージされた PR はない。最終 push は igov が 2 日前(open な PR は 3 件)、cg-australian-digital-trust が 17 日前、Identity-Proofing-Extension が 36 日前、eKYC-IDA が 56 日前、eKYC-IDA-Authority が 63 日前である。",
+      "summary": "Verified identity data in OpenID: eKYC-IDA with its authority profile, the identity proofing extension, and government and national trust profiles. None of these repositories merged a PR in the last 30 days. Last pushes: igov 2 days ago (3 open PRs), cg-australian-digital-trust 17 days, Identity-Proofing-Extension 36, eKYC-IDA 57, eKYC-IDA-Authority 64.",
+      "summary_ja": "OpenID における検証済み identity データを扱う。対象は eKYC-IDA とその authority プロファイル、identity proofing extension、政府・国単位の trust プロファイルである。どのリポジトリも直近 30 日にマージされた PR はない。最終 push は igov が 2 日前(open な PR は 3 件)、cg-australian-digital-trust が 17 日前、Identity-Proofing-Extension が 36 日前、eKYC-IDA が 57 日前、eKYC-IDA-Authority が 64 日前である。",
       "members": [
         {
           "track": "openid",
@@ -427,8 +427,8 @@
       "id": "authorization-apis",
       "name": "Authorization APIs and decision semantics",
       "name_ja": "認可 API と判定セマンティクス",
-      "summary": "Externalised authorization decisions. AuthZEN was pushed 1 day ago, merged 6 PRs in 30 days and has 23 open; the material shows no content of recent changes. The evaluation draft and AIMS touch verifier-side evaluation, where this week's WIMSE threads settled on at-or-past freshness boundaries.",
-      "summary_ja": "外部化された認可判定を扱う。AuthZEN は 1 日前に push があり、30 日で 6 件の PR をマージし、open な PR は 23 件ある。最近の変更の内容は資料から確認できない。evaluation draft と AIMS は検証側の評価に関わり、今週の WIMSE の議論では鮮度の境界を「ちょうど到達した時点で期限切れ」とすることで固まった。",
+      "summary": "Externalised authorization decisions. AuthZEN was pushed 2 days ago, merged 6 PRs in 30 days and has 23 open; the material shows no content of recent changes. The evaluation draft and AIMS touch verifier-side evaluation, where WIMSE threads settled on at-or-past freshness boundaries.",
+      "summary_ja": "外部化された認可判定を扱う。AuthZEN は 2 日前に push があり、30 日で 6 件の PR をマージし、open な PR は 23 件ある。最近の変更の内容は資料から確認できない。evaluation draft と AIMS は検証側の評価に関わり、WIMSE の議論では鮮度の境界を「ちょうど到達した時点で期限切れ」とすることで固まった。",
       "members": [
         {
           "track": "openid",
@@ -457,8 +457,8 @@
       "id": "openid-connect-federation",
       "name": "OpenID Connect, federation and client libraries",
       "name_ja": "OpenID Connect・Federation・クライアントライブラリ",
-      "summary": "OpenID Connect core and extensions, Federation, publication and AppAuth. OIDF published Federation Entity Collection -02 and Federation Wallet -06. claims-aggregation merged 39 PRs in 30 days, with large rewordings this week. A new OIDC crypto agility draft for post-quantum algorithms drew objections and is moving to OpenID AB/Connect. AppAuth-iOS made OIDAuthorizationService a protocol (#997).",
-      "summary_ja": "OpenID Connect のコアと拡張、Federation、公開の仕組み、AppAuth を扱う。OIDF は Federation Entity Collection -02 と Federation Wallet -06 を公開した。claims-aggregation は 30 日間で 39 件の PR をマージし、今週は大幅な文言整理があった。ポスト量子向けの OIDC crypto agility の新 draft には反対意見が出て、OpenID の AB/Connect WG に持ち込まれる。AppAuth-iOS は OIDAuthorizationService をプロトコルにした(#997)。",
+      "summary": "OpenID Connect core and extensions, Federation, publication and AppAuth. OIDF published Federation Entity Collection -02 and Federation Wallet -06. claims-aggregation merged 39 PRs in 30 days, mostly rewording toward Draft 04. The OIDC crypto agility draft for post-quantum algorithms drew objections and goes to OpenID AB/Connect. AppAuth-iOS made OIDAuthorizationService a protocol (#997).",
+      "summary_ja": "OpenID Connect のコアと拡張、Federation、公開の仕組み、AppAuth を扱う。OIDF は Federation Entity Collection -02 と Federation Wallet -06 を公開した。claims-aggregation は 30 日間で 39 件の PR をマージし、多くは Draft 04 に向けた文言整理である。ポスト量子向けの OIDC crypto agility の draft には反対意見が出て、OpenID の AB/Connect WG に持ち込まれる。AppAuth-iOS は OIDAuthorizationService をプロトコルにした(#997)。",
       "members": [
         {
           "track": "openid",
@@ -562,5 +562,5 @@
       ]
     }
   ],
-  "generated_at": "2026-11-19T07:33:12+00:00"
+  "generated_at": "2026-11-19T20:47:20+00:00"
 }
