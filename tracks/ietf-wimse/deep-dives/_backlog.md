@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-19T07:29:26+00:00
+Generated at: 2026-11-19T20:40:39+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -32,15 +32,15 @@ Generated at: 2026-11-19T07:29:26+00:00
 
 Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.
 
-- **high** `Diff active WG draft: draft-ietf-wimse-aims-01`: The AIMS thread is settling transcription and audit-record rules, with a PR #176 change proposed.
+- **high** `Diff active WG draft: draft-ietf-wimse-aims-01`: A practitioner raised open scope questions on cross-domain status checks, identifier pointers and accountable-party transfer in aims-01.
 - **high** `Diff active WG draft: draft-ietf-wimse-arch-09`: -09 adds Issuer/Trust Anchor definitions, a Trust Domain Separation section and a SHOULD NOT on shared agent identities.
 - **high** `Diff active WG draft: draft-ietf-wimse-http-signature-08`: The digest shows active work on its test vectors (#419), a closed server-nonce issue (#369) and a new dangling-reference issue (#422).
 - **high** `Diff active WG draft: draft-ietf-wimse-workload-creds-03`: The IPR poll to its authors started today, which suggests the draft is moving toward publication.
-- **high** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: Discussed as near wire-identical to niyikiza on par_hash and del_depth, with an open question on signature octets in the hash.
-- **high** `Review related draft: draft-hulea-wimse-agent-mandate-01`: Author agreed Section 9.5 is unsafe and will change budget-release semantics in -02.
+- **high** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: Cited as settling par_hash and totals handling, with a del_max_depth counting difference against AAT.
 - **high** `Review related draft: draft-miao-wimse-http-signature-test-vectors-00`: New draft with 29 vectors and 3 observations on spec ambiguity in draft-ietf-wimse-http-signature.
 - **high** `Review related draft: draft-nandakumar-wimse-wpt-message-binding-00`: Announced today and already drawing questions on authority hashing behind gateways and registry profiles.
 - **high** `Review related draft: draft-sweeney-wimse-credential-delegation-02`: The thread names it as the basis for a final-hop hackathon scenario with a working implementation.
+- **low** `Review related draft: draft-hulea-wimse-agent-mandate-01`: Only appears as a column in a side-by-side comparison; no change discussed.
 - **low** `Review related draft: draft-thaha-wimse-agent-evidence-binding-03`: Its authors engaged in two threads today, but only through short comments, with no new text in this material.
 
 <!-- triage:end -->
