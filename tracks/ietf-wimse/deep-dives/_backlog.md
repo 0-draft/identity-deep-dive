@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-18T20:35:36+00:00
+Generated at: 2026-11-19T07:29:26+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -39,7 +39,6 @@ Moved by this week's material. candidates.json and the site list raised candidat
 - **high** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: Discussed as near wire-identical to niyikiza on par_hash and del_depth, with an open question on signature octets in the hash.
 - **high** `Review related draft: draft-hulea-wimse-agent-mandate-01`: Author agreed Section 9.5 is unsafe and will change budget-release semantics in -02.
 - **high** `Review related draft: draft-miao-wimse-http-signature-test-vectors-00`: New draft with 29 vectors and 3 observations on spec ambiguity in draft-ietf-wimse-http-signature.
-- **high** `Review related draft: draft-nandakumar-wimse-delegator-bound-chains-00`: New draft adding signer-key binding, pseudonyms and audience attenuation to delegation chains, with live list review today.
 - **high** `Review related draft: draft-nandakumar-wimse-wpt-message-binding-00`: Announced today and already drawing questions on authority hashing behind gateways and registry profiles.
 - **high** `Review related draft: draft-sweeney-wimse-credential-delegation-02`: The thread names it as the basis for a final-hop hackathon scenario with a working implementation.
 - **low** `Review related draft: draft-thaha-wimse-agent-evidence-binding-03`: Its authors engaged in two threads today, but only through short comments, with no new text in this material.

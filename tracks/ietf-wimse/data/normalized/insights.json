@@ -1,11 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-11T19:40:15+00:00",
-      "text": "The most concrete movement is on the delegation-chain drafts: AAT, Asor and Cred -02 are converging on one meaning for del_max_depth, and the AIMS thread agreed the delegated subject may be transcribed across trust domains if the mapping is in the signed audit record. Several threads also moved a freshness boundary to \"at or past\" (refused at exactly the limit).",
-      "text_ja": "委任チェーン系ドラフト（AAT、Asor、Cred -02）で del_max_depth の意味を一つに揃える流れが進み、AIMS のスレッドでは、信頼ドメインをまたぐ際に委任対象の識別子を書き換えてよいが、その対応関係を署名された監査記録に残すことで合意した。鮮度の境界を「ちょうど期限なら拒否」に改める動きも複数のスレッドで見られた。"
-    },
-    {
       "at": "2026-11-12T07:16:09+00:00",
       "text": "The WIMSE list had three agent-delegation threads and no new WG draft text. The most concrete is the AIMS/MBA thread, which moves to an exclusive \"at-or-past\" time-boundary convention. The other two threads are about act-claim revocation wording and a user-issued delegation root with its status.",
       "text_ja": "WIMSEのメーリングリストではエージェント委任に関する三つのスレッドが動いたが、WGドラフトの本文変更はない。最も具体的なのはAIMS/MBAのスレッドで、時間境界を「at-or-past」(排他的)に統一する方向になった。残る二つは、act クレームと失効に関する文言の修正、およびユーザー発行ルートとそのステータスの扱いである。"
@@ -74,6 +69,11 @@
       "at": "2026-11-18T20:37:07+00:00",
       "text": "A new individual draft, draft-miao-wimse-http-signature-test-vectors-00, publishes 29 judged test vectors (6 positive, 23 negative) for the WIMSE HTTP Message Signatures protocol. The rest is list activity: a hackathon interop repo and a convergence report on agent-token drafts.",
       "text_ja": "最も重要なのは、WIMSE の HTTP Message Signatures プロトコル向けに 29 件（正例 6、負例 23）の判定対象ベクターを示す個人ドラフト draft-miao-wimse-http-signature-test-vectors-00 の登場である。その他は、ハッカソンの相互運用リポジトリと、エージェントトークン各ドラフトの収束に関する報告である。"
+    },
+    {
+      "at": "2026-11-19T07:30:55+00:00",
+      "text": "No draft text changed. The most notable item is a new individual draft, draft-molas-agent-principal-refs-00, which compares agent principal-reference designs. The other item is an IPR poll on WIMSE Workload Credentials, with no IPR disclosed so far.",
+      "text_ja": "ドラフト本文の変更はない。主な動きは、エージェントのプリンシパル参照を比較する個人ドラフト draft-molas-agent-principal-refs-00 の発表と、WIMSE Workload Credentials に関する IPR 確認の投稿である。IPR の開示はまだない。"
     }
   ],
   "items": {
@@ -276,36 +276,6 @@
       "use_cases_ja": [
         "失効情報やステータス情報の取得元が応答しないときに拒否するポリシーポイントを持つ AIMS 環境で、監査担当者が実際のポリシー拒否と区別する必要がある場合。",
         "Section 11 の監査記録を再構成する担当者が、判断に古い入力が使われたかどうかを知る必要がある場合。"
-      ]
-    },
-    "mail:33_tdetI9AjZMcqhQnnnUdJTNCs": {
-      "diagram": "",
-      "first_seen": "2026-11-11",
-      "headline": "AIMS cross-domain gap text: agreed to add bounding sentences that issuer trust does not decide authorization and that determinations expire.",
-      "headline_ja": "AIMS のドメイン間ギャップの記述：発行者の信頼は認可を決めないこと、判断には有効期限があることを限定する文を加える方向で一致",
-      "id": "mail:33_tdetI9AjZMcqhQnnnUdJTNCs",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-ietf-oauth-spiffe-client-auth",
-          "note": "Related only loosely (workload identity to OAuth client binding); the material does not cite it.",
-          "note_ja": "関連は緩やか（ワークロード識別子と OAuth クライアントの結び付け）で、資料は引用していない。",
-          "track": "oauth-wg"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "The thread continues David Croston's proposal to record in AIMS a gap about trust between trust domains, with a mechanism-neutral property list (verifier trusts another domain's issuer without bilateral setup, issuer speaks only for its names, verifier chooses domains, bounded withdrawal). Jiahui Miao adds a bounding property: accepting another domain's issuer does not by itself establish authorization for an action. ShaoBao Li adds a time half, that a determination holds at the time of observation and not after the evidence expires. Cliff agrees to put one sentence in the gap text and the rest, including recording \"not determined\" rather than \"not permitted\", in Section 10.4. Sriram Shankarlingam agrees and notes his DNS-link link token grants nothing. Several messages cite the authors' own drafts and conformance suites.",
-      "summary_ja": "このスレッドは、信頼ドメイン間の信頼に関するギャップを AIMS に記録するという David Croston の提案の続きで、機構に依存しない性質の一覧（二者間の設定なしに他ドメインの発行者を信頼できる、発行者は自身の名前についてのみ発言できる、検証者が受け入れるドメインを選ぶ、失効の時間的上限）が示されている。Jiahui Miao は、他ドメインの発行者を受け入れてもそれだけでは操作の認可は確立されないという限定的な性質を加えた。ShaoBao Li は、判断は観測時点で成立し、証拠の失効後は成立しないという時間面を加えた。Cliff は、ギャップ記述に一文、残り（「不許可」ではなく「未判定」と記録する規則を含む）を Section 10.4 に置くことに同意した。Sriram Shankarlingam も賛成し、自身の DNS リンクトークンは何も許可しないと述べた。複数のメッセージが著者自身のドラフトや適合性テストを引用している。",
-      "title": "AIMS -01: upstream authorities for Workload Identity Certificates (trust between trust domains) (6 new messages)",
-      "updated_at": "2026-11-11T19:40:15+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/33_tdetI9AjZMcqhQnnnUdJTNCs/",
-      "use_cases": [
-        "Federating agents across organizations where no bilateral trust bundle exchange exists.",
-        "Auditors needing to tell apart refused because authority could not be determined and refused because the operation is not permitted."
-      ],
-      "use_cases_ja": [
-        "二者間の信頼バンドル交換がない組織間でエージェントをフェデレーションする場合。",
-        "権限を判定できず拒否した場合と、操作が許可されず拒否した場合を監査で区別する必要がある場合。"
       ]
     },
     "mail:3RkVPuznZ9tNbEdSDHi-Z8vfXOw": {
@@ -548,23 +518,6 @@
         "委任主体の識別子を書き換えつつ監査可能性を保つ必要があるドメイン間エージェントゲートウェイ。"
       ]
     },
-    "mail:G81dpzTWMQgyCzshUmHHbzr8bzU": {
-      "diagram": "",
-      "first_seen": "2026-11-11",
-      "headline": "One short reply: act is attribution, not a policy input, and the evidence-binding authors will take that in -02.",
-      "headline_ja": "短い返信：act は帰属情報であり、ポリシー入力ではない。evidence-binding の著者が -02 で反映する",
-      "id": "mail:G81dpzTWMQgyCzshUmHHbzr8bzU",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Despite the subject line announcing draft-thaha-wimse-agent-evidence-binding-00, the only message in the file is Kieran replying to Mikhail. Kieran concedes his earlier \"policy input\" line was wrong because Section 4.1 of the RFC keeps prior actors out of the access-control decision, so deny-listing a prior actor still conflicts with it. Direction (a) is the correct reading and Shameer and Shaibi will take it in -02. Per-hop authority needs separately verified evidence. The announcement text itself is not in the file.",
-      "summary_ja": "件名は draft-thaha-wimse-agent-evidence-binding-00 の告知だが、ファイルにあるのは Mikhail への Kieran の返信のみである。Kieran は先の「ポリシー入力」という説明が誤りだったと認めた。RFC の Section 4.1 は過去の行為者をアクセス制御の判断から除外しており、過去の行為者を拒否リストに載せることはそれと矛盾するためである。方向 (a) が正しい読みで、Shameer と Shaibi が -02 に取り込む。ホップごとの権限には別途検証された証拠が必要である。告知本文自体はファイルに含まれない。",
-      "title": "New I-D: draft-thaha-wimse-agent-evidence-binding-00 (evidence binding for AIMS audit)",
-      "updated_at": "2026-11-11T19:40:15+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/G81dpzTWMQgyCzshUmHHbzr8bzU/",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
     "mail:Gu4rPKixfcCaSPlMWxHUeP9PWs4": {
       "diagram": "",
       "first_seen": "2026-11-12",
@@ -586,36 +539,6 @@
       "use_cases_ja": [
         "複数の検証者にまたがる累積の支出や呼び出し予算を強制する委任クレデンシャルサービスを構築する場合。",
         "ステータスエンドポイントを置くサーバーがない、ユーザー直接発行の委任ルートを発行する場合。"
-      ]
-    },
-    "mail:HewNx8oZlaK0RSEV7BnYOLq1xuc": {
-      "diagram": "sequenceDiagram\n participant A as Domain A AS\n participant B as Domain B AS\n participant L as Signed audit record\n A->>B: token with sub value X\n B->>B: transcribe X to Y\n B->>L: record old X, new Y, own identity\n B->>B: issue token with sub Y",
-      "first_seen": "2026-11-11",
-      "headline": "AIMS delegation thread: the delegated subject may differ across trust domains if the transcription is in the signed record.",
-      "headline_ja": "AIMS の委任スレッド：信頼ドメインをまたぐ場合、対応関係が署名された記録にあれば委任対象の識別子は異なってよい",
-      "id": "mail:HewNx8oZlaK0RSEV7BnYOLq1xuc",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-ietf-oauth-identity-chaining",
-          "note": "The cross-domain transcribed identifier is discussed as OAUTH-ID-CHAIN Section 2.5.",
-          "note_ja": "信頼ドメイン間で書き換えられる識別子は OAUTH-ID-CHAIN の Section 2.5 として議論されている。",
-          "track": "oauth-wg"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "Kieran Sweeney clarified that \"sub preserved\" means the same principal, not the same bytes. Within one trust domain the value stays identical at every hop (sub fixed, actor in client_id and act). Across a trust domain, transcription under identity chaining is acceptable if the transcribing party records old value, new value and its own identity in what it signs; an AS merely keeping the mapping is not enough for AIMS Section 11. Marc proposes two changes on PR #176 along those lines. Both sides also agree to move the freshness boundary to at-or-past, so the 21 boundary vectors and the 23 October wording change, and the case admitted at exactly S+L becomes refused.",
-      "summary_ja": "Kieran Sweeney は、「sub の保持」は同じバイト列ではなく同じプリンシパルを指すと明確化した。同一信頼ドメイン内では全ホップで値が同一（sub は固定、行為者は client_id と act）。信頼ドメインをまたぐ場合は、identity chaining による書き換えは、書き換えた当事者が旧値・新値・自身の識別子を署名対象に記録するなら許容される。AS が対応関係を保持するだけでは AIMS Section 11 には不十分である。Marc は PR #176 に同趣旨の二つの修正を提案する。また、鮮度の境界を「期限以降は拒否」に改めることでも合意し、21 件の境界ベクターと 10 月 23 日の文言が変わり、ちょうど S+L で受理されていたケースは拒否になる。",
-      "title": "Subject: AIMS-00: multi-hop delegation context across agent, tool and resource boundaries (2 new messages)",
-      "updated_at": "2026-11-11T19:40:15+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/HewNx8oZlaK0RSEV7BnYOLq1xuc/",
-      "use_cases": [
-        "A deployment where an agent chain crosses trust domains via identity chaining and needs auditors to reconstruct the original user from records alone.",
-        "A verifier implementing the S+L revocation-admission bound that must decide whether an input exactly at its limit is accepted."
-      ],
-      "use_cases_ja": [
-        "identity chaining で信頼ドメインをまたぐエージェントチェーンで、監査者が記録だけから元のユーザーを復元する必要がある場合。",
-        "S+L の失効受理境界を実装する検証者が、ちょうど期限の入力を受理するか判断する場合。"
       ]
     },
     "mail:INsYufjtYsijqhJNn-01dG7ogqU": {
@@ -779,36 +702,6 @@
       "use_cases_ja": [
         "二番目の航空会社が、ユーザーが利用上限を実際に承認したことを確認する必要がある旅行予約のエージェントチェーン。",
         "各依拠当事者にリンク可能なユーザー識別子を見せずに、ユーザー署名付きの権限を使いたいエージェントプラットフォーム。"
-      ]
-    },
-    "mail:P1yDQDvbTRAwDDsLYU5WZDocCsQ": {
-      "diagram": "",
-      "first_seen": "2026-11-11",
-      "headline": "AAT, Asor and Cred -02 authors agree a child's lower del_max_depth must be honoured, and compare constraints before IETF 127.",
-      "headline_ja": "AAT、Asor、Cred -02 の著者が、子トークンのより小さい del_max_depth を尊重すべきことで一致し、IETF 127 前に制約を比較する",
-      "id": "mail:P1yDQDvbTRAwDDsLYU5WZDocCsQ",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-ietf-oauth-transaction-tokens",
-          "note": "Not referenced in the material; omit if unsure.",
-          "note_ja": "資料中では参照されていない。",
-          "track": "oauth-wg"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "Kieran agrees that the effective maximum depth at any hop is the lowest del_max_depth on the path, and that this cap is separate from the question of the leaf at the maximum (AAT J.10.f accepts a leaf at del_depth equal to the root maximum, Asor -03 rejects it). Rob Zagarella asks the comparison of the three drafts to record whether each can bind a leaf to a digest of one exact request; Kieran says Cred -02 cannot express that in the token today, and its Section 5.5 takes the chain format by reference so its entry for off-DS verification is provisional. Rob also asks that the AAT Section 9.8 revocation freshness bound be stated in the same terms as Cred -02 Section 7. Niki holds a side meeting on 16 November in San Francisco.",
-      "summary_ja": "Kieran は、各ホップでの有効な最大深度は経路上で最小の del_max_depth であること、およびこの上限は「最大深度にある末端」の扱い（AAT J.10.f は del_depth がルートの最大値に等しい末端を受理し、Asor -03 は拒否する）とは別に決めるべきだと述べた。Rob Zagarella は三つのドラフトの比較表に、末端を単一リクエストのダイジェストに束縛できるかを記録するよう求め、Kieran は Cred -02 では現状トークンで表現できないと答えた。Cred -02 の Section 5.5 はチェーン形式を参照で取り込むため、DS 外で検証する場合の記載は暫定である。Rob は AAT Section 9.8 の失効鮮度の上限を Cred -02 Section 7 と同じ表現で示すことも求めた。Niki は 11 月 16 日にサンフランシスコでサイドミーティングを開く。",
-      "title": "AAT -02 announcement (2 new messages)",
-      "updated_at": "2026-11-11T19:40:15+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/P1yDQDvbTRAwDDsLYU5WZDocCsQ/",
-      "use_cases": [
-        "Implementers of attenuating delegation tokens who need to know whether a leaf at the maximum depth is accepted.",
-        "Human-approval flows where an approval must bind to one exact action such as a payee and amount."
-      ],
-      "use_cases_ja": [
-        "減衰する委任トークンの実装者が、最大深度にある末端を受理すべきか知る必要がある場合。",
-        "受取人と金額のように、承認を一つの具体的な操作に束縛する必要がある人間承認のフロー。"
       ]
     },
     "mail:P_5LBMyFwLGsNJr0PEVV573wVvg": {
@@ -994,6 +887,29 @@
         "サービスの前にリバースプロキシがある場合に、署名で対象とするリクエストの要素を決めようとするチーム。"
       ]
     },
+    "mail:bTn4phN88WAkmVkkUywGQieqwcM": {
+      "diagram": "flowchart TD\n  G[Grant issuer, root] --> A{Who keeps the total}\n  A -->|Option 1| S[Split into non-overlapping allocations]\n  S --> R1[Relying party 1 enforces its share]\n  S --> R2[Relying party 2 enforces its share]\n  A -->|Option 2| B[Budget owner, usually root issuer]\n  B --> RS[Reserve before each booking]\n  RS --> R3[Relying party admits booking only against a reservation]",
+      "first_seen": "2026-11-19",
+      "headline": "New draft draft-molas-agent-principal-refs-00 compares principal references in agent delegation; the thread asks who enforces a total limit.",
+      "headline_ja": "新規個人ドラフト draft-molas-agent-principal-refs-00 が、エージェント委任のプリンシパル参照を比較し、合計上限の管理主体も論じている。",
+      "id": "mail:bTn4phN88WAkmVkkUywGQieqwcM",
+      "kind": "mail",
+      "related": [],
+      "significance": "new-proposal",
+      "summary": "Marc (MintID) announced draft-molas-agent-principal-refs-00. It states six properties of the principal reference that a delegation root carries and evaluates five current drafts against them, delegator-bound chains among them. It defines no limits. In the thread about an $800 budget spread over several airline bookings, Marc gives two ways to keep the total. In the first, the grant issuer splits the budget into non-overlapping allocations, one per relying party. In the second, one budget owner, naturally the root issuer, reserves against the total before each booking. Neither gives a common limit across roots that did not agree to one. The second lets the owner see which bookings draw on the budget. Correlating the principal across relying parties to add up spend would undo unlinkability from per-chain pseudonyms or a pairwise sub. The two forms are conformance cases 5a and 5b in the AAIF Identity and Trust group.",
+      "summary_ja": "Marc (MintID) が draft-molas-agent-principal-refs-00 を発表した。委任のルートが持つプリンシパル参照について六つの性質を定め、delegator-bound chains を含む現行の五つのドラフトをそれらに照らして評価している。上限そのものは定義しない。複数の航空会社での予約にまたがる 800 ドルの予算をめぐるスレッドでは、合計の管理方法を二つ挙げている。一つは、グラントの発行者が予算を重複しない配分に分割し、依拠者ごとに一つずつ割り当てる方法である。もう一つは、通常はルートの発行者である一つの予算管理者が、予約のたびに合計に対して枠を確保する方法である。いずれも、合意していないルート間で共通の上限を実現するものではない。後者では管理者がどの予約が予算を消費するかを把握できる。依拠者間でプリンシパルを突き合わせて支出を合算すると、チェーンごとの仮名や pairwise の sub による非リンク性が失われる。この二つの方式は AAIF Identity and Trust グループの適合ケース 5a と 5b になっている。",
+      "title": "New draft: PACE Authorization: delegation and action approval for agent dialogs:",
+      "updated_at": "2026-11-19T07:30:55+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/bTn4phN88WAkmVkkUywGQieqwcM/",
+      "use_cases": [
+        "An agent holds a delegated grant with a spending cap and books with several unrelated relying parties, such as airlines. The deployer must decide who enforces the total.",
+        "A deployer wants to keep delegation roots unlinkable across relying parties with pairwise subs or per-chain pseudonyms, and still wants a spending limit."
+      ],
+      "use_cases_ja": [
+        "上限付きの委任グラントを持つエージェントが、航空会社のような無関係な複数の依拠者で予約を行う場合に、合計上限を誰が管理するかを決める必要がある。",
+        "pairwise の sub やチェーンごとの仮名によって、依拠者間で委任ルートを非リンクに保ちつつ、支出上限も維持したい場合である。"
+      ]
+    },
     "mail:fMPFKSpMHoji68UYn5W3bcNh_NE": {
       "diagram": "",
       "first_seen": "2026-11-16",
@@ -1029,6 +945,23 @@
       "title": "New draft: Message Binding for Workload Proof Tokens",
       "updated_at": "2026-11-16T22:09:24+00:00",
       "url": "https://mailarchive.ietf.org/arch/msg/wimse/frclj3SHeVIbbFU8tbt1rhMO3Wo/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "mail:jP5h2uj8J7Xwsad5B8lsyGBZ2Eg": {
+      "diagram": "",
+      "first_seen": "2026-11-19",
+      "headline": "Authors of the WIMSE Workload Credentials draft confirm they know of no IPR restrictions.",
+      "headline_ja": "WIMSE Workload Credentials ドラフトの著者が、既知の IPR 制限はないと回答した。",
+      "id": "mail:jP5h2uj8J7Xwsad5B8lsyGBZ2Eg",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "This is part of the chairs' IPR poll on the WIMSE Workload Credentials draft. Brian Campbell and Arndt each replied that they know of no IPR restrictions. The poll was started by Justin Richer on 17 November. No technical content is involved.",
+      "summary_ja": "WIMSE Workload Credentials ドラフトに関する IPR 確認の一環である。Justin Richer が 11 月 17 日に著者へ開示を求め、Brian Campbell と Arndt がそれぞれ既知の IPR 制限はないと回答した。技術的な内容は含まれない。",
+      "title": "IPR Restrictions on WIMSE Credentials",
+      "updated_at": "2026-11-19T07:30:55+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/jP5h2uj8J7Xwsad5B8lsyGBZ2Eg/",
       "use_cases": [],
       "use_cases_ja": []
     },
@@ -1150,36 +1083,6 @@
         "MCP のツール呼び出しの認可で、ドラフトをまたいで par_hash と del_depth を相互運用可能に扱う必要がある実装者。"
       ]
     },
-    "mail:zLDfwOIkylaaI4vS97LSdAt4RYw": {
-      "diagram": "sequenceDiagram\n participant U as User\n participant DS as Delegation Server\n participant AG as Agent\n participant UP as Upstream resource\n U->>DS: deposit credential\n DS->>AG: delegation token\n AG->>DS: exercise under token\n DS->>UP: call with deposited credential\n DS->>AG: result and receipt",
-      "first_seen": "2026-11-11",
-      "headline": "Review of Cred delegation -02: user-issued roots, tally mode and revocation status are the open points for -03.",
-      "headline_ja": "Cred 委任 -02 のレビュー：-03 に向けた論点はユーザー発行ルート、集計モード、失効ステータス",
-      "id": "mail:zLDfwOIkylaaI4vS97LSdAt4RYw",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-ietf-oauth-identity-chaining",
-          "note": "Not named in the material; omit.",
-          "note_ja": "資料中では言及されていない。",
-          "track": "oauth-wg"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "Kieran's -02 announcement describes a Delegation Server (DS) that holds deposited user credentials and lets agents exercise them by proxy under a delegation token. It adds sub-delegation exchange (5.4.1), rank order in the token, delegation_constraints with max_lifetime and max_subtree written only by the DS, a chain-verifiable profile (5.5) adopting the Asor agent_delegation format unchanged, revocation text stating revoked_count is invalidation not closure, and ML-DSA. Caleb Dayton raises six points, including the claim remap for user-issued tokens, using the token's jti as root receipt, a mode marker for single-writer versus delegate-held tally, and a status mechanism when no DS exists. Kieran agrees to a per-key mode marker but cautions that a per-verifier tally does not bound the total across verifiers, and says -02 names no status mechanism for tokens the DS did not issue. Rob Zagarella suggests separating who issued a root from evidence a person approved it, and asks Section 7 to cover suspension and restoration.",
-      "summary_ja": "Kieran の -02 告知は、ユーザーが預けた資格情報を保持する Delegation Server（DS）を置き、エージェントが委任トークンのもとで代理実行する構成を説明している。追加点は、サブ委任の交換（5.4.1）、トークン内の順位、DS のみが書き込む max_lifetime と max_subtree を持つ delegation_constraints、Asor の agent_delegation 形式をそのまま採用するチェーン検証プロファイル（5.5）、revoked_count は無効化であって完結ではないとする失効の記述、ML-DSA の許可である。Caleb Dayton は、ユーザー発行トークンの claim 再マッピング、jti をルートレシートとする案、単一書き込み元と委任先保持の集計を区別するモード指示、DS がない場合の状態確認手段など六点を指摘した。Kieran は鍵ごとのモード指示に同意しつつ、検証者ごとの集計では検証者をまたいだ総量は抑えられないと注意し、DS が発行していないトークンのステータス機構は -02 に定めがないと述べた。Rob Zagarella は、ルートの発行者と人間の承認の証拠を分けること、および Section 7 で一時停止と復元を扱うことを提案した。",
-      "title": "draft-sweeney-wimse-credential-delegation-02 (2 new messages)",
-      "updated_at": "2026-11-11T19:40:15+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/zLDfwOIkylaaI4vS97LSdAt4RYw/",
-      "use_cases": [
-        "An agent platform where users deposit OAuth credentials with a proxy and agents never hold the upstream token.",
-        "A verifier away from the DS that must decide whether a cumulative budget has been exceeded."
-      ],
-      "use_cases_ja": [
-        "ユーザーが OAuth 資格情報をプロキシに預け、エージェントが上流トークンを保持しないエージェント基盤。",
-        "DS から離れた検証者が、累積上限を超えたか判断する場合。"
-      ]
-    },
     "repo:ietf-wg-wimse/draft-ietf-wimse-arch:3bc2ec497cfc": {
       "diagram": "",
       "first_seen": "2026-11-17",
@@ -1258,12 +1161,6 @@
       "priority": "high",
       "reason": "New draft with 29 vectors and 3 observations on spec ambiguity in draft-ietf-wimse-http-signature.",
       "reason_ja": "draft-ietf-wimse-http-signature について、29 件のベクターと仕様の曖昧さに関する 3 件の観察事項を含む新規ドラフトである。"
-    },
-    "Review related draft: draft-nandakumar-wimse-delegator-bound-chains-00": {
-      "date": "2026-11-16",
-      "priority": "high",
-      "reason": "New draft adding signer-key binding, pseudonyms and audience attenuation to delegation chains, with live list review today.",
-      "reason_ja": "委任チェーンに署名鍵の結び付け、仮名、audience の縮小を加える新規ドラフトで、本日メーリングリスト上でレビューも出ている。"
     },
     "Review related draft: draft-nandakumar-wimse-wpt-message-binding-00": {
       "date": "2026-11-17",
