@@ -1,6 +1,6 @@
 # OAuth WG Backlog (2026-11-19)
 
-- generated_at_utc: `2026-11-19T07:29:40+00:00`
+- generated_at_utc: `2026-11-19T20:40:52+00:00`
 
 - [ ] `draft-ietf-oauth-sd-jwt-vc` score=125 updated=2026-11-16T10:45:13Z
 - [ ] `draft-ietf-oauth-status-list` score=90 updated=2026-11-19T02:42:34Z
@@ -24,7 +24,8 @@
 
 Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.
 
-- **high** `draft-ietf-oauth-client-id-metadata-document`: Active dispute over mandating fetcher isolation before last call, with PR #115 and issue #112 in play.
+- **high** `draft-ietf-oauth-client-id-metadata-document`: Active debate on whether fetch-hardening (headers, proxying) belongs normatively in the draft.
 - **high** `draft-ietf-oauth-identity-assertion-authz-grant`: New issue #161 reports a conflict between the §4.3.3 and §4.5 rules, and #121 was closed this week.
+- **low** `draft-ietf-oauth-v2-1`: Only a minor reference error in section 7.13.1 was reported.
 
 <!-- triage:end -->

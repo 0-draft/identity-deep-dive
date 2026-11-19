@@ -54,6 +54,11 @@
       "at": "2026-11-19T07:30:55+00:00",
       "text": "The main thread is the CIMD security debate: Patrick White argues the draft must mandate isolation of the client metadata fetcher, and Shankar agrees. Elsewhere the Native Clients profile drops `username` and `refresh_key` ahead of last call, and several new proposals appeared (Transactional Access Tokens, OIDC crypto agility, a RAR payment mandate profile).",
       "text_ja": "最も重要なのは CIMD のセキュリティ議論で、Patrick White がメタデータ取得処理の隔離をドラフトで必須にすべきだと主張し、Shankar が賛同した。また、Native Clients プロファイルは最終コール前に `username` と `refresh_key` を削除する方針で、Transactional Access Tokens、OIDC 暗号アジリティ、RAR 支払いマンデートの各提案も議論された。"
+    },
+    {
+      "at": "2026-11-19T20:42:12+00:00",
+      "text": "Nothing changed in any draft text; four mailing-list messages only. The most substantive is the CIMD thread, where a reviewer pushes back on making client-side fetch hardening (proxying, header hygiene) normative.",
+      "text_ja": "ドラフト本文の変更はなく、メーリングリストの投稿が4件あるのみである。最も重要なのは CIMD のスレッドで、クライアント側のフェッチ強化策（プロキシ、ヘッダー）を規範にすることに対し、反論が出ている。"
     }
   ],
   "items": {
@@ -346,6 +351,30 @@
       "title": "Éric Vyncke's No Objection on draft-ietf-oauth-sd-jwt-vc-27: (with COMMENT)",
       "updated_at": "2026-11-18T07:34:29+00:00",
       "url": "https://mailarchive.ietf.org/arch/msg/oauth/HzIZORPP2bIS3r0rQBFjja8tIXY/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "mail:I-gW4sVCdxBgnUTmAU_-GZGaSGM": {
+      "diagram": "",
+      "first_seen": "2026-11-19",
+      "headline": "A list participant asks the author of the PACE Authorization draft to stop cross-posting and unquoted replies, and the thread also holds early design talk.",
+      "headline_ja": "PACE Authorization ドラフトの投稿者に、複数リストへの投稿と引用なしの返信をやめるよう求める投稿で、設計に関する初期の議論も含まれる。",
+      "id": "mail:I-gW4sVCdxBgnUTmAU_-GZGaSGM",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-reddy-wimse-oauth-dialog-binding",
+          "note": "Same thread is cross-posted to the WIMSE list and concerns binding agent dialogs and grants to credentials, though the material does not name this draft.",
+          "note_ja": "同じスレッドが WIMSE のメーリングリストにも投稿されており、エージェントの対話と grant のクレデンシャルへの結び付けを扱うが、資料にこのドラフト名は出てこない。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "The top message is a conduct complaint to Blake Morrison: multi-list posting is discouraged, replies lack quoted history, and the poster suspects an AI autoresponder. In the quoted message, Blake tells Suhas that without a wallet he prefers option 2. He says a root grant only beats option 3 if it carries the user's passkey tap at their own provider, its timing, and the grant shown at that moment, and that the next revision must tie the grant to that moment. He also notes that one grant spent at two airlines still needs an answer, as does wallet trust. The options themselves are not defined in this material.",
+      "summary_ja": "冒頭の投稿は Blake Morrison への苦情である。複数のメーリングリストへの投稿は推奨されず、返信に引用がなく、AI の自動応答ではないかと疑っている。引用された投稿では、Blake が Suhas に対し、ウォレットがなければ選択肢2を支持すると述べている。ルートの grant が選択肢3より優れるのは、ユーザー自身のプロバイダーでのパスキー操作、その時刻、操作時に提示された grant を保持する場合に限られ、次の改訂ではその時点に grant を結び付ける必要があるとしている。また、同じ grant が二つの航空会社で使われる場合の扱いとウォレットの信頼も未解決としている。選択肢の内容はこの資料には定義されていない。",
+      "title": "New draft: PACE Authorization: delegation and action approval for agent dialogs:",
+      "updated_at": "2026-11-19T20:42:12+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/I-gW4sVCdxBgnUTmAU_-GZGaSGM/",
       "use_cases": [],
       "use_cases_ja": []
     },
@@ -731,6 +760,29 @@
         "支払いの運用者が、短いトークン有効期間で足りるのか、オンラインの失効確認が必要かを判断する場合。"
       ]
     },
+    "mail:fclB-M3AdRdUkDnNUWWYzmmjFTE": {
+      "diagram": "",
+      "first_seen": "2026-11-19",
+      "headline": "A reviewer argues most CIMD fetch-hardening advice is out of scope for OAuth, apart from testable items like request headers.",
+      "headline_ja": "CIMD のフェッチ強化策の多くは OAuth の範囲外であり、リクエストヘッダーのように検証可能なものに限るべきだという反論である。",
+      "id": "mail:fclB-M3AdRdUkDnNUWWYzmmjFTE",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Replying to Patrick White's IETF 127 comment, Michael Sweet questions how a flaw in the DNS resolver, TLS stack or HTTP parser underneath an AS's fetch of an https client_id URL is an OAuth protocol problem. He says the spec can reference TLS/HTTP best practices but cannot mandate implementation architecture. He concedes that some measures, such as request headers, are straightforward, effective and testable, and could be normative. Using a proxy unrelated to the AS network location is, in his view, a configuration choice outside OAuth's scope and of doubtful effectiveness. White's position, as quoted, is that hardening guidance (no true user agent, no credentials, proxying) must be in the draft itself, not a later BCP.",
+      "summary_ja": "Patrick White の IETF 127 でのコメントに対し、Michael Sweet が返信している。AS が https の client_id URL を取得する際の、DNS リゾルバー、TLS スタック、HTTP パーサーの欠陥がなぜ OAuth のプロトコル上の問題なのかと疑問を呈し、仕様は TLS/HTTP のベストプラクティスを参照できても、実装アーキテクチャを強制できないと述べている。一方、リクエストヘッダーのように単純で効果的かつ検証可能な対策は規範にできるとしている。AS のネットワーク位置と無関係なプロキシを使うかどうかは、OAuth の範囲外の構成上の選択であり、効果も疑わしいという見解である。引用された White の主張は、強化策（実際のユーザーエージェントを送らない、認証情報を付けない、プロキシ経由）は後付けの BCP ではなくドラフト本体に含めるべきというものである。",
+      "title": "CIMD Request Issues - Pat White comment from IETF 127",
+      "updated_at": "2026-11-19T20:42:12+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/fclB-M3AdRdUkDnNUWWYzmmjFTE/",
+      "use_cases": [
+        "An AS operator accepting arbitrary https client_id URLs deciding how much fetch hardening to build in beyond what the draft requires",
+        "A CIMD implementer choosing which outbound request headers to send when fetching client metadata"
+      ],
+      "use_cases_ja": [
+        "任意の https client_id URL を受け付ける AS の運用者が、ドラフトの要求を超えてどこまでフェッチの強化策を実装するか判断する場合",
+        "CIMD の実装者が、クライアントメタデータの取得時に送信するリクエストヘッダーを選ぶ場合"
+      ]
+    },
     "mail:kAGQP9CSb_3d3Cg7eWq2GYBkrvU": {
       "diagram": "sequenceDiagram\nparticipant A as Agent\nparticipant RS as Bank resource\nparticipant AS as Authorization server\nA->>RS: payment request\nRS-->>A: approval needed with mandate_reason\nA->>AS: obtain approval\nRS->>RS: write signed hash-chained receipt",
       "first_seen": "2026-11-17",
@@ -779,6 +831,36 @@
         "OIDCを使わない素のOAuthで、ネイティブクライアントにユーザー名/パスワードをやめさせたいメール、カレンダー、連絡先サーバー。",
         "IMAP、SMTP、CalDAV向けクライアントが、トークンレスポンスのアカウント名でアカウント表示名を付ける場合。",
         "非エクスポート鍵ストレージのない端末で、リフレッシュトークンのローテーションとDPoPバインドのどちらを選ぶか検討する認可サーバー。"
+      ]
+    },
+    "mail:ls5lsyM4Lg6Zaful23JI3bzDLdk": {
+      "diagram": "",
+      "first_seen": "2026-11-19",
+      "headline": "Karl suggests the txn_handle in Transactional Access Tokens is the part worth aligning with the Mission grant binding, independent of token format.",
+      "headline_ja": "Transactional Access Tokens の txn_handle は、トークン形式と無関係に Mission の grant binding と整合させる価値がある部分だという指摘である。",
+      "id": "mail:ls5lsyM4Lg6Zaful23JI3bzDLdk",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-wimse-workload-creds",
+          "note": "Weak link only: Txn-ATs are said to be exchangeable for Txn-Tokens that propagate context inside a trust domain, which is the same problem space as workload credentials.",
+          "note_ja": "弱い関連のみ。Txn-AT は信頼ドメイン内でコンテキストを伝搬する Txn-Token に交換できるとされ、ワークロードクレデンシャルと同じ問題領域である。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Karl reads txn_handle in draft-tulshi-oauth-transactional-access-tokens as playing a role similar to the Mission grant binding in draft-mcguinness-oauth-mission: the AS resolves it to bounded work on each request, so it can gate issuance on that task and enforce limits such as a derivation count. He calls it the most interesting part and not specific to the token format. The quoted thread shows Atul Tulshibagwale posting an updated draft aligned with RAR for the request process and token format, following earlier feedback from Jeff Lombardo asking why not a RAR profile, token exchange or ID-JAG-based approach instead of a new token. Atul's earlier answers say the AS is the TTS here and Txn-ATs can be exchanged for Txn-Tokens inside a resource server's domain. The quoted material is truncated.",
+      "summary_ja": "Karl は、draft-tulshi-oauth-transactional-access-tokens の txn_handle が、draft-mcguinness-oauth-mission の Mission grant binding と似た役割を持つと読んでいる。AS が各リクエストでこれを制限された作業に解決するため、そのタスクに基づいて発行を制御し、派生回数などの上限を強制できる。Karl はこれを提案の中で最も興味深い部分とし、トークン形式に固有の概念ではないとしている。引用されたスレッドでは、Atul Tulshibagwale がリクエスト手順とトークン形式を RAR に合わせた更新版ドラフトを投稿している。これは、新しいトークンではなく RAR プロファイル、トークン交換、ID-JAG で足りるのではないかという Jeff Lombardo の指摘を受けたものである。Atul の過去の回答では、この仕様では AS が TTS に相当し、Txn-AT はリソースサーバーのドメイン内で Txn-Token に交換できるとされている。引用部分は途中で切れている。",
+      "title": "Transactional Access Tokens",
+      "updated_at": "2026-11-19T20:42:12+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/ls5lsyM4Lg6Zaful23JI3bzDLdk/",
+      "use_cases": [
+        "Authors of agent or task-scoped token drafts looking to share one task-handle mechanism instead of defining it per token format",
+        "An AS that must cap how many tokens may be derived from one approved task"
+      ],
+      "use_cases_ja": [
+        "エージェントやタスク単位のトークンのドラフト著者が、トークン形式ごとではなく共通のタスクハンドル機構を共有しようとする場合",
+        "承認された一つのタスクから派生できるトークン数に上限を設けたい AS の場合"
       ]
     },
     "mail:mtGdBEyIMgDdrP7RnK89AVpcuRM": {
@@ -858,6 +940,23 @@
         "リフレッシュトークンの再利用検知と、応答を失った場合の復旧のどちらを重視するかを検討する認可サーバーの運用者。",
         "共有の相互運用スコープレジストリにスコープを登録するサーバーベンダー。"
       ]
+    },
+    "mail:sKLsD8nT9CNcvIldC_0An2bKQ2U": {
+      "diagram": "",
+      "first_seen": "2026-11-19",
+      "headline": "A reader reports that OAuth 2.1 section 7.13.1 cites RFC 9700 section 4.1.1 for client open redirectors, which does not describe that attack.",
+      "headline_ja": "OAuth 2.1 の 7.13.1 節が、クライアントのオープンリダイレクタについて RFC 9700 の 4.1.1 節を引用しているが、その節は該当する攻撃を述べていないという指摘である。",
+      "id": "mail:sKLsD8nT9CNcvIldC_0An2bKQ2U",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Max Waldbillig says the Client as Open Redirector section of draft-ietf-oauth-v2-1 (version 17) points to RFC 9700 section 4.1.1 for code exfiltration. That section covers the AS accepting an attacker-controlled redirect URI, not a client open redirector. Section 4.1.2 describes a client open redirector but uses the implicit grant, which OAuth 2.1 no longer includes. He suggests the draft may need an example showing how, or whether, a client open redirector can exfiltrate codes in the authorization code flow. No response is in the material.",
+      "summary_ja": "Max Waldbillig は、draft-ietf-oauth-v2-1（バージョン17）の「Client as Open Redirector」の節が、認可コードの漏えいについて RFC 9700 の 4.1.1 節を参照していると指摘している。その節は AS が攻撃者の制御するリダイレクト URI を受け入れる場合を扱っており、クライアントのオープンリダイレクタではない。4.1.2 節はクライアントのオープンリダイレクタを説明しているが、例が OAuth 2.1 で削除された Implicit グラントである。そのため、認可コードフローでクライアントのオープンリダイレクタがどのように（あるいはそもそも）コードの漏えいに使えるかを示す例が有用かもしれないと提案している。資料には返信は含まれていない。",
+      "title": "Possible incorrect reference in Section 7.13.1 of draft-ietf-oauth-v2-1",
+      "updated_at": "2026-11-19T20:42:12+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/sKLsD8nT9CNcvIldC_0An2bKQ2U/",
+      "use_cases": [],
+      "use_cases_ja": []
     },
     "mail:y_IZYbPS71qPIJl8Jgxr2IyEfRE": {
       "diagram": "flowchart LR\nR[Root token DT_0 signed by trust anchor, carries del_bind and cnf key K1] --> H1[Hop 1 signed with K1, iss is root client_id, cnf key K2]\nH1 --> H2[Hop 2 signed with K2, iss is hop 1 client_id]",
@@ -986,14 +1085,20 @@
     "draft-ietf-oauth-client-id-metadata-document": {
       "date": "2026-11-19",
       "priority": "high",
-      "reason": "Active dispute over mandating fetcher isolation before last call, with PR #115 and issue #112 in play.",
-      "reason_ja": "最終コール前にフェッチ処理の隔離を必須にするかで議論が続いており、PR #115 と issue #112 が関係している。"
+      "reason": "Active debate on whether fetch-hardening (headers, proxying) belongs normatively in the draft.",
+      "reason_ja": "フェッチ強化策（ヘッダー、プロキシ）をドラフトに規範として含めるべきかという議論が進行中である。"
     },
     "draft-ietf-oauth-identity-assertion-authz-grant": {
       "date": "2026-11-15",
       "priority": "high",
       "reason": "New issue #161 reports a conflict between the §4.3.3 and §4.5 rules, and #121 was closed this week.",
       "reason_ja": "新規 issue #161 で §4.3.3 と §4.5 の規則の矛盾が報告され、#121 もクローズされた。"
+    },
+    "draft-ietf-oauth-v2-1": {
+      "date": "2026-11-19",
+      "priority": "low",
+      "reason": "Only a minor reference error in section 7.13.1 was reported.",
+      "reason_ja": "7.13.1 節の参照誤りという軽微な指摘のみである。"
     }
   }
 }
