@@ -1,11 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-12T07:16:09+00:00",
-      "text": "No draft text changed in this run. The two list messages are an IETF 127 slide-upload reminder and a thread on how to compare the AAT-02 draft with PSEA-based approval proofs.",
-      "text_ja": "この回ではドラフト本文の変更はない。メーリングリストの2件は、IETF 127のスライド提出依頼と、AAT-02を承認証明（PSEA）と比較する方法をめぐる議論である。"
-    },
-    {
       "at": "2026-11-13T06:50:52+00:00",
       "text": "The main item is the draft-le-agent-passport-00 thread. The author set out per-constraint subsumption rules for -01 and agreed to compare them with other delegation drafts before IETF 127. The only other change is an authorship-ordering PR on OAuth 2.1.",
       "text_ja": "最も重要なのは draft-le-agent-passport-00 のスレッドである。著者が -01 向けの制約種別ごとの包含規則を示し、IETF 127 前に他の委任ドラフトと比較することに同意した。ほかには OAuth 2.1 の著者表記に関する PR が一件あるのみである。"
@@ -59,6 +54,11 @@
       "at": "2026-11-19T20:42:12+00:00",
       "text": "Nothing changed in any draft text; four mailing-list messages only. The most substantive is the CIMD thread, where a reviewer pushes back on making client-side fetch hardening (proxying, header hygiene) normative.",
       "text_ja": "ドラフト本文の変更はなく、メーリングリストの投稿が4件あるのみである。最も重要なのは CIMD のスレッドで、クライアント側のフェッチ強化策（プロキシ、ヘッダー）を規範にすることに対し、反論が出ている。"
+    },
+    {
+      "at": "2026-11-20T07:21:47+00:00",
+      "text": "The most notable activity is mailing-list debate over agent delegation: the Actor Chain authors asked the chairs to compare three competing drafts before an adoption call, and two new agent drafts (PACE Authorization, delegation revocation) drew review comments. The first-party-apps draft is being renamed to \"OAuth Authorization Challenge Endpoint\", which is editorial.",
+      "text_ja": "最も目立つのはエージェント委任をめぐるメーリングリストの議論である。Actor Chain の著者らが、採用呼びかけの前に競合する三つのドラフトを比較するようチェアに求めた。また、新しいエージェント関連ドラフト二件（PACE Authorization と委任の失効）にレビューコメントが付いた。first-party-apps ドラフトは「OAuth Authorization Challenge Endpoint」へ改名される予定で、これは編集上の変更である。"
     }
   ],
   "items": {
@@ -445,23 +445,6 @@
         "一つのネイティブアプリに対応するマルチリージョンまたはマルチテナントの認可サーバーでは、発行者のホストごとにメタデータドキュメントを用意する必要がある。"
       ]
     },
-    "mail:QBkjvseqmO0KYRwP5ArCI19GlDM": {
-      "diagram": "",
-      "first_seen": "2026-11-12",
-      "headline": "The chairs ask presenters to upload slides for the IETF 127 OAuth session and the joint WIMSE session.",
-      "headline_ja": "座長が、IETF 127のOAuthセッションとWIMSEとの合同セッションの発表者にスライドのアップロードを依頼している。",
-      "id": "mail:QBkjvseqmO0KYRwP5ArCI19GlDM",
-      "kind": "mail",
-      "related": [],
-      "significance": "routine",
-      "summary": "Rifaat asks presenters to upload slides as soon as possible. One link is for the OAuth sessions at IETF 127 and another is for the shared session with WIMSE. The message has no technical content.",
-      "summary_ja": "Rifaatが発表者に対し、できるだけ早くスライドをアップロードするよう依頼している。リンクはIETF 127のOAuthセッション用と、WIMSEとの合同セッション用の二つである。技術的な内容は含まれない。",
-      "title": "OAuth Sessions Slides",
-      "updated_at": "2026-11-12T07:16:09+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/QBkjvseqmO0KYRwP5ArCI19GlDM/",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
     "mail:QDDL1q1ZVcuUAEiB_tUwEM8DPnE": {
       "diagram": "",
       "first_seen": "2026-11-18",
@@ -545,6 +528,36 @@
         "鍵のローテーションを計画する発行者は、退役した鍵をどのくらいの期間公開し続けるべきかを知る必要がある。"
       ]
     },
+    "mail:TmOI1beLEIAtzYbfslf4ldg-9M8": {
+      "diagram": "",
+      "first_seen": "2026-11-20",
+      "headline": "A reviewer lists replay, crash-retry, WebAuthn and display edge cases in the new PACE Authorization draft.",
+      "headline_ja": "新しい PACE Authorization ドラフトに対し、査読者がリプレイ、クラッシュ後の再試行、WebAuthn、表示に関するエッジケースを挙げた。",
+      "id": "mail:TmOI1beLEIAtzYbfslf4ldg-9M8",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-reddy-wimse-oauth-dialog-binding",
+          "note": "Also binds agent dialogs to credentials, but the message does not reference it.",
+          "note_ja": "こちらもエージェントのダイアログをクレデンシャルに束縛するが、メッセージでは言及されていない。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Suhas Nandakumar and Cullen announced draft-nandakumar-agentproto-pace-authz-00 on Nov 16. It covers delegating to an agent with a credential bound to a dialog, asking for approval via a signed check, approving through an access token for one action, and revoking a delegation to end dependent dialogs. Paul Williams replied with edge cases. Consumed jti values are kept only until exp, which leaves a replay window if verifiers accept clock skew. A resource server that crashes after consuming the approval token can see a retry with a new checkpoint_id and a duplicate effect. The WebAuthn check omits several validations, and the inline key should be matched against the enrolled key. He also suggests rendering pitfalls for Security Considerations and points to his Proof-of-Intent drafts for edits outside pre-declared bounds.",
+      "summary_ja": "Suhas Nandakumar と Cullen は 11 月 16 日に draft-nandakumar-agentproto-pace-authz-00 を公開した。ダイアログに束縛された委任クレデンシャルによるエージェントへの委任、署名付きチェックによる承認の要求、単一の操作のためのアクセストークンによる承認、委任の失効による依存ダイアログの終了を扱う。Paul Williams は次のエッジケースを指摘した。使用済みの jti を exp まで しか保持しないため、検証者が時計のずれを許容するとリプレイの余地が残る。リソースサーバーが承認トークンを消費した後にクラッシュすると、新しい checkpoint_id での再試行により副作用が重複しうる。WebAuthn の検証には複数の項目が欠けており、インラインの鍵は登録済みの鍵と照合すべきである。さらに、表示に関する落とし穴を Security Considerations に記載することを提案し、事前に宣言された範囲外の編集については自身の Proof-of-Intent ドラフトを紹介している。",
+      "title": "New draft: PACE Authorization: delegation and action approval for agent dialogs:",
+      "updated_at": "2026-11-20T07:21:47+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/TmOI1beLEIAtzYbfslf4ldg-9M8/",
+      "use_cases": [
+        "An implementer of human-approval flows for agent actions who needs idempotency and replay guidance.",
+        "A resource server verifying WebAuthn-based approval confirmations."
+      ],
+      "use_cases_ja": [
+        "エージェントの操作に対する人間の承認フローを実装し、冪等性とリプレイ対策の指針が必要な実装者。",
+        "WebAuthn に基づく承認確認を検証するリソースサーバー。"
+      ]
+    },
     "mail:UwVKZ7yQZhs7baTJmQdzZEKIpME": {
       "diagram": "flowchart LR\n AS[AS discovery lists jwks_uri and jwks_uris] --> JWT[AS signs token with jku header]\n JWT --> V[Verifier matches jku against discovery]\n V --> K[Fetch key set for that jku URI]",
       "first_seen": "2026-11-18",
@@ -568,29 +581,6 @@
         "PQC署名鍵の導入を計画し、jwks_uri内のRS256鍵しか扱えないクライアントを壊したくない認可サーバーの運用者。",
         "IDトークンやJWTアクセストークンを検証し、jkuヘッダーやjkuqsのプロファイルを安全に扱う必要が出るライブラリのメンテナー。",
         "新しい認可リクエストパラメーターと、クライアント単位やredirect_uri単位のオプトインのどちらを採るか検討する導入者。"
-      ]
-    },
-    "mail:WixDZ1_uCFhHcyVW7y0ao-hXWpQ": {
-      "diagram": "",
-      "first_seen": "2026-11-12",
-      "headline": "AAT-02 thread: compare leaves that carry an action binding apart from leaves that cite a separate approval proof, and record shared replay state.",
-      "headline_ja": "AAT-02のスレッドで、行為束縛を持つ葉と別の承認証明を参照する葉を分けて比較し、共有リプレイ状態も記録すべきだとの議論がある。",
-      "id": "mail:WixDZ1_uCFhHcyVW7y0ao-hXWpQ",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Mohamad Yossif argues that a chain leaf need not express the binding to one exact request itself. It can carry the digest of, or cite by jti, a separate proof. He describes draft-yossif-psea-03 as a proof signed by the approver's enrolled device over the SHA-256 of the request in RFC 8785 form, which a verifier refuses on replay. He suggests the comparison list \"not expressible in the token\" and \"expressible by reference\" as two entries. Iman agrees, would keep the action identifier, approval jti and proof reference distinct, and notes that conformance case DR-C7 only checks a second presentation to the same verifier. Iman proposes a new test presenting one proof through two leaves at two enforcement points and checking that at most one finalization succeeds, which separate local replay caches would not show. The thread contains no draft text change.",
-      "summary_ja": "Mohamad Yossifは、チェーンの葉が特定の1リクエストへの束縛を自身で表現する必要はなく、別の証明のダイジェストを保持するか、jtiで参照すればよいと主張している。draft-yossif-psea-03は、承認者の登録済みデバイスがRFC 8785形式のリクエストのSHA-256に対して署名する証明であり、検証者はリプレイを拒否すると説明している。比較表では「トークン内では表現できない」と「参照により表現できる」を別項目にすることを提案している。Imanはこれに同意し、行為識別子、承認のjti、証明への参照は区別して保持すべきだとしている。またDR-C7が確認するのは同一検証者への2回目の提示のみだと指摘している。さらに、1つの証明を2つの強制点の2つの葉から提示し、完了するのは高々1つであることを確認する新しいテストを提案している。ローカルのリプレイキャッシュが別々では、これは示せない。スレッドにドラフト本文の変更はない。",
-      "title": "AAT -02 announcement (2 new messages)",
-      "updated_at": "2026-11-12T07:16:09+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/WixDZ1_uCFhHcyVW7y0ao-hXWpQ/",
-      "use_cases": [
-        "Authors of an agent authorization token who must decide whether per-request approval is carried in the token or referenced from an external proof.",
-        "Deployers running several enforcement points in one verification domain who must decide whether replay state has to be shared across them."
-      ],
-      "use_cases_ja": [
-        "エージェント向け認可トークンの作成者が、リクエスト単位の承認をトークン内に持たせるか、外部の証明を参照させるかを決める場合。",
-        "同一の検証ドメインに複数の強制点を置く運用者が、リプレイ状態をそれらの間で共有する必要があるかを判断する場合。"
       ]
     },
     "mail:Y6RNjJVYx4DVyPbMWZX6EmA-424": {
@@ -705,6 +695,36 @@
         "継続的な支出上限のもとで旅行を予約するエージェントで、二社目の事業者が利用者の承認を検証する必要がある場面。",
         "銀行発行のウォレットクレデンシャルと IdP のアサーションのどちらを本人同意の証拠として受け入れるかを検証者が判断する場面。",
         "委任チェーンを実装する側が、複数の宛先にまたがる累計上限を誰が強制するかを決める場面。"
+      ]
+    },
+    "mail:d4QcDFQ4Ays3NJUukHaknL8KIrk": {
+      "diagram": "sequenceDiagram\nparticipant Root as Root issuer\nparticipant A as Agent A\nparticipant B as Agent B\nRoot->>A: delegation-revoked SET\nA->>B: relay SET to downstream holder\nB->>B: stop using token and descendants\nB->>Root: chain status check as backstop",
+      "first_seen": "2026-11-20",
+      "headline": "A new draft defines a delegation-revoked security event that revokes a token and all its descendants.",
+      "headline_ja": "新しいドラフトが、トークンとその子孫をすべて失効させる delegation-revoked セキュリティイベントを定義した。",
+      "id": "mail:d4QcDFQ4Ays3NJUukHaknL8KIrk",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-nandakumar-wimse-delegator-bound-chains",
+          "note": "Same authors work on delegation chains, but the message does not link the two.",
+          "note_ja": "同じ著者が委任チェーンに取り組んでいるが、メッセージでは両者を関連づけていない。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "new-proposal",
+      "summary": "Suhas Nandakumar and Cullen posted draft-nandakumar-oauth-delegation-revocation-00. It defines a delegation-revoked SET that revokes a token and every credential delegated below it. Each holder relays the event down the chain, and chain status checks act as the backstop if an event is lost. Marc replied with suggestions: state that only the root issuer or its designee can withdraw a principal across all chains, ask issuers to state a maximum publication delay so the Section 7 bound is measurable from revoked_at, and prefer Status List over token introspection for chain status because introspection reveals which tokens each verifier checks.",
+      "summary_ja": "Suhas Nandakumar と Cullen は draft-nandakumar-oauth-delegation-revocation-00 を公開した。トークンとその下位に委任されたすべてのクレデンシャルを失効させる delegation-revoked SET を定義する。各保持者がイベントを連鎖の下流へ中継し、イベントが失われた場合は連鎖のステータス確認が補完手段となる。Marc は次の提案を返信した。プリンシパルをすべての連鎖にわたって取り消せるのはルート発行者またはその指名先のみであると明記すること。Section 7 の上限を revoked_at から測定できるよう、発行者に最大公開遅延の明示を求めること。連鎖のステータスにはトークンイントロスペクションより Status List を優先すること。イントロスペクションは、検証者がどのトークンを確認しているかを発行者に知らせてしまうためである。",
+      "title": "New draft: Security Events for Revocation of Agent Delegations (2 new messages)",
+      "updated_at": "2026-11-20T07:21:47+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/d4QcDFQ4Ays3NJUukHaknL8KIrk/",
+      "use_cases": [
+        "An operator who must cut off a sub-agent chain after revoking the first delegation.",
+        "A verifier choosing between Status List and introspection to check chain status."
+      ],
+      "use_cases_ja": [
+        "最初の委任を失効させた後に、下位のエージェント連鎖を遮断する必要がある運用者。",
+        "連鎖のステータス確認に Status List とイントロスペクションのどちらを使うか選ぶ検証者。"
       ]
     },
     "mail:dcWgMjGDoGkntmYRCytdiLToTAw": {
@@ -861,6 +881,36 @@
       "use_cases_ja": [
         "エージェントやタスク単位のトークンのドラフト著者が、トークン形式ごとではなく共通のタスクハンドル機構を共有しようとする場合",
         "承認された一つのタスクから派生できるトークン数に上限を設けたい AS の場合"
+      ]
+    },
+    "mail:m_2hHS8OfrXxj1ISfKphVkAZyTo": {
+      "diagram": "",
+      "first_seen": "2026-11-20",
+      "headline": "The Actor Chain authors ask the chairs to compare Actor Chain, Actor Profile and Delegation Chain before any adoption call.",
+      "headline_ja": "Actor Chain の著者らが、採用呼びかけの前に Actor Chain・Actor Profile・Delegation Chain の比較をチェアに求めた。",
+      "id": "mail:m_2hHS8OfrXxj1ISfKphVkAZyTo",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-nandakumar-wimse-delegator-bound-chains",
+          "note": "Another delegation-chain proposal in the same agent-delegation space, though this message does not name it.",
+          "note_ja": "同じエージェント委任の領域にある別の委任チェーン提案だが、このメッセージでは名前が挙がっていない。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "After the IETF 127 joint OAuth/WIMSE session, the Actor Chain authors recommend their draft as the starting text for shared JWT access-token delegation rules. They argue the first WG draft should include recipient-specific actor disclosure at issuance, plus verification of the original actor proofs and AS acceptances. In their payment example, a gateway must verify the initiator's and connector's signed records while bank policy withholds the screening actor. They say Actor Profile would reject this because it requires retaining the screening actor, and that Delegation Chain signs that actor into both adjacent records, so both drafts would need extra rules. They also set out a dated timeline of their work and ask the chairs to explain how the IETF 127 agenda priorities applied to their slot request. They ask the chairs to invite all three author groups to compare the shared JWT rules, contributions and the gateway case, and to post a summary.",
+      "summary_ja": "IETF 127 の OAuth/WIMSE 合同セッションの後、Actor Chain の著者らは、JWT アクセストークンの委任に関する共通ルールの出発点として自らのドラフトを推奨している。最初の WG ドラフトには、発行時の受信者別アクター開示と、元のアクター証明および AS による受理の検証を含めるべきだと主張する。決済の例では、ゲートウェイが開始者とコネクタの署名済み記録を検証する必要がある一方、銀行のポリシーは審査アクターを開示しない。著者らによれば、Actor Profile は審査アクターの保持を要求するためこの交換を拒否し、Delegation Chain は隣接する二つの記録の両方にそのアクターを署名するため、どちらも追加ルールが必要になる。また、自らの作業の時系列を示し、IETF 127 の議題優先度が自分たちの発表枠の要望にどう適用されたかの説明をチェアに求めている。三つのドラフトの著者を招いて共通の JWT ルール、各自の貢献、ゲートウェイの事例を比較させ、チェアがその要約をメーリングリストに投稿するよう依頼している。",
+      "title": "Comparing Actor Chain and Actor Profile before an adoption call",
+      "updated_at": "2026-11-20T07:21:47+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/m_2hHS8OfrXxj1ISfKphVkAZyTo/",
+      "use_cases": [
+        "A WG member deciding which delegation draft to support in an adoption call.",
+        "An authorization server that must chain actors but hide an intermediate actor from a downstream gateway."
+      ],
+      "use_cases_ja": [
+        "採用呼びかけでどの委任ドラフトを支持するかを判断する WG メンバー。",
+        "アクターを連鎖させつつ、中間アクターを下流のゲートウェイに見せたくない認可サーバー。"
       ]
     },
     "mail:mtGdBEyIMgDdrP7RnK89AVpcuRM": {
@@ -1028,6 +1078,40 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "pr:oauth-wg/oauth-first-party-apps#180": {
+      "diagram": "",
+      "first_seen": "2026-11-20",
+      "headline": "A PR updates references to RFC10017 and RFC10027, but its body is empty.",
+      "headline_ja": "RFC10017 と RFC10027 への参照を更新する PR だが、本文は空である。",
+      "id": "pr:oauth-wg/oauth-first-party-apps#180",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "routine",
+      "summary": "The PR title says references were updated to RFC10017 and RFC10027. The body is empty, so the material gives no further detail.",
+      "summary_ja": "PR のタイトルは、参照を RFC10017 と RFC10027 に更新したことを示している。本文は空であり、これ以上の詳細は資料から読み取れない。",
+      "title": "oauth-wg/oauth-first-party-apps#180: updated references to RFC10017 and RFC10027",
+      "updated_at": "2026-11-20T07:21:47+00:00",
+      "url": "https://github.com/oauth-wg/oauth-first-party-apps/pull/180",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "pr:oauth-wg/oauth-first-party-apps#181": {
+      "diagram": "",
+      "first_seen": "2026-11-20",
+      "headline": "The first-party-apps draft is being renamed to \"OAuth Authorization Challenge Endpoint\".",
+      "headline_ja": "first-party-apps ドラフトの名称を「OAuth Authorization Challenge Endpoint」に変更する PR が出された。",
+      "id": "pr:oauth-wg/oauth-first-party-apps#181",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The PR renames the draft from \"OAuth 2.0 for First-Party Applications\" to \"OAuth Authorization Challenge Endpoint\". It updates the title, abbrev, the introduction's reference to the old name and the README heading. The file is renamed to draft-ietf-oauth-authorization-challenge-endpoint.md, with docname, links, .gitignore and CODEOWNERS updated. Repository links are unchanged and descriptive uses of \"first-party applications\" remain. Datatracker links will not resolve until the draft is submitted under the new name. No protocol change is described.",
+      "summary_ja": "この PR は、ドラフト名を「OAuth 2.0 for First-Party Applications」から「OAuth Authorization Challenge Endpoint」に変更する。title、abbrev、序文中の旧名称への言及、README の見出しを更新する。ファイルは draft-ietf-oauth-authorization-challenge-endpoint.md に改名され、docname、リンク、.gitignore、CODEOWNERS も更新される。リポジトリ名を含むリンクは変更されず、本文中の「first-party applications」という説明的な用法も残る。新しい名前で提出されるまで Datatracker のリンクは解決されない。プロトコルの変更は記述されていない。",
+      "title": "oauth-wg/oauth-first-party-apps#181: Rename draft to OAuth Authorization Challenge Endpoint",
+      "updated_at": "2026-11-20T07:21:47+00:00",
+      "url": "https://github.com/oauth-wg/oauth-first-party-apps/pull/181",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "pr:oauth-wg/oauth-v2-1#283": {
       "diagram": "",
       "first_seen": "2026-11-13",
@@ -1093,6 +1177,18 @@
       "priority": "high",
       "reason": "New issue #161 reports a conflict between the §4.3.3 and §4.5 rules, and #121 was closed this week.",
       "reason_ja": "新規 issue #161 で §4.3.3 と §4.5 の規則の矛盾が報告され、#121 もクローズされた。"
+    },
+    "draft-ietf-oauth-status-list": {
+      "date": "2026-11-20",
+      "priority": "low",
+      "reason": "Only cited in list feedback as a preferred chain-status mechanism, with no change to the draft.",
+      "reason_ja": "メーリングリストで連鎖のステータス確認の推奨手段として挙げられただけで、ドラフト自体に変更はない。"
+    },
+    "draft-ietf-oauth-transaction-tokens": {
+      "date": "2026-11-20",
+      "priority": "low",
+      "reason": "Mentioned only as one possible delegation credential in the PACE draft announcement.",
+      "reason_ja": "PACE ドラフトの告知で委任クレデンシャルの候補の一つとして触れられただけである。"
     },
     "draft-ietf-oauth-v2-1": {
       "date": "2026-11-19",
