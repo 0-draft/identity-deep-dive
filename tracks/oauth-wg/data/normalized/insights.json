@@ -59,6 +59,11 @@
       "at": "2026-11-20T07:21:47+00:00",
       "text": "The most notable activity is mailing-list debate over agent delegation: the Actor Chain authors asked the chairs to compare three competing drafts before an adoption call, and two new agent drafts (PACE Authorization, delegation revocation) drew review comments. The first-party-apps draft is being renamed to \"OAuth Authorization Challenge Endpoint\", which is editorial.",
       "text_ja": "最も目立つのはエージェント委任をめぐるメーリングリストの議論である。Actor Chain の著者らが、採用呼びかけの前に競合する三つのドラフトを比較するようチェアに求めた。また、新しいエージェント関連ドラフト二件（PACE Authorization と委任の失効）にレビューコメントが付いた。first-party-apps ドラフトは「OAuth Authorization Challenge Endpoint」へ改名される予定で、これは編集上の変更である。"
+    },
+    {
+      "at": "2026-11-20T20:26:50+00:00",
+      "text": "Nothing substantive in specs today. The main thread is scope for an OAuth actor-delegation adoption: McGuinness favors a narrow Actor Profile base with provenance and selective disclosure as follow-on work, while the Actor Chain authors want selective disclosure in the first draft. There were also several new individual proposals.",
+      "text_ja": "仕様本体に実質的な変更はない。主な議論は、アクター委譲の採用範囲である。McGuinness は、基本の Actor Profile を狭く保ち、来歴証明と選択的開示は後続作業とする案を支持している。一方、Actor Chain の共著者は、最初の文書に選択的開示を含めるよう求めている。このほか、個人提案の新規ドラフトが複数投稿された。"
     }
   ],
   "items": {
@@ -422,6 +427,36 @@
         "複数のエージェント委任ドラフトを実装する者は、制約種別ごとの縮小規則表を共通のテストベクトルの出発点にできる。"
       ]
     },
+    "mail:N1uo61sS2I1QMa7r9-uhoc3swWA": {
+      "diagram": "sequenceDiagram\n  participant U as User\n  participant RS as Resource server app\n  participant AS as Authorization server\n  U->>RS: disconnect one agent\n  RS->>AS: revoke request with token issued to RS for the same user\n  AS->>AS: check sub matches the delegation tokens\n  AS->>AS: revoke grant and successor tokens\n  AS-->>RS: delegation revoked",
+      "first_seen": "2026-11-20",
+      "headline": "Feedback on the agent-delegation revocation security events draft: select a grant by grant identifier, and handle refresh rotation in flight.",
+      "headline_ja": "エージェント委譲の失効に関するセキュリティイベントのドラフトに対し、グラント識別子による選択と、進行中のリフレッシュローテーションの扱いが提案された。",
+      "id": "mail:N1uo61sS2I1QMa7r9-uhoc3swWA",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "openid/sharedsignals",
+          "note": "The author currently emits a CAEP session-revoked event for this case, and expects to move to a delegation-revoked event.",
+          "note_ja": "著者は現在この場合に CAEP の session-revoked イベントを発行しており、delegation-revoked イベントへの移行を見込んでいる。",
+          "track": "openid"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "The thread concerns the draft Security Events for Revocation of Agent Delegations, which only appears here as a reply to Suhas and Cullen. Ilja describes a case where a resource server acting for a user lets the user disconnect one agent, but RFC 7009 only lets the token's own client revoke. They wrote draft-radusch-oauth-subject-proof so a caller holding a token issued by the AS for the same user can have the AS revoke that one delegation. They raise two points. The delegation subject identifier names a token by (iss, jti), but access and refresh tokens change on every refresh, so they select by a grant identifier (dlg_id, proposed for the actor profile) and ask for an alternative member for it. Also, a refresh rotation in progress during revocation can let the successor token survive, so they revoke the successor chain and fail the rotation, and suggest a sentence in Section 7 or 9. They currently emit a CAEP session-revoked event and expect to move to a delegation-revoked event with reason principal_request.",
+      "summary_ja": "このスレッドは、Suhas と Cullen への返信として現れる、エージェント委譲の失効に関するセキュリティイベントのドラフトに関するものである。Ilja は、ユーザーのために動くリソースサーバーがユーザーに特定の一つのエージェントを切断させたい場合を挙げる。しかし RFC 7009 ではトークンの発行先クライアントしか失効できない。そこで draft-radusch-oauth-subject-proof を書き、同じユーザーについて AS が発行したトークンを持つ呼び出し元が、その一つの委譲を AS に失効させられるようにした。二点を指摘している。第一に、委譲のサブジェクト識別子は (iss, jti) でトークンを指定するが、アクセストークンとリフレッシュトークンは更新のたびに変わるため、グラント識別子 (dlg_id。アクタープロファイル向けに提案中) で選択しており、そのための代替メンバーを求めている。第二に、失効の最中に進行しているリフレッシュローテーションでは後継トークンが残る可能性があるため、後継チェーンも失効させ、先行トークンが失効済みならローテーションを失敗させている。これについて Section 7 または 9 に一文を加えることを提案している。現在は CAEP の session-revoked イベントを発行しており、形式が固まれば reason が principal_request の delegation-revoked イベントへ移行する予定である。",
+      "title": "New draft: Security Events for Revocation of Agent Delegations",
+      "updated_at": "2026-11-20T20:26:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/N1uo61sS2I1QMa7r9-uhoc3swWA/",
+      "use_cases": [
+        "An AS or RS that lets users disconnect a single AI agent without revoking their other grants.",
+        "An authorization server implementing refresh token rotation that must ensure a revocation cannot be outrun by an in-flight refresh."
+      ],
+      "use_cases_ja": [
+        "ユーザーの他のグラントを失効させずに、特定の AI エージェント一つだけを切断できるようにする AS または RS。",
+        "リフレッシュトークンのローテーションを実装し、進行中のリフレッシュによって失効が追い越されないようにする必要がある認可サーバー。"
+      ]
+    },
     "mail:OcZJg8cvTfnRnjcCDxnTlqgFbkA": {
       "diagram": "sequenceDiagram\nparticipant C as Client\nparticipant AS as Authorization server\nparticipant D as Metadata document host\nC->>AS: authorization request with client_id URL\nAS->>AS: resolve host and refuse private addresses\nAS->>D: GET document, no redirects, size and time capped\nD-->>AS: JSON with client_id and redirect_uris\nAS->>AS: check client_id is byte-equal, apply RFC 8252 to redirect_uris\nAS-->>C: continue flow as public client with PKCE",
       "first_seen": "2026-11-16",
@@ -443,6 +478,36 @@
       "use_cases_ja": [
         "事前登録のない MCP クライアントを受け入れる認可サーバーは、client_id の URL を取得する前に、ここに挙げられた SSRF 対策とキャッシュ制限を用意する必要がある。",
         "一つのネイティブアプリに対応するマルチリージョンまたはマルチテナントの認可サーバーでは、発行者のホストごとにメタデータドキュメントを用意する必要がある。"
+      ]
+    },
+    "mail:PaGEtTWzOhFgZXwqMuKDSKr2aAc": {
+      "diagram": "",
+      "first_seen": "2026-11-20",
+      "headline": "Filip Skokan objects that the OIDC crypto-agility proposal breaks servers that already publish several key types, and sketches non-breaking alternatives.",
+      "headline_ja": "Filip Skokan は、OIDC の暗号アジリティ提案が複数の鍵種別を既に公開しているサーバーに破壊的だと指摘し、非破壊の代替案を示した。",
+      "id": "mail:PaGEtTWzOhFgZXwqMuKDSKr2aAc",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "openid/connect",
+          "note": "Skokan says the ID Token, JARM and Signed UserInfo parts would belong in the OIDF Connect WG.",
+          "note_ja": "Skokan は、ID Token、JARM、署名付き UserInfo に関する部分は OIDF の Connect WG に置くべきだと述べている。",
+          "track": "openid"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Breno de Medeiros submitted draft-demedeiros-oidc-crypto-agility. It would let OIDC metadata publish supported JWT signing algorithms, let the client request one in the authorization request, and add a way to filter algorithms from the published key set. The motivation is easier adoption of new algorithms, especially PQC, in open federation. Filip Skokan replied that the proposal breaks correctly working implementations, and that the real problem is faulty clients and libraries rather than a lack of agility. He suggested opt-in or brownouts for exposing extra keys. He also outlined non-breaking options: a `jwks_uris` array with a `jku` header that must match discovery, a `jkuqs` header that replaces the query string of jwks_uri, or a client-opt-in out of band. Breno then floated changing authorization_server_jwt_signing_algorithms_supported into an object mapping each algorithm to a JWK Set URI. Skokan noted ID Tokens currently say SHOULD NOT use jku, so any jku approach needs profiling. Material is a discussion with a draft sketch attached, and no agreed text.",
+      "summary_ja": "Breno de Medeiros が draft-demedeiros-oidc-crypto-agility を投稿した。OIDC のメタデータで対応する JWT 署名アルゴリズムを公開し、クライアントが認可リクエストでその一つを要求でき、公開鍵セットからアルゴリズムを絞り込む手段も加える。目的は、オープンなフェデレーションで新しいアルゴリズム、特に PQC を採用しやすくすることである。Filip Skokan は、この提案は正しく動作している実装を壊し、問題の本質は暗号アジリティの欠如ではなく不具合のあるクライアントとライブラリだと返信した。追加鍵を公開するためのオプトインやブラウンアウトを提案し、非破壊の案も示した。具体的には、`jwks_uris` 配列と、ディスカバリーと一致が必要な `jku` ヘッダー、jwks_uri のクエリ文字列を置き換える `jkuqs` ヘッダー、帯域外でのクライアントのオプトインである。Breno は、authorization_server_jwt_signing_algorithms_supported をリストから、各アルゴリズムを JWK Set URI に対応付けるオブジェクトに変える案を示した。Skokan は、現行の ID Token が jku を使わないことを SHOULD NOT としているため、jku を使う案にはプロファイルが必要だと指摘した。これは議論であり、ドラフトの草案が添付されているが、合意されたテキストはない。",
+      "title": "Submitted new I-D proposal regarding OIDC crypto agility improvement",
+      "updated_at": "2026-11-20T20:26:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/PaGEtTWzOhFgZXwqMuKDSKr2aAc/",
+      "use_cases": [
+        "An authorization server operator planning a PQC signing-key rollout without breaking existing relying parties that mishandle multiple keys in jwks_uri.",
+        "A library maintainer deciding how verifiers should treat jku or per-algorithm key set URIs from discovery metadata."
+      ],
+      "use_cases_ja": [
+        "jwks_uri 内の複数鍵を正しく扱えない既存の依拠当事者を壊さずに、PQC 署名鍵へ移行しようとする認可サーバー運用者。",
+        "ディスカバリーメタデータ由来の jku やアルゴリズム別の鍵セット URI を、検証側がどう扱うべきかを決めるライブラリ保守者。"
       ]
     },
     "mail:QDDL1q1ZVcuUAEiB_tUwEM8DPnE": {
@@ -803,6 +868,36 @@
         "CIMD の実装者が、クライアントメタデータの取得時に送信するリクエストヘッダーを選ぶ場合"
       ]
     },
+    "mail:hyYB8Kr61CP-vrz_R_E5lRdIWhY": {
+      "diagram": "",
+      "first_seen": "2026-11-20",
+      "headline": "The WG is debating whether an actor-delegation starting text should include provenance proofs and selective disclosure, or stay minimal.",
+      "headline_ja": "アクター委譲の出発点となる文書に、来歴証明と選択的開示を含めるか、最小限に留めるかが議論されている。",
+      "id": "mail:hyYB8Kr61CP-vrz_R_E5lRdIWhY",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-nandakumar-wimse-delegator-bound-chains",
+          "note": "Another delegation-chain proposal for AI agents, in the same design space as the actor chain debate.",
+          "note_ja": "AI エージェント向けの別の委譲チェーン提案であり、アクターチェーン論争と同じ設計領域にある。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "A. Prasad recommended Actor Chain as the starting text, and argued the first WG draft should specify recipient-specific actor disclosure at issuance. It should also specify verification of the original actor proofs and AS acceptances when required. Karl McGuinness, author of Actor Profile, replied that common actor identification, chain representation and propagation rules have enough interoperability value without provenance proofs or selective disclosure. He said these can be follow-on profiles, provided the base does not preclude them, and he asked the WG for input on scope. Ramki, an Actor Chain co-author, accepted that not every deployment needs actor-signed proofs. He noted that Actor Chain separates assurance from disclosure, with a Declared-Full option that has no actor-signed proofs. He asked how an extension could issue a JWT that omits the screening actor yet still lets the initiator's and connector's original proofs be verified, given Actor Profile's chain-preservation rules. The thread is before an adoption call, and no text has changed.",
+      "summary_ja": "A. Prasad は Actor Chain を出発点とする文書として推奨し、最初の WG ドラフトで発行時の受信者別アクター開示を規定すべきだと主張した。あわせて、必要な場合に元のアクター証明と AS の受理を検証することも規定すべきだとした。Actor Profile の著者である Karl McGuinness は、来歴証明や選択的開示がなくても、共通のアクター識別、チェーン表現、伝播規則には十分な相互運用性の価値があると応じた。それらは後続のプロファイルとしてよく、基本仕様がそれを妨げないことが条件だとし、範囲について WG の意見を求めた。Actor Chain の共著者 Ramki は、すべての配備でアクター署名の証明が必要なわけではないと認めた。Actor Chain は保証と開示を分離しており、アクター署名の証明を持たない Declared-Full という選択肢があると述べた。その上で、Actor Profile の現行のチェーン保存規則の下で、審査アクターを省きつつ、発起者とコネクタの元の証明を検証可能にした JWT を拡張でどう発行するのかを問うた。採用判断の前の議論であり、テキストの変更はない。",
+      "title": "Comparing Actor Chain and Actor Profile before an adoption call (2 new messages)",
+      "updated_at": "2026-11-20T20:26:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/hyYB8Kr61CP-vrz_R_E5lRdIWhY/",
+      "use_cases": [
+        "An AI agent platform choosing between two competing delegation-chain formats for JWT access tokens before the WG adopts one.",
+        "A payment gateway that must verify the initiator's signed records while the bank withholds an intermediate screening actor from the token."
+      ],
+      "use_cases_ja": [
+        "WG がどちらかを採用する前に、JWT アクセストークンの委譲チェーン形式として競合する二案のどちらを選ぶかを検討する AI エージェント基盤。",
+        "発起者の署名付き記録を検証する必要がある一方で、銀行がトークンから中間の審査アクターを伏せたい決済ゲートウェイ。"
+      ]
+    },
     "mail:kAGQP9CSb_3d3Cg7eWq2GYBkrvU": {
       "diagram": "sequenceDiagram\nparticipant A as Agent\nparticipant RS as Bank resource\nparticipant AS as Authorization server\nA->>RS: payment request\nRS-->>A: approval needed with mandate_reason\nA->>AS: obtain approval\nRS->>RS: write signed hash-chained receipt",
       "first_seen": "2026-11-17",
@@ -936,6 +1031,29 @@
         "委任チェーンの検証者が、ユーザー由来の制約とエージェントが設定した制約を区別したい場合。"
       ]
     },
+    "mail:oPkIewx8BZUug4DnwFAiC8TTwP0": {
+      "diagram": "",
+      "first_seen": "2026-11-20",
+      "headline": "draft-williams-oauth-poi-core-01 adds consume-once admission, a typed attestation container and crash-recovery rules, and asks three design questions.",
+      "headline_ja": "draft-williams-oauth-poi-core-01 は、一度だけ消費される受理、型付き attestation コンテナ、クラッシュ復旧規則を加え、設計上の質問を三つ投げている。",
+      "id": "mail:oPkIewx8BZUug4DnwFAiC8TTwP0",
+      "kind": "mail",
+      "related": [],
+      "significance": "substantive",
+      "summary": "The author posted -01 of the Proof of Intent draft and asked for feedback on three open questions. First, whether PoI errors should use 403 only and whether PoI-Challenge and PoI-Envelope should adopt RFC 8941 Structured Fields. Second, whether to keep the parameterized application/poi+jwt;kind=... or register distinct +jwt subtypes so libraries can match typ by plain string. Third, the wire bindings, namely how initial KCT issuance is parameterized at the token endpoint, how oversized envelopes coexist with an API request body, how the RS returns the CIR, and which schema format governs editable_schema. Changes in -01 separate stateless evidence verification from atomic consume-once admission that fails closed. They add attestation: {format, token} with an IANA registry and profiles. They also require display of every raw_params member. Receipts are scoped to admission evidence, intent_id stays stable across reapproval, and the draft defines intent_outcome_unknown (409) and intent_rejected (422). An Implementation Status section is added.",
+      "summary_ja": "著者は Proof of Intent ドラフトの -01 を投稿し、未決の三点について意見を求めた。第一に、PoI のエラーを 403 のみにするか、また PoI-Challenge と PoI-Envelope に RFC 8941 Structured Fields を採用するか。第二に、パラメータ付きの application/poi+jwt;kind=... を維持するか、ライブラリが typ を単純な文字列で照合できるよう、別個の +jwt サブタイプを登録するか。第三に、ワイヤ上のバインディングである。具体的には、トークンエンドポイントで初回の KCT 発行をどうパラメータ化するか、大きすぎるエンベロープを API のリクエストボディとどう共存させるか、RS が CIR をどう返すか、editable_schema にどのスキーマ形式を適用するかである。-01 の変更点は、ステートレスな証拠検証と、障害時に拒否側へ倒れる原子的な一度限りの受理の分離である。attestation: {format, token} を IANA レジストリとプロファイルとともに追加し、raw_params の全メンバーの表示を必須とした。受領証は受理の証拠に範囲を限定し、intent_id は再承認後も維持される。あわせて intent_outcome_unknown (409) と intent_rejected (422) を定義し、Implementation Status セクションを追加した。",
+      "title": "Updated Draft: draft-williams-oauth-poi-core-01",
+      "updated_at": "2026-11-20T20:26:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/oPkIewx8BZUug4DnwFAiC8TTwP0/",
+      "use_cases": [
+        "A team building human-approval flows for agent actions that must prove the approved parameters match what was executed.",
+        "A resource server operator that needs replay-safe, consume-once admission of signed intent evidence, including during store outages."
+      ],
+      "use_cases_ja": [
+        "エージェントの操作に対する人間の承認フローを構築し、承認されたパラメータと実行内容が一致することを証明する必要があるチーム。",
+        "署名付きの意図の証拠を、ストア障害時も含めてリプレイ耐性のある一度限りの形で受理する必要があるリソースサーバーの運用者。"
+      ]
+    },
     "mail:r4KE4aYluE03Z7oQel0WMVgisgY": {
       "diagram": "sequenceDiagram\nparticipant C as Client\nparticipant A as Actor agent\nparticipant AS as Authorization server\nA-->>C: actor_proof signed with actor key\nC->>AS: token exchange with actor and actor_proof\nAS->>AS: verify proof, check any narrowing\nAS-->>C: token bound to actor key, marked not for client",
       "first_seen": "2026-11-16",
@@ -1007,6 +1125,36 @@
       "url": "https://mailarchive.ietf.org/arch/msg/oauth/sKLsD8nT9CNcvIldC_0An2bKQ2U/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:xeDwM6Q4xP2mZ5uSEbilXFKFHZI": {
+      "diagram": "",
+      "first_seen": "2026-11-20",
+      "headline": "A new RAR profile defines payment mandates and hash-chained receipts for agent payments, and a reviewer asks about unresolved outcomes.",
+      "headline_ja": "新しい RAR プロファイルがエージェント決済向けのペイメントマンデートとハッシュ連鎖の受領証を定義し、査読者が未解決の結果について質問している。",
+      "id": "mail:xeDwM6Q4xP2mZ5uSEbilXFKFHZI",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-hulea-wimse-agent-mandate",
+          "note": "Also defines verifiable mandates for agents, though the thread does not reference it. The link is topical only.",
+          "note_ja": "エージェント向けの検証可能なマンデートを定義する点で近いが、このスレッドは参照していない。主題上の関連にとどまる。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "new-proposal",
+      "summary": "Richard Craig posted draft-craig-oauth-rar-payment-mandates-00. It defines two RFC 9396 authorization details types, payment_mandate and single_payment, and an ordered set of reasons a payment falls outside a mandate. The reason is carried as a mandate_reason claim in draft-rosomakho-oauth-txn-challenge or an approval_required error. Each decision gets a signed, hash-chained receipt, with personal data kept as salted commitments outside the chain so it can be erased. He asked for review of the reason set, composition with the transaction challenge, and the receipt format. In a reply, Jiahui Miao praised that evaluation sits at the institution and that approvals are bound to the exact payment digest. They raised two questions. First, whether an unknown outcome should be an open item closed only by a later receipt with the same payment_id. Second, whether the receipt should record every reason that applied rather than only the first. No draft text changed in this thread.",
+      "summary_ja": "Richard Craig が draft-craig-oauth-rar-payment-mandates-00 を投稿した。RFC 9396 の authorization details タイプとして payment_mandate と single_payment を定義し、支払いがマンデートの範囲外となる理由を順序付きの集合として定める。理由は、draft-rosomakho-oauth-txn-challenge の mandate_reason クレーム、または approval_required エラーで伝える。各判断には署名付きでハッシュ連鎖した受領証が発行され、個人データは連鎖の外に salt 付きコミットメントとして保持されるため、消去できる。著者は、理由の集合、トランザクションチャレンジとの組み合わせ、受領証の形式について査読を求めた。Jiahui Miao は返信で、評価が金融機関側にあること、承認が支払い内容のダイジェストに結び付けられていることを評価した。そのうえで二点を質問した。一つは、結果が unknown の場合を、同じ payment_id を持つ後続の受領証でのみ閉じられる未完了項目と定めるべきか。もう一つは、受領証に最初の理由だけでなく該当した全理由を記録すべきか、である。このスレッドでドラフトの本文は変更されていない。",
+      "title": "New draft: RAR profile for agent payment mandates, approval reasons and receipts (draft-craig-oauth-rar-payment-mandates-00)",
+      "updated_at": "2026-11-20T20:26:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/xeDwM6Q4xP2mZ5uSEbilXFKFHZI/",
+      "use_cases": [
+        "A bank or payment institution letting an AI agent pay named suppliers within per-payment and per-period limits, with step-up approval beyond them.",
+        "A procurement system that needs dispute-ready evidence of what was decided, including when the payment outcome was unknown."
+      ],
+      "use_cases_ja": [
+        "AI エージェントに、一回あたりと期間ごとの上限の範囲内で指定の仕入先へ支払わせ、上限を超える場合は追加承認を求める銀行や決済事業者。",
+        "支払い結果が unknown だった場合も含め、何を判断したかについて紛争に使える証拠を必要とする調達システム。"
+      ]
     },
     "mail:y_IZYbPS71qPIJl8Jgxr2IyEfRE": {
       "diagram": "flowchart LR\nR[Root token DT_0 signed by trust anchor, carries del_bind and cnf key K1] --> H1[Hop 1 signed with K1, iss is root client_id, cnf key K2]\nH1 --> H2[Hop 2 signed with K2, iss is hop 1 client_id]",
