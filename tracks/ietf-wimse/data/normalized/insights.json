@@ -1,11 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-12T07:16:09+00:00",
-      "text": "The WIMSE list had three agent-delegation threads and no new WG draft text. The most concrete is the AIMS/MBA thread, which moves to an exclusive \"at-or-past\" time-boundary convention. The other two threads are about act-claim revocation wording and a user-issued delegation root with its status.",
-      "text_ja": "WIMSEのメーリングリストではエージェント委任に関する三つのスレッドが動いたが、WGドラフトの本文変更はない。最も具体的なのはAIMS/MBAのスレッドで、時間境界を「at-or-past」(排他的)に統一する方向になった。残る二つは、act クレームと失効に関する文言の修正、およびユーザー発行ルートとそのステータスの扱いである。"
-    },
-    {
       "at": "2026-11-13T06:50:52+00:00",
       "text": "The WIMSE list this run had no new draft text: discussion of agent delegation and revocation in draft-ietf-wimse-aims and related drafts, plus IETF 127 hackathon interop scenarios for agent call chains. The main takeaway is that revocation and fail-closed behaviour are becoming the shared test target.",
       "text_ja": "今回は新しいドラフト本文の変更はなく、draft-ietf-wimse-aims と関連ドラフトにおけるエージェント委任と失効の議論、および IETF 127 ハッカソンのエージェント呼び出しチェーン相互運用シナリオが中心だった。失効とフェイルクローズの挙動が共通のテスト対象になりつつある点が要点である。"
@@ -79,6 +74,11 @@
       "at": "2026-11-19T20:42:12+00:00",
       "text": "The WIMSE list this run was all discussion, no WG draft changes: the AER-1 mapping reached -03 to separate \"denied\" from \"not_evaluated\" in audit records, and agent-token draft authors compared how they track budgets and depth limits.",
       "text_ja": "今回の WIMSE メーリングリストは議論のみで、WG ドラフト本文の変更はなかった。AER-1 マッピングが -03 となり監査記録で \"denied\" と \"not_evaluated\" を分離した。またエージェントトークン系ドラフトの著者間で、予算の追跡方法と深さ制限の比較が行われた。"
+    },
+    {
+      "at": "2026-11-20T07:21:47+00:00",
+      "text": "Two mailing-list threads, both about checking agent status from outside the trust domain (AIMS revocation and a public registry). There were no draft text changes. The discussion is exploratory, with proposals from individual and vendor participants.",
+      "text_ja": "メーリングリストの議論が二件あり、いずれも信頼ドメイン外からのエージェント状態確認（AIMS の失効や公開レジストリ）を扱っている。ドラフト本文の変更はなく、個人や事業者による探索的な提案にとどまる。"
     }
   ],
   "items": {
@@ -453,6 +453,36 @@
         "支払いの前に人またはポリシーによる承認を必要とし、承認された金額の範囲でのみ実行するエージェントの場合。"
       ]
     },
+    "mail:A9BmP2ORAS19NSKgV_IqiAqPjXk": {
+      "diagram": "sequenceDiagram\n participant A as Agent\n participant R as Receiver\n participant D as DNS\n participant AS as Operator AS\n A->>R: fresh access token\n R->>D: lookup _agent-oauth.agent-name\n D-->>R: issuer and client_id\n R->>AS: fetch issuer published keys\n R->>R: validate token against record and keys",
+      "first_seen": "2026-11-20",
+      "headline": "A reply to a draft-ietf-wimse-aims-01 question proposes a DNS-based pointer so unrelated parties can check an agent's status.",
+      "headline_ja": "draft-ietf-wimse-aims-01 への質問に対し、無関係な第三者がエージェントの状態を確認できる DNS ベースのポインタが提案された。",
+      "id": "mail:A9BmP2ORAS19NSKgV_IqiAqPjXk",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-status-list",
+          "note": "Also addresses publishing revocation status for tokens or credentials; the thread's proposal instead uses DNS and the operator's AS as the status source.",
+          "note_ja": "トークンや資格情報の失効状態の公開を扱う点で近いが、本スレッドの提案は DNS と運営者の認可サーバーを状態の情報源とする。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "A thread asked whether draft-ietf-wimse-aims-01 should cover status checks by a party with no relationship to the issuer, allow a pointer from an identifier to its status source in Section 6, and cover transfer of an agent between accountable parties. The reply points to an individual draft, draft-shankarlingam-oauth-agent-dns-link. In it the agent presents a fresh access token for its OAuth client, and the receiver validates it against a DNS record at _agent-oauth.&lt;agent-name&gt; and the issuer's published keys. The record names the issuer and client_id, so it points to the operator's authorization server as the status authority. Revocation is done by disabling the client, and receivers bound the rejection delay using token age, DNS and key caching, and clock skew. The author admits there is no public history of past status, and offers to propose Section 6 text. The original poster also disclosed a pending patent application. The third question, on transfer between accountable parties, was not answered in this message.",
+      "summary_ja": "あるスレッドで、draft-ietf-wimse-aims-01 が発行者と関係のない第三者による状態確認を対象とするか、Section 6 で識別子から状態参照先へのポインタを許すか、エージェントの責任主体間の移転を扱うかが問われた。返信は個人ドラフト draft-shankarlingam-oauth-agent-dns-link を示している。そこではエージェントが自身の OAuth クライアントの新しいアクセストークンを提示し、受信側が _agent-oauth.&lt;agent-name&gt; の DNS レコードと発行者の公開鍵に照らして検証する。レコードは issuer と client_id を示すため、状態の権威である運営者の認可サーバーを指す。失効はクライアントの無効化で行い、受信側はトークンの経過時間、DNS と鍵のキャッシュ、クロックずれから拒否までの遅延を見積もる。過去の状態の公開履歴は得られないという制約も認められている。著者は Section 6 向けの文案提出を申し出ている。元の質問者は特許出願中である旨も開示した。第三の質問（責任主体間の移転）には、このメッセージでは答えていない。",
+      "title": "AIMS question: checking agent status from outside the trust domain",
+      "updated_at": "2026-11-20T07:21:47+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/A9BmP2ORAS19NSKgV_IqiAqPjXk/",
+      "use_cases": [
+        "A bank needs to confirm that an AI agent acting for a customer is still authorized by its operator, with no prior trust relationship with the operator.",
+        "An AIMS implementer wants a standard way to find the authoritative status source from an agent identifier."
+      ],
+      "use_cases_ja": [
+        "銀行が、運営者との事前の信頼関係なしに、顧客のために動く AI エージェントが運営者から今も認可されているかを確認する場合。",
+        "AIMS の実装者が、エージェント識別子から権威ある状態参照先を見つける標準的な方法を必要とする場合。"
+      ]
+    },
     "mail:AUUcqnfZO9c5WXckMA3dNhJp8lE": {
       "diagram": "",
       "first_seen": "2026-11-19",
@@ -581,29 +611,6 @@
       "use_cases_ja": [
         "失効情報源やステータス源が停止中に拒否するポリシーポイントを持つ AIMS 実装で、その拒否が実際のポリシー評価ではなかったことを監査担当者に示す場合。",
         "Section 11 のイベントを再構成する際に、ポリシーによる拒否と fail-closed による障害起因の拒否を監査ログの検証者が区別する場合。"
-      ]
-    },
-    "mail:Gu4rPKixfcCaSPlMWxHUeP9PWs4": {
-      "diagram": "",
-      "first_seen": "2026-11-12",
-      "headline": "Credential-delegation -03 will cover cumulative-budget tally limits and a status location for user-issued grants.",
-      "headline_ja": "credential-delegation の-03では、累積予算の集計の限界と、ユーザー発行グラントのステータス所在を扱う予定である。",
-      "id": "mail:Gu4rPKixfcCaSPlMWxHUeP9PWs4",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Caleb accepts Kieran's review points 1, 4 and 6 and the jti-as-root shape for composing a user-issued root with the chain format. For -03 he agrees a tally held at each verifier bounds the total per verifier, not across verifiers, so a cumulative budget needs a single writer that sees every exercise. He also accepts the status gap: since a user cannot run a status endpoint, the grant must name where its status lives, and he will bring text. Quoted earlier, Rob suggests keeping who minted the root separate from evidence that a person approved it, and asks Section 7 to say what verifiers see for actions during a suspension and whether a restored delegation is the same grant; Kieran notes -02 Section 7 covers revocation only.",
-      "summary_ja": "CalebはKieranのレビュー項目1、4、6と、ユーザー発行ルートをチェーン形式と組み合わせるjti-as-rootの形を受け入れた。-03に向けて、検証者ごとに保持する集計は検証者単位の合計しか制限せず、全体では制限できないため、累積予算には全ての行使を見る単一の書き込み元が必要であることに同意している。また、ユーザーはステータスエンドポイントを運用できないため、グラントがステータスの所在を示す必要があるという指摘も認め、本文を用意するとしている。引用された先行メッセージでは、Robがルートの発行者と、人が承認したことの証拠を分けるよう提案し、Section 7に停止中の行為を検証者がどう見るか、復旧した委任が同一のグラントかを記すよう求めた。Kieranは-02のSection 7は失効のみを扱うと述べている。",
-      "title": "draft-sweeney-wimse-credential-delegation-02",
-      "updated_at": "2026-11-12T07:16:09+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/Gu4rPKixfcCaSPlMWxHUeP9PWs4/",
-      "use_cases": [
-        "Building a delegated-credential service that enforces a cumulative spending or call budget across several verifiers.",
-        "Issuing a delegation root directly from a user, where there is no server to host a status endpoint."
-      ],
-      "use_cases_ja": [
-        "複数の検証者にまたがる累積の支出や呼び出し予算を強制する委任クレデンシャルサービスを構築する場合。",
-        "ステータスエンドポイントを置くサーバーがない、ユーザー直接発行の委任ルートを発行する場合。"
       ]
     },
     "mail:IFO_WULHQKHZDVdVwKWc_V_fIRQ": {
@@ -898,31 +905,6 @@
       "use_cases": [],
       "use_cases_ja": []
     },
-    "mail:XDzEijPg8qT_4X4u7Yl11PHU5og": {
-      "diagram": "",
-      "first_seen": "2026-11-12",
-      "headline": "Thread on multi-hop delegation settles on an exclusive at-or-past rule for state age and permit expiry.",
-      "headline_ja": "複数ホップ委任のスレッドで、状態の経過時間と許可の有効期限に排他的な「at-or-past」規則を使う方向で合意した。",
-      "id": "mail:XDzEijPg8qT_4X4u7Yl11PHU5og",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Mikhail agrees to change his 23 October example to exclusive limits: state whose age equals S is stale, and a permit is unusable at or after its expiry; issuance needs a permit deadline later than issuance time. With S enforced at final issuance and permit lifetime bounded by L, new admissions are bounded strictly before original as-of + S + L (assuming zero skew and grace), though completion of already-admitted work is not bounded. Re-running the harness against MBA at commit ea1a149 gives 15 of 22 cases agreeing and 7 differing, where MBA compares inclusively at equality; he calls these differences from the convention, not defects. In the quoted message Marc asks Kieran to confirm that a transcribed delegated-subject value across a trust domain is acceptable if the transcription (old value, new value, server identity) is in the server's tamper-evident audit record, and proposes two changes on PR #176.",
-      "summary_ja": "Mikhailは10月23日の例を排他的な限界値に改めることに同意した。すなわち、経過時間がSに等しい状態は古いものとして扱い、許可は有効期限の時点以降は使えず、発行には発行時刻より後の許可期限が必要である。最終発行時点でSを強制し、許可の有効期間をLで制限すれば、ゼロのクロックスキューと猶予を仮定して、新規の受理は元のas-of + S + Lより厳密に前に限られる。ただし受理済みの作業の完了は制限されない。MBAのコミットea1a149に対して同じハーネスを再実行すると22件中15件が一致し7件が異なった。差異はMBAが等値を包含的に比較する箇所にあり、欠陥ではなく規約との違いだと述べている。引用されたMarcのメッセージでは、信頼ドメインをまたぐ際に委任された主体の値を変換して記録する場合、変換前後の値とサーバーの識別子を改ざん検知可能な監査記録に残せばよいかをKieranに確認し、PR #176への二つの修正を提案している。",
-      "title": "Subject: AIMS-00: multi-hop delegation context across agent, tool and resource boundaries",
-      "updated_at": "2026-11-12T07:16:09+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/XDzEijPg8qT_4X4u7Yl11PHU5og/",
-      "use_cases": [
-        "Implementing permit or mission-bound authorization expiry checks, where the boundary instant (equal to expiry) must be treated as expired.",
-        "Writing test vectors for staleness and expiry so that independent implementations agree at equality.",
-        "Deciding how a server records a subject identifier it rewrites when a request crosses a trust domain."
-      ],
-      "use_cases_ja": [
-        "許可やミッション束縛認可の期限検査を実装する際、有効期限と等しい時点を期限切れとして扱う必要がある場合。",
-        "古さと期限のテストベクターを書き、独立した実装が等値の境界で同じ結果になるようにする場合。",
-        "リクエストが信頼ドメインをまたぐ際にサーバーが書き換える主体識別子をどう記録するかを決める場合。"
-      ]
-    },
     "mail:ZC-4gmGfFfj8EEK0JxAx_qduOCo": {
       "diagram": "",
       "first_seen": "2026-11-17",
@@ -1089,6 +1071,29 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "mail:k1ywYY7Ib2dBilB2KSDYRhuSZqM": {
+      "diagram": "",
+      "first_seen": "2026-11-20",
+      "headline": "The author of draft-molas-agent-principal-refs-00 explains how a public agent registry would be graded against properties P5 and P6.",
+      "headline_ja": "draft-molas-agent-principal-refs-00 の著者が、公開エージェントレジストリを性質 P5 と P6 に照らしてどう評価するかを説明した。",
+      "id": "mail:k1ywYY7Ib2dBilB2KSDYRhuSZqM",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "A participant running a public agent registry (a code, a date, active or revoked status, free lookup without an account) asked how it would be evaluated in draft-molas-agent-principal-refs-00. The author replied that P6 can be met if the withdrawal event and the time from it to the status change are stated, with the bound running from the event. They distinguished per-agent status from the principal's standing, meaning whether the accountable party behind the agent is still accepted. A registry carrying the second separately is the case that none of the five evaluated drafts bounds. On P5, a lookup by code sends a per-record value, so P5 is not met on that path. P5 is not a disqualifier, since properties are graded individually. If the lookup were the only status path, the grade would be Prevents. Publishing the whole list or a commitment to it would let a relying party avoid naming a record. The author evaluates only Internet-Drafts, so a deployment would need to be described in a draft before it is listed in Appendix A of -01. A third message suggests a SCITT (RFC 9943) Trust Registry could help, and links an article.",
+      "summary_ja": "公開エージェントレジストリ（コード、日付、active または revoked の状態、アカウント不要の無料照会）を運用する参加者が、draft-molas-agent-principal-refs-00 での評価を尋ねた。著者は、撤回イベントとそこから状態変更までの時間が明示され、その上限がイベント時点から計られるなら P6 を満たせると答えた。また、エージェント単位の状態と、エージェントの背後にある責任主体が今も受け入れられているかという主体の地位（standing）を区別した。後者を別個に担うレジストリは、評価対象の 5 つのドラフトのいずれも上限を設けていないケースにあたる。P5 については、コードによる照会はレコード固有の値を送るため、その経路では P5 を満たさない。ただし各性質は個別に評価されるので失格にはならない。照会が唯一の状態確認経路であれば評価は Prevents になる。一覧全体またはそのコミットメントを公開すれば、受信側はレコードを指定せずに取得できる。著者が評価するのは Internet-Draft のみであり、実運用の仕組みは Internet-Draft に記述されて初めて -01 の Appendix A に載せられる。三通目では SCITT (RFC 9943) の Trust Registry が役立つ可能性が示され、記事へのリンクが付されている。",
+      "title": "draft-molas-agent-principal-refs-00 - public registry as a case? (3 new messages)",
+      "updated_at": "2026-11-20T07:21:47+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/k1ywYY7Ib2dBilB2KSDYRhuSZqM/",
+      "use_cases": [
+        "A registry operator wants to know whether a lookup-by-code design would pass privacy properties such as P5 in the evaluation.",
+        "A draft author deciding whether to publish a registry description as an Internet-Draft so it can be evaluated."
+      ],
+      "use_cases_ja": [
+        "レジストリ運営者が、コードによる照会方式が評価で P5 などのプライバシー性質を満たすかを知りたい場合。",
+        "ドラフト著者が、評価対象になるようレジストリの記述を Internet-Draft として公開すべきか判断する場合。"
+      ]
+    },
     "mail:mZYP9JeCKECx5uPLLcvsAbthxNg": {
       "diagram": "",
       "first_seen": "2026-11-15",
@@ -1154,36 +1159,6 @@
         "AIMS に沿ってエージェントの行為の監査証跡を構築する運用者が、保存された承認がシステムによる説明なのか、本人に帰属する記録なのかを知りたい場合。"
       ]
     },
-    "mail:zDPvc_Mm39RS_-26njTvkhjfv6w": {
-      "diagram": "flowchart LR\nA[Token with nested act claims] --> B[Serving party reads top-level claims and current actor only]\nC[Delegation chain tokens] --> D[Verify each hop]\nD --> E[Check status list answer]\nE -->|any token revoked| F[Deny]",
-      "first_seen": "2026-11-12",
-      "headline": "Mikhail asks the evidence-binding authors to reword claims that a serving party cannot refuse a call over a suspended prior actor.",
-      "headline_ja": "Mikhailは、過去のアクターが停止されたことを理由に呼び出しを拒否できないとする記述の修正を、エビデンス束縛ドラフトの著者に求めた。",
-      "id": "mail:zDPvc_Mm39RS_-26njTvkhjfv6w",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-ietf-oauth-status-list",
-          "note": "The delegation-chain draft's status references and freshness window are checked against a status list answer.",
-          "note_ja": "委任チェーンドラフトのステータス参照と鮮度は、ステータスリストの応答に対して確認される。",
-          "track": "oauth-wg"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "Kieran has accepted that RFC 8693 Section 4.1 keeps prior actors in nested act claims out of access-control decisions, and the authors will take that reading in -02. Mikhail notes the SCITT -02 text still says a Serving Party cannot refuse a call because a prior actor was suspended. He points out that separately verified delegation tokens give another basis: a chain in the draft-asor-wimse-agent-delegation-chain-03 format is verified hop by hop, and step 7 denies when an accepted status answer marks any token revoked, within the status list freshness window. He suggests wording limited to refusal on the basis of nested act claims, and rewording the phrase that history is neither complete nor evidence.",
-      "summary_ja": "KieranはRFC 8693 Section 4.1により、入れ子のactクレーム内の過去のアクターはアクセス制御の判断に使えないという読みを認め、著者は-02でこれを取り入れるとしている。Mikhailは、SCITT -02の本文が依然として、過去のアクターが停止されたことを理由にServing Partyが呼び出しを拒否できないと記している点を指摘した。別途検証された委任トークンは別の根拠となる。draft-asor-wimse-agent-delegation-chain-03形式のチェーンはホップごとに検証され、ステップ7では、受け入れたステータス応答がいずれかのトークンを失効としていれば、ステータスリストの鮮度の範囲内で拒否される。そこで、拒否できないのは入れ子のactクレームに基づく場合に限るという文言と、履歴が完全でも証拠でもないという表現の修正を提案している。",
-      "title": "New I-D: draft-thaha-wimse-agent-evidence-binding-00 (evidence binding for AIMS audit)",
-      "updated_at": "2026-11-12T07:16:09+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/zDPvc_Mm39RS_-26njTvkhjfv6w/",
-      "use_cases": [
-        "Designing an audit or serving-party policy for multi-hop agent calls where an upstream actor is later suspended.",
-        "Choosing whether per-hop authority is checked from act claims (attribution only) or from separately verified delegation tokens with status references."
-      ],
-      "use_cases_ja": [
-        "上流のアクターが後から停止される、複数ホップのエージェント呼び出しの監査やServing Partyのポリシーを設計する場合。",
-        "ホップごとの権限を、act クレーム(帰属のみ)から確認するか、ステータス参照を持つ別途検証された委任トークンから確認するかを選ぶ場合。"
-      ]
-    },
     "mail:zFrXzOgjgybe9xQ2TrVTyb7Z7uU": {
       "diagram": "",
       "first_seen": "2026-11-18",
@@ -1244,12 +1219,6 @@
   },
   "overflow": [],
   "triage": {
-    "Diff active WG draft: draft-ietf-wimse-aims-01": {
-      "date": "2026-11-19",
-      "priority": "high",
-      "reason": "A practitioner raised open scope questions on cross-domain status checks, identifier pointers and accountable-party transfer in aims-01.",
-      "reason_ja": "実務者が aims-01 について、ドメイン間の状態確認、識別子からのポインター、責任主体の移転という範囲の疑問を提起した。"
-    },
     "Diff active WG draft: draft-ietf-wimse-arch-09": {
       "date": "2026-11-17",
       "priority": "high",
