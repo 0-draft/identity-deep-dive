@@ -1,11 +1,11 @@
-# OAuth WG Backlog (2026-11-20)
+# OAuth WG Backlog (2026-11-21)
 
-- generated_at_utc: `2026-11-20T20:25:31+00:00`
+- generated_at_utc: `2026-11-21T07:13:52+00:00`
 
 - [ ] `draft-ietf-oauth-sd-jwt-vc` score=118 updated=2026-11-16T10:45:13Z
 - [ ] `draft-ietf-oauth-status-list` score=90 updated=2026-11-19T02:42:34Z
 - [ ] `draft-ietf-oauth-rfc8725bis` score=90 updated=2026-11-17T15:06:04Z
-- [ ] `draft-ietf-oauth-identity-chaining` score=73 updated=2026-11-12T02:07:35Z
+- [ ] `draft-ietf-oauth-identity-chaining` score=75 updated=2026-11-12T02:07:35Z
 - [ ] `draft-ietf-oauth-client-id-metadata-document` score=73 updated=2026-11-02T22:02:56Z
 - [ ] `draft-ietf-oauth-identity-assertion-authz-grant` score=73 updated=2026-10-31T00:32:39Z
 - [ ] `draft-ietf-oauth-first-party-apps` score=72 updated=2026-08-26T14:40:16Z
@@ -24,7 +24,7 @@
 
 Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.
 
-- **high** `draft-ietf-oauth-client-id-metadata-document`: Active debate on whether fetch-hardening (headers, proxying) belongs normatively in the draft.
+- **high** `draft-ietf-oauth-client-id-metadata-document`: An implementation report led to a planned issue on §6.2 cache wording plus open suggestions on DNS rebinding, timeouts and RFC 8252.
 - **high** `draft-ietf-oauth-identity-assertion-authz-grant`: New issue #161 reports a conflict between the §4.3.3 and §4.5 rules, and #121 was closed this week.
 - **low** `draft-ietf-oauth-status-list`: Only cited in list feedback as a preferred chain-status mechanism, with no change to the draft.
 - **low** `draft-ietf-oauth-transaction-tokens`: Mentioned only as one possible delegation credential in the PACE draft announcement.

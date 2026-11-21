@@ -1,11 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-13T06:50:52+00:00",
-      "text": "The main item is the draft-le-agent-passport-00 thread. The author set out per-constraint subsumption rules for -01 and agreed to compare them with other delegation drafts before IETF 127. The only other change is an authorship-ordering PR on OAuth 2.1.",
-      "text_ja": "最も重要なのは draft-le-agent-passport-00 のスレッドである。著者が -01 向けの制約種別ごとの包含規則を示し、IETF 127 前に他の委任ドラフトと比較することに同意した。ほかには OAuth 2.1 の著者表記に関する PR が一件あるのみである。"
-    },
-    {
       "at": "2026-11-14T18:08:33+00:00",
       "text": "One item: an IANA early review of draft-ietf-oauth-deferred-token-response-01 asking for clarifications to the IANA Considerations. No protocol change.",
       "text_ja": "IANAが draft-ietf-oauth-deferred-token-response-01 の早期レビューを送り、IANA Considerations の明確化を求めた。プロトコルの変更はない。"
@@ -64,6 +59,11 @@
       "at": "2026-11-20T20:26:50+00:00",
       "text": "Nothing substantive in specs today. The main thread is scope for an OAuth actor-delegation adoption: McGuinness favors a narrow Actor Profile base with provenance and selective disclosure as follow-on work, while the Actor Chain authors want selective disclosure in the first draft. There were also several new individual proposals.",
       "text_ja": "仕様本体に実質的な変更はない。主な議論は、アクター委譲の採用範囲である。McGuinness は、基本の Actor Profile を狭く保ち、来歴証明と選択的開示は後続作業とする案を支持している。一方、Actor Chain の共著者は、最初の文書に選択的開示を含めるよう求めている。このほか、個人提案の新規ドラフトが複数投稿された。"
+    },
+    {
+      "at": "2026-11-21T07:15:03+00:00",
+      "text": "An implementation report on draft-ietf-oauth-client-id-metadata-document led to a concrete issue about cache-lifetime wording in -03 §6.2. The actor-delegation thread (Actor Chain vs Actor Profile) continues toward an adoption call, and a new individual draft on brokered authorization appeared.",
+      "text_ja": "draft-ietf-oauth-client-id-metadata-document の実装報告から、-03 §6.2 のキャッシュ期間の文言に関する具体的な issue が起こされた。Actor Chain と Actor Profile の比較議論は採用の呼びかけに向けて続いており、ブローカー型認可の新しい個人ドラフトも投稿された。"
     }
   ],
   "items": {
@@ -208,6 +208,31 @@
         "TLS を終端し Host を書き換える可能性のあるゲートウェイ越しに JSON-RPC（A2A、MCP）をやり取りするエージェント。",
         "証明を結び付ける HTTP リクエストが存在しない WebSocket や Media over QUIC を使うワークロード。",
         "呼び出し側と受信側のリクエスト記録が同じ値にコミットする必要があるシステム。"
+      ]
+    },
+    "mail:7v7AHvCv5o_7x7nWWHA62k7Qipw": {
+      "diagram": "",
+      "first_seen": "2026-11-21",
+      "headline": "An implementer's review of the Client ID Metadata Document draft ends with one issue on cache-lifetime wording and a few open suggestions.",
+      "headline_ja": "Client ID Metadata Document ドラフトの実装者レビューは、キャッシュ期間の文言に関する issue 一件と、いくつかの未決の提案で終わった。",
+      "id": "mail:7v7AHvCv5o_7x7nWWHA62k7Qipw",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "In a follow-up to an implementation report, Sean MacGuire withdrew several earlier points (RFC 3986 §6.2.1 string comparison already covers URL comparison, and the per-host documents were a deployment choice, not a draft requirement). Sean will open an issue for item 4: -03 §6.2 applies the minimum cache lifetime only when none is otherwise indicated, so no-store and max-age=0 fall outside it, and the issue proposes the same 'regardless' wording the maximum already has. Remaining suggestions: mention DNS rebinding (the address check must hold for the address actually connected to) and a fetch timeout in the fetch-safety text, and add a pointer to RFC 8252 for native clients, since redirect_uris is where the AS learns a native scheme. Emelia noted the OWASP SSRF cheat sheet already covers DNS rebinding, and said the AS should read the document's scope and intersect it with what it is willing to grant.",
+      "summary_ja": "実装報告へのフォローアップで Sean MacGuire は、先に挙げた複数の指摘を取り下げた（RFC 3986 §6.2.1 の単純な文字列比較で URL 比較は足りること、ホストごとの文書はデプロイ上の選択でありドラフトの要件ではないこと）。項目 4 については issue を起こす予定である。-03 §6.2 は最小キャッシュ期間を「他に指定がない場合」にのみ適用するため no-store と max-age=0 が対象外となり、issue は最大値に既にある「regardless」と同じ文言を提案している。残る提案は、取得時の安全性の記述に DNS rebinding（接続した実際のアドレスでも検査が成り立つこと）と取得タイムアウトを加えること、およびネイティブクライアント向けに RFC 8252 への参照を加えることである。redirect_uris は認可サーバーがネイティブのスキームを知る場所だからである。Emelia は、DNS rebinding は OWASP の SSRF チートシートで既に扱われていること、また認可サーバーは文書内の scope を読み、許可する範囲との積集合を取るべきことを述べた。",
+      "title": "Implementation report:draft-ietf-oauth-client-id-metadata-document at an AS serving native apps and MCP clients",
+      "updated_at": "2026-11-21T07:15:03+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/7v7AHvCv5o_7x7nWWHA62k7Qipw/",
+      "use_cases": [
+        "An AS operator fetching client metadata documents who wants to know how no-store or max-age=0 responses should be cached under -03 §6.2.",
+        "An implementer hardening the metadata-document fetcher against SSRF, including DNS rebinding and timeouts.",
+        "A native-app vendor publishing a metadata document whose redirect_uris use private-use URI schemes."
+      ],
+      "use_cases_ja": [
+        "-03 §6.2 のもとで no-store や max-age=0 の応答をどうキャッシュすべきかを知りたい、クライアントメタデータ文書を取得する認可サーバーの運用者。",
+        "DNS rebinding やタイムアウトを含め、メタデータ文書の取得処理を SSRF に対して堅牢にする実装者。",
+        "private-use URI スキームの redirect_uris を持つメタデータ文書を公開するネイティブアプリの提供者。"
       ]
     },
     "mail:ALY4dNyHGE97WD8kZ0bKPYxwtOk": {
@@ -383,48 +408,29 @@
       "use_cases": [],
       "use_cases_ja": []
     },
-    "mail:J309gZABiOnSsvebrwYUWTi1Aow": {
-      "diagram": "",
-      "first_seen": "2026-11-13",
-      "headline": "Agent Passport author spells out -01 rules for cumulative limits, RAR grants and per-constraint attenuation of delegation receipts.",
-      "headline_ja": "Agent Passport の著者が、累積上限・RAR による付与・制約種別ごとの委任レシート縮小規則について -01 の方針を示した。",
-      "id": "mail:J309gZABiOnSsvebrwYUWTi1Aow",
+    "mail:J7ih2WjufFDRkrWdwNdHpQiAh-M": {
+      "diagram": "sequenceDiagram\nparticipant C as Client\nparticipant AS as Authorization server\nparticipant G as Gateway\nC->>AS: select profile the AS advertises\nC->>AS: token exchange to extend the chain\nAS->>AS: keep subject and nest prior actors under new act\nAS-->>C: signed successor JWT access token\nC->>G: present token\nG->>G: validate act chain per profile",
+      "first_seen": "2026-11-21",
+      "headline": "The Actor Chain authors reply to Actor Profile and recommend their draft as the WG's starting text for delegation in JWT access tokens.",
+      "headline_ja": "Actor Chain の著者らが Actor Profile に応答し、JWT アクセストークンにおける委任の出発点として自分たちのドラフトを推している。",
+      "id": "mail:J7ih2WjufFDRkrWdwNdHpQiAh-M",
       "kind": "mail",
-      "related": [
-        {
-          "name": "draft-asor-wimse-agent-delegation-chain",
-          "note": "Named in the thread as having its own subsumption rule to compare against.",
-          "note_ja": "スレッドで、比較対象となる独自の包含規則を持つドラフトとして挙げられている。",
-          "track": "ietf-wimse"
-        },
-        {
-          "name": "draft-hulea-wimse-agent-mandate",
-          "note": "Named in the thread (as Hulea) among the drafts whose attenuation rules are to be compared.",
-          "note_ja": "スレッドで、縮小規則の比較対象として Hulea の名で挙げられている。",
-          "track": "ietf-wimse"
-        },
-        {
-          "name": "draft-sweeney-wimse-credential-delegation",
-          "note": "Kieran Sweeney, who replies in the thread, authors this credential delegation draft. This is an inference from the author name only.",
-          "note_ja": "スレッドで返信している Kieran Sweeney が著者の委任ドラフトである。著者名のみに基づく推定である。",
-          "track": "ietf-wimse"
-        }
-      ],
-      "significance": "new-proposal",
-      "summary": "In reply to Kieran Sweeney, Ben Le says -01 will require a receipt with a cumulative limit to name exactly one relying party, which alone counts for the receipt and all its children. A limit without a single named party will be invalid. Sharing a total across relying parties is out of scope, and whether another party in the call path could keep the total is left open. He will define an RFC 9396 authorization_details type for grants so an authorization server that supports RAR can issue root receipts directly, while Token Exchange remains the path for an agent that obtains a receipt using its passport as actor token. He also gives a per-constraint subsumption table (host, port, methods, paths, tools, max_body_bytes, max_calls, max_spend, exp, aud). A child attenuates its parent only if every rule holds, unknown members are rejected, and anything not comparable is rejected. -01 has only a fixed limit of 8 receipts per chain and no depth claim. He plans to join Niki's comparison side meeting on 16 November and hold his own on 17 November, ahead of IETF 127.",
-      "summary_ja": "Ben Le は Kieran Sweeney への返信で、-01 では累積上限を持つレシートは依拠当事者を一つだけ指名しなければならず、その当事者がレシートとすべての子レシートの合計を単独で数えると述べた。単一の指名がない上限付きレシートは無効となる。複数の依拠当事者間で合計を共有することは対象外であり、呼び出し経路上の他の当事者が合計を保持する可能性は未決である。付与には RFC 9396 の authorization_details タイプを定義し、RAR 対応の認可サーバーがルートレシートを直接発行できるようにする。エージェントがパスポートをアクタートークンとしてレシートを得る場合は Token Exchange を使い続ける。さらに制約種別ごとの包含規則表(host、port、methods、paths、tools、max_body_bytes、max_calls、max_spend、exp、aud)を示した。子が親を縮小したといえるのはすべての規則を満たす場合のみであり、未知のメンバーや比較できないものは拒否される。-01 にはチェーン当たり 8 レシートという固定上限のみがあり、深さのクレームはない。IETF 127 に先立ち、11月16日の Niki 主催のサイドミーティングに参加し、17日に自身のサイドミーティングを開く予定である。",
-      "title": "New draft: Agent Passports and Delegation Receipts (draft-le-agent-passport-00) (2 new messages)",
-      "updated_at": "2026-11-13T06:50:52+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/J309gZABiOnSsvebrwYUWTi1Aow/",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Prasad, for the Actor Chain coauthors, says its declared-full profile already gives the simple issuer-asserted baseline Karl describes: the AS keeps the subject, nests prior actors under the new actor's issuer-qualified act entry and signs the successor token. On the bank-gateway example (show initiator and connector, hide a screening service), he argues Actor Profile requires carrying forward an actor already named in the inbound act, so the exchange would be rejected, and a disclosure extension would have to allow omission; Actor Chain's declared-subset permits it, and verified-subset can add original signed requests and AS acceptances. Actor Chain has six profiles (two assurance choices times three disclosure choices) selected by the client from those the AS advertises. They report independent Python and Node.js validators agreeing on accept and reject tests, and recommend Actor Chain as the starting text, led by a concise declared-full section. Quoted earlier messages show Karl wanting a base without provenance proofs or selective disclosure, with provenance as a later profile, and Ramki agreeing to test that compatibility. The message is truncated.",
+      "summary_ja": "Actor Chain の共著者を代表して Prasad は、declared-full プロファイルが Karl の述べる発行者主張のみの基本形を既に提供していると述べる。認可サーバーが subject を保持し、先行する actor を新しい actor の issuer 修飾付き act エントリの下に入れ子にして、後続のトークンに署名する。銀行ゲートウェイの例（initiator と connector を見せ、審査サービスは隠す）については、Actor Profile は受信した act が既に挙げる actor の引き継ぎを要求するため交換は拒否され、省略を許すには開示拡張が必要になると論じる。Actor Chain の declared-subset はこれを許し、verified-subset は元の署名付きリクエストと認可サーバーの受理記録を加えられる。Actor Chain は保証の選択肢二つと開示の選択肢三つによる六つのプロファイルを持ち、クライアントが認可サーバーの公開するものから選ぶ。Python と Node.js の独立した検証実装が同じ受理・拒否テストで一致したことを報告し、簡潔な declared-full の節を先頭に置く形で Actor Chain を出発点として推奨している。引用された過去のメッセージでは、Karl は出所証明や選択的開示を含まない基本仕様と、後続のプロファイルとしての出所証明を望み、Ramki はその互換性の検証に賛同している。メッセージは途中で切れている。",
+      "title": "Comparing Actor Chain and Actor Profile before an adoption call",
+      "updated_at": "2026-11-21T07:15:03+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/J7ih2WjufFDRkrWdwNdHpQiAh-M/",
       "use_cases": [
-        "An authorization server that already supports RAR could issue root delegation receipts for agents using a new authorization_details type.",
-        "A relying party enforcing a cumulative spend or call cap on an agent chain must be the one named counter in the receipt.",
-        "Implementers of several agent delegation drafts can use the per-constraint attenuation table as a basis for shared test vectors."
+        "An AI-agent gateway that must give a downstream service an actor history while keeping an internal screening service private.",
+        "A deployer choosing between an issuer-asserted act chain and one backed by actor-signed proofs.",
+        "A WG participant weighing which draft to adopt as the base for JWT access-token delegation."
       ],
       "use_cases_ja": [
-        "RAR に対応済みの認可サーバーは、新しい authorization_details タイプを使ってエージェント向けのルート委任レシートを発行できる。",
-        "エージェントのチェーンに累積の支出上限や呼び出し回数上限を適用する依拠当事者は、レシート内で指名された唯一のカウンターとなる必要がある。",
-        "複数のエージェント委任ドラフトを実装する者は、制約種別ごとの縮小規則表を共通のテストベクトルの出発点にできる。"
+        "内部の審査サービスを隠したまま、下流サービスに actor の履歴を渡す必要がある AI エージェントのゲートウェイ。",
+        "発行者が主張する act チェーンと、actor の署名付き証明に裏付けられたものとのどちらを選ぶかを検討するデプロイ担当者。",
+        "JWT アクセストークンの委任の基盤としてどのドラフトを採用するかを検討する WG の参加者。"
       ]
     },
     "mail:N1uo61sS2I1QMa7r9-uhoc3swWA": {
@@ -648,6 +654,29 @@
         "新しい認可リクエストパラメーターと、クライアント単位やredirect_uri単位のオプトインのどちらを採るか検討する導入者。"
       ]
     },
+    "mail:ViWE0WzaIYlcnLPrdJrJDHYG7xg": {
+      "diagram": "",
+      "first_seen": "2026-11-21",
+      "headline": "Mark questions whether per-server instance identifiers must expose every server to the attester, and asks for a Privacy Pass-style split.",
+      "headline_ja": "Mark は、サーバーごとのインスタンス識別子が全サーバーを attester に見せてしまう点を問い、Privacy Pass 型の分離を提案している。",
+      "id": "mail:ViWE0WzaIYlcnLPrdJrJDHYG7xg",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Mark comments on two of Karl's drafts. On client-instance-id §10.3, scoping the instance identifier per server lets the attester see every server a client uses, while a single shared scope avoids that but lets the servers correlate the instance. He asks whether the tradeoff is forced, pointing to Privacy Pass (RFC 9576), which separates attestation from issuance. On client-attesters, he supports keeping publisher-authorized key selection (an open-source project naming its own attester in its CIMD) as a first-class path and keeping attestation optional, as §7.6 has it.",
+      "summary_ja": "Mark は Karl の二つのドラフトにコメントしている。client-instance-id §10.3 については、インスタンス識別子をサーバーごとにスコープすると attester がクライアントの使う全サーバーを把握でき、共有スコープにするとそれは避けられるがサーバー間でインスタンスを相関できると指摘し、この二択は避けられないのかを問うている。attestation と発行を分離する Privacy Pass（RFC 9576）を例に挙げている。client-attesters については、公開者が認可する鍵選択（オープンソースプロジェクトが CIMD で自前の attester を指定する方式）を第一級の経路として維持し、§7.6 のとおり attestation を任意のままにすることを支持している。",
+      "title": "client-instance-id and client-attesters: attester visibility",
+      "updated_at": "2026-11-21T07:15:03+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/ViWE0WzaIYlcnLPrdJrJDHYG7xg/",
+      "use_cases": [
+        "A client-attestation deployment where the attester should not learn which servers each app install talks to.",
+        "An open-source client that wants to name its own attester in its CIMD rather than rely on a platform vendor."
+      ],
+      "use_cases_ja": [
+        "attester がアプリの各インストールの接続先サーバーを知るべきでない、クライアント attestation のデプロイ。",
+        "プラットフォームベンダーに頼らず、CIMD で自前の attester を指定したいオープンソースのクライアント。"
+      ]
+    },
     "mail:Y6RNjJVYx4DVyPbMWZX6EmA-424": {
       "diagram": "",
       "first_seen": "2026-11-17",
@@ -692,6 +721,29 @@
       "use_cases_ja": [
         "ユーザーに接続済みの AI エージェントを表示し、エージェントごとの切断ボタンを提供する Web アプリケーション。",
         "管理者による全体の失効を使わずに、クライアントの操作で委任された許可を一つだけ失効させたい認可サーバー運用者。"
+      ]
+    },
+    "mail:ZWix6YIyFguohCBkLI88We0zAPw": {
+      "diagram": "sequenceDiagram\nparticipant I as Client instance\nparticipant AS as Authorization server\nparticipant B as Broker\nparticipant U as Upstream resource\nI->>AS: client credentials grant\nAS-->>I: short-lived sender-constrained token\nI->>B: request using token\nB->>U: upstream request with broker-held credential\nU-->>B: response\nB-->>I: result",
+      "first_seen": "2026-11-21",
+      "headline": "A new individual draft has a broker hold the OAuth grant while short-lived client instances get sender-constrained tokens.",
+      "headline_ja": "新しい個人ドラフトは、ブローカーが OAuth の grant を保持し、短命なクライアントインスタンスには送信者制約付きトークンを渡す方式を提案している。",
+      "id": "mail:ZWix6YIyFguohCBkLI88We0zAPw",
+      "kind": "mail",
+      "related": [],
+      "significance": "new-proposal",
+      "summary": "Kieran Sweeney posted draft-sweeney-oauth-brokered-authorization-00 for deployments where many short-lived client instances act under one authorization. A broker is the single durable OAuth client of the upstream resource: it holds the grant and the upstream credential and makes each upstream request itself. The AS records the authorization against the client, not any instance. Each instance gets a short-lived, sender-constrained access token through the client credentials grant and never holds a grant, refresh token or upstream credential. Feedback is requested on the Section 11 open issues: restricting a brokered authorization to some instances (by attester, tenant or resource-owner condition) and evidence of each upstream request that someone other than the broker can check.",
+      "summary_ja": "Kieran Sweeney は、多数の短命なクライアントインスタンスが一つの認可のもとで動作するデプロイを対象に、draft-sweeney-oauth-brokered-authorization-00 を投稿した。ブローカーは上流リソースに対する唯一の永続的な OAuth クライアントであり、grant と上流の資格情報を保持し、上流への各リクエストを自ら行う。認可サーバーは認可をインスタンスではなくクライアントに対して記録する。各インスタンスは client credentials grant により短命で送信者制約付きのアクセストークンを受け取り、grant、リフレッシュトークン、上流の資格情報は持たない。Section 11 の未解決事項として、ブローカー型認可を一部のインスタンス（attester、テナント、リソースオーナーの条件による）に限定すること、およびブローカー以外の者が検証できる上流リクエストごとの証跡について、意見を求めている。",
+      "title": "New individual draft: OAuth Brokered Authorization: Grant Custody for Short-Lived Client Instances",
+      "updated_at": "2026-11-21T07:15:03+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/ZWix6YIyFguohCBkLI88We0zAPw/",
+      "use_cases": [
+        "Ephemeral agent or job instances that call an upstream API on a user's behalf without any of them holding a refresh token.",
+        "A platform that wants one revocable grant per client rather than per short-lived instance."
+      ],
+      "use_cases_ja": [
+        "リフレッシュトークンをどのインスタンスにも持たせずに、利用者の代わりに上流 API を呼ぶ短命なエージェントやジョブのインスタンス。",
+        "短命なインスタンスごとではなく、クライアントごとに取り消し可能な grant を一つ持たせたいプラットフォーム。"
       ]
     },
     "mail:awq69VLm0U5Cb0ohVKXLg5LLLDY": {
@@ -1126,6 +1178,27 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "mail:toGYFb0xtz7_JfCBhAy5AEx-bSk": {
+      "diagram": "",
+      "first_seen": "2026-11-21",
+      "headline": "Mark argues that approval evidence for bounded work must survive the AS rewriting its own records, and suggests hash-linking.",
+      "headline_ja": "Mark は、境界付き作業の承認証跡は認可サーバー自身による記録の書き換えに耐える必要があるとし、ハッシュ連鎖を提案している。",
+      "id": "mail:toGYFb0xtz7_JfCBhAy5AEx-bSk",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Replying in the bounded-work use-case discussion, Mark says that if approval evidence is meant to settle disputes it must hold up even when the AS, itself one of the parties, changes its records. In -00 the evidence is signed by the AS (4.1.3), which does not prevent the AS from later signing a different history, such as one without a withdrawal. He suggests hash-linking the approval and lifecycle records and giving the approver the latest hash. No draft text changes; this is a requirement proposed for the discussion.",
+      "summary_ja": "境界付き作業のユースケース議論への返信で Mark は、承認証跡が紛争の解決に使われるなら、当事者の一つである認可サーバー自身が記録を変更しても耐えられなければならないと述べている。-00 では証跡は認可サーバーが署名する（4.1.3）が、これでは認可サーバーが後から取り消しを含まない別の履歴に署名することを防げない。対策として、承認記録とライフサイクル記録をハッシュで連鎖させ、承認者に最新のハッシュを渡すことを提案している。ドラフトの文面に変更はなく、議論に向けた要件の提案である。",
+      "title": "bounded-work: a requirement for the use-case discussion",
+      "updated_at": "2026-11-21T07:15:03+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/toGYFb0xtz7_JfCBhAy5AEx-bSk/",
+      "use_cases": [
+        "A deployer who needs approval and withdrawal records that a user can use against the AS in a dispute."
+      ],
+      "use_cases_ja": [
+        "紛争時に認可サーバーに対して利用者が使える承認・撤回の記録を必要とするデプロイ担当者。"
+      ]
+    },
     "mail:xeDwM6Q4xP2mZ5uSEbilXFKFHZI": {
       "diagram": "",
       "first_seen": "2026-11-20",
@@ -1260,23 +1333,6 @@
       "use_cases": [],
       "use_cases_ja": []
     },
-    "pr:oauth-wg/oauth-v2-1#283": {
-      "diagram": "",
-      "first_seen": "2026-11-13",
-      "headline": "A PR proposes moving Dick and Torsten from authors to the acknowledgements in OAuth 2.1.",
-      "headline_ja": "OAuth 2.1 で Dick と Torsten を著者欄から謝辞へ移す PR が出された。",
-      "id": "pr:oauth-wg/oauth-v2-1#283",
-      "kind": "pull-request",
-      "related": [],
-      "significance": "editorial",
-      "summary": "The PR body argues that Aaron has contributed far more to the document than anyone else, so the attribution should reflect that. It includes a screenshot as an imperfect example measure. No spec text or protocol behaviour changes. The material gives no discussion or outcome.",
-      "summary_ja": "PR の本文は、Aaron が文書に対して他の誰よりもはるかに多く貢献しており、著者表記もそれを反映すべきだと主張している。不完全な例としてスクリーンショットが添付されている。仕様の本文やプロトコルの挙動は変わらない。議論や結果は資料に含まれていない。",
-      "title": "oauth-wg/oauth-v2-1#283: move Dick and Torsten to the acknowledgements",
-      "updated_at": "2026-11-13T06:50:52+00:00",
-      "url": "https://github.com/oauth-wg/oauth-v2-1/pull/283",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
     "pr:oauth-wg/oauth-v2-1#284": {
       "diagram": "",
       "first_seen": "2026-11-17",
@@ -1315,10 +1371,10 @@
   "overflow": [],
   "triage": {
     "draft-ietf-oauth-client-id-metadata-document": {
-      "date": "2026-11-19",
+      "date": "2026-11-21",
       "priority": "high",
-      "reason": "Active debate on whether fetch-hardening (headers, proxying) belongs normatively in the draft.",
-      "reason_ja": "フェッチ強化策（ヘッダー、プロキシ）をドラフトに規範として含めるべきかという議論が進行中である。"
+      "reason": "An implementation report led to a planned issue on §6.2 cache wording plus open suggestions on DNS rebinding, timeouts and RFC 8252.",
+      "reason_ja": "実装報告により、§6.2 のキャッシュ文言に関する issue と、DNS rebinding・タイムアウト・RFC 8252 に関する未決の提案が生じた。"
     },
     "draft-ietf-oauth-identity-assertion-authz-grant": {
       "date": "2026-11-15",
