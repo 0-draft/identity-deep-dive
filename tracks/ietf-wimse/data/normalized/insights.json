@@ -1,16 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-13T06:50:52+00:00",
-      "text": "The WIMSE list this run had no new draft text: discussion of agent delegation and revocation in draft-ietf-wimse-aims and related drafts, plus IETF 127 hackathon interop scenarios for agent call chains. The main takeaway is that revocation and fail-closed behaviour are becoming the shared test target.",
-      "text_ja": "今回は新しいドラフト本文の変更はなく、draft-ietf-wimse-aims と関連ドラフトにおけるエージェント委任と失効の議論、および IETF 127 ハッカソンのエージェント呼び出しチェーン相互運用シナリオが中心だった。失効とフェイルクローズの挙動が共通のテスト対象になりつつある点が要点である。"
-    },
-    {
-      "at": "2026-11-13T19:45:59+00:00",
-      "text": "One item: a tooling status announcement from the author of draft-li-rttp-iqa-addressing (not a WIMSE WG draft). It covers package releases, test vector filings and a hosted MCP endpoint. No WIMSE draft text changed, so nothing substantive moved.",
-      "text_ja": "今回は draft-li-rttp-iqa-addressing の著者によるツール更新の告知が1件のみである。パッケージのリリース、テストベクターの提出、ホスト型 MCP エンドポイントの公開を伝えるもので、WIMSE の WG ドラフトの本文に変更はなく、実質的な動きはない。"
-    },
-    {
       "at": "2026-11-14T06:29:04+00:00",
       "text": "Nothing in the specs changed. The one item is a mailing-list thread in which the IETF 127 Hackathon interop plan for agent call chains attracts extra scenarios and implementations, mostly about revocation and failing closed.",
       "text_ja": "仕様本文の変更はない。今回は IETF 127 ハッカソンにおけるエージェント呼び出しチェーンの相互運用テスト計画に関するメーリングリストのスレッドのみで、失効とフェイルクローズに関するシナリオや実装が追加で提案された。"
@@ -84,6 +74,11 @@
       "at": "2026-11-20T20:26:50+00:00",
       "text": "Only one item this run: a procedural IPR statement on the WIMSE list, with no draft text changes. Joseph Salowey says they know of no IPR on four drafts that are past last call.",
       "text_ja": "今回は WIMSE メーリングリストへの手続き上の IPR 声明が 1 件のみで、ドラフト本文の変更はない。Joseph Salowey が、最終コール通過済みの 4 件のドラフトについて既知の IPR はないと述べた。"
+    },
+    {
+      "at": "2026-11-21T07:15:03+00:00",
+      "text": "draft-ietf-wimse-http-signature-09 is mostly editorial, with one small behaviour change: a client may reuse a server-generated nonce from Accept-Signature. Alongside it, the munoz authorization-evidence draft was rewritten to build on the WG's AIMS draft.",
+      "text_ja": "draft-ietf-wimse-http-signature-09 は大半が編集上の修正だが、クライアントが Accept-Signature のサーバー生成 nonce を再利用できるという小さな挙動変更を含む。あわせて munoz の authorization-evidence ドラフトが WG の AIMS ドラフトを前提とする内容に書き直された。"
     }
   ],
   "items": {
@@ -148,6 +143,29 @@
         "ML-DSA への移行中を含め、relying party が trust domain ごとに受け入れる issuer と trust anchor を設定する場合。"
       ]
     },
+    "draft:draft-ietf-wimse-http-signature-09": {
+      "diagram": "sequenceDiagram\n participant C as Client workload\n participant S as Server workload\n S->>C: Response with Accept-Signature (nonce)\n C->>S: Request with WIT and signature (reuses server nonce)\n S->>S: Validate WIT then signature, check nonce",
+      "first_seen": "2026-11-21",
+      "headline": "The HTTP signature draft lets a client use a server-supplied nonce from Accept-Signature, and fixes wording and cross-references.",
+      "headline_ja": "HTTP 署名ドラフトが Accept-Signature のサーバー生成 nonce をクライアントが使うことを許可し、文言と相互参照を修正した",
+      "id": "draft:draft-ietf-wimse-http-signature-09",
+      "kind": "draft-revision",
+      "related": [],
+      "significance": "substantive",
+      "summary": "The one behavioural change is that a request may now carry a server-generated nonce taken from Accept-Signature (RFC 9421 Section 5.1) in place of a client-generated one, provided it meets the same uniqueness and entropy rules (at least 64 bits, 96 recommended). The other changes clarify text. For CONNECT, @authority follows RFC 9421 (lowercased host, default port omitted), so it may differ from the request target. The introduction now explains that a signature with a WIT authenticates the caller end to end across multiple TLS hops. The example nonces are noted as below the entropy floor. Cross-references to workload-creds are corrected (WIT validation is now Section 5.1.3, the architecture reference Section 1.1), and references are updated to workload-creds-03, arch-09 and mutual-tls-03. The implementation status entry now notes that its coverage is as per version -08.",
+      "summary_ja": "挙動が変わるのは一点で、リクエストにクライアント生成の nonce の代わりに Accept-Signature（RFC 9421 Section 5.1）のサーバー生成 nonce を載せてよくなった。ただし一意性とエントロピーの要件（64 ビット以上、96 ビット以上を推奨）を満たす必要がある。その他は文言の明確化である。CONNECT では @authority は RFC 9421 に従い（ホスト名は小文字、デフォルトポートは省略）、リクエストターゲットと異なる場合がある。序論には、WIT 付きの署名が複数の TLS ホップをまたいで呼び出し元をエンドツーエンドで認証することが説明された。例の nonce はエントロピーの下限を満たさないと注記された。workload-creds への相互参照は修正され（WIT の検証は Section 5.1.3、アーキテクチャは Section 1.1）、参照先は workload-creds-03、arch-09、mutual-tls-03 に更新された。実装状況の記載には、対象範囲が -08 版相当であると注記された。",
+      "title": "draft-ietf-wimse-http-signature-09: WIMSE Workload-to-Workload Authentication with HTTP Signatures",
+      "updated_at": "2026-11-21T07:15:03+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-ietf-wimse-http-signature-08&url2=draft-ietf-wimse-http-signature-09",
+      "use_cases": [
+        "A server that issues Accept-Signature with a nonce and wants clients to reuse it so it can track replay on its side.",
+        "An implementer using a CONNECT proxy who must compute @authority with the default port omitted, even when the request target includes the port."
+      ],
+      "use_cases_ja": [
+        "Accept-Signature で nonce を発行し、クライアントにそれを再利用させてサーバー側でリプレイを管理したいサーバー。",
+        "CONNECT プロキシを実装する際、リクエストターゲットにポートが含まれていても、デフォルトポートを省略して @authority を計算する必要がある実装者。"
+      ]
+    },
     "draft:draft-miao-wimse-http-signature-test-vectors-00": {
       "diagram": "",
       "first_seen": "2026-11-18",
@@ -169,6 +187,42 @@
       "use_cases_ja": [
         "wimse-aud の正規化や nonce の不一致といった拒否ケースに対して、WIMSE S2S の HTTP 署名方式の検証側を確認する実装者。",
         "Ed25519 と ES256 の処理を回帰テストするために、バイト単位で再現できる決定的な署名ベースを必要とするライブラリ作者。"
+      ]
+    },
+    "draft:draft-munoz-wimse-authorization-evidence-02": {
+      "diagram": "sequenceDiagram\n participant A as AI agent\n participant I as Issuer\n participant R as Resource server\n A->>I: Proposed request\n I->>I: Decide and sign Permit\n I->>R: Dispatch request (allow)\n I->>I: Record Closure Record with dispatch digest",
+      "first_seen": "2026-11-21",
+      "headline": "The authorization-evidence draft is retargeted from an individual draft to the WG's AIMS draft and narrows its claims about what a Permit proves.",
+      "headline_ja": "authorization-evidence ドラフトの参照先が個人ドラフトから WG の AIMS ドラフトに変わり、Permit が証明する範囲の主張が絞られた",
+      "id": "draft:draft-munoz-wimse-authorization-evidence-02",
+      "kind": "draft-revision",
+      "related": [
+        {
+          "name": "openid/authzen",
+          "note": "The draft cites AuthZEN as the common interface between a resource server and an external policy decision point.",
+          "note_ja": "本ドラフトは、リソースサーバーと外部ポリシー決定ポイントの間の共通インターフェースとして AuthZEN を挙げている。",
+          "track": "openid"
+        },
+        {
+          "name": "draft-ietf-oauth-transaction-tokens",
+          "note": "The draft has a section on linking Permits to Transaction Tokens.",
+          "note_ja": "本ドラフトには Permit を Transaction Token に結び付ける節がある。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "substantive",
+      "summary": "The draft now builds on draft-ietf-wimse-aims-01, which it says was adopted by the WG in September 2026 as the successor to draft-klrc-aiagent-auth, instead of the earlier individual draft. It still defines how a signed Permit records a pre-execution authorization decision, with a paired Closure Record for a dispatched allow that has a request-body commitment. The abstract and Section 11 crosswalk are reworded so that a Permit covers only part of the AIMS audit minimum, and deployments must retain other evidence such as risk state and the cause of remediation. SPIFFE and wimse subject typing moves from MUST to SHOULD, and the draft adds related-work discussion (AuthZEN, other evidence drafts including draft-thaha-wimse-agent-evidence-binding). The diff is truncated, so later sections were not seen.",
+      "summary_ja": "本ドラフトは、以前の個人ドラフトではなく、2026 年 9 月に draft-klrc-aiagent-auth の後継として WG に採択されたとされる draft-ietf-wimse-aims-01 を前提とするようになった。事前の認可判断を署名付き Permit として記録し、リクエストボディへのコミットメントを持つ allow が送出された場合は対になる Closure Record を付ける、という枠組みは維持されている。要約と Section 11 の対応表は、Permit が AIMS の監査要件の一部しか満たさず、リスク状態や是正の原因などの証拠を展開側が別途保持する必要がある、という書き方に改められた。SPIFFE および wimse のサブジェクト種別指定は MUST から SHOULD に弱められ、AuthZEN や draft-thaha-wimse-agent-evidence-binding を含む他の証拠系ドラフトとの関連も追記された。差分は途中で切り詰められており、後半の節は確認できていない。",
+      "title": "draft-munoz-wimse-authorization-evidence-02: Signed Authorization-Evidence Records for AI Agent Actions Using WIMSE Workload Identity",
+      "updated_at": "2026-11-21T07:15:03+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-munoz-wimse-authorization-evidence-01&url2=draft-munoz-wimse-authorization-evidence-02",
+      "use_cases": [
+        "An operator of AI agents who must satisfy the AIMS Section 11 audit requirement and wants a signed record of each allow, deny or challenge decision.",
+        "A policy decision point team using AuthZEN that wants to preserve the original decision, including a denial with an approval workflow."
+      ],
+      "use_cases_ja": [
+        "AIMS Section 11 の監査要件を満たす必要があり、allow・deny・challenge の各判断の署名付き記録を求める AI エージェントの運用者。",
+        "AuthZEN を使うポリシー決定ポイントのチームで、承認ワークフローが利用できる拒否を含め、元の判断を保存したい場合。"
       ]
     },
     "draft:draft-nandakumar-wimse-delegator-bound-chains-00": {
@@ -286,34 +340,6 @@
       "use_cases_ja": [
         "失効情報やステータス情報の取得元が応答しないときに拒否するポリシーポイントを持つ AIMS 環境で、監査担当者が実際のポリシー拒否と区別する必要がある場合。",
         "Section 11 の監査記録を再構成する担当者が、判断に古い入力が使われたかどうかを知る必要がある場合。"
-      ]
-    },
-    "mail:3RkVPuznZ9tNbEdSDHi-Z8vfXOw": {
-      "diagram": "",
-      "first_seen": "2026-11-13",
-      "headline": "In short, the evidence-binding authors will narrow a claim about suspended prior actors so it no longer conflicts with RFC 8693 Section 4.1.",
-      "headline_ja": "evidence-binding の著者らは、停止された先行アクターに関する記述を RFC 8693 第4.1節と矛盾しないよう限定することにした。",
-      "id": "mail:3RkVPuznZ9tNbEdSDHi-Z8vfXOw",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-ietf-oauth-transaction-tokens",
-          "note": "Weak link only: both deal with carrying delegation context across hops, but the material does not reference it.",
-          "note_ja": "弱い関連のみ。いずれもホップ間の委任コンテキストを扱うが、資料に直接の言及はない。",
-          "track": "oauth-wg"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "Shameer accepts Mikhail's two corrections. The statement that a Serving Party cannot refuse a call because a prior actor is suspended was too broad, because RFC 8693 Section 4.1 only rules out using nested act claims for that decision, not separately verified delegation tokens. The wording becomes: cannot refuse a call on the basis of the nested act claims because a prior actor has since been suspended. The phrase about history being neither complete nor evidence is replaced with: does not by itself establish that it is complete, or that any hop held or narrowed authority. Both edits will go into the next revisions of the SCITT draft and the Evidence Binding draft. No draft text was posted in this message.",
-      "summary_ja": "Shameer は Mikhail の二点の指摘を受け入れた。Serving Party が先行アクターの停止を理由に呼び出しを拒否できないという記述は広すぎた。RFC 8693 第4.1節が排除しているのは入れ子の act クレームをその判断に用いることであり、別途検証された委任トークンの利用ではない。文言は「先行アクターがその後停止されたことを、入れ子の act クレームに基づいて理由に呼び出しを拒否することはできない」に改められる。「完全でも証拠でもない」という履歴に関する表現は、「それ自体では完全であること、あるいはいずれかのホップが権限を保持または縮小したことを立証しない」に置き換えられる。どちらの修正も SCITT ドラフトと Evidence Binding ドラフトの次版に反映される。このメッセージ自体にドラフト本文は含まれていない。",
-      "title": "New I-D: draft-thaha-wimse-agent-evidence-binding-00 (evidence binding for AIMS audit)",
-      "updated_at": "2026-11-13T06:50:52+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/3RkVPuznZ9tNbEdSDHi-Z8vfXOw/",
-      "use_cases": [
-        "A Serving Party deciding whether it may deny a call based on a suspended prior actor, using verified delegation tokens rather than nested act claims."
-      ],
-      "use_cases_ja": [
-        "入れ子の act クレームではなく検証済み委任トークンを用いて、停止された先行アクターを理由に呼び出しを拒否できるか判断する Serving Party。"
       ]
     },
     "mail:3b_KjKBN2xzYAspj9rUIJcSU1pQ": {
@@ -518,23 +544,6 @@
         "責任の観点から、エージェントの認可がいつ失効したかを証明する必要がある実装者の場合。"
       ]
     },
-    "mail:B3VfzW_jlvVT3BI4T4f4oAySBxU": {
-      "diagram": "",
-      "first_seen": "2026-11-13",
-      "headline": "The author of draft-li-rttp-iqa-addressing announces package releases, vector filings and a hosted MCP endpoint on the wimse list.",
-      "headline_ja": "draft-li-rttp-iqa-addressing の著者が、パッケージのリリース、ベクターの提出、ホスト型 MCP エンドポイントを wimse メーリングリストで告知した。",
-      "id": "mail:B3VfzW_jlvVT3BI4T4f4oAySBxU",
-      "kind": "mail",
-      "related": [],
-      "significance": "routine",
-      "summary": "The author reports version 1.3.2 of the rttp and iqa-org packages on crates.io, PyPI and npm, with conformance vectors re-anchored to draft-li-rttp-iqa-addressing-02 (vector bytes unchanged). They also report iqa-mcp 1.0.3, an MCP server with four tools (derive_route_shard, parse_envelope, verify_envelope, published_vector). Four new vector families were filed as candidates with the Agent-Authority-Conformance lab (PRs #221 to #224), and an interop run over a third-party family was recorded (PR #225). A hosted MCP endpoint at mcp.iqa.org serves the same code. The message is a status note with links to the author's blog. It proposes no protocol change, and the draft's content is not described beyond naming. It is not a WIMSE WG draft and does not touch any WIMSE candidate.",
-      "summary_ja": "著者は、rttp と iqa-org の各パッケージのバージョン 1.3.2 を crates.io、PyPI、npm で公開し、適合性ベクターを draft-li-rttp-iqa-addressing-02 に再アンカーしたと報告している(ベクターのバイト列は変更なし)。あわせて、4つのツール(derive_route_shard、parse_envelope、verify_envelope、published_vector)を持つ MCP サーバー iqa-mcp 1.0.3 も公開した。新しいベクターファミリー4件を Agent-Authority-Conformance lab に候補として提出し(PR #221〜#224)、第三者のファミリーに対する相互運用実行も記録した(PR #225)。mcp.iqa.org には同じコードを提供するホスト型 MCP エンドポイントが公開された。本メッセージは著者のブログへのリンクを含む状況報告であり、プロトコルの変更提案はなく、ドラフトの内容にもほとんど触れていない。WIMSE の WG ドラフトではなく、WIMSE の候補にも関係しない。",
-      "title": "RTTP+IQA tooling update: three releases, five lab filings, and a hosted MCP endpoint",
-      "updated_at": "2026-11-13T19:45:59+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/B3VfzW_jlvVT3BI4T4f4oAySBxU/",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
     "mail:BwGCvOXBxqAVBqOG_prlM3nwZUg": {
       "diagram": "",
       "first_seen": "2026-11-18",
@@ -563,29 +572,6 @@
       "use_cases_ja": [
         "WIT/WPT や HTTP Message Signatures のバインディングを実装し、公開された相互運用性マトリクスと自分たちのピアを比較したい実装者。",
         "二つの信頼ドメインにまたがる複数ホップのエージェント呼び出しで、トランザクショントークンの封じ込めを確認したい開発チーム。"
-      ]
-    },
-    "mail:CUSo_w53my0EePs-7PdFaqHr0Rk": {
-      "diagram": "",
-      "first_seen": "2026-11-13",
-      "headline": "In short, the AIMS/MBA thread settles on an at-or-past (exclusive) expiry rule and on allowing a transcribed delegated-subject value across trust domains.",
-      "headline_ja": "AIMS と MBA のスレッドで、有効期限は「到達時点で無効」とする排他的ルールに揃え、信頼ドメインをまたぐ場合に限り委任主体の値の書き換えを許す方向で合意した。",
-      "id": "mail:CUSo_w53my0EePs-7PdFaqHr0Rk",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Participants agree to use an at-or-past boundary: state whose age equals S is stale, and a permit is not usable at or after its expiry. Mikhail's example with S = L = 300,000 ms shows that new admissions are bounded strictly before as-of + S + L, assuming zero skew and grace. It does not bound completion of work already admitted. Rerunning the harness with at-or-past expectations against MBA gave 15 of 22 cases agreeing and 7 differing, mostly where MBA compares inclusively at equality. These are described as differences from the convention, not defects. Separately, Marc and Kieran settle that the delegated-subject value must stay identical within a trust domain but may be transcribed when crossing one. Marc proposes the mapping be recorded in the transcribing server's tamper-evident audit record, via suggested changes on PR #176.",
-      "summary_ja": "参加者は「到達時点で無効」の境界規則を採用することで一致した。年齢が S に等しい状態は失効扱いとなり、permit は有効期限の時点以降は使用できない。S = L = 300,000 ms の例では、クロックスキューと猶予がゼロの前提で、新規受理は as-of + S + L より厳密に前に制限される。ただし受理済みの処理の完了までは制限しない。MBA に対して同じ検証ハーネスを at-or-past の期待値で実行すると、22 ケース中 15 件が一致し 7 件が相違した。相違は主に MBA が等値で包含的に比較する箇所であり、欠陥ではなく規約との差異とされている。別件として、Marc と Kieran は、委任主体の値は同一信頼ドメイン内では同一に保ち、ドメインをまたぐ場合は書き換えを認めることで合意した。Marc は、その対応関係を書き換えを行うサーバーの改ざん検知可能な監査記録に残すことを PR #176 で提案する意向である。",
-      "title": "Subject: AIMS-00: multi-hop delegation context across agent, tool and resource boundaries",
-      "updated_at": "2026-11-13T06:50:52+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/CUSo_w53my0EePs-7PdFaqHr0Rk/",
-      "use_cases": [
-        "An implementer of permit or token expiry checks deciding whether equality at the boundary counts as expired.",
-        "A cross-domain agent gateway that must rewrite the delegated subject identifier while keeping it auditable."
-      ],
-      "use_cases_ja": [
-        "permit やトークンの有効期限検査で、境界との等値を失効とみなすか判断する実装者。",
-        "委任主体の識別子を書き換えつつ監査可能性を保つ必要があるドメイン間エージェントゲートウェイ。"
       ]
     },
     "mail:DnZC2EjOyi076-ogRKA4J9jrIXc": {
@@ -737,42 +723,6 @@
       "url": "https://mailarchive.ietf.org/arch/msg/wimse/LzzNtpzX0jzim9cEqlQWBgihSR8/",
       "use_cases": [],
       "use_cases_ja": []
-    },
-    "mail:N84c51Qxwe6i1bihDHCklyDphUg": {
-      "diagram": "sequenceDiagram\n participant A as Agent A (domain A)\n participant B as Agent B\n participant R as Receiving hop\n A->>B: delegate\n B->>R: first call\n R-->>B: accepted\n Note over A: A is revoked\n B->>R: next call\n R-->>B: rejected (fail closed)",
-      "first_seen": "2026-11-13",
-      "headline": "In short, an IETF 127 hackathon plan for WIMSE agent call chains drew proposed negative test scenarios centred on revocation and fail-closed checks.",
-      "headline_ja": "IETF 127 ハッカソンの WIMSE エージェント呼び出しチェーン相互運用計画に対し、失効とフェイルクローズを中心とした異常系シナリオが提案された。",
-      "id": "mail:N84c51Qxwe6i1bihDHCklyDphUg",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-ietf-oauth-transaction-tokens",
-          "note": "The scenario binds a Txn-Token to each hop's proof and keeps it inside its domain.",
-          "note_ja": "シナリオでは Txn-Token を各ホップの証明に束縛し、ドメイン内にとどめている。",
-          "track": "oauth-wg"
-        },
-        {
-          "name": "draft-ietf-oauth-identity-chaining",
-          "note": "Crossing to trust domain B uses identity chaining.",
-          "note_ja": "信頼ドメイン B への移行にアイデンティティチェーニングを用いる。",
-          "track": "oauth-wg"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "Alexander Pelov will run interop scenarios across independent implementations (SPIRE with experimental WIT-SVID, go-spiffe, Cofide's PoC and a Python implementation). The scenarios use workload-creds-03, wpt-02, http-signature-08, identifier-04, Txn-Tokens and identity chaining across two trust domains, with a shared transaction ID in logs. The normal path binds a Txn-Token to each hop's proof, and the Txn-Token never leaves its domain. Replies from Ben Le (draft-le-agent-passport) and Iman add cases: unreachable status list, revocation after delegation, widening delegation, cumulative limits across two services, request rewritten by a proxy and tool-description digest changes. Iman asks that logs distinguish confirmed revocation, expired status cache and unavailable status service, and that a revoked authorization blocks the operation before effect.",
-      "summary_ja": "Alexander Pelov は、独立した複数の実装（実験的な WIT-SVID 対応の SPIRE、go-spiffe、Cofide の PoC、Python 実装）を用いた相互運用シナリオを実施する予定である。シナリオは workload-creds-03、wpt-02、http-signature-08、identifier-04、Txn-Token、アイデンティティチェーニングを二つの信頼ドメインにまたがって使い、ログには共通のトランザクション ID を記録する。正常系では Txn-Token を各ホップの証明に束縛し、Txn-Token 自体はドメイン外に出さない。Ben Le（draft-le-agent-passport）と Iman は、到達不能なステータスリスト、委任後の失効、権限が拡大する委任、二つのサービスにまたがる累積上限、プロキシによるリクエスト書き換え、ツール定義のダイジェスト変化といったケースを追加した。Iman は、確定した失効、期限切れのステータスキャッシュ、利用不能なステータスサービスをログ上で区別すること、また失効した認可では効果が生じる前に操作が阻止されることを求めている。",
-      "title": "IETF 127 Hackathon: WIMSE interop scenarios for agent call chains (5 new messages)",
-      "updated_at": "2026-11-13T06:50:52+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/N84c51Qxwe6i1bihDHCklyDphUg/",
-      "use_cases": [
-        "An implementer of WIT/WPT or Txn-Tokens wanting shared negative test cases to compare against other implementations.",
-        "A deployer defining fail-closed policy when a status list is unreachable or a delegating agent is revoked mid-chain."
-      ],
-      "use_cases_ja": [
-        "他実装と比較できる共通の異常系テストケースを求める WIT/WPT や Txn-Token の実装者。",
-        "ステータスリストに到達できない場合や、チェーン途中で委任元エージェントが失効した場合のフェイルクローズ方針を定める運用者。"
-      ]
     },
     "mail:NIGoNNBqfgDfIs-MvDSFKy9QAY0": {
       "diagram": "",
@@ -1237,6 +1187,23 @@
       "url": "https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "repo:ietf-wg-wimse/draft-ietf-wimse-s2s-protocol:ae2acf10cc55": {
+      "diagram": "",
+      "first_seen": "2026-11-21",
+      "headline": "One commit in the s2s-protocol repo: the editorial fixes that went into http-signature-09.",
+      "headline_ja": "s2s-protocol リポジトリの 1 コミットは、http-signature-09 に取り込まれた編集上の修正である",
+      "id": "repo:ietf-wg-wimse/draft-ietf-wimse-s2s-protocol:ae2acf10cc55",
+      "kind": "repo-activity",
+      "related": [],
+      "significance": "routine",
+      "summary": "A single commit, \"HTTP-Sig editorial fixes (#417, #420, #422)\", merged on 2026-11-20. Its issue numbers match the -09 change log entries on the introduction, the illustrative example nonces and the workload-creds cross-references. Only the commit title is available, with no diff.",
+      "summary_ja": "2026-11-20 にマージされた 1 件のコミット「HTTP-Sig editorial fixes (#417, #420, #422)」のみである。課題番号は、-09 の変更履歴にある序論、例示用 nonce、workload-creds への相互参照の項目と一致する。入手できたのはコミットタイトルだけで、差分はない。",
+      "title": "1 new commit(s) in ietf-wg-wimse/draft-ietf-wimse-s2s-protocol",
+      "updated_at": "2026-11-21T07:15:03+00:00",
+      "url": "https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol",
+      "use_cases": [],
+      "use_cases_ja": []
     }
   },
   "overflow": [],
@@ -1252,6 +1219,12 @@
       "priority": "high",
       "reason": "The digest shows active work on its test vectors (#419), a closed server-nonce issue (#369) and a new dangling-reference issue (#422).",
       "reason_ja": "ダイジェストにテストベクター（#419）、クローズされたサーバー nonce の issue（#369）、参照先が存在しないという新規 issue（#422）の動きがある。"
+    },
+    "Diff active WG draft: draft-ietf-wimse-http-signature-09": {
+      "date": "2026-11-21",
+      "priority": "high",
+      "reason": "-09 lets a client reuse a server-generated nonce from Accept-Signature, a behaviour change worth a diff.",
+      "reason_ja": "-09 でクライアントが Accept-Signature のサーバー生成 nonce を再利用できるようになり、挙動が変わったため差分を確認する価値がある。"
     },
     "Diff active WG draft: draft-ietf-wimse-workload-creds-03": {
       "date": "2026-11-17",
