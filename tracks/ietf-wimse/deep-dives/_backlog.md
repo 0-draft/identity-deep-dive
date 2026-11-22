@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-22T06:53:32+00:00
+Generated at: 2026-11-22T19:44:11+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -33,10 +33,10 @@ Generated at: 2026-11-22T06:53:32+00:00
 
 Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.
 
-- **high** `Diff active WG draft: draft-ietf-wimse-aims-01`: Two threads this run target AIMS: a Section 6 status-pointer and transfer question, and the issue #86 multi-hop example.
-- **high** `Diff active WG draft: draft-ietf-wimse-arch-09`: -09 adds Issuer/Trust Anchor definitions, a Trust Domain Separation section and a SHOULD NOT on shared agent identities.
+- **high** `Diff active WG draft: draft-ietf-wimse-aims-01`: The AIMS Section 6 status-source wording is under discussion on the list, with an offer to draft text.
+- **high** `Diff active WG draft: draft-ietf-wimse-arch-09`: Arch issue #139 on AI intermediaries and per-agent identity was commented on and closed this week.
 - **high** `Diff active WG draft: draft-ietf-wimse-http-signature-08`: The digest shows active work on its test vectors (#419), a closed server-nonce issue (#369) and a new dangling-reference issue (#422).
-- **high** `Diff active WG draft: draft-ietf-wimse-http-signature-09`: -09 lets a client reuse a server-generated nonce from Accept-Signature, a behaviour change worth a diff.
+- **high** `Diff active WG draft: draft-ietf-wimse-http-signature-09`: Digest shows closed s2s-protocol issues on http-signature: test vectors, nonce note, editorial comments, and a broken workload-creds reference.
 - **high** `Diff active WG draft: draft-ietf-wimse-workload-creds-03`: The IPR poll to its authors started today, which suggests the draft is moving toward publication.
 - **high** `Review related draft: draft-asor-wimse-agent-delegation-chain-03`: Cited as settling par_hash and totals handling, with a del_max_depth counting difference against AAT.
 - **high** `Review related draft: draft-miao-wimse-http-signature-test-vectors-00`: New draft with 29 vectors and 3 observations on spec ambiguity in draft-ietf-wimse-http-signature.

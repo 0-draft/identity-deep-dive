@@ -69,6 +69,11 @@
       "at": "2026-11-22T06:55:18+00:00",
       "text": "No draft text changed in this run. The substantive thread is the AIMS (draft-ietf-wimse-aims-01) discussion on checking agent status from outside the issuer's trust domain, plus a proposed multi-hop delegation example for AIMS issue #86.",
       "text_ja": "今回はドラフト本文の変更はない。主な動きは、発行者の信頼ドメイン外からエージェントの状態を確認する方法に関する draft-ietf-wimse-aims-01 の議論と、AIMS issue #86 向けのマルチホップ委任の例の提案である。"
+    },
+    {
+      "at": "2026-11-22T19:45:37+00:00",
+      "text": "No WG draft text changed in this run. The main thread is on the list: a draft-molas-agent-principal-refs-00 debate about how a public agent status registry should bound revocation delay (P6). The WG GitHub digest shows s2s-protocol cleanups for http-signature and wpt.",
+      "text_ja": "今回の実行ではWGドラフトの本文変更はない。主な動きはメーリングリストで、draft-molas-agent-principal-refs-00をめぐり、公開エージェントステータスレジストリが失効の遅延をどう保証すべきか(P6)が議論された。GitHubの週次ダイジェストでは、s2s-protocolでhttp-signatureとwptの整理が進んでいる。"
     }
   ],
   "items": {
@@ -281,6 +286,29 @@
         "A2A や MCP のような HTTP 上の JSON-RPC で、中継がボディを再シリアライズしうるため、バイト列への署名が使えない場合。"
       ]
     },
+    "mail:-4du6HkeVluCVdJbnpenPJQ4ex0": {
+      "diagram": "flowchart LR\nM[Maker] -->|signs commitment: profile id, receipt_id, output_hash, caller_scope, key thumbprint| A[Attestation]\nA --> C[Checker]\nC --> O[present, evaluated, outcome]\nN[No attestation] --> P[present false, no outcome]",
+      "first_seen": "2026-11-22",
+      "headline": "In short, a new individual draft adds an optional signed attribution to AER-1 receipts, so a third party can tell who made the record.",
+      "headline_ja": "個人ドラフトの新規提出で、AER-1レシートにオプションの署名付き帰属情報が加わり、第三者が記録の作成者を確認できるようになる。",
+      "id": "mail:-4du6HkeVluCVdJbnpenPJQ4ex0",
+      "kind": "mail",
+      "related": [],
+      "significance": "new-proposal",
+      "summary": "draft-zambo-aer1-attribution-profile-00 binds an AER-1 receipt to its maker, which the base receipt leaves open. The attestation is optional, and a receipt without one stays conformant. When present, the maker signs a five-member commitment: the profile identifier, receipt_id, output_hash, caller_scope and the RFC 7638 key thumbprint, using Ed25519 or ES256, with no PKI, registry or permission step. A checker reports present, evaluated and outcome, where the outcome is attributed, attribution failed or not checked. A missing attestation has no outcome and must not be reported as failed or not checked. The author claims over 159,000 public receipts and publishes a conformance corpus. This is the author's description, not an independent evaluation.",
+      "summary_ja": "draft-zambo-aer1-attribution-profile-00は、基本のレシートが未定義としている、AER-1レシートと作成者との結び付けを定める。署名付きの証明はオプションであり、これを持たないレシートも適合である。証明がある場合、作成者はプロファイル識別子、receipt_id、output_hash、caller_scope、RFC 7638の鍵サムプリントの5要素に対する約束に、Ed25519またはES256で署名する。PKI、レジストリ、許可の手順は不要である。検査側はpresent、evaluated、outcomeを報告し、outcomeはattributed、attribution failed、not checkedのいずれかである。証明がない場合はoutcomeを持たず、failedやnot checkedとして報告してはならない。作者は公開レシートが159,000件を超えると述べ、適合性コーパスを公開している。これは作者自身の説明であり、第三者による評価ではない。",
+      "title": "New draft: an attribution profile for AER-1 receipts (draft-zambo-aer1-attribution-profile-00)",
+      "updated_at": "2026-11-22T19:45:37+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/-4du6HkeVluCVdJbnpenPJQ4ex0/",
+      "use_cases": [
+        "An auditor who needs to know which agent or service produced a stored tool-call result",
+        "A verifier that must handle receipts with and without attribution without treating missing attribution as an error"
+      ],
+      "use_cases_ja": [
+        "保存されたツール呼び出し結果をどのエージェントまたはサービスが生成したかを確認したい監査担当者",
+        "帰属情報の有無にかかわらずレシートを扱い、帰属情報がないことをエラーとしない検証者"
+      ]
+    },
     "mail:-jp1HV34AzcmNjhxSr9hPSkdZMU": {
       "diagram": "sequenceDiagram\n participant C as Client\n participant Ac as Actor\n participant AS as Authorization server\n Ac->>C: actor_proof (agrees, key bound)\n C->>AS: token exchange with actor and actor_proof\n AS->>AS: verify proof, bind token to actor key\n AS->>C: token not for client\n C->>Ac: pass token",
       "first_seen": "2026-11-16",
@@ -358,6 +386,29 @@
       ],
       "use_cases_ja": [
         "稼働中のエージェントをセーフモードにし、下流の依拠当事者が行動前にその状態を確認できるようにしたい運用者。"
+      ]
+    },
+    "mail:643-IcKVBQSPa6e9Sw0FyfXMPe4": {
+      "diagram": "sequenceDiagram\nparticipant Rcv as Receiver\nparticipant DNS as Operator DNS record\nparticipant Reg as Independent status source\nRcv->>DNS: look up agent record\nDNS-->>Rcv: iss, client_id, optional status_source\nRcv->>Reg: query agent code at status_source\nReg-->>Rcv: status plus withdrawal events and max delay",
+      "first_seen": "2026-11-22",
+      "headline": "In short, an AIBSN author and the AIMS author agree on a mechanism-neutral Section 6 pointer from an agent identifier to an independent status source.",
+      "headline_ja": "AIBSNの著者とAIMSの著者が、エージェント識別子から独立したステータス情報源を指す、仕組みに依存しないSection 6の記述で合意に向かっている。",
+      "id": "mail:643-IcKVBQSPa6e9Sw0FyfXMPe4",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Sriram Shankarlingam says the _agent-oauth record already allows extra keys that receivers must ignore, so a status-source pointer could be added without breaking receivers, but it belongs in the document defining the status source. Jaromir Zly then defines an optional status_source entry in Section 7.10 of draft-zly-aibsn-agent-status. A record or an AIMS identifier can point to an independent source and the agent's code there, and the source must say which events withdraw a record and how long it takes. On transfer to a new issuer, Sriram says the domain owner updates iss and client_id, tokens from the old issuer stop being accepted when the receiver's cached record expires, and a paragraph will be added in the next revision. A legitimate transfer cannot be told from a hijack by the record alone. Receivers apply policy on agent name plus client identifier and log both. Sriram would accept Section 6 wording that stays mechanism neutral and requires each source to state the starting event and maximum delay, as in P6.",
+      "summary_ja": "Sriram Shankarlingamは、_agent-oauthレコードは追加のキーを許し、受信者は未知のキーを無視しなければならないため、ステータス情報源へのポインターは受信者を壊さずに追加できるが、その定義はステータス情報源を定めるドキュメントに置くべきだと述べた。これを受けてJaromir Zlyは、draft-zly-aibsn-agent-statusのSection 7.10に任意のstatus_sourceエントリを定義した。レコードまたはAIMSの識別子から独立した情報源とそこでのエージェントのコードを指せ、情報源はどのイベントでレコードが撤回されるかと所要時間を示さなければならない。新しい発行者への移管については、ドメイン所有者がissとclient_idを更新し、旧発行者のトークンは受信者のキャッシュ済みレコードが期限切れになると受理されなくなり、次の版で段落を追加するとSriramは述べた。正当な移管とハイジャックはレコードだけでは区別できない。受信者はエージェント名とクライアント識別子を合わせてポリシーを適用し、両方を記録する。Sriramは、仕組みに依存せず、各情報源に起点イベントと最大遅延の明示を求める(P6と同様)Section 6の文言なら受け入れられるとしている。",
+      "title": "AIMS question: checking agent status from outside the trust domain",
+      "updated_at": "2026-11-22T19:45:37+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/643-IcKVBQSPa6e9Sw0FyfXMPe4/",
+      "use_cases": [
+        "An operator publishing an agent name in DNS that also wants a public, third-party status record for disputes",
+        "A receiver handling an agent whose operator changed authorization server or issuer"
+      ],
+      "use_cases_ja": [
+        "エージェント名をDNSで公開しつつ、紛争に備えて第三者による公開ステータス記録も持ちたい運営者",
+        "運営者が認可サーバーや発行者を変更したエージェントを扱う受信者"
       ]
     },
     "mail:9Oo3h5DF81u2k4qrPDFHXxryH-I": {
@@ -446,6 +497,29 @@
       "use_cases_ja": [
         "エージェント運用者と信頼関係のない銀行などの依存当事者が、顧客の代理で動くエージェントがまだ認可されているかを確認する場合。",
         "責任の観点から、エージェントの認可がいつ失効したかを証明する必要がある実装者の場合。"
+      ]
+    },
+    "mail:AyrwD5fB3oS8tF14xYx84NRpnEQ": {
+      "diagram": "flowchart TD\nA[Withdrawal event on principal standing] --> B[Source takes it in]\nB --> C[Relying party observes status]\nC --> D[Relying party refuses agent]\nA -. bound runs from event .-> D\nC -. status unreadable .-> D",
+      "first_seen": "2026-11-22",
+      "headline": "In short, Songbo Bu's two P6 suggestions will go into draft-molas-agent-principal-refs-01: a per-path withdrawal table and a fail-closed test.",
+      "headline_ja": "Songbo BuによるP6への2件の提案が、draft-molas-agent-principal-refs-01に取り入れられる予定である。撤回経路ごとの表と、フェイルクローズのテストである。",
+      "id": "mail:AyrwD5fB3oS8tF14xYx84NRpnEQ",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Marc Molas relays two off-list suggestions from Songbo Bu. First, P6 is recorded per withdrawal path, with principal standing in its own row. Each row states the withdrawal event, when the source takes it in, and when the relying party observes it, and the bound runs from the event, because a fresh signed observation does not show how quickly the source took in the withdrawal. Second, a test for that row: keep the agent and its token valid, change only the principal's standing, and check that a conforming relying party refuses within the stated bound, including when it cannot read the status. Both will be credited to Bu in -01, planned for 1 December. -01 will also list draft-bu-agentproto-security-principal-binding among the drafts not evaluated, with no grade implied.",
+      "summary_ja": "Marc MolasはSongbo Buからオフリストで受けた2件の提案を共有した。第一に、P6は撤回経路ごとに記録し、プリンシパルの立場(standing)は独立した行とする。各行は撤回イベント、情報源がそれを取り込む時点、依拠当事者が観測する時点を示し、上限はイベントから数える。新しい署名付き観測だけでは、情報源が撤回をどれだけ早く取り込んだかが分からないためである。第二に、その行のテストとして、エージェントとそのトークンを有効なままにしてプリンシパルの立場だけを変更し、適合した依拠当事者が、ステータスを読めない場合も含め、定められた上限内に拒否することを確認する。いずれもBuの功績として12月1日予定の-01に入る。-01では、draft-bu-agentproto-security-principal-bindingも評価対象外のドラフトとして、評価なしで列挙される。",
+      "title": "draft-molas-agent-principal-refs: two suggestions on P6 from Songbo Bu",
+      "updated_at": "2026-11-22T19:45:37+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/AyrwD5fB3oS8tF14xYx84NRpnEQ/",
+      "use_cases": [
+        "Testing that a relying party stops accepting an agent when only the principal's standing changes",
+        "Writing a revocation SLA that starts at the withdrawal event rather than at the observation"
+      ],
+      "use_cases_ja": [
+        "プリンシパルの立場だけが変わった場合に、依拠当事者がエージェントの受理を止めることのテスト",
+        "観測時点ではなく撤回イベントから起算する失効SLAの記述"
       ]
     },
     "mail:BwGCvOXBxqAVBqOG_prlM3nwZUg": {
@@ -787,6 +861,23 @@
         "委任された主体がドメイン間でどう対応付けられたかを、後から監査者が検証する必要がある場合。"
       ]
     },
+    "mail:SoIEBI6zibYWiMOeqOIsvfehExM": {
+      "diagram": "",
+      "first_seen": "2026-11-22",
+      "headline": "In short, the weekly digest shows s2s-protocol issues on http-signature and wpt closed, and a closed arch issue on AI agent identity.",
+      "headline_ja": "週次ダイジェストでは、s2s-protocolのhttp-signatureとwptに関するissueが閉じられ、archのAIエージェントのID関連issueも閉じられた。",
+      "id": "mail:SoIEBI6zibYWiMOeqOIsvfehExM",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "In draft-ietf-wimse-arch, issue #139 (token scopes do not create per-agent identity, so separate workload identities are required) received a comment and was closed. In s2s-protocol, four issues were closed: #422 (http-signature and wpt point to workload-creds Section 5.1.4, which -03 does not have), #420 (note that sample nonces in the HTTP-Sig examples are illustrative and below the entropy floor), #417 (Kathleen's editorial comments on HTTP-Sig) and #419 (test vectors for http-signature-08). Pull request #424, addressing Justin's review, got a comment, and two further s2s-protocol PRs and one in workload-identity-practices were opened. The digest does not show the resulting text changes.",
+      "summary_ja": "draft-ietf-wimse-archではissue #139(トークンのスコープはエージェント単位のIDを作らないため、別々のワークロードIDが必要)にコメントが付き、閉じられた。s2s-protocolでは4件が閉じられた。#422(http-signatureとwptが参照するworkload-credsのSection 5.1.4が-03に存在しない)、#420(HTTP-Sigの例のnonceは例示であり、エントロピーの下限に満たない旨の注記)、#417(HTTP-Sigに関するKathleenの編集上のコメント)、#419(http-signature-08のテストベクター)である。Justinのレビューに対応するPR #424にはコメントが付き、s2s-protocolで2件、workload-identity-practicesで1件のPRが新たに出された。ダイジェストからは、結果としての本文変更は分からない。",
+      "title": "Weekly github digest (WIMSE Weekly GitHub Activity Summary)",
+      "updated_at": "2026-11-22T19:45:37+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/SoIEBI6zibYWiMOeqOIsvfehExM/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "mail:V3Coqv_8g1tHFl7nV2gq-Lppf5o": {
       "diagram": "",
       "first_seen": "2026-11-18",
@@ -803,6 +894,29 @@
       "url": "https://mailarchive.ietf.org/arch/msg/wimse/V3Coqv_8g1tHFl7nV2gq-Lppf5o/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:WI8HdSgosASESG2vXCTmY_PsfWo": {
+      "diagram": "sequenceDiagram\nparticipant R as Registry\nparticipant RP as Relying party\nR->>RP: change feed of status updates\nRP->>RP: update local status list\nRP->>RP: check agent status locally\nRP-->>RP: refuse if revoked or status unreadable",
+      "first_seen": "2026-11-22",
+      "headline": "In short, a thread on whether a public agent registry (AIBSN) can meet P1 to P6 of draft-molas-agent-principal-refs-00, centred on cache versus live status.",
+      "headline_ja": "公開エージェントレジストリ(AIBSN)がdraft-molas-agent-principal-refs-00のP1〜P6を満たせるかをめぐる議論で、キャッシュと即時ステータスの対立が中心である。",
+      "id": "mail:WI8HdSgosASESG2vXCTmY_PsfWo",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Dick Brooks sets three requirements for a trust registry: under 500 ms on average, real-time accuracy from the SCITT ledger, and a single network round trip. He says a local copy trades accuracy for speed. Marc Molas replies that a relying party holding a pre-fetched status list answers locally with no round trip, and the registry does not learn which object is checked. He adds that P6 asks for a number, the time from the withdrawal to the moment a conforming relying party refuses, not for real-time. Jaromir Zly (AIBSN) posts draft-zly-aibsn-agent-status, with a Section 8 self-assessment saying P5 and P6 are not met today, and a Section 7.6 proposal for a local status copy fed by a change feed. He measures lookups at 38 ms on average, 45 ms at the 95th percentile. Marc plans to list the draft in Appendix A of -01 on 1 December 2026, and notes that P6 in Section 3.6 measures up to the moment the relying party refuses, so a bound counted from the registry's receipt of a notification does not fit the test.",
+      "summary_ja": "Dick Brooksは信頼レジストリの要件として、平均500ミリ秒未満、SCITT台帳に基づくリアルタイムの正確性、ネットワーク往復1回を挙げ、ローカルコピーは正確性を犠牲にすると述べた。Marc Molasは、事前取得したステータスリストを持つ依拠当事者は往復なしでローカルに応答でき、レジストリはどのオブジェクトが確認されたかを知らないと返答した。またP6が求めるのは「リアルタイム」ではなく、撤回から適合した依拠当事者が拒否するまでの時間という数値だと述べた。Jaromir Zly(AIBSN)はdraft-zly-aibsn-agent-statusを公開した。Section 8の自己評価ではP5とP6は現時点で未達とされ、Section 7.6では変更フィードで更新するローカルコピーが提案されている。検索の平均は38ミリ秒、95パーセンタイルは45ミリ秒と報告された。Marcは2026年12月1日の-01のAppendix Aに掲載する予定で、Section 3.6のP6は依拠当事者が拒否するまでを測るため、レジストリが通知を受け取った時点からの上限は検証に合わないと指摘した。",
+      "title": "draft-molas-agent-principal-refs-00 - public registry as a case? (5 new messages)",
+      "updated_at": "2026-11-22T19:45:37+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/WI8HdSgosASESG2vXCTmY_PsfWo/",
+      "use_cases": [
+        "A relying party deciding whether to keep a local copy of an agent status list or query a registry on every request",
+        "A registry operator that must state how long a revocation takes to reach relying parties"
+      ],
+      "use_cases_ja": [
+        "エージェントのステータスリストをローカルに保持するか、リクエストごとにレジストリへ問い合わせるかを判断する依拠当事者",
+        "失効が依拠当事者に届くまでの時間を明示しなければならないレジストリ運営者"
+      ]
     },
     "mail:ZC-4gmGfFfj8EEK0JxAx_qduOCo": {
       "diagram": "",
@@ -1191,14 +1305,14 @@
     "Diff active WG draft: draft-ietf-wimse-aims-01": {
       "date": "2026-11-22",
       "priority": "high",
-      "reason": "Two threads this run target AIMS: a Section 6 status-pointer and transfer question, and the issue #86 multi-hop example.",
-      "reason_ja": "今回の二つの議論が AIMS を対象としている。第6節の状態参照先と移管に関する質問、および issue #86 のマルチホップの例である。"
+      "reason": "The AIMS Section 6 status-source wording is under discussion on the list, with an offer to draft text.",
+      "reason_ja": "AIMSのSection 6のステータス情報源に関する文言がメーリングリストで議論されており、文案作成の申し出もある。"
     },
     "Diff active WG draft: draft-ietf-wimse-arch-09": {
-      "date": "2026-11-17",
+      "date": "2026-11-22",
       "priority": "high",
-      "reason": "-09 adds Issuer/Trust Anchor definitions, a Trust Domain Separation section and a SHOULD NOT on shared agent identities.",
-      "reason_ja": "-09 で Issuer と Trust Anchor の定義、Trust Domain Separation の節、エージェント ID 共有への SHOULD NOT が追加された。"
+      "reason": "Arch issue #139 on AI intermediaries and per-agent identity was commented on and closed this week.",
+      "reason_ja": "AI仲介とエージェント単位のIDに関するarchのissue #139に今週コメントが付き、閉じられた。"
     },
     "Diff active WG draft: draft-ietf-wimse-http-signature-08": {
       "date": "2026-11-15",
@@ -1207,10 +1321,10 @@
       "reason_ja": "ダイジェストにテストベクター（#419）、クローズされたサーバー nonce の issue（#369）、参照先が存在しないという新規 issue（#422）の動きがある。"
     },
     "Diff active WG draft: draft-ietf-wimse-http-signature-09": {
-      "date": "2026-11-21",
+      "date": "2026-11-22",
       "priority": "high",
-      "reason": "-09 lets a client reuse a server-generated nonce from Accept-Signature, a behaviour change worth a diff.",
-      "reason_ja": "-09 でクライアントが Accept-Signature のサーバー生成 nonce を再利用できるようになり、挙動が変わったため差分を確認する価値がある。"
+      "reason": "Digest shows closed s2s-protocol issues on http-signature: test vectors, nonce note, editorial comments, and a broken workload-creds reference.",
+      "reason_ja": "ダイジェストでは、s2s-protocolのhttp-signature関連issue(テストベクター、nonceの注記、編集上のコメント、workload-credsの参照切れ)が閉じられている。"
     },
     "Diff active WG draft: draft-ietf-wimse-workload-creds-03": {
       "date": "2026-11-17",
