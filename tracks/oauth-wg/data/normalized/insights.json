@@ -64,6 +64,11 @@
       "at": "2026-11-22T06:55:19+00:00",
       "text": "The main activity is a mailing-list debate on adopting OAuth Actor Chain or Actor Profile for delegation: Actor Chain's authors want per-recipient disclosure in the first draft, while Karl McGuinness and Pieter Kasselman favour a narrow base. Two PRs would tighten Client Identifier URL rules.",
       "text_ja": "主な動きは、委任について OAuth Actor Chain と Actor Profile のどちらを採用するかのメーリングリストでの議論である。Actor Chain の著者は受信者ごとの開示を最初の草案に求め、Karl McGuinness と Pieter Kasselman は狭い基本仕様を支持している。Client Identifier URL の規則を厳格化する PR も 2 件ある。"
+    },
+    {
+      "at": "2026-11-22T19:45:37+00:00",
+      "text": "The main thread is the OAuth WG scope debate over which actor-delegation draft (Actor Profile or Actor Chain) to adopt first. Most voices favour a narrow base document, with subset disclosure as follow-on work. GitHub activity is mostly issues and PRs on the ID-JAG and client-id-metadata-document drafts. No draft text is reported as changed in this material.",
+      "text_ja": "最大の動きは、アクター委譲ドラフト（Actor Profile と Actor Chain）のどちらを最初に採用するかというスコープ議論である。多くの発言者は範囲を絞った基本文書を支持し、部分開示は後続の作業とする立場である。GitHub では ID-JAG と client-id-metadata-document の issue と PR が中心で、ドラフト本文の変更は今回の資料には含まれていない。"
     }
   ],
   "items": {
@@ -295,6 +300,23 @@
         "消去要求にも対応しつつ、承認が必要となった判断を監査可能にしたい実装者。"
       ]
     },
+    "mail:DeIh3KO9kryIhbfCqcFyvk1drr8": {
+      "diagram": "",
+      "first_seen": "2026-11-22",
+      "headline": "A reader suggests rewording the OAuth 2.1 introduction example so the authorization server is clearly the bank's.",
+      "headline_ja": "OAuth 2.1 の序文の例で、認可サーバーが銀行側であることが明確になるよう文言を修正する提案。",
+      "id": "mail:DeIh3KO9kryIhbfCqcFyvk1drr8",
+      "kind": "mail",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The author says that in the draft-ietf-oauth-v2-1-17 introduction, the phrase \"authenticates directly with their financial institution's server (authorization server)\" could be read as a component of the financial management service (client). They suggest replacing it with \"banking institution's server\", or alternatively an example using a personal finance service and \"their bank's server\". This is a wording-only suggestion with no protocol change, and no replies are included.",
+      "summary_ja": "投稿者は、draft-ietf-oauth-v2-1-17 の序文にある「authenticates directly with their financial institution's server (authorization server)」が、金融管理サービス（クライアント）側の構成要素と読める可能性があると指摘している。対案として「banking institution's server」への置き換え、または個人向け金融サービスと「their bank's server」を使った別の例を示している。文言のみの提案でプロトコルの変更はなく、返信は資料に含まれない。",
+      "title": "Minor Suggestion draft-ietf-oauth-v2-1-17",
+      "updated_at": "2026-11-22T19:45:37+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/DeIh3KO9kryIhbfCqcFyvk1drr8/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "mail:F0EM1153dNyFHn5TmphTpvkCQWg": {
       "diagram": "flowchart LR\n  A[Initiator] --> S[Screening actor]\n  S --> C[Connector]\n  C --> AS[Authorization server]\n  AS -->|JWT with disclosed hops only| G[Payment gateway]\n  U[Authorized auditor] -->|verifies withheld hop against chain head| AS",
       "first_seen": "2026-11-22",
@@ -477,6 +499,23 @@
         "ユーザーの他のグラントを失効させずに、特定の AI エージェント一つだけを切断できるようにする AS または RS。",
         "リフレッシュトークンのローテーションを実装し、進行中のリフレッシュによって失効が追い越されないようにする必要がある認可サーバー。"
       ]
+    },
+    "mail:NQbH3WYKgr_X1TJL9C4MNJKqUrQ": {
+      "diagram": "",
+      "first_seen": "2026-11-22",
+      "headline": "Weekly GitHub digest: new issues and PRs on OAuth 2.1, ID-JAG, client-id-metadata-document and deferred-token-response.",
+      "headline_ja": "週次 GitHub ダイジェスト：OAuth 2.1、ID-JAG、client-id-metadata-document、deferred-token-response の issue と PR の動き。",
+      "id": "mail:NQbH3WYKgr_X1TJL9C4MNJKqUrQ",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "The digest lists new issues and PRs but no merged text. In oauth-v2-1, issue #285 asks to add a reference to RFC 10027, and #266 (define invalid_client for the authorization error response, tagged ietf-127) got two comments. In the ID-JAG repo, a new issue (#162) proposes a profile for multi-hop delegation chaining, and four existing issues (#142, #145, #159, #160) got comments, covering the resource parameter, access token lifetime, jwt-dpop vs jwt-bearer in Sections 7.2 and 8, and sender-constrained ID-JAG vs client authentication. In client-id-metadata-document, issue #133 proposes applying the minimum effective cache duration regardless of directives, as is done for the maximum (§6.2), and PR #132 (pre-fetch validation and fetch-triggering guidance) drew five comments. In deferred-token-response, issue #46 asks whether the preceding endpoint may return a deferred response directly. The digest gives only titles, not the contents of these issues.",
+      "summary_ja": "このダイジェストは新規の issue と PR を列挙しているだけで、マージされた本文変更は含まれない。oauth-v2-1 では、issue #285 が RFC 10027 への参照追加を求め、ietf-127 ラベル付きの #266（認可エラーレスポンスにおける invalid_client の定義）に 2 件のコメントが付いた。ID-JAG リポジトリでは、新規 issue #162 がマルチホップ委譲チェーンのプロファイルを提案し、既存の #142、#145、#159、#160 にコメントが付いた。話題は resource パラメータ、アクセストークンの有効期間、7.2 節と 8 節における jwt-dpop と jwt-bearer、送信者制約付き ID-JAG とクライアント認証の関係である。client-id-metadata-document では、issue #133 が最大値と同様に最小有効キャッシュ期間もディレクティブに関係なく適用することを提案し（§6.2）、PR #132（事前取得の検証と取得を引き起こす条件に関するガイダンス）に 5 件のコメントが付いた。deferred-token-response では、issue #46 が先行するエンドポイントが遅延レスポンスを直接返せるようにすることを求めている。ダイジェストにはタイトルのみが載り、各 issue の内容は分からない。",
+      "title": "Weekly github digest (OAuth Activity Summary)",
+      "updated_at": "2026-11-22T19:45:37+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/NQbH3WYKgr_X1TJL9C4MNJKqUrQ/",
+      "use_cases": [],
+      "use_cases_ja": []
     },
     "mail:OcZJg8cvTfnRnjcCDxnTlqgFbkA": {
       "diagram": "sequenceDiagram\nparticipant C as Client\nparticipant AS as Authorization server\nparticipant D as Metadata document host\nC->>AS: authorization request with client_id URL\nAS->>AS: resolve host and refuse private addresses\nAS->>D: GET document, no redirects, size and time capped\nD-->>AS: JSON with client_id and redirect_uris\nAS->>AS: check client_id is byte-equal, apply RFC 8252 to redirect_uris\nAS-->>C: continue flow as public client with PKCE",
@@ -1231,6 +1270,38 @@
         "紛争時に認可サーバーに対して利用者が使える承認・撤回の記録を必要とするデプロイ担当者。"
       ]
     },
+    "mail:wKasJd4xdw1SPeOxe3dV13xRmf4": {
+      "diagram": "",
+      "first_seen": "2026-11-22",
+      "headline": "WG members argue over whether Actor Profile or Actor Chain should be the starting text for delegation actor rules, and how narrow it should be.",
+      "headline_ja": "委譲におけるアクター規則の出発点を Actor Profile と Actor Chain のどちらにするか、またどこまで範囲を絞るかをめぐる議論。",
+      "id": "mail:wKasJd4xdw1SPeOxe3dV13xRmf4",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-nandakumar-wimse-delegator-bound-chains",
+          "note": "Another delegation-chain design for AI agents, in the same space as the actor chain proposals, though this thread does not cite it.",
+          "note_ja": "AI エージェント向けの別の委譲チェーン設計で、アクターチェーンの提案と同じ領域にあるが、このスレッドでは引用されていない。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Following IETF 127, A. Prasad recommends Actor Chain as the starting text, saying its declared-full profile already covers issuer-asserted actor history in nested act. The first WG draft, they argue, should also allow optional subset disclosure (declared-subset and verified-subset) for need-to-know cases such as a gateway. Karl McGuinness and Pieter Kasselman favour a narrow base document on actor identification, chain representation and propagation, with provenance and selective disclosure as follow-on profiles. Ilja Radusch, running actor-profile -01 at depth 1, lists what a first document must fix: the act shape (iss + sub, enforcement on act.sub), identical act preservation across refresh, and a grant-level identifier (dlg_id, actor-profile PR #34). They support a narrow document if the chain-preservation rule lets a later subset profile relax it by an explicit signal. The message is truncated in the source, and no adoption decision is recorded.",
+      "summary_ja": "IETF 127 を受けて、A. Prasad は Actor Chain を出発点とすることを推奨している。declared-full プロファイルが、入れ子の act における発行者によるアクター履歴の表明をすでに扱っているという理由である。ゲートウェイのように知る必要のある範囲に限定したい場合のため、最初の WG ドラフトでも任意の部分開示（declared-subset と verified-subset）を許すべきだと主張する。Karl McGuinness と Pieter Kasselman は、アクターの識別、チェーンの表現、伝播規則に絞った基本文書を支持し、来歴と選択的開示は後続のプロファイルとする立場である。actor-profile -01 を深さ 1 で運用している Ilja Radusch は、最初の文書が定めるべき事項として、act の形（iss と sub、act.sub に基づく強制）、リフレッシュ時に同一の act を保持すること、グラントレベルの識別子（dlg_id、actor-profile PR #34）を挙げた。チェーン保持規則を、後続の部分集合プロファイルが明示的なシグナルで緩和できる書き方にすることを条件に、範囲を絞った文書を支持している。元のメッセージは途中で切れており、採用の決定は記録されていない。",
+      "title": "Comparing Actor Chain and Actor Profile before an adoption call (2 new messages)",
+      "updated_at": "2026-11-22T19:45:37+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/wKasJd4xdw1SPeOxe3dV13xRmf4/",
+      "use_cases": [
+        "An AS issuing delegated-agent tokens that must keep act intact across refresh-token use.",
+        "A gateway that forwards an agent request and should disclose only the actors the next hop needs.",
+        "A resource server that lists or revokes a user's delegations and needs a stable per-grant key."
+      ],
+      "use_cases_ja": [
+        "委譲されたエージェント向けトークンを発行し、リフレッシュトークンの利用をまたいで act を保持しなければならない認可サーバー。",
+        "エージェントのリクエストを転送し、次のホップが必要とするアクターのみを開示したいゲートウェイ。",
+        "ユーザーの委譲を一覧表示または取り消すために、グラントごとの安定したキーを必要とするリソースサーバー。"
+      ]
+    },
     "mail:xeDwM6Q4xP2mZ5uSEbilXFKFHZI": {
       "diagram": "",
       "first_seen": "2026-11-20",
@@ -1259,6 +1330,29 @@
       "use_cases_ja": [
         "AI エージェントに、一回あたりと期間ごとの上限の範囲内で指定の仕入先へ支払わせ、上限を超える場合は追加承認を求める銀行や決済事業者。",
         "支払い結果が unknown だった場合も含め、何を判断したかについて紛争に使える証拠を必要とする調達システム。"
+      ]
+    },
+    "mail:xmpncNcNsIielhtQDosnhixJ-78": {
+      "diagram": "sequenceDiagram\nparticipant A as Attacker (user A)\nparticipant F as Auth filter\nparticipant R as Record store\nparticipant H as Profile handler\nA->>F: JWT signed with default key, sub=A uid=A-session userId=B\nF->>F: verify signature (passes)\nF->>R: look up record by sub and uid\nR-->>F: A's record found\nF->>H: principal A, userId claim B\nH->>H: own-profile check uses userId = B\nH-->>A: B's profile edited",
+      "first_seen": "2026-11-22",
+      "headline": "A researcher asks whether the JWT BCP should say that every claim identifying the user must match the server-side authentication record.",
+      "headline_ja": "研究者が、ユーザーを識別するすべての JWT クレームがサーバー側の認証レコードと一致することを JWT BCP に明記すべきか尋ねている。",
+      "id": "mail:xmpncNcNsIielhtQDosnhixJ-78",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "A Fudan University researcher describes two forgery cases, in ELADMIN and Mainflux, where a JWT signed with a default key passed the signature and server-side record checks, yet a different claim (userId in ELADMIN) made a downstream handler act as another account. Both projects merged fixes: ELADMIN compares the full presented JWT with the one stored at login and drops the shared key, and Mainflux requires a configured secret and checks that the record belongs to the account in the JWT. The author argues that §3.8 of the BCP does not say how a checked record should constrain all claims used to identify the user. They propose a short implementation note and ask whether the existing text covers this, noting that rfc8725bis-10 is already in the RFC Editor queue. No reply is included in the material.",
+      "summary_ja": "復旦大学の研究者が、ELADMIN と Mainflux における 2 件の偽造事例を報告している。いずれも既定の鍵で署名した JWT が署名検証とサーバー側レコードの検査を通過したが、別のクレーム（ELADMIN では userId）により下流のハンドラーが別のアカウントとして動作した。両プロジェクトは修正をマージしており、ELADMIN はログイン時に保存した JWT 全体と提示された JWT を比較し共有鍵を廃止した。Mainflux は署名シークレットの設定を必須とし、レコードが JWT 内のアカウントに属することを検査する。投稿者は、BCP の §3.8 が、検査済みレコードがユーザー識別に使うすべてのクレームをどう制約すべきかを述べていないと主張する。短い実装上の注記を提案し、既存の文言で足りるかを尋ねている。rfc8725bis-10 はすでに RFC Editor キューにあるとも述べている。資料に返信は含まれない。",
+      "title": "User identity checks for JWTs with server-side authentication records",
+      "updated_at": "2026-11-22T19:45:37+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/xmpncNcNsIielhtQDosnhixJ-78/",
+      "use_cases": [
+        "A Spring or Express app that authenticates with a JWT plus a Redis session record and reads a user ID claim in a downstream handler.",
+        "An IoT or admin platform that ships a default signing key and must decide how claims are bound to a stored session."
+      ],
+      "use_cases_ja": [
+        "JWT と Redis のセッションレコードで認証し、下流のハンドラーでユーザー ID クレームを読む Spring や Express のアプリケーション。",
+        "既定の署名鍵を同梱する IoT や管理プラットフォームで、クレームと保存済みセッションの結び付け方を決める場面。"
       ]
     },
     "mail:y_IZYbPS71qPIJl8Jgxr2IyEfRE": {
@@ -1465,17 +1559,17 @@
   },
   "overflow": [],
   "triage": {
-    "draft-ietf-oauth-client-id-metadata-document": {
+    "draft-ietf-oauth-identity-assertion-authz-grant": {
       "date": "2026-11-22",
       "priority": "high",
-      "reason": "Two open PRs (#134, #135) would tighten Client Identifier URL rules (no query, no port), with a WG question about local-testing exceptions.",
-      "reason_ja": "2 件の PR（#134、#135）が Client Identifier URL の規則（クエリとポートの禁止）を厳格化しようとしており、ローカルテスト向けの例外について WG への問いも出ている。"
+      "reason": "Five issues were opened or commented on in one week (#142, #145, #159, #160, #162), including multi-hop delegation chaining.",
+      "reason_ja": "1 週間で 5 件の issue（#142、#145、#159、#160、#162）が作成またはコメントされ、マルチホップ委譲チェーンも含まれる。"
     },
-    "draft-ietf-oauth-identity-assertion-authz-grant": {
-      "date": "2026-11-15",
-      "priority": "high",
-      "reason": "New issue #161 reports a conflict between the §4.3.3 and §4.5 rules, and #121 was closed this week.",
-      "reason_ja": "新規 issue #161 で §4.3.3 と §4.5 の規則の矛盾が報告され、#121 もクローズされた。"
+    "draft-ietf-oauth-rfc8725bis": {
+      "date": "2026-11-22",
+      "priority": "low",
+      "reason": "A thread asks for a clarification, but the draft is already in the RFC Editor queue, so changes are unlikely.",
+      "reason_ja": "明確化を求めるスレッドがあるが、ドラフトはすでに RFC Editor キューにあり、変更される可能性は低い。"
     },
     "draft-ietf-oauth-status-list": {
       "date": "2026-11-20",
