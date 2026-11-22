@@ -1,8 +1,8 @@
-# OAuth WG Backlog (2026-11-21)
+# OAuth WG Backlog (2026-11-22)
 
-- generated_at_utc: `2026-11-21T19:19:40+00:00`
+- generated_at_utc: `2026-11-22T06:53:49+00:00`
 
-- [ ] `draft-ietf-oauth-sd-jwt-vc` score=116 updated=2026-11-16T10:45:13Z
+- [ ] `draft-ietf-oauth-sd-jwt-vc` score=112 updated=2026-11-16T10:45:13Z
 - [ ] `draft-ietf-oauth-status-list` score=90 updated=2026-11-19T02:42:34Z
 - [ ] `draft-ietf-oauth-rfc8725bis` score=83 updated=2026-11-17T15:06:04Z
 - [ ] `draft-ietf-oauth-first-party-apps` score=80 updated=2026-08-26T14:40:16Z
@@ -24,7 +24,7 @@
 
 Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.
 
-- **high** `draft-ietf-oauth-client-id-metadata-document`: An implementation report led to a planned issue on §6.2 cache wording plus open suggestions on DNS rebinding, timeouts and RFC 8252.
+- **high** `draft-ietf-oauth-client-id-metadata-document`: Two open PRs (#134, #135) would tighten Client Identifier URL rules (no query, no port), with a WG question about local-testing exceptions.
 - **high** `draft-ietf-oauth-identity-assertion-authz-grant`: New issue #161 reports a conflict between the §4.3.3 and §4.5 rules, and #121 was closed this week.
 - **low** `draft-ietf-oauth-status-list`: Only cited in list feedback as a preferred chain-status mechanism, with no change to the draft.
 - **low** `draft-ietf-oauth-transaction-tokens`: Mentioned only as one possible delegation credential in the PACE draft announcement.

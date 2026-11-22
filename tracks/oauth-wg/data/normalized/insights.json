@@ -1,13 +1,5 @@
 {
-  "attempts": {
-    "count": 1
-  },
   "briefs": [
-    {
-      "at": "2026-11-14T18:08:33+00:00",
-      "text": "One item: an IANA early review of draft-ietf-oauth-deferred-token-response-01 asking for clarifications to the IANA Considerations. No protocol change.",
-      "text_ja": "IANAが draft-ietf-oauth-deferred-token-response-01 の早期レビューを送り、IANA Considerations の明確化を求めた。プロトコルの変更はない。"
-    },
     {
       "at": "2026-11-15T18:54:47+00:00",
       "text": "No draft text changed this run. The most substantive activity is on the identity-assertion-authz-grant issue tracker, where an Audience-to-client_id mismatch was reported (#161) and the CIMD digest issue (#121) was closed. A new individual draft for batch agent delegation also appeared.",
@@ -67,6 +59,11 @@
       "at": "2026-11-21T07:15:03+00:00",
       "text": "An implementation report on draft-ietf-oauth-client-id-metadata-document led to a concrete issue about cache-lifetime wording in -03 §6.2. The actor-delegation thread (Actor Chain vs Actor Profile) continues toward an adoption call, and a new individual draft on brokered authorization appeared.",
       "text_ja": "draft-ietf-oauth-client-id-metadata-document の実装報告から、-03 §6.2 のキャッシュ期間の文言に関する具体的な issue が起こされた。Actor Chain と Actor Profile の比較議論は採用の呼びかけに向けて続いており、ブローカー型認可の新しい個人ドラフトも投稿された。"
+    },
+    {
+      "at": "2026-11-22T06:55:19+00:00",
+      "text": "The main activity is a mailing-list debate on adopting OAuth Actor Chain or Actor Profile for delegation: Actor Chain's authors want per-recipient disclosure in the first draft, while Karl McGuinness and Pieter Kasselman favour a narrow base. Two PRs would tighten Client Identifier URL rules.",
+      "text_ja": "主な動きは、委任について OAuth Actor Chain と Actor Profile のどちらを採用するかのメーリングリストでの議論である。Actor Chain の著者は受信者ごとの開示を最初の草案に求め、Karl McGuinness と Pieter Kasselman は狭い基本仕様を支持している。Client Identifier URL の規則を厳格化する PR も 2 件ある。"
     }
   ],
   "items": {
@@ -298,22 +295,37 @@
         "消去要求にも対応しつつ、承認が必要となった判断を監査可能にしたい実装者。"
       ]
     },
-    "mail:FmOt_z3_BXJBWtpSdLxxtPV6wMs": {
-      "diagram": "",
-      "first_seen": "2026-11-14",
-      "headline": "IANA's pre-meeting review asks the deferred-token-response authors to clarify two registry details.",
-      "headline_ja": "IANAが会議前レビューで、deferred-token-response の二つのレジストリ記載の明確化を求めた。",
-      "id": "mail:FmOt_z3_BXJBWtpSdLxxtPV6wMs",
+    "mail:F0EM1153dNyFHn5TmphTpvkCQWg": {
+      "diagram": "flowchart LR\n  A[Initiator] --> S[Screening actor]\n  S --> C[Connector]\n  C --> AS[Authorization server]\n  AS -->|JWT with disclosed hops only| G[Payment gateway]\n  U[Authorized auditor] -->|verifies withheld hop against chain head| AS",
+      "first_seen": "2026-11-22",
+      "headline": "The WG is debating the scope of a first delegation draft: Actor Chain with selective disclosure, or a narrow Actor Profile.",
+      "headline_ja": "委任ドラフトの最初の範囲をめぐり、選択的開示を含む Actor Chain と、範囲を絞った Actor Profile のどちらを採るかが議論されている。",
+      "id": "mail:F0EM1153dNyFHn5TmphTpvkCQWg",
       "kind": "mail",
-      "related": [],
-      "significance": "routine",
-      "summary": "IANA sent its routine pre-IETF 127 review of draft-ietf-oauth-deferred-token-response-01. It asks the authors to say whether the new registry in Section 13.2 belongs in an existing registry group or a new one. It also asks for the full registry name, as it should appear on the IANA website, for Section 13.4. No protocol behaviour or wire format is discussed.",
-      "summary_ja": "IANAが IETF 127 に先立つ定例レビューとして draft-ietf-oauth-deferred-token-response-01 に関する指摘を送った。13.2節の新規レジストリを既存のレジストリグループに追加するか新しいグループに置くかの明示を求めている。また13.4節について、IANAのウェブサイトに表示されるレジストリの正式名称の記載を求めている。プロトコルの挙動やワイヤフォーマットには触れていない。",
-      "title": "Early review: draft-ietf-oauth-deferred-token-response-01 (IETF 127)",
-      "updated_at": "2026-11-14T18:08:33+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/FmOt_z3_BXJBWtpSdLxxtPV6wMs/",
-      "use_cases": [],
-      "use_cases_ja": []
+      "related": [
+        {
+          "name": "draft-asor-wimse-agent-delegation-chain",
+          "note": "Also concerns verifiable delegation chains for agents, but the material does not link it to this thread.",
+          "note_ja": "エージェント向けの検証可能な委任チェーンを扱う点で関連するが、資料にこのスレッドとの明示的な関連は書かれていない。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "A. Prasad (Actor Chain) recommends Actor Chain as the starting text for JWT access-token delegation rules. The recommendation rests on recipient-specific disclosure: a gateway can get a JWT with the inherited screening actor omitted, and an authorized auditor holding the full originals can verify the withheld step against the chain head. Prasad claims Actor Profile must carry such an actor forward, and that handing over a Liu Delegation Chain record discloses the identifier. Karl McGuinness (Actor Profile) prefers a concise, narrowly scoped base covering actor identification, chain representation and propagation, with provenance proofs and selective disclosure as separate profiles as long as the base does not preclude them. Pieter Kasselman supports the narrow scope. Mark Atwood suggests per-recipient disclosure should be a requirement, with hash-linked hops so a withheld hop is still provable. One of Prasad's messages is truncated in the material, so the full argument is not captured. No adoption decision appears.",
+      "summary_ja": "A. Prasad（Actor Chain）は、JWT アクセストークンの委任規則の出発点として Actor Chain を推している。根拠は受信者ごとの開示である。ゲートウェイには継承された screening actor を省いた JWT を渡せ、完全な原本を持つ認可された監査者は、省かれたステップをチェーンヘッドに対して検証できる。Prasad は、Actor Profile ではそのような actor を引き継ぐ必要があり、Liu の Delegation Chain では委任レコードを渡すと識別子が開示されると主張している。Karl McGuinness（Actor Profile）は、actor の識別、チェーン表現、伝播を扱う簡潔で範囲の狭い基本仕様を望み、来歴証明と選択的開示は、基本仕様がそれを妨げない限り別プロファイルで扱うとしている。Pieter Kasselman も範囲を絞る立場を支持している。Mark Atwood は、受信者ごとの開示を要件とし、各ホップをハッシュで連結して、隠したホップも証明可能にすることを提案している。Prasad のメッセージの 1 件は資料内で切り詰められており、主張の全体は把握できていない。採用の決定は資料に含まれていない。",
+      "title": "Comparing Actor Chain and Actor Profile before an adoption call (3 new messages)",
+      "updated_at": "2026-11-22T06:55:19+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/F0EM1153dNyFHn5TmphTpvkCQWg/",
+      "use_cases": [
+        "An API gateway that must authorize a request without seeing internal screening or intermediary hops that belong to another trust domain.",
+        "Regulated workflows such as payments, healthcare referrals or insurance claims, where an auditor must later verify a hop the recipient was never shown.",
+        "A WG participant deciding whether to support adoption of Actor Chain or Actor Profile, and how big the first document should be."
+      ],
+      "use_cases_ja": [
+        "別の信頼ドメインに属する内部の screening や中継ホップを見ずに、リクエストを認可する必要がある API ゲートウェイ。",
+        "決済、医療の紹介、保険請求のように、受信者には見せなかったホップを後から監査者が検証する必要がある規制対象のワークフロー。",
+        "Actor Chain と Actor Profile のどちらの採用を支持するか、また最初の文書をどこまで広げるかを判断する WG 参加者。"
+      ]
     },
     "mail:Gg-XRhIkKakzC1ay6QhKkRimrw8": {
       "diagram": "sequenceDiagram\nparticipant C as Client\nparticipant AS as Authorization Server\nparticipant H as client_id URL host\nC->>AS: authorization request with URL client_id\nAS->>H: fetch metadata document\nH-->>AS: document with redirect_uris\nAS->>AS: check client_id equality, redirect URIs, scope intersection\nAS-->>C: continue flow",
@@ -778,6 +790,23 @@
         "カレンダーとメールの権限が必要なオーケストレーターエージェントは、エージェントごとに同意画面を出さず、一度の同意で両方を要求できる。",
         "各サブエージェントのトークンを自身の権限だけに限定したい運用者は、項目ごとの may_act による紐付けを使える。"
       ]
+    },
+    "mail:b20jw_GKDd4TT_s2WQxjhE3WB98": {
+      "diagram": "",
+      "first_seen": "2026-11-22",
+      "headline": "The IETF created a non-WG mailing list called LEAK on automated rotation of API keys.",
+      "headline_ja": "IETF が、API キーの自動ローテーションを扱う非 WG のメーリングリスト LEAK を新設した。",
+      "id": "mail:b20jw_GKDd4TT_s2WQxjhE3WB98",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "Lisa Dusseault forwarded the Secretariat announcement of a new non-WG list, leak@ietf.org (Limit Exposure of API Keys), in the ART area. Its stated purpose is to discuss automated rotation of API keys as harm mitigation, and to give guidance and fill gaps so the long tail of API servers can move to safer options. She posted it for people on the OAuth list who may not follow ietf-announce. No drafts or protocol text are involved.",
+      "summary_ja": "Lisa Dusseault が、ART エリアの新しい非 WG リスト leak@ietf.org（Limit Exposure of API Keys）の設立を知らせる事務局の告知を転送した。目的は、被害軽減としての API キーの自動ローテーションを議論し、ロングテールの API サーバーがより安全な方式へ移行できるよう指針を示し、不足を埋めることである。ietf-announce を追っていない OAuth リストの参加者に向けた周知であり、ドラフトやプロトコル文面は関係しない。",
+      "title": "New Non-WG Mailing List: leak (Limit Exposure of API Keys)",
+      "updated_at": "2026-11-22T06:55:19+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/b20jw_GKDd4TT_s2WQxjhE3WB98/",
+      "use_cases": [],
+      "use_cases_ja": []
     },
     "mail:cMK4l6ZzO4AG6ugan-I-Rs3QDvA": {
       "diagram": "flowchart LR\nU[User wallet or device key] -->|signs grant| R[Root token]\nR --> A[Agent token]\nA --> B[Second airline]\nB -->|checks chain back to user signature| U",
@@ -1285,6 +1314,52 @@
         "CIMD を使い、デフォルト以外のポートでテスト用の認可サーバーや CIMD サービスを動かす MCP の運用。"
       ]
     },
+    "pr:oauth-wg/draft-ietf-oauth-client-id-metadata-document#134": {
+      "diagram": "",
+      "first_seen": "2026-11-22",
+      "headline": "A proposed change would make a query component in Client Identifier URLs a MUST NOT instead of a SHOULD NOT.",
+      "headline_ja": "Client Identifier URL にクエリ成分を含めることを、SHOULD NOT から MUST NOT に強める変更が提案されている。",
+      "id": "pr:oauth-wg/draft-ietf-oauth-client-id-metadata-document#134",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "substantive",
+      "summary": "The PR changes the draft so that a Client Identifier URL must not contain a query string. Today the draft only says it should not. The author says this matches the existing rule that the Client ID Metadata Document must not be built from query input. It is one of three stand-alone PRs related to issue #112, alongside #132 (fetch-gating) and #135 (port ban).",
+      "summary_ja": "この PR は、Client Identifier URL にクエリ文字列を含めてはならない（must not）とするようドラフトを変更する。現行のドラフトは should not にとどまっている。作者は、Client ID Metadata Document をクエリ入力から生成してはならないという既存の規則と整合すると述べている。issue #112 に関連し、#132（fetch-gating）と #135（ポートの禁止）と並ぶ独立した PR の 1 つである。",
+      "title": "oauth-wg/draft-ietf-oauth-client-id-metadata-document#134: Require Client Identifier URLs MUST NOT contain a query component (#112)",
+      "updated_at": "2026-11-22T06:55:19+00:00",
+      "url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pull/134",
+      "use_cases": [
+        "An authorization server that fetches client metadata can reject client_id URLs with a query component outright.",
+        "A client that today uses a query string in its client_id URL would need to change it."
+      ],
+      "use_cases_ja": [
+        "クライアントメタデータを取得する認可サーバーは、クエリ成分を含む client_id URL を一律に拒否できる。",
+        "現在 client_id の URL にクエリ文字列を使っているクライアントは、変更が必要になる。"
+      ]
+    },
+    "pr:oauth-wg/draft-ietf-oauth-client-id-metadata-document#135": {
+      "diagram": "",
+      "first_seen": "2026-11-22",
+      "headline": "A proposed change would ban ports in Client Identifier URLs in the client-id-metadata-document draft.",
+      "headline_ja": "client-id-metadata-document ドラフトで、Client Identifier URL にポートを含めることを禁止する変更が提案されている。",
+      "id": "pr:oauth-wg/draft-ietf-oauth-client-id-metadata-document#135",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "substantive",
+      "summary": "The PR changes the draft so that a Client Identifier URL must not include a port. The draft currently allows one. The string-comparison example no longer uses :443 and uses a trailing slash instead. The author flags that this may break local testing such as https://localhost:8443/... and other non-default ports, and says the WG might prefer a should-not, or a must-not with a development exception. It is one of three stand-alone PRs related to issue #112.",
+      "summary_ja": "この PR は、Client Identifier URL にポートを含めてはならない（must not）とするようドラフトを変更する。現行のドラフトはポートを許可している。文字列比較の例は :443 をやめ、末尾のスラッシュを使うようになる。作者は、https://localhost:8443/... のようなローカルテストや、デフォルト以外のポートが使えなくなる可能性を指摘し、should not にするか、開発用の例外を設けた must not にする案もあり得るとしている。issue #112 に関連する独立した 3 件の PR の 1 つである。",
+      "title": "oauth-wg/draft-ietf-oauth-client-id-metadata-document#135: Disallow port component in Client Identifier URLs (#112)",
+      "updated_at": "2026-11-22T06:55:19+00:00",
+      "url": "https://github.com/oauth-wg/draft-ietf-oauth-client-id-metadata-document/pull/135",
+      "use_cases": [
+        "A client developer testing against a local authorization server on a non-default port would no longer be able to use a conforming Client Identifier URL.",
+        "An authorization server implementer deciding how strictly to validate client_id URLs."
+      ],
+      "use_cases_ja": [
+        "デフォルト以外のポートでローカルの認可サーバーに対してテストするクライアント開発者は、準拠した Client Identifier URL を使えなくなる。",
+        "client_id の URL をどこまで厳密に検証するかを決める認可サーバーの実装者。"
+      ]
+    },
     "pr:oauth-wg/oauth-deferred-token-response#82": {
       "diagram": "",
       "first_seen": "2026-11-16",
@@ -1336,6 +1411,23 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "pr:oauth-wg/oauth-first-party-apps#182": {
+      "diagram": "",
+      "first_seen": "2026-11-22",
+      "headline": "A contact-detail update for an author of the first-party-apps draft.",
+      "headline_ja": "first-party-apps ドラフトの著者の連絡先を更新する変更である。",
+      "id": "pr:oauth-wg/oauth-first-party-apps#182",
+      "kind": "pull-request",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The PR changes Pieter Kasselman's email contact and updates the document history. There is no protocol change.",
+      "summary_ja": "この PR は Pieter Kasselman のメールの連絡先を変更し、文書の履歴を更新する。プロトコルの変更はない。",
+      "title": "oauth-wg/oauth-first-party-apps#182: Update contact details for Pieter Kasselman",
+      "updated_at": "2026-11-22T06:55:19+00:00",
+      "url": "https://github.com/oauth-wg/oauth-first-party-apps/pull/182",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "pr:oauth-wg/oauth-v2-1#284": {
       "diagram": "",
       "first_seen": "2026-11-17",
@@ -1374,10 +1466,10 @@
   "overflow": [],
   "triage": {
     "draft-ietf-oauth-client-id-metadata-document": {
-      "date": "2026-11-21",
+      "date": "2026-11-22",
       "priority": "high",
-      "reason": "An implementation report led to a planned issue on §6.2 cache wording plus open suggestions on DNS rebinding, timeouts and RFC 8252.",
-      "reason_ja": "実装報告により、§6.2 のキャッシュ文言に関する issue と、DNS rebinding・タイムアウト・RFC 8252 に関する未決の提案が生じた。"
+      "reason": "Two open PRs (#134, #135) would tighten Client Identifier URL rules (no query, no port), with a WG question about local-testing exceptions.",
+      "reason_ja": "2 件の PR（#134、#135）が Client Identifier URL の規則（クエリとポートの禁止）を厳格化しようとしており、ローカルテスト向けの例外について WG への問いも出ている。"
     },
     "draft-ietf-oauth-identity-assertion-authz-grant": {
       "date": "2026-11-15",
