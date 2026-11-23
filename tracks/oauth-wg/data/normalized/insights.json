@@ -69,6 +69,11 @@
       "at": "2026-11-23T07:44:45+00:00",
       "text": "No draft text changed; three mailing-list threads. The most notable is a proposal to add guidance to the JWT BCP (rfc8725bis) that a record-backed JWT check must bind every claim used to identify the user.",
       "text_ja": "ドラフト本文の変更はなく、メーリングリストの議論が三件ある。最も注目すべきは、レコード照合を行う JWT で、ユーザー識別に使うすべてのクレームを照合結果に結び付けるよう JWT BCP (rfc8725bis) に明記する提案である。"
+    },
+    {
+      "at": "2026-11-23T23:58:03+00:00",
+      "text": "The most substantive thread is the WG scope debate over actor and delegation profiles: several people favour a narrow first document fixing the `act` shape, refresh preservation and a grant-level identifier. A new RAR payment-mandate draft got detailed review. The rest is discussion only.",
+      "text_ja": "最も重要なのは、アクター／委任プロファイルの範囲をめぐる議論である。`act` の形式、リフレッシュ時の保持、付与単位の識別子に絞った小さな最初の文書を支持する声が複数あった。新規の RAR 決済マンデートのドラフトにも詳細なレビューが付いた。そのほかは議論のみである。"
     }
   ],
   "items": {
@@ -240,6 +245,29 @@
         "-03 §6.2 のもとで no-store や max-age=0 の応答をどうキャッシュすべきかを知りたい、クライアントメタデータ文書を取得する認可サーバーの運用者。",
         "DNS rebinding やタイムアウトを含め、メタデータ文書の取得処理を SSRF に対して堅牢にする実装者。",
         "private-use URI スキームの redirect_uris を持つメタデータ文書を公開するネイティブアプリの提供者。"
+      ]
+    },
+    "mail:8PlKFLCzRgbqHa_NjWvxeb71dOY": {
+      "diagram": "",
+      "first_seen": "2026-11-23",
+      "headline": "A researcher asks for a JWT BCP §3.8 note on consistent user identity; one reviewer says the existing RFCs already cover it.",
+      "headline_ja": "研究者が JWT BCP §3.8 にユーザー識別の一貫性に関する注記を求めたが、既存の RFC で足りるという意見が出た。",
+      "id": "mail:8PlKFLCzRgbqHa_NjWvxeb71dOY",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Gaosong Zhang reported token-forgery cases in ELADMIN and Mainflux. In ELADMIN the filter checked the Redis record via `sub` and `uid`, but a downstream handler took the account from `userId`. With the publicly known default signing key, a forged token let user A act as administrator B. Both projects merged fixes. He proposed a §3.8 sentence that every claim used to identify the user should resolve to the user tied to the server-side record. Emelia Smith said no BCP change is needed: the failures were a well-known signing key and redundant non-standard claims, and RFC 7519 and §§2.1 and 3.8 of RFC 8725 already cover them. She allowed that discouraging multiple identity claims might help. Frederik Krogsdal Jacobsen found the point reasonable, suggested shorter wording with 'user', and noted the revision may be too late. Zhang asked whether it could go in a future update.",
+      "summary_ja": "Gaosong Zhang は ELADMIN と Mainflux のトークン偽造事例を報告した。ELADMIN では、フィルターが `sub` と `uid` で Redis のレコードを確認する一方、下流のハンドラーは `userId` からアカウントを得ていた。公開されている既定の署名鍵により、偽造トークンで一般ユーザー A が管理者 B として操作できた。両プロジェクトとも修正を取り込み済みである。Zhang は、ユーザーの識別に使うすべてのクレームが、サーバー側レコードに結びつくユーザーに解決されるべきだとする一文を §3.8 に加えるよう提案した。Emelia Smith は、原因は周知の署名鍵と重複した非標準クレームであり、RFC 7519 と RFC 8725 の §2.1 および §3.8 で既に扱われているため BCP の変更は不要としたが、識別に複数のクレームを使わないよう促す程度なら有益かもしれないと述べた。Frederik Krogsdal Jacobsen は指摘を妥当とし、「user」を使った短い文案を示したうえで、今回の改訂には間に合わない可能性に触れた。Zhang は将来の更新で検討できるか尋ねた。",
+      "title": "User identity checks for JWTs with server-side authentication records (6 new messages)",
+      "updated_at": "2026-11-23T23:58:03+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/8PlKFLCzRgbqHa_NjWvxeb71dOY/",
+      "use_cases": [
+        "An application that authenticates by JWT plus a server-side session record should derive the user from one claim (`sub`) and use it in every handler.",
+        "Deployments should not ship a shared default signing key."
+      ],
+      "use_cases_ja": [
+        "JWT とサーバー側セッションレコードで認証するアプリケーションは、ユーザーを一つのクレーム（`sub`）から決め、すべてのハンドラーで同じ値を使うべきである。",
+        "共有の既定署名鍵を同梱して出荷してはならない。"
       ]
     },
     "mail:ALY4dNyHGE97WD8kZ0bKPYxwtOk": {
@@ -495,6 +523,29 @@
         "JWT アクセストークンの委任の基盤としてどのドラフトを採用するかを検討する WG の参加者。"
       ]
     },
+    "mail:LGotP0K7zW1AD45o2Q6pBR2H3dE": {
+      "diagram": "",
+      "first_seen": "2026-11-23",
+      "headline": "Review of draft-craig-oauth-rar-payment-mandates-00 finds gaps in receipt outcomes, receipt timing and what is committed.",
+      "headline_ja": "draft-craig-oauth-rar-payment-mandates-00 のレビューで、レシートの outcome、記録の時点、コミット対象に抜けが指摘された。",
+      "id": "mail:LGotP0K7zW1AD45o2Q6pBR2H3dE",
+      "kind": "mail",
+      "related": [],
+      "significance": "new-proposal",
+      "summary": "The draft profiles RAR for agent payment mandates, approval reasons and signed receipts. Markus Mazurczak of Home-Mandate, who also maintains a payment implementation (Valet), reviewed it. He said §6 lists decision states (approved, completed, declined) that the `outcome` values in Table 2 do not cover, and Valet's `escalated` receipt is missing too. He asked that a decision and its receipt be stored together, and that an unknown outcome stay open until a new receipt with the same payment_id resolves it. He suggested a JCS digest of the granted authorization_details instead of mandate_version. He proposed committing payee and reference while leaving amount and currency in the clear, so limits can be checked. He asked the draft to say whether an approval covers every limit a payment breaks. He also asked how chain heads are published and signed, and for the salt and value encoding in §6.3, iss and iat given typ payment-receipt+jwt, time-zone changes, and foreign-currency payments. He said Home-Mandate will likely adopt something close to §6.3.",
+      "summary_ja": "このドラフトは、エージェントの決済マンデート、承認理由、署名付きレシートのための RAR プロファイルである。Home-Mandate の Markus Mazurczak が、自身が保守する決済実装 Valet の経験をもとにレビューした。§6 の判定状態（approved、completed、declined）が Table 2 の `outcome` の値に対応しておらず、Valet の `escalated` レシートも載っていないと指摘した。判定とレシートを一緒に保存すること、unknown は同じ payment_id の新しいレシートで解消されるまで未決とすることを求めた。mandate_version の代わりに、付与された authorization_details の JCS ダイジェストを使う案も示した。上限を検証できるよう、金額と通貨は平文のままにして、受取人と参照をコミットする案も出した。承認が、その支払いが超えるすべての上限を対象とするかを明記するよう求めた。さらに、チェーンの先頭の公開方法と署名者、§6.3 のソルトと値のエンコード、typ が payment-receipt+jwt であるのに iss と iat がない点、タイムゾーンの変更、異なる通貨での支払いについても質問した。Home-Mandate は §6.3 に近い方式を採用する見込みだと述べた。",
+      "title": "New draft: RAR profile for agent payment mandates, approval reasons and receipts (draft-craig-oauth-rar-payment-mandates-00)",
+      "updated_at": "2026-11-23T23:58:03+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/LGotP0K7zW1AD45o2Q6pBR2H3dE/",
+      "use_cases": [
+        "An institution that lets AI agents pay suppliers under standing limits needs auditable receipts that survive a crash between booking and logging.",
+        "A privacy-sensitive payment log needs to erase one customer's payee data without breaking the signed chain."
+      ],
+      "use_cases_ja": [
+        "AI エージェントに上限付きで取引先への支払いを許す金融機関は、計上と記録の間でクラッシュしても監査に耐えるレシートが必要である。",
+        "プライバシーに配慮する決済ログでは、署名済みチェーンを壊さずに特定顧客の受取人情報を消去できる必要がある。"
+      ]
+    },
     "mail:N1uo61sS2I1QMa7r9-uhoc3swWA": {
       "diagram": "sequenceDiagram\n  participant U as User\n  participant RS as Resource server app\n  participant AS as Authorization server\n  U->>RS: disconnect one agent\n  RS->>AS: revoke request with token issued to RS for the same user\n  AS->>AS: check sub matches the delegation tokens\n  AS->>AS: revoke grant and successor tokens\n  AS-->>RS: delegation revoked",
       "first_seen": "2026-11-20",
@@ -524,6 +575,23 @@
         "ユーザーの他のグラントを失効させずに、特定の AI エージェント一つだけを切断できるようにする AS または RS。",
         "リフレッシュトークンのローテーションを実装し、進行中のリフレッシュによって失効が追い越されないようにする必要がある認可サーバー。"
       ]
+    },
+    "mail:NCaXa6__GYbA5C5pYj965VhEKNM": {
+      "diagram": "",
+      "first_seen": "2026-11-23",
+      "headline": "An erratum asks to retitle RFC 7662 to 'Token Info Endpoint'; Justin Richer says reject it.",
+      "headline_ja": "RFC 7662 の題名を「Token Info Endpoint」に改める errata に対し、Justin Richer は却下を求めた。",
+      "id": "mail:NCaXa6__GYbA5C5pYj965VhEKNM",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Erratum 9331, reported by Aaron Parecki, proposes changing the title of RFC 7662 from 'OAuth 2.0 Token Introspection' to 'OAuth 2.0 Token Info Endpoint'. The report argues that introspection means examining one's own state, while the protected resource here sends the token to the AS and reads the response. It says this causes confusion with self-contained JWT access tokens (RFC 9068). Justin Richer replied that it should be rejected: the AS is the implementor and is looking into its own store, so the title is not an error. No decision has been recorded.",
+      "summary_ja": "Aaron Parecki が報告した errata 9331 は、RFC 7662 の題名を「OAuth 2.0 Token Introspection」から「OAuth 2.0 Token Info Endpoint」へ改めることを提案している。報告は、introspection は自身の内部状態を調べることを意味するが、この仕様では保護リソースがトークンを AS に送り応答を読むと述べ、自己完結型の JWT アクセストークン（RFC 9068）との混同を招くとする。これに対し Justin Richer は、AS が実装主体であり自身の保持する情報を調べているのだから題名は誤りではないとして、却下を求めた。決定はまだ記録されていない。",
+      "title": "RFC7662 (9331) (2 new messages)",
+      "updated_at": "2026-11-23T23:58:03+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/NCaXa6__GYbA5C5pYj965VhEKNM/",
+      "use_cases": [],
+      "use_cases_ja": []
     },
     "mail:NQbH3WYKgr_X1TJL9C4MNJKqUrQ": {
       "diagram": "",
@@ -1073,6 +1141,52 @@
         "非エクスポート鍵ストレージのない端末で、リフレッシュトークンのローテーションとDPoPバインドのどちらを選ぶか検討する認可サーバー。"
       ]
     },
+    "mail:kyleXXNbXF1jsKM6iSTjr2Q6YkE": {
+      "diagram": "",
+      "first_seen": "2026-11-23",
+      "headline": "The author of a cookie-bound token pattern for RFC 10017 §6.3 dropped it after reviewers pointed to the BFF.",
+      "headline_ja": "RFC 10017 §6.3 を補う cookie バインドトークン案は、BFF を勧める指摘を受けて提案者が取り下げた。",
+      "id": "mail:kyleXXNbXF1jsKM6iSTjr2Q6YkE",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Frédéric Gilbert proposed a complement to the browser-based client pattern in §6.3 for public clients with no backend. Tokens would be delivered only in HttpOnly cookies, and the flow bound to the browser by an HttpOnly nonce cookie set at the authorization endpoint and required at the token endpoint. He argued this reduces scenario 5.1.3 (malicious code starting its own flow) to 5.1.4, at the cost of OAuth endpoints and the API sharing one origin. Frederik Krogsdal Jacobsen and Yaron Zehavi suggested keeping a BFF and passing risk context to the RS by SSF CAEP/RISC, a JWT on the side, forwarded headers, traceparent, or Origin-bound sessions. Philippe De Ryck questioned the same-origin layout and said a BFF is not a heavy lift. Gilbert concluded a gateway-hosted BFF achieves the same goals and said he will not pursue this as a general pattern.",
+      "summary_ja": "Frédéric Gilbert は、バックエンドを持たない公開クライアント向けの §6.3 を補う案を示した。トークンは HttpOnly cookie でのみ配送し、認可エンドポイントで設定してトークンエンドポイントで必須とする HttpOnly の nonce cookie でフローをブラウザーに結びつける。これにより悪意あるコードが自前のフローを始めるシナリオ 5.1.3 が 5.1.4 に軽減されるが、OAuth エンドポイントと API が同一オリジンである必要がある、という主張である。Frederik Krogsdal Jacobsen と Yaron Zehavi は、BFF を使い、リスク情報は SSF CAEP/RISC、補助的な JWT、転送ヘッダー、traceparent、Origin に結びつけたセッションで RS に渡す方法を示した。Philippe De Ryck は同一オリジンの構成に疑問を呈し、BFF の導入は大きな負担ではないと述べた。Gilbert は、ゲートウェイに置く BFF で同じ目的を達成できると認め、一般的なパターンとしては進めないとした。",
+      "title": "RFC 10017 (BCP 212): A cookie-bound token pattern complementing Section 6.3 (6 new messages)",
+      "updated_at": "2026-11-23T23:58:03+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/kyleXXNbXF1jsKM6iSTjr2Q6YkE/",
+      "use_cases": [
+        "An API gateway that is both AS and RS for several first-party SPAs wants the RS to keep client-IP and per-app visibility; the thread points to a gateway-hosted BFF with forwarded context instead."
+      ],
+      "use_cases_ja": [
+        "複数の自社 SPA に対して AS と RS を兼ねる API ゲートウェイで、RS がクライアント IP やアプリ別の可視性を保ちたい場合、このスレッドはゲートウェイに置く BFF と転送コンテキストを勧めている。"
+      ]
+    },
+    "mail:l6G7j1hHKd2R8wYMTvOZ71vinZU": {
+      "diagram": "",
+      "first_seen": "2026-11-23",
+      "headline": "Replies to the actor-profile vs Actor Chain comparison mostly favour a narrow first document that fixes `act`, refresh preservation and a grant ID.",
+      "headline_ja": "アクタープロファイルと Actor Chain の比較への返信は、`act`、リフレッシュ時の保持、付与IDを定める狭い最初の文書を支持する意見が多い。",
+      "id": "mail:l6G7j1hHKd2R8wYMTvOZ71vinZU",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Karl McGuinness argued for adopting a narrowly scoped actor profile, with provenance proofs and selective disclosure as follow-on profiles, as long as the base does not preclude them. A. Prasad (Actor Chain) had earlier recommended Actor Chain as the starting text and wanted recipient-specific actor disclosure in the first draft. Ilja Radusch, from a deployed AS, listed what the first document must fix for interop: the `act` shape (iss + sub, with the RS enforcing on act.sub), identical `act` on refreshed tokens (normative), and a grant-level identifier such as dlg_id from actor-profile PR #34. He asked that chain preservation be worded so a later subset profile can relax it with an explicit signal. Tania Aizenman (for the EAGF draft author) and Niki Niyikiza supported the grant identifier, and Niyikiza wanted it usable on tokens without `act`. Another participant also asked for a narrow, concise scope. No draft text changed. The adoption question is still open.",
+      "summary_ja": "Karl McGuinness は、来歴証明や選択的開示は後続のプロファイルとし、基本プロファイルがそれらを妨げない限り、範囲を絞ったアクタープロファイルを採用することを支持した。先に A. Prasad（Actor Chain）は、Actor Chain を出発点とし、最初のドラフトに受信者別のアクター開示を含めるよう推奨していた。運用中の AS を持つ Ilja Radusch は、相互運用のために最初の文書が定めるべき点として、`act` の形式（iss と sub、RS は act.sub のみで判定）、リフレッシュ後のトークンで `act` が同一であること（規範とする）、actor-profile の PR #34 にある dlg_id のような付与単位の識別子を挙げた。また、後続のサブセットプロファイルが明示的な信号で緩和できるよう、チェーン保持の規則を書くことを求めた。Tania Aizenman（EAGF ドラフト著者の代理）と Niki Niyikiza は付与識別子を支持し、Niyikiza は `act` のないトークンでも使えるべきだとした。さらに別の参加者も、簡潔で範囲の狭い文書を支持した。ドラフトの本文に変更はなく、採用の可否は未決である。",
+      "title": "Comparing Actor Chain and Actor Profile before an adoption call (3 new messages)",
+      "updated_at": "2026-11-23T23:58:03+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/l6G7j1hHKd2R8wYMTvOZ71vinZU/",
+      "use_cases": [
+        "An AS issuing delegated-agent tokens must keep `act` identical across refresh-token use, or the record of who acted is lost.",
+        "A resource server that lists or revokes a user's delegations needs a stable per-grant key, since act.sub collapses all grants of one agent client and jti changes on rotation.",
+        "Agents extending a chain without the AS can group every token under one root identifier."
+      ],
+      "use_cases_ja": [
+        "委任エージェント用トークンを発行する AS は、リフレッシュ時にも `act` を同一に保たないと、誰が行動したかの記録が失われる。",
+        "ユーザーの委任を一覧表示・解除するリソースサーバーには付与単位の安定した鍵が要る。act.sub は同一エージェントクライアントの全付与をまとめてしまい、jti はローテーションのたびに変わるためである。",
+        "AS を介さずにチェーンを延長するエージェントは、ルートの識別子で配下の全トークンをまとめられる。"
+      ]
+    },
     "mail:ls5lsyM4Lg6Zaful23JI3bzDLdk": {
       "diagram": "",
       "first_seen": "2026-11-19",
@@ -1569,9 +1683,9 @@
     },
     "draft-ietf-oauth-rfc8725bis": {
       "date": "2026-11-23",
-      "priority": "high",
-      "reason": "A live thread proposes new JWT BCP guidance on binding all identity claims to a checked authentication record, citing Sections 3.8 and 3.10.",
-      "reason_ja": "認証レコードで検証済みの JWT について、全ての識別クレームを結び付けるガイダンスを JWT BCP に追加する提案が進行中で、Section 3.8 と 3.10 が引用されている。"
+      "priority": "low",
+      "reason": "The §3.8 note request got a reply that existing RFCs already cover it, and the editors may be past adding text.",
+      "reason_ja": "§3.8 への注記の要望に対し、既存の RFC で扱われているとの返信があり、編集者が文言を追加する段階を過ぎている可能性もある。"
     },
     "draft-ietf-oauth-status-list": {
       "date": "2026-11-20",
