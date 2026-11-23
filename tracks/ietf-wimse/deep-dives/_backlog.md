@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-23T07:42:52+00:00
+Generated at: 2026-11-23T19:33:32+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -25,7 +25,7 @@ Generated at: 2026-11-23T07:42:52+00:00
 | 19 | 6 | Review related draft: draft-uppalapati-wimse-pq-agent-identity-01 | draft-uppalapati-wimse-pq-agent-identity-01 (2026-10-27) |
 | 20 | 5 | Diff active WG draft: draft-ietf-wimse-arch-09 | draft-ietf-wimse-arch-09 (2026-11-16) |
 | 21 | 5 | Diff active WG draft: draft-ietf-wimse-identifier-04 | draft-ietf-wimse-identifier-04 (2026-10-23) |
-| 22 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-08 | draft-ietf-wimse-workload-identity-practices-08 (2026-10-30) |
+| 22 | 5 | Diff active WG draft: draft-ietf-wimse-workload-identity-practices-09 | draft-ietf-wimse-workload-identity-practices-09 (2026-11-23) |
 | 23 | 4 | Review related draft: draft-heigh-wimse-workload-identity-metadata-00 | draft-heigh-wimse-workload-identity-metadata-00 (2026-10-16) |
 
 <!-- triage:start -->
