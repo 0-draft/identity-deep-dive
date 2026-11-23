@@ -1,9 +1,9 @@
-# OAuth WG Backlog (2026-11-22)
+# OAuth WG Backlog (2026-11-23)
 
-- generated_at_utc: `2026-11-22T19:44:12+00:00`
+- generated_at_utc: `2026-11-23T07:43:04+00:00`
 
 - [ ] `draft-ietf-oauth-sd-jwt-vc` score=112 updated=2026-11-16T10:45:13Z
-- [ ] `draft-ietf-oauth-status-list` score=90 updated=2026-11-19T02:42:34Z
+- [ ] `draft-ietf-oauth-status-list` score=85 updated=2026-11-19T02:42:34Z
 - [ ] `draft-ietf-oauth-rfc8725bis` score=83 updated=2026-11-17T15:06:04Z
 - [ ] `draft-ietf-oauth-first-party-apps` score=80 updated=2026-08-26T14:40:16Z
 - [ ] `draft-ietf-oauth-identity-chaining` score=75 updated=2026-11-12T02:07:35Z
@@ -25,7 +25,7 @@
 Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.
 
 - **high** `draft-ietf-oauth-identity-assertion-authz-grant`: Five issues were opened or commented on in one week (#142, #145, #159, #160, #162), including multi-hop delegation chaining.
-- **low** `draft-ietf-oauth-rfc8725bis`: A thread asks for a clarification, but the draft is already in the RFC Editor queue, so changes are unlikely.
+- **high** `draft-ietf-oauth-rfc8725bis`: A live thread proposes new JWT BCP guidance on binding all identity claims to a checked authentication record, citing Sections 3.8 and 3.10.
 - **low** `draft-ietf-oauth-status-list`: Only cited in list feedback as a preferred chain-status mechanism, with no change to the draft.
 - **low** `draft-ietf-oauth-transaction-tokens`: Mentioned only as one possible delegation credential in the PACE draft announcement.
 - **low** `draft-ietf-oauth-v2-1`: Only a minor reference error in section 7.13.1 was reported.

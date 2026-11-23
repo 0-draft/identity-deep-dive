@@ -1,11 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-15T18:54:47+00:00",
-      "text": "No draft text changed this run. The most substantive activity is on the identity-assertion-authz-grant issue tracker, where an Audience-to-client_id mismatch was reported (#161) and the CIMD digest issue (#121) was closed. A new individual draft for batch agent delegation also appeared.",
-      "text_ja": "今回はドラフト本文の変更はない。最も実質的な動きは identity-assertion-authz-grant の issue で、Audience と client_id の対応の不整合が報告され（#161）、CIMD ダイジェストの issue（#121）がクローズされた。マルチエージェント向けのバッチ委任に関する個人ドラフトも新たに告知された。"
-    },
-    {
       "at": "2026-11-16T06:35:17+00:00",
       "text": "A quiet run: the only item is a wording PR on the deferred token response draft that simplifies the definition of the deferral code. No protocol behaviour changed.",
       "text_ja": "今回は静かな更新である。唯一の項目は、deferred token response ドラフトの deferral code の定義を簡潔にする文言修正の PR であり、プロトコルの挙動は変わっていない。"
@@ -69,6 +64,11 @@
       "at": "2026-11-22T19:45:37+00:00",
       "text": "The main thread is the OAuth WG scope debate over which actor-delegation draft (Actor Profile or Actor Chain) to adopt first. Most voices favour a narrow base document, with subset disclosure as follow-on work. GitHub activity is mostly issues and PRs on the ID-JAG and client-id-metadata-document drafts. No draft text is reported as changed in this material.",
       "text_ja": "最大の動きは、アクター委譲ドラフト（Actor Profile と Actor Chain）のどちらを最初に採用するかというスコープ議論である。多くの発言者は範囲を絞った基本文書を支持し、部分開示は後続の作業とする立場である。GitHub では ID-JAG と client-id-metadata-document の issue と PR が中心で、ドラフト本文の変更は今回の資料には含まれていない。"
+    },
+    {
+      "at": "2026-11-23T07:44:45+00:00",
+      "text": "No draft text changed; three mailing-list threads. The most notable is a proposal to add guidance to the JWT BCP (rfc8725bis) that a record-backed JWT check must bind every claim used to identify the user.",
+      "text_ja": "ドラフト本文の変更はなく、メーリングリストの議論が三件ある。最も注目すべきは、レコード照合を行う JWT で、ユーザー識別に使うすべてのクレームを照合結果に結び付けるよう JWT BCP (rfc8725bis) に明記する提案である。"
     }
   ],
   "items": {
@@ -95,27 +95,29 @@
         "発行者は、vct の型が他の型を extends している場合、それらの型を照合の対象にしたいなら aka_vcts に列挙する必要がある。extends では追加されなくなったためである。"
       ]
     },
-    "mail:1__U02DObNtvWmF2Is4p9-j5qH8": {
-      "diagram": "",
-      "first_seen": "2026-11-15",
-      "headline": "Weekly GitHub digest: a rule conflict reported in the identity assertion grant, CIMD discussion, and two open PRs.",
-      "headline_ja": "週次 GitHub ダイジェスト: identity assertion grant の規則の矛盾の報告、CIMD の議論、オープンな PR 二件。",
-      "id": "mail:1__U02DObNtvWmF2Is4p9-j5qH8",
+    "mail:1wKbrz0NwWgJgMxMMywsyRlwl5g": {
+      "diagram": "sequenceDiagram\n participant A as User A (attacker)\n participant F as Auth filter\n participant R as Redis record\n participant H as Profile handler\n A->>F: JWT forged with A sub and uid plus admin B userId\n F->>F: verify signature (default key)\n F->>R: look up record by sub and uid\n R-->>F: A's record found\n F->>H: request authenticated as A\n H->>H: account ID taken from userId claim\n H-->>A: edits B's profile",
+      "first_seen": "2026-11-23",
+      "headline": "A researcher asks the WG to make the JWT BCP require that a checked server-side record match every claim used to identify the user.",
+      "headline_ja": "認証レコードで検証した JWT について、ユーザー識別に使う全クレームをレコードと一致させるよう JWT BCP に明記する提案がある。",
+      "id": "mail:1wKbrz0NwWgJgMxMMywsyRlwl5g",
       "kind": "mail",
       "related": [],
       "significance": "discussion",
-      "summary": "For oauth-identity-assertion-authz-grant, issue #161 was opened saying that the §4.3.3 processing rule (SAML Audience matches the client_id) conflicts with the Audience to Client ID mapping required in §4.5. Issue #121 (optional client metadata digest so the IdP can vouch for the client's CIMD) got one comment from mcguinness and was closed. For client-id-metadata-document, #112 (security considerations for fetching client metadata) and #78 (whether the AS may provide iss when fetching the client_id) drew 7 comments in total, both tagged ietf-127. In oauth-sd-jwt-vc a PR was submitted and #457 (clarify that the types of an SD-JWT VC are those asserted in vct and aka_vcts) got a comment. In oauth-v2-1, PR #273 (restrict access token values to the token68 syntax) received 2 comments. The digest contains only titles and counts, so the outcomes are not visible.",
-      "summary_ja": "oauth-identity-assertion-authz-grant では、§4.3.3 の処理規則（SAML の Audience が client_id と一致すること）が §4.5 で要求される Audience から Client ID への対応付けと矛盾するとして issue #161 が起票された。issue #121（IdP がクライアントの CIMD を保証できるようにするための任意のクライアントメタデータダイジェスト）は mcguinness のコメントの後にクローズされた。client-id-metadata-document では #112（クライアントメタデータ取得時のセキュリティ考慮事項）と #78（client_id 取得時に AS が iss を提供できるか）に合計7件のコメントが付き、いずれも ietf-127 ラベルが付いている。oauth-sd-jwt-vc では PR が一件提出され、#457（SD-JWT VC の型は vct と aka_vcts で表明されたものであることの明確化）にコメントが付いた。oauth-v2-1 では PR #273（アクセストークン値を token68 構文に制限する）に2件のコメントが付いた。ダイジェストはタイトルと件数のみで、議論の結論は読み取れない。",
-      "title": "Weekly github digest (OAuth Activity Summary)",
-      "updated_at": "2026-11-15T18:54:47+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/1__U02DObNtvWmF2Is4p9-j5qH8/",
+      "summary": "The thread shows a reply from Frederik Krogsdal Jacobsen to a researcher at Fudan University. The researcher described two bugs, both fixed upstream. In ELADMIN, the filter verified the JWT signature and looked up a Redis authentication record via sub and uid, but a downstream handler took the account ID from a separate userId claim. With the publicly known default signing key, a user could forge a token with their own sub/uid and an administrator's userId. ELADMIN's fix compares the full presented JWT with the token saved at login and removes the shared default key. Mainflux had a similar problem, fixed by requiring a signing secret and checking that the record exists, is valid and belongs to the account named in the JWT. The researcher suggests making this identity check explicit in the JWT BCP (rfc8725bis-10 Section 3.8). Jacobsen replied that the guidance can be stated shortly as using a consistent user identifier for authorization to prevent mix-ups, and had no strong opinion on whether it belongs in the BCP. The message is truncated, so the rest of the proposal is not visible.",
+      "summary_ja": "このスレッドは、復旦大学の研究者に対する Frederik Krogsdal Jacobsen の返信である。研究者は、上流で修正済みの二件の不具合を報告した。ELADMIN では、フィルターが JWT 署名を検証し、sub と uid で Redis の認証レコードを引いていたが、下流のハンドラーは別の userId クレームからアカウント ID を取得していた。公開されている既定の署名鍵を使えば、自分の sub と uid に管理者の userId を載せたトークンを偽造できた。ELADMIN の修正は、提示された JWT 全体をログイン時に保存したトークンと照合し、共有の既定鍵を廃止するものである。Mainflux でも同様の問題があり、署名シークレットを必須とし、レコードが存在し有効で JWT のアカウントに属することを確認する修正が入った。研究者は、この確認を JWT BCP (rfc8725bis-10 の Section 3.8) に明記することを提案している。Jacobsen は、一貫したユーザー識別子を認可に使い取り違えを防ぐことと短く表現できると返信し、BCP に含めるかどうかには強い意見がないとした。メッセージは途中で切れており、提案の残りは確認できない。",
+      "title": "User identity checks for JWTs with server-side authentication records",
+      "updated_at": "2026-11-23T07:44:45+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/1wKbrz0NwWgJgMxMMywsyRlwl5g/",
       "use_cases": [
-        "An implementer of the identity assertion authorization grant who maps SAML Audience values to client IDs should watch #161 before fixing the processing rules.",
-        "A client-ID-metadata-document implementer can follow #78 and #112 for the iss and fetch-security outcomes expected around IETF 127."
+        "A Spring or Redis-style app that verifies a JWT and a session record in middleware but reads account IDs from other claims in handlers.",
+        "A product that ships a default JWT signing secret and needs to require deployer-supplied keys.",
+        "Authors of the JWT BCP deciding whether Section 3.8 needs an explicit claim-to-record binding rule."
       ],
       "use_cases_ja": [
-        "SAML の Audience を client ID に対応付ける identity assertion 認可グラントの実装者は、処理規則を固める前に #161 を確認するとよい。",
-        "client-id-metadata-document の実装者は、IETF 127 前後の iss と取得時セキュリティに関する結論を #78 と #112 で追える。"
+        "ミドルウェアで JWT とセッションレコードを検証しながら、ハンドラーでは別のクレームからアカウント ID を読むアプリケーション。",
+        "JWT の既定署名シークレットを同梱しており、デプロイ担当者に鍵の指定を必須とすべき製品。",
+        "Section 3.8 にクレームとレコードの対応付けの明示的な規則が必要かどうかを検討する JWT BCP の編集者。"
       ]
     },
     "mail:3SuQvGEjYQh4oFBhKyjcpPrqQmQ": {
@@ -268,6 +270,29 @@
       "use_cases_ja": [
         "支払いの前に人間または承認者の承認を得て、その支払いだけを実行する必要があるエージェント。",
         "エージェント間の委任に Actor Profile トークン、Transaction Tokens、委任チェーンのどれを使うか選ぶ運用者。"
+      ]
+    },
+    "mail:BlDWJT4omhPgD-jVurnimmiBv1E": {
+      "diagram": "sequenceDiagram\n participant S as SPA app1\n participant AS as Token endpoint (API origin)\n participant G as API gateway (RS)\n S->>AS: POST /oauth/token code and code_verifier (credentials include)\n AS-->>S: Set-Cookie encrypted AT (HttpOnly) plus token_fingerprint\n S->>G: API request with fingerprint (cookie sent automatically)\n G->>G: decrypt cookie and check fingerprint\n G-->>S: response",
+      "first_seen": "2026-11-23",
+      "headline": "Someone proposes a cookie-bound access token pattern complementing RFC 10017 Section 6.3, keeping the API gateway as enforcement point.",
+      "headline_ja": "API ゲートウェイを実施点として残せるよう、RFC 10017 の Section 6.3 を補完する Cookie 結び付きアクセストークンのパターンが提案された。",
+      "id": "mail:BlDWJT4omhPgD-jVurnimmiBv1E",
+      "kind": "mail",
+      "related": [],
+      "significance": "new-proposal",
+      "summary": "The author argues that the BFF recommendation in RFC 10017 moves enforcement away from the resource server: the gateway loses client IP, per-application distinction and one-to-one request mapping, which weakens rate limiting, quotas and anomaly detection. The proposed pattern keeps the SPA a public client using authorization code with PKCE. The token endpoint, served from the same origin as the API, returns the access token in an HttpOnly, SameSite=Strict cookie with a __Host-Http- prefix and a per-client name, encrypted with an AEAD whose key the AS and RS share. The SPA gets only a token fingerprint (for example base64url of SHA-256 of the access token, Option A). The gateway requires both the cookie and the fingerprint on each request, so one same-site SPA cannot use another's tokens. The pattern assumes the AS and API share an origin and that the site is not a public suffix. The message is truncated, so the second fingerprint option and the rest of the threat analysis are not visible.",
+      "summary_ja": "投稿者は、RFC 10017 の BFF の推奨は実施点をリソースサーバーから遠ざけると主張している。ゲートウェイはクライアント IP、アプリケーションごとの区別、リクエストの一対一対応を失い、レート制限、クォータ、異常検知が弱まる。提案されたパターンでは、SPA は認可コードと PKCE を使うパブリッククライアントのままである。API と同一オリジンで提供されるトークンエンドポイントが、__Host-Http- プレフィックスとクライアントごとの名前を持つ HttpOnly かつ SameSite=Strict の Cookie にアクセストークンを入れて返す。Cookie は AS と RS が共有する鍵の AEAD で暗号化される。SPA が受け取るのはトークンのフィンガープリントのみである（例: アクセストークンの SHA-256 の base64url、Option A）。ゲートウェイは各リクエストで Cookie とフィンガープリントの両方を要求するため、同一サイトの別の SPA が他の SPA のトークンを使うことはできない。このパターンは、AS と API が同一オリジンであること、およびサイトが public suffix でないことを前提とする。メッセージは途中で切れており、二つ目のフィンガープリント方式と脅威分析の残りは確認できない。",
+      "title": "RFC 10017 (BCP 212): A cookie-bound token pattern complementing Section 6.3",
+      "updated_at": "2026-11-23T07:44:45+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/BlDWJT4omhPgD-jVurnimmiBv1E/",
+      "use_cases": [
+        "Several first-party SPAs on sibling subdomains behind one API gateway that already does rate limiting and quotas.",
+        "Teams that want tokens kept away from JavaScript without introducing a BFF proxy."
+      ],
+      "use_cases_ja": [
+        "同一サイトの兄弟サブドメインにある複数のファーストパーティ SPA が、レート制限とクォータを行う単一の API ゲートウェイを共有する構成。",
+        "BFF プロキシを導入せずに、トークンを JavaScript から隔離したいチーム。"
       ]
     },
     "mail:C7uOYIHSWX3He8gCW_nlcTW7ehc": {
@@ -630,29 +655,6 @@
         "CIMD の既定の取得処理を提供するライブラリのメンテナーが、プロセス内取得と隔離ワーカーのどちらにするか選ぶ場面。"
       ]
     },
-    "mail:Rkn-L9TK6x2wtWhLhcA3H9CHr9Y": {
-      "diagram": "",
-      "first_seen": "2026-11-15",
-      "headline": "A list member asks how a retained KYAPay token can be verified months later when the issuer key may no longer be published.",
-      "headline_ja": "保存した KYAPay トークンを数か月後に検証する際、発行者の鍵がすでに公開されていない可能性をどう扱うかについて、メーリングリストで質問があった。",
-      "id": "mail:Rkn-L9TK6x2wtWhLhcA3H9CHr9Y",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Francesco Marinoni Moretto notes that the KYAPay Using draft (Section 4.2) says recipients may retain a token for audit or dispute resolution and re-verify it later, and the token draft's editor's copy now allows retention. Section 6.4 already says exp is checked against the time the request was received. The gap is the verification key: Section 8.10 only asks issuers to keep superseded keys for the maximum token lifetime after rotation, which may not cover a chargeback months later. He proposes stating the receipt-time rule in the token draft's validation section, and having either recipients keep the key they used or issuers keep retired keys for a stated period. He also asks whether disputes are meant to rely on the issuer's own record through jti and verification_id. No answer is included.",
-      "summary_ja": "Francesco Marinoni Moretto は、KYAPay の Using ドラフト（4.2節）が、受信者は監査や紛争解決のためにトークンを保存して後から再検証できるとしており、トークンドラフトのエディタ版でも保存が認められるようになったと指摘している。6.4節にはすでに、exp はリクエストを受信した時刻に対して確認するという規則がある。欠けているのは検証鍵の入手先である。8.10節は発行者にローテーション後も最大トークン有効期間のあいだ旧鍵を保持するよう求めるだけで、数か月後のチargeback には足りない可能性がある。提案は、受信時刻の規則をトークンドラフトの検証の節に書くこと、そして受信者が使用した鍵を保持するか、発行者が退役した鍵を一定期間保持すると明記することである。紛争時は jti と verification_id による発行者自身の記録に頼る想定なのかも質問している。回答は含まれていない。",
-      "title": "KYAPay: verifying a retained token later",
-      "updated_at": "2026-11-15T18:54:47+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/Rkn-L9TK6x2wtWhLhcA3H9CHr9Y/",
-      "use_cases": [
-        "A payment recipient handling a chargeback long after a token expired needs the original issuer key to re-verify it.",
-        "An issuer planning key rotation needs to know how long retired keys must stay published."
-      ],
-      "use_cases_ja": [
-        "トークンの期限切れからかなり後にチャージバックを処理する決済の受信者は、再検証のために当時の発行者の鍵が必要になる。",
-        "鍵のローテーションを計画する発行者は、退役した鍵をどのくらいの期間公開し続けるべきかを知る必要がある。"
-      ]
-    },
     "mail:TmOI1beLEIAtzYbfslf4ldg-9M8": {
       "diagram": "",
       "first_seen": "2026-11-20",
@@ -681,6 +683,36 @@
       "use_cases_ja": [
         "エージェントの操作に対する人間の承認フローを実装し、冪等性とリプレイ対策の指針が必要な実装者。",
         "WebAuthn に基づく承認確認を検証するリソースサーバー。"
+      ]
+    },
+    "mail:U9S3HdBaay8UO-IW07IFxgFd_Z0": {
+      "diagram": "",
+      "first_seen": "2026-11-23",
+      "headline": "Authors of the actor-chain drafts reply on scope before a possible adoption call, offering to split out a core and run a virtual interop test.",
+      "headline_ja": "アクターチェーン関連ドラフトの著者が、採用の呼びかけを前に範囲について返信し、コアの切り出しと仮想の相互運用テストを提案した。",
+      "id": "mail:U9S3HdBaay8UO-IW07IFxgFd_Z0",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-asor-wimse-agent-delegation-chain",
+          "note": "Also addresses delegation chains for AI agents, but the thread does not reference it; listed as a competing design area.",
+          "note_ja": "AI エージェントの委任チェーンを扱う点で関連するが、このスレッドでは言及されていない。競合しうる設計領域として挙げた。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Prasad replies to Ilja Radusch, who had argued for a narrow first document based on a deployed AS running actor-profile -01. Radusch listed what must be fixed for interop: the act shape (iss and sub, with the resource server enforcing only act.sub), identical act preserved on refresh, and a grant-level identifier (dlg_id). Radusch also asked that the chain-preservation rule let a later subset profile relax it with an explicit signal. Prasad says draft-mw-oauth-actor-chain-03 structures profiles on common rules, each supportable alone, and the declared-full profile could be extracted as a short core. Prasad argues that when agents choose their next hop at runtime, an AS that carries the full chain forward without enforcing the recipient's disclosure limit can expose actors beyond need-to-know. With declared-subset, the AS can issue a JWT that names the profile in actp and omits the restricted actor. The base should allow narrowing disclosure. Prasad also proposes a short virtual interop session once scope is agreed.",
+      "summary_ja": "Prasad が Ilja Radusch に返信している。Radusch は、actor-profile -01 を動かす稼働中の AS の経験に基づき、範囲を絞った最初の文書を支持していた。相互運用のために固定すべき点として、act の形（iss と sub で、リソースサーバーは act.sub のみで判定する）、リフレッシュ時に同一の act を保持すること、グラントごとの識別子（dlg_id）を挙げた。また、チェーン保存の規則は、後続のサブセットプロファイルが明示的なシグナルで緩和できる書き方にすることを求めた。Prasad は、draft-mw-oauth-actor-chain-03 が共通規則の上に各プロファイルを構成し、それぞれ単独で対応できるようにしており、declared-full を短いコアとして切り出せると述べた。さらに、エージェントが実行時に次のホップを選ぶ場合、AS が受信者の開示制限を適用せずにチェーン全体を引き継ぐと、必要以上のアクターが開示されうると論じた。declared-subset では、AS が actp にプロファイルを示し、制限対象のアクターを省いた JWT を発行できる。ベースは開示を絞ることを明示的に許すべきだとした。範囲が合意されれば、短い仮想の相互運用セッションも提案した。",
+      "title": "Comparing Actor Chain and Actor Profile before an adoption call",
+      "updated_at": "2026-11-23T07:44:45+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/U9S3HdBaay8UO-IW07IFxgFd_Z0/",
+      "use_cases": [
+        "An AS that issues delegated-agent tokens and must decide whether to keep act unchanged across refresh and token exchange hops.",
+        "A gateway forwarding agent calls to a third party that may see only part of the actor chain."
+      ],
+      "use_cases_ja": [
+        "委任エージェントのトークンを発行する AS が、リフレッシュやトークン交換のホップをまたいで act を変更せずに保持するかどうかを決める場面。",
+        "エージェントの呼び出しを、アクターチェーンの一部しか見られない第三者に転送するゲートウェイ。"
       ]
     },
     "mail:UwVKZ7yQZhs7baTJmQdzZEKIpME": {
@@ -798,36 +830,6 @@
       "use_cases_ja": [
         "リフレッシュトークンをどのインスタンスにも持たせずに、利用者の代わりに上流 API を呼ぶ短命なエージェントやジョブのインスタンス。",
         "短命なインスタンスごとではなく、クライアントごとに取り消し可能な grant を一つ持たせたいプラットフォーム。"
-      ]
-    },
-    "mail:awq69VLm0U5Cb0ohVKXLg5LLLDY": {
-      "diagram": "sequenceDiagram\n participant U as User\n participant L as Leader Agent\n participant AS as Authorization Server\n participant S as Sub-Agent\n L->>AS: RAR request with may_act per item\n AS->>U: Approve all, some or none\n U-->>AS: Decision\n AS-->>L: Batch Token\n L->>S: Delegate\n S->>AS: Token Exchange with Batch Token\n AS-->>S: Access token with its own permissions only",
-      "first_seen": "2026-11-15",
-      "headline": "A hackathon team shows a batch authorization demo that uses RAR and token exchange, with may_act per authorization item to split permissions between sub-agents.",
-      "headline_ja": "ハッカソンのチームが、RAR とトークン交換を組み合わせ、認可項目ごとの may_act でサブエージェント間の権限を分ける一括認可のデモを紹介した。",
-      "id": "mail:awq69VLm0U5Cb0ohVKXLg5LLLDY",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-asor-wimse-agent-delegation-chain",
-          "note": "Also addresses delegation to AI agent chains, though the message does not reference it.",
-          "note_ja": "AI エージェントの連鎖への委任を扱う点で近いが、メッセージ中に直接の言及はない。",
-          "track": "ietf-wimse"
-        }
-      ],
-      "significance": "new-proposal",
-      "summary": "The authors announce an individual draft (draft-ni-oauth-batch-authorization-delegation) and a working demo from the IETF 127 Hackathon. A leader agent requests permissions for several sub-agents in one batch, and the user approves them together, selects some, or rejects all. The draft combines OAuth RAR and Token Exchange and adds a may_act field to each authorization_details item to name the sub-agent allowed to use it. Each sub-agent then exchanges the batch token for its own access token containing only its assigned permissions. The demo has a personal assistant coordinating calendar and email agents. The authors ask for review and contributions.",
-      "summary_ja": "著者らは IETF 127 ハッカソンの成果として、個人ドラフト draft-ni-oauth-batch-authorization-delegation と動作するデモを告知した。リーダーエージェントが複数のサブエージェント分の権限を一括で要求し、ユーザーはそれらをまとめて承認するか、一部を選ぶか、すべて拒否できる。ドラフトは OAuth RAR とトークン交換を組み合わせ、authorization_details の各項目に、その権限を使えるサブエージェントを示す may_act フィールドを加える。各サブエージェントはバッチトークンを交換し、自分に割り当てられた権限だけを含む独自のアクセストークンを得る。デモではパーソナルアシスタントがカレンダーエージェントとメールエージェントを調整する。著者はレビューと貢献を求めている。",
-      "title": "IETF 127 Hackathon: Batch Authorization Delegation Demo",
-      "updated_at": "2026-11-15T18:54:47+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/awq69VLm0U5Cb0ohVKXLg5LLLDY/",
-      "use_cases": [
-        "An orchestrator agent that needs calendar and email permissions can ask for both in one consent prompt instead of one prompt per agent.",
-        "A deployer who wants each sub-agent token limited to its own permissions can use the per-item may_act binding."
-      ],
-      "use_cases_ja": [
-        "カレンダーとメールの権限が必要なオーケストレーターエージェントは、エージェントごとに同意画面を出さず、一度の同意で両方を要求できる。",
-        "各サブエージェントのトークンを自身の権限だけに限定したい運用者は、項目ごとの may_act による紐付けを使える。"
       ]
     },
     "mail:b20jw_GKDd4TT_s2WQxjhE3WB98": {
@@ -1566,10 +1568,10 @@
       "reason_ja": "1 週間で 5 件の issue（#142、#145、#159、#160、#162）が作成またはコメントされ、マルチホップ委譲チェーンも含まれる。"
     },
     "draft-ietf-oauth-rfc8725bis": {
-      "date": "2026-11-22",
-      "priority": "low",
-      "reason": "A thread asks for a clarification, but the draft is already in the RFC Editor queue, so changes are unlikely.",
-      "reason_ja": "明確化を求めるスレッドがあるが、ドラフトはすでに RFC Editor キューにあり、変更される可能性は低い。"
+      "date": "2026-11-23",
+      "priority": "high",
+      "reason": "A live thread proposes new JWT BCP guidance on binding all identity claims to a checked authentication record, citing Sections 3.8 and 3.10.",
+      "reason_ja": "認証レコードで検証済みの JWT について、全ての識別クレームを結び付けるガイダンスを JWT BCP に追加する提案が進行中で、Section 3.8 と 3.10 が引用されている。"
     },
     "draft-ietf-oauth-status-list": {
       "date": "2026-11-20",
