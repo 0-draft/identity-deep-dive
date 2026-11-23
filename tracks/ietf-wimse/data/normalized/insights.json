@@ -1,16 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-15T06:38:45+00:00",
-      "text": "The only item is an IETF 127 hackathon thread that turns agent call-chain failure cases into eight shared test scenarios, P1–P8, with fixed inputs so implementations can compare results. No WG draft text changed.",
-      "text_ja": "今回の対象は IETF 127 ハッカソンのメールスレッド 1 件のみである。エージェント呼び出しチェーンの失敗ケースを 8 つの共通テストシナリオ（P1〜P8）にまとめ、入力を固定して実装間で結果を比較できるようにしている。WG ドラフト本文の変更はない。"
-    },
-    {
-      "at": "2026-11-15T18:54:47+00:00",
-      "text": "No WG draft text changed. The most notable item is a mailing-list thread where an individual draft (draft-zambo-aer1-wimse-mapping) tightened how it records \"not_evaluated\" versus \"denied\" for AIMS Section 11 audit records. The weekly GitHub digest shows s2s-protocol activity on http-signature-08 test vectors, a closed server-nonce issue, and a new dangling-reference issue.",
-      "text_ja": "WGドラフトの本文に変更はない。最も注目すべきは、個人ドラフト draft-zambo-aer1-wimse-mapping が AIMS Section 11 の監査記録で \"not_evaluated\" と \"denied\" の区別を厳密化したメーリングリストのやり取りである。週次の GitHub ダイジェストでは、s2s-protocol で http-signature-08 のテストベクターに関する議論、サーバー生成 nonce の issue のクローズ、参照先の節が存在しないという新規 issue が報告された。"
-    },
-    {
       "at": "2026-11-16T06:35:17+00:00",
       "text": "The only item is a mailing-list comment on draft-ietf-wimse-aims-01 that proposes an explanatory paragraph in Section 10.8. It is a discussion with no text change yet, so nothing substantive moved in this track.",
       "text_ja": "今回の対象は draft-ietf-wimse-aims-01 の第10.8節に説明文を追加する提案のメーリングリスト投稿のみである。議論の段階でテキストの変更はなく、このトラックに実質的な動きはない。"
@@ -74,6 +64,11 @@
       "at": "2026-11-22T19:45:37+00:00",
       "text": "No WG draft text changed in this run. The main thread is on the list: a draft-molas-agent-principal-refs-00 debate about how a public agent status registry should bound revocation delay (P6). The WG GitHub digest shows s2s-protocol cleanups for http-signature and wpt.",
       "text_ja": "今回の実行ではWGドラフトの本文変更はない。主な動きはメーリングリストで、draft-molas-agent-principal-refs-00をめぐり、公開エージェントステータスレジストリが失効の遅延をどう保証すべきか(P6)が議論された。GitHubの週次ダイジェストでは、s2s-protocolでhttp-signatureとwptの整理が進んでいる。"
+    },
+    {
+      "at": "2026-11-23T07:44:45+00:00",
+      "text": "No WG draft diffs this run, only four mailing-list threads. The most substantive one is on agent status: how an AIMS identifier could point to a status source, with each source stating its revocation delay. The rest is self-promotion of individual drafts.",
+      "text_ja": "今回はWG草案の差分はなく、メーリングリストの4件のみである。最も内容があるのはエージェントの状態確認に関する議論で、AIMSの識別子から状態ソースを指し、各ソースが失効までの遅延を明示する案が出ている。他は個人草案の紹介が中心である。"
     }
   ],
   "items": {
@@ -337,29 +332,6 @@
         "承認するエージェントが、自身は使えるトークンを保持せず、実行する別のエージェントだけが使えるアクセストークンを得たい場合。"
       ]
     },
-    "mail:1Lm1pnMFKTIDQA0c_0yQUio9k3Q": {
-      "diagram": "",
-      "first_seen": "2026-11-15",
-      "headline": "The AER-1 mapping draft now records a fail-closed denial as not_evaluated when an input was unreachable or stale, as agreed with a reviewer on the list.",
-      "headline_ja": "AER-1 マッピングドラフトは、入力が到達不能または古い場合、fail-closed による拒否を not_evaluated として記録するようにした。",
-      "id": "mail:1Lm1pnMFKTIDQA0c_0yQUio9k3Q",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Brennan Zambo announces -03 of draft-zambo-aer1-wimse-mapping, which maps AER-1 receipts to the audit records required by AIMS Section 11. After review by Girish Konda, Section 3 now says that not_evaluated applies whenever an input the decision depended on could not be established, whether it was unreachable or reached but not current, even if a fail-closed rule then denies. decision_reason_detail names that input, and denied is reserved for decisions evaluated on established inputs. The decision reason is committed in the receipt for the audit reader but not returned to the caller, so the error does not become an oracle. The thread also shows the -02 step, which added the committed decision_reason member. The message is truncated, and the author asks the reviewer to confirm that -03 separates the cases as intended.",
-      "summary_ja": "Brennan Zambo が、AER-1 レシートを AIMS Section 11 の監査記録に対応付ける draft-zambo-aer1-wimse-mapping の -03 を発表した。Girish Konda のレビューを受け、Section 3 は、判断が依存した入力を確立できなかった場合（到達不能、または到達したが最新でない場合）は、fail-closed ルールが拒否した場合でも not_evaluated を適用すると定めた。decision_reason_detail がその入力を示し、denied は確立された入力で評価された判断に限られる。判断理由は監査の読み手のためにレシートにコミットされるが、呼び出し元には返されないため、エラーがオラクルになることはない。スレッドには、decision_reason メンバーを追加した -02 の経緯も含まれる。メッセージは途中で切れており、著者はレビュー担当者に -03 が意図どおりに区別できているかの確認を求めている。",
-      "title": "draft-zambo-aer1-wimse-mapping-01: AER-1 as a candidate format for AIMS Section 11 audit records",
-      "updated_at": "2026-11-15T18:54:47+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/1Lm1pnMFKTIDQA0c_0yQUio9k3Q/",
-      "use_cases": [
-        "An AIMS deployment whose policy point denies when a revocation or status source does not answer, and whose auditors must tell that apart from a real policy denial.",
-        "A reviewer reconstructing Section 11 audit records who needs to know whether a decision used stale inputs."
-      ],
-      "use_cases_ja": [
-        "失効情報やステータス情報の取得元が応答しないときに拒否するポリシーポイントを持つ AIMS 環境で、監査担当者が実際のポリシー拒否と区別する必要がある場合。",
-        "Section 11 の監査記録を再構成する担当者が、判断に古い入力が使われたかどうかを知る必要がある場合。"
-      ]
-    },
     "mail:3b_KjKBN2xzYAspj9rUIJcSU1pQ": {
       "diagram": "flowchart LR\n A[active] --> S[safe_mode]\n A --> U[suspended]\n S --> U\n A --> R[revoked]\n S --> R\n U --> R\n S -.owner only.-> A\n U -.owner only.-> A",
       "first_seen": "2026-11-17",
@@ -598,6 +570,29 @@
       "url": "https://mailarchive.ietf.org/arch/msg/wimse/HAxOOzAN-8rWDfzBtbvrJt4tTq4/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:HZixEiDAKLcIwtmTd1GtIBDUpaA": {
+      "diagram": "",
+      "first_seen": "2026-11-23",
+      "headline": "The AER-1 attribution profile now fixes one JSON string-escaping rule so commitments hash identically across languages.",
+      "headline_ja": "AER-1 attribution profile が JSON 文字列エスケープ規則を一つに固定し、言語間でコミットメントのダイジェストが一致するようにした。",
+      "id": "mail:HZixEiDAKLcIwtmTd1GtIBDUpaA",
+      "kind": "mail",
+      "related": [],
+      "significance": "substantive",
+      "summary": "The author reports a new revision of draft-zambo-aer1-attribution-profile (the message says -01, though the subject says -00). Review found that Section 4 fixed member order, whitespace and no-normalization but not string escaping, so a non-ASCII caller_scope such as café gives different bytes and digests in Python's escaped form versus JavaScript's literal UTF-8. Section 4 now inherits the escaping rule of Section 7.1 of the base AER-1 draft. A new Appendix B gives a positive known-answer vector: the commitment, its canonical bytes, the digest, and a public JWK with the signature.",
+      "summary_ja": "draft-zambo-aer1-attribution-profile の新版が投稿されたと報告されている（件名は -00 だが本文は -01 とする）。レビューにより、4節はメンバー順序、空白、正規化なしを定めていたが文字列エスケープを定めておらず、café のような非ASCIIの caller_scope ではPythonのエスケープ形式とJavaScriptのUTF-8リテラル形式でバイト列とダイジェストが異なることが判明した。4節は基底のAER-1草案7.1節のエスケープ規則を明示的に継承するようになった。新しい付録Bには、コミットメント、正準バイト列、ダイジェスト、公開JWKと署名を含む既知解ベクターが載っている。",
+      "title": "New draft: an attribution profile for AER-1 receipts (draft-zambo-aer1-attribution-profile-00)",
+      "updated_at": "2026-11-23T07:44:45+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/HZixEiDAKLcIwtmTd1GtIBDUpaA/",
+      "use_cases": [
+        "An implementer producing AER-1 attestation commitments in both Python and JavaScript services who needs identical digests for non-ASCII scope values.",
+        "A verifier checking signatures over commitments that wants a known-answer vector to test its canonicalization."
+      ],
+      "use_cases_ja": [
+        "PythonとJavaScriptの両方のサービスでAER-1のattestationコミットメントを生成し、非ASCIIのスコープ値でも同一のダイジェストが必要な実装者。",
+        "コミットメントへの署名を検証し、正準化処理を試す既知解ベクターが欲しい検証者。"
+      ]
     },
     "mail:IFO_WULHQKHZDVdVwKWc_V_fIRQ": {
       "diagram": "",
@@ -918,6 +913,36 @@
         "失効が依拠当事者に届くまでの時間を明示しなければならないレジストリ運営者"
       ]
     },
+    "mail:ZAgrZUWeAxNKGcuivc7yvPs8Vbc": {
+      "diagram": "",
+      "first_seen": "2026-11-23",
+      "headline": "A thread on draft-molas-agent-principal-refs-00 compares public agent registries on latency, freshness and round trips.",
+      "headline_ja": "draft-molas-agent-principal-refs-00 のスレッドで、公開エージェントレジストリを応答時間、鮮度、往復回数で比較している。",
+      "id": "mail:ZAgrZUWeAxNKGcuivc7yvPs8Vbc",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-status-list",
+          "note": "A cached status list with changes fed to relying parties is the same trade-off, though the thread does not cite it.",
+          "note_ja": "状態リストをキャッシュし更新を配信する方式と同じトレードオフだが、スレッドでは引用されていない。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Dick Brooks argues that a trust registry must meet three requirements: average response under 500 ms, current real-time status from SCITT ledger content, and one network round trip. He says locally stored data trades accuracy for speed. Jaromir (AIBSN) replies that the lookup returns status at request time, took 38 ms on average over 100 European lookups, and needs one HTTPS GET. He says the local-copy option in Section 7.6 of draft-zly-aibsn-agent-status is a proposal next to the live lookup, and will be clarified in -01. Dick adds that SAG-CTR uses a failover cache flushed every N minutes. These are self-reported measurements, and the material is truncated.",
+      "summary_ja": "Dick Brooks は、トラストレジストリが満たすべき条件として、平均500ミリ秒未満の応答、SCITT台帳の内容に基づく現時点の状態、ネットワーク往復1回を挙げている。ローカルに保存したデータは精度を犠牲にして速度を得るものだとしている。Jaromir（AIBSN）は、検索は要求時点の状態を返し、欧州からの100回の検索で平均38ミリ秒、HTTPS GET 1回で済むと返答している。draft-zly-aibsn-agent-status 7.6節のローカルコピーは、ライブ検索と並ぶ選択肢としての提案であり、-01 で明確化するとしている。Dick は、SAG-CTR ではN分ごとに消去されるフェイルオーバー用キャッシュを使うと補足している。数値は自己申告であり、資料は途中で切れている。",
+      "title": "draft-molas-agent-principal-refs-00 - public registry as a case?",
+      "updated_at": "2026-11-23T07:44:45+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/ZAgrZUWeAxNKGcuivc7yvPs8Vbc/",
+      "use_cases": [
+        "A relying party choosing between live status lookups and a locally cached status list for agent identities.",
+        "An implementer of a trust registry weighing cache flush intervals against stale revocation data."
+      ],
+      "use_cases_ja": [
+        "エージェント識別子について、ライブの状態検索とローカルにキャッシュした状態リストのどちらを使うか選ぶ依拠当事者。",
+        "キャッシュ消去間隔と失効情報の古さのトレードオフを検討するトラストレジストリの実装者。"
+      ]
+    },
     "mail:ZC-4gmGfFfj8EEK0JxAx_qduOCo": {
       "diagram": "",
       "first_seen": "2026-11-17",
@@ -1029,6 +1054,38 @@
         "pairwise の sub やチェーンごとの仮名によって、依拠者間で委任ルートを非リンクに保ちつつ、支出上限も維持したい場合である。"
       ]
     },
+    "mail:f2ezo_l0SvWfdPyhGlDUa2mplLg": {
+      "diagram": "sequenceDiagram\nparticipant RP as Relying party\nparticipant ID as Agent identifier record\nparticipant SS as Status source\nRP->>ID: look up agent identifier\nID-->>RP: record with pointer to status source\nRP->>SS: check status\nSS-->>RP: active or revoked, with event and max delay stated",
+      "first_seen": "2026-11-23",
+      "headline": "Two authors agree to draft mechanism-neutral AIMS Section 6 text letting an identifier point to a status source with a stated revocation delay.",
+      "headline_ja": "二人の著者が、識別子から状態ソースを指し、失効までの最大遅延を明示させる、仕組みに中立なAIMS 6節の文案を共同で作ることで合意した。",
+      "id": "mail:f2ezo_l0SvWfdPyhGlDUa2mplLg",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-status-list",
+          "note": "Also a way to publish revocation status for a credential or identifier, though the thread does not mention it.",
+          "note_ja": "資格情報や識別子の失効状態を公開する手段という点で近いが、スレッドでは言及されていない。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Sriram Shankarlingam and Jaromir (AIBSN) agree to propose neutral wording for AIMS Section 6: an identifier can point to a status source, and each source states the event its delay is measured from and the maximum delay before a relying party refuses, as in Marc's P6. No field or registry is to be named. Sriram also reports -03 of draft-shankarlingam-oauth-agent-dns-link with a Change of Issuer section: the domain owner updates client_id (and iss) in the link record, receivers use the new values from the next uncached lookup, so old-client tokens stop being accepted within the cache lifetime. The record cannot show whether the owner made the change. Policy keyed on agent name plus client identifier, and logging of the client identifier at each verification, limit the impact. Earlier quoted text describes draft-zly-aibsn-agent-status with an optional status_source entry. The material is truncated.",
+      "summary_ja": "Sriram Shankarlingam と Jaromir（AIBSN）は、AIMS 6節に仕組みに中立な文言を提案することで合意した。識別子は状態ソースを指すことができ、各状態ソースは遅延の起点となる事象と、依拠当事者が拒否するまでの最大遅延を明示する。これはMarcのP6と同様であり、特定のフィールドやレジストリは名指ししない。Sriram は draft-shankarlingam-oauth-agent-dns-link の -03 も報告している。新設の Change of Issuer 節では、ドメイン所有者がリンクレコードの client_id（および iss）を更新し、受信側は次のキャッシュ非経由の検索から新しい値で検証するため、旧クライアントのトークンはキャッシュ有効期間内に受理されなくなる。レコードだけでは所有者による変更かどうかは判別できない。エージェント名とクライアント識別子の両方に基づくポリシーと、検証ごとのクライアント識別子の記録が影響を限定する。引用部分では draft-zly-aibsn-agent-status が任意の status_source エントリを持つことが述べられている。資料は途中で切れている。",
+      "title": "AIMS question: checking agent status from outside the trust domain",
+      "updated_at": "2026-11-23T07:44:45+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/f2ezo_l0SvWfdPyhGlDUa2mplLg/",
+      "use_cases": [
+        "An AIMS editor deciding how Section 6 should refer to external agent status sources.",
+        "A receiver that resolves an agent name through DNS and must handle the operator moving to a new OAuth client or issuer.",
+        "A deployer who needs evidence of agent revocation held outside the operator's trust domain."
+      ],
+      "use_cases_ja": [
+        "AIMS 6節で外部のエージェント状態ソースをどう参照するかを決める編集者。",
+        "DNS経由でエージェント名を解決し、運用者が新しいOAuthクライアントや発行者へ移る場合を扱う受信側。",
+        "運用者の信頼ドメイン外で保持される、エージェント失効の証拠が必要なデプロイ担当者。"
+      ]
+    },
     "mail:fMPFKSpMHoji68UYn5W3bcNh_NE": {
       "diagram": "",
       "first_seen": "2026-11-16",
@@ -1103,6 +1160,23 @@
         "エージェント間委任の実装者が、権限の縮小、親への束縛、引数への束縛を検証する実行可能なケースを求める場合。"
       ]
     },
+    "mail:hMKTKADxtaotoIMByw6e570Tjq4": {
+      "diagram": "",
+      "first_seen": "2026-11-23",
+      "headline": "The author of draft-li-rttp-iqa-addressing points to three gaps in AIMS and offers their own draft's vectors as existing work.",
+      "headline_ja": "draft-li-rttp-iqa-addressing の著者が、AIMSの不足領域を3点挙げ、自身の草案とテストベクターを既存の成果として紹介している。",
+      "id": "mail:hMKTKADxtaotoIMByw6e570Tjq4",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The author names three areas they see as underserved in the AIMS draft: a vocabulary for policy outcomes (Section 10.4), freshness when the verifier is offline (Section 9.2.3 limitations), and offline-verifiable evidence artifacts for Sections 11 and 13. For each they cite sections of their own draft: a closed five-value refusal set with priority order, an in-band lease with a cached-lease offline mode, and a 128-octet attestation envelope with a byte-exact test vector. They state they are not asking AIMS to adopt or reference anything, only pointing to existing work and public conformance vectors. No response is in the material.",
+      "summary_ja": "著者は、AIMS草案で不足していると見る3領域を挙げている。ポリシー判断結果の語彙（10.4節）、検証者がオフラインの場合の鮮度（9.2.3節の制約）、11節と13節向けのオフライン検証可能な証跡である。それぞれについて自身の草案の節を示している。優先順位付きで閉じた5値の拒否集合、帯域内のリースとキャッシュ済みリースによるオフラインモード、バイト単位で固定されたテストベクターを持つ128オクテットの attestation envelope である。AIMSに採用や参照を求めるものではなく、既存の成果と公開の適合性ベクターを示すだけだと述べている。返信は資料に含まれていない。",
+      "title": "AIMS: three underserved areas, with existing work",
+      "updated_at": "2026-11-23T07:44:45+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/hMKTKADxtaotoIMByw6e570Tjq4/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "mail:jP5h2uj8J7Xwsad5B8lsyGBZ2Eg": {
       "diagram": "",
       "first_seen": "2026-11-19",
@@ -1141,48 +1215,6 @@
       "use_cases_ja": [
         "レジストリ運営者が、コードによる照会方式が評価で P5 などのプライバシー性質を満たすかを知りたい場合。",
         "ドラフト著者が、評価対象になるようレジストリの記述を Internet-Draft として公開すべきか判断する場合。"
-      ]
-    },
-    "mail:mZYP9JeCKECx5uPLLcvsAbthxNg": {
-      "diagram": "",
-      "first_seen": "2026-11-15",
-      "headline": "Weekly GitHub digest: s2s-protocol closes the server-nonce issue and gets a report of a dangling workload-creds section reference.",
-      "headline_ja": "週次 GitHub ダイジェスト: s2s-protocol でサーバー生成 nonce の issue がクローズされ、workload-creds の節参照が存在しないとの報告が出た。",
-      "id": "mail:mZYP9JeCKECx5uPLLcvsAbthxNg",
-      "kind": "mail",
-      "related": [],
-      "significance": "routine",
-      "summary": "The digest covers the s2s-protocol repository only. A new issue (#422, by kanywst) says that http-signature and wpt point to workload-creds Section 5.1.4, which -03 does not have. Issue #419 (test vectors for draft-ietf-wimse-http-signature-08) received six comments from HUIIIM, kanywst and yaronf. Issue #369 (server generated nonce, labelled draft-ietf-wimse-http-signature) received one comment from yaronf and was closed. One pull request was opened by yaronf, with no title or body shown in the digest. The digest gives no outcome for the nonce issue and no text of the PR, so the effect on the draft cannot be determined from this material.",
-      "summary_ja": "このダイジェストは s2s-protocol リポジトリのみを対象としている。新規 issue #422（kanywst）は、http-signature と wpt が workload-creds の Section 5.1.4 を参照しているが、-03 にはその節がないと指摘している。issue #419（draft-ietf-wimse-http-signature-08 のテストベクター）には HUIIIM、kanywst、yaronf から6件のコメントが付いた。issue #369（サーバー生成 nonce、draft-ietf-wimse-http-signature ラベル）には yaronf から1件のコメントが付き、クローズされた。yaronf が pull request を1件作成したが、ダイジェストにはタイトルも本文も示されていない。nonce の issue のクローズ理由や PR の内容は資料に含まれないため、ドラフトへの影響は判断できない。",
-      "title": "Weekly github digest (WIMSE Weekly GitHub Activity Summary)",
-      "updated_at": "2026-11-15T18:54:47+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/mZYP9JeCKECx5uPLLcvsAbthxNg/",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
-    "mail:nPDAthCFZZP1OsSsJPKmto0qNdY": {
-      "diagram": "",
-      "first_seen": "2026-11-15",
-      "headline": "In short, the hackathon organisers published eight reproducible agent call-chain test scenarios and fixed how to run P7 so results compare.",
-      "headline_ja": "ハッカソン主催者がエージェント呼び出しチェーンの再現可能なテストシナリオ 8 件を公開し、P7 の実行条件を固定して結果を比較可能にした",
-      "id": "mail:nPDAthCFZZP1OsSsJPKmto0qNdY",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Ben Le (Redthread Security) shared one JSON file per scenario, P1–P8, each with setup, expected decision, log reason and whether any effect occurred. They cover an unreachable status list, revocation before effect, a widening delegation, a cumulative limit across services, a rewritten request, a tool or build change between hops, an approval display that differs from the executed action (P7), and a bearer-only final hop. Revoked, stale and unavailable status get separate log reasons (status-revoked, status-stale, status-unavailable). For P7, Arun Thallapelly (OmniArx) gave four conditions to reproduce his result: verify at time 1800000000, use the given key, action and request, start with fresh replay state, and use a verifier that holds the action. Ben Le notes that action binding alone would accept R2, so the root receipt signed by the principal's authenticator, left open in Appendix B of the passport draft, matters. He proposes discussing it at the side meeting on 17 November, 18:45–19:45 PT, Plaza A. Marc Miro i Rierola offered a second implementation using a zero-knowledge non-revocation proof instead of a status list. The material is truncated.",
-      "summary_ja": "Ben Le（Redthread Security）が、シナリオごとに 1 つの JSON ファイル（P1〜P8）を共有した。各ファイルにはセットアップ、期待される判定、ログ理由、効果の発生有無が記されている。対象は、ステータスリストへの到達不能、効果発生前の失効、権限が広がる委任、複数サービスにまたがる累積上限、書き換えられたリクエスト、ホップ間のツールやビルドの変更、承認画面と実行アクションの不一致（P7）、ベアラートークンのみの最終ホップである。失効、キャッシュ期限切れ、サービス利用不能には別々のログ理由（status-revoked、status-stale、status-unavailable）が与えられている。P7 について Arun Thallapelly（OmniArx）は、結果を再現する 4 条件を示した。時刻 1800000000 で検証すること、指定の鍵・アクション・リクエストを使うこと、リプレイ状態を新規にすること、アクションを保持する検証者を使うことである。Ben Le は、アクションへの束縛だけでは R2 が受理されると指摘し、passport ドラフトの Appendix B で未決のルートレシートが重要になるとしている。この点を 11 月 17 日 18:45〜19:45 PT、Plaza A のサイドミーティングで議論することを提案している。Marc Miro i Rierola は、ステータスリストではなくゼロ知識の非失効証明を使う 2 つ目の実装を提案した。資料は途中で切れている。",
-      "title": "IETF 127 Hackathon: WIMSE interop scenarios for agent call chains (2 new messages)",
-      "updated_at": "2026-11-15T06:38:45+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/nPDAthCFZZP1OsSsJPKmto0qNdY/",
-      "use_cases": [
-        "Run your agent-delegation verifier against P1–P8 to check it fails closed and logs the right reason when a status list is unreachable, stale or revoked.",
-        "Test whether an enforcement point with no request-to-action mapping can catch an approval display that differs from the executed action (P7).",
-        "Compare a status-list revocation design with a zero-knowledge non-revocation design by refusal timing and log reasons (P2)."
-      ],
-      "use_cases_ja": [
-        "エージェント委任の検証実装を P1〜P8 で試し、ステータスリストが到達不能・古い・失効済みのときにフェイルクローズし、正しい理由を記録するかを確認する。",
-        "リクエストからアクションへの対応付けを持たない強制ポイントが、承認画面と実行アクションの不一致を検出できるかを確認する（P7）。",
-        "ステータスリスト方式とゼロ知識による非失効証明方式を、拒否までの時間とログ理由で比較する（P2）。"
       ]
     },
     "mail:nYivxREheGt3jeHVyuVjkNVICwA": {
@@ -1313,12 +1345,6 @@
       "priority": "high",
       "reason": "Arch issue #139 on AI intermediaries and per-agent identity was commented on and closed this week.",
       "reason_ja": "AI仲介とエージェント単位のIDに関するarchのissue #139に今週コメントが付き、閉じられた。"
-    },
-    "Diff active WG draft: draft-ietf-wimse-http-signature-08": {
-      "date": "2026-11-15",
-      "priority": "high",
-      "reason": "The digest shows active work on its test vectors (#419), a closed server-nonce issue (#369) and a new dangling-reference issue (#422).",
-      "reason_ja": "ダイジェストにテストベクター（#419）、クローズされたサーバー nonce の issue（#369）、参照先が存在しないという新規 issue（#422）の動きがある。"
     },
     "Diff active WG draft: draft-ietf-wimse-http-signature-09": {
       "date": "2026-11-22",
