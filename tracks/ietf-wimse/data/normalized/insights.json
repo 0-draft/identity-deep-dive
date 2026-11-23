@@ -69,6 +69,11 @@
       "at": "2026-11-23T07:44:45+00:00",
       "text": "No WG draft diffs this run, only four mailing-list threads. The most substantive one is on agent status: how an AIMS identifier could point to a status source, with each source stating its revocation delay. The rest is self-promotion of individual drafts.",
       "text_ja": "今回はWG草案の差分はなく、メーリングリストの4件のみである。最も内容があるのはエージェントの状態確認に関する議論で、AIMSの識別子から状態ソースを指し、各ソースが失効までの遅延を明示する案が出ている。他は個人草案の紹介が中心である。"
+    },
+    {
+      "at": "2026-11-23T23:58:03+00:00",
+      "text": "draft-ietf-wimse-workload-identity-practices-09 answers IETF Last Call feedback by saying a trusted proxy can do proof of possession for a workload. The chairs also warned on the list that AI-generated posts may lead to posting restrictions.",
+      "text_ja": "draft-ietf-wimse-workload-identity-practices-09 は IETF Last Call のコメントを反映し、信頼できるプロキシがワークロードに代わって proof of possession を行えると明記した。また、WIMSE のチェアは AI 生成の投稿が多すぎるとして、メーリングリストの投稿制限もあり得ると警告した。"
     }
   ],
   "items": {
@@ -154,6 +159,29 @@
       "use_cases_ja": [
         "Accept-Signature で nonce を発行し、クライアントにそれを再利用させてサーバー側でリプレイを管理したいサーバー。",
         "CONNECT プロキシを実装する際、リクエストターゲットにポートが含まれていても、デフォルトポートを省略して @authority を計算する必要がある実装者。"
+      ]
+    },
+    "draft:draft-ietf-wimse-workload-identity-practices-09": {
+      "diagram": "sequenceDiagram\n participant W as Workload\n participant P as Trusted proxy\n participant R as Relying party\n W->>P: Outbound request\n P->>P: Sign request-bound proof with private key\n P->>R: Request plus proof\n R->>R: Verify proof of possession",
+      "first_seen": "2026-11-23",
+      "headline": "Practices -09 says a trusted proxy can hold keys and perform proof of possession for a workload.",
+      "headline_ja": "Practices -09 は、信頼できるプロキシが鍵を保持しワークロードに代わって proof of possession を行えると明記した。",
+      "id": "draft:draft-ietf-wimse-workload-identity-practices-09",
+      "kind": "draft-revision",
+      "related": [],
+      "significance": "substantive",
+      "summary": "Section 5.6 now says the workload, or a trusted infrastructure component acting for it, SHOULD perform proof of possession. Section 4.5 drops the word sidecar in favour of proxy. It adds that a proxy can generate request-bound proofs for outbound requests without exposing private keys to the application. Section 5.1.5 treats access to signing capabilities as a security boundary. Untrusted input MUST NOT influence authorization of signing operations. The text warns that a compromised workload may still misuse its authorized signing capability. The draft's own history lists only the proof-of-possession clarification and the sidecar/proxy wording. The rest is wording and a new acknowledgement.",
+      "summary_ja": "5.6節は、ワークロード自身、またはその代理として動作する信頼できるインフラ構成要素が proof of possession を行うべき(SHOULD)と述べる。4.5節は「sidecar」を「proxy」に改め、プロキシがアプリケーションに秘密鍵を見せずに送信リクエストへ紐づく証明を生成できると追記した。5.1.5節は署名機能へのアクセスをセキュリティ境界として扱い、署名操作の認可判断に信頼できない入力が影響してはならない(MUST NOT)とする。侵害されたワークロードが許可された署名機能を悪用し得る点も明記した。変更履歴に記載されているのは proof of possession の明確化と sidecar/proxy の表記統一のみで、残りは文言修正と謝辞の追加である。",
+      "title": "draft-ietf-wimse-workload-identity-practices-09: Workload Identity Practices",
+      "updated_at": "2026-11-23T23:58:03+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-ietf-wimse-workload-identity-practices-08&url2=draft-ietf-wimse-workload-identity-practices-09",
+      "use_cases": [
+        "A service mesh proxy that attaches HTTP-level proofs to outbound calls without exposing keys to the app.",
+        "A workload identity agent that signs on behalf of workloads and restricts which signing requests it accepts."
+      ],
+      "use_cases_ja": [
+        "アプリケーションに鍵を見せず、送信 HTTP 呼び出しに証明を付与するサービスメッシュのプロキシ。",
+        "ワークロードに代わって署名し、受け付ける署名要求を制限するワークロードIDエージェント。"
       ]
     },
     "draft:draft-miao-wimse-http-signature-test-vectors-00": {
@@ -279,6 +307,36 @@
       "use_cases_ja": [
         "TLS を終端する中継を経由する Media over QUIC や WebSocket 上のエージェント制御メッセージで、受信者が鍵の保有者がこのメッセージそのものを送ったことを確認したい場合。",
         "A2A や MCP のような HTTP 上の JSON-RPC で、中継がボディを再シリアライズしうるため、バイト列への署名が使えない場合。"
+      ]
+    },
+    "draft:draft-seymour-wimse-connected-flight-07": {
+      "diagram": "sequenceDiagram\n participant A as Agent\n participant S as Tenant STS\n participant N as Next hop\n A->>S: Report first completion of hop\n S->>S: Write consumption record by root ref and hop index\n N->>S: Request Boarding Pass for same hop index\n S-->>N: Refused as record exists",
+      "first_seen": "2026-11-23",
+      "headline": "Connected-flight -07 adds a consumption record, issuer-key rules and replay/redirection bounds.",
+      "headline_ja": "connected-flight -07 は、消費記録、発行者鍵の要件、リプレイとリダイレクトの限界を追加した。",
+      "id": "draft:draft-seymour-wimse-connected-flight-07",
+      "kind": "draft-revision",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-identity-chaining",
+          "note": "The draft compares its model with OAuth Token Exchange and chained delegation across domains.",
+          "note_ja": "本ドラフトは OAuth Token Exchange やドメイン間の委任チェーンと比較している。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "substantive",
+      "summary": "The draft gives each tenant's STS a consumption record for the hops it issues Boarding Passes for. The record is keyed to the Root Token reference and hop index and written atomically at the first completion attempt. It limits each hop to one completion and is kept until Ticket expiry plus clock skew. Ticket issuance now requires a verified Passport and the principal's authorization of the frozen call. Issuer keys for Passport, Ticket, Boarding Pass and Visa MUST be distinct and held in hardware-backed storage away from any agent runtime. Issuer standing is anchored in the home tenant, and a shared registry is consulted only at tenant boundaries. A new section 4.4 lists time, scope, boundary and count bounds. The draft states that it does not eliminate replay or prompt injection.",
+      "summary_ja": "各テナントの STS が、自らが Boarding Pass を発行するホップについて消費記録を持つ。記録は Root Token への参照とホップ番号をキーとし、そのホップの最初の完了試行時に原子的に書き込まれる。これによりホップごとの完了は1回に制限され、記録は Ticket の失効時刻とクロックスキューまで保持される。Ticket の発行には、検証済みの Passport と、凍結された呼び出しに対するプリンシパルの認可が必要となった。Passport、Ticket、Boarding Pass、Visa の発行者鍵は互いに別でなければならず(MUST)、エージェント実行環境と同居しないハードウェア鍵ストアに置く。発行者の正当性はホームテナントに根拠を置き、共有レジストリはテナント境界でのみ参照する。新設の4.4節は時間・範囲・境界・回数の限界を列挙し、リプレイやプロンプトインジェクションを排除するものではないと明記している。",
+      "title": "draft-seymour-wimse-connected-flight-07: Zero Trust Fabric Layer Agent-to-Agent Chained Trust on a Connected Flight",
+      "updated_at": "2026-11-23T23:58:03+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-seymour-wimse-connected-flight-06&url2=draft-seymour-wimse-connected-flight-07",
+      "use_cases": [
+        "A multi-agent orchestrator that must stop a delegated hop from being completed twice.",
+        "Cross-tenant agent chains where a Visa is issued only at the boundary."
+      ],
+      "use_cases_ja": [
+        "委任されたホップが二重に完了しないようにしたいマルチエージェントのオーケストレーター。",
+        "境界でのみ Visa を発行するテナント間のエージェントチェーン。"
       ]
     },
     "mail:-4du6HkeVluCVdJbnpenPJQ4ex0": {
@@ -780,6 +838,23 @@
         "各依拠当事者にリンク可能なユーザー識別子を見せずに、ユーザー署名付きの権限を使いたいエージェントプラットフォーム。"
       ]
     },
+    "mail:PASMBaoHjPgUXamgoSggJFmhqME": {
+      "diagram": "",
+      "first_seen": "2026-11-23",
+      "headline": "The author announces connected-flight -07 on the list, with a six-point summary.",
+      "headline_ja": "著者が connected-flight -07 の公開をメーリングリストで告知し、6点の変更を要約した。",
+      "id": "mail:PASMBaoHjPgUXamgoSggJFmhqME",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "The announcement lists the -07 changes. Issuer standing is anchored in the home tenant, with a shared registry used only at the boundary. Ticket issuance depends on a verified Passport and principal authorization. The consumption record is defined. Issuer keys are distinct and hardware-backed. A new section states bounds on replay and redirection. The abstract now identifies the ZTFL architecture as the author's earlier work. It matches the diff.",
+      "summary_ja": "告知は -07 の変更点を列挙している。発行者の正当性はホームテナントに根拠を置き、共有レジストリは境界でのみ使う。Ticket の発行は検証済みの Passport とプリンシパルの認可に依存する。消費記録が定義された。発行者鍵は互いに別でハードウェア鍵ストアに置かれる。リプレイとリダイレクトの限界を述べる節が新設された。概要では ZTFL を著者自身の先行研究として明示した。内容は差分と一致している。",
+      "title": "draft-seymour-wimse-connected-flight-07",
+      "updated_at": "2026-11-23T23:58:03+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/PASMBaoHjPgUXamgoSggJFmhqME/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "mail:P_5LBMyFwLGsNJr0PEVV573wVvg": {
       "diagram": "",
       "first_seen": "2026-11-17",
@@ -1054,6 +1129,44 @@
         "pairwise の sub やチェーンごとの仮名によって、依拠者間で委任ルートを非リンクに保ちつつ、支出上限も維持したい場合である。"
       ]
     },
+    "mail:dN51wJq1zrDjrnew-6nFdwcG05Y": {
+      "diagram": "",
+      "first_seen": "2026-11-23",
+      "headline": "The WIMSE chairs say most list posts look AI-generated and warn of moderation.",
+      "headline_ja": "WIMSE のチェアは、投稿の大半が AI 生成に見えるとして、モデレーションの可能性を警告した。",
+      "id": "mail:dN51wJq1zrDjrnew-6nFdwcG05Y",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Justin followed up on the chairs' 3 November guidance. The chairs say behaviour has not changed. An analysis of the archive found most posts almost certainly AI-generated. They ask posters to self-moderate. Otherwise external moderation will be imposed, which they have not used before. The earlier message allowed AI for grammar, wording and as a sounding board. It said participants must be able to explain and defend their content, and it warned of restricted posting privileges.",
+      "summary_ja": "Justin が、11月3日付けのチェアのガイダンスに続く投稿を行った。チェアによれば、その後も投稿の振る舞いに変化は見られない。アーカイブの分析では、投稿の大半がほぼ確実に AI 生成であったという。チェアは投稿者による自主的な調整を求め、それがなければ外部からのモデレーションを課すとしている。これまでこの手段は使っていない。先のメッセージは、文法・表現の改善や考えを整理する相手としての AI 利用を認める一方、投稿者は内容を説明し擁護できなければならないとし、投稿権限の制限もあり得ると述べていた。",
+      "title": "Guidelines for AI-Assisted Contributions to the WIMSE WG",
+      "updated_at": "2026-11-23T23:58:03+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/dN51wJq1zrDjrnew-6nFdwcG05Y/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "mail:duEtkdULynR6lQuyV712JCcq7J4": {
+      "diagram": "",
+      "first_seen": "2026-11-23",
+      "headline": "The author of an agent status registry draft revises it after review against the criteria P1 to P6.",
+      "headline_ja": "エージェントのステータスレジストリのドラフトの著者が、基準 P1〜P6 に照らした指摘を受けて改訂した。",
+      "id": "mail:duEtkdULynR6lQuyV712JCcq7J4",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Jaromir posted -01 of draft-zly-aibsn-agent-status. For P6, refund and dispute delays are now counted from the event as the payment processor records it, and Section 7.3 proposes a 15-minute maximum pull interval. Refusing when status cannot be read is left to the relying party. For P4, Section 7.9 logs every release of owner data, with refusals, for 3 years. P6 stays marked not met today. Marc plans to list the draft in Appendix A of his draft-molas-agent-principal-refs -01.",
+      "summary_ja": "Jaromir は draft-zly-aibsn-agent-status の -01 を公開した。P6 については、返金や紛争の遅延を決済事業者が記録した事象の時点から数え、7.3節は依存者が状態を取得する間隔の上限を15分とすることを提案する。状態を読めない場合に拒否するかどうかは依存者の判断とした。P4 については、7.9節が拒否を含む所有者データの開示をすべて3年間記録する。P6 は「現時点では未達」のままである。Marc は自身の draft-molas-agent-principal-refs の -01 の Appendix A にこのドラフトを載せる予定である。",
+      "title": "draft-molas-agent-principal-refs-00 - public registry as a case?",
+      "updated_at": "2026-11-23T23:58:03+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/duEtkdULynR6lQuyV712JCcq7J4/",
+      "use_cases": [
+        "Relying parties that must refuse an agent whose status changed, with a stated maximum delay."
+      ],
+      "use_cases_ja": [
+        "状態が変わったエージェントを、明示された最大遅延内で拒否する必要がある依存者。"
+      ]
+    },
     "mail:f2ezo_l0SvWfdPyhGlDUa2mplLg": {
       "diagram": "sequenceDiagram\nparticipant RP as Relying party\nparticipant ID as Agent identifier record\nparticipant SS as Status source\nRP->>ID: look up agent identifier\nID-->>RP: record with pointer to status source\nRP->>SS: check status\nSS-->>RP: active or revoked, with event and max delay stated",
       "first_seen": "2026-11-23",
@@ -1177,6 +1290,46 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "mail:jAjyS_ikbVTt7Jd5hIP9wSW4X58": {
+      "diagram": "",
+      "first_seen": "2026-11-23",
+      "headline": "An independent Rust implementation passes all 229 AAT -02 test vectors, with one gap noted in step 2c.",
+      "headline_ja": "独立した Rust 実装が AAT -02 の 229 件のテストベクターすべてで判定が一致した。2c の記述に不足が一点ある。",
+      "id": "mail:jAjyS_ikbVTt7Jd5hIP9wSW4X58",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Cleiton reports that his Rust implementation agrees on all 229 verdicts (54 PERMIT, 175 DENY) in the -02 suite. He says moving from -01 needed only the breaking changes in Appendix F. He notes step 2c does not say what a minimal parser does with a repeated jti. His implementation denies at 2c, where the vector expects rejection at 3b. The verdict is the same. Niki's quoted reply says asor -03 hashes the same signing input for par_hash as AAT -02. The remaining difference is that both drafts call the claim del_max_depth but count it differently. Cleiton offers to contribute that case to constraint-comparison.",
+      "summary_ja": "Cleiton は、自身の Rust 実装が -02 のスイートの 229 件(PERMIT 54、DENY 175)すべてで判定が一致したと報告した。-01 からの移行に必要だったのは Appendix F の破壊的変更のみだったという。ステップ2cは jti が重複した場合に最小限のパーサーがどう扱うかを定めていないと指摘する。彼の実装は2cで拒否するが、テストベクターは3bでの拒否を想定している。判定結果は同じである。引用された Niki の返信によれば、asor -03 は par_hash に AAT -02 と同じ署名入力をハッシュする。残る違いは、両ドラフトとも del_max_depth というクレーム名だが数え方が異なる点である。Cleiton はこのケースを constraint-comparison に提供すると申し出ている。",
+      "title": "Implementation report: convergence across the offline-attenuated agent-token drafts (niyikiza / asor / fane)",
+      "updated_at": "2026-11-23T23:58:03+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/jAjyS_ikbVTt7Jd5hIP9wSW4X58/",
+      "use_cases": [
+        "Teams implementing offline-attenuated agent tokens who want an independent interop result.",
+        "Implementers choosing a del_max_depth counting rule across AAT and asor."
+      ],
+      "use_cases_ja": [
+        "オフラインで権限を絞るエージェントトークンを実装し、独立した相互運用の結果を知りたいチーム。",
+        "AAT と asor の間で del_max_depth の数え方を選ぶ実装者。"
+      ]
+    },
+    "mail:jBuYevn84xvICGd9DZpufi18Jqk": {
+      "diagram": "",
+      "first_seen": "2026-11-23",
+      "headline": "Practices -09 was published in response to a Last Call review by Shankar.",
+      "headline_ja": "Shankar の Last Call レビューを受けて Practices -09 が公開された。",
+      "id": "mail:jBuYevn84xvICGd9DZpufi18Jqk",
+      "kind": "mail",
+      "related": [],
+      "significance": "substantive",
+      "summary": "Arndt says the feedback was incorporated and -09 published. Shankar had suggested three changes: allow a trusted infrastructure component to perform proof of possession (5.6), make signing capability a security boundary (5.1.5), and describe proxies that manage keys in service meshes (4.5). The -09 text carries these ideas, with the examples reworded to say proxy instead of sidecar. The IESG Last Call was for -08 as an Informational RFC with comments due 2026-11-13.",
+      "summary_ja": "Arndt は、フィードバックを取り込んで -09 を公開したと述べた。Shankar の提案は3点で、信頼できるインフラ構成要素による proof of possession の許容(5.6節)、署名機能のセキュリティ境界化(5.1.5節)、鍵を管理するプロキシのサービスメッシュでの説明(4.5節)である。-09 の本文はこれらを反映しており、例では sidecar の代わりに proxy と記している。IESG の Last Call は -08 を Informational RFC とするもので、コメント期限は 2026-11-13 であった。",
+      "title": "Last Call: <draft-ietf-wimse-workload-identity-practices-08.txt> (Workload Identity Practices) to Informational RFC",
+      "updated_at": "2026-11-23T23:58:03+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/jBuYevn84xvICGd9DZpufi18Jqk/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "mail:jP5h2uj8J7Xwsad5B8lsyGBZ2Eg": {
       "diagram": "",
       "first_seen": "2026-11-19",
@@ -1215,6 +1368,34 @@
       "use_cases_ja": [
         "レジストリ運営者が、コードによる照会方式が評価で P5 などのプライバシー性質を満たすかを知りたい場合。",
         "ドラフト著者が、評価対象になるようレジストリの記述を Internet-Draft として公開すべきか判断する場合。"
+      ]
+    },
+    "mail:nBwuYsuknbHoBGnOD5aKr3_2XkQ": {
+      "diagram": "",
+      "first_seen": "2026-11-23",
+      "headline": "Proposed neutral AIMS Section 6 text lets an agent identifier point to an independent status source.",
+      "headline_ja": "AIMS 6節に、エージェント識別子から独立したステータス情報源を指せるようにする中立的な文案が提案された。",
+      "id": "mail:nBwuYsuknbHoBGnOD5aKr3_2XkQ",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-status-list",
+          "note": "Both address checking revocation or status of an issued identity, but the material does not link them.",
+          "note_ja": "発行済みIDの失効や状態確認を扱う点は共通するが、資料上の直接の関連は示されていない。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "new-proposal",
+      "summary": "Jaromir sent draft text for Section 6 of AIMS. An identifier may point to a status source run by someone other than the issuer. Each source must state which events remove standing, when the clock starts and the maximum delay. Services needing fresh answers may refuse the agent if no status arrives in time. The pointer and fetch mechanism are left to other documents. Sriram's quoted reply says -03 of draft-shankarlingam-oauth-agent-dns-link adds a Change of Issuer section. A DNS record alone cannot show whether the domain owner made a change. The message is truncated, so it is incomplete.",
+      "summary_ja": "Jaromir が AIMS 6節の文案を送った。識別子は発行者以外が運用するステータス情報源を指してよい。各情報源は、どの事象で資格が失われるか、時間の起点、最大遅延を明示しなければならない。新しい応答が必要なサービスは、時間内に状態が得られなければそのエージェントを拒否してよい。参照方法と取得方法は他の文書に委ねる。引用された Sriram の返信によれば、draft-shankarlingam-oauth-agent-dns-link の -03 に Change of Issuer の節が加わった。DNS レコードだけでは、ドメイン所有者が変更したかどうかは分からない。メッセージは途中で切れており、内容は不完全である。",
+      "title": "AIMS question: checking agent status from outside the trust domain",
+      "updated_at": "2026-11-23T23:58:03+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/nBwuYsuknbHoBGnOD5aKr3_2XkQ/",
+      "use_cases": [
+        "A service outside an agent's trust domain that checks whether the agent is still allowed to act."
+      ],
+      "use_cases_ja": [
+        "エージェントの信頼ドメインの外から、そのエージェントがまだ動作を許可されているかを確認するサービス。"
       ]
     },
     "mail:nYivxREheGt3jeHVyuVjkNVICwA": {
@@ -1297,6 +1478,23 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "repo:ietf-wg-wimse/draft-ietf-wimse-arch:fb13f4832e1b": {
+      "diagram": "",
+      "first_seen": "2026-11-23",
+      "headline": "The architecture draft merged a consistency-review pull request, but the commit list shows no content.",
+      "headline_ja": "アーキテクチャのドラフトに整合性レビューのプルリクエストがマージされたが、コミット一覧から内容は分からない。",
+      "id": "repo:ietf-wg-wimse/draft-ietf-wimse-arch:fb13f4832e1b",
+      "kind": "repo-activity",
+      "related": [],
+      "significance": "routine",
+      "summary": "Eight commits were merged through PR #143 (consistency-review). They include resolving architecture consistency review findings, applying reviewer suggestions on 31 October, and edits to draft-ietf-wimse-arch.md on 16 and 23 November. Only commit titles are available, so the material does not show what text changed.",
+      "summary_ja": "整合性レビュー(PR #143)を通じて8件のコミットがマージされた。内容は、アーキテクチャの整合性レビュー指摘への対応、10月31日のレビュアー提案の適用、11月16日と23日の draft-ietf-wimse-arch.md の編集である。得られるのはコミットのタイトルのみで、どの文章が変わったかは分からない。",
+      "title": "8 new commit(s) in ietf-wg-wimse/draft-ietf-wimse-arch",
+      "updated_at": "2026-11-23T23:58:03+00:00",
+      "url": "https://github.com/ietf-wg-wimse/draft-ietf-wimse-arch",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "repo:ietf-wg-wimse/draft-ietf-wimse-s2s-protocol:1a2ad8c16daa": {
       "diagram": "",
       "first_seen": "2026-11-16",
@@ -1330,15 +1528,32 @@
       "url": "https://github.com/ietf-wg-wimse/draft-ietf-wimse-s2s-protocol",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "repo:ietf-wg-wimse/draft-ietf-wimse-workload-identity-practices:dfde5b22adaa": {
+      "diagram": "",
+      "first_seen": "2026-11-23",
+      "headline": "One commit incorporates IETF Last Call feedback into the practices draft.",
+      "headline_ja": "プラクティスのドラフトに IETF Last Call のフィードバックを取り込む1件のコミットがあった。",
+      "id": "repo:ietf-wg-wimse/draft-ietf-wimse-workload-identity-practices:dfde5b22adaa",
+      "kind": "repo-activity",
+      "related": [],
+      "significance": "routine",
+      "summary": "Commit dfde5b22adaa (#96) on 23 November is titled as incorporating IETF Last Call feedback. This is the repository change behind -09. The commit message gives no further detail.",
+      "summary_ja": "11月23日のコミット dfde5b22adaa(#96)は、IETF Last Call のフィードバックを取り込むものである。-09 の元となるリポジトリ上の変更だ。コミットメッセージにこれ以上の詳細はない。",
+      "title": "1 new commit(s) in ietf-wg-wimse/draft-ietf-wimse-workload-identity-practices",
+      "updated_at": "2026-11-23T23:58:03+00:00",
+      "url": "https://github.com/ietf-wg-wimse/draft-ietf-wimse-workload-identity-practices",
+      "use_cases": [],
+      "use_cases_ja": []
     }
   },
   "overflow": [],
   "triage": {
     "Diff active WG draft: draft-ietf-wimse-aims-01": {
-      "date": "2026-11-22",
-      "priority": "high",
-      "reason": "The AIMS Section 6 status-source wording is under discussion on the list, with an offer to draft text.",
-      "reason_ja": "AIMSのSection 6のステータス情報源に関する文言がメーリングリストで議論されており、文案作成の申し出もある。"
+      "date": "2026-11-23",
+      "priority": "low",
+      "reason": "The status-source Section 6 proposal is only on the list so far, with no draft text.",
+      "reason_ja": "ステータス情報源に関する6節の提案は現時点ではメーリングリスト上のみで、ドラフト本文には反映されていない。"
     },
     "Diff active WG draft: draft-ietf-wimse-arch-09": {
       "date": "2026-11-22",
@@ -1358,11 +1573,11 @@
       "reason": "The IPR poll to its authors started today, which suggests the draft is moving toward publication.",
       "reason_ja": "本日、著者への IPR 確認が始まっており、公開に向けて動いているとみられる。"
     },
-    "Review related draft: draft-asor-wimse-agent-delegation-chain-03": {
-      "date": "2026-11-19",
+    "Diff active WG draft: draft-ietf-wimse-workload-identity-practices-09": {
+      "date": "2026-11-23",
       "priority": "high",
-      "reason": "Cited as settling par_hash and totals handling, with a del_max_depth counting difference against AAT.",
-      "reason_ja": "par_hash と合計の扱いを解決済みとして引用され、AAT との del_max_depth の数え方の差も指摘された。"
+      "reason": "-09 adds normative-looking changes on proxy proof of possession and signing boundaries after Last Call.",
+      "reason_ja": "-09 は Last Call を経て、プロキシによる proof of possession と署名境界に関する変更を加えた。"
     },
     "Review related draft: draft-hulea-wimse-agent-mandate-01": {
       "date": "2026-11-19",
@@ -1381,6 +1596,12 @@
       "priority": "high",
       "reason": "Announced today and already drawing questions on authority hashing behind gateways and registry profiles.",
       "reason_ja": "本日告知され、ゲートウェイ越しの authority のハッシュ化やレジストリのプロファイルについて質問が出ている。"
+    },
+    "Review related draft: draft-seymour-wimse-connected-flight-07": {
+      "date": "2026-11-23",
+      "priority": "high",
+      "reason": "-07 defines a consumption record, key requirements and replay bounds.",
+      "reason_ja": "-07 は消費記録、鍵の要件、リプレイの限界を定義した。"
     },
     "Review related draft: draft-thaha-wimse-agent-evidence-binding-03": {
       "date": "2026-11-17",
