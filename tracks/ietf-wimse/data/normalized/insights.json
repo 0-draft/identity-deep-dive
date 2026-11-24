@@ -69,6 +69,11 @@
       "at": "2026-11-24T09:58:36+00:00",
       "text": "WIMSE chairs escalated their AI-content warning: Justin Richer says most list posts are likely AI-generated and moderation will be imposed unless posters self-moderate. A second post offers runnable test fixtures for P5/P6. No draft text changed in this run.",
       "text_ja": "WIMSEのチェアは、AI生成コンテンツに関する警告を強めた。Justin Richerは、メーリングリストの投稿の大半がAI生成と思われると述べ、自主的な調整が進まなければ外部からのモデレーションを課すとした。もう一件はP5/P6の実行可能なテストフィクスチャの提供である。ドラフト本文の変更はなかった。"
+    },
+    {
+      "at": "2026-11-24T22:30:27+00:00",
+      "text": "The only draft change is draft-uppalapati-wimse-pq-agent-identity-02, an Informational individual draft that adds cross-references and a JOSE working group answer on composite signatures. The AIMS mailing-list thread continues to shape a neutral Section 6 text on external agent status.",
+      "text_ja": "ドラフトの変更は個人提出の Informational ドラフト draft-uppalapati-wimse-pq-agent-identity-02 のみで、参照の追加と複合署名に関する JOSE ワーキンググループの回答が反映された。AIMS のメーリングリストでは、外部のエージェント状態確認に関する中立的な Section 6 の文案の議論が続いている。"
     }
   ],
   "items": {
@@ -268,6 +273,29 @@
         "境界でのみ Visa を発行するテナント間のエージェントチェーン。"
       ]
     },
+    "draft:draft-uppalapati-wimse-pq-agent-identity-02": {
+      "diagram": "",
+      "first_seen": "2026-11-24",
+      "headline": "In short, the PQ agent identity draft -02 adds cross-references and records a JOSE WG answer on composite signatures; no new requirements are visible.",
+      "headline_ja": "post-quantum エージェント ID ドラフトの -02 は、参照を追加し、複合署名に関する JOSE ワーキンググループの回答を記録した。新しい要件は確認できない。",
+      "id": "draft:draft-uppalapati-wimse-pq-agent-identity-02",
+      "kind": "draft-revision",
+      "related": [],
+      "significance": "substantive",
+      "summary": "The diff is truncated, so only part is visible. It adds a reference to draft-niyikiza-oauth-attenuating-agent-tokens and a paragraph noting that its Section 9.11 algorithm allowlist is the enforcement PQ-R5 asks for, while it says nothing about post-quantum algorithms. The online-verification text now points to Section 8 of draft-asor-wimse-agent-delegation-chain, and to its Section 6.4 with draft-gilda-audit-agent-audit-record for retaining the root key path. The composite signature question put to JOSE is now reported as answered: the ML-DSA component does not verify standalone as an RFC 9964 signature, only the traditional component is at issue, and the WG declined to add a statement. A requirement on independent protection families gains a test (an unannounced break of one must not propagate), and the trust-anchor requirement now says it covers order only, with the date left to PQ-R2 and PQ-R7(e). References were updated, including RFC 10073 replacing the LAMPS composite draft.",
+      "summary_ja": "差分は途中で切れており、見えているのは一部のみである。draft-niyikiza-oauth-attenuating-agent-tokens への参照が追加され、その Section 9.11 のアルゴリズム許可リストは PQ-R5 が求める強制に当たるが、post-quantum アルゴリズムには触れていないと述べられた。オンライン検証の記述は draft-asor-wimse-agent-delegation-chain の Section 8 を指すようになり、ルート鍵の経路の保持については同ドラフトの Section 6.4 と draft-gilda-audit-agent-audit-record が参照された。JOSE に出された複合署名の質問には回答があったと記され、ML-DSA 構成要素は RFC 9964 署名として単独では検証されず、問題となるのは従来型の構成要素のみであり、ワーキンググループは記述の追加を見送ったとされる。独立した保護ファミリーの要件には、一方が告知なく破られても他方に波及しないという判定基準が加わり、トラストアンカーの要件は順序のみを求め、期日は PQ-R2 と PQ-R7(e) に委ねると明記された。参照も更新され、LAMPS の複合署名ドラフトは RFC 10073 に置き換わった。",
+      "title": "draft-uppalapati-wimse-pq-agent-identity-02: Post-Quantum Requirements for Software and AI Agent Identity",
+      "updated_at": "2026-11-24T22:30:27+00:00",
+      "url": "https://author-tools.ietf.org/iddiff?url1=draft-uppalapati-wimse-pq-agent-identity-01&url2=draft-uppalapati-wimse-pq-agent-identity-02",
+      "use_cases": [
+        "Reviewers tracking how post-quantum migration requirements for delegation chains are scoped across WIMSE-related drafts.",
+        "Authors of delegation or audit-record drafts deciding how to cite a requirement for retained, later-verifiable records."
+      ],
+      "use_cases_ja": [
+        "WIMSE 関連ドラフトで、委任チェーンの post-quantum 移行要件の範囲がどう整理されているかを追う査読者。",
+        "保持され後から検証される記録への要件をどう引用するかを検討する、委任または監査記録ドラフトの著者。"
+      ]
+    },
     "mail:-4du6HkeVluCVdJbnpenPJQ4ex0": {
       "diagram": "flowchart LR\nM[Maker] -->|signs commitment: profile id, receipt_id, output_hash, caller_scope, key thumbprint| A[Attestation]\nA --> C[Checker]\nC --> O[present, evaluated, outcome]\nN[No attestation] --> P[present false, no outcome]",
       "first_seen": "2026-11-22",
@@ -317,6 +345,36 @@
       ],
       "use_cases_ja": [
         "稼働中のエージェントをセーフモードにし、下流の依拠当事者が行動前にその状態を確認できるようにしたい運用者。"
+      ]
+    },
+    "mail:5vf-1uga0E9j1jx8XIW1PDxm4YM": {
+      "diagram": "",
+      "first_seen": "2026-11-24",
+      "headline": "In short, a thread on AIMS Section 6 converges on neutral text for external agent status sources, and a new draft offers a staleness rule and a delay formula.",
+      "headline_ja": "AIMS の Section 6 について、外部の状態情報源に関する中立的な文案へ議論が収束しつつあり、新たなドラフトが古さの扱いと遅延の計算式を提案した。",
+      "id": "mail:5vf-1uga0E9j1jx8XIW1PDxm4YM",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-status-list",
+          "note": "The delay formula includes the status list's time-to-live as the term T.",
+          "note_ja": "遅延の計算式に、状態リストの存続時間が項 T として含まれる。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "The message is truncated. Ben Le supports the neutral Section 6 text proposed in the thread, under which an agent identifier can point to a status source outside the issuer's trust domain, and each source states when its clock starts and its maximum lag. He adds two points from draft-le-agent-passport -01. A relying party that cannot get a fresh answer should record status-stale and must not record status-revoked on a stale or superseded answer alone. The refusal time after standing is withdrawn at t0 is t0 + B + min(L, M, R + T), where B is the evidence issuer's acceptance window, L the receipt lifetime, M the relying party's maximum evidence age, R the refresh interval and T the status list's time-to-live. He also discloses IPR #7669 against that draft. The quoted earlier messages show draft-zly-aibsn-agent-status adding an optional status_source entry, and draft-shankarlingam-oauth-agent-dns-link -03 adding a Change of Issuer section.",
+      "summary_ja": "メッセージは途中で切れている。Ben Le は、スレッドで提案された中立的な Section 6 の文案を支持している。その文案では、エージェント識別子が発行者の信頼ドメイン外の状態情報源を指すことができ、各情報源は時計の起点と最大の遅延を明示する。さらに draft-le-agent-passport -01 から二点を挙げている。新しい応答を得られない依拠当事者は status-stale を記録すべきであり、古い応答や置き換えられた応答だけで status-revoked を記録してはならない。地位が t0 に取り消された場合に拒否に至る時刻は t0 + B + min(L, M, R + T) であり、B は証拠発行者の受理期間、L は受領証の有効期間、M は依拠当事者の証拠の最大経過時間、R は更新間隔、T は状態リストの存続時間である。同ドラフトに対する IPR 開示 #7669 も報告している。引用された過去のメッセージからは、draft-zly-aibsn-agent-status が任意の status_source エントリを追加し、draft-shankarlingam-oauth-agent-dns-link の -03 が Change of Issuer の節を追加したことが分かる。",
+      "title": "AIMS question: checking agent status from outside the trust domain",
+      "updated_at": "2026-11-24T22:30:27+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/5vf-1uga0E9j1jx8XIW1PDxm4YM/",
+      "use_cases": [
+        "A service outside an agent's issuing domain that must decide whether to accept the agent and needs to tell revocation from an unreachable status source.",
+        "Editors drafting AIMS Section 6 who want a bounded, stated delay for status answers."
+      ],
+      "use_cases_ja": [
+        "エージェントの発行ドメイン外にあり、受け入れを判断する際に、失効と状態情報源への到達不能を区別する必要があるサービス。",
+        "状態応答の遅延に明示された上限を求める、AIMS の Section 6 の起草者。"
       ]
     },
     "mail:643-IcKVBQSPa6e9Sw0FyfXMPe4": {
@@ -1386,15 +1444,32 @@
       "url": "https://github.com/ietf-wg-wimse/draft-ietf-wimse-workload-identity-practices",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "repo:ietf-wg-wimse/ietf-wg-wimse.github.io:aacf6d98548d": {
+      "diagram": "",
+      "first_seen": "2026-11-24",
+      "headline": "In short, two small website commits: an IETF 127 entry and an SEO title fix.",
+      "headline_ja": "WIMSE ワーキンググループのウェブサイトに対する小さな二件のコミットで、IETF 127 の追加と SEO 用タイトルの修正である。",
+      "id": "repo:ietf-wg-wimse/ietf-wg-wimse.github.io:aacf6d98548d",
+      "kind": "repo-activity",
+      "related": [],
+      "significance": "routine",
+      "summary": "The material lists only two commit messages: adding IETF 127 and tweaking the long list display, and fixing the title in SEO headers. No diffs are given, so nothing more can be said.",
+      "summary_ja": "資料にはコミットメッセージが二件あるのみである。IETF 127 の追加と長いリスト表示の調整、および SEO ヘッダーのタイトル修正である。差分は含まれておらず、これ以上のことは言えない。",
+      "title": "2 new commit(s) in ietf-wg-wimse/ietf-wg-wimse.github.io",
+      "updated_at": "2026-11-24T22:30:27+00:00",
+      "url": "https://github.com/ietf-wg-wimse/ietf-wg-wimse.github.io",
+      "use_cases": [],
+      "use_cases_ja": []
     }
   },
   "overflow": [],
   "triage": {
     "Diff active WG draft: draft-ietf-wimse-aims-01": {
-      "date": "2026-11-23",
-      "priority": "low",
-      "reason": "The status-source Section 6 proposal is only on the list so far, with no draft text.",
-      "reason_ja": "ステータス情報源に関する6節の提案は現時点ではメーリングリスト上のみで、ドラフト本文には反映されていない。"
+      "date": "2026-11-24",
+      "priority": "high",
+      "reason": "The active mailing-list thread is drafting a new Section 6 on external status sources for AIMS.",
+      "reason_ja": "メーリングリストで、AIMS に外部の状態情報源に関する新しい Section 6 を起草する議論が進行中である。"
     },
     "Diff active WG draft: draft-ietf-wimse-arch-09": {
       "date": "2026-11-22",
