@@ -64,6 +64,11 @@
       "at": "2026-11-23T23:58:03+00:00",
       "text": "The most substantive thread is the WG scope debate over actor and delegation profiles: several people favour a narrow first document fixing the `act` shape, refresh preservation and a grant-level identifier. A new RAR payment-mandate draft got detailed review. The rest is discussion only.",
       "text_ja": "最も重要なのは、アクター／委任プロファイルの範囲をめぐる議論である。`act` の形式、リフレッシュ時の保持、付与単位の識別子に絞った小さな最初の文書を支持する声が複数あった。新規の RAR 決済マンデートのドラフトにも詳細なレビューが付いた。そのほかは議論のみである。"
+    },
+    {
+      "at": "2026-11-24T22:30:27+00:00",
+      "text": "The most substantive thread is the CIMD author's pushback on did:cimd, a DID method built on Client ID Metadata Documents. The other two items are discussion only: an erratum proposing to retitle RFC 7662, and a request for a JWT BCP note on user identity checks, which arrived too late because the BCP update is in the RFC Editor queue.",
+      "text_ja": "最も重要なのは、Client ID Metadata Document 上に構築された DID メソッド did:cimd に対する CIMD 著者の反対である。他の二件は議論のみで、RFC 7662 の題名変更を求める erratum と、JWT BCP への本人確認に関する注記の要望である。後者は BCP の更新が既に RFC Editor キューにあるため、時期を逸している。"
     }
   ],
   "items": {
@@ -143,6 +148,36 @@
       "use_cases_ja": [
         "既存の RP を壊さずに jwks_uri へポスト量子鍵を公開しようとする OpenID Provider。",
         "アルゴリズムが混在する JWKS で鍵のインポートに失敗するクライアントライブラリの作者。"
+      ]
+    },
+    "mail:4oYMm9G3tnjaTxRWWTclGutfKUo": {
+      "diagram": "",
+      "first_seen": "2026-11-24",
+      "headline": "did:cimd, a DID method that treats a CIMD as a DID document, drew an objection from a CIMD author. The thread moved on to client instance identification.",
+      "headline_ja": "CIMD を DID ドキュメントとして扱う did:cimd に CIMD 著者が異議を唱え、議論はクライアントインスタンスの識別へ移った",
+      "id": "mail:4oYMm9G3tnjaTxRWWTclGutfKUo",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-wimse-workload-creds",
+          "note": "Emelia names SPIFFE/WIMSE as the right place for workload identity, which CIMD leaves out of scope.",
+          "note_ja": "Emelia は、CIMD の対象外であるワークロードの識別は SPIFFE/WIMSE が扱うべきだと述べている。",
+          "track": "ietf-wimse"
+        }
+      ],
+      "significance": "discussion",
+      "summary": "Suhyeon Forten Lee announced did:cimd, a DID method in which the Client Identifier URL is the DID and the keys in `jwks` or `jwks_uri` are the verification keys. It is aimed at AI agents and registered in the W3C DID Extensions registry. Emelia Smith, speaking as one CIMD author, objected. A CIMD identifies client software, not an instance or a subject. The method adds semantics CIMD lacks, such as 410 Gone meaning deactivation. It profiles the outdated draft-02, and the name suggests an endorsement that does not exist. She asked for withdrawal or a rename. The author added a non-affiliation notice, will narrow the motivation and update to -03, but keeps the name. Richard Craig added points on key history, cache latency for deactivation and keyless platform clients. Emelia answered that key history belongs with the relying party, that CIMD keys should not sign action statements, and that client instances are the open topic from IETF 127. She pointed to draft-mcguinness-oauth-client-instance-id, which profiles Attestation-Based Client Authentication.",
+      "summary_ja": "Suhyeon Forten Lee が did:cimd を紹介した。これは Client Identifier URL を DID とし、`jwks` または `jwks_uri` の鍵を検証鍵とする DID メソッドで、AI エージェントを想定し W3C DID Extensions レジストリに登録されている。CIMD 著者の Emelia Smith は個人の立場で反対した。CIMD はクライアントソフトウェアを識別するもので、インスタンスやサブジェクトを識別しない。410 Gone を無効化とみなすなど CIMD にない意味付けを加えている。古い draft-02 を前提としており、名称が存在しない承認関係を示唆するため、撤回か改名を求めた。作者は非関係の注記を追加し、動機の記述を絞り -03 へ更新するが、名称は維持する。Richard Craig は鍵の履歴、無効化のキャッシュ遅延、鍵を持たないプラットフォームクライアントについて指摘した。Emelia は、鍵の履歴は検証側が保持すべきこと、CIMD の鍵で行為の声明に署名すべきでないことを述べ、IETF 127 で議論されたクライアントインスタンスが未解決の論点だと答えた。あわせて Attestation-Based Client Authentication を拡張する draft-mcguinness-oauth-client-instance-id を紹介した。",
+      "title": "did:cimd: a DID method built on Client ID Metadata Documents (7 new messages)",
+      "updated_at": "2026-11-24T22:30:27+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/4oYMm9G3tnjaTxRWWTclGutfKUo/",
+      "use_cases": [
+        "A relying party that records the resolved key and thumbprint at the time of each call, since the document is point-in-time.",
+        "An agent platform that must separate the OAuth client_id (software) from per-customer agent instance identity."
+      ],
+      "use_cases_ja": [
+        "文書は時点情報であるため、呼び出しごとに解決した鍵とサムプリントを記録する検証側。",
+        "OAuth の client_id（ソフトウェア）と、顧客ごとのエージェントインスタンスの識別を分ける必要があるエージェント基盤。"
       ]
     },
     "mail:5ZaI7imNuZdOVt1g7cASCJWx_Lc": {
@@ -517,6 +552,27 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "mail:PFvyw7E9bzmIsmpHFVvOYakXNKY": {
+      "diagram": "",
+      "first_seen": "2026-11-24",
+      "headline": "A request to add a note on user identity checks to the JWT BCP came too late: the update is already in the RFC Editor queue.",
+      "headline_ja": "JWT BCP に本人確認に関する注記を加える要望は、更新が既に RFC Editor キューにあるため時期を逸した",
+      "id": "mail:PFvyw7E9bzmIsmpHFVvOYakXNKY",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "A researcher reported forged-JWT cases in the ELADMIN application and asked for a note in JWT BCP section 3.8. The note would remind implementers to use the same validated user identity throughout request processing. In that case the authentication check used `sub` while the profile handler used `userId`. Emelia S. argued the RFCs already cover this: `sub` is the standard identity claim, and the real problems were a reused well-known signing key and several parallel non-standard claims. Michael Jones replied that the BCP update is already in the RFC Editor queue, so it is not a good time for additions. Emelia suggested filing a GitHub issue so that a future BCP update can consider it.",
+      "summary_ja": "ある研究者が ELADMIN アプリケーションでの JWT 偽造事例を報告し、JWT BCP の 3.8 節に、リクエスト処理全体で同一の検証済みユーザー識別情報を使うよう促す注記を求めた。この事例では認証チェックが `sub` を使い、プロフィール処理は `userId` を使っていた。Emelia S. は、`sub` が標準の識別クレームであり、実際の問題は既知の署名鍵の再利用と並行する非標準クレームだと述べ、既存の RFC で足りるとした。Michael Jones は、BCP の更新が既に RFC Editor キューにあるため追加には適さない時期だと返答した。Emelia は、将来の BCP 更新で検討されるよう GitHub issue を起こすことを提案した。",
+      "title": "User identity checks for JWTs with server-side authentication records (2 new messages)",
+      "updated_at": "2026-11-24T22:30:27+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/PFvyw7E9bzmIsmpHFVvOYakXNKY/",
+      "use_cases": [
+        "An application that checks `sub` at authentication but reads another claim such as `userId` downstream should use one validated identity throughout."
+      ],
+      "use_cases_ja": [
+        "認証時に `sub` を確認しながら後段で `userId` など別のクレームを読むアプリケーションは、検証済みの単一の識別情報を一貫して使うべきである。"
+      ]
+    },
     "mail:PaGEtTWzOhFgZXwqMuKDSKr2aAc": {
       "diagram": "",
       "first_seen": "2026-11-20",
@@ -714,6 +770,23 @@
         "attester がアプリの各インストールの接続先サーバーを知るべきでない、クライアント attestation のデプロイ。",
         "プラットフォームベンダーに頼らず、CIMD で自前の attester を指定したいオープンソースのクライアント。"
       ]
+    },
+    "mail:Vpfb_RC3vqhvHw-EpoK9pLjSniQ": {
+      "diagram": "",
+      "first_seen": "2026-11-24",
+      "headline": "Erratum 9331 asks to retitle RFC 7662 to 'Token Info Endpoint'. Two replies on the list oppose it.",
+      "headline_ja": "erratum 9331 は RFC 7662 の題名を「Token Info Endpoint」に変えるよう求めており、リスト上の二件の返信は反対している",
+      "id": "mail:Vpfb_RC3vqhvHw-EpoK9pLjSniQ",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "A Technical erratum (EID 9331, reported by Aaron Parecki) proposes changing the title of RFC 7662 from 'OAuth 2.0 Token Introspection' to 'OAuth 2.0 Token Info Endpoint'. The report argues that 'introspection' means examining one's own state, whereas the protected resource here queries the AS. It says the name confuses people when JWT access tokens are validated locally, and that it is consistent with the OpenID Connect UserInfo Endpoint. Justin Richer, the RFC's editor, says it should be rejected because the title is not an error: the AS is the one looking into its own state. A second participant agrees, saying a title change goes beyond the purpose of an erratum under the IESG errata statement. Nothing in the protocol would change.",
+      "summary_ja": "Technical の erratum（EID 9331、報告者は Aaron Parecki）が、RFC 7662 の題名を「OAuth 2.0 Token Introspection」から「OAuth 2.0 Token Info Endpoint」へ変更するよう提案している。報告は、「introspection」は自身の内部状態の検査を意味するが、この仕様ではリソースサーバーが認可サーバーへ問い合わせる点を挙げている。ローカルで検証する JWT アクセストークンでは混乱を招くこと、OpenID Connect の UserInfo Endpoint と整合することも理由に挙げている。RFC の編者である Justin Richer は、認可サーバーが自身の状態を調べる側であり題名は誤りではないとして、却下を求めている。別の参加者も、題名の変更は IESG の erratum 処理方針における erratum の目的を超えるとして同調している。プロトコルの変更はない。",
+      "title": "RFC7662 (9331)",
+      "updated_at": "2026-11-24T22:30:27+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/Vpfb_RC3vqhvHw-EpoK9pLjSniQ/",
+      "use_cases": [],
+      "use_cases_ja": []
     },
     "mail:Y6RNjJVYx4DVyPbMWZX6EmA-424": {
       "diagram": "",
@@ -1443,6 +1516,12 @@
   },
   "overflow": [],
   "triage": {
+    "draft-ietf-oauth-client-id-metadata-document": {
+      "date": "2026-11-24",
+      "priority": "high",
+      "reason": "A CIMD author spelled out scope limits and new draft-03 text on client authentication in a live thread.",
+      "reason_ja": "CIMD 著者が、範囲の限定とクライアント認証に関する draft-03 の新しい記述をスレッドで説明した。"
+    },
     "draft-ietf-oauth-identity-assertion-authz-grant": {
       "date": "2026-11-22",
       "priority": "high",
@@ -1450,10 +1529,10 @@
       "reason_ja": "1 週間で 5 件の issue（#142、#145、#159、#160、#162）が作成またはコメントされ、マルチホップ委譲チェーンも含まれる。"
     },
     "draft-ietf-oauth-rfc8725bis": {
-      "date": "2026-11-23",
+      "date": "2026-11-24",
       "priority": "low",
-      "reason": "The §3.8 note request got a reply that existing RFCs already cover it, and the editors may be past adding text.",
-      "reason_ja": "§3.8 への注記の要望に対し、既存の RFC で扱われているとの返信があり、編集者が文言を追加する段階を過ぎている可能性もある。"
+      "reason": "The BCP update is in the RFC Editor queue, so new additions are closed.",
+      "reason_ja": "BCP の更新は RFC Editor キューにあり、新たな追加は受け付けられない。"
     },
     "draft-ietf-oauth-status-list": {
       "date": "2026-11-20",
