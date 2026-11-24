@@ -1,6 +1,6 @@
-# OAuth WG Backlog (2026-11-23)
+# OAuth WG Backlog (2026-11-24)
 
-- generated_at_utc: `2026-11-23T23:56:14+00:00`
+- generated_at_utc: `2026-11-24T09:57:52+00:00`
 
 - [ ] `draft-ietf-oauth-sd-jwt-vc` score=106 updated=2026-11-16T10:45:13Z
 - [ ] `draft-ietf-oauth-rfc8725bis` score=90 updated=2026-11-23T21:38:46Z

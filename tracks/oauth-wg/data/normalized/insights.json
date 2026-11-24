@@ -1,16 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-16T06:35:17+00:00",
-      "text": "A quiet run: the only item is a wording PR on the deferred token response draft that simplifies the definition of the deferral code. No protocol behaviour changed.",
-      "text_ja": "今回は静かな更新である。唯一の項目は、deferred token response ドラフトの deferral code の定義を簡潔にする文言修正の PR であり、プロトコルの挙動は変わっていない。"
-    },
-    {
-      "at": "2026-11-16T22:09:25+00:00",
-      "text": "The only text change to an adopted draft is draft-ietf-oauth-sd-jwt-vc-27, which now says an SD-JWT VC's types come only from the issuer's vct and aka_vcts claims, not from Type Metadata extends. The rest of the run is mostly new individual drafts on agent delegation and a field report on client-id-metadata-document.",
-      "text_ja": "採択済みドラフトで本文が変わったのは draft-ietf-oauth-sd-jwt-vc-27 のみで、SD-JWT VC の型は Type Metadata の extends ではなく、発行者が asserts する vct と aka_vcts だけで決まると明確化された。そのほかは、エージェント委任に関する新しい個人ドラフトの告知と、client-id-metadata-document の実装報告が中心である。"
-    },
-    {
       "at": "2026-11-17T07:59:41+00:00",
       "text": "The main activity is an implementation report on draft-ietf-oauth-client-id-metadata-document from an AS serving native apps and MCP clients. The thread produced suggestions on SSRF hardening, caching and RFC 8252 pointers, but no draft text changed. Two other messages: a question on the PACE Authorization draft and a new individual draft on OIDC crypto agility.",
       "text_ja": "最も動きがあったのは、ネイティブアプリと MCP クライアントを扱う認可サーバーからの draft-ietf-oauth-client-id-metadata-document の実装報告である。SSRF 対策、キャッシュ、RFC 8252 への参照などの提案が出たが、ドラフト本文の変更はない。ほかに PACE Authorization ドラフトへの質問と、OIDC の暗号アジリティに関する新規個人ドラフトの投稿がある。"
@@ -77,29 +67,6 @@
     }
   ],
   "items": {
-    "draft:draft-ietf-oauth-sd-jwt-vc-27": {
-      "diagram": "",
-      "first_seen": "2026-11-16",
-      "headline": "SD-JWT VC -27 says a credential's types come only from vct and aka_vcts, never from Type Metadata extends.",
-      "headline_ja": "SD-JWT VC -27 は、クレデンシャルの型は vct と aka_vcts のみで決まり、Type Metadata の extends では決まらないと明確化した",
-      "id": "draft:draft-ietf-oauth-sd-jwt-vc-27",
-      "kind": "draft-revision",
-      "related": [],
-      "significance": "substantive",
-      "summary": "The draft removes the earlier idea that a consumer MAY use types reached through extends when matching types, and removes the SHOULD that the vct type extend types listed in aka_vcts. It now states that the types of an SD-JWT VC are those the Issuer asserts in vct and aka_vcts, while extends only determines which Type Metadata is inherited. Type Metadata is optional, so type matching in issuance and presentation protocols relies on vct and aka_vcts. The security text for aka_vcts is reworded to say these types are asserted like the vct type, and the MUST NOT treat them as proof of issuer authorization stays. Example signatures and iat values were regenerated, and the expiry date moved.",
-      "summary_ja": "以前の版にあった、型の照合時に extends で到達できる型も利用してよい(MAY)という記述と、vct の型が aka_vcts に列挙された型を extends すべきである(SHOULD)という記述が削除された。SD-JWT VC の型は発行者が vct と aka_vcts で asserts したものであり、extends が決めるのは継承される Type Metadata だけであると明記された。Type Metadata は任意で利用できない場合もあるため、発行・提示プロトコルの型照合は vct と aka_vcts に依拠する。aka_vcts のセキュリティ上の注意は、vct の型と同様に発行者が asserts する型であるという表現に改められ、これを発行者の認可の証拠として扱ってはならない(MUST NOT)という要件は維持された。例の署名と iat は再生成され、有効期限も更新された。",
-      "title": "draft-ietf-oauth-sd-jwt-vc-27: SD-JWT-based Verifiable Digital Credentials (SD-JWT VC)",
-      "updated_at": "2026-11-16T22:09:25+00:00",
-      "url": "https://author-tools.ietf.org/iddiff?url1=draft-ietf-oauth-sd-jwt-vc-26&url2=draft-ietf-oauth-sd-jwt-vc-27",
-      "use_cases": [
-        "A verifier that matches requested credential types must stop expanding the received vct through Type Metadata extends and check only vct and aka_vcts.",
-        "An issuer whose vct type extends other types should list those types in aka_vcts if it wants them to match, since extends no longer adds them."
-      ],
-      "use_cases_ja": [
-        "要求されたクレデンシャルの型を照合する検証者は、受け取った vct を Type Metadata の extends で展開せず、vct と aka_vcts だけを確認する必要がある。",
-        "発行者は、vct の型が他の型を extends している場合、それらの型を照合の対象にしたいなら aka_vcts に列挙する必要がある。extends では追加されなくなったためである。"
-      ]
-    },
     "mail:1wKbrz0NwWgJgMxMMywsyRlwl5g": {
       "diagram": "sequenceDiagram\n participant A as User A (attacker)\n participant F as Auth filter\n participant R as Redis record\n participant H as Profile handler\n A->>F: JWT forged with A sub and uid plus admin B userId\n F->>F: verify signature (default key)\n F->>R: look up record by sub and uid\n R-->>F: A's record found\n F->>H: request authenticated as A\n H->>H: account ID taken from userId claim\n H-->>A: edits B's profile",
       "first_seen": "2026-11-23",
@@ -270,36 +237,6 @@
         "共有の既定署名鍵を同梱して出荷してはならない。"
       ]
     },
-    "mail:ALY4dNyHGE97WD8kZ0bKPYxwtOk": {
-      "diagram": "sequenceDiagram\nparticipant A as Delegating agent\nparticipant B as Performing agent\nparticipant P as Approver\nparticipant R as Resource\nA->>B: delegation credential bound to dialog\nB->>P: signed ask for the action\nP-->>B: access token for that one action, bound to B key\nB->>R: act with token\nR->>R: check token against approved limits",
-      "first_seen": "2026-11-16",
-      "headline": "A new draft, PACE Authorization, covers delegation, asking and approval for one action between agents using existing OAuth and WIMSE credentials.",
-      "headline_ja": "PACE Authorization という新ドラフトが、既存の OAuth と WIMSE の資格情報を使い、エージェント間の委任と単一アクションの承認を扱う",
-      "id": "mail:ALY4dNyHGE97WD8kZ0bKPYxwtOk",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-reddy-wimse-oauth-dialog-binding",
-          "note": "Also binds agent dialogs to credentials, but the mail does not reference it, so the link is topical only.",
-          "note_ja": "同じくエージェントのダイアログを資格情報に結び付けるが、メールでは言及されておらず、関連は主題上のものにとどまる。",
-          "track": "ietf-wimse"
-        }
-      ],
-      "significance": "new-proposal",
-      "summary": "The authors split the authority part out of the core PACE draft as draft-nandakumar-agentproto-pace-authz. It describes four steps: a delegation credential bound to the dialog it opens (possibly Actor Profile tokens, Transaction Tokens or delegator-bound chains), a signed request when an agent hits an action needing approval, an approver issuing an access token for that one action bound to the performing agent's key, and the resource checking the token against the approved limits, such as a payment amount. Revoking a delegation ends dependent dialogs. The mail text is partly truncated, so details of the exchange and CIBA steps are unclear. They ask for feedback on whether the security properties cover agent flows.",
-      "summary_ja": "著者らは認可に関する部分をコアの PACE ドラフトから分離し、draft-nandakumar-agentproto-pace-authz として公開した。四つの段階を扱う。開始するダイアログに結び付けられた委任資格情報(Actor Profile トークン、Transaction Tokens、委任者束縛チェーンなどを想定)、承認が必要なアクションに遭遇したエージェントが送る署名付き要求、承認者が実行するエージェントの鍵に束縛して単一アクション用のアクセストークンを発行すること、リソースが承認された上限(支払額など)に照らしてトークンを確認することである。委任を失効させると、それに依存するダイアログも終了する。メール本文は一部欠落しており、トークン交換や CIBA の詳細は不明である。著者らは、セキュリティ特性がエージェントのフローを十分に網羅しているかについてフィードバックを求めている。",
-      "title": "New draft: PACE Authorization: delegation and action approval for agent dialogs:",
-      "updated_at": "2026-11-16T22:09:25+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/ALY4dNyHGE97WD8kZ0bKPYxwtOk/",
-      "use_cases": [
-        "An agent that must get a human or approver sign-off before making a payment and then perform only that payment.",
-        "A deployer choosing between Actor Profile tokens, Transaction Tokens and delegation chains for agent-to-agent delegation."
-      ],
-      "use_cases_ja": [
-        "支払いの前に人間または承認者の承認を得て、その支払いだけを実行する必要があるエージェント。",
-        "エージェント間の委任に Actor Profile トークン、Transaction Tokens、委任チェーンのどれを使うか選ぶ運用者。"
-      ]
-    },
     "mail:BlDWJT4omhPgD-jVurnimmiBv1E": {
       "diagram": "sequenceDiagram\n participant S as SPA app1\n participant AS as Token endpoint (API origin)\n participant G as API gateway (RS)\n S->>AS: POST /oauth/token code and code_verifier (credentials include)\n AS-->>S: Set-Cookie encrypted AT (HttpOnly) plus token_fingerprint\n S->>G: API request with fingerprint (cookie sent automatically)\n G->>G: decrypt cookie and check fingerprint\n G-->>S: response",
       "first_seen": "2026-11-23",
@@ -425,36 +362,6 @@
         "URL ベースのクライアント ID で MCP クライアントやネイティブアプリを受け入れる認可サーバーが、メタデータ取得処理を SSRF や DNS rebinding に対して堅牢にしたい場合。",
         "クライアントメタデータ文書の認可サーバー側キャッシュに上下限を設けるか、メタデータ文書クライアントを公開クライアントに限定するかを検討する場合。",
         "ネイティブアプリが文書内にリダイレクト URI を公開し、認可サーバーがその一覧に RFC 8252 の規則を適用する必要がある場合。"
-      ]
-    },
-    "mail:He6VhuaZ4OQbuanyfzxMKjkaBOA": {
-      "diagram": "sequenceDiagram\nparticipant S as Sender workload\nparticipant X as Relay\nparticipant V as Verifier\nV-->>S: nonce\nS->>S: canonicalize message, compute hash h\nS->>X: message with WPT carrying mth and nonce\nX->>V: forward\nV->>V: recompute hash, check aud and nonce",
-      "first_seen": "2026-11-16",
-      "headline": "A new draft adds an mth claim that ties a WIMSE Workload Proof Token to the content of the message it accompanies, on HTTP or other transports.",
-      "headline_ja": "WIMSE の Workload Proof Token をそれが伴うメッセージの内容に結び付ける mth クレームを、HTTP やその他のトランスポート向けに追加する新ドラフト",
-      "id": "mail:He6VhuaZ4OQbuanyfzxMKjkaBOA",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-ietf-wimse-wpt",
-          "note": "The draft extends the WIMSE Workload Proof Token with message binding.",
-          "note_ja": "このドラフトは WIMSE Workload Proof Token にメッセージ束縛を追加する。",
-          "track": "ietf-wimse"
-        }
-      ],
-      "significance": "new-proposal",
-      "summary": "draft-nandakumar-wimse-wpt-message-binding addresses that a WPT covers who is calling and where but not the request content, and relies on jti and short lifetime against replay. It defines an mth claim of the form {\"p\": profile, \"h\": hash} computed under a named canonicalization profile, so a WPT cannot be moved to another message undetected. It describes carrying a WPT outside HTTP, with aud naming the receiver, and a nonce echoing a verifier-supplied value for freshness. A registry of canonicalization profiles starts with JSON messages without the credential member. It targets Media over QUIC, WebSocket and JSON-RPC protocols such as A2A and MCP, and notes mth can also be used in an SD-JWT Key Binding JWT. HTTP Message Signatures remain the choice for protecting header fields.",
-      "summary_ja": "draft-nandakumar-wimse-wpt-message-binding は、WPT が呼び出し元と呼び出し先は示すがリクエストの内容は対象外であり、リプレイ対策を jti と短い有効期間に頼っているという問題を扱う。名前付きの正規化プロファイルのもとで計算した {\"p\": profile, \"h\": hash} 形式の mth クレームを定義し、WPT を検出されずに別のメッセージへ移すことを防ぐ。HTTP 以外での WPT の運搬方法も定め、aud は受信者を指し、nonce は検証者が与えた値を返すことで鮮度を確立する。正規化プロファイルのレジストリは、credential メンバーを除いた JSON メッセージから始まる。対象は Media over QUIC、WebSocket、A2A や MCP のような JSON-RPC プロトコルであり、mth は SD-JWT の Key Binding JWT でも使えるとしている。ヘッダーフィールドを保護する必要がある場合は HTTP Message Signatures が引き続き適切である。",
-      "title": "New draft: Message Binding for Workload Proof Tokens",
-      "updated_at": "2026-11-16T22:09:25+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/He6VhuaZ4OQbuanyfzxMKjkaBOA/",
-      "use_cases": [
-        "Agent traffic over WebSocket or Media over QUIC through relays that terminate TLS, where a proof could otherwise be replayed on another message.",
-        "MCP or A2A JSON-RPC calls where the proof should cover the body and survive JSON re-serialization."
-      ],
-      "use_cases_ja": [
-        "TLS を終端するリレーを経由する WebSocket や Media over QUIC のエージェント通信で、証明が別のメッセージに流用されるのを防ぎたい場合。",
-        "MCP や A2A の JSON-RPC 呼び出しで、証明が本文を対象とし、JSON の再シリアライズ後も有効であるようにしたい場合。"
       ]
     },
     "mail:HzIZORPP2bIS3r0rQBFjja8tIXY": {
@@ -609,29 +516,6 @@
       "url": "https://mailarchive.ietf.org/arch/msg/oauth/NQbH3WYKgr_X1TJL9C4MNJKqUrQ/",
       "use_cases": [],
       "use_cases_ja": []
-    },
-    "mail:OcZJg8cvTfnRnjcCDxnTlqgFbkA": {
-      "diagram": "sequenceDiagram\nparticipant C as Client\nparticipant AS as Authorization server\nparticipant D as Metadata document host\nC->>AS: authorization request with client_id URL\nAS->>AS: resolve host and refuse private addresses\nAS->>D: GET document, no redirects, size and time capped\nD-->>AS: JSON with client_id and redirect_uris\nAS->>AS: check client_id is byte-equal, apply RFC 8252 to redirect_uris\nAS-->>C: continue flow as public client with PKCE",
-      "first_seen": "2026-11-16",
-      "headline": "An AS operator reports seven practical gaps after running Client ID Metadata Documents with native apps and MCP clients.",
-      "headline_ja": "ネイティブアプリと MCP クライアントで Client ID Metadata Document を運用した認可サーバー運用者が、七つの実務上の指摘を報告した",
-      "id": "mail:OcZJg8cvTfnRnjcCDxnTlqgFbkA",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "The author runs an OAuth 2.1 authorization server that advertises client_id_metadata_document_supported and has completed the full flow with a native app and Claude Code. They suggest the draft say client_id must be byte-for-byte equal with no normalisation, and note that a native app needs one document per AS host. They list SSRF defences they found necessary: refuse private, loopback and link-local addresses after resolution, refuse redirects, cap body size (64 KiB) and time (5 s), and require HTTPS with a path. They also propose clamping cache lifetimes both ways, allowing an AS to restrict such clients to public clients with PKCE, applying RFC 8252 rules to the document's redirect_uris, and ignoring any scope member in the document. These are suggestions for the draft's text, not agreed changes.",
-      "summary_ja": "投稿者は client_id_metadata_document_supported を公開する OAuth 2.1 認可サーバーを運用しており、ネイティブアプリと Claude Code で一連のフローが完了したと報告している。client_id は正規化なしでバイト単位に一致すべきと明記すること、ネイティブアプリでは認可サーバーのホストごとにドキュメントが必要になることを指摘している。また、名前解決後にプライベート、ループバック、リンクローカルのアドレスを拒否する、リダイレクトを拒否する、本文サイズ(64 KiB)と時間(5 秒)を制限する、パスを持つ HTTPS を要求する、といった SSRF 対策を挙げている。さらに、キャッシュ期間を上下両側で制限すること、認可サーバーがこの種のクライアントを PKCE 付きの公開クライアントに限定できると明記すること、ドキュメントの redirect_uris に RFC 8252 の規則を適用すること、ドキュメント内の scope を無視することを提案している。これらはドラフト本文への提案であり、合意された変更ではない。",
-      "title": "Implementation report:draft-ietf-oauth-client-id-metadata-document at an AS serving native apps and MCP clients",
-      "updated_at": "2026-11-16T22:09:25+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/OcZJg8cvTfnRnjcCDxnTlqgFbkA/",
-      "use_cases": [
-        "An AS that accepts MCP clients with no prior registration needs the SSRF and cache limits listed here before fetching client_id URLs.",
-        "A multi-region or multi-tenant AS serving one native app must plan a metadata document per issuer host."
-      ],
-      "use_cases_ja": [
-        "事前登録のない MCP クライアントを受け入れる認可サーバーは、client_id の URL を取得する前に、ここに挙げられた SSRF 対策とキャッシュ制限を用意する必要がある。",
-        "一つのネイティブアプリに対応するマルチリージョンまたはマルチテナントの認可サーバーでは、発行者のホストごとにメタデータドキュメントを用意する必要がある。"
-      ]
     },
     "mail:PaGEtTWzOhFgZXwqMuKDSKr2aAc": {
       "diagram": "",
@@ -854,29 +738,6 @@
         "Relying Party が受け取る署名アルゴリズムを選択したい場合。"
       ]
     },
-    "mail:YAF9uJPEYv_O3UnckcVcEJ0zLDA": {
-      "diagram": "sequenceDiagram\nparticipant A as Client A\nparticipant AS as Authorization server\nA->>AS: POST /introspect with own token as subject proof\nAS->>AS: check signature, expiry, client_id, same user\nAS-->>A: full response for the user tokens incl. act\nA->>AS: POST /revoke naming dlg_id\nAS-->>A: 200 and that one grant is revoked",
-      "first_seen": "2026-11-16",
-      "headline": "A new individual draft lets a client that holds a token for a user introspect and revoke that user's other grants, such as connected AI agents.",
-      "headline_ja": "ユーザーのトークンを持つクライアントが、そのユーザーの他の許可(接続済みの AI エージェントなど)をイントロスペクションおよび失効できるようにする新しい個人ドラフト",
-      "id": "mail:YAF9uJPEYv_O3UnckcVcEJ0zLDA",
-      "kind": "mail",
-      "related": [],
-      "significance": "new-proposal",
-      "summary": "draft-radusch-oauth-subject-proof defines a third kind of caller for RFC 7662 and RFC 7009: a client presenting a token the AS issued to that same client for the same end user. The AS verifies the proof's signature, expiry, revocation state, client_id match with the authenticated caller, and same-user match. At /introspect the caller gets the full response for that user's tokens including act; at /revoke it names one grant by dlg_id (or act.sub as fallback) and the AS revokes exactly that grant. Public clients get nothing by default. The author reports a deployed implementation behind flags, and asks whether to reuse the RFC 8693 subject_token parameters, whether to rely on dlg_id from draft-mcguinness-oauth-actor-profile, and whether the WG has interest.",
-      "summary_ja": "draft-radusch-oauth-subject-proof は、RFC 7662 と RFC 7009 に第三の呼び出し主体を加える。同じクライアントに同じエンドユーザー向けに発行された、認可サーバー自身のトークンを提示するクライアントである。認可サーバーは証明の署名、有効期限、失効状態、client_id と認証済み呼び出し元の一致、対象と同一ユーザーであることを確認する。/introspect では、呼び出し元はそのユーザーのトークンについて act を含む完全な応答を受け取り、/revoke では dlg_id(代替として act.sub)で一つの許可を指定し、認可サーバーはその許可だけを失効させる。公開クライアントは既定では何も得られない。著者は設定フラグ付きで実装済みであると述べ、RFC 8693 の subject_token を再利用すべきか、draft-mcguinness-oauth-actor-profile の dlg_id に依存してよいか、WG として関心があるかを問うている。",
-      "title": "New Internet-Draft: OAuth 2.0 Subject-Proof Callers for Token Introspection and Revocation",
-      "updated_at": "2026-11-16T22:09:25+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/YAF9uJPEYv_O3UnckcVcEJ0zLDA/",
-      "use_cases": [
-        "A web app that shows a user their connected AI agents and offers a per-agent disconnect button.",
-        "An AS operator who wants client-initiated revocation of one delegated grant without an admin-wide global revocation."
-      ],
-      "use_cases_ja": [
-        "ユーザーに接続済みの AI エージェントを表示し、エージェントごとの切断ボタンを提供する Web アプリケーション。",
-        "管理者による全体の失効を使わずに、クライアントの操作で委任された許可を一つだけ失効させたい認可サーバー運用者。"
-      ]
-    },
     "mail:ZWix6YIyFguohCBkLI88We0zAPw": {
       "diagram": "sequenceDiagram\nparticipant I as Client instance\nparticipant AS as Authorization server\nparticipant B as Broker\nparticipant U as Upstream resource\nI->>AS: client credentials grant\nAS-->>I: short-lived sender-constrained token\nI->>B: request using token\nB->>U: upstream request with broker-held credential\nU-->>B: response\nB-->>I: result",
       "first_seen": "2026-11-21",
@@ -1013,29 +874,6 @@
       "use_cases_ja": [
         "RAR 形式のリクエストでトランザクションのコンテキストをリソースサーバーに伝えたい認可サーバー運用者。",
         "内部にマイクロサービスを持ち、アクセストークンを Txn-Token に交換したいリソースサーバー。"
-      ]
-    },
-    "mail:eWA8NJCX_ywNbSGnN1qvHJ3UASw": {
-      "diagram": "",
-      "first_seen": "2026-11-16",
-      "headline": "Hackathon participants report Tamarin models showing RFC 9207, RFC 8707 and DPoP are each needed for agent toolchains, and that TTL alone is not enough.",
-      "headline_ja": "ハッカソン参加者が、エージェントのツールチェーンでは RFC 9207、RFC 8707、DPoP がそれぞれ必要であり、TTL だけでは不十分であることを Tamarin モデルで示したと報告した",
-      "id": "mail:eWA8NJCX_ywNbSGnN1qvHJ3UASw",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "The authors built 9 symbolic Tamarin Prover models (376 CI checks) of OAuth profiles for MCP-style agent toolchains and delegated payments. By their ablation results, dropping RFC 9207 lets an adversarial tool AS redirect authorization codes, and dropping RFC 8707 lets tokens for one resource server be replayed against others. Pure bearer tokens fail when tool output leaks authorization headers, whereas DPoP with RFC 9396 prevents replay without the key. In a UPI Circle-style delegation model, they conclude that TTL expiry is insufficient and synchronous revocation checks at the resource server are needed. Models and a paper are linked; these are the authors' own claims, not independently reviewed here.",
-      "summary_ja": "著者らは、MCP 型のエージェントツールチェーンと委任された支払いを対象に、OAuth のプロファイルを 9 個の Tamarin Prover の記号モデル(376 の CI チェック)として構築した。アブレーションの結果として、RFC 9207 を外すと悪意あるツールの認可サーバーが認可コードをリダイレクトでき、RFC 8707 を外すと一つのリソースサーバー向けのトークンを他のサービスに対してリプレイできると報告している。ツールの出力から認可ヘッダーが漏れる場合、単純な Bearer トークンは安全でなく、RFC 9396 と組み合わせた DPoP は鍵なしでのリプレイを防ぐとしている。UPI Circle を想定した委任モデルでは、TTL による失効では不十分で、リソースサーバーでの同期的な失効確認が必要と結論している。モデルと論文へのリンクがあるが、これらは著者自身の主張であり、ここで独立に検証したものではない。",
-      "title": "Formal verification of OAuth 2.0 profiles in delegated agent toolchains (IETF 127 Hackathon)",
-      "updated_at": "2026-11-16T22:09:25+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/eWA8NJCX_ywNbSGnN1qvHJ3UASw/",
-      "use_cases": [
-        "A team building MCP agents that discover tools and authorization servers dynamically can use the models to see which mitigations they cannot skip.",
-        "A payments deployer deciding whether short token lifetimes are enough or online revocation checks are required."
-      ],
-      "use_cases_ja": [
-        "ツールや認可サーバーを動的に発見する MCP エージェントを構築するチームが、省略できない対策を確認するためにモデルを利用できる。",
-        "支払いの運用者が、短いトークン有効期間で足りるのか、オンラインの失効確認が必要かを判断する場合。"
       ]
     },
     "mail:fclB-M3AdRdUkDnNUWWYzmmjFTE": {
@@ -1293,29 +1131,6 @@
         "署名付きの意図の証拠を、ストア障害時も含めてリプレイ耐性のある一度限りの形で受理する必要があるリソースサーバーの運用者。"
       ]
     },
-    "mail:r4KE4aYluE03Z7oQel0WMVgisgY": {
-      "diagram": "sequenceDiagram\nparticipant C as Client\nparticipant A as Actor agent\nparticipant AS as Authorization server\nA-->>C: actor_proof signed with actor key\nC->>AS: token exchange with actor and actor_proof\nAS->>AS: verify proof, check any narrowing\nAS-->>C: token bound to actor key, marked not for client",
-      "first_seen": "2026-11-16",
-      "headline": "A new draft extends Token Exchange so a client can get a token bound to another agent's key, with that agent's signed consent.",
-      "headline_ja": "クライアントが別のエージェントの鍵に束縛されたトークンを、そのエージェントの署名付き同意のもとで取得できるよう Token Exchange を拡張する新ドラフト",
-      "id": "mail:r4KE4aYluE03Z7oQel0WMVgisgY",
-      "kind": "mail",
-      "related": [],
-      "significance": "new-proposal",
-      "summary": "draft-nandakumar-oauth-actor-bound-token-exchange adds an actor and an actor_proof to the RFC 8693 request. The named actor signs a short proof, optionally listing what it agreed to, and never contacts the AS. The AS binds the issued token to the actor's key and tells the client the token is not for it. If an approver narrows the request, such as a lower amount, the AS checks it only narrows what the actor agreed to. Resource servers are unchanged, and without actor_proof the request is plain RFC 8693. The author says the same binding works for assertions such as an ID-JAG and for tokens issued after CIBA approval.",
-      "summary_ja": "draft-nandakumar-oauth-actor-bound-token-exchange は、RFC 8693 のリクエストに actor と actor_proof を加える。指名されたアクターは、同意した内容を任意で明示した短い証明に署名し、認可サーバーとは通信しない。認可サーバーは発行するトークンをアクターの鍵に束縛し、そのトークンがクライアント向けではないことを伝える。承認者が金額を下げるなどリクエストを絞り込んだ場合、認可サーバーは、それがアクターの同意内容を狭めるだけであることを確認する。リソースサーバーは変更不要で、actor_proof がなければ通常の RFC 8693 になる。著者は、ID-JAG のようなアサーションや、CIBA 承認後に発行されるトークンにも同じ束縛が使えると述べている。",
-      "title": "New draft: OAuth 2.0 Token Exchange with Actor-Bound Tokens:",
-      "updated_at": "2026-11-16T22:09:25+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/r4KE4aYluE03Z7oQel0WMVgisgY/",
-      "use_cases": [
-        "An approver agent that must obtain a token usable only by the agent that will perform the approved action.",
-        "A flow where an approver lowers a payment amount and the AS must check it stays within what the performing agent agreed to."
-      ],
-      "use_cases_ja": [
-        "承認を行うエージェントが、承認された操作を実際に実行するエージェントだけが使えるトークンを取得する必要がある場合。",
-        "承認者が支払額を下げ、認可サーバーがそれを実行側エージェントの同意の範囲内か確認する必要がある場合。"
-      ]
-    },
     "mail:rRj4i-InS933_FYxNW0hySitSyY": {
       "diagram": "sequenceDiagram\nparticipant C as Client\nparticipant AS as Authorization server\nC->>AS: refresh with RT1 and refresh_key K\nAS-->>C: RT2 (response lost)\nC->>AS: retry with RT1 and same K\nAS-->>C: same RT2, not treated as theft",
       "first_seen": "2026-11-17",
@@ -1471,36 +1286,6 @@
         "既定の署名鍵を同梱する IoT や管理プラットフォームで、クレームと保存済みセッションの結び付け方を決める場面。"
       ]
     },
-    "mail:y_IZYbPS71qPIJl8Jgxr2IyEfRE": {
-      "diagram": "flowchart LR\nR[Root token DT_0 signed by trust anchor, carries del_bind and cnf key K1] --> H1[Hop 1 signed with K1, iss is root client_id, cnf key K2]\nH1 --> H2[Hop 2 signed with K2, iss is hop 1 client_id]",
-      "first_seen": "2026-11-16",
-      "headline": "A new draft binds each hop of an agent delegation chain to the key of the previous hop, and a reviewer asks for audit rules on pseudonym resolution.",
-      "headline_ja": "エージェント委任チェーンの各ホップを直前のホップの鍵に結び付ける新ドラフトが提案され、レビュアーが仮名の解決に関する監査規則を求めた",
-      "id": "mail:y_IZYbPS71qPIJl8Jgxr2IyEfRE",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-asor-wimse-agent-delegation-chain",
-          "note": "The new draft extends the Delegation Tokens defined here.",
-          "note_ja": "新ドラフトはここで定義された Delegation Tokens を拡張している。",
-          "track": "ietf-wimse"
-        }
-      ],
-      "significance": "new-proposal",
-      "summary": "The thread has two messages. The authors announce draft-nandakumar-wimse-delegator-bound-chains, which extends the Delegation Tokens of draft-asor-wimse-agent-delegation-chain: each token is signed with the key named in the previous token's cnf and its iss is the previous client_id, so only the root needs a trust anchor. A del_bind claim in the root enables this for the whole chain. It also adds a per-chain pseudonym for the person, cycle detection, audience attenuation and context binding. They ask whether binding belongs in the base draft, whether it fits the Actor Profile as a companion, and about using one key for both signing and proof of possession. A reviewer, Marc, supports a flag in the base draft and suggests stating when the DT_0 issuer resolves a pseudonym and to whom, with a log of resolutions, and that withdrawing a principal means revoking every DT_0 with the bound measured from the issuer's decision.",
-      "summary_ja": "このスレッドには二通のメッセージがある。著者らは draft-nandakumar-wimse-delegator-bound-chains を告知した。これは draft-asor-wimse-agent-delegation-chain の Delegation Tokens を拡張し、各トークンを直前のトークンの cnf に指定された鍵で署名し、iss を直前の client_id とすることで、信頼アンカーが必要なのはルートだけになる。ルートの del_bind クレームでチェーン全体に適用される。そのほか、人物ごとのチェーン単位の仮名、循環検出、audience の縮小、コンテキストバインディングを追加している。著者らは、ベースのドラフトに取り込むべきか、Actor Profile の補助プロファイルとして適合するか、署名と所有証明に同一の鍵を使うことをどう考えるかを問うている。レビュアーの Marc は、拡張ではなくベースのドラフトのフラグとする案を支持し、DT_0 の発行者が仮名をいつ誰に解決するかを明記して解決のたびに記録すること、および、主体の撤回は全 DT_0 の失効を意味し、その期限は各検証者の設定ではなく発行者の判断から測ることを提案している。",
-      "title": "New draft: Delegator-Bound Delegation Chains for AI Agents: (2 new messages)",
-      "updated_at": "2026-11-16T22:09:25+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/y_IZYbPS71qPIJl8Jgxr2IyEfRE/",
-      "use_cases": [
-        "Agents in different organisations delegating directly to each other, with no AS to vouch for each hop.",
-        "A verifier that must prove which delegator issued each hop of an agent chain offline."
-      ],
-      "use_cases_ja": [
-        "各ホップを保証する認可サーバーがない状態で、異なる組織のエージェント同士が直接委任する場合。",
-        "エージェントチェーンの各ホップをどの委任者が発行したかを、検証者がオフラインで証明する必要がある場合。"
-      ]
-    },
     "pr:oauth-wg/draft-ietf-oauth-client-id-metadata-document#132": {
       "diagram": "flowchart TD\nA[Authorization request with client_id URL] --> B{Syntax and length OK, no query or port}\nB -- no --> R[Reject without fetching]\nB -- yes --> C{Local policy such as allowlist}\nC -- fail --> R\nC -- pass --> D{PAR request}\nD -- yes --> F[Fetch metadata document]\nD -- no --> E[Authenticate user first]\nE --> F",
       "first_seen": "2026-11-18",
@@ -1569,23 +1354,6 @@
         "デフォルト以外のポートでローカルの認可サーバーに対してテストするクライアント開発者は、準拠した Client Identifier URL を使えなくなる。",
         "client_id の URL をどこまで厳密に検証するかを決める認可サーバーの実装者。"
       ]
-    },
-    "pr:oauth-wg/oauth-deferred-token-response#82": {
-      "diagram": "",
-      "first_seen": "2026-11-16",
-      "headline": "In short, this PR rewrites the definition of the deferral code to focus on its purpose and lifecycle.",
-      "headline_ja": "deferral code の定義を、その目的とライフサイクルに焦点を当てて書き直す PR である。",
-      "id": "pr:oauth-wg/oauth-deferred-token-response#82",
-      "kind": "pull-request",
-      "related": [],
-      "significance": "editorial",
-      "summary": "The PR reworks the Section 2 definition of the deferral code. The author found the existing text confusing: it never says the code is used to obtain a token, yet it includes a fragment about the revocation endpoint. The PR simplifies the definition around its intended purpose and lifecycle. The source gives only the PR description, not the diff, so the exact new wording is unknown. It appears to be an editorial change.",
-      "summary_ja": "この PR は、Section 2 にある deferral code の定義を書き直す。既存の文は、コードがトークン取得に使われることに触れていない一方で、revocation endpoint に関する記述を含んでおり、分かりにくいと指摘されている。PR は目的とライフサイクルを中心に定義を簡潔にする。ソースには PR の説明のみがあり差分は含まれないため、新しい文言の詳細は不明である。編集上の変更と見られる。",
-      "title": "oauth-wg/oauth-deferred-token-response#82: Simplify definition of deferral code parameter",
-      "updated_at": "2026-11-16T06:35:17+00:00",
-      "url": "https://github.com/oauth-wg/oauth-deferred-token-response/pull/82",
-      "use_cases": [],
-      "use_cases_ja": []
     },
     "pr:oauth-wg/oauth-first-party-apps#180": {
       "diagram": "",
