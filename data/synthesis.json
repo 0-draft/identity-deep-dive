@@ -1,28 +1,28 @@
 {
   "picks": [
     {
-      "id": "draft:draft-ietf-oauth-sd-jwt-vc-27",
-      "why": "Issuers that relied on Type Metadata extends to convey types must now list every type in vct or aka_vcts, and verifiers must not infer types from extends. The draft is in IESG Evaluation, so this is close to final.",
-      "why_ja": "型の伝達を Type Metadata の extends に頼ってきた発行者は、vct か aka_vcts に型をすべて列挙する必要があり、検証側は extends から型を推定してはならない。draft は IESG Evaluation にあり、内容は最終に近い。"
-    },
-    {
-      "id": "pr:oauth-wg/draft-ietf-oauth-client-id-metadata-document#132",
-      "why": "Authorization servers that fetch client metadata would have to reject URLs with a query, a port or over 2048 octets before any request. The port ban may break local development, and mandating fetcher isolation is still disputed on the list, so this is a proposal.",
-      "why_ja": "client ID metadata document を取得する認可サーバーは、クエリ、ポート、2048 オクテット超の URL を、ネットワーク要求の前に拒否することになる。ポートの禁止はローカル開発の構成を壊しうる。取得処理の隔離を必須にするかはメーリングリストで意見が分かれており、まだ提案の段階である。"
-    },
-    {
       "id": "draft:draft-ietf-wimse-arch-09",
-      "why": "Relying parties MUST associate each trust domain with its own issuers and trust anchors. A signing key shared across domains lets one compromise forge credentials for all of them, and agents needing separate audit or revocation SHOULD NOT share a workload identity.",
+      "why": "Relying parties MUST bind each trust domain to its own issuers and trust anchors. A signing key shared across domains lets one compromise forge credentials in all of them, and agents needing separate audit or revocation SHOULD NOT share a workload identity.",
       "why_ja": "relying party は trust domain ごとに issuer と trust anchor を対応づけることが MUST になった。署名鍵を複数の domain で共有すると、一つの侵害ですべての domain の資格情報を偽造できる。監査や失効を分けたい agent は workload identity を共有すべきでない。"
     },
     {
       "id": "draft:draft-ietf-wimse-workload-identity-practices-09",
-      "why": "Service mesh and gateway operators get explicit backing for a trusted proxy holding keys and performing proof of possession for a workload. The draft also treats signing capability as a security boundary. It was revised in response to IETF Last Call review.",
-      "why_ja": "service mesh やゲートウェイの運用者にとって、信頼できる proxy が鍵を持ち workload に代わって proof of possession を行うことが、明文で認められた。署名機能を安全境界として扱う点も加わった。IETF Last Call のレビューを受けた改訂である。"
+      "why": "Service mesh and gateway operators now have text backing a trusted proxy that holds keys and performs proof of possession for a workload. It also treats signing capability as a security boundary. The change answers IETF Last Call review of -08.",
+      "why_ja": "service mesh やゲートウェイの運用者にとって、信頼できる proxy が鍵を持ち workload に代わって proof of possession を行うことが、文書上で認められた。署名機能を安全境界として扱う点も加わった。-08 に対する IETF Last Call のレビューを受けた改訂である。"
+    },
+    {
+      "id": "pr:oauth-wg/draft-ietf-oauth-client-id-metadata-document#132",
+      "why": "Authorization servers that fetch client metadata would have to reject URLs with a query, a port or over 2048 octets before any request. The port ban may break local development, and whether to mandate fetcher isolation is still disputed on the list, so this is a proposal.",
+      "why_ja": "client ID metadata document を取得する認可サーバーは、クエリ、ポート、2048 オクテット超の URL を、ネットワーク要求の前に拒否することになる。ポートの禁止はローカル開発の構成を壊しうる。取得処理の隔離を必須にするかはメーリングリストで意見が分かれており、まだ提案の段階である。"
+    },
+    {
+      "id": "draft:draft-ietf-wimse-http-signature-09",
+      "why": "Implementers of the HTTP signature protocol must now accept a server-supplied nonce from Accept-Signature, subject to the same entropy rules (at least 64 bits). The draft is already with the IESG, so little else is expected to change.",
+      "why_ja": "HTTP Signature を実装する側は、Accept-Signature でサーバーが渡した nonce を受け入れる必要がある。エントロピーの条件(64 ビット以上)はクライアント生成の nonce と同じである。draft はすでに IESG に提出されており、これ以外の大きな変更は見込みにくい。"
     },
     {
       "id": "mail:F0EM1153dNyFHn5TmphTpvkCQWg",
-      "why": "Which text the WG adopts decides whether recipient-specific actor disclosure lives in the base or in later profiles. Prasad wants Actor Chain with selective disclosure; McGuinness and Kasselman want a narrow base. No adoption decision yet.",
+      "why": "Which text the WG adopts decides whether recipient-specific actor disclosure goes in the base or in later profiles. Prasad wants Actor Chain with selective disclosure. McGuinness and Kasselman want a narrow base. No adoption decision yet.",
       "why_ja": "WG がどの文書を出発点に採るかで、受信者ごとの actor 開示が基本仕様に入るか後続のプロファイルになるかが決まる。Prasad は選択的開示を含む Actor Chain を、McGuinness と Kasselman は狭い基本仕様を推している。採択の判断はまだない。"
     }
   ],
@@ -31,7 +31,7 @@
       "id": "workload-credentials",
       "name": "Workload credentials and proof of possession",
       "name_ja": "ワークロード資格情報と proof of possession",
-      "summary": "WIMSE base stack: identifier, credentials, WPT, HTTP signatures, mTLS. Practices -09 answers Last Call review (proxy may do proof of possession); http-signature -09 allows server-supplied nonces. Both are submitted to the IESG. arch -09 added issuer, trust anchor and trust-domain separation. Individual drafts cover test vectors, WPT message binding (mth claim) and partition-tolerant renewal.",
+      "summary": "WIMSE base stack: identifier, credentials, WPT, HTTP signatures, mTLS. Practices -09 answers Last Call review (a proxy may do proof of possession); http-signature -09 allows server-supplied nonces. Both are submitted to the IESG. arch -09 adds issuer, trust anchor and trust-domain separation. Individual drafts cover test vectors, WPT message binding (mth claim) and partition-tolerant renewal.",
       "summary_ja": "WIMSE の基盤で、識別子、資格情報、WPT、HTTP Signature、mTLS を扱う。practices -09 は Last Call のレビューに応え、proxy による proof of possession を認めた。http-signature -09 はサーバーが渡す nonce を認めた。どちらも IESG に提出済みである。arch -09 は issuer、trust anchor、trust domain の分離を加えた。個人 draft は、テストベクター、WPT のメッセージ結びつけ(mth claim)、分断時の期限延長を提案している。",
       "members": [
         {
@@ -141,8 +141,8 @@
       "id": "agent-delegation",
       "name": "Agent delegation and attenuation",
       "name_ja": "Agent の委譲と attenuation",
-      "summary": "How authority narrows between agents. Asor, AAT, Agent Passport, Hulea, delegator-bound chains, connected-flight (-07 adds a per-hop consumption record) and Delegate SD-JWT overlap; asor -03 and AAT -02 agree on par_hash but count del_max_depth differently. Who enforces a cumulative limit is open. In OAuth, Actor Chain and Actor Profile are compared before any adoption call; no decision yet.",
-      "summary_ja": "agent 間で権限をどう狭めるかを扱う。Asor、AAT、Agent Passport、Hulea、delegator-bound chains、connected-flight(-07 で hop ごとの consumption record を追加)、Delegate SD-JWT は内容が重なる。asor -03 は par_hash で AAT -02 と揃ったが、del_max_depth の数え方は異なる。累計上限を誰が強制するかは未決である。OAuth では、採択の判断の前に Actor Chain と Actor Profile の比較が続いており、まだ決定はない。",
+      "summary": "How authority narrows between agents. Asor, AAT, Agent Passport, Hulea, delegator-bound chains, connected-flight (-07 adds a per-hop consumption record) and Delegate SD-JWT overlap. One independent implementation passes all 229 AAT -02 vectors; AAT and asor count del_max_depth differently. Who enforces a cumulative limit is open. In OAuth, Actor Chain vs Actor Profile awaits an adoption call.",
+      "summary_ja": "agent 間で権限をどう狭めるかを扱う。Asor、AAT、Agent Passport、Hulea、delegator-bound chains、connected-flight(-07 で hop ごとの consumption record を追加)、Delegate SD-JWT は内容が重なる。独立実装が AAT -02 の 229 件のテストベクターをすべて通した。del_max_depth の数え方は AAT と asor で異なる。累計上限を誰が強制するかは未決である。OAuth では Actor Chain と Actor Profile の比較が続き、採択の判断はまだない。",
       "members": [
         {
           "track": "ietf-wimse",
@@ -192,8 +192,8 @@
       "id": "agent-authorization-oauth",
       "name": "Agent authorization in OAuth",
       "name_ja": "OAuth における agent の認可",
-      "summary": "Proposals for authorizing AI agents with OAuth, mostly individual drafts: PACE Authorization, actor-bound Token Exchange, delegation-revoked security events, subject-proof callers, a RAR payment-mandate profile, Proof of Intent -01, Transactional Access Tokens and brokered authorization. Transaction Tokens await write-up.",
-      "summary_ja": "AI agent を OAuth で認可する提案を扱い、多くは個人 draft である。PACE Authorization、actor-bound な Token Exchange、delegation-revoked セキュリティイベント、subject-proof caller、支払い mandate 向けの RAR プロファイル、Proof of Intent -01、Transactional Access Tokens、brokered authorization がある。Transaction Tokens は write-up 待ちである。",
+      "summary": "Proposals for authorizing AI agents with OAuth, mostly individual drafts: PACE Authorization, delegation-revoked security events, subject-proof callers, a RAR payment-mandate profile, Proof of Intent -01, Transactional Access Tokens and brokered authorization. Transaction Tokens await write-up.",
+      "summary_ja": "AI agent を OAuth で認可する提案を扱い、多くは個人 draft である。PACE Authorization、delegation-revoked セキュリティイベント、subject-proof caller、支払い mandate 向けの RAR プロファイル、Proof of Intent -01、Transactional Access Tokens、brokered authorization がある。Transaction Tokens は write-up 待ちである。",
       "members": [
         {
           "track": "openid",
@@ -228,7 +228,7 @@
       "id": "agent-evidence-audit",
       "name": "Agent identity, context and audit evidence",
       "name_ja": "Agent の identity・コンテキスト・監査証跡",
-      "summary": "Identity, status and audit for AI agent actions. AIMS threads on status checks from outside the trust domain accepted mechanism-neutral Section 6 wording; no AIMS text changed. Authorization-evidence -02 builds on AIMS, the AER-1 mapping reached -03 and a new AER-1 attribution profile appeared. Hackathon interop results are self-reported.",
+      "summary": "Identity, status and audit for AI agent actions. AIMS threads on status checks from outside the trust domain accepted mechanism-neutral Section 6 wording, but no AIMS text changed. Authorization-evidence -02 builds on AIMS, the AER-1 mapping reached -03 and a new AER-1 attribution profile appeared. Hackathon interop results are self-reported.",
       "summary_ja": "AI agent の行動について、identity、状態確認、監査を扱う。trust domain の外からの状態確認をめぐる AIMS の議論では、仕組みに依存しない Section 6 の文言で合意したが、AIMS の本文は変わっていない。authorization-evidence -02 は AIMS を土台にし、AER-1 のマッピングは -03 に進み、AER-1 の attribution プロファイルが新たに出た。ハッカソンの相互運用結果は自己報告である。",
       "members": [
         {
@@ -275,8 +275,8 @@
       "id": "cross-domain-grants",
       "name": "Cross-domain grants and token exchange",
       "name_ja": "ドメイン間グラントと token exchange",
-      "summary": "Carrying identity and authorization across trust domains. Identity chaining is in the RFC Editor queue but marked Blocked; transaction tokens await write-up. The ID-JAG repository has a new issue (#162) proposing a multi-hop chaining profile. Actor-bound Token Exchange is a new proposal here.",
-      "summary_ja": "identity と認可を trust domain の境界越しに運ぶ方式を扱う。identity chaining は RFC Editor キューにあるが Blocked の状態で、transaction tokens は write-up 待ちである。ID-JAG のリポジトリでは新しい issue(#162)が多段の chaining プロファイルを提案している。actor-bound な Token Exchange がこの領域の新しい提案である。",
+      "summary": "Carrying identity and authorization across trust domains. Identity chaining is in the RFC Editor queue but marked Blocked; transaction tokens await write-up. The ID-JAG repository has a new issue (#162) proposing a multi-hop chaining profile.",
+      "summary_ja": "identity と認可を trust domain の境界越しに運ぶ方式を扱う。identity chaining は RFC Editor キューにあるが Blocked の状態で、transaction tokens は write-up 待ちである。ID-JAG のリポジトリでは新しい issue(#162)が多段の chaining プロファイルを提案している。",
       "members": [
         {
           "track": "oauth-wg",
@@ -346,8 +346,8 @@
       "id": "verifiable-credentials",
       "name": "Verifiable credentials and SD-JWT",
       "name_ja": "Verifiable Credentials と SD-JWT",
-      "summary": "SD-JWT VC -27 is in IESG Evaluation and takes types only from vct and aka_vcts; Éric Vyncke moved to No Objection. Token Status List is in the RFC Editor queue. OpenID4VCI and OpenID4VP had no explained change this week (last push 11 days ago; 2 and 1 PRs merged in 30 days). HAIP's last push was 60 days ago.",
-      "summary_ja": "SD-JWT VC -27 は IESG Evaluation にあり、型は vct と aka_vcts だけから決まる。Éric Vyncke は No Objection に変わった。Token Status List は RFC Editor キューにある。OpenID4VCI と OpenID4VP は今週説明のある変更がない(最終 push は 11 日前で、30 日間のマージはそれぞれ 2 件と 1 件)。HAIP の最終 push は 60 日前である。",
+      "summary": "SD-JWT VC -27 is in IESG Evaluation; Éric Vyncke moved to No Objection after his DISCUSS was resolved. Token Status List is in the RFC Editor queue. OpenID4VCI and OpenID4VP had no explained change this week (last push 11 days ago; 2 and 1 PRs merged in 30 days). HAIP's last push was 60 days ago.",
+      "summary_ja": "SD-JWT VC -27 は IESG Evaluation にあり、Éric Vyncke は DISCUSS が解消されて No Objection に変わった。Token Status List は RFC Editor キューにある。OpenID4VCI と OpenID4VP は今週説明のある変更がない(最終 push は 11 日前で、30 日間のマージはそれぞれ 2 件と 1 件)。HAIP の最終 push は 60 日前である。",
       "members": [
         {
           "track": "oauth-wg",
@@ -396,8 +396,8 @@
       "id": "identity-assurance",
       "name": "Identity assurance and proofing",
       "name_ja": "身元保証と本人確認",
-      "summary": "Verified identity data in OpenID: eKYC-IDA with its authority profile, the identity proofing extension, and government and national trust profiles. None of these repositories merged a PR in the last 30 days. Last pushes: igov 6 days ago (3 open PRs), cg-australian-digital-trust 21 days, Identity-Proofing-Extension 40, eKYC-IDA 61, eKYC-IDA-Authority 68.",
-      "summary_ja": "OpenID における検証済み identity データを扱う。対象は eKYC-IDA とその authority プロファイル、identity proofing extension、政府・国単位の trust プロファイルである。どのリポジトリも直近 30 日にマージされた PR はない。最終 push は igov が 6 日前(open な PR は 3 件)、cg-australian-digital-trust が 21 日前、Identity-Proofing-Extension が 40 日前、eKYC-IDA が 61 日前、eKYC-IDA-Authority が 68 日前である。",
+      "summary": "Verified identity data in OpenID: eKYC-IDA with its authority profile, the identity proofing extension, and government and national trust profiles. None of these repositories merged a PR in the last 30 days. Last pushes: igov 7 days ago (3 open PRs), cg-australian-digital-trust 22 days, Identity-Proofing-Extension 41, eKYC-IDA 61, eKYC-IDA-Authority 68.",
+      "summary_ja": "OpenID における検証済み identity データを扱う。対象は eKYC-IDA とその authority プロファイル、identity proofing extension、政府・国単位の trust プロファイルである。どのリポジトリも直近 30 日にマージされた PR はない。最終 push は igov が 7 日前(open な PR は 3 件)、cg-australian-digital-trust が 22 日前、Identity-Proofing-Extension が 41 日前、eKYC-IDA が 61 日前、eKYC-IDA-Authority が 68 日前である。",
       "members": [
         {
           "track": "openid",
@@ -561,5 +561,5 @@
       ]
     }
   ],
-  "generated_at": "2026-11-24T00:01:46+00:00"
+  "generated_at": "2026-11-24T10:01:42+00:00"
 }
