@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-24T22:29:03+00:00
+Generated at: 2026-11-25T08:39:29+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -37,12 +37,10 @@ Moved by this week's material. candidates.json and the site list raised candidat
 - **high** `Diff active WG draft: draft-ietf-wimse-aims-01`: The active mailing-list thread is drafting a new Section 6 on external status sources for AIMS.
 - **high** `Diff active WG draft: draft-ietf-wimse-arch-09`: Arch issue #139 on AI intermediaries and per-agent identity was commented on and closed this week.
 - **high** `Diff active WG draft: draft-ietf-wimse-http-signature-09`: Digest shows closed s2s-protocol issues on http-signature: test vectors, nonce note, editorial comments, and a broken workload-creds reference.
-- **high** `Diff active WG draft: draft-ietf-wimse-workload-creds-03`: The IPR poll to its authors started today, which suggests the draft is moving toward publication.
 - **high** `Diff active WG draft: draft-ietf-wimse-workload-identity-practices-09`: -09 adds normative-looking changes on proxy proof of possession and signing boundaries after Last Call.
 - **high** `Review related draft: draft-miao-wimse-http-signature-test-vectors-00`: New draft with 29 vectors and 3 observations on spec ambiguity in draft-ietf-wimse-http-signature.
-- **high** `Review related draft: draft-nandakumar-wimse-wpt-message-binding-00`: Announced today and already drawing questions on authority hashing behind gateways and registry profiles.
 - **high** `Review related draft: draft-seymour-wimse-connected-flight-07`: -07 defines a consumption record, key requirements and replay bounds.
+- **high** `Review related draft: draft-uppalapati-wimse-pq-agent-identity-02`: The -02 was announced on the list with requirement rewording (PQ-R4, PQ-R7), a new survey entry and a Section 8.2 finding on ML-DSA.
 - **low** `Review related draft: draft-hulea-wimse-agent-mandate-01`: Only appears as a column in a side-by-side comparison; no change discussed.
-- **low** `Review related draft: draft-thaha-wimse-agent-evidence-binding-03`: Its authors engaged in two threads today, but only through short comments, with no new text in this material.
 
 <!-- triage:end -->
