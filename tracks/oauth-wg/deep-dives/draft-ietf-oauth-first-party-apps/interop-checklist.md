@@ -1,11 +1,11 @@
 # Interop Checklist
 
 - [ ] The challenge endpoint URL uses the `https` scheme and accepts `application/x-www-form-urlencoded` POST bodies in UTF-8 (Section 4.1).
-- [ ] Requests without `response_type=code` are rejected, and `client_id` is treated as required unless the client is identified by authentication or `auth_session` (Section 5.1).
+- [ ] Requests carry `response_type=code` (REQUIRED, and MUST be `code`), and `client_id` unless the client is identified by authentication or `auth_session` (Section 5.1).
 - [ ] If both `client_id` and an authenticated or session-derived client identity are present and differ, the request is rejected (Section 5.1).
 - [ ] If the server requires client authentication at the token endpoint for a client, it also requires it at the challenge endpoint (Section 4.1).
-- [ ] `insufficient_authorization` and `redirect_to_web` are returned with HTTP 403, and a client written for 400 or 401 still handles them (Section 5.2.2.1, Appendix B).
-- [ ] The status code for `invalid_session` and for other errors is 400 by default, and the client does not rely on a different code (Section 5.2.2).
+- [ ] `insufficient_authorization` and `redirect_to_web` from the challenge endpoint are returned with HTTP 403, not the -03 default of 400 or the 401 of the -03 Appendix B.3 example (Section 5.2.2.1).
+- [ ] `invalid_session` and other errors that do not set their own status code are returned with HTTP 400 (Section 5.2.2).
 - [ ] `error`, `error_description` and `error_uri` contain only the allowed ASCII characters (Section 5.2.2).
 - [ ] The client sends the stored `auth_session` on every later challenge request and replaces it when a response carries a new value (Section 5.3.1).
 - [ ] An `auth_session` presented from a different device, or with a different DPoP key, is rejected (Section 5.3.1, 9.6.1).

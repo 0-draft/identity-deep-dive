@@ -48,7 +48,7 @@ sequenceDiagram
 
 - **Trigger**: The Datatracker lists revision 04 with the states "Active", "I-D Exists" and "WG Consensus: Waiting for Write-Up". WG Last Call on -03 ran from 25 June to 13 July 2026, -04 was posted on 1 July 2026 during it, and the WG state moved from "In WG Last Call" to "Waiting for Write-Up" on 15 July 2026. A document shepherd was assigned on 26 August 2026.
 - **Source evidence**: Appendix D lists -04 as "Editorial clarifications and improvements" and "Updated HTTP response codes for consistency". The response-code change is normative: Section 5.2.2.1 now says the server MUST respond with 403 for `insufficient_authorization` and `redirect_to_web`. The editor's WGLC reply of 1 July 2026 gives the reason: an example used 401 without the `WWW-Authenticate` header that 401 requires, so the codes were changed to 403.
-- **Expected impact**: In -03 the normative default for both codes was 400 (Section 5.2.2), the Appendix B.3 example used 401, and the token endpoint examples (Section 6.2, Appendix B.4) already used 403. Implementations that followed the 400 default or the 401 example need to change. The next step is the shepherd write-up. The IESG state is still "I-D Exists", so the draft has not been sent to the IESG.
+- **Expected impact**: In -03 the normative default for both codes was 400 (Section 5.2.2), the Appendix B.3 example used 401 for `insufficient_authorization`, and the token endpoint examples (Section 6.2, Appendix B.4) already used 403. Implementations that followed the 400 default or the 401 example need to change. The next step is the shepherd write-up. The IESG state is still "I-D Exists", so the draft has not been sent to the IESG.
 
 ## What Changed
 
@@ -64,7 +64,7 @@ Changes from -03 to -04:
 - References: cross-device-security moves to -16 and attestation-based-client-auth to -09.
 - The remaining changes are wording and editorial fixes, plus two acknowledgments (Filip Skokan, Joseph Heenan).
 
-Compatibility: deployments that returned 400 or 401 for the two error codes would not conform to -04. The WGLC thread does not mention any deployment that did so.
+Compatibility: deployments that return 400 for either code (the -03 default) or 401 for `insufficient_authorization` (the -03 Appendix B.3 example) would not conform to -04. The WGLC thread does not mention any deployment that did so.
 
 ## Technical Analysis
 

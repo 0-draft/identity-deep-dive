@@ -48,7 +48,7 @@ sequenceDiagram
 
 - **Trigger**: Datatracker はリビジョン 04 の状態を "Active"、"I-D Exists"、"WG Consensus: Waiting for Write-Up" としている。-03 の WG Last Call は 2026 年 6 月 25 日から 7 月 13 日までで、その途中の 7 月 1 日に -04 が出た。WG の状態は 7 月 15 日に "In WG Last Call" から "Waiting for Write-Up" に移り、8 月 26 日に document shepherd が決まった。
 - **Source evidence**: Appendix D は -04 を "Editorial clarifications and improvements" と "Updated HTTP response codes for consistency" としている。レスポンスコードの変更は規範的なもので、Section 5.2.2.1 は `insufficient_authorization` と `redirect_to_web` を 403 で返さなければならない (MUST) と定めた。理由は 2026 年 7 月 1 日の editor による WGLC への返信にある。401 を使う例に、401 で必須の `WWW-Authenticate` ヘッダーがなかったため、403 に変えたという。
-- **Expected impact**: -03 では両コードの規範上の既定は 400 (Section 5.2.2)、Appendix B.3 の例は 401 で、トークンエンドポイントの例 (Section 6.2、Appendix B.4) はすでに 403 だった。400 の既定や 401 の例に従った実装は変更が必要になる。次の段階は shepherd の write-up である。IESG の状態はまだ "I-D Exists" で、IESG には送られていない。
+- **Expected impact**: -03 では両コードの規範上の既定は 400 (Section 5.2.2)、Appendix B.3 の例は `insufficient_authorization` に 401 を使い、トークンエンドポイントの例 (Section 6.2、Appendix B.4) はすでに 403 だった。400 の既定や 401 の例に従った実装は変更が必要になる。次の段階は shepherd の write-up である。IESG の状態はまだ "I-D Exists" で、IESG には送られていない。
 
 ## 変更点
 
@@ -64,7 +64,7 @@ sequenceDiagram
 - 参考文献: cross-device-security は -16、attestation-based-client-auth は -09 に更新された。
 - 残りは文言と編集上の修正、および謝辞への 2 名 (Filip Skokan、Joseph Heenan) の追加である。
 
-互換性: 2 つのエラーコードに 400 や 401 を返していたデプロイメントは -04 に適合しない。WGLC のスレッドには、そうしていたデプロイメントへの言及はない。
+互換性: どちらかのコードに 400 (-03 の既定) を返す、または `insufficient_authorization` に 401 (-03 の Appendix B.3 の例) を返すデプロイメントは -04 に適合しない。WGLC のスレッドには、そうしていたデプロイメントへの言及はない。
 
 ## 技術分析
 

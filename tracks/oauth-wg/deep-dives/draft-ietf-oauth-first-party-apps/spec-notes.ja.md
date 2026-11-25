@@ -31,4 +31,4 @@
 
 - Upstream: [RFC6749] とそのトークンエンドポイントを土台とし、PKCE [RFC7636]、Pushed Authorization Request [RFC9126]、DPoP [RFC9449]、ステップアップ通知 [RFC9470]、サーバーメタデータ [RFC8414] を再利用する。[RFC9470] を変更しないと明記している (Section 3.3、7)。
 - Downstream: 認可サーバーはチャレンジエンドポイントとメタデータ値 `authorization_challenge_endpoint` を追加する (Section 8)。クライアントと SDK は `auth_session` の処理を実装する。デプロイメントはリクエストとエラーコードの独自プロファイルを定義する必要がある (Section 1.2、Appendix B)。
-- Compatibility: 2 つのエラーコードに 400 や 401 を返していた実装は -04 と異なる。ドラフトはファーストパーティのネイティブアプリ向けであり、ブラウザーベースのアプリでの利用は推奨されない (Section 9.8)。トークンエンドポイントについて Section 6.2 はステータスコードを定めていない。例は 403 だが、[RFC6749] の Section 5.2 の既定は 400 である。
+- Compatibility: -03 に従う実装は、両コードに 400 (Section 5.2.2 の既定) を返すか、`insufficient_authorization` に 401 (Appendix B.3 の例) を返し、どちらも -04 と異なる。ドラフトはファーストパーティのネイティブアプリ向けであり、ブラウザーベースのアプリでの利用は推奨されない (Section 9.8)。トークンエンドポイントについて Section 6.2 はステータスコードを定めていない。例は 403 だが、[RFC6749] の Section 5.2 の既定は 400 である。

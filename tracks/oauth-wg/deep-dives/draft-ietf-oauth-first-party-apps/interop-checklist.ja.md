@@ -1,11 +1,11 @@
 # Interop Checklist
 
 - [ ] チャレンジエンドポイントの URL は `https` スキームを使い、UTF-8 の `application/x-www-form-urlencoded` の POST ボディーを受け付ける (Section 4.1)。
-- [ ] `response_type=code` のないリクエストは拒否され、`client_id` は、クライアントが認証または `auth_session` で識別できる場合を除き必須として扱われる (Section 5.1)。
+- [ ] リクエストは `response_type=code` を含み (REQUIRED、値は `code` でなければならない)、クライアントが認証または `auth_session` で識別できる場合を除き `client_id` も含む (Section 5.1)。
 - [ ] `client_id` と、認証またはセッションから得たクライアントの識別が両方あって一致しない場合、リクエストは拒否される (Section 5.1)。
 - [ ] サーバーがあるクライアントにトークンエンドポイントでクライアント認証を要求する場合、チャレンジエンドポイントでも要求する (Section 4.1)。
-- [ ] `insufficient_authorization` と `redirect_to_web` は HTTP 403 で返され、400 や 401 を想定して書かれたクライアントもこれを処理できる (Section 5.2.2.1、Appendix B)。
-- [ ] `invalid_session` とその他のエラーのステータスコードは既定で 400 であり、クライアントは別のコードに依存しない (Section 5.2.2)。
+- [ ] チャレンジエンドポイントの `insufficient_authorization` と `redirect_to_web` は、-03 の既定の 400 や -03 の Appendix B.3 の例の 401 ではなく、HTTP 403 で返される (Section 5.2.2.1)。
+- [ ] `invalid_session` など、個別にステータスコードを定めていないエラーは HTTP 400 で返される (Section 5.2.2)。
 - [ ] `error`、`error_description`、`error_uri` は許可された ASCII 文字だけを含む (Section 5.2.2)。
 - [ ] クライアントは保存した `auth_session` を以降のチャレンジリクエストごとに送り、レスポンスに新しい値があれば置き換える (Section 5.3.1)。
 - [ ] 別のデバイスから、または別の DPoP 鍵で提示された `auth_session` は拒否される (Section 5.3.1、9.6.1)。
