@@ -1,16 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-17T07:59:41+00:00",
-      "text": "The main activity is an implementation report on draft-ietf-oauth-client-id-metadata-document from an AS serving native apps and MCP clients. The thread produced suggestions on SSRF hardening, caching and RFC 8252 pointers, but no draft text changed. Two other messages: a question on the PACE Authorization draft and a new individual draft on OIDC crypto agility.",
-      "text_ja": "最も動きがあったのは、ネイティブアプリと MCP クライアントを扱う認可サーバーからの draft-ietf-oauth-client-id-metadata-document の実装報告である。SSRF 対策、キャッシュ、RFC 8252 への参照などの提案が出たが、ドラフト本文の変更はない。ほかに PACE Authorization ドラフトへの質問と、OIDC の暗号アジリティに関する新規個人ドラフトの投稿がある。"
-    },
-    {
-      "at": "2026-11-17T20:59:40+00:00",
-      "text": "Agent-authorization drafts dominate the list: the PACE thread debates having the user sign the delegated grant itself, and a new RAR payment-mandate draft was posted. A mailmaint profile's refresh_key proposal also drew pushback. Nothing in the core specs changed beyond a citation fix in OAuth 2.1.",
-      "text_ja": "メーリングリストではエージェント認可系のドラフトが中心である。PACE の議論では委任グラントへの本人署名が論点となり、RAR を用いた支払いマンデートの新規ドラフトも投稿された。mailmaint プロファイルの refresh_key には異論が出た。OAuth 2.1 の変更は参照の修正のみである。"
-    },
-    {
       "at": "2026-11-18T07:34:29+00:00",
       "text": "The sd-jwt-vc draft cleared another IESG ballot: Éric Vyncke moved to No Objection on -27 after his DISCUSS was resolved. A new CIMD pull request would tighten Client Identifier URL rules and limit who can trigger metadata fetches. There was also a list discussion of a new PACE Authorization draft.",
       "text_ja": "sd-jwt-vc の -27 で Éric Vyncke の DISCUSS が解消され、No Objection に変わった。CIMD ドラフトには、Client Identifier URL の規則を厳格化し、メタデータ取得の起点を制限するプルリクエストが出た。新しい PACE Authorization ドラフトに関するメーリングリストでの議論もあった。"
@@ -69,6 +59,11 @@
       "at": "2026-11-24T22:30:27+00:00",
       "text": "The most substantive thread is the CIMD author's pushback on did:cimd, a DID method built on Client ID Metadata Documents. The other two items are discussion only: an erratum proposing to retitle RFC 7662, and a request for a JWT BCP note on user identity checks, which arrived too late because the BCP update is in the RFC Editor queue.",
       "text_ja": "最も重要なのは、Client ID Metadata Document 上に構築された DID メソッド did:cimd に対する CIMD 著者の反対である。他の二件は議論のみで、RFC 7662 の題名変更を求める erratum と、JWT BCP への本人確認に関する注記の要望である。後者は BCP の更新が既に RFC Editor キューにあるため、時期を逸している。"
+    },
+    {
+      "at": "2026-11-25T08:40:50+00:00",
+      "text": "No draft text changed; three mailing-list threads. The most notable is did:cimd, where reviewers said key history, key purposes and client-versus-instance identity do not belong in a CIMD-derived DID. The JWT BCP update is in the RFC Editor queue, so no additions are possible. An erratum proposing to retitle RFC 7662 drew objections.",
+      "text_ja": "ドラフト本文の変更はなく、メーリングリストの議論が三件あった。最も目立つのは did:cimd で、鍵の履歴・鍵の用途・クライアントとインスタンスの区別は CIMD 由来の DID が担うべきではないとの指摘があった。JWT BCP の更新は RFC Editor キューにあり追加は受け付けられない。RFC 7662 の題名変更を求める errata には反対意見が出た。"
     }
   ],
   "items": {
@@ -180,50 +175,6 @@
         "OAuth の client_id（ソフトウェア）と、顧客ごとのエージェントインスタンスの識別を分ける必要があるエージェント基盤。"
       ]
     },
-    "mail:5ZaI7imNuZdOVt1g7cASCJWx_Lc": {
-      "diagram": "sequenceDiagram\nparticipant W as Workload\nparticipant R as Relay\nparticipant V as Receiver\nV-->>W: nonce\nW->>R: message with WPT carrying mth and aud\nR->>V: forward message\nV->>V: recompute hash and compare with mth",
-      "first_seen": "2026-11-17",
-      "headline": "A new WIMSE draft adds an mth claim so a Workload Proof Token commits to the message content, and a reviewer asks about gateways rewriting Host.",
-      "headline_ja": "WPT がメッセージ内容にコミットするための mth クレームを加える WIMSE ドラフトが投稿され、Host を書き換えるゲートウェイについて質問が出た",
-      "id": "mail:5ZaI7imNuZdOVt1g7cASCJWx_Lc",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-nandakumar-wimse-wpt-message-binding",
-          "note": "The draft under discussion.",
-          "note_ja": "議論の対象となっているドラフトである。",
-          "track": "ietf-wimse"
-        },
-        {
-          "name": "draft-ietf-wimse-wpt",
-          "note": "The WPT that mth extends.",
-          "note_ja": "mth が拡張する対象の WPT である。",
-          "track": "ietf-wimse"
-        },
-        {
-          "name": "draft-thaha-wimse-agent-evidence-binding",
-          "note": "Reviewer's draft with a comparable request-digest binding.",
-          "note_ja": "査読者のドラフトで、同様のリクエストダイジェストによる束縛を持つ。",
-          "track": "ietf-wimse"
-        }
-      ],
-      "significance": "new-proposal",
-      "summary": "Suhas Nandakumar and Cullen posted draft-nandakumar-wimse-wpt-message-binding, which adds an mth claim ({\"p\": profile, \"h\": hash}) so a WPT is bound to message content under a named canonicalization profile, with a registry of profiles. It also defines carrying a WPT inside messages on non-HTTP transports such as Media over QUIC and WebSocket, with aud naming the receiver, a verifier-supplied nonce for freshness, use on HTTP requests for JSON-RPC protocols such as A2A and MCP, and use in an SD-JWT Key Binding JWT. In the reply shown, Shameer Thaha describes a similar request-digest approach in their drafts, which hashes method, path and query, and body digest but omits scheme and authority because gateways rewrite them. They ask whether mth on HTTP covers the authority and whether their HTTP form could be a registry profile.",
-      "summary_ja": "Suhas Nandakumar と Cullen が draft-nandakumar-wimse-wpt-message-binding を投稿した。このドラフトは mth クレーム（{\"p\": プロファイル, \"h\": ハッシュ}）を追加し、名前付きの正規化プロファイルに基づいて WPT をメッセージ内容に束縛する。プロファイルのレジストリも設ける。さらに、Media over QUIC や WebSocket などの HTTP 以外のトランスポートで WPT をメッセージ内に載せる方法（aud に受信者を指定）、検証者が与える nonce による鮮度の確保、A2A や MCP のような JSON-RPC プロトコル向けの HTTP リクエストでの利用、SD-JWT の Key Binding JWT での利用を定める。示された返信では Shameer Thaha が、自身のドラフトにおける同様のリクエストダイジェスト方式を説明している。メソッド、パスとクエリ、ボディのダイジェストをハッシュし、ゲートウェイが書き換えるためスキームとオーソリティは除外する方式である。質問は、HTTP 上の mth がオーソリティを含むか、そして自分たちの HTTP 形式をレジストリのプロファイルにできるかである。",
-      "title": "New draft: Message Binding for Workload Proof Tokens",
-      "updated_at": "2026-11-17T20:59:40+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/5ZaI7imNuZdOVt1g7cASCJWx_Lc/",
-      "use_cases": [
-        "Agents exchanging JSON-RPC (A2A, MCP) through gateways that terminate TLS and may rewrite Host.",
-        "Workloads using WebSocket or Media over QUIC where no HTTP request exists to bind a proof to.",
-        "Systems that need the caller's and receiver's records of a request to commit to the same value."
-      ],
-      "use_cases_ja": [
-        "TLS を終端し Host を書き換える可能性のあるゲートウェイ越しに JSON-RPC（A2A、MCP）をやり取りするエージェント。",
-        "証明を結び付ける HTTP リクエストが存在しない WebSocket や Media over QUIC を使うワークロード。",
-        "呼び出し側と受信側のリクエスト記録が同じ値にコミットする必要があるシステム。"
-      ]
-    },
     "mail:7v7AHvCv5o_7x7nWWHA62k7Qipw": {
       "diagram": "",
       "first_seen": "2026-11-21",
@@ -271,6 +222,46 @@
         "JWT とサーバー側セッションレコードで認証するアプリケーションは、ユーザーを一つのクレーム（`sub`）から決め、すべてのハンドラーで同じ値を使うべきである。",
         "共有の既定署名鍵を同梱して出荷してはならない。"
       ]
+    },
+    "mail:9o7F3tsHtIje5NB155EOlH3-BHU": {
+      "diagram": "",
+      "first_seen": "2026-11-25",
+      "headline": "Reviewers of did:cimd say key history, key purposes and agent instances belong outside a CIMD-derived DID.",
+      "headline_ja": "did:cimd の議論で、鍵の履歴・鍵の用途・エージェントのインスタンス識別は CIMD 由来の DID の範囲外だとする意見が出た。",
+      "id": "mail:9o7F3tsHtIje5NB155EOlH3-BHU",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "In the did:cimd thread, Emelia Smith answered Richard Craig's review points. A CIMD is a point-in-time document, so key history should be kept by the relying party or authorization server in its own log. CIMD keys serve the client's interactions with the authorization server, so signing payment intents or other action statements needs separate keys, since reuse is cross-protocol key reuse. A client_id identifies client software shared by many users and agent instances, not one instance, and a credential subject can use the client_id URL directly with no DID. Craig agreed, noting his agents already use separate DPoP and signing keys, and asked for the IETF 127 client-instance discussion. The author, Suhyeon Forten Lee, agreed that the client_id URL is the better choice where a system can use it, as with SD-JWT VC, and will look at client instances. The message is truncated, so the original proposal is only partly visible.",
+      "summary_ja": "did:cimd のスレッドで Emelia Smith が Richard Craig のレビュー指摘に答えた。CIMD は特定時点の文書であるため、鍵の履歴は依拠当事者または認可サーバーが自前のログで保持すべきである。CIMD の鍵はクライアントと認可サーバーとのやり取りのためのものであり、支払い意図などの署名には別の鍵を使うべきで、共用はプロトコル間の鍵の再利用になる。client_id は多数のユーザーやエージェントインスタンスに共有されるクライアントソフトウェアを識別するもので、特定のインスタンスではなく、クレデンシャルの subject には DID なしで client_id の URL を直接使える。Craig は同意し、自身のエージェントが DPoP 用と署名用に別の鍵を使っていると述べ、IETF 127 のクライアントインスタンスの議論を尋ねた。提案者の Suhyeon Forten Lee は、SD-JWT VC のように client_id の URL を直接使える場合はそれが望ましいと認め、クライアントインスタンスの議論を検討するとした。本文は途中で切れており、元の提案の一部しか見えない。",
+      "title": "did:cimd: a DID method built on Client ID Metadata Documents",
+      "updated_at": "2026-11-25T08:40:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/9o7F3tsHtIje5NB155EOlH3-BHU/",
+      "use_cases": [
+        "An authorization server or relying party that must verify an agent's signature after key rotation, for example in a payment dispute, and so keeps its own copy of the key it saw.",
+        "A credential scheme such as SD-JWT VC that wants an OAuth client's client_id URL as the credential subject without a DID."
+      ],
+      "use_cases_ja": [
+        "鍵のローテーション後、たとえば支払い紛争の際にエージェントの署名を検証する必要があり、認可サーバーや依拠当事者が観測した鍵のコピーを自前で保持する場合。",
+        "SD-JWT VC のように、DID を使わず OAuth クライアントの client_id の URL をクレデンシャルの subject にしたいクレデンシャル方式。"
+      ]
+    },
+    "mail:BIALaujaTXniHb7JbgMsA9q0TiU": {
+      "diagram": "",
+      "first_seen": "2026-11-25",
+      "headline": "An erratum proposes retitling RFC 7662 to 'Token Info Endpoint', and WG participants say it should be rejected.",
+      "headline_ja": "RFC 7662 の題名を「Token Info Endpoint」に変える errata が提出され、WG の参加者は却下すべきだと述べている。",
+      "id": "mail:BIALaujaTXniHb7JbgMsA9q0TiU",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Erratum 9331 on RFC 7662 argues that 'Introspection' misleads because the protected resource queries the authorization server instead of examining the token itself, and proposes the title 'OAuth 2.0 Token Info Endpoint'. Justin Richer, the RFC's editor, said it should be rejected, since the AS looks into its own state about the token and the title is not an error. Brian Campbell found the term confusing but said changing an RFC title goes beyond the purpose of an erratum, citing IESG errata processing guidance. Deb added it to her to-do list. No decision is recorded in the material.",
+      "summary_ja": "RFC 7662 への errata 9331 は、保護リソースがトークン自体を調べるのではなく認可サーバーに問い合わせるため「Introspection」は誤解を招くとして、題名を「OAuth 2.0 Token Info Endpoint」に変えることを提案している。RFC の編者である Justin Richer は、AS が自身の保持するトークンの情報を調べるのであり題名は誤りではないとして却下を求めた。Brian Campbell は、この用語は紛らわしいと考えるが、RFC の題名変更は errata の目的を超えるとし、IESG の errata 処理方針を挙げた。Deb は自身の作業リストに加えた。資料には決定は記録されていない。",
+      "title": "RFC7662 (9331)",
+      "updated_at": "2026-11-25T08:40:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/BIALaujaTXniHb7JbgMsA9q0TiU/",
+      "use_cases": [],
+      "use_cases_ja": []
     },
     "mail:BlDWJT4omhPgD-jVurnimmiBv1E": {
       "diagram": "sequenceDiagram\n participant S as SPA app1\n participant AS as Token endpoint (API origin)\n participant G as API gateway (RS)\n S->>AS: POST /oauth/token code and code_verifier (credentials include)\n AS-->>S: Set-Cookie encrypted AT (HttpOnly) plus token_fingerprint\n S->>G: API request with fingerprint (cookie sent automatically)\n G->>G: decrypt cookie and check fingerprint\n G-->>S: response",
@@ -374,31 +365,6 @@
         "Actor Chain と Actor Profile のどちらの採用を支持するか、また最初の文書をどこまで広げるかを判断する WG 参加者。"
       ]
     },
-    "mail:Gg-XRhIkKakzC1ay6QhKkRimrw8": {
-      "diagram": "sequenceDiagram\nparticipant C as Client\nparticipant AS as Authorization Server\nparticipant H as client_id URL host\nC->>AS: authorization request with URL client_id\nAS->>H: fetch metadata document\nH-->>AS: document with redirect_uris\nAS->>AS: check client_id equality, redirect URIs, scope intersection\nAS-->>C: continue flow",
-      "first_seen": "2026-11-17",
-      "headline": "An AS operator's implementation report on Client ID Metadata Documents gets editor replies. Most points are withdrawn, and a few possible additions remain.",
-      "headline_ja": "Client ID Metadata Document の実装報告に編集者が回答し、多くの指摘は取り下げられ、追加の可能性が残るのは数点である。",
-      "id": "mail:Gg-XRhIkKakzC1ay6QhKkRimrw8",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Sean MacGuire runs an OAuth 2.1 AS used by MCP clients and a native app. They listed seven observations, and Emelia (an author or editor) answered each. Sean withdrew point 1 (client_id comparison is already simple string comparison per RFC 3986 section 6.2.1) and point 2 (one document per AS host was their own choice). Point 5 (restricting client authentication methods) is covered by the new Client Authentication section. Sean will file an issue on cache bounds (point 4). On SSRF (point 3), they suggest adding DNS rebinding and a fetch timeout. Emelia says rebinding is covered by the referenced OWASP cheat sheet, so restating it is open. On point 6, the draft does not reference RFC 8252, and a pointer for native clients may help. On point 7, Emelia says the AS should read the document's scope and intersect it with what it is willing to grant. Sean's AS ignores that member and says that if this is the intent, nothing needs adding. No draft text changed. The source was truncated.",
-      "summary_ja": "Sean MacGuire は MCP クライアントとネイティブアプリが利用する OAuth 2.1 の認可サーバーを運用しており、7 点の所見を挙げた。それに対して Emelia（著者または編集者）が各点に回答した。Sean は 1 点目（client_id の比較は RFC 3986 6.2.1 節の単純な文字列比較で既に規定されている）と 2 点目（認可サーバーのホストごとに 1 文書とするのは自分たちの選択である）を取り下げた。5 点目（クライアント認証方式の制限）は、新設の Client Authentication 節で扱われている。Sean はキャッシュ期間の上下限（4 点目）について issue を立てる予定である。SSRF 対策（3 点目）については、DNS rebinding とフェッチのタイムアウトを追記する案が出ている。Emelia は rebinding が参照先の OWASP チートシートで扱われているため、再掲するかは未決としている。6 点目については、ドラフトが RFC 8252 を参照しておらず、ネイティブクライアント向けの参照があると有用かもしれない。7 点目について Emelia は、認可サーバーは文書内の scope を読み、許可する範囲との積集合を取るべきだと述べた。Sean の認可サーバーはそのメンバーを無視しており、それが意図なら追記は不要としている。ドラフト本文の変更はない。資料は途中で切り詰められている。",
-      "title": "Implementation report:draft-ietf-oauth-client-id-metadata-document at an AS serving native apps and MCP clients (3 new messages)",
-      "updated_at": "2026-11-17T07:59:41+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/Gg-XRhIkKakzC1ay6QhKkRimrw8/",
-      "use_cases": [
-        "An AS that accepts MCP clients and native apps by URL-based client IDs and must harden its metadata fetcher against SSRF and DNS rebinding.",
-        "A deployer deciding whether to bound the AS-side cache of client metadata documents, or to limit metadata-document clients to public clients.",
-        "A native app that publishes redirect URIs in its document and the AS that must apply RFC 8252 rules to that list."
-      ],
-      "use_cases_ja": [
-        "URL ベースのクライアント ID で MCP クライアントやネイティブアプリを受け入れる認可サーバーが、メタデータ取得処理を SSRF や DNS rebinding に対して堅牢にしたい場合。",
-        "クライアントメタデータ文書の認可サーバー側キャッシュに上下限を設けるか、メタデータ文書クライアントを公開クライアントに限定するかを検討する場合。",
-        "ネイティブアプリが文書内にリダイレクト URI を公開し、認可サーバーがその一覧に RFC 8252 の規則を適用する必要がある場合。"
-      ]
-    },
     "mail:HzIZORPP2bIS3r0rQBFjja8tIXY": {
       "diagram": "",
       "first_seen": "2026-11-18",
@@ -486,6 +452,27 @@
       "use_cases_ja": [
         "AI エージェントに上限付きで取引先への支払いを許す金融機関は、計上と記録の間でクラッシュしても監査に耐えるレシートが必要である。",
         "プライバシーに配慮する決済ログでは、署名済みチェーンを壊さずに特定顧客の受取人情報を消去できる必要がある。"
+      ]
+    },
+    "mail:LSSDKZ7Sku2uoy58IDIpLumOQtM": {
+      "diagram": "",
+      "first_seen": "2026-11-25",
+      "headline": "The JWT BCP update is in the RFC Editor queue, so a requested note on user identity checks will not be added now.",
+      "headline_ja": "JWT BCP の更新は RFC Editor キューにあり、ユーザー識別確認に関する注記の追加は今回は行われない。",
+      "id": "mail:LSSDKZ7Sku2uoy58IDIpLumOQtM",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Gaosong Zhang asked for a note in section 3.8 of the JWT BCP reminding implementers to use the same validated user identity throughout request processing. The case was ELADMIN, where authentication checked sub but a downstream handler used a userId claim. Emelia Smith argued the BCP already covers this: the sub claim (RFC 7519 section 4.1.2) is the one for the user's identity, and the problem was a well-known signing key plus duplicated non-standard claims. Michael Jones replied that the update is already in the RFC Editor queue, so this is not a good time for additions. Gaosong said they could open a GitHub issue for a future update.",
+      "summary_ja": "Gaosong Zhang は、JWT BCP の 3.8 節に、リクエスト処理の全体で同じ検証済みユーザー識別子を使うよう実装者に促す注記を求めた。事例は ELADMIN で、認証では sub を確認していたが、下流のハンドラーは userId クレームを使っていた。Emelia Smith は、BCP は既にこれを扱っており、ユーザー識別には sub クレーム（RFC 7519 の 4.1.2 節）を使うべきで、問題は既知の署名鍵の使用と重複した非標準クレームだと述べた。Michael Jones は、更新は既に RFC Editor キューにあり追加を検討する時期ではないと答えた。Gaosong は将来の更新に向けて GitHub issue を立てられると述べた。",
+      "title": "User identity checks for JWTs with server-side authentication records",
+      "updated_at": "2026-11-25T08:40:50+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/LSSDKZ7Sku2uoy58IDIpLumOQtM/",
+      "use_cases": [
+        "An application that accepts JWTs and reads user identity from several claims, where checking sub in one place and a custom claim in another can cause mix-up bugs."
+      ],
+      "use_cases_ja": [
+        "JWT を受け付けるアプリケーションが複数のクレームからユーザー識別子を読む場合、ある箇所で sub を確認し別の箇所で独自クレームを使うと取り違えのバグになりうる。"
       ]
     },
     "mail:N1uo61sS2I1QMa7r9-uhoc3swWA": {
@@ -788,29 +775,6 @@
       "use_cases": [],
       "use_cases_ja": []
     },
-    "mail:Y6RNjJVYx4DVyPbMWZX6EmA-424": {
-      "diagram": "",
-      "first_seen": "2026-11-17",
-      "headline": "A new individual draft proposes that OIDC metadata publish supported JWT signing algorithms and let clients request one, to ease PQC adoption.",
-      "headline_ja": "OIDC のメタデータでサポートする JWT 署名アルゴリズムを公開し、クライアントが 1 つを要求できるようにする新規個人ドラフトの提案で、PQC への移行を容易にすることを狙う。",
-      "id": "mail:Y6RNjJVYx4DVyPbMWZX6EmA-424",
-      "kind": "mail",
-      "related": [],
-      "significance": "new-proposal",
-      "summary": "Breno announced draft-demedeiros-oidc-crypto-agility. It would let OIDC authorization metadata publish the supported JWT signing algorithms and let the client request one of them in the authorization request. It also adds a parameter to filter algorithms out of the published key sets at the jwks URI. The stated motivation is to reduce friction for adopting new algorithms, particularly post-quantum cryptography in open federation contexts. The message is only an announcement, and no detailed mechanism is in the material.",
-      "summary_ja": "Breno が draft-demedeiros-oidc-crypto-agility を投稿した。OIDC の認可メタデータでサポートする JWT 署名アルゴリズムを公開し、クライアントが認可リクエストでそのうちの 1 つを要求できるようにする。加えて、jwks の URI で公開される鍵セットからアルゴリズムを絞り込むパラメーターも導入する。動機は、新しいアルゴリズムの採用時の摩擦を減らすことであり、特にオープンなフェデレーションでの耐量子暗号の採用を容易にすることである。メッセージは告知のみで、詳細な仕組みは資料に含まれていない。",
-      "title": "Submitted new I-D proposal regarding OIDC crypto agility improvement",
-      "updated_at": "2026-11-17T07:59:41+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/Y6RNjJVYx4DVyPbMWZX6EmA-424/",
-      "use_cases": [
-        "An OpenID Provider in open federation that needs to add post-quantum signature algorithms without breaking existing relying parties.",
-        "A relying party that wants to choose which signing algorithm it receives."
-      ],
-      "use_cases_ja": [
-        "オープンなフェデレーションの OpenID Provider が、既存の Relying Party を壊さずに耐量子署名アルゴリズムを追加したい場合。",
-        "Relying Party が受け取る署名アルゴリズムを選択したい場合。"
-      ]
-    },
     "mail:ZWix6YIyFguohCBkLI88We0zAPw": {
       "diagram": "sequenceDiagram\nparticipant I as Client instance\nparticipant AS as Authorization server\nparticipant B as Broker\nparticipant U as Upstream resource\nI->>AS: client credentials grant\nAS-->>I: short-lived sender-constrained token\nI->>B: request using token\nB->>U: upstream request with broker-held credential\nU-->>B: response\nB-->>I: result",
       "first_seen": "2026-11-21",
@@ -850,44 +814,6 @@
       "url": "https://mailarchive.ietf.org/arch/msg/oauth/b20jw_GKDd4TT_s2WQxjhE3WB98/",
       "use_cases": [],
       "use_cases_ja": []
-    },
-    "mail:cMK4l6ZzO4AG6ugan-I-Rs3QDvA": {
-      "diagram": "flowchart LR\nU[User wallet or device key] -->|signs grant| R[Root token]\nR --> A[Agent token]\nA --> B[Second airline]\nB -->|checks chain back to user signature| U",
-      "first_seen": "2026-11-17",
-      "headline": "In the PACE thread, the author proposes letting the user confirm a delegation grant itself, and others raise device-key signing and cross-booking limits.",
-      "headline_ja": "PACE のスレッドで、委任グラントそのものを本人に確認させる案が示され、デバイス鍵での署名や予約をまたぐ上限管理が論点になった",
-      "id": "mail:cMK4l6ZzO4AG6ugan-I-Rs3QDvA",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-reddy-wimse-oauth-dialog-binding",
-          "note": "Binds agent dialogs to WIMSE and OAuth credentials, the same agent-dialog setting as PACE.",
-          "note_ja": "PACE と同じエージェント対話の場面で、対話を WIMSE と OAuth のクレデンシャルに結び付けるドラフトである。",
-          "track": "ietf-wimse"
-        },
-        {
-          "name": "draft-nandakumar-wimse-delegator-bound-chains",
-          "note": "The thread says wallet-signed roots work with delegator-bound chains.",
-          "note_ja": "スレッドでは、ウォレットが署名するルートは delegator-bound chains と組み合わせられるとされている。",
-          "track": "ietf-wimse"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "Suhas (the PACE author) answers Blake's point that nothing in a delegation chain is signed by the principal. For the next revision they propose that the principal confirms the grant once at setup (for example up to $800, aisle seat, until 9am), with the confirmation carried in the root token down the chain. Three options are listed: a wallet-signed SD-JWT credential (strongest), the user's own identity provider, or today's behaviour where the agent platform's authorization server asserts it. Mohamad Yossif suggests a device-bound key enrolled earlier as another way to get the user's signature, verifiable offline. Niki Niyikiza notes that delegator-bound chains would let the wallet sign the root, and points out that the same grant used with a second airline could be spent twice because no one tracks the total, asking the draft to say who does. No draft text changed; this is feedback on a proposal.",
-      "summary_ja": "PACE の著者である Suhas が、委任チェーンのどこにも本人の署名がないという Blake の指摘に答えている。次の改訂版では、本人がセットアップ時にグラント（例: 800ドルまで、通路側座席、午前9時まで）を一度確認し、その確認をルートトークンに入れてチェーンの下流へそのまま伝える案を示した。選択肢は三つある。ウォレットが署名する SD-JWT クレデンシャル（最も強い）、利用者自身のアイデンティティプロバイダー、そして現状どおりエージェントプラットフォームの認可サーバーが表明する方式である。Mohamad Yossif は、事前に登録したデバイス束縛鍵でも本人署名を得られ、オフラインで検証できると述べた。Niki Niyikiza は、delegator-bound chains ならウォレットがルートに署名できると述べ、同じグラントを別の航空会社で使うと合計額を誰も管理しないため二重に支払う恐れがあるとして、誰が管理するかをドラフトに明記するよう求めた。ドラフト本文の変更はなく、提案へのフィードバックである。",
-      "title": "New draft: PACE Authorization: delegation and action approval for agent dialogs: (3 new messages)",
-      "updated_at": "2026-11-17T20:59:40+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/cMK4l6ZzO4AG6ugan-I-Rs3QDvA/",
-      "use_cases": [
-        "An agent booking travel under a standing spending limit, where a second vendor must verify the user really approved the limit.",
-        "A verifier deciding whether to accept a bank-issued wallet credential or an IdP assertion as proof of principal consent.",
-        "An implementer of delegation chains deciding who enforces cumulative limits across several recipients."
-      ],
-      "use_cases_ja": [
-        "継続的な支出上限のもとで旅行を予約するエージェントで、二社目の事業者が利用者の承認を検証する必要がある場面。",
-        "銀行発行のウォレットクレデンシャルと IdP のアサーションのどちらを本人同意の証拠として受け入れるかを検証者が判断する場面。",
-        "委任チェーンを実装する側が、複数の宛先にまたがる累計上限を誰が強制するかを決める場面。"
-      ]
     },
     "mail:d4QcDFQ4Ays3NJUukHaknL8KIrk": {
       "diagram": "sequenceDiagram\nparticipant Root as Root issuer\nparticipant A as Agent A\nparticipant B as Agent B\nRoot->>A: delegation-revoked SET\nA->>B: relay SET to downstream holder\nB->>B: stop using token and descendants\nB->>Root: chain status check as backstop",
@@ -1000,31 +926,6 @@
       "use_cases_ja": [
         "WG がどちらかを採用する前に、JWT アクセストークンの委譲チェーン形式として競合する二案のどちらを選ぶかを検討する AI エージェント基盤。",
         "発起者の署名付き記録を検証する必要がある一方で、銀行がトークンから中間の審査アクターを伏せたい決済ゲートウェイ。"
-      ]
-    },
-    "mail:kAGQP9CSb_3d3Cg7eWq2GYBkrvU": {
-      "diagram": "sequenceDiagram\nparticipant A as Agent\nparticipant RS as Bank resource\nparticipant AS as Authorization server\nA->>RS: payment request\nRS-->>A: approval needed with mandate_reason\nA->>AS: obtain approval\nRS->>RS: write signed hash-chained receipt",
-      "first_seen": "2026-11-17",
-      "headline": "A new individual draft defines RAR types for agent payment mandates, machine-readable approval reasons and hash-chained receipts.",
-      "headline_ja": "エージェントの支払いマンデート、承認理由、ハッシュ連鎖の受領記録を RAR で定義する個人ドラフトが投稿された",
-      "id": "mail:kAGQP9CSb_3d3Cg7eWq2GYBkrvU",
-      "kind": "mail",
-      "related": [],
-      "significance": "new-proposal",
-      "summary": "Richard Craig posted draft-craig-oauth-rar-payment-mandates-00. It defines two RFC 9396 authorization details types, payment_mandate (payees, per-payment and per-period limits, approval mode) and single_payment, plus an ordered set of reasons a payment falls outside a mandate (such as new_recipient or over_period_limit). A resource conveys the reason through a mandate_reason claim in draft-rosomakho-oauth-txn-challenge or an approval_required error. Each decision gets a signed, hash-chained receipt, with personal data kept as salted commitments outside the chain so it can be erased. The author asks for review of the reason set and whether it belongs in an IANA registry, composition with the transaction challenge, and the receipt format. A proof of concept is referenced.",
-      "summary_ja": "Richard Craig が draft-craig-oauth-rar-payment-mandates-00 を投稿した。RFC 9396 の authorization details タイプとして payment_mandate（支払先、支払ごとおよび期間ごとの上限、承認モード）と single_payment を定義し、さらに支払いがマンデートの範囲外となる理由の順序付き集合（new_recipient、over_period_limit など）を定める。リソースは、この理由を draft-rosomakho-oauth-txn-challenge の mandate_reason クレーム、または approval_required エラーで伝える。各判断には署名付きのハッシュ連鎖の受領記録が作られ、個人データは連鎖の外に salt 付きコミットメントとして置かれるため消去できる。著者は、理由の集合とそれを IANA レジストリに置くべきか、トランザクションチャレンジとの組み合わせ方、受領記録の形式についてレビューを求めている。概念実証も参照されている。",
-      "title": "New draft: RAR profile for agent payment mandates, approval reasons and receipts (draft-craig-oauth-rar-payment-mandates-00)",
-      "updated_at": "2026-11-17T20:59:40+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/kAGQP9CSb_3d3Cg7eWq2GYBkrvU/",
-      "use_cases": [
-        "A bank letting an AI agent pay named payees within per-payment and per-period limits.",
-        "A resource server that must tell a client why a payment needs human approval.",
-        "A deployer who needs an auditable decision record that can still honour data-erasure requests."
-      ],
-      "use_cases_ja": [
-        "AI エージェントに、支払ごと・期間ごとの上限内で指定した支払先への支払いを許可する銀行。",
-        "支払いに人間の承認が必要な理由をクライアントへ伝える必要があるリソースサーバー。",
-        "データ消去の要請に応じつつ、監査可能な判断記録を残したい運用者。"
       ]
     },
     "mail:kZ2o-_Nzvrq7do-K973oaTWPqK0": {
@@ -1158,29 +1059,6 @@
         "アクターを連鎖させつつ、中間アクターを下流のゲートウェイに見せたくない認可サーバー。"
       ]
     },
-    "mail:mtGdBEyIMgDdrP7RnK89AVpcuRM": {
-      "diagram": "",
-      "first_seen": "2026-11-17",
-      "headline": "A reviewer asks whether the first hop of a PACE delegation chain could be signed with the user's own key, so a later verifier can tell the user set the limit.",
-      "headline_ja": "PACE Authorization の委任チェーンの最初のホップをユーザー自身の鍵で署名し、後続の検証者が上限をユーザーが設定したと判別できるか、という質問。",
-      "id": "mail:mtGdBEyIMgDdrP7RnK89AVpcuRM",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Blake replies to the authors of the PACE Authorization draft (addressed to Suhas and Cullen) with a scenario: a user tells an agent to book a flight with an aisle seat for at most $800, and the agent later rebooks with a second airline. Section 3.3 lets the second airline check that no hop raised the $800 limit. But section 6 says the agent's approval shows only that the agent agreed. Blake asks whether the first hop could be signed with the user's own key from section 6.3, so the second airline can tell the user set the limit. This is a question, with no answer or text change. The draft text itself is not in the material.",
-      "summary_ja": "Blake が PACE Authorization ドラフトの著者（Suhas 宛てと Cullen 宛て）に質問している。想定は、ユーザーが通路側の座席で 800 ドル以内の航空券をエージェントに予約させ、エージェントが後で別の航空会社に予約し直すという場面である。3.3 節により、2 社目の航空会社は、どのホップも 800 ドルの上限を引き上げていないことを確認できる。しかし 6 節は、エージェントの承認はエージェントが同意したことしか示さないと述べている。そこで Blake は、最初のホップを 6.3 節のユーザー自身の鍵で署名すれば、2 社目の航空会社が上限をユーザー自身が設定したと判別できるのではないか、と尋ねている。これは質問であり、回答もテキストの変更もない。ドラフトの本文自体はこの資料に含まれていない。",
-      "title": "New draft: PACE Authorization: delegation and action approval for agent dialogs:",
-      "updated_at": "2026-11-17T07:59:41+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/mtGdBEyIMgDdrP7RnK89AVpcuRM/",
-      "use_cases": [
-        "An agent re-delegating a user's constrained task, such as a booking with a price cap, to a second service that must tell who set the constraint.",
-        "A verifier of a delegation chain that must tell user-originated limits from limits the agent set."
-      ],
-      "use_cases_ja": [
-        "価格上限付きの予約のように、ユーザーが制約を付けたタスクを、エージェントが別のサービスに再委任する場面で、その制約を誰が設定したかをサービス側が判別したい場合。",
-        "委任チェーンの検証者が、ユーザー由来の制約とエージェントが設定した制約を区別したい場合。"
-      ]
-    },
     "mail:oPkIewx8BZUug4DnwFAiC8TTwP0": {
       "diagram": "",
       "first_seen": "2026-11-20",
@@ -1202,38 +1080,6 @@
       "use_cases_ja": [
         "エージェントの操作に対する人間の承認フローを構築し、承認されたパラメータと実行内容が一致することを証明する必要があるチーム。",
         "署名付きの意図の証拠を、ストア障害時も含めてリプレイ耐性のある一度限りの形で受理する必要があるリソースサーバーの運用者。"
-      ]
-    },
-    "mail:rRj4i-InS933_FYxNW0hySitSyY": {
-      "diagram": "sequenceDiagram\nparticipant C as Client\nparticipant AS as Authorization server\nC->>AS: refresh with RT1 and refresh_key K\nAS-->>C: RT2 (response lost)\nC->>AS: retry with RT1 and same K\nAS-->>C: same RT2, not treated as theft",
-      "first_seen": "2026-11-17",
-      "headline": "Review of the mailmaint native-client OAuth profile questions its new username response parameter and refresh_key mechanism.",
-      "headline_ja": "mailmaint のネイティブクライアント向け OAuth プロファイルについて、username レスポンスパラメーターと refresh_key への疑問が示された",
-      "id": "mail:rRj4i-InS933_FYxNW0hySitSyY",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "openid/native-sso",
-          "note": "Both concern native client OAuth behaviour, though the material does not link them directly.",
-          "note_ja": "どちらもネイティブクライアントの OAuth の挙動に関わるが、資料上の直接の関連は示されていない。",
-          "track": "openid"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "Neil Jenkins asked for OAuth WG review of draft-ietf-mailmaint-oauth-public-07, a profile for email and calendar clients to authenticate to arbitrary servers without preregistration. It adds three elements: a username token-response property, a refresh_key token-request parameter that lets a client retry a lost refresh without being treated as token theft (changing RFC 9700 section 4.14.2), and an Interoperable OAuth Scopes Registry. A reviewer asks why not use the OIDC email scope or an ID token, and what happens if the username changes. They also call refresh_key complicated and a security regression, since the AS must store literal refresh tokens for an unbounded time, and suggest requiring or recommending DPoP instead of rotation. Feedback is directed to the mailmaint list.",
-      "summary_ja": "Neil Jenkins が、事前登録なしに任意のサーバーへ認証するメール・カレンダークライアント向けプロファイル draft-ietf-mailmaint-oauth-public-07 について、OAuth WG のレビューを依頼した。このドラフトは三つの要素を追加する。トークンレスポンスの username プロパティ、失われた更新応答をクライアントが盗難扱いされずに再試行できる refresh_key トークンリクエストパラメーター（RFC 9700 の 4.14.2 節を変更する）、そして Interoperable OAuth Scopes Registry である。レビュー担当者は、OIDC の email スコープや ID トークンを使わない理由と、username が変わった場合の挙動を問うた。また refresh_key は複雑であり、認可サーバーがリフレッシュトークンの文字列を無期限に保存する必要があるためセキュリティ上の後退だとして、ローテーションの代わりに DPoP の必須化または強い推奨を提案した。フィードバックは mailmaint のメーリングリストに送るよう案内されている。",
-      "title": "mailmaint's OAuth Profile for Native Clients of Open Protocols (2 new messages)",
-      "updated_at": "2026-11-17T20:59:40+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/oauth/rRj4i-InS933_FYxNW0hySitSyY/",
-      "use_cases": [
-        "A mail or calendar client that must work with servers it has never been registered with.",
-        "An authorization server operator weighing refresh token reuse detection against recovery from lost responses.",
-        "A server vendor who would register scopes in a shared interoperable scopes registry."
-      ],
-      "use_cases_ja": [
-        "事前登録のないサーバーとも動作する必要があるメール・カレンダークライアント。",
-        "リフレッシュトークンの再利用検知と、応答を失った場合の復旧のどちらを重視するかを検討する認可サーバーの運用者。",
-        "共有の相互運用スコープレジストリにスコープを登録するサーバーベンダー。"
       ]
     },
     "mail:sKLsD8nT9CNcvIldC_0An2bKQ2U": {
@@ -1479,23 +1325,6 @@
       "use_cases": [],
       "use_cases_ja": []
     },
-    "pr:oauth-wg/oauth-v2-1#284": {
-      "diagram": "",
-      "first_seen": "2026-11-17",
-      "headline": "A pull request fixes the Basic scheme reference in OAuth 2.1 to point at RFC 7617 instead of RFC 9110 Section 11.",
-      "headline_ja": "OAuth 2.1 の Basic スキームの参照を、RFC 9110 の 11 節から RFC 7617 に直す pull request である",
-      "id": "pr:oauth-wg/oauth-v2-1#284",
-      "kind": "pull-request",
-      "related": [],
-      "significance": "editorial",
-      "summary": "Section 2.4.1 says the Basic scheme is defined in Section 11 of HTTP, but that section is the general authentication framework. The PR changes the reference to Section 2 of RFC 7617, which the document already cites in the Bearer section. It is a citation fix with no protocol change.",
-      "summary_ja": "2.4.1 節は Basic スキームが HTTP の 11 節で定義されるとしているが、同節は一般的な認証フレームワークである。この PR は参照を RFC 7617 の 2 節に変更する。RFC 7617 は Bearer の節で既に引用されている。参照の修正であり、プロトコルの変更はない。",
-      "title": "oauth-wg/oauth-v2-1#284: Cite RFC 7617 for the Basic authentication scheme",
-      "updated_at": "2026-11-17T20:59:40+00:00",
-      "url": "https://github.com/oauth-wg/oauth-v2-1/pull/284",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
     "pr:oauth-wg/oauth-v2-1#286": {
       "diagram": "",
       "first_seen": "2026-11-18",
@@ -1516,12 +1345,6 @@
   },
   "overflow": [],
   "triage": {
-    "draft-ietf-oauth-client-id-metadata-document": {
-      "date": "2026-11-24",
-      "priority": "high",
-      "reason": "A CIMD author spelled out scope limits and new draft-03 text on client authentication in a live thread.",
-      "reason_ja": "CIMD 著者が、範囲の限定とクライアント認証に関する draft-03 の新しい記述をスレッドで説明した。"
-    },
     "draft-ietf-oauth-identity-assertion-authz-grant": {
       "date": "2026-11-22",
       "priority": "high",
@@ -1529,10 +1352,10 @@
       "reason_ja": "1 週間で 5 件の issue（#142、#145、#159、#160、#162）が作成またはコメントされ、マルチホップ委譲チェーンも含まれる。"
     },
     "draft-ietf-oauth-rfc8725bis": {
-      "date": "2026-11-24",
+      "date": "2026-11-25",
       "priority": "low",
-      "reason": "The BCP update is in the RFC Editor queue, so new additions are closed.",
-      "reason_ja": "BCP の更新は RFC Editor キューにあり、新たな追加は受け付けられない。"
+      "reason": "The BCP update is in the RFC Editor queue and the WG has declined a requested addition, so little remains to cover as a work in progress.",
+      "reason_ja": "BCP の更新は RFC Editor キューにあり、求められた追加は見送られたため、進行中の作業として扱う内容は少ない。"
     },
     "draft-ietf-oauth-status-list": {
       "date": "2026-11-20",
