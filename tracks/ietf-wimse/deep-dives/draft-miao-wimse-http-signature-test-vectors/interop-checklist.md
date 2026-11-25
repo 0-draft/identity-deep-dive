@@ -1,1 +1,22 @@
-fix
+# Interop Checklist
+
+- [ ] The test keys derive from their seeds and match the published JWKs, and the three WITs verify under the issuer key (Section 3).
+- [ ] RFC 8792 folds are removed before any value is used: drop the backslash, the line break and the leading whitespace of the next line (Section 2).
+- [ ] The `workload-identity-token` line of each signature base carries the full WIT text, not the printed placeholder; P-01 reproduces only then (Section 2, hands-on log).
+- [ ] P-01 to P-06 reproduce their signature bases and literal Signature values byte for byte, and the verifier accepts them at T0+60 (Section 4).
+- [ ] `@query` keeps the leading `?`, and is `?` alone when there is no query (P-01, P-05; RFC 9421 Section 2.2.7).
+- [ ] CONNECT `@authority` is `svcb.example.com`, with the default port dropped (P-04; RFC 9421 Section 2.2.3; base -09 Section 3). An implementation that keeps `:443`, as the -08 wording suggests, fails P-04.
+- [ ] ES256 signatures are raw r||s and are produced with RFC 6979 nonces, so a re-signed value matches byte for byte (P-03, Section 2).
+- [ ] The verifier selects the WIMSE signature by its tag, ignores the decoy, and rejects a message with two WIMSE tags (P-06, N-08, N-22).
+- [ ] The verifier rejects missing required components and parameters even when the signature is valid (N-01, N-05, N-11), and records whether it enforces the sender-only rules for `keyid`, `alg` and CONNECT coverage (N-02, N-06, N-07, N-21).
+- [ ] A body without Content-Digest is rejected (N-03), and a body that does not match Content-Digest is rejected on the digest check. In N-04 the signature itself still verifies, whatever Section 5.4 says.
+- [ ] The validity window is inclusive: P-01 is accepted at T0+300 and rejected at T0+301 with WIT-A still valid (N-09b). N-09 at T0+3600 also hits WIT-A's `exp`.
+- [ ] `wimse-aud` is matched by Simple String Comparison against the configured set, so a trailing slash is rejected (N-10).
+- [ ] The client rejects a signed response without `wimse-req-nonce` or with a different one (N-12, N-13), and an unsigned response to a request that set `wimse-sign-response` (N-14).
+- [ ] The key and algorithm come only from `cnf.jwk`; N-15 is rejected even though it verifies under svcC's key (Section 5.16).
+- [ ] An invalid WIT and an invalid signature give the same 400 response with the same problem type, and never 401 (N-17). Agree in the test setup whether a bare 400 without a problem details body passes, since base Section 3.6 makes the body a SHOULD.
+- [ ] A server that must sign but cannot returns 501 `wimse-signed-response-unsupported` or 400 `wimse-signed-response-unavailable`, never an unsigned 200 (N-18).
+- [ ] A client's Accept-Signature lists at least the base Section 3 response components (N-19).
+- [ ] An expired WIT with a valid signature is rejected with no side effect, which shows that the WIT is checked first (N-20). The WIT validation procedure is in Section 5.1.3 of the workload credentials draft (-09 wording); -08's "Section 5.1.4" does not exist there.
+- [ ] Sender nonces carry at least 64 bits of entropy; the harness states how many requests it samples, since Section 5.17 leaves N open (N-16).
+- [ ] Results are recorded against a named base revision. The set cites -08; re-check quoted requirements when the base changes.
