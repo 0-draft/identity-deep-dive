@@ -69,6 +69,11 @@
       "at": "2026-11-25T08:40:50+00:00",
       "text": "Two mailing-list messages, no change to a WG draft. The more substantive one is Sankalp Gilda's test vectors on trust-anchor provenance for the delegation-chain draft's Section 6.4. The other is the -02 of the post-quantum agent identity draft.",
       "text_ja": "メーリングリストの2件のみで、WGドラフトの変更はない。中心は、delegation-chain ドラフト Section 6.4 のトラストアンカー由来に関する Sankalp Gilda 氏のテストベクターである。もう1件はポスト量子エージェント識別ドラフトの -02 公開の告知である。"
+    },
+    {
+      "at": "2026-11-25T21:45:21+00:00",
+      "text": "No WG draft changed in this run; the week was mailing-list activity. The most notable item is a question on whether WIMSE should cover evidence that a delegator was entitled to delegate (Authority Assertion in draft-hulea-wimse-agent-mandate).",
+      "text_ja": "今回はWGドラフトの更新はなく、メーリングリストの議論のみである。最も注目すべきは、委任者が委任する権限を持っていたことの証拠(draft-hulea-wimse-agent-mandateのAuthority Assertion)をWIMSEで扱うべきかという問いである。"
     }
   ],
   "items": {
@@ -479,6 +484,23 @@
         "Section 11 のイベントを再構成する際に、ポリシーによる拒否と fail-closed による障害起因の拒否を監査ログの検証者が区別する場合。"
       ]
     },
+    "mail:GOtEcnOvKzbtEDMONGFUnEvYyQ4": {
+      "diagram": "",
+      "first_seen": "2026-11-25",
+      "headline": "A reviewer reports two problems in the test vectors of draft-miao-wimse-http-signature-test-vectors-00.",
+      "headline_ja": "レビュアーがdraft-miao-wimse-http-signature-test-vectors-00のテストベクタの問題を2点報告している。",
+      "id": "mail:GOtEcnOvKzbtEDMONGFUnEvYyQ4",
+      "kind": "mail",
+      "related": [],
+      "significance": "editorial",
+      "summary": "The reviewer verified the five keys and vector P-01 against -00. P-01's signature only matches when the workload-identity-token line in the signature base is the full WIT-A, but the draft prints a placeholder, which contradicts the statement that it is retained verbatim, and the token is in Section 3 rather than 2. For N-04, P-03 covers content-digest rather than the body, so with header and Signature unchanged the signature still verifies and only the digest comparison fails.",
+      "summary_ja": "レビュアーは5つの鍵とベクタP-01を-00に対して検証した。P-01の署名は、署名ベース内のworkload-identity-tokenの行が完全なWIT-Aである場合にのみ一致するが、ドラフトにはプレースホルダが印刷されており、「そのまま保持される」という記述と矛盾する。またトークンはSection 2ではなくSection 3にある。N-04については、P-03がボディではなくcontent-digestを対象としているため、ヘッダーとSignatureが変わらなければ署名の検証は成功し、ダイジェストの比較だけが失敗する。",
+      "title": "New draft: draft-miao-wimse-http-signature-test-vectors-00 — test vectors for the S2S HTTP signature scheme",
+      "updated_at": "2026-11-25T21:45:21+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/GOtEcnOvKzbtEDMONGFUnEvYyQ4/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "mail:GzYGxOfvaAnmNfJipbtGtNGirXw": {
       "diagram": "",
       "first_seen": "2026-11-24",
@@ -518,6 +540,29 @@
       "url": "https://mailarchive.ietf.org/arch/msg/wimse/HAxOOzAN-8rWDfzBtbvrJt4tTq4/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:HTjzLGpYvTrpvHAq8msB7YqKrvU": {
+      "diagram": "",
+      "first_seen": "2026-11-25",
+      "headline": "A thread drafts neutral AIMS Section 6 text on external agent status sources and argues a status answer must not stand in for authorization.",
+      "headline_ja": "AIMSのSection 6の中立的な文案をめぐり、外部のエージェント状態ソースと、状態の回答を認可の代わりにしてはならない点が議論されている。",
+      "id": "mail:HTjzLGpYvTrpvHAq8msB7YqKrvU",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The thread drafts a Section 6 for AIMS: an agent identifier can point to a status source run by someone other than the issuer, and each source states which events remove standing, when the clock starts and the maximum lag. Jiahui Miao suggests changing wording from whether the agent is allowed to act to whether its standing is still in effect, leaving authorization to the relying party as in AIMS Section 10.4. Miao also asks that a refusal on a stale answer record the event and maximum delay applied, not only status-stale. Ben Le describes draft-le-agent-passport-01, which records status-stale instead of revocation and gives a refusal bound of t0 + B + min(L, M, R + T). The thread is truncated in the source, so later messages are not covered.",
+      "summary_ja": "このスレッドでは、AIMSのSection 6の文案が検討されている。エージェント識別子は発行者以外が運用する状態ソースを指すことができ、各ソースはどの事象で資格が失われるか、時計の起点、および最大の遅延を明示する。Jiahui Miaoは「エージェントが動作を許可されているか」を「エージェントの資格が有効か」に改め、許可の判断はAIMSのSection 10.4と同様に依拠者に委ねるよう提案している。また、古い回答で拒否する場合は、status-staleだけでなく、適用した起点事象と最大遅延も記録するよう求めている。Ben Leはdraft-le-agent-passport-01を紹介し、失効ではなくstatus-staleを記録すること、拒否までの上限がt0 + B + min(L, M, R + T)であることを示している。ソースのメールは途中で切れており、以降のメッセージは対象外である。",
+      "title": "AIMS question: checking agent status from outside the trust domain",
+      "updated_at": "2026-11-25T21:45:21+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/HTjzLGpYvTrpvHAq8msB7YqKrvU/",
+      "use_cases": [
+        "A relying party outside the issuer's domain deciding whether to trust an agent's current standing.",
+        "Keeping refusal records that can be rechecked later in a dispute."
+      ],
+      "use_cases_ja": [
+        "発行者のドメイン外にある依拠者が、エージェントの現在の資格を信頼してよいか判断する場合。",
+        "後日の紛争で再検証できる拒否の記録を残す場合。"
+      ]
     },
     "mail:HZixEiDAKLcIwtmTd1GtIBDUpaA": {
       "diagram": "",
@@ -831,6 +876,23 @@
         "キャッシュ消去間隔と失効情報の古さのトレードオフを検討するトラストレジストリの実装者。"
       ]
     },
+    "mail:_ItM-_16fMjc8z5oTPkwS4lpgwM": {
+      "diagram": "",
+      "first_seen": "2026-11-25",
+      "headline": "A list post links articles on trust management; it has no technical content for WIMSE.",
+      "headline_ja": "メーリングリストへの投稿で、トラスト管理に関する記事へのリンクであり、WIMSEに関する技術的内容はない。",
+      "id": "mail:_ItM-_16fMjc8z5oTPkwS4lpgwM",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "The message shares two external articles and says identity management is moving toward trust management. It contains no proposal, draft reference or technical argument.",
+      "summary_ja": "このメッセージは外部の記事2件を共有し、アイデンティティ管理がトラスト管理に向かっていると述べている。提案、ドラフトへの言及、技術的な主張は含まれていない。",
+      "title": "This article from CVS and McDonald's should be required reading for everyone in the WIMSE WG",
+      "updated_at": "2026-11-25T21:45:21+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/_ItM-_16fMjc8z5oTPkwS4lpgwM/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "mail:bTn4phN88WAkmVkkUywGQieqwcM": {
       "diagram": "flowchart TD\n  G[Grant issuer, root] --> A{Who keeps the total}\n  A -->|Option 1| S[Split into non-overlapping allocations]\n  S --> R1[Relying party 1 enforces its share]\n  S --> R2[Relying party 2 enforces its share]\n  A -->|Option 2| B[Budget owner, usually root issuer]\n  B --> RS[Reserve before each booking]\n  RS --> R3[Relying party admits booking only against a reservation]",
       "first_seen": "2026-11-19",
@@ -976,6 +1038,36 @@
       "url": "https://mailarchive.ietf.org/arch/msg/wimse/hMKTKADxtaotoIMByw6e570Tjq4/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:iB-0pc72P_IaEPpeRgpmBYrHfhA": {
+      "diagram": "flowchart LR\n  A[Agent permissions] --> I[Intersection]\n  S[Sponsor permissions] --> I\n  C[Session scope] --> I\n  I --> D{Tool call allowed?}\n  D -->|yes| R[Execute and issue audit receipt]\n  D -->|no or cannot evaluate| X[Deny]",
+      "first_seen": "2026-11-25",
+      "headline": "A new individual draft proposes per-tool-call authorization for AI agents, using the intersection of agent, sponsor and session permissions.",
+      "headline_ja": "新しい個人ドラフトが、エージェント・スポンサー・セッションの権限の積集合によるツール呼び出しごとの認可を提案している。",
+      "id": "mail:iB-0pc72P_IaEPpeRgpmBYrHfhA",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-transaction-tokens",
+          "note": "Both carry per-call context for downstream authorization decisions, though the mail does not reference it.",
+          "note_ja": "どちらも下流の認可判断のための呼び出し単位の文脈を扱うが、メールでは言及されていない。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "new-proposal",
+      "summary": "Karmendra Pandey announced draft-pandey-agent-identity-00. Each agent is its own principal bound to a human sponsor through a delegation chain. Authorization is evaluated at every tool call, with effective permissions as the intersection of the agent's, the sponsor's and the session scope. Unevaluable actions are denied, irreversible action classes need sponsor approval, and each call yields a tamper-evident audit receipt. The draft defines no new protocol and requests no IANA actions. Review is requested on the intersection rule, fail-closed behaviour and reuse of the receipt.",
+      "summary_ja": "Karmendra Pandeyがdraft-pandey-agent-identity-00を公表した。各エージェントは独立したプリンシパルであり、委任チェーンを通じて人間のスポンサーに結び付けられる。認可はツール呼び出しごとに評価され、有効な権限はエージェント、スポンサー、セッションスコープの積集合となる。評価できない操作は拒否され、取り消せない操作の区分にはスポンサーの承認が必要で、評価された呼び出しごとに改ざん検知可能な監査レシートが生成される。新たなプロトコルは定義せず、IANAへの要求もない。積集合の規則、フェイルクローズ要件、レシートの再利用性についてレビューが求められている。",
+      "title": "New draft: draft-pandey-agent-identity-00 — Session-Scoped Authorization for AI Agents",
+      "updated_at": "2026-11-25T21:45:21+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/iB-0pc72P_IaEPpeRgpmBYrHfhA/",
+      "use_cases": [
+        "An MCP or tool gateway that must decide per call what an agent acting for a user may do.",
+        "Producing audit receipts for each agent action to support later dispute or review."
+      ],
+      "use_cases_ja": [
+        "ユーザーに代わって動作するエージェントに、呼び出しごとに何を許可するかを決める必要があるMCPやツールのゲートウェイ。",
+        "後日の紛争やレビューのために、エージェントの各操作の監査レシートを残す場合。"
+      ]
     },
     "mail:iGTW6JAv6Nt81CwR7734xbaR3p8": {
       "diagram": "flowchart TD\n  A[Root element] --> B{Type}\n  B -->|Key set, no certificate| C[Report thumbprint and algorithm family]\n  C --> D[Binding to party: not established]\n  B -->|Certification path| E[Validate path to held trust anchor]\n  E --> F[Report party and per-certificate algorithms]\n  E -->|Expired or invalid| G[Reject, do not read party off the path]",
@@ -1148,6 +1240,29 @@
         "MCP のツール呼び出しの認可で、ドラフトをまたいで par_hash と del_depth を相互運用可能に扱う必要がある実装者。"
       ]
     },
+    "mail:zeMYPRXMTA5bRnWssKMeJj7XJNA": {
+      "diagram": "flowchart LR\n  A[Authority source: register or signatory policy] -->|signs Authority Assertion| B[Assertion]\n  C[Delegator] -->|root mandate with digest of assertion| D[Chain]\n  B --> E[Validator]\n  D --> E\n  E -->|root within assertion?| F[Accept or reject]",
+      "first_seen": "2026-11-25",
+      "headline": "The author of draft-hulea-wimse-agent-mandate asks whether WIMSE should cover proof that a delegator was entitled to delegate.",
+      "headline_ja": "draft-hulea-wimse-agent-mandateの著者が、委任者に委任権限があったことの証明をWIMSEで扱うべきか問うている。",
+      "id": "mail:zeMYPRXMTA5bRnWssKMeJj7XJNA",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Claudiu Hulea notes that delegation chain drafts show no hop exceeds its parent, and draft-nandakumar-wimse-delegator-bound-chains adds that each hop was granted by the parent's holder. The root still rests on a trust anchor, which shows who signed it, not that the delegator could grant its contents. draft-hulea-wimse-agent-mandate-01 proposes an Authority Assertion: a statement signed by a source the relying party trusts (for example a company register or signatory policy) of what the delegator may grant. The root mandate references it by digest and the Validator checks the root stays within it. He asks whether this is a WIMSE gap, possibly for the AIMS gaps section, or belongs elsewhere, and requests review of Section 9.4 before -02.",
+      "summary_ja": "Claudiu Huleaは、委任チェーンのドラフトは各ホップが親を超えないことを示し、draft-nandakumar-wimse-delegator-bound-chainsは各ホップが親の保有者によって付与されたことを加えるが、ルートは依然としてトラストアンカーに依存しており、それは誰がルートに署名したかを示すだけで、委任者がその内容を付与できたことは示さないと指摘している。draft-hulea-wimse-agent-mandate-01は、Authority Assertionを提案している。これは、依拠者が信頼する発行元(例: 会社登記簿や署名権限ポリシー)が、委任者が付与できる範囲を署名付きで述べるものである。ルートのマンデートはこれをダイジェストで参照し、Validatorはルートがその範囲内に収まることを検証する。同氏は、これがWIMSEで埋めるべきギャップか(AIMSのギャップ節の可能性もある)、他の場で扱うべきかを問い、-02の前にSection 9.4のレビューを求めている。",
+      "title": "Evidence that the delegator could delegate: interest in WIMSE?",
+      "updated_at": "2026-11-25T21:45:21+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/zeMYPRXMTA5bRnWssKMeJj7XJNA/",
+      "use_cases": [
+        "A bank in another domain accepting a treasury agent's payment mandate without holding the company's onboarding file.",
+        "A relying party that wants to verify a root delegation stays within what the issuing officer could commit."
+      ],
+      "use_cases_ja": [
+        "別ドメインの銀行が、会社のオンボーディング資料を持たずに、財務エージェントの支払マンデートを受け入れる場合。",
+        "依拠者が、ルートの委任が発行した担当者の権限内に収まっているかを検証したい場合。"
+      ]
+    },
     "repo:ietf-wg-wimse/draft-ietf-wimse-arch:fb13f4832e1b": {
       "diagram": "",
       "first_seen": "2026-11-23",
@@ -1220,10 +1335,10 @@
   "overflow": [],
   "triage": {
     "Diff active WG draft: draft-ietf-wimse-aims-01": {
-      "date": "2026-11-24",
+      "date": "2026-11-25",
       "priority": "high",
-      "reason": "The active mailing-list thread is drafting a new Section 6 on external status sources for AIMS.",
-      "reason_ja": "メーリングリストで、AIMS に外部の状態情報源に関する新しい Section 6 を起草する議論が進行中である。"
+      "reason": "Active thread drafting AIMS Section 6 on external status sources and a gaps section request.",
+      "reason_ja": "AIMSのSection 6(外部の状態ソース)の文案作成とギャップ節の要望が進行中である。"
     },
     "Diff active WG draft: draft-ietf-wimse-arch-09": {
       "date": "2026-11-22",
@@ -1244,16 +1359,16 @@
       "reason_ja": "-09 は Last Call を経て、プロキシによる proof of possession と署名境界に関する変更を加えた。"
     },
     "Review related draft: draft-hulea-wimse-agent-mandate-01": {
-      "date": "2026-11-19",
-      "priority": "low",
-      "reason": "Only appears as a column in a side-by-side comparison; no change discussed.",
-      "reason_ja": "並列比較の一列として登場するのみで、変更の議論はない。"
+      "date": "2026-11-25",
+      "priority": "high",
+      "reason": "Author asked the list whether the Authority Assertion is a WIMSE gap and requested review of Section 9.4 before -02.",
+      "reason_ja": "著者がAuthority AssertionがWIMSEのギャップかを問い、-02の前にSection 9.4のレビューを求めている。"
     },
     "Review related draft: draft-miao-wimse-http-signature-test-vectors-00": {
-      "date": "2026-11-18",
+      "date": "2026-11-25",
       "priority": "high",
-      "reason": "New draft with 29 vectors and 3 observations on spec ambiguity in draft-ietf-wimse-http-signature.",
-      "reason_ja": "draft-ietf-wimse-http-signature について、29 件のベクターと仕様の曖昧さに関する 3 件の観察事項を含む新規ドラフトである。"
+      "reason": "A reviewer found the P-01 placeholder does not reproduce the signature and N-04 misdescribes what fails.",
+      "reason_ja": "レビュアーが、P-01のプレースホルダでは署名が再現できず、N-04で失敗する箇所の記述が不正確だと指摘している。"
     },
     "Review related draft: draft-seymour-wimse-connected-flight-07": {
       "date": "2026-11-23",
