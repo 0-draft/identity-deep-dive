@@ -1,16 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-17T07:59:42+00:00",
-      "text": "Quiet run: AppAuth-iOS added instance-method variants of OIDAuthorizationService APIs, and openid/fapi merged one PR on structure of implementation advice. Neither shows protocol or wire-format changes.",
-      "text_ja": "動きは小さい。AppAuth-iOS に OIDAuthorizationService のインスタンスメソッド版が追加され、openid/fapi では実装アドバイスの構成に関する PR が1件マージされた。プロトコルやワイヤフォーマットの変更は確認できない。"
-    },
-    {
-      "at": "2026-11-17T20:59:40+00:00",
-      "text": "The openid/claims-aggregation repo had 32 commits in a week, adding a dedicated Claim Set Endpoint, privacy controls, and RP request validation. Only commit titles are available, so details are unverified. sharedsignals has one commit titled \"Drop event signatures (#368)\".",
-      "text_ja": "openid/claims-aggregation で1週間に32コミットがあり、専用の Claim Set Endpoint、プライバシー制御、RP リクエスト検証が追加された。ただし入手できたのはコミットタイトルのみで、詳細は未確認である。sharedsignals には \"Drop event signatures (#368)\" という1コミットがあった。"
-    },
-    {
       "at": "2026-11-18T07:34:29+00:00",
       "text": "The only notable change is in openid/claims-aggregation, which had 10 commits (4 merged PRs) that clarify the Claims Endpoint, trust boundaries and IANA registration templates. AppAuth-iOS made `OIDAuthorizationService` a protocol.",
       "text_ja": "主な動きは openid/claims-aggregation で、10件のコミット(マージされたPR 4件)により Claims Endpoint、信頼境界、IANA登録テンプレートが明確化された。AppAuth-iOS では `OIDAuthorizationService` がプロトコルになった。"
@@ -34,26 +24,14 @@
       "at": "2026-11-23T23:58:03+00:00",
       "text": "Quiet openid day with no substantive spec change: three repositories moved, and the dchp batch (nine commits on reader authentication and verifier terminology) is the largest, though the material gives only commit titles.",
       "text_ja": "openid トラックは仕様上の大きな変更のない静かな一日だった。3 つのリポジトリに動きがあり、最大は dchp の 9 コミット（リーダー認証とverifier 用語の統一）だが、材料はコミットタイトルのみである。"
+    },
+    {
+      "at": "2026-11-25T08:40:51+00:00",
+      "text": "A quiet day in the openid track: two single-commit repository updates, and the material is too thin to show any protocol change.",
+      "text_ja": "openid トラックは動きが少なく、リポジトリへの1コミットずつ2件のみである。資料が乏しく、プロトコルの変更は確認できない。"
     }
   ],
   "items": {
-    "repo:openid/AppAuth-iOS:2026-11-16T23:20:41Z": {
-      "diagram": "",
-      "first_seen": "2026-11-17",
-      "headline": "AppAuth-iOS adds instance-method versions of OIDAuthorizationService and its iOS/macOS convenience methods.",
-      "headline_ja": "AppAuth-iOS が OIDAuthorizationService とその iOS/macOS 向け簡易メソッドのインスタンスメソッド版を追加した。",
-      "id": "repo:openid/AppAuth-iOS:2026-11-16T23:20:41Z",
-      "kind": "repo-activity",
-      "related": [],
-      "significance": "routine",
-      "summary": "Two commits landed on the default branch: one adds instance methods to `OIDAuthorizationService` (#990), and one adds instance versions of the iOS- and macOS-specific convenience methods (#991). Only commit titles are available, so the exact API shape, and whether the existing class methods are kept or deprecated, is not known from this material.",
-      "summary_ja": "デフォルトブランチに2件のコミットが入った。1件は OIDAuthorizationService にインスタンスメソッドを追加するもの（#990）、もう1件は iOS・macOS 固有の簡易メソッドのインスタンス版を追加するもの（#991）である。入手できたのはコミットタイトルのみであり、API の詳細や既存のクラスメソッドが維持されるか非推奨になるかは、この資料からは分からない。",
-      "title": "openid/AppAuth-iOS: 2 new commits on the default branch",
-      "updated_at": "2026-11-17T07:59:42+00:00",
-      "url": "https://github.com/openid/AppAuth-iOS",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
     "repo:openid/AppAuth-iOS:2026-11-17T22:09:52Z": {
       "diagram": "",
       "first_seen": "2026-11-18",
@@ -84,6 +62,23 @@
       "summary_ja": "1 件のコミット（#992）で、フェイクセッションを含む新プロダクト `AppAuthTestHelpers` が追加された。入手できたのはコミットタイトルのみで、API の詳細は不明である。プロトコルの変更ではなく、ライブラリ利用アプリ向けのテスト支援と見られる。",
       "title": "openid/AppAuth-iOS: 1 new commit on the default branch",
       "updated_at": "2026-11-23T23:58:03+00:00",
+      "url": "https://github.com/openid/AppAuth-iOS",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "repo:openid/AppAuth-iOS:2026-11-25T07:00:45Z": {
+      "diagram": "",
+      "first_seen": "2026-11-25",
+      "headline": "AppAuth-iOS added a fake authorization service to its test helpers.",
+      "headline_ja": "AppAuth-iOS のテストヘルパーに偽の認可サービス OIDFakeAuthorizationService が追加された。",
+      "id": "repo:openid/AppAuth-iOS:2026-11-25T07:00:45Z",
+      "kind": "repo-activity",
+      "related": [],
+      "significance": "routine",
+      "summary": "One commit (#993) adds `OIDFakeAuthorizationService` to `AppAuthTestHelpers`. Only the commit title is available, so details of its behaviour are not known. By its name it is a test helper and not a change to the library's protocol behaviour.",
+      "summary_ja": "1件のコミット (#993) で `AppAuthTestHelpers` に `OIDFakeAuthorizationService` が追加された。入手できたのはコミットタイトルのみで、動作の詳細は不明である。名前からはテスト用ヘルパーであり、ライブラリのプロトコル動作の変更ではないと考えられる。",
+      "title": "openid/AppAuth-iOS: 1 new commit on the default branch",
+      "updated_at": "2026-11-25T08:40:51+00:00",
       "url": "https://github.com/openid/AppAuth-iOS",
       "use_cases": [],
       "use_cases_ja": []
@@ -121,31 +116,6 @@
       "url": "https://github.com/openid/authzen",
       "use_cases": [],
       "use_cases_ja": []
-    },
-    "repo:openid/claims-aggregation:2026-11-17T16:27:16Z": {
-      "diagram": "",
-      "first_seen": "2026-11-17",
-      "headline": "claims-aggregation merged several PRs covering a Claim Set Endpoint, CP token security, subject privacy controls and RP request validation.",
-      "headline_ja": "claims-aggregation で Claim Set Endpoint、CP のトークン保護、Subject のプライバシー制御、RP リクエスト検証に関する複数の PR がマージされた。",
-      "id": "repo:openid/claims-aggregation:2026-11-17T16:27:16Z",
-      "kind": "repo-activity",
-      "related": [],
-      "significance": "substantive",
-      "summary": "Only commit titles are available (15 of 32 are shown). PR #50 defines a dedicated CP Claim Set Endpoint and a subless JWT profile, restores Claims Endpoint names, and requires RS256 interoperability. PR #49 defines privacy limits and Subject controls for stored Claim Sets, including deletion intent protection, disclosure history, export controls, and legal retention. PR #48 defines CP authentication, token protection and Claim Set storage. PR #47 defines RP request validation and per-RP consent, with tighter PKCE enforcement and source-aware consent. PR #46 concerns claim set freshness. The actual spec text is not in the material, so exact behaviour is not verified.",
-      "summary_ja": "入手できたのはコミットタイトルのみである（32件中15件）。PR #50 は専用の CP Claim Set Endpoint と subless JWT プロファイルを定義し、Claims Endpoint の名称を戻し、RS256 の相互運用性を必須とする。PR #49 は保存された Claim Set に対するプライバシー上の制限と Subject の制御（削除意図の保護、開示履歴、エクスポート制御、法的保持の考慮）を定義する。PR #48 は CP の認証、トークン保護、Claim Set の保管を定義する。PR #47 は RP リクエスト検証と RP ごとの同意を定義し、PKCE の強制と取得元を考慮した同意を厳格化する。PR #46 は claim set の鮮度に関するものである。仕様本文は資料に含まれないため、具体的な挙動は未確認である。",
-      "title": "openid/claims-aggregation: 32 new commits on the default branch",
-      "updated_at": "2026-11-17T20:59:40+00:00",
-      "url": "https://github.com/openid/claims-aggregation",
-      "use_cases": [
-        "A claims provider implementer deciding how to expose stored Claim Sets and authenticate callers.",
-        "An RP integrating with a claims aggregation service that needs to know PKCE and consent requirements.",
-        "A privacy reviewer assessing deletion, disclosure history and retention handling for Subjects."
-      ],
-      "use_cases_ja": [
-        "保存された Claim Set の公開方法と呼び出し元の認証方法を決める claims provider の実装者。",
-        "claims aggregation サービスと連携し、PKCE と同意の要件を把握する必要がある RP。",
-        "Subject の削除、開示履歴、保持の扱いを評価するプライバシーのレビュー担当者。"
-      ]
     },
     "repo:openid/claims-aggregation:2026-11-18T06:51:04Z": {
       "diagram": "",
@@ -204,6 +174,23 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "repo:openid/connect:2026-11-25T01:58:18Z": {
+      "diagram": "",
+      "first_seen": "2026-11-25",
+      "headline": "openid/connect merged PR #2155 (branch mbj-hash-algorithms-notices); the material does not show its content.",
+      "headline_ja": "openid/connect で PR #2155 (ブランチ mbj-hash-algorithms-notices) がマージされたが、内容は資料から読み取れない。",
+      "id": "repo:openid/connect:2026-11-25T01:58:18Z",
+      "kind": "repo-activity",
+      "related": [],
+      "significance": "routine",
+      "summary": "A merge commit for pull request #2155 from the branch `mbj-hash-algorithms-notices` landed on the default branch. The material has only the merge title, with no diff or PR body, so what it changes is not known. The branch name suggests notices about hash algorithms, but that is a guess from the name alone.",
+      "summary_ja": "ブランチ `mbj-hash-algorithms-notices` からのプルリクエスト #2155 のマージコミットがデフォルトブランチに入った。資料にはマージのタイトルしかなく、差分も PR 本文もないため、変更内容は不明である。ブランチ名からはハッシュアルゴリズムに関する注記と推測されるが、名前に基づく推測にすぎない。",
+      "title": "openid/connect: 1 new commit on the default branch",
+      "updated_at": "2026-11-25T08:40:51+00:00",
+      "url": "https://github.com/openid/connect",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
     "repo:openid/dchp:2026-11-23T12:16:22Z": {
       "diagram": "",
       "first_seen": "2026-11-23",
@@ -221,23 +208,6 @@
       "use_cases": [],
       "use_cases_ja": []
     },
-    "repo:openid/fapi:2026-11-17T07:18:28Z": {
-      "diagram": "",
-      "first_seen": "2026-11-17",
-      "headline": "openid/fapi merged PR #873, which appears to restructure implementation advice (issue #871).",
-      "headline_ja": "openid/fapi が実装アドバイスの構成に関する PR #873（issue #871）をマージした。",
-      "id": "repo:openid/fapi:2026-11-17T07:18:28Z",
-      "kind": "repo-activity",
-      "related": [],
-      "significance": "routine",
-      "summary": "One merge commit for PR #873 from the branch davetonge/impl-advice/871-structure. The branch name suggests a restructuring of the implementation advice, but no diff or description is available, so the content is not confirmed.",
-      "summary_ja": "ブランチ davetonge/impl-advice/871-structure からの PR #873 のマージコミットが1件ある。ブランチ名からは実装アドバイスの構成変更と推測されるが、差分や説明がないため内容は確認できない。",
-      "title": "openid/fapi: 1 new commit on the default branch",
-      "updated_at": "2026-11-17T07:59:42+00:00",
-      "url": "https://github.com/openid/fapi",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
     "repo:openid/fapi:2026-11-18T14:43:22Z": {
       "diagram": "",
       "first_seen": "2026-11-18",
@@ -252,23 +222,6 @@
       "title": "openid/fapi: 7 new commits on the default branch",
       "updated_at": "2026-11-18T20:37:08+00:00",
       "url": "https://github.com/openid/fapi",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
-    "repo:openid/sharedsignals:2026-11-17T18:12:29Z": {
-      "diagram": "",
-      "first_seen": "2026-11-17",
-      "headline": "sharedsignals merged a commit titled \"Drop event signatures (#368)\"; no further detail is available.",
-      "headline_ja": "sharedsignals で \"Drop event signatures (#368)\" というコミットがマージされたが、詳細は不明である。",
-      "id": "repo:openid/sharedsignals:2026-11-17T18:12:29Z",
-      "kind": "repo-activity",
-      "related": [],
-      "significance": "routine",
-      "summary": "The material is a single commit title, \"Drop event signatures (#368)\". It suggests per-event signatures are being removed from the Shared Signals spec, but the diff and rationale are not included, so the scope is unverified.",
-      "summary_ja": "資料は \"Drop event signatures (#368)\" という1件のコミットタイトルのみである。Shared Signals 仕様からイベント単位の署名が削除されることを示唆するが、差分と理由は含まれず、範囲は未確認である。",
-      "title": "openid/sharedsignals: 1 new commit on the default branch",
-      "updated_at": "2026-11-17T20:59:40+00:00",
-      "url": "https://github.com/openid/sharedsignals",
       "use_cases": [],
       "use_cases_ja": []
     }
