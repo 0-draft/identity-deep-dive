@@ -2,15 +2,15 @@
 
 ## 環境
 
-- ランタイム: Python 3.15.2
-- ツール: `cryptography` 50.0.2（Ed25519、ECDSA P-256）
+- ランタイム: Python 3.15.2（`vectors/lab1.log` の 1 行目に出力）
+- ツール: `cryptography` 50.0.2（同じ行。Ed25519、ECDSA P-256）
 - バージョン: draft-miao-wimse-http-signature-test-vectors-00（IETF アーカイブのテキスト、UTC で 2026 年 11 月 25 日に取得）
 
 ## 手順
 
 1. -00 の Section 3 と 4.1 から、5 つのテスト鍵、WIT-A、P-01 のメッセージを、RFC 8792 の折り返しを外して `vectors/lab1.py` に写す。
 2. `python3 -I vectors/lab1.py > vectors/lab1.log` を実行する。
-3. `vectors/lab1.log` を読む。鍵ごとに 1 行、WIT-A の確認、P-01 を署名し直した結果 2 行が出る。
+3. `vectors/lab1.log` を読む。バージョンの行、鍵ごとに 1 行、WIT-A の確認、P-01 を署名し直した結果 2 行が出る。
 
 ## 結果
 

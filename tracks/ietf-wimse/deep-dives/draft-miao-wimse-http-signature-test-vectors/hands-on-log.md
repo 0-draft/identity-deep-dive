@@ -2,15 +2,15 @@
 
 ## Environment
 
-- Runtime: Python 3.15.2
-- Tooling: `cryptography` 50.0.2 (Ed25519, ECDSA P-256)
+- Runtime: Python 3.15.2 (printed on the first line of `vectors/lab1.log`)
+- Tooling: `cryptography` 50.0.2 (same line) (Ed25519, ECDSA P-256)
 - Versions: draft-miao-wimse-http-signature-test-vectors-00 (IETF archive text, fetched 25 November 2026 UTC)
 
 ## Steps
 
 1. Copy the five test keys, WIT-A and the P-01 message from Sections 3 and 4.1 of the -00 text into `vectors/lab1.py`, with the RFC 8792 folds removed.
 2. Run `python3 -I vectors/lab1.py > vectors/lab1.log`.
-3. Read `vectors/lab1.log`: one line per key, the WIT-A check, and the two P-01 re-signing results.
+3. Read `vectors/lab1.log`: the version line, one line per key, the WIT-A check, and the two P-01 re-signing results.
 
 ## Results
 

@@ -6,7 +6,8 @@ checks the WIT-A issuer signature, and re-signs the P-01 signature base
 text. Run: python3 -I vectors/lab1.py > vectors/lab1.log
 """
 
-import base64, hashlib
+import base64, hashlib, sys
+import cryptography
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import serialization
@@ -15,6 +16,8 @@ from cryptography.hazmat.primitives import serialization
 def b64u(b):
     return base64.urlsafe_b64encode(b).rstrip(b"=").decode()
 
+
+print("python", sys.version.split()[0], "cryptography", cryptography.__version__)
 
 ed = {
     "issuer": ("QH_Zu0pnwyO8xdFQm9upOUFAbpb4nhMrGc29L3uJXDA", "4nRAPQQyr8cUgAtCESLc4ZIGIxZT9-guqxcc3wV-2NI"),
