@@ -10,7 +10,7 @@ Review happened on the issue and the list. On 7 November 2026 Yaron Sheffer, co-
 
 ## Why This Matters
 
-The base draft is in AD Evaluation at the IESG (Datatracker, checked 26 November 2026), so its text is close to final. Its own examples cover two positive exchanges (base Sections 3.7.1, 3.7.2). This set adds 23 negatives, each tied to one MUST, plus published keys, so that implementations can compare decisions instead of only compare signatures. Writing the vectors already moved the base: two of its points are in -09. It also shows where the base states a rule only for senders (`keyid`, `alg`, coverage, CONNECT) and a verifier has to decide whether to enforce it. Some of the draft's own text needs checking before use: the placeholder in the signature bases is not what is signed, and the N-04 note says the signature fails when it does not.
+The base draft is in AD Evaluation at the IESG (Datatracker, checked 25 November 2026 UTC), so its text is close to final. Its own examples cover two positive exchanges (base Sections 3.7.1, 3.7.2). This set adds 23 negatives, each tied to one MUST, plus published keys, so that implementations can compare decisions instead of only compare signatures. Writing the vectors already moved the base: two of its points are in -09. It also shows where the base states a rule only for senders (`keyid`, `alg`, coverage, CONNECT) and a verifier has to decide whether to enforce it. Some of the draft's own text needs checking before use: the placeholder in the signature bases is not what is signed, and the N-04 note says the signature fails when it does not.
 
 ## Open Questions
 

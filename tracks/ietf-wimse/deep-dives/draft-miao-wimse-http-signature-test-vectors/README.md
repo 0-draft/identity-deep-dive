@@ -76,7 +76,7 @@ The diagram is this repository's summary of the request checks named in P-01, P-
 
 ## Experiments
 
-- [x] Lab 1: Regenerate the test keys from the stated seeds (`SHA-256("s01-validation-vectors:<name>")`, and the svcC scalar derivation), compare them with the published JWKs, then rebuild the P-01 signature base and compare the Signature value byte for byte. Done on 26 November 2026: all five keys match, and P-01 matches only with the full WIT-A text in the base (hands-on log).
+- [x] Lab 1: Regenerate the test keys from the stated seeds (`SHA-256("s01-validation-vectors:<name>")`, and the svcC scalar derivation), compare them with the published JWKs, then rebuild the P-01 signature base and compare the Signature value byte for byte. Done on 25 November 2026 UTC: all five keys match, and P-01 matches only with the full WIT-A text in the base (hands-on log).
 - [ ] Lab 2: Run an existing WIMSE HTTP signature verifier against P-01 to P-06 and N-01 to N-15, plus N-09b at T0+300 and T0+301, and record accept or reject and the HTTP status for each. Check that N-06, N-07 and N-10 are rejected even when the signature is valid. The accept or reject part was run with a script verifier in the draft-ietf-wimse-http-signature deep dive (11 and 15 November 2026) and every decision matched; HTTP status from a running server is still open.
 - [ ] Lab 3: Run the behavior probes: send an expired WIT with a valid signature and watch for side effects (N-20), send an invalid WIT and an invalid signature and diff the responses (N-17), and send a request with `wimse-sign-response` to a server that cannot sign (N-18).
 

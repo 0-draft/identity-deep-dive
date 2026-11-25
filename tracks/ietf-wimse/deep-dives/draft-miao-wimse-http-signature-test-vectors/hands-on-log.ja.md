@@ -4,7 +4,7 @@
 
 - ランタイム: Python 3.15.2
 - ツール: `cryptography` 50.0.2（Ed25519、ECDSA P-256）
-- バージョン: draft-miao-wimse-http-signature-test-vectors-00（IETF アーカイブのテキスト、2026 年 11 月 26 日に取得）
+- バージョン: draft-miao-wimse-http-signature-test-vectors-00（IETF アーカイブのテキスト、UTC で 2026 年 11 月 25 日に取得）
 
 ## 手順
 
@@ -14,7 +14,7 @@
 
 ## 結果
 
-- 2026 年 11 月 26 日: どの鍵も Section 3 のとおりシードから導出できた。issuer、svcA、svcB、other は、`d` が `SHA-256("s01-validation-vectors:<name>")` の base64url で、公開鍵の `x` も一致した。svcC は、スカラー `SHA-256("s01-validation-vectors:svcC") mod (n-1) + 1` から公開の `d`、`x`、`y` が得られた。
+- UTC で 2026 年 11 月 25 日: どの鍵も Section 3 のとおりシードから導出できた。issuer、svcA、svcB、other は、`d` が `SHA-256("s01-validation-vectors:<name>")` の base64url で、公開鍵の `x` も一致した。svcC は、スカラー `SHA-256("s01-validation-vectors:svcC") mod (n-1) + 1` から公開の `d`、`x`、`y` が得られた。
 - WIT-A は発行者の鍵で検証に通り、ペイロードは Section 3 のとおり `iat` が T0-60、`exp` が T0+3600、`cnf.jwk` が vec-a-key だった。
 - P-01 のベースを svcA の鍵で署名し直すと、公開の Signature 値とバイト単位で一致するのは、`workload-identity-token` の行に WIT-A の全文を入れたときだけだった。印刷どおりのプレースホルダー `[WIT-A，§2 全文]` では値が違った。
 

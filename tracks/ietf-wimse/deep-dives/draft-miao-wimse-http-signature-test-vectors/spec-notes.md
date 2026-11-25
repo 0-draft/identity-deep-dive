@@ -57,7 +57,7 @@ This is revision -00, so there is no earlier revision and no diff. What it conta
 
 - Observations (Section 6): O-1 replay cache is only a SHOULD; O-2 example nonces in base Section 3.7 are 32 bits; O-3 `@authority` coverage outside CONNECT is neither required nor forbidden.
 
-Checked against the base text (-08 and -09, 26 November 2026): every quoted requirement is in the section the vector names. N-05 condenses a bulleted list, and N-17 paraphrases "NOT RECOMMENDED" for 401. In -09 all quotes still hold except N-20's "Section 5.1.4 of [workload-creds]", which -09 changes to Section 5.1.3 (issue #422); workload-creds-03 has no Section 5.1.4.
+Checked against the base text (-08 and -09, 25 November 2026 UTC): every quoted requirement is in the section the vector names. N-05 condenses a bulleted list, and N-17 paraphrases "NOT RECOMMENDED" for 401. In -09 all quotes still hold except N-20's "Section 5.1.4 of [workload-creds]", which -09 changes to Section 5.1.3 (issue #422); workload-creds-03 has no Section 5.1.4.
 
 Text in -00 that does not match what the vectors do:
 
