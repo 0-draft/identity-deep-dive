@@ -14,7 +14,7 @@
 - [ ] `redirect_to_web` never carries a `request_uri` when the first request had no `code_challenge` (Section 5.2.2.1.1).
 - [ ] When `redirect_to_web` has no `request_uri`, the client starts a normal authorization code flow with PKCE (Section 5.2.2.1.1).
 - [ ] The token request carries no `redirect_uri` and the token response may carry `auth_session` (Section 6, 6.1).
-- [ ] A refresh token request can return 403 `insufficient_authorization`, and the client continues at the challenge endpoint (Section 6.2).
+- [ ] A refresh token request can return `insufficient_authorization` (403 in the Section 6.2 and Appendix B.4 examples, with no status code mandated), and the client continues at the challenge endpoint (Section 6.2).
 - [ ] After an [RFC9470] error from a resource server, the client sends `acr_values`, `max_age` and `scope` at the challenge endpoint (Section 7).
 - [ ] The authorization server metadata publishes `authorization_challenge_endpoint` (Section 4.1, 8).
 - [ ] Rate limiting is applied per `auth_session`, and an AS-defined profile exists for the extra parameters and error codes in use (Section 9.3, Appendix B).

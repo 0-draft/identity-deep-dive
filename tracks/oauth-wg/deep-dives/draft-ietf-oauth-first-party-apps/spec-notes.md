@@ -19,7 +19,7 @@ Informative references listed in the draft (Section 11.2):
 
 Revision 04 compared with 03:
 
-- `insufficient_authorization` and `redirect_to_web` MUST use HTTP 403 (Section 5.2.2.1). The Appendix B `otp_required` example moves from 401 to 403.
+- `insufficient_authorization` and `redirect_to_web` MUST use HTTP 403 (Section 5.2.2.1). The Appendix B.3 `otp_required` example moves from 401 to 403. The editor's WGLC reply (1 July 2026) says a 401 example lacked the `WWW-Authenticate` header that 401 requires.
 - A `redirect_to_web` example with `request_uri` is added, with a SHOULD to follow [RFC9700] and [RFC9207] (Section 5.2.2.1.1).
 - Clients SHOULD discard `auth_session` on logout (Section 5.3.1).
 - `response_type=code` is added to the request example (Section 5.1).
@@ -31,4 +31,4 @@ Revision 04 compared with 03:
 
 - Upstream: builds on [RFC6749] and its token endpoint, reuses PKCE [RFC7636], pushed authorization requests [RFC9126], DPoP [RFC9449], step-up signalling [RFC9470] and server metadata [RFC8414]. It states that it does not change [RFC9470] (Section 3.3, 7).
 - Downstream: authorization servers add the challenge endpoint and the `authorization_challenge_endpoint` metadata value (Section 8). Clients and SDKs implement `auth_session` handling. Deployments must define their own profile of requests and error codes (Section 1.2, Appendix B).
-- Compatibility: implementations that returned 400 or 401 for the two error codes differ from -04. The draft is intended for first-party native apps and NOT RECOMMENDED for browser-based apps (Section 9.8). The material does not say how the 403 at the token endpoint interacts with [RFC6749] clients (Section 6.2).
+- Compatibility: implementations that returned 400 or 401 for the two error codes differ from -04. The draft is intended for first-party native apps and NOT RECOMMENDED for browser-based apps (Section 9.8). At the token endpoint, Section 6.2 sets no status code: its example uses 403 where [RFC6749] Section 5.2 defaults to 400.

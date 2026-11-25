@@ -14,7 +14,7 @@
 - [ ] 最初のリクエストに `code_challenge` がなかった場合、`redirect_to_web` は `request_uri` を含まない (Section 5.2.2.1.1)。
 - [ ] `redirect_to_web` に `request_uri` がない場合、クライアントは PKCE を使った通常の認可コードフローを開始する (Section 5.2.2.1.1)。
 - [ ] トークンリクエストに `redirect_uri` は含まれず、トークンレスポンスには `auth_session` が含まれることがある (Section 6、6.1)。
-- [ ] リフレッシュトークンのリクエストは 403 の `insufficient_authorization` を返すことがあり、クライアントはチャレンジエンドポイントで続行する (Section 6.2)。
+- [ ] リフレッシュトークンのリクエストは `insufficient_authorization` を返すことがあり (Section 6.2 と Appendix B.4 の例では 403、ステータスコードの規定はない)、クライアントはチャレンジエンドポイントで続行する (Section 6.2)。
 - [ ] リソースサーバーからの [RFC9470] のエラーを受けて、クライアントは `acr_values`、`max_age`、`scope` をチャレンジエンドポイントへ送る (Section 7)。
 - [ ] 認可サーバーメタデータは `authorization_challenge_endpoint` を公開している (Section 4.1、8)。
 - [ ] レート制限は `auth_session` ごとに適用され、使用する追加パラメーターとエラーコードについて認可サーバー独自のプロファイルが存在する (Section 9.3、Appendix B)。

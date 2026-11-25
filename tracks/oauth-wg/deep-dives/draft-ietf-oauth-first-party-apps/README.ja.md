@@ -33,12 +33,12 @@ sequenceDiagram
 3. クライアントは保持している `auth_session` を必ず含めてリクエストを繰り返す。中間リクエストは別の形式でもよく、独自のエンドポイントへ送ってもよい (Section 5.3)。
 4. 条件を満たすと、サーバーは HTTP 200 で `authorization_code` を返す (Section 5.2.1)。
 5. クライアントはトークンエンドポイントでコードを引き換える。認可リクエストに `redirect_uri` がないため、送信しない (Section 6)。
-6. サーバーが直接の対話を望む場合、`redirect_to_web` を HTTP 403 で返し、Pushed Authorization Request の `request_uri` を付けてもよい。付いていない場合、クライアントは PKCE を使った通常の認可コードフローを開始する (Section 5.2.2.1.1)。
+6. サーバーが直接の対話を望む場合、`redirect_to_web` を HTTP 403 で返す。[RFC9126] の Section 2.2 で定義された `request_uri` を付けてもよいが、最初のリクエストに PKCE の `code_challenge` がなかった場合は付けてはならない (MUST NOT)。`request_uri` がなければ、クライアントは PKCE を使った通常の認可コードフローを開始する (Section 5.2.2.1.1)。
 7. 以降、トークンエンドポイントは有効なリフレッシュトークンに対しても `insufficient_authorization` を返せる (Section 6.2)。リソースサーバーは [RFC9470] のステップアップエラーを返すことができ、クライアントはチャレンジエンドポイントで応答する (Section 7)。
 
 ## ユースケース
 
-- 銀行などのサービスが、自社のモバイルアプリでアプリを離れずにパスキーでサインインさせる (Appendix A.1)。
+- 銀行が自社のモバイルアプリで、アプリを離れずにパスキーでサインインさせる。これは例示で、パスキーの流れは Appendix A.1 にあり、銀行の自社アプリは Section 9.1 がファーストパーティアプリケーションの例として挙げている。
 - ファーストパーティアプリがメールまたは SMS の確認コードを求め、`auth_session` でやり取りをつなぐ (Appendix A.4、A.5)。
 - 1 週間後にリフレッシュトークンが拒否されたアプリが、再ログインではなく OTP の入力を求める (Appendix A.6、B.4)。
 - リソースサーバーがより高い `acr` レベルを要求し、アプリがその場でステップアップを完了する (Appendix A.7)。
@@ -46,25 +46,25 @@ sequenceDiagram
 
 ## なぜ今重要か
 
-- **Trigger**: Datatracker はリビジョン 04 の状態を "Active"、"I-D Exists"、"WG Consensus: Waiting for Write-Up" としている。`subject.json` に他の理由はない (`ai_note` は空である)。
-- **Source evidence**: Appendix D は -04 を "Editorial clarifications and improvements" と "Updated HTTP response codes for consistency" としている。差分を見ると、レスポンスコードの変更は実質的に規範的である。`insufficient_authorization` と `redirect_to_web` は 403 でなければならなくなった。
-- **Expected impact**: これらのエラーに 401 や 400 を返す -03 の例に従った実装は変更が必要になる。作業部会が write-up 待ちの状態を公開に近いと見ているかどうかは、資料には書かれていない。
+- **Trigger**: Datatracker はリビジョン 04 の状態を "Active"、"I-D Exists"、"WG Consensus: Waiting for Write-Up" としている。-03 の WG Last Call は 2026 年 6 月 25 日から 7 月 13 日までで、その途中の 7 月 1 日に -04 が出た。WG の状態は 7 月 15 日に "In WG Last Call" から "Waiting for Write-Up" に移り、8 月 26 日に document shepherd が決まった。
+- **Source evidence**: Appendix D は -04 を "Editorial clarifications and improvements" と "Updated HTTP response codes for consistency" としている。レスポンスコードの変更は規範的なもので、Section 5.2.2.1 は `insufficient_authorization` と `redirect_to_web` を 403 で返さなければならない (MUST) と定めた。理由は 2026 年 7 月 1 日の editor による WGLC への返信にある。401 を使う例に、401 で必須の `WWW-Authenticate` ヘッダーがなかったため、403 に変えたという。
+- **Expected impact**: -03 では両コードの規範上の既定は 400 (Section 5.2.2)、Appendix B.3 の例は 401 で、トークンエンドポイントの例 (Section 6.2、Appendix B.4) はすでに 403 だった。400 の既定や 401 の例に従った実装は変更が必要になる。次の段階は shepherd の write-up である。IESG の状態はまだ "I-D Exists" で、IESG には送られていない。
 
 ## 変更点
 
-`diff.txt` に基づく -03 から -04 への変更:
+-03 から -04 への変更:
 
 - Section 5.2.2.1: `insufficient_authorization` と `redirect_to_web` は HTTP 403 (Forbidden) で返さなければならない。Section 5.2.2 の一般規則は、個別のエラーコードが別途定めない限り HTTP 400 のままである。
 - Section 5.2.2.1.1: `request_uri` を含む `redirect_to_web` の例を追加し、[RFC9700] のベストプラクティス（[RFC9207] の `iss` レスポンスパラメーターを含む）に従うべきとする SHOULD を追加した。両 RFC は参考文献として追加された。
 - Section 5.3.1: ユーザーがアプリからログアウトしたとき、クライアントは `auth_session` を破棄すべきである (SHOULD)。
-- Appendix B: `otp_required` の例は 401 ではなく 403 を使い、401 を指定していた文は削除された。
+- Appendix B: B.3 の `otp_required` 付き `insufficient_authorization` の例は 401 ではなく 403 になり、B.2 で `otp_required` に 401 を指定していた文は削除された。
 - Section 5.1: リクエスト例に `response_type=code` が加わった。
 - Section 10.1: IANA の仕様参照先が Section 5.3.1 になり、Section 10.2 は Section 8 を指すようになった。以前は Section 5.4 と Section 4.1 を参照していた。
 - Section 5.2.2: JSON の参照が [RFC8259] になり、[RFC7159] の参照は削除された。
 - 参考文献: cross-device-security は -16、attestation-based-client-auth は -09 に更新された。
 - 残りは文言と編集上の修正、および謝辞への 2 名 (Filip Skokan、Joseph Heenan) の追加である。
 
-互換性: 2 つのエラーコードに 400 や 401 を返していたデプロイメントは -04 に適合しない。そのような実装が実際に存在したかどうかは資料に書かれていない。
+互換性: 2 つのエラーコードに 400 や 401 を返していたデプロイメントは -04 に適合しない。WGLC のスレッドには、そうしていたデプロイメントへの言及はない。
 
 ## 技術分析
 
@@ -72,10 +72,10 @@ sequenceDiagram
 
 - フィッシング: 悪意のあるアプリがクライアントになりすませる。またユーザーは認証情報を入力する場所がもう一つ増えることを学ばなければならない (Section 9.2)。サーバーは任意の段階でリダイレクト型フローを要求してよい (MAY)。
 - 新しいエンドポイントでのクレデンシャルスタッフィングとブルートフォース: 実装者はブラウザーのフローと同様の対策を検討し (SHOULD)、可能なら Attestation API を使い、`auth_session` ごとにレート制限を行うべきである (Section 9.3)。
-- クライアントのなりすまし: モバイルやデスクトップのアプリはパブリッククライアントであるため、ドラフトは Attestation を勧めている (Section 9.4)。トークンエンドポイントでクライアント認証を要求するなら、チャレンジエンドポイントでも必須となる (Section 4.1)。
+- クライアントのなりすまし: モバイルやデスクトップのアプリは通常パブリッククライアントなので、実装者は OS の Attestation API などの対策を検討すべきである (SHOULD) (Section 9.4)。トークンエンドポイントでクライアント認証を要求するなら、チャレンジエンドポイントでも必須となる (Section 4.1)。
 - "first-partyness" の検証は MUST だが (Section 5)、方法は範囲外である (Section 9.1)。
 - トークンの窃取: トークンは送信者制約を付けるべきであり (SHOULD)、DPoP を使う場合、クライアントはチャレンジリクエストに DPoP ヘッダーを付けて認可コードを束縛すべきである (SHOULD)。サーバーは以降のすべてのリクエストとトークンリクエストで同じ鍵を強制する (Section 9.5.1)。
-- `auth_session` の乗っ取り: 値はデバイスに束縛すべきで (SHOULD)、たとえば DPoP 鍵に結び付ける (Section 5.3.1、9.6.1)。乱数の場合は少なくとも 256 ビットのエントロピーが必要で、有効期間はサーバーが決める (Section 9.6.2)。
+- `auth_session` の乗っ取り: 値はデバイスに束縛すべきで (SHOULD)、たとえば DPoP 鍵に結び付ける (Section 5.3.1、9.6.1)。サーバーは値をセッションごとに一意にしなければならず (MUST)、乱数なら少なくとも 256 ビットのエントロピーを持たせるべきである (SHOULD) (Section 5.3.1)。有効期間はサーバーが決める (Section 9.6.2)。
 
 **プロトコルフロー。** 設計は既存のトークンエンドポイントを再利用し、新しいエンドポイントは認可コードだけを発行する (Appendix C)。ドラフトは 2 つの理由を挙げる。既存の OAuth サーバーへの変更を減らすこと、リダイレクト型フローの構造に近づけることである。要素ごとのグラントタイプと、トークンの直接返却は退けている。
 
@@ -89,12 +89,12 @@ sequenceDiagram
 ## 未解決の論点
 
 - Section 5.2.2.1 は `invalid_session` にステータスコードを定めていないため、Section 5.2.2 により 400 が既定となる。ドラフトはこれが意図かどうかを述べていない。
-- Section 6.2 はトークンエンドポイントで HTTP 403 を示す一方、エラー形式は [RFC6749] の Section 5.2 を参照している。ドラフトは、このエンドポイントでの [RFC6749] のエラー処理との関係を述べていない。
-- Section 10.1 は `auth_session` の使用場所を "token response" のみで登録しているが、チャレンジエンドポイントのエラーレスポンス (Section 5.2.2、6.2) とリクエスト (Section 5.1) にも現れる。登録がこれらを含むべきかは議論されていない。
+- Section 6.2 はトークンエンドポイントでの `insufficient_authorization` にステータスコードを定めていない。例は 403 だが、エラー形式として参照する [RFC6749] の Section 5.2 の既定は 400 である。Section 5.2.2.1 に加わった MUST はチャレンジエンドポイントにしか及ばない。
+- Section 10.1 は `auth_session` の使用場所を "token response" のみで登録しているが、チャレンジエンドポイントのエラーレスポンス (Section 5.2.2)、トークンエンドポイントのエラーレスポンス (Section 6.2)、チャレンジリクエスト (Section 5.1) にも現れる。登録がこれらを含むべきかは議論されていない。
 - 参考文献に `[IANA.JWT] "*** BROKEN REFERENCE ***"` が残り、用語の節には "TODO: Replace RFC6749 references with OAuth 2.1" が残っている (Section 2.1)。
 - Section 9.1 は first-partyness の検証を求めるが、具体的な方法を示していない。選択肢として Attestation とクライアント認証を挙げるだけである。
-- Section 7 はクライアントが `acr_values`、`max_age`、`scope` をチャレンジエンドポイントへ送るとするが、Section 5.1 は `acr_values` と `max_age` をパラメーターとして挙げていない。これらは Section 4.1 の拡張の規則で渡されることになる。
-- ドラフトはプロファイル化されることを想定している (Section 1.2) が、資料にはプロファイルは示されていない。
+- Section 7 はクライアントが `acr_values`、`max_age`、`scope` をチャレンジエンドポイントへ送るとするが、Section 5.1 は `acr_values` と `max_age` をパラメーターとして挙げていない。これらは OpenID Connect のパラメーターで、拡張の規則で受け付けられる。Section 4.1 はエンドポイントが受け付けなければならない (MUST) 拡張として OpenID Connect を挙げ、Section 5.1 は "parameters from any extensions" を受け付ける。Section 7 自体もこれらを [OpenID] のものとしている。
+- ドラフトはプロファイル化されることを想定している (Section 1.2) が、Appendix B にある例示用のユーザー名と OTP のプロファイル以外は挙げていない。
 
 ## 実験
 
@@ -106,3 +106,8 @@ sequenceDiagram
 
 - [IETF Datatracker の draft-ietf-oauth-first-party-apps-04](https://datatracker.ietf.org/doc/draft-ietf-oauth-first-party-apps/04/)
 - [ドラフトに記載されたソースリポジトリ](https://github.com/oauth-wg/oauth-first-party-apps)
+- [draft-ietf-oauth-first-party-apps-04 のテキスト](https://www.ietf.org/archive/id/draft-ietf-oauth-first-party-apps-04.txt)
+- [リビジョン 03 と 04 の差分](https://author-tools.ietf.org/iddiff?url1=draft-ietf-oauth-first-party-apps-03&url2=draft-ietf-oauth-first-party-apps-04)
+- [OAuth メーリングリスト: -03 の WG Last Call](https://mailarchive.ietf.org/arch/msg/oauth/u3CJ_cyoMRU0Dmwa-k2rqxkHQls/)
+- [OAuth メーリングリスト: -04 と 403 への変更を伝える editor の返信](https://mailarchive.ietf.org/arch/msg/oauth/myGNJ8YQOxqrDaTgRZxSmYAoZSw/)
+- [Datatracker の履歴](https://datatracker.ietf.org/doc/draft-ietf-oauth-first-party-apps/history/)
