@@ -1,16 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-18T07:34:29+00:00",
-      "text": "No draft text changed. The most substantive thread is on the WIMSE list: AIMS delegation context, where the participants agreed a transcribed identifier needs a signed audit record at the transcribing server. A large interop matrix for the IETF 127 hackathon B_CHAIN flow was also reported.",
-      "text_ja": "ドラフト本文の変更はない。最も重要なのはメーリングリストでの AIMS の委任コンテキストに関する議論で、変換された識別子は変換を行うサーバーの署名付き監査記録に残すべきだという点で参加者が一致した。IETF 127 ハッカソンの B_CHAIN フローに対する大規模な相互運用性マトリクスの結果も報告された。"
-    },
-    {
-      "at": "2026-11-18T20:37:07+00:00",
-      "text": "A new individual draft, draft-miao-wimse-http-signature-test-vectors-00, publishes 29 judged test vectors (6 positive, 23 negative) for the WIMSE HTTP Message Signatures protocol. The rest is list activity: a hackathon interop repo and a convergence report on agent-token drafts.",
-      "text_ja": "最も重要なのは、WIMSE の HTTP Message Signatures プロトコル向けに 29 件（正例 6、負例 23）の判定対象ベクターを示す個人ドラフト draft-miao-wimse-http-signature-test-vectors-00 の登場である。その他は、ハッカソンの相互運用リポジトリと、エージェントトークン各ドラフトの収束に関する報告である。"
-    },
-    {
       "at": "2026-11-19T07:30:55+00:00",
       "text": "No draft text changed. The most notable item is a new individual draft, draft-molas-agent-principal-refs-00, which compares agent principal-reference designs. The other item is an IPR poll on WIMSE Workload Credentials, with no IPR disclosed so far.",
       "text_ja": "ドラフト本文の変更はない。主な動きは、エージェントのプリンシパル参照を比較する個人ドラフト draft-molas-agent-principal-refs-00 の発表と、WIMSE Workload Credentials に関する IPR 確認の投稿である。IPR の開示はまだない。"
@@ -74,6 +64,11 @@
       "at": "2026-11-25T21:45:21+00:00",
       "text": "No WG draft changed in this run; the week was mailing-list activity. The most notable item is a question on whether WIMSE should cover evidence that a delegator was entitled to delegate (Authority Assertion in draft-hulea-wimse-agent-mandate).",
       "text_ja": "今回はWGドラフトの更新はなく、メーリングリストの議論のみである。最も注目すべきは、委任者が委任する権限を持っていたことの証拠(draft-hulea-wimse-agent-mandateのAuthority Assertion)をWIMSEで扱うべきかという問いである。"
+    },
+    {
+      "at": "2026-11-26T08:25:25+00:00",
+      "text": "The main movement is draft-le-agent-passport-01, which fails closed on revocation and uses a single-RP counter for cumulative limits. It also drew a related delegator-bound chain proposal. Nothing changed in the WG drafts themselves.",
+      "text_ja": "最も大きな動きは draft-le-agent-passport-01 の公開である。失効時は fail closed とし、累積上限は単一の RP が数える方式にした。関連する delegator-bound chain の提案も議論された。WG ドラフト本体の変更はない。"
     }
   ],
   "items": {
@@ -121,29 +116,6 @@
       "use_cases_ja": [
         "アプリケーションに鍵を見せず、送信 HTTP 呼び出しに証明を付与するサービスメッシュのプロキシ。",
         "ワークロードに代わって署名し、受け付ける署名要求を制限するワークロードIDエージェント。"
-      ]
-    },
-    "draft:draft-miao-wimse-http-signature-test-vectors-00": {
-      "diagram": "",
-      "first_seen": "2026-11-18",
-      "headline": "In short, a new informational draft gives reproducible test vectors for the WIMSE HTTP Message Signatures protocol, including 23 negative cases.",
-      "headline_ja": "WIMSE の HTTP Message Signatures プロトコル向けに、負例 23 件を含む再現可能なテストベクターを示す情報提供ドラフトが登場した。",
-      "id": "draft:draft-miao-wimse-http-signature-test-vectors-00",
-      "kind": "new-draft",
-      "related": [],
-      "significance": "new-proposal",
-      "summary": "The draft defines no new protocol behavior. It records 6 positive and 23 negative vectors for draft-ietf-wimse-http-signature, plus 3 non-judged observations where the base spec's text, read literally, does not support a pass/fail judgment. Test keys (Ed25519 and ES256) are published in full and derived from fixed seeds, with a fixed verification clock (T0=1795000000, verify at T0+60, expires = created+300). Positive vectors give the full RFC 9421 signature base. Each negative vector is a single mutation mapped to a quoted normative requirement, such as missing @query coverage, Content-Digest mismatch, a keyid or alg parameter present, two signatures carrying the WIMSE tag, wimse-aud differing only by URI normalization, a wrong wimse-req-nonce, or processing before the WIT is validated. Failures are expected to surface as HTTP 400 with the wimse-signature-invalid problem type. The set was earlier posted as issue #419 and on Zenodo, and reproduced by independent implementers. The text provided is truncated, so the observations were not seen.",
-      "summary_ja": "本ドラフトは新たなプロトコル動作を定義しない。draft-ietf-wimse-http-signature に対する正例 6 件、負例 23 件のベクターに加え、基本仕様の文面を文字どおり読むと合否を判定できない箇所を 3 件の観察事項（判定対象外）として記録している。テスト用の鍵（Ed25519 と ES256）は固定シードから導出して全て公開され、検証時刻も固定されている（T0=1795000000、検証は T0+60、expires は created+300）。正例には RFC 9421 の署名ベース全文が付く。負例は正例を 1 か所だけ変異させたもので、基本仕様の規範的要件の引用に対応付けられている。例は @query の網羅漏れ、Content-Digest の不一致、keyid や alg パラメーターの存在、WIMSE の tag を持つ署名が 2 つあるケース、URI 正規化のみが異なる wimse-aud、誤った wimse-req-nonce、WIT 検証前の処理などである。失敗は wimse-signature-invalid の problem type を伴う HTTP 400 として返すことが期待される。このセットは先に issue #419 と Zenodo で公開され、独立した実装者によって再現されている。入手できた本文は途中で切れており、観察事項は確認できていない。",
-      "title": "draft-miao-wimse-http-signature-test-vectors-00: Test Vectors for the WIMSE HTTP Message Signatures Protocol",
-      "updated_at": "2026-11-18T20:37:07+00:00",
-      "url": "https://datatracker.ietf.org/doc/draft-miao-wimse-http-signature-test-vectors/00/",
-      "use_cases": [
-        "An implementer of the WIMSE S2S HTTP signature scheme checking a verifier against rejection cases such as wimse-aud normalization or nonce mismatch.",
-        "A library author wanting a deterministic, byte-reproducible signature base to regression-test Ed25519 and ES256 handling."
-      ],
-      "use_cases_ja": [
-        "wimse-aud の正規化や nonce の不一致といった拒否ケースに対して、WIMSE S2S の HTTP 署名方式の検証側を確認する実装者。",
-        "Ed25519 と ES256 の処理を回帰テストするために、バイト単位で再現できる決定的な署名ベースを必要とするライブラリ作者。"
       ]
     },
     "draft:draft-munoz-wimse-authorization-evidence-02": {
@@ -424,36 +396,6 @@
         "観測時点ではなく撤回イベントから起算する失効SLAの記述"
       ]
     },
-    "mail:BwGCvOXBxqAVBqOG_prlM3nwZUg": {
-      "diagram": "",
-      "first_seen": "2026-11-18",
-      "headline": "Hackathon: an external interop matrix reports the two-domain B_CHAIN flow passing in all 12,288 published substitutions.",
-      "headline_ja": "ハッカソン：外部の相互運用性マトリクスで、二つの信頼ドメインにまたがる B_CHAIN フローが公開された 12,288 通りの置換すべてで成功したと報告された。",
-      "id": "mail:BwGCvOXBxqAVBqOG_prlM3nwZUg",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-ietf-oauth-transaction-tokens",
-          "note": "The B_CHAIN flow checks that a Domain A transaction token stays in its domain and keeps its transaction ID when scope is narrowed.",
-          "note_ja": "B_CHAIN フローは、Domain A のトランザクショントークンがそのドメイン内に留まり、スコープを絞ってもトランザクション ID が維持されることを確認している。",
-          "track": "oauth-wg"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "Jacob Stewart reported a WIMSE interop matrix of 161,370 execution IDs: 151,069 passed, 182 failed, 10,119 blocked. It covers WIC/mTLS, WIT with WPT, and WIT with HTTP Message Signatures bindings. The two-domain B_CHAIN success path passed all 12,288 published substitutions across 27 role bindings and 94 directional handoffs. Each run checks that the original Domain A transaction token stays in Domain A, the transaction ID survives scope narrowing, and the File Tool verifies the WPT binding to both the WIT and the narrowed transaction token before permitting one protected read. Alexander replies that he will record this in the hackathon repository as a separate external run, outside their own totals. He asks Jacob to confirm the wording and how to be named, and to supply a commit-pinned revision. He also says P7 need not stay blocked, since a verifier that holds the action can run the Appendix A vectors.",
-      "summary_ja": "Jacob Stewart は、161,370 件の実行 ID からなる WIMSE の相互運用性マトリクスの結果を報告した。成功 151,069 件、失敗 182 件、ブロック 10,119 件である。対象は WIC/mTLS、WIT と WPT、WIT と HTTP Message Signatures のバインディングである。二つの信頼ドメインにまたがる B_CHAIN の成功経路は、27 のロールバインディングと 94 の方向付きハンドオフにわたる、公開された 12,288 通りの置換すべてで成功した。各実行では、元の Domain A のトランザクショントークンが Domain A に留まること、スコープを絞ってもトランザクション ID が維持されること、File Tool が WIT と絞り込み後のトランザクショントークンの両方への WPT の結びつきを検証したうえで保護対象の読み取りを一回だけ許可することを確認している。Alexander は、この結果をハッカソンのリポジトリに、自分たちの集計に含めない外部の実行として記録すると返答した。文言と掲載名の確認、およびコミットを固定した版の提供を求めている。また、アクションを保持する検証者が Appendix A のベクターを実行できるため、P7 はブロックされたままにしなくてよいと述べた。",
-      "title": "IETF 127 Hackathon: WIMSE interop scenarios for agent call chains",
-      "updated_at": "2026-11-18T07:34:29+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/BwGCvOXBxqAVBqOG_prlM3nwZUg/",
-      "use_cases": [
-        "Implementers of WIT/WPT or HTTP Message Signatures bindings who want to compare their peers against a public interop matrix.",
-        "Teams building multi-hop agent call chains across two trust domains that need to check transaction token containment."
-      ],
-      "use_cases_ja": [
-        "WIT/WPT や HTTP Message Signatures のバインディングを実装し、公開された相互運用性マトリクスと自分たちのピアを比較したい実装者。",
-        "二つの信頼ドメインにまたがる複数ホップのエージェント呼び出しで、トランザクショントークンの封じ込めを確認したい開発チーム。"
-      ]
-    },
     "mail:DnZC2EjOyi076-ogRKA4J9jrIXc": {
       "diagram": "",
       "first_seen": "2026-11-19",
@@ -610,23 +552,6 @@
         "予算付き委任において、事前分割の割当と予約サービスのどちらを選ぶか検討する場合。"
       ]
     },
-    "mail:INsYufjtYsijqhJNn-01dG7ogqU": {
-      "diagram": "",
-      "first_seen": "2026-11-18",
-      "headline": "PACE Authorization thread: one reply on what the delegation root must carry, and a list-etiquette complaint about the poster.",
-      "headline_ja": "PACE Authorization のスレッド：委任のルートに何を持たせるべきかについての返信一通と、投稿者への投稿作法に関する苦情。",
-      "id": "mail:INsYufjtYsijqhJNn-01dG7ogqU",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Blake Morrison replied on the PACE Authorization draft that, without a wallet, they favour option 2. It only beats option 3 if the root records the passkey tap at the user's own provider, when it happened, and the grant the user was viewing at that moment. The next revision would need to tie the grant to that moment. Two open problems remain: the same grant spent at two airlines, and wallet trust. A separate message from another participant objects to the posting style: cross-posting to several lists and no quoted history. They suggest it may be an AI-assisted autoresponder and ask Blake to reconsider. The options themselves are not defined in the material, so the substance is thin.",
-      "summary_ja": "Blake Morrison は PACE Authorization ドラフトについて、ウォレットがない場合は選択肢 2 を支持すると返信した。選択肢 2 が選択肢 3 より優れるのは、ルートに、ユーザー自身のプロバイダーでのパスキー操作、その時刻、操作時にユーザーが見ていたグラントが含まれる場合に限る。次の改訂ではグラントをその時点に結びつける必要がある。未解決の問題として、同一のグラントが二つの航空会社で使われる場合と、ウォレットの信頼が残っている。別の参加者は、複数のメーリングリストへの同時投稿と引用履歴の欠如を指摘し、AI 支援の自動応答の可能性に触れたうえで、投稿の仕方を見直すよう求めた。選択肢の中身は資料に定義がなく、内容は乏しい。",
-      "title": "New draft: PACE Authorization: delegation and action approval for agent dialogs: (2 new messages)",
-      "updated_at": "2026-11-18T07:34:29+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/INsYufjtYsijqhJNn-01dG7ogqU/",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
     "mail:L4HmjlvtNsj-7THXgfOc-PVm4J0": {
       "diagram": "",
       "first_seen": "2026-11-24",
@@ -673,22 +598,28 @@
         "失効から適合する依拠当事者が拒否するまでの時間を明示する必要があるレジストリ運営者。"
       ]
     },
-    "mail:LzzNtpzX0jzim9cEqlQWBgihSR8": {
+    "mail:LcmaHpAV4z6s0htiS4XbWYKaQFU": {
       "diagram": "",
-      "first_seen": "2026-11-18",
-      "headline": "In short, the IETF 127 hackathon team published a repo with WIMSE interop scenarios, PCAP traces and a Wireshark dissector that others can test against.",
-      "headline_ja": "IETF 127 のハッカソンチームが、WIMSE の相互運用シナリオ、PCAP トレース、Wireshark ディセクターを含むリポジトリを公開し、他の実装者が試せるようにした。",
-      "id": "mail:LzzNtpzX0jzim9cEqlQWBgihSR8",
+      "first_seen": "2026-11-26",
+      "headline": "draft-le-agent-passport-01 is posted. Revocation now fails closed and cumulative limits are counted by one RP.",
+      "headline_ja": "draft-le-agent-passport-01 が公開された。失効は fail closed となり、累積上限は一つの RP が数える。",
+      "id": "mail:LcmaHpAV4z6s0htiS4XbWYKaQFU",
       "kind": "mail",
       "related": [],
-      "significance": "routine",
-      "summary": "The team reports substantial testing of WIMSE scenarios, done in the AI2II project, an approach where coding agents from different model families build the test peers, checkers and reviews. Everything is on GitHub with a browsable scenario site, PCAP files and a Wireshark dissector. They invite others to run their implementations against the scenarios and contribute use cases or results by pull request or issue. Code and documents are under Apache-2.0 or MIT, and partner traces keep their owners' terms. The authors suggest the main take-away is a repo participants can use to check interoperability over time. No protocol text changes.",
-      "summary_ja": "チームは、AI2II プロジェクトで行った WIMSE シナリオの相当量のテストを報告している。AI2II は、異なるモデルファミリーのコーディングエージェントがテスト用ピア、チェッカー、レビューを構築する手法である。成果は GitHub にあり、閲覧用のシナリオサイト、PCAP ファイル、Wireshark ディセクターが提供されている。自分の実装をこれらのシナリオに対して実行すること、ユースケースや結果をプルリクエストか issue で寄せることを歓迎している。コードと文書は Apache-2.0 または MIT で提供され、パートナーのトレースは各所有者の条件に従う。作者らは、参加者が長期的に相互運用性を確認できるリポジトリが存在することが主な成果だと述べている。プロトコル本文の変更はない。",
-      "title": "Hackathon results - website you can explore",
-      "updated_at": "2026-11-18T20:37:07+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/LzzNtpzX0jzim9cEqlQWBgihSR8/",
-      "use_cases": [],
-      "use_cases_ja": []
+      "significance": "substantive",
+      "summary": "The announcement lists the main changes in -01. Revocation fails closed when no fresh status is available, with a stated bound on how long a withdrawn principal can still be relied on. A cumulative limit is counted by exactly one RP, and grants can be requested as a RAR authorization_details type. Transport and intermediary rules are added, with @authority always covered. A root receipt can record how the person approved the delegation, including a WebAuthn assertion. The draft also adds a table mapping it to cross-organisation delegation requirements and a comparison with other attenuation formats. A public relying-party verifier under Apache-2.0 covers the IETF 127 hackathon scenarios.",
+      "summary_ja": "この告知は -01 の主な変更を挙げている。新しい失効状態を得られない場合は fail closed とし、失効した主体にどれだけの間依拠できるかの上限も明記した。累積上限はちょうど一つの RP が数え、grants は RAR の authorization_details タイプとして要求できる。トランスポートと中継装置の規則を追加し、@authority は常に対象に含める。ルートレシートには、WebAuthn assertion を含め、人物が委任を承認した方法を記録できる。クロス組織委任の要件への対応表と、他の attenuation 形式との比較も加わった。Apache-2.0 の公開 RP 検証器が IETF 127 ハッカソンのシナリオを扱う。",
+      "title": "draft-le-agent-passport-01 posted",
+      "updated_at": "2026-11-26T08:25:25+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/LcmaHpAV4z6s0htiS4XbWYKaQFU/",
+      "use_cases": [
+        "An RP that accepts agent passports must decide what to do when the status list cannot be fetched.",
+        "A deployer wants to request agent grants through RAR authorization_details."
+      ],
+      "use_cases_ja": [
+        "agent passport を受け入れる RP が、ステータスリストを取得できない場合の動作を決める必要がある場合。",
+        "エージェントの grants を RAR の authorization_details で要求したい運用者。"
+      ]
     },
     "mail:NIGoNNBqfgDfIs-MvDSFKy9QAY0": {
       "diagram": "",
@@ -766,29 +697,6 @@
         "運営者がエージェントを新しい発行者とクライアントへ移管し、旧発行者のトークンがいつまで受理されるかを受信側が把握する必要がある場合。"
       ]
     },
-    "mail:SHso1Zyz_O4N_fiIhRoh_i8IgZA": {
-      "diagram": "",
-      "first_seen": "2026-11-18",
-      "headline": "AIMS thread: a transcribed identifier's old-to-new mapping goes in the transcribing server's signed audit record, not in the token.",
-      "headline_ja": "AIMS の議論：識別子を変換する場合、新旧の対応は変換を行うサーバーの署名付き監査記録に残し、トークンには載せない。",
-      "id": "mail:SHso1Zyz_O4N_fiIhRoh_i8IgZA",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Kieran confirms Marc's reading of the AIMS delegation-context rules. The delegated principal must stay the same, but not necessarily the same bytes. Within one trust domain the value stays identical at every hop. Across a trust domain a transcribed value is acceptable if the transcription is recorded. The mapping (old value, new value, server identity) belongs in the transcribing server's own audit record, signed and fixed at transcription time. It should not travel in the token across the boundary, since that would hand the original identifier back to the receiving domain and defeat the correlation limit. A signed record can be checked by an auditor, while a retained mapping can only be requested. Marc plans to suggest two changes on PR #176: record the mapping in the audit record rather than retain it, and let the value differ only where a request crosses a trust domain. They also agree an input is refused at or past the instant its validity ends. The boundary wording and the 21 test vectors are left with their authors.",
-      "summary_ja": "Kieran は、AIMS の委任コンテキストに関する Marc の解釈を確認した。委任された主体は同一でなければならないが、バイト列まで同一である必要はない。同一の信頼ドメイン内では値はすべてのホップで同一のままとし、信頼ドメインをまたぐ場合は、変換が記録されていれば変換後の値を用いてよい。対応関係（旧値、新値、サーバーの識別子）は、変換を行うサーバー自身の監査記録に、変換時点で署名して固定する。境界を越えるトークンに載せると、受け取る側のドメインが元の識別子を再び得ることになり、相関を抑える効果が失われる。署名済みの記録は監査者が検証できるが、保持されただけの対応関係は要求することしかできない。Marc は PR #176 に二つの変更を提案する予定である。対応関係は保持ではなく監査記録に残すこと、値が異なってよいのはリクエストが信頼ドメインをまたぐ場合に限ることである。また、入力は有効期間が終わる時点以降は拒否するという点でも一致した。境界の文言と 21 件のテストベクターは、それぞれの作成者に委ねられた。",
-      "title": "Subject: AIMS-00: multi-hop delegation context across agent, tool and resource boundaries",
-      "updated_at": "2026-11-18T07:34:29+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/SHso1Zyz_O4N_fiIhRoh_i8IgZA/",
-      "use_cases": [
-        "Deployments where an agent call crosses trust domains and the subject identifier is remapped to limit correlation.",
-        "Auditors who need to verify after the fact how a delegated subject was mapped between domains."
-      ],
-      "use_cases_ja": [
-        "エージェントの呼び出しが信頼ドメインをまたぎ、相関を抑えるために主体識別子を付け替える構成。",
-        "委任された主体がドメイン間でどう対応付けられたかを、後から監査者が検証する必要がある場合。"
-      ]
-    },
     "mail:SoIEBI6zibYWiMOeqOIsvfehExM": {
       "diagram": "",
       "first_seen": "2026-11-22",
@@ -803,23 +711,6 @@
       "title": "Weekly github digest (WIMSE Weekly GitHub Activity Summary)",
       "updated_at": "2026-11-22T19:45:37+00:00",
       "url": "https://mailarchive.ietf.org/arch/msg/wimse/SoIEBI6zibYWiMOeqOIsvfehExM/",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
-    "mail:V3Coqv_8g1tHFl7nV2gq-Lppf5o": {
-      "diagram": "",
-      "first_seen": "2026-11-18",
-      "headline": "In short, the author announces the test-vector draft to the WIMSE list, asks for more negative cases and verification results, and offers to edit it.",
-      "headline_ja": "作者が WIMSE のメーリングリストでテストベクターのドラフトを告知し、追加の負例と検証結果を求め、編集者の担当も申し出た。",
-      "id": "mail:V3Coqv_8g1tHFl7nV2gq-Lppf5o",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "The announcement describes 29 vectors (6 positive, 23 negative) and 3 observation items, with a machine-readable anchor layer so implementations can consume the set directly. The author says the emphasis is on negative cases where implementations most often diverge, naming expiry windows, @authority normalization and caller-reference reuse. The set is also on Zenodo (v4) and was earlier raised as issue #419. The author asks for additional negative cases and independent verification results, and volunteers to serve as editor if the WG finds the document useful.",
-      "summary_ja": "告知メールでは、29 件のベクター（正例 6、負例 23）と 3 件の観察事項を挙げ、実装がそのまま利用できる機械可読のアンカー層を備えるとしている。作者は、実装間で差が出やすい負例に重点を置いたと述べ、有効期間、@authority の正規化、caller-reference の再利用を例に挙げている。このセットは Zenodo（v4）でも公開され、先に issue #419 として提起されている。作者は追加の負例と独立した検証結果を求め、WG が有用と判断すれば編集者を務める意向を示している。",
-      "title": "New draft: draft-miao-wimse-http-signature-test-vectors-00 — test vectors for the S2S HTTP signature scheme",
-      "updated_at": "2026-11-18T20:37:07+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/V3Coqv_8g1tHFl7nV2gq-Lppf5o/",
       "use_cases": [],
       "use_cases_ja": []
     },
@@ -892,6 +783,29 @@
       "url": "https://mailarchive.ietf.org/arch/msg/wimse/_ItM-_16fMjc8z5oTPkwS4lpgwM/",
       "use_cases": [],
       "use_cases_ja": []
+    },
+    "mail:bBK4Zonj2Il52zHhr2XXrTVKajk": {
+      "diagram": "",
+      "first_seen": "2026-11-26",
+      "headline": "The author of draft-le-agent-passport replies to reviewers on shared limits, intermediaries and inclusion proofs, pointing to -01.",
+      "headline_ja": "draft-le-agent-passport の著者が、共有上限・中継装置・包含証明に関するレビューに回答し、-01 を案内した。",
+      "id": "mail:bBK4Zonj2Il52zHhr2XXrTVKajk",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "The thread starts with a request for an IETF 127 slot for draft-le-agent-passport-00 and includes reviews from Errol Seymour and from the draft-thaha-scitt-agent-execution-evidence authors. The latest reply says -01 is posted. A receipt with dlg_limits must name exactly one RP in aud, and that RP is the only counter. For intermediaries, @authority stays covered, but an RP may declare a locally configured set of authorities it accepts as its own. An intermediary that rewrites covered components must either verify the signature itself and pass its decision over an authenticated channel, or not forward the passport. The author agrees to a SCITT Receipt for inclusion proofs and to being cited for grants and attenuation. The message body is truncated, so the rest of the original request is not visible.",
+      "summary_ja": "このスレッドは、IETF 127 での draft-le-agent-passport-00 の発表枠の依頼から始まり、Errol Seymour と draft-thaha-scitt-agent-execution-evidence の著者によるレビューを含む。最新の返信は -01 の公開を告げている。dlg_limits を持つレシートは aud に RP をちょうど一つ指定しなければならず、その RP だけが数える。中継装置については @authority を引き続き対象とするが、RP は自身のものとして受け入れる authority の集合をローカル設定で宣言できる。対象コンポーネントを書き換える中継装置は、自ら署名を検証して判断を認証済みチャネルで渡すか、passport を転送しないかのいずれかとする。著者は包含証明に SCITT Receipt を使うこと、および grants と attenuation の引用に同意している。本文は途中で切れており、元の依頼文の残りは確認できない。",
+      "title": "Agenda slot request for IETF 127 — draft-le-agent-passport-00",
+      "updated_at": "2026-11-26T08:25:25+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/bBK4Zonj2Il52zHhr2XXrTVKajk/",
+      "use_cases": [
+        "A relying party behind a gateway that rewrites the host needs to know which authorities it may accept as its own.",
+        "A deployer that must cap cumulative spend by an agent has to choose a single RP to count it."
+      ],
+      "use_cases_ja": [
+        "ホストを書き換えるゲートウェイの背後にある RP が、自身のものとして受け入れてよい authority を知る必要がある場合。",
+        "エージェントの累積支出に上限を設ける運用者が、数える RP を一つに決める必要がある場合。"
+      ]
     },
     "mail:bTn4phN88WAkmVkkUywGQieqwcM": {
       "diagram": "flowchart TD\n  G[Grant issuer, root] --> A{Who keeps the total}\n  A -->|Option 1| S[Split into non-overlapping allocations]\n  S --> R1[Relying party 1 enforces its share]\n  S --> R2[Relying party 2 enforces its share]\n  A -->|Option 2| B[Budget owner, usually root issuer]\n  B --> RS[Reserve before each booking]\n  RS --> R3[Relying party admits booking only against a reservation]",
@@ -1092,6 +1006,29 @@
         "鍵セットのみの委任チェーン証拠を受け取り、その鍵を名指しされた当事者のものとして扱ってよいか判断する依拠当事者。"
       ]
     },
+    "mail:ixBxKlbk-bJEce-E5Lja4BM3MUQ": {
+      "diagram": "flowchart LR\nR[Root token signed by trust anchor] -->|cnf names key A| H1[Hop 1 signed by key A]\nH1 -->|cnf names key B| H2[Hop 2 signed by key B]\nH2 --> V[Verifier checks the chain offline]",
+      "first_seen": "2026-11-26",
+      "headline": "A new draft makes each hop of an agent delegation chain signed by the previous agent's key. The le-agent-passport author says it should be the default.",
+      "headline_ja": "新しいドラフトは、エージェント委任チェーンの各ホップを直前のエージェントの鍵で署名させる。draft-le-agent-passport の著者はこれを既定にすべきだと述べた。",
+      "id": "mail:ixBxKlbk-bJEce-E5Lja4BM3MUQ",
+      "kind": "mail",
+      "related": [],
+      "significance": "new-proposal",
+      "summary": "Suhas Nandakumar and Cullen posted draft-nandakumar-wimse-delegator-bound-chains, which extends the Delegation Tokens of draft-asor-wimse-agent-delegation-chain. Each token is signed with the key the previous token names in cnf, and its iss is the previous token's client_id. Only the root rests on a trust anchor. A del_bind claim in the root enables this for the whole chain, and later hops cannot turn it off. The draft also adds a per-chain pseudonym for the person, cycle detection, audience attenuation and context binding. Ben Le replies that draft-le-agent-passport makes delegator binding the only mode, with each child receipt signed by the holder key of the passport whose thumbprint is in cnf.jkt. He leans towards a default in the Delegation Tokens draft rather than an extension, and says the same key signs the next receipt and the request.",
+      "summary_ja": "Suhas Nandakumar と Cullen は、draft-asor-wimse-agent-delegation-chain の Delegation Tokens を拡張する draft-nandakumar-wimse-delegator-bound-chains を公開した。各トークンは直前のトークンが cnf で指名した鍵で署名され、iss は直前のトークンの client_id となる。トラストアンカーに依拠するのはルートだけである。ルートの del_bind クレームがチェーン全体でこの方式を有効にし、後続のホップは無効にできない。ほかに、人物のチェーンごとの仮名、循環検出、audience の縮小、コンテキスト束縛を加える。Ben Le は、draft-le-agent-passport では delegator binding が唯一のモードであり、子レシートは cnf.jkt に拇印が示された passport の保持者鍵で署名されると返信した。拡張ではなく Delegation Tokens ドラフトの既定にする方向に傾いており、次のレシートとリクエストに同じ鍵を使うと述べている。",
+      "title": "New draft: Delegator-Bound Delegation Chains for AI Agents:",
+      "updated_at": "2026-11-26T08:25:25+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/ixBxKlbk-bJEce-E5Lja4BM3MUQ/",
+      "use_cases": [
+        "Agents in different organisations delegate directly to each other with no server to vouch for each step.",
+        "A verifier checks offline that each hop was actually granted by the agent before it."
+      ],
+      "use_cases_ja": [
+        "異なる組織のエージェント同士が、各ステップを保証するサーバーなしで直接委任する場合。",
+        "検証者が、各ホップが直前のエージェントから実際に付与されたものであることをオフラインで確認する場合。"
+      ]
+    },
     "mail:jAjyS_ikbVTt7Jd5hIP9wSW4X58": {
       "diagram": "",
       "first_seen": "2026-11-23",
@@ -1217,27 +1154,27 @@
       "use_cases": [],
       "use_cases_ja": []
     },
-    "mail:zFrXzOgjgybe9xQ2TrVTyb7Z7uU": {
+    "mail:qYxPk16KTdlQ5KyD4r3-fBxL8Ms": {
       "diagram": "",
-      "first_seen": "2026-11-18",
-      "headline": "In short, an implementer argues that the offline-attenuated agent-token drafts already agree on much of the wire format and lists the few forks left.",
-      "headline_ja": "実装者が、オフライン減衰型のエージェントトークンの各ドラフトはワイヤ形式の多くで既に一致していると論じ、残る相違点を挙げた。",
-      "id": "mail:zFrXzOgjgybe9xQ2TrVTyb7Z7uU",
+      "first_seen": "2026-11-26",
+      "headline": "Jiahui Miao proposes separate, test-first rejection criteria for workload-instance binding, drawn from the WIMSE HTTP signature test vectors.",
+      "headline_ja": "Jiahui Miao は、WIMSE HTTP 署名のテストベクターに基づき、ワークロードインスタンス束縛の拒否基準を独立した試験先行の作業項目にすることを提案した。",
+      "id": "mail:qYxPk16KTdlQ5KyD4r3-fBxL8Ms",
       "kind": "mail",
       "related": [],
       "significance": "discussion",
-      "summary": "Cleiton Augusto Correa Bezerra reports an independent implementation of draft-niyikiza-oauth-attenuating-agent-tokens that reproduces its Appendix A vectors byte for byte, and compares it with asor-wimse-agent-delegation-chain and fane-opena2a-aap. The three agree on authority in RFC 9396 authorization_details, fail-closed handling of unknown types, Ed25519 as baseline, PoP via cnf, and rejecting RFC 8693's nested act claim. niyikiza and asor are near wire-identical on chain linkage: par_hash is the base64url SHA-256 of the parent's JWS Signing Input, with del_depth and del_max_depth. Open: whether the parent's signature octets are in the hashed input (asor-00 leaves this slightly open). Real forks: offline-derived chains versus broker-mediated RFC 8693 exchange (fane), and constraint vocabulary, where only niyikiza gives a full algebra. They offer shared test vectors, not a new draft. Kamin Chung adds that a receipt assembled after execution cannot show that what ran is what the person confirmed.",
-      "summary_ja": "Cleiton Augusto Correa Bezerra は、draft-niyikiza-oauth-attenuating-agent-tokens の独立実装が同ドラフトの Appendix A のベクターをバイト単位で再現したと報告し、asor-wimse-agent-delegation-chain および fane-opena2a-aap と比較している。3 つのドラフトは、権限を RFC 9396 の authorization_details で表現すること、未知の type を fail-closed で扱うこと、Ed25519 を基準とすること、cnf による PoP、RFC 8693 のネストした act クレームを退けることで一致している。チェーン連結では niyikiza と asor がほぼ同一のワイヤ形式で、par_hash は親の JWS Signing Input の SHA-256 を base64url にしたもの、位置は del_depth と del_max_depth で追跡する。未確定なのは、親の署名オクテットをハッシュ入力に含めるかで、asor-00 ではやや曖昧である。実際の相違点は、オフライン導出のチェーンとブローカー仲介の RFC 8693 交換（fane）の対立、および制約の語彙で、完全な代数を示すのは niyikiza のみである。提案は新ドラフトではなく共有テストベクターである。Kamin Chung は、実行後に作成したレシートでは、実行されたものが本人の確認した内容と一致することを示せないと付け加えている。",
-      "title": "Implementation report: convergence across the offline-attenuated agent-token drafts (niyikiza / asor / fane) (2 new messages)",
-      "updated_at": "2026-11-18T20:37:07+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/zFrXzOgjgybe9xQ2TrVTyb7Z7uU/",
+      "summary": "Citing the R9(f) gap in draft-cea-list-vaultys-oauth-agent-deleg-reqs-gaps-00, the author notes that DPoP and mTLS prove key possession but not that the workload instance the authority was delegated to is using the key. From the 29 vectors in draft-miao-wimse-http-signature-test-vectors-00, 23 of them negative, three criteria are proposed. Instance mismatch is a rejection class distinct from signature invalidity. The binding check runs against the presented instance identity, not the key that produced the proof. A proof that verifies but names the wrong instance is a negative case. The author says these are criteria and test material, not a binding specification, and asks whether the list wants this as a separable work item.",
+      "summary_ja": "著者は draft-cea-list-vaultys-oauth-agent-deleg-reqs-gaps-00 の R9(f) の欠落を引き、DPoP と mTLS は鍵の保持を証明するが、権限の委任先のワークロードインスタンスがその鍵を使っていることは証明しないと指摘する。draft-miao-wimse-http-signature-test-vectors-00 の 29 個のベクター（うち 23 個が否定ケース）から、三つの基準を提案している。インスタンスの不一致は署名の無効とは別の拒否クラスである。束縛の検査は、証明を生成した鍵ではなく提示されたインスタンス識別子に対して行う。検証に成功してもインスタンスが異なる証明は否定ケースである。著者はこれらを束縛仕様ではなく基準とテスト資料と位置づけ、独立した作業項目にすることへの関心をメーリングリストに尋ねている。",
+      "title": "Workload-instance binding needs rejection criteria, not just identity formats",
+      "updated_at": "2026-11-26T08:25:25+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/qYxPk16KTdlQ5KyD4r3-fBxL8Ms/",
       "use_cases": [
-        "Agent platforms deciding between offline-derived delegation chains and broker-mediated token exchange for sub-agent delegation.",
-        "Implementers of MCP tool-call authorization who need interoperable par_hash and del_depth handling across drafts."
+        "A WIMSE HTTP signature verifier needs negative tests for a valid signature presented by the wrong workload instance.",
+        "Authors of agent delegation specifications need rejection criteria for instance binding."
       ],
       "use_cases_ja": [
-        "サブエージェントへの委任に、オフライン導出のチェーンとブローカー仲介のトークン交換のどちらを採用するか検討するエージェント基盤の担当者。",
-        "MCP のツール呼び出しの認可で、ドラフトをまたいで par_hash と del_depth を相互運用可能に扱う必要がある実装者。"
+        "WIMSE の HTTP 署名の検証器が、有効な署名を誤ったワークロードインスタンスが提示するケースの否定テストを必要とする場合。",
+        "エージェント委任仕様の著者が、インスタンス束縛の拒否基準を必要とする場合。"
       ]
     },
     "mail:zeMYPRXMTA5bRnWssKMeJj7XJNA": {
@@ -1365,10 +1302,16 @@
       "reason_ja": "著者がAuthority AssertionがWIMSEのギャップかを問い、-02の前にSection 9.4のレビューを求めている。"
     },
     "Review related draft: draft-miao-wimse-http-signature-test-vectors-00": {
-      "date": "2026-11-25",
+      "date": "2026-11-26",
       "priority": "high",
-      "reason": "A reviewer found the P-01 placeholder does not reproduce the signature and N-04 misdescribes what fails.",
-      "reason_ja": "レビュアーが、P-01のプレースホルダでは署名が再現できず、N-04で失敗する箇所の記述が不正確だと指摘している。"
+      "reason": "The author proposed its instance-mismatch negative cases as a separate work item on the list.",
+      "reason_ja": "著者が、インスタンス不一致の否定ケースを独立した作業項目とすることをメーリングリストで提案した。"
+    },
+    "Review related draft: draft-nandakumar-wimse-delegator-bound-chains-00": {
+      "date": "2026-11-26",
+      "priority": "high",
+      "reason": "Announced on the list this run, with direct feedback from the le-agent-passport author on defaults and key reuse.",
+      "reason_ja": "今回メーリングリストで告知され、draft-le-agent-passport の著者から既定値と鍵の共用について直接のフィードバックがあった。"
     },
     "Review related draft: draft-seymour-wimse-connected-flight-07": {
       "date": "2026-11-23",
