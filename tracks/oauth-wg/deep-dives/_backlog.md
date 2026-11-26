@@ -1,6 +1,6 @@
-# OAuth WG Backlog (2026-11-25)
+# OAuth WG Backlog (2026-11-26)
 
-- generated_at_utc: `2026-11-25T21:44:37+00:00`
+- generated_at_utc: `2026-11-26T08:24:36+00:00`
 
 - [ ] `draft-ietf-oauth-sd-jwt-vc` score=96 updated=2026-11-16T10:45:13Z
 - [ ] `draft-ietf-oauth-rfc8725bis` score=90 updated=2026-11-23T21:38:46Z
@@ -12,7 +12,7 @@
 - [ ] `draft-ietf-oauth-transaction-tokens` score=70 updated=2026-08-21T11:57:16Z
 - [ ] `draft-ietf-oauth-deferred-token-response` score=66 updated=2026-10-31T16:12:16Z
 - [ ] `draft-ietf-oauth-v2-1` score=66 updated=2026-10-31T04:16:32Z
-- [ ] `draft-ietf-oauth-delegate-sd-jwt` score=66 updated=2026-10-30T12:38:29Z
+- [ ] `draft-ietf-oauth-delegate-sd-jwt` score=64 updated=2026-10-30T12:38:29Z
 - [ ] `draft-ietf-oauth-attestation-based-client-auth` score=50 updated=2026-10-18T17:33:02Z
 - [ ] `draft-ietf-oauth-spiffe-client-auth` score=28 updated=2026-11-02T17:35:55Z
 - [ ] `draft-ietf-oauth-rar-metadata-remediation` score=20 updated=2026-08-23T20:29:29Z
@@ -27,7 +27,7 @@ Moved by this week's material. candidates.json and the site list raised candidat
 - **high** `draft-ietf-oauth-identity-assertion-authz-grant`: Five issues were opened or commented on in one week (#142, #145, #159, #160, #162), including multi-hop delegation chaining.
 - **low** `draft-ietf-oauth-rfc8725bis`: The BCP update is in the RFC Editor queue and the WG has declined a requested addition, so little remains to cover as a work in progress.
 - **low** `draft-ietf-oauth-status-list`: Only cited in list feedback as a preferred chain-status mechanism, with no change to the draft.
-- **low** `draft-ietf-oauth-transaction-tokens`: Mentioned only as one possible delegation credential in the PACE draft announcement.
+- **low** `draft-ietf-oauth-transaction-tokens`: The thread mentions Actor Profile covers Transaction Tokens, but no change to this draft is reported.
 - **low** `draft-ietf-oauth-v2-1`: Only a minor reference error in section 7.13.1 was reported.
 
 <!-- triage:end -->
