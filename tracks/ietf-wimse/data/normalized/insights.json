@@ -69,6 +69,11 @@
       "at": "2026-11-26T08:25:25+00:00",
       "text": "The main movement is draft-le-agent-passport-01, which fails closed on revocation and uses a single-RP counter for cumulative limits. It also drew a related delegator-bound chain proposal. Nothing changed in the WG drafts themselves.",
       "text_ja": "最も大きな動きは draft-le-agent-passport-01 の公開である。失効時は fail closed とし、累積上限は単一の RP が数える方式にした。関連する delegator-bound chain の提案も議論された。WG ドラフト本体の変更はない。"
+    },
+    {
+      "at": "2026-11-26T21:38:15+00:00",
+      "text": "The most substantive thread is draft-hulea-wimse-agent-mandate: -01 vectors and profile were published, and the author is weighing two -02 changes (a sum_max ceiling in powers, and moving alternatives out of the indeterminate result). The rest is list discussion of agent-status wording for AIMS Section 6 and of draft-le-agent-passport -01. No WG draft text changed in this run.",
+      "text_ja": "最も実質的なのは draft-hulea-wimse-agent-mandate のスレッドで、-01 のテストベクターと Validation Profile が公開され、-02 に向けて powers 内の sum_max 上限と、indeterminate 時の alternatives の扱いの二案が検討されている。ほかは AIMS Section 6 のエージェント状態に関する文言と draft-le-agent-passport -01 の議論で、WG ドラフトの本文変更はない。"
     }
   ],
   "items": {
@@ -552,6 +557,29 @@
         "予算付き委任において、事前分割の割当と予約サービスのどちらを選ぶか検討する場合。"
       ]
     },
+    "mail:Ja6hVA-v5-DY_Ywz67N_QvOFCdI": {
+      "diagram": "",
+      "first_seen": "2026-11-26",
+      "headline": "In short, the draft-le-agent-passport author described -01 choices on shared limits, intermediaries and SCITT proofs; a SCITT contributor offered help.",
+      "headline_ja": "draft-le-agent-passport の著者が、共有上限、中継装置、SCITT 包含証明に関する -01 の選択を説明し、SCITT の関係者が協力を申し出た。",
+      "id": "mail:Ja6hVA-v5-DY_Ywz67N_QvOFCdI",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Ben Le replied that -01 is posted. A receipt with dlg_limits must name exactly one RP in aud, and that RP is the only counter. Shaibi and Shameer's after-the-fact detection is seen as complementary for limits spread across RPs. \"@authority\" stays covered, but an RP may declare, as local configuration, the authorities it accepts as its own. An intermediary that rewrites covered components must verify the signature itself and pass its decision over an authenticated channel, or not forward the passport. A SCITT Receipt is the preferred option for the inclusion-proof claim. Dick Brooks offered help on SCITT Receipts and cited RFC 9943 Section 5.1.1 on registration policies, then corrected Ben's description of him: he is not an author of RFC 9943.",
+      "summary_ja": "Ben Le は -01 を公開したと返信した。dlg_limits を持つレシートは aud に RP をちょうど一つ指定しなければならず、その RP が唯一のカウンターとなる。複数の RP にまたがる上限には、Shaibi と Shameer の事後検出が補完になると述べた。\"@authority\" は引き続き対象に含まれるが、RP は自身のものとして受け入れるオーソリティの集合をローカル設定として宣言できる。対象コンポーネントを書き換える中継装置は、自ら署名を検証して認証済みチャネルで判断を渡すか、パスポートを転送してはならない。包含証明のクレームには SCITT Receipt を採用したい意向である。Dick Brooks は SCITT Receipt に関する協力を申し出て RFC 9943 Section 5.1.1 の登録ポリシーを引用し、自身は RFC 9943 の著者ではないと Ben の紹介を訂正した。",
+      "title": "Agenda slot request for IETF 127 — draft-le-agent-passport-00 (3 new messages)",
+      "updated_at": "2026-11-26T21:38:15+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/Ja6hVA-v5-DY_Ywz67N_QvOFCdI/",
+      "use_cases": [
+        "An RP behind a gateway or TLS terminator needs to know which authority values to accept when verifying an HTTP message signature.",
+        "A deployer of delegated agent credentials with spending limits must know that dlg_limits is counted by a single named RP."
+      ],
+      "use_cases_ja": [
+        "ゲートウェイや TLS 終端装置の背後にある RP は、HTTP メッセージ署名を検証する際にどの authority の値を受け入れるかを知る必要がある。",
+        "支出上限付きの委任エージェント資格情報を運用する者は、dlg_limits が指名された単一の RP で集計されることを知っておく必要がある。"
+      ]
+    },
     "mail:L4HmjlvtNsj-7THXgfOc-PVm4J0": {
       "diagram": "",
       "first_seen": "2026-11-24",
@@ -621,6 +649,29 @@
         "エージェントの grants を RAR の authorization_details で要求したい運用者。"
       ]
     },
+    "mail:NADlHkNCwidP76JvmbnOdW8WKMA": {
+      "diagram": "",
+      "first_seen": "2026-11-26",
+      "headline": "In short, a proposed AIMS Section 6 text on agent status sources now says 'standing is still in effect' and records stale refusals as stale, not revoked.",
+      "headline_ja": "AIMS Section 6 のエージェント状態ソースの提案文が、「standing が有効」という表現に改められ、古い応答による拒否は失効でなく stale として記録するとされた。",
+      "id": "mail:NADlHkNCwidP76JvmbnOdW8WKMA",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Jaromir Zly posted proposed neutral text for AIMS Section 6 incorporating feedback. A status source may be run by the issuer, operator or an independent party, so an outside service can check whether the agent's standing is still in effect without relying on the issuer alone. Whether the agent may perform an action remains the relying party's own decision (Section 10.4), a point Jiahui Miao pushed for. Each source should state which events remove standing, when the clock starts, and the maximum delay. A relying party that refuses on a stale or missing answer should record a stale status, not a revocation, and keep the event and maximum delay it applied. No field or registry is named. He also posted -02 of draft-zly-aibsn-agent-status to match, and asked the editors to treat the text as a proposal.",
+      "summary_ja": "Jaromir Zly は、寄せられた意見を反映した AIMS Section 6 の中立的な提案文を投稿した。状態ソースは発行者、運用者、独立した第三者のいずれが運営してもよく、外部のサービスは発行者のみに頼らず、エージェントの standing が有効かどうかを確認できる。エージェントが操作を行ってよいかは引き続き RP 自身の認可判断（Section 10.4）であり、これは Jiahui Miao が求めた点である。各ソースは、standing を失わせる事象、各事象でクロックが始まる時点、応答が追いつくまでの最大遅延を示すべきである。古い応答や応答がないことを理由に拒否する RP は、失効ではなく stale な状態として記録し、適用した事象と最大遅延も保存すべきである。フィールドやレジストリは指定していない。これに合わせて draft-zly-aibsn-agent-status の -02 も投稿され、編集者には提案として自由に変更するよう依頼している。",
+      "title": "AIMS question: checking agent status from outside the trust domain (2 new messages)",
+      "updated_at": "2026-11-26T21:38:15+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/NADlHkNCwidP76JvmbnOdW8WKMA/",
+      "use_cases": [
+        "A service verifying an agent from another trust domain wants to check agent status without trusting only the issuer.",
+        "A relying party that refuses on a stale status answer needs a record that distinguishes stale from revoked and can be re-checked in a dispute."
+      ],
+      "use_cases_ja": [
+        "別のトラストドメインのエージェントを検証するサービスが、発行者のみを信頼せずにエージェントの状態を確認したい場合。",
+        "古い状態応答を理由に拒否する RP が、stale と失効を区別し、紛争時に再検証できる記録を必要とする場合。"
+      ]
+    },
     "mail:NIGoNNBqfgDfIs-MvDSFKy9QAY0": {
       "diagram": "",
       "first_seen": "2026-11-19",
@@ -671,6 +722,23 @@
       "title": "draft-seymour-wimse-connected-flight-07",
       "updated_at": "2026-11-23T23:58:03+00:00",
       "url": "https://mailarchive.ietf.org/arch/msg/wimse/PASMBaoHjPgUXamgoSggJFmhqME/",
+      "use_cases": [],
+      "use_cases_ja": []
+    },
+    "mail:PJeRBN1XEMhLQZKsdarAj9c1kyU": {
+      "diagram": "",
+      "first_seen": "2026-11-26",
+      "headline": "In short, the agent-mandate author published the -01 Validation Profile and Trust Anchor Set with digests and noted how expected test results changed.",
+      "headline_ja": "agent-mandate の著者が、-01 の Validation Profile と Trust Anchor Set をダイジェスト付きで公開し、テストケースの期待結果の変更点を説明した。",
+      "id": "mail:PJeRBN1XEMhLQZKsdarAj9c1kyU",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "Claudiu sent James the Validation Profile (profil.json, https://bank.example/profiles/agents/3) and Trust Anchor Set (ancore.json, https://bank.example/anchors/7) for -01, with digests to check before signing; the keys are unchanged and the -00 profile digest is superseded. Case 4 can now be written: a root referencing two Authority Assertions, one established and one not presented, is valid with an authority_not_presented diagnostic. For cases 1 to 3, expected results change per the -01 Changes from -00: anchors is a new member of the Validation Result, references carry only dig, errors and diagnostics have defined forms, and alternatives is empty when the outcome is invalid.",
+      "summary_ja": "Claudiu は James に -01 の Validation Profile（profil.json、https://bank.example/profiles/agents/3）と Trust Anchor Set（ancore.json、https://bank.example/anchors/7）を送り、署名前に確認すべきダイジェストを示した。鍵は変わらず、-00 のプロファイルのダイジェストは無効となる。ケース 4 は、確立済みと未提示の二つの Authority Assertion を参照するルートが authority_not_presented の診断付きで valid となる、と書けるようになった。ケース 1〜3 の期待結果は -01 の Changes from -00 に従って変わる。Validation Result に anchors が新しいメンバーとして加わり、references は dig のみを持ち、エラーと診断には定義された形式があり、outcome が invalid のとき alternatives は空になる。",
+      "title": "draft-hulea-wimse-agent-mandate-00: evidence that the delegator was entitled to delegate",
+      "updated_at": "2026-11-26T21:38:15+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/PJeRBN1XEMhLQZKsdarAj9c1kyU/",
       "use_cases": [],
       "use_cases_ja": []
     },
@@ -1177,6 +1245,31 @@
         "エージェント委任仕様の著者が、インスタンス束縛の拒否基準を必要とする場合。"
       ]
     },
+    "mail:rDtWoia19UrbD0j_SIvqASgb8aA": {
+      "diagram": "",
+      "first_seen": "2026-11-26",
+      "headline": "In short, the agent-mandate author conceded -01 cannot express a monthly cap and floated two -02 fixes; a reviewer shared -01 test vectors.",
+      "headline_ja": "agent-mandate の著者が、-01 では月次上限を表現できないと認め、-02 の修正案を二つ示した。レビュー担当者は -01 のテストベクターを共有した。",
+      "id": "mail:rDtWoia19UrbD0j_SIvqASgb8aA",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "James asked whether a EUR 50,000 monthly limit can be expressed in an Authority Assertion, since Section 5 bars stateful constraints in powers, and whether an RP reading only alternatives may proceed on an indeterminate result. Claudiu answered that the monthly limit is not expressible: the Section 9.4 check proves only a per-payment ceiling, and a cumulative limit would need a ledger, while -01 keys accounting by root mandate (Section 9.5). For -02 he offers either admitting sum_max in powers as a per-root ceiling, or keeping the exclusion and stating that only stateless ceilings are proved. On alternatives, he says Section 10.1 requires treating indeterminate as denial unless policy permits it, but agrees the result is a trap and suggests either stating in 9.6 that the RP reads outcome first, or moving alternatives into a separate member. James then confirmed both -01 digests match, published -01 vectors (cases 0 to 4, 15, 16), and preferred the separate member plus a per-root sum_max ceiling, if the text says the cumulative limit stays open.",
+      "summary_ja": "James は、Section 5 が powers に状態を持つ制約を認めないため、月額 EUR 50,000 の上限を Authority Assertion で表現できるのか、また indeterminate の結果で alternatives だけを読む RP が処理を進めてよいのかを質問した。Claudiu は、月次上限は表現できず、Section 9.4 の検査が証明するのは一回ごとの上限だけであり、累積上限には台帳が必要で、-01 は会計をルートマンデート単位で行う（Section 9.5）と答えた。-02 では、powers に sum_max をルートごとの上限として認める案と、除外を維持して状態を持たない上限のみを証明すると明記する案を示した。alternatives については、Section 10.1 が方針で許可しない限り indeterminate を拒否として扱うよう求めるが、結果の形が落とし穴になることは認め、9.6 で RP は outcome を先に読むと明記するか、alternatives を別メンバーに移す案を挙げた。James は -01 のダイジェスト一致を確認し、-01 のベクター（ケース 0〜4、15、16）を公開した。別メンバー案と、累積上限は未解決のままと明記することを条件とするルートごとの sum_max 上限を支持した。",
+      "title": "Evidence that the delegator could delegate: interest in WIMSE? (3 new messages)",
+      "updated_at": "2026-11-26T21:38:15+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/rDtWoia19UrbD0j_SIvqASgb8aA/",
+      "use_cases": [
+        "A bank accepting agent-initiated payments needs to know whether a delegator's authority covers cumulative limits or only per-payment ceilings.",
+        "An RP implementer must decide how to handle indeterminate validation results without accidentally treating alternatives as an approval.",
+        "Someone building an interoperable validator can check against the published -01 test vectors."
+      ],
+      "use_cases_ja": [
+        "エージェントによる支払いを受け付ける銀行は、委任者の権限が累積上限まで及ぶのか、一回ごとの上限だけなのかを知る必要がある。",
+        "RP の実装者は、alternatives を承認と取り違えないように indeterminate の検証結果を扱う方法を決める必要がある。",
+        "相互運用可能な検証器を作る人は、公開された -01 のテストベクターで確認できる。"
+      ]
+    },
     "mail:zeMYPRXMTA5bRnWssKMeJj7XJNA": {
       "diagram": "flowchart LR\n  A[Authority source: register or signatory policy] -->|signs Authority Assertion| B[Assertion]\n  C[Delegator] -->|root mandate with digest of assertion| D[Chain]\n  B --> E[Validator]\n  D --> E\n  E -->|root within assertion?| F[Accept or reject]",
       "first_seen": "2026-11-25",
@@ -1271,12 +1364,6 @@
   },
   "overflow": [],
   "triage": {
-    "Diff active WG draft: draft-ietf-wimse-aims-01": {
-      "date": "2026-11-25",
-      "priority": "high",
-      "reason": "Active thread drafting AIMS Section 6 on external status sources and a gaps section request.",
-      "reason_ja": "AIMSのSection 6(外部の状態ソース)の文案作成とギャップ節の要望が進行中である。"
-    },
     "Diff active WG draft: draft-ietf-wimse-arch-09": {
       "date": "2026-11-22",
       "priority": "high",
@@ -1296,10 +1383,10 @@
       "reason_ja": "-09 は Last Call を経て、プロキシによる proof of possession と署名境界に関する変更を加えた。"
     },
     "Review related draft: draft-hulea-wimse-agent-mandate-01": {
-      "date": "2026-11-25",
+      "date": "2026-11-26",
       "priority": "high",
-      "reason": "Author asked the list whether the Authority Assertion is a WIMSE gap and requested review of Section 9.4 before -02.",
-      "reason_ja": "著者がAuthority AssertionがWIMSEのギャップかを問い、-02の前にSection 9.4のレビューを求めている。"
+      "reason": "The -01 vectors and profile were published, and the thread discusses the -02 options (sum_max ceiling, separate alternatives member).",
+      "reason_ja": "-01 のベクターとプロファイルが公開され、-02 の選択肢（sum_max 上限、alternatives の別メンバー化）が議論されている。"
     },
     "Review related draft: draft-miao-wimse-http-signature-test-vectors-00": {
       "date": "2026-11-26",
