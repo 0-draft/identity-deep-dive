@@ -64,6 +64,11 @@
       "at": "2026-11-26T08:25:26+00:00",
       "text": "No substantive spec change today. The main item is the WG debate on scoping delegation work: Actor Chain vs. the narrower Actor Profile, ahead of a possible adoption call. A new -01 of draft-le-agent-passport was also announced.",
       "text_ja": "仕様本文の実質的な変更はない。主な動きは、採用の呼びかけを前にした委任仕様の範囲をめぐる議論（Actor Chain と、より範囲の狭い Actor Profile の比較）である。draft-le-agent-passport の -01 も告知された。"
+    },
+    {
+      "at": "2026-11-26T21:38:15+00:00",
+      "text": "The oauth list had two threads and no draft changes. One is a reply on the new PACE Authorization draft about how a key was bound to a person. The other is a critique of draft-demedeiros-oidc-crypto-agility, which proposes publishing supported JWT algorithms in OIDC metadata.",
+      "text_ja": "oauthメーリングリストでは2件のスレッドがあり、ドラフト本文の変更はなかった。一つは新しいPACE Authorizationドラフトで鍵と本人の結び付け方法を巡る返信、もう一つはOIDCメタデータに対応JWT署名アルゴリズムを載せるdraft-demedeiros-oidc-crypto-agilityへの批判である。"
     }
   ],
   "items": {
@@ -560,6 +565,29 @@
       "use_cases": [],
       "use_cases_ja": []
     },
+    "mail:NIMesmkkywYwuZia_Hwgl8Pryjg": {
+      "diagram": "",
+      "first_seen": "2026-11-26",
+      "headline": "A reply on the new PACE Authorization draft asks Section 6.3 or 6.4 to say how a key was bound to the person.",
+      "headline_ja": "PACE Authorizationドラフトへの返信で、6.3節または6.4節に鍵を本人へ結び付けた方法への言及を求めている。",
+      "id": "mail:NIMesmkkywYwuZia_Hwgl8Pryjg",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "This is a short reply from Mohamad to Niki in the thread announcing the PACE Authorization draft (delegation and action approval for agent dialogs). Mohamad agrees that Section 6.3 lists the ways a verifier can trust a key. They argue that a second airline that never dealt with the user cannot use a key registered earlier with it, so it must rely on an issuer that vouches the key belongs to the person. In that case a device key enrolled elsewhere is in the same position as a wallet credential. Section 6.3 says whom the verifier trusts but not what that party checked when it bound the key to the person. Mohamad suggests one sentence in 6.3 or 6.4: the verifier's policy should also weigh how the key was bound to the principal. The draft text itself is not in the material, so only this comment is covered.",
+      "summary_ja": "PACE Authorizationドラフト（エージェント間対話のための委任と操作承認）の告知スレッドで、MohamadがNikiに送った短い返信である。Mohamadは、6.3節が検証者の信頼できる鍵の方法を列挙している点に同意する。ただし、ユーザーと取引のない二つ目の航空会社は、以前に自社へ登録された鍵を使えないため、その鍵が本人のものだと保証する発行者に頼るしかないと述べる。この場合、別の場所で登録されたデバイス鍵はウォレットのクレデンシャルと同じ位置づけになる。6.3節は検証者が誰を信頼するかを述べるが、その相手が鍵を本人に結び付けたときに何を確認したかには触れていない。Mohamadは、6.3節または6.4節に、検証者のポリシーは鍵がプリンシパルにどう結び付けられたかも考慮する、という一文を加えることを提案している。ドラフト本文は資料に含まれないため、扱うのはこのコメントのみである。",
+      "title": "New draft: PACE Authorization: delegation and action approval for agent dialogs:",
+      "updated_at": "2026-11-26T21:38:15+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/NIMesmkkywYwuZia_Hwgl8Pryjg/",
+      "use_cases": [
+        "A verifier in an agent-to-agent booking flow that has never met the user and has to decide whether to trust a device key enrolled at another party.",
+        "An implementer writing verifier policy for PACE-style delegation who needs to decide whether key binding assurance should affect approval decisions."
+      ],
+      "use_cases_ja": [
+        "ユーザーと面識のない検証者が、別の事業者で登録されたデバイス鍵を信頼するか判断するエージェント間の予約フロー。",
+        "PACE型の委任における検証ポリシーを実装する際に、鍵の結び付けの確かさを承認判断に反映するか決める場面。"
+      ]
+    },
     "mail:NQbH3WYKgr_X1TJL9C4MNJKqUrQ": {
       "diagram": "",
       "first_seen": "2026-11-22",
@@ -626,6 +654,29 @@
       "use_cases_ja": [
         "jwks_uri 内の複数鍵を正しく扱えない既存の依拠当事者を壊さずに、PQC 署名鍵へ移行しようとする認可サーバー運用者。",
         "ディスカバリーメタデータ由来の jku やアルゴリズム別の鍵セット URI を、検証側がどう扱うべきかを決めるライブラリ保守者。"
+      ]
+    },
+    "mail:QxAtDG5gjU5v40LT4nDtySxz6H8": {
+      "diagram": "",
+      "first_seen": "2026-11-26",
+      "headline": "A reviewer argues the OIDC crypto-agility draft should not partition keys by algorithm and that keyset contents, not metadata, should show supported algorithms.",
+      "headline_ja": "OIDCの暗号アジリティのドラフトに対し、鍵をアルゴリズムで分けるべきではなく、対応アルゴリズムはメタデータでなく鍵セットの内容で示すべきだと批判している。",
+      "id": "mail:QxAtDG5gjU5v40LT4nDtySxz6H8",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Breno de Medeiros announced draft-demedeiros-oidc-crypto-agility. It lets OIDC metadata publish supported JWT signing algorithms and lets a client request one in the authorization request. It also adds a parameter to filter algorithms out of the published key set at the jwks URI. The stated aim is to ease adoption of new algorithms, particularly post-quantum ones, in open federation. A reviewer replies that this is interesting but has problems. Keys should not be partitioned by algorithm, because migration needs old and new keys to coexist for a transition period. They are suspicious of matching by security strength, since levels change and servers may move up or down. They agree the filter is at best a stop-gap, because broken clients must eventually be fixed. They call supported-algorithm metadata flawed, because clients read it once and then pin an algorithm. They propose treating the key set as the source of truth. They suggest the OpenID Foundation as the venue. The message is truncated, so the rest of the reviewer's points are missing.",
+      "summary_ja": "Breno de Medeirosがdraft-demedeiros-oidc-crypto-agilityを告知した。このドラフトは、OIDCメタデータに対応するJWT署名アルゴリズムを公開させ、クライアントが認可リクエストでその一つを要求できるようにする。さらに、jwks URIで公開される鍵セットからアルゴリズムを絞り込むパラメータを加える。目的は、オープンなフェデレーションで新アルゴリズム、特にポスト量子暗号の採用を容易にすることである。これに対し、あるレビュアーは興味深いが問題があると返信した。移行には新旧の鍵が一定期間共存する必要があるため、鍵をアルゴリズムで分けるべきではない。セキュリティ強度の対応付けは、強度の評価が変わり、サーバーが強度を上げ下げすることもあるため疑わしい。絞り込みは、壊れたクライアントをいずれ修正する必要があるので、あくまで暫定策にすぎない。対応アルゴリズムのメタデータは、クライアントが一度読んでアルゴリズムを固定してしまうため欠陥があり、鍵セットの内容を唯一の情報源とすべきだと述べる。また、検討の場としてOpenID Foundationが適切だと示唆している。メッセージは途中で切れており、残りの指摘は不明である。",
+      "title": "Submitted new I-D proposal regarding OIDC crypto agility improvement",
+      "updated_at": "2026-11-26T21:38:15+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/QxAtDG5gjU5v40LT4nDtySxz6H8/",
+      "use_cases": [
+        "An OP or AS operator planning a post-quantum signing migration who needs old and new keys to be published together during the transition.",
+        "A client or resource server library author deciding whether to learn supported algorithms from metadata or from the JWK Set."
+      ],
+      "use_cases_ja": [
+        "ポスト量子暗号への署名移行を計画するOPまたは認可サーバーの運用者が、移行期間中に新旧の鍵を併せて公開する必要がある場面。",
+        "クライアントやリソースサーバーのライブラリ作者が、対応アルゴリズムをメタデータとJWK Setのどちらから得るか決める場面。"
       ]
     },
     "mail:RFulmwwcjCE1Qyt4888AI8ypVg8": {
