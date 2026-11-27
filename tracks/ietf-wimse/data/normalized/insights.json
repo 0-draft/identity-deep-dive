@@ -1,16 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-19T07:30:55+00:00",
-      "text": "No draft text changed. The most notable item is a new individual draft, draft-molas-agent-principal-refs-00, which compares agent principal-reference designs. The other item is an IPR poll on WIMSE Workload Credentials, with no IPR disclosed so far.",
-      "text_ja": "ドラフト本文の変更はない。主な動きは、エージェントのプリンシパル参照を比較する個人ドラフト draft-molas-agent-principal-refs-00 の発表と、WIMSE Workload Credentials に関する IPR 確認の投稿である。IPR の開示はまだない。"
-    },
-    {
-      "at": "2026-11-19T20:42:12+00:00",
-      "text": "The WIMSE list this run was all discussion, no WG draft changes: the AER-1 mapping reached -03 to separate \"denied\" from \"not_evaluated\" in audit records, and agent-token draft authors compared how they track budgets and depth limits.",
-      "text_ja": "今回の WIMSE メーリングリストは議論のみで、WG ドラフト本文の変更はなかった。AER-1 マッピングが -03 となり監査記録で \"denied\" と \"not_evaluated\" を分離した。またエージェントトークン系ドラフトの著者間で、予算の追跡方法と深さ制限の比較が行われた。"
-    },
-    {
       "at": "2026-11-20T07:21:47+00:00",
       "text": "Two mailing-list threads, both about checking agent status from outside the trust domain (AIMS revocation and a public registry). There were no draft text changes. The discussion is exploratory, with proposals from individual and vendor participants.",
       "text_ja": "メーリングリストの議論が二件あり、いずれも信頼ドメイン外からのエージェント状態確認（AIMS の失効や公開レジストリ）を扱っている。ドラフト本文の変更はなく、個人や事業者による探索的な提案にとどまる。"
@@ -74,6 +64,11 @@
       "at": "2026-11-26T21:38:15+00:00",
       "text": "The most substantive thread is draft-hulea-wimse-agent-mandate: -01 vectors and profile were published, and the author is weighing two -02 changes (a sum_max ceiling in powers, and moving alternatives out of the indeterminate result). The rest is list discussion of agent-status wording for AIMS Section 6 and of draft-le-agent-passport -01. No WG draft text changed in this run.",
       "text_ja": "最も実質的なのは draft-hulea-wimse-agent-mandate のスレッドで、-01 のテストベクターと Validation Profile が公開され、-02 に向けて powers 内の sum_max 上限と、indeterminate 時の alternatives の扱いの二案が検討されている。ほかは AIMS Section 6 のエージェント状態に関する文言と draft-le-agent-passport -01 の議論で、WG ドラフトの本文変更はない。"
+    },
+    {
+      "at": "2026-11-27T08:40:07+00:00",
+      "text": "The most substantive thread is on draft-hulea-wimse-agent-mandate -01: the authors confirmed that rechecking every supporting assertion at authorization time wrongly denies requests, and floated two fixes for -02. The rest is new-proposal chatter around AIMS and agent drafts, plus a test-vector citation.",
+      "text_ja": "最も実質的なのは draft-hulea-wimse-agent-mandate -01 のスレッドで、認可時にすべての裏付けアサーションを再検査する仕様が不当な拒否を生むことを著者が認め、-02 への修正案を二つ示した。ほかは AIMS とエージェント関連ドラフトをめぐる新提案の議論と、テストベクタの引用情報の告知である。"
     }
   ],
   "items": {
@@ -265,6 +260,50 @@
         "JOSE でハイブリッドまたは複合 ML-DSA 署名を実装し、分離した ML-DSA コンポーネントが単独では検証できないことを知る必要がある実装者。"
       ]
     },
+    "mail:4r7ynK3IbERO43TVdprfg7WNj4I": {
+      "diagram": "",
+      "first_seen": "2026-11-27",
+      "headline": "A proposal to add a note to AIMS separating organizational decisions from authorization checks draws two evidence-format drafts.",
+      "headline_ja": "AIMS に組織的な意思決定と認可評価を区別する注記を加える提案が出され、二つの証跡形式ドラフトが紹介された。",
+      "id": "mail:4r7ynK3IbERO43TVdprfg7WNj4I",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "David Luna asked whether draft-ietf-wimse-aims-01 should carry a short, non-normative note distinguishing a technical authorization decision, the organizational Decision behind an action, and evidence of execution and outcome. He suggested an integrity-protected reference to the Decision, without private details in the token. Brennan Zambo agreed and pointed to draft-zambo-aer1, an execution receipt format with an outcome vocabulary and hash-linked receipts. Iman Schrock preferred keeping the decision at the application layer and adding a note to AIMS §10 that the receiving service must check the evidence covers the actual beneficiary and amount, referencing draft-schrock-ep-authorization-evidence-chain-08. No text change to AIMS has been made.",
+      "summary_ja": "David Luna は、draft-ietf-wimse-aims-01 に、技術的な認可判断、行為の背景にある組織的な意思決定、実行と結果の証跡を区別する短い非規範的な注記を入れるべきかを問うた。トークンに非公開の詳細を含めず、意思決定への完全性保護された参照を使うことを提案している。Brennan Zambo はこれに賛同し、結果の語彙とハッシュ連結を持つ実行レシート形式 draft-zambo-aer1 を紹介した。Iman Schrock は、意思決定はアプリケーション層に置き、受信側サービスが証跡が実際の受取人と金額を覆うことを確認する旨を AIMS §10 に注記する案を示し、draft-schrock-ep-authorization-evidence-chain-08 を参照した。AIMS 本文への変更はまだない。",
+      "title": "AIMS: organizational decision provenance and authorization evidence for AI agents (3 new messages)",
+      "updated_at": "2026-11-27T08:40:07+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/4r7ynK3IbERO43TVdprfg7WNj4I/",
+      "use_cases": [
+        "Teams building AI agents that make payments need an audit trail that shows who approved an action, not just that a token was valid.",
+        "Authors of AIMS authorization considerations deciding how much evidence handling to define in the draft."
+      ],
+      "use_cases_ja": [
+        "支払いを行う AI エージェントを構築するチームは、トークンが有効だったことだけでなく、誰が行為を承認したかを示す監査証跡を必要とする。",
+        "AIMS の認可に関する考慮事項で、証跡の扱いをどこまでドラフトに定めるかを検討する著者。"
+      ]
+    },
+    "mail:4zdhTHqRCYNQMwcP7BwlBQxIGro": {
+      "diagram": "",
+      "first_seen": "2026-11-27",
+      "headline": "The author of the HTTP signature test vectors published a citable v4 set with a DOI and an MD5 for checking the bytes.",
+      "headline_ja": "HTTP 署名のテストベクタの作者が、DOI と MD5 を付した引用可能な v4 セットを公開した。",
+      "id": "mail:4zdhTHqRCYNQMwcP7BwlBQxIGro",
+      "kind": "mail",
+      "related": [],
+      "significance": "routine",
+      "summary": "Jiahui Miao announced test vectors v4 for the HTTP Message Signature profile in draft-ietf-wimse-http-signature: 29 verdict vectors (6 positive, 23 negative) plus 3 observation items, archived at Zenodo with a DOI and CC-BY-4.0 licence. The message gives the MD5 of the publication file and asks implementers to report results by set version, draft baseline and implementation. v3 and v4 results are not interchangeable, since v4 adds N-09b and implementer-feedback fixes. The same content is in draft-miao-wimse-http-signature-test-vectors-00. This is a release notice and does not change the profile.",
+      "summary_ja": "Jiahui Miao は、draft-ietf-wimse-http-signature の HTTP Message Signature プロファイル向けテストベクタ v4 を告知した。判定ベクタ 29 件（正例 6、負例 23）と観察項目 3 件で、Zenodo に DOI 付き、CC-BY-4.0 で保管されている。公開ファイルの MD5 を示し、実装者にはセットのバージョン、ドラフトの基準版、実装名で結果を報告するよう求めている。v4 は N-09b と実装者からの指摘による修正を加えているため、v3 と v4 の結果は互換でない。同じ内容は draft-miao-wimse-http-signature-test-vectors-00 にもある。これは公開の告知であり、プロファイル自体は変更しない。",
+      "title": "Test vectors for the WIMSE HTTP signature profile — v4 set, citation and integrity pointers",
+      "updated_at": "2026-11-27T08:40:07+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/4zdhTHqRCYNQMwcP7BwlBQxIGro/",
+      "use_cases": [
+        "An implementer of the WIMSE HTTP signature profile can run the vectors and report divergences against a fixed, checkable set."
+      ],
+      "use_cases_ja": [
+        "WIMSE の HTTP 署名プロファイルの実装者は、固定され検証可能なセットでベクタを実行し、差異を報告できる。"
+      ]
+    },
     "mail:5vf-1uga0E9j1jx8XIW1PDxm4YM": {
       "diagram": "",
       "first_seen": "2026-11-24",
@@ -318,6 +357,59 @@
         "運営者が認可サーバーや発行者を変更したエージェントを扱う受信者"
       ]
     },
+    "mail:8_N7JGge-dQG_tgO1Osw9Wn3Tz0": {
+      "diagram": "",
+      "first_seen": "2026-11-27",
+      "headline": "draft-le-agent-passport-01 is posted, and a reviewer asks how it could cap a delegation presented to several relying parties.",
+      "headline_ja": "draft-le-agent-passport-01 が公開され、複数の依拠側に提示される委任の総量制限についてレビュアーが質問した。",
+      "id": "mail:8_N7JGge-dQG_tgO1Osw9Wn3Tz0",
+      "kind": "mail",
+      "related": [
+        {
+          "name": "draft-ietf-oauth-transaction-tokens",
+          "note": "Not referenced in the thread; transaction tokens are another way to carry delegated context, but the material does not link them.",
+          "note_ja": "スレッドでは言及されていない。トランザクショントークンも委任の文脈を運ぶ手段だが、資料上の関連はない。",
+          "track": "oauth-wg"
+        }
+      ],
+      "significance": "new-proposal",
+      "summary": "Ben Le announced -01 of draft-le-agent-passport. Changes listed: revocation fails closed without fresh status, with a stated bound on reliance on a withdrawn principal; a cumulative limit counted by exactly one relying party, with grants requestable as a RAR authorization_details type; transport and intermediary rules covering @authority; root receipts that can record how the person approved, including a WebAuthn assertion; and a requirements table and comparison with other attenuation formats. A public verifier is available under Apache-2.0. Errol Seymour asked, in a reply, how a limit shared across relying parties could be handled, since an agent presenting the same delegation at several relying parties has no total cap. He asked whether a shared issuer, side counter or aggregate limit is planned. No answer is in the material.",
+      "summary_ja": "Ben Le が draft-le-agent-passport の -01 を公開した。変更点は次のとおり。新しい状態情報がない場合は失効確認を fail closed とし、失効した主体に依拠できる期間の上限を定めた。累積上限をちょうど一つの依拠側で数え、付与を RAR の authorization_details タイプとして要求できるようにした。@authority を対象とする転送と中継者の規則を加えた。ルートレシートに、WebAuthn アサーションを含む本人の承認方法を記録できるようにした。要件対応表と他の減衰形式との比較を加えた。Apache-2.0 の検証器も公開されている。Errol Seymour は、同じ委任を複数の依拠側に提示するエージェントには総量の上限がないとして、依拠側をまたぐ上限の扱いを質問し、共有発行者、補助カウンタ、集計上限の予定を尋ねた。回答は資料に含まれていない。",
+      "title": "draft-le-agent-passport-01 posted",
+      "updated_at": "2026-11-27T08:40:07+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/8_N7JGge-dQG_tgO1Osw9Wn3Tz0/",
+      "use_cases": [
+        "Cross-organization agent delegation where one agent presents the same grant to several services and spend limits matter.",
+        "Deployments that need revocation to fail closed when status data is unavailable."
+      ],
+      "use_cases_ja": [
+        "同じ権限付与を一つのエージェントが複数のサービスに提示し、支出上限が重要になる組織間の委任。",
+        "状態情報が得られないときに失効確認を fail closed にする必要がある運用。"
+      ]
+    },
+    "mail:8hHUzcL31rVs0JMWeXFeVnQDZMY": {
+      "diagram": "sequenceDiagram\nparticipant RP as Relying party\nparticipant A1 as Assertion 1\nparticipant A2 as Assertion 2\nRP->>A1: validate at T (supports root)\nRP->>A2: validate at T (supports root)\nNote over RP: time passes to A\nRP->>A1: recheck exp (expired)\nRP->>A2: recheck exp (valid)\nNote over RP: -01 denies, proposed -02 caps by one recorded assertion",
+      "first_seen": "2026-11-27",
+      "headline": "The agent-mandate author agrees -01 wrongly denies issuance when one of two supporting assertions has expired, and proposes fixes for -02.",
+      "headline_ja": "agent-mandate の著者は、裏付けアサーションの一方が失効すると -01 が発行を不当に拒否することを認め、-02 の修正案を示した。",
+      "id": "mail:8hHUzcL31rVs0JMWeXFeVnQDZMY",
+      "kind": "mail",
+      "related": [],
+      "significance": "substantive",
+      "summary": "Songbo Bu showed that in -01, if two assertions both establish the same root at validation time T and one has expired by authorization time A, Section 10.2 rechecks every supporting assertion and denies issuance. Claudiu Hulea confirmed this is unintended, because Section 9.4 treats the references as alternatives. He offered two fixes: the relying party records one supporting assertion and caps the token by that assertion only, or the text keeps \"every\" and says the alternatives hold only at T. Earlier in the thread, Hulea said a monthly sum_max cannot be expressed in powers (Section 5), and proposed either a per-root sum_max ceiling or an explicit open issue. For indeterminate results, he proposed a separate member for alternatives, and James He supported that. He also verified James's 17 test vectors at c8795e4, and the cases showed no mismatch with -01.",
+      "summary_ja": "Songbo Bu は、-01 では二つのアサーションが検証時刻 T に同じルートを成立させ、認可時刻 A に一方が失効している場合、10.2 節がすべての裏付けアサーションを再検査して発行を拒否することを示した。Claudiu Hulea は、9.4 節が参照を選択肢として扱うため、この拒否は意図したものではないと認めた。修正案は二つある。一つは、依拠側が裏付けアサーションを一つ選んで記録し、そのアサーションのみでトークンの有効期限を制限する案である。もう一つは「every」を維持し、9.4 節で選択肢は T 時点でのみ成立すると明記する案である。スレッドの前半で Hulea は、月次の sum_max は powers で表現できない（5 節）とし、ルートごとの sum_max 上限を認めるか、未解決事項として明記するかの二案を示した。indeterminate の結果については alternatives を別メンバーに分ける案を示し、James He も賛同した。James の 17 件のテストベクタ（c8795e4）も検証され、-01 との不一致は報告されていない。",
+      "title": "Evidence that the delegator could delegate: interest in WIMSE? (3 new messages)",
+      "updated_at": "2026-11-27T08:40:07+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/8hHUzcL31rVs0JMWeXFeVnQDZMY/",
+      "use_cases": [
+        "An implementer of a mandate verifier needs to know whether one expired assertion should fail issuance when another still supports the root.",
+        "A bank or relying party accepting delegated payment mandates needs to know that cumulative limits are not provable from an authority assertion."
+      ],
+      "use_cases_ja": [
+        "マンデート検証器の実装者は、別のアサーションがまだルートを裏付けている場合に、失効したアサーションが一つあるだけで発行を失敗させるべきかを知る必要がある。",
+        "委任された支払いマンデートを受け付ける銀行や依拠側は、累積上限が権限アサーションからは証明できないことを知る必要がある。"
+      ]
+    },
     "mail:A9BmP2ORAS19NSKgV_IqiAqPjXk": {
       "diagram": "sequenceDiagram\n participant A as Agent\n participant R as Receiver\n participant D as DNS\n participant AS as Operator AS\n A->>R: fresh access token\n R->>D: lookup _agent-oauth.agent-name\n D-->>R: issuer and client_id\n R->>AS: fetch issuer published keys\n R->>R: validate token against record and keys",
       "first_seen": "2026-11-20",
@@ -348,36 +440,6 @@
         "AIMS の実装者が、エージェント識別子から権威ある状態参照先を見つける標準的な方法を必要とする場合。"
       ]
     },
-    "mail:AUUcqnfZO9c5WXckMA3dNhJp8lE": {
-      "diagram": "",
-      "first_seen": "2026-11-19",
-      "headline": "A practitioner asks whether draft-ietf-wimse-aims-01 should cover status checks and accountable-party transfer for agents across trust domains.",
-      "headline_ja": "実務者が、draft-ietf-wimse-aims-01 に信頼ドメインをまたぐエージェントの状態確認と責任主体の移転を含めるべきか質問した。",
-      "id": "mail:AUUcqnfZO9c5WXckMA3dNhJp8lE",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-ietf-oauth-status-list",
-          "note": "Addresses publishing revocation status that unrelated verifiers can check, the kind of mechanism the question is about, though the message does not mention it.",
-          "note_ja": "無関係な検証者が確認できる失効状態の公開を扱い、質問が対象とする種類の仕組みに当たるが、メッセージでは言及されていない。",
-          "track": "oauth-wg"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "Jaromir Zly says revocation in AIMS (short-lived credentials in Section 8, introspection in 10.3, signals in 11) assumes the verifier has a relationship with the issuer. He gives a case where bank, customer and agent operator are in different trust domains. He asks three questions: whether a status check by an unrelated party (active or revoked, since when) is in scope; whether the draft could allow a pointer from the identifier to where its status can be looked up, since Section 6 puts the identifier registry out of scope; and whether moving an agent to another accountable party is covered, since he found only retirement in Section 6. He describes his own public registry (AIBSN) as background and discloses a pending patent application. No answers appear in this message.",
-      "summary_ja": "Jaromir Zly は、AIMS の失効手段（Section 8 の短寿命クレデンシャル、10.3 のイントロスペクション、11 のシグナル）は検証者が発行者と関係を持つことを前提にしていると述べる。銀行、顧客、エージェント運用者が別々の信頼ドメインにある例を挙げ、三点を質問した。無関係な当事者による状態確認（有効か失効か、いつから）が対象範囲か。Section 6 が識別子レジストリを範囲外としているが、識別子から状態の照会先へのポインターを許容できないか。エージェントを別の責任主体へ移す場合が扱われているか（Section 6 に廃止しか見当たらない）。背景として自らの公開レジストリ AIBSN を説明し、係属中の特許出願を開示している。このメッセージに回答は含まれない。",
-      "title": "AIMS question: checking agent status from outside the trust domain",
-      "updated_at": "2026-11-19T20:42:12+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/AUUcqnfZO9c5WXckMA3dNhJp8lE/",
-      "use_cases": [
-        "A relying party such as a bank that must verify whether an agent acting for a customer is still authorized, without any trust relationship with the agent operator.",
-        "A deployer who must prove when an agent authorization was revoked for liability purposes."
-      ],
-      "use_cases_ja": [
-        "エージェント運用者と信頼関係のない銀行などの依存当事者が、顧客の代理で動くエージェントがまだ認可されているかを確認する場合。",
-        "責任の観点から、エージェントの認可がいつ失効したかを証明する必要がある実装者の場合。"
-      ]
-    },
     "mail:AyrwD5fB3oS8tF14xYx84NRpnEQ": {
       "diagram": "flowchart TD\nA[Withdrawal event on principal standing] --> B[Source takes it in]\nB --> C[Relying party observes status]\nC --> D[Relying party refuses agent]\nA -. bound runs from event .-> D\nC -. status unreadable .-> D",
       "first_seen": "2026-11-22",
@@ -399,36 +461,6 @@
       "use_cases_ja": [
         "プリンシパルの立場だけが変わった場合に、依拠当事者がエージェントの受理を止めることのテスト",
         "観測時点ではなく撤回イベントから起算する失効SLAの記述"
-      ]
-    },
-    "mail:DnZC2EjOyi076-ogRKA4J9jrIXc": {
-      "diagram": "",
-      "first_seen": "2026-11-19",
-      "headline": "The AER-1 mapping for AIMS audit records reached -03: a fail-closed denial on an unestablished input is now recorded as not_evaluated.",
-      "headline_ja": "AIMS 監査記録向け AER-1 マッピングが -03 となり、入力を確定できないまま fail-closed で拒否した場合は not_evaluated と記録されるようになった。",
-      "id": "mail:DnZC2EjOyi076-ogRKA4J9jrIXc",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-ietf-oauth-status-list",
-          "note": "The status inputs whose unavailability or staleness triggers not_evaluated are of the kind a status list provides, though the message does not name it.",
-          "note_ja": "not_evaluated の契機となるステータス入力の到達不能や陳腐化は status list が提供する種類の情報に当たるが、メッセージ内では名指しされていない。",
-          "track": "oauth-wg"
-        }
-      ],
-      "significance": "substantive",
-      "summary": "Thread between the author of draft-zambo-aer1-wimse-mapping and a reviewer. In -02 a committed decision_reason member distinguished \"denied\" from \"not_evaluated\". The reviewer pointed out that a fail-closed policy point still runs and denies when a status source does not answer, and that an input reached but stale was not covered. In -03 (Section 3), \"not_evaluated\" applies whenever an input the decision depended on could not be established, whether unreachable or not current, even if a fail-closed rule denies. decision_reason_detail names that input, and \"denied\" is kept for decisions evaluated on established inputs. The reason is committed for the audit reader and not returned to the caller, so the error does not become an oracle. The reviewer confirmed -03 separates the cases.",
-      "summary_ja": "draft-zambo-aer1-wimse-mapping の著者とレビュアーの間のスレッド。-02 ではコミットされた decision_reason メンバーにより \"denied\" と \"not_evaluated\" が区別されていた。レビュアーは、fail-closed のポリシーポイントはステータス源が応答しなくてもポリシーを実行して拒否するため両者が再び混ざること、また到達できたが古い入力も対象外であることを指摘した。-03（Section 3）では、判断が依存した入力を確定できなかった場合は、到達不能でも最新でなくても、fail-closed ルールが拒否する場合でも \"not_evaluated\" を適用する。decision_reason_detail がその入力を示し、\"denied\" は確定した入力で評価された判断に限る。理由は監査の読み手向けにコミットされ呼び出し元には返さないため、エラーがオラクルにならない。レビュアーは -03 で区別できていることを確認した。",
-      "title": "draft-zambo-aer1-wimse-mapping-01: AER-1 as a candidate format for AIMS Section 11 audit records",
-      "updated_at": "2026-11-19T20:42:12+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/DnZC2EjOyi076-ogRKA4J9jrIXc/",
-      "use_cases": [
-        "An AIMS deployment whose policy point denies when a revocation or status source is down and must later show auditors that the denial was not a real policy evaluation.",
-        "A verifier of audit logs that needs to tell policy denials from fail-closed outages when reconstructing Section 11 events."
-      ],
-      "use_cases_ja": [
-        "失効情報源やステータス源が停止中に拒否するポリシーポイントを持つ AIMS 実装で、その拒否が実際のポリシー評価ではなかったことを監査担当者に示す場合。",
-        "Section 11 のイベントを再構成する際に、ポリシーによる拒否と fail-closed による障害起因の拒否を監査ログの検証者が区別する場合。"
       ]
     },
     "mail:GOtEcnOvKzbtEDMONGFUnEvYyQ4": {
@@ -532,29 +564,6 @@
       "use_cases_ja": [
         "PythonとJavaScriptの両方のサービスでAER-1のattestationコミットメントを生成し、非ASCIIのスコープ値でも同一のダイジェストが必要な実装者。",
         "コミットメントへの署名を検証し、正準化処理を試す既知解ベクターが欲しい検証者。"
-      ]
-    },
-    "mail:IFO_WULHQKHZDVdVwKWc_V_fIRQ": {
-      "diagram": "",
-      "first_seen": "2026-11-19",
-      "headline": "PACE Authorization thread: who keeps a spending total across relying parties is answered with an allocator or a ledger.",
-      "headline_ja": "PACE Authorization のスレッドで、複数の依存当事者にまたがる支出合計を誰が保持するかについて、アロケーターまたは台帳という二案が示された。",
-      "id": "mail:IFO_WULHQKHZDVdVwKWc_V_fIRQ",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "Using an $800 travel budget with several airlines as the example, Marc Miro i Rierola gives two ways to keep the total without the airlines learning more about the user. The issuer splits the total into non-overlapping allocations per relying party, or one budget owner reserves against the total before each booking. Neither gives a common limit across roots that did not agree, and correlating the principal across airlines would undo unlinkability. He announced draft-molas-agent-principal-refs-00, which states six properties of a principal reference and evaluates five drafts against them. Niki Niyikiza replies that asor -03 Section 9.4 already describes an allocator or ledger and separates per-action max from totals (max_lifetime, max_subtree), with enforcement points denying when they cannot see the total (Section 4.2). PACE would still need to name the total and the allocator or ledger. Rebooking needs a share returned first, so the allocator must be reachable, which a wallet that signed the root usually is not. He linked a comparison on what must be remembered and who shares it.",
-      "summary_ja": "8 ドルの旅行予算を複数の航空会社で使う例で、Marc Miro i Rierola は、航空会社がユーザーについて余計な情報を得ずに合計を保持する二つの方法を示した。発行者が合計を依存当事者ごとの重ならない割当に分けるか、単一の予算所有者が予約ごとに合計に対して確保を行う方法である。いずれも合意していないルート間の共通上限は与えず、航空会社間でプリンシパルを相関させるとリンク不能性が失われる。彼は draft-molas-agent-principal-refs-00 を公開し、プリンシパル参照の六つの性質を示して五つのドラフトを評価したと述べた。Niki Niyikiza は、asor -03 の Section 9.4 がアロケーターまたは台帳を既に記述し、一回の上限 max と合計（max_lifetime、max_subtree）を区別し、合計が見えない実施点は拒否すると返信した（Section 4.2）。PACE は合計であることと、アロケーターか台帳の担い手を明記する必要がある。再予約では先に割当を戻す必要があるため、アロケーターに到達できる必要があるが、ルートに署名したウォレットは通常到達できない。何を記憶し誰が共有するかの比較も共有された。",
-      "title": "New draft: PACE Authorization: delegation and action approval for agent dialogs:",
-      "updated_at": "2026-11-19T20:42:12+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/IFO_WULHQKHZDVdVwKWc_V_fIRQ/",
-      "use_cases": [
-        "An agent granted a total spending limit that is used at several independent merchants, where someone must enforce the cumulative cap.",
-        "A deployer choosing between pre-split allocations and a reservation service for budgeted delegation."
-      ],
-      "use_cases_ja": [
-        "複数の独立した事業者で使われる総支出上限を付与されたエージェントで、累積上限を誰かが強制しなければならない場合。",
-        "予算付き委任において、事前分割の割当と予約サービスのどちらを選ぶか検討する場合。"
       ]
     },
     "mail:Ja6hVA-v5-DY_Ywz67N_QvOFCdI": {
@@ -670,42 +679,6 @@
       "use_cases_ja": [
         "別のトラストドメインのエージェントを検証するサービスが、発行者のみを信頼せずにエージェントの状態を確認したい場合。",
         "古い状態応答を理由に拒否する RP が、stale と失効を区別し、紛争時に再検証できる記録を必要とする場合。"
-      ]
-    },
-    "mail:NIGoNNBqfgDfIs-MvDSFKy9QAY0": {
-      "diagram": "",
-      "first_seen": "2026-11-19",
-      "headline": "The AAT author replies to an implementation report: asor -03 now matches AAT -02 on par_hash, but del_max_depth is counted differently.",
-      "headline_ja": "AAT の著者が実装レポートに返信し、par_hash は asor -03 と AAT -02 で一致したが、del_max_depth の数え方は異なると指摘した。",
-      "id": "mail:NIGoNNBqfgDfIs-MvDSFKy9QAY0",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-ietf-oauth-transaction-tokens",
-          "note": "AAT is said to be usable alongside transaction tokens.",
-          "note_ja": "AAT は transaction token と併用できるとされている。",
-          "track": "oauth-wg"
-        },
-        {
-          "name": "draft-ietf-oauth-identity-chaining",
-          "note": "AAT is said to be usable alongside identity chaining.",
-          "note_ja": "AAT は identity chaining と併用できるとされている。",
-          "track": "oauth-wg"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "Niki Niyikiza (Tenuo) responds to an implementation report on the offline-attenuated agent-token drafts. Some open items are already settled: asor -03 hashes the parent's JWS Signing Input for par_hash, the same bytes as AAT -02, with the signature outside the hash, and asor has typed constraints with narrowing rules (Sections 4.2, 4.3). Shared claim names are deliberate, and asor Section 10 asks for one registry entry per name. Both drafts use del_max_depth but count depth differently, so the same value can pass in one and fail in the other. AAT builds on OAuth with an AS issuing the root token, usable alongside transaction tokens and identity chaining. A side-by-side comparison of narrowing rules for AAT -02, asor -03 and hulea -01 with test cases was published. AAT -02 changed the alg name to Ed25519 and made typ required, and has a 229-case test suite. A quoted message argues a receipt assembled after execution cannot show that what ran is what the person confirmed.",
-      "summary_ja": "Niki Niyikiza（Tenuo）がオフライン減衰型エージェントトークン系ドラフトに関する実装レポートへ返信した。未解決とされた点の一部は既に解決済みである。asor -03 は par_hash に親の JWS Signing Input をハッシュ対象とし、AAT -02 と同じバイト列で署名はハッシュの外に置く。asor は型付き制約と各型の縮小規則を持つ（Section 4.2、4.3）。共通のクレーム名は意図的で、asor の Section 10 は名前ごとに単一の登録を求めている。両ドラフトとも del_max_depth を使うが深さの数え方が異なり、同じ値が一方で通り他方で失敗し得る。AAT は OAuth 上に構築され、AS がルートトークンを発行し、transaction token や identity chaining と併用できる。AAT -02、asor -03、hulea -01 の縮小規則を並べた比較とテストケースが公開された。AAT -02 では alg 名が Ed25519 に変わり typ が必須になり、229 ケースのテストスイートがある。引用されたメッセージは、実行後に作られるレシートでは実行内容が本人の確認した内容と一致することを示せないと主張している。",
-      "title": "Implementation report: convergence across the offline-attenuated agent-token drafts (niyikiza / asor / fane)",
-      "updated_at": "2026-11-19T20:42:12+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/NIGoNNBqfgDfIs-MvDSFKy9QAY0/",
-      "use_cases": [
-        "An implementer supporting both AAT and asor tokens who must reconcile del_max_depth semantics before accepting chains from either.",
-        "A team upgrading an earlier AAT implementation that will fail on the Ed25519 alg name and required typ in -02."
-      ],
-      "use_cases_ja": [
-        "AAT と asor の両方のトークンを扱う実装者が、いずれのチェーンも受け入れる前に del_max_depth の意味を調整する場合。",
-        "AAT -02 での alg 名 Ed25519 と typ 必須化により、以前の実装が失敗するため移行する場合。"
       ]
     },
     "mail:PASMBaoHjPgUXamgoSggJFmhqME": {
@@ -873,29 +846,6 @@
       "use_cases_ja": [
         "ホストを書き換えるゲートウェイの背後にある RP が、自身のものとして受け入れてよい authority を知る必要がある場合。",
         "エージェントの累積支出に上限を設ける運用者が、数える RP を一つに決める必要がある場合。"
-      ]
-    },
-    "mail:bTn4phN88WAkmVkkUywGQieqwcM": {
-      "diagram": "flowchart TD\n  G[Grant issuer, root] --> A{Who keeps the total}\n  A -->|Option 1| S[Split into non-overlapping allocations]\n  S --> R1[Relying party 1 enforces its share]\n  S --> R2[Relying party 2 enforces its share]\n  A -->|Option 2| B[Budget owner, usually root issuer]\n  B --> RS[Reserve before each booking]\n  RS --> R3[Relying party admits booking only against a reservation]",
-      "first_seen": "2026-11-19",
-      "headline": "New draft draft-molas-agent-principal-refs-00 compares principal references in agent delegation; the thread asks who enforces a total limit.",
-      "headline_ja": "新規個人ドラフト draft-molas-agent-principal-refs-00 が、エージェント委任のプリンシパル参照を比較し、合計上限の管理主体も論じている。",
-      "id": "mail:bTn4phN88WAkmVkkUywGQieqwcM",
-      "kind": "mail",
-      "related": [],
-      "significance": "new-proposal",
-      "summary": "Marc (MintID) announced draft-molas-agent-principal-refs-00. It states six properties of the principal reference that a delegation root carries and evaluates five current drafts against them, delegator-bound chains among them. It defines no limits. In the thread about an $800 budget spread over several airline bookings, Marc gives two ways to keep the total. In the first, the grant issuer splits the budget into non-overlapping allocations, one per relying party. In the second, one budget owner, naturally the root issuer, reserves against the total before each booking. Neither gives a common limit across roots that did not agree to one. The second lets the owner see which bookings draw on the budget. Correlating the principal across relying parties to add up spend would undo unlinkability from per-chain pseudonyms or a pairwise sub. The two forms are conformance cases 5a and 5b in the AAIF Identity and Trust group.",
-      "summary_ja": "Marc (MintID) が draft-molas-agent-principal-refs-00 を発表した。委任のルートが持つプリンシパル参照について六つの性質を定め、delegator-bound chains を含む現行の五つのドラフトをそれらに照らして評価している。上限そのものは定義しない。複数の航空会社での予約にまたがる 800 ドルの予算をめぐるスレッドでは、合計の管理方法を二つ挙げている。一つは、グラントの発行者が予算を重複しない配分に分割し、依拠者ごとに一つずつ割り当てる方法である。もう一つは、通常はルートの発行者である一つの予算管理者が、予約のたびに合計に対して枠を確保する方法である。いずれも、合意していないルート間で共通の上限を実現するものではない。後者では管理者がどの予約が予算を消費するかを把握できる。依拠者間でプリンシパルを突き合わせて支出を合算すると、チェーンごとの仮名や pairwise の sub による非リンク性が失われる。この二つの方式は AAIF Identity and Trust グループの適合ケース 5a と 5b になっている。",
-      "title": "New draft: PACE Authorization: delegation and action approval for agent dialogs:",
-      "updated_at": "2026-11-19T07:30:55+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/bTn4phN88WAkmVkkUywGQieqwcM/",
-      "use_cases": [
-        "An agent holds a delegated grant with a spending cap and books with several unrelated relying parties, such as airlines. The deployer must decide who enforces the total.",
-        "A deployer wants to keep delegation roots unlinkable across relying parties with pairwise subs or per-chain pseudonyms, and still wants a spending limit."
-      ],
-      "use_cases_ja": [
-        "上限付きの委任グラントを持つエージェントが、航空会社のような無関係な複数の依拠者で予約を行う場合に、合計上限を誰が管理するかを決める必要がある。",
-        "pairwise の sub やチェーンごとの仮名によって、依拠者間で委任ルートを非リンクに保ちつつ、支出上限も維持したい場合である。"
       ]
     },
     "mail:dN51wJq1zrDjrnew-6nFdwcG05Y": {
@@ -1137,23 +1087,6 @@
       "use_cases": [],
       "use_cases_ja": []
     },
-    "mail:jP5h2uj8J7Xwsad5B8lsyGBZ2Eg": {
-      "diagram": "",
-      "first_seen": "2026-11-19",
-      "headline": "Authors of the WIMSE Workload Credentials draft confirm they know of no IPR restrictions.",
-      "headline_ja": "WIMSE Workload Credentials ドラフトの著者が、既知の IPR 制限はないと回答した。",
-      "id": "mail:jP5h2uj8J7Xwsad5B8lsyGBZ2Eg",
-      "kind": "mail",
-      "related": [],
-      "significance": "routine",
-      "summary": "This is part of the chairs' IPR poll on the WIMSE Workload Credentials draft. Brian Campbell and Arndt each replied that they know of no IPR restrictions. The poll was started by Justin Richer on 17 November. No technical content is involved.",
-      "summary_ja": "WIMSE Workload Credentials ドラフトに関する IPR 確認の一環である。Justin Richer が 11 月 17 日に著者へ開示を求め、Brian Campbell と Arndt がそれぞれ既知の IPR 制限はないと回答した。技術的な内容は含まれない。",
-      "title": "IPR Restrictions on WIMSE Credentials",
-      "updated_at": "2026-11-19T07:30:55+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/jP5h2uj8J7Xwsad5B8lsyGBZ2Eg/",
-      "use_cases": [],
-      "use_cases_ja": []
-    },
     "mail:k1ywYY7Ib2dBilB2KSDYRhuSZqM": {
       "diagram": "",
       "first_seen": "2026-11-20",
@@ -1383,16 +1316,10 @@
       "reason_ja": "-09 は Last Call を経て、プロキシによる proof of possession と署名境界に関する変更を加えた。"
     },
     "Review related draft: draft-hulea-wimse-agent-mandate-01": {
-      "date": "2026-11-26",
+      "date": "2026-11-27",
       "priority": "high",
-      "reason": "The -01 vectors and profile were published, and the thread discusses the -02 options (sum_max ceiling, separate alternatives member).",
-      "reason_ja": "-01 のベクターとプロファイルが公開され、-02 の選択肢（sum_max 上限、alternatives の別メンバー化）が議論されている。"
-    },
-    "Review related draft: draft-miao-wimse-http-signature-test-vectors-00": {
-      "date": "2026-11-26",
-      "priority": "high",
-      "reason": "The author proposed its instance-mismatch negative cases as a separate work item on the list.",
-      "reason_ja": "著者が、インスタンス不一致の否定ケースを独立した作業項目とすることをメーリングリストで提案した。"
+      "reason": "Active thread confirms a Section 10.2 expiry-recheck flaw and proposes -02 changes.",
+      "reason_ja": "スレッドで 10.2 節の失効再検査の問題が確認され、-02 への変更案が出ている。"
     },
     "Review related draft: draft-nandakumar-wimse-delegator-bound-chains-00": {
       "date": "2026-11-26",
