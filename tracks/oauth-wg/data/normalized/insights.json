@@ -64,9 +64,39 @@
       "at": "2026-11-27T08:40:07+00:00",
       "text": "The OAuth list is converging on a narrow first actor-delegation document. Karl McGuinness published Actor Profile -02 and proposed a common base with Actor Chain's declared-full profile, with selective disclosure and provenance as separate work. A second item is a thin review of draft-le-agent-passport-01.",
       "text_ja": "OAuthメーリングリストでは、最初のアクター委任文書を狭い範囲にする方向に収束しつつある。Karl McGuinnessが Actor Profile -02 を公開し、Actor Chain の declared-full プロファイルとの共通基盤を提案した。選択的開示と来歴証明は別作業とする案である。もう一件は draft-le-agent-passport-01 への短いレビューである。"
+    },
+    {
+      "at": "2026-11-27T21:21:45+00:00",
+      "text": "The only item is the OAuth list thread on which actor-delegation draft should be the base for a WG adoption call. Actor Profile -02 came out on Nov 26, and the open question is how a chain signals that it is incomplete. No draft text was adopted.",
+      "text_ja": "今回の対象は、OAuth メーリングリストでの、WG 採択に向けてどの actor 委任ドラフトを土台にするかという議論一件のみである。Actor Profile -02 が 11月26日に公開され、チェーンが不完全であることをどう示すかが争点になっている。ドラフトの採択は行われていない。"
     }
   ],
   "items": {
+    "mail:1u307Msd9GqpCZrZKpK6uVCPmjE": {
+      "diagram": "",
+      "first_seen": "2026-11-27",
+      "headline": "The Actor Chain vs Actor Profile thread now centres on how a delegation chain signals that actors were omitted.",
+      "headline_ja": "Actor Chain と Actor Profile の比較議論は、委任チェーンから actor が省略されたことをどう示すかに移っている。",
+      "id": "mail:1u307Msd9GqpCZrZKpK6uVCPmjE",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "After Karl McGuinness published Actor Profile -02 and proposed a narrow common base (RFC 8693 actor representation, chain propagation, presenter binding, consistent semantics across token exchange, JWT assertion grants and refresh), three replies came in. Prasad (Actor Chain) argues for starting from Actor Chain, even with only declared-full, and for keeping a Subset option so the AS can enforce need-to-know. His example is that a path A→C and a path A→B→C can both show only A and C in act, so a marker confirming omission could reveal a confidential review. Jiahui Miao argues the base must define one reserved incompleteness signal in tokens and introspection (actors omitted, shown actors in order, nothing claimed about the omitted ones). They also want a rule that a recipient requiring a complete chain rejects a signalled-incomplete one. Ilja reports running code: keep the -02 §6.5 refresh rule (carry the recorded chain unchanged or reject), and reserve an opaque AS-assigned grant identifier (dlg_id, actor-profile PR #34) that also works on tokens without act. The material is truncated, so earlier messages are only partly visible.",
+      "summary_ja": "Karl McGuinness が Actor Profile -02 を公開し、RFC 8693 による actor 表現、チェーン伝播、提示者バインディング、トークン交換・JWT assertion grant・リフレッシュにまたがる一貫した意味論に絞った共通の土台を提案した。これに対し三件の返信があった。Prasad（Actor Chain）は、declared-full のみでも Actor Chain を出発点にすること、および AS が発行時に need-to-know を強制できるよう Subset を選択肢として残すことを主張した。経路 A→C と A→B→C がどちらも act に A と C しか示さない場合があり、省略を確認するマーカーが機密のレビューの存在を漏らし得るという例を挙げている。Jiahui Miao は、土台でトークンとイントロスペクションの両方に、予約済みの不完全性シグナル（actor が省略された、表示された actor は順序どおり、省略された actor については何も主張しない）を一つ定めるべきだとしている。あわせて、完全なチェーンを要求する受信者は不完全と示されたチェーンを拒否する、という規則も求めている。Ilja は実運用の知見として、-02 §6.5 のリフレッシュ規則（記録済みチェーンをそのまま引き継ぐか拒否する）を残すこと、および act のないトークンでも使える AS 発行の不透明な grant 識別子（dlg_id、actor-profile PR #34）を予約することを挙げた。資料は途中で切れているため、それ以前のメッセージは一部しか確認できない。",
+      "title": "Comparing Actor Chain and Actor Profile before an adoption call (4 new messages)",
+      "updated_at": "2026-11-27T21:21:45+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/oauth/1u307Msd9GqpCZrZKpK6uVCPmjE/",
+      "use_cases": [
+        "An authorization server issuing delegated-agent tokens for multi-hop agent calls must decide whether to carry the full actor chain, a subset, or reject on omission.",
+        "A resource server in a different domain that requires a complete actor path needs a defined way to tell a complete chain from a shortened one.",
+        "A deployer who rotates refresh tokens for delegated agents needs the actor chain to stay unchanged across refresh so a client cannot shed its actor."
+      ],
+      "use_cases_ja": [
+        "マルチホップのエージェント呼び出しに委任エージェント用トークンを発行する認可サーバーは、actor チェーン全体を載せるか、一部だけを載せるか、省略が必要な場合に拒否するかを決める必要がある。",
+        "完全な actor 経路を要求する別ドメインのリソースサーバーは、完全なチェーンと短縮されたチェーンを区別する定義済みの方法を必要とする。",
+        "委任エージェント向けにリフレッシュトークンをローテーションする運用者は、クライアントがリフレッシュで actor を外せないよう、リフレッシュ後も actor チェーンが変わらないことを必要とする。"
+      ]
+    },
     "mail:1wKbrz0NwWgJgMxMMywsyRlwl5g": {
       "diagram": "sequenceDiagram\n participant A as User A (attacker)\n participant F as Auth filter\n participant R as Redis record\n participant H as Profile handler\n A->>F: JWT forged with A sub and uid plus admin B userId\n F->>F: verify signature (default key)\n F->>R: look up record by sub and uid\n R-->>F: A's record found\n F->>H: request authenticated as A\n H->>H: account ID taken from userId claim\n H-->>A: edits B's profile",
       "first_seen": "2026-11-23",
@@ -1162,12 +1192,6 @@
   },
   "overflow": [],
   "triage": {
-    "draft-ietf-oauth-identity-assertion-authz-grant": {
-      "date": "2026-11-22",
-      "priority": "high",
-      "reason": "Five issues were opened or commented on in one week (#142, #145, #159, #160, #162), including multi-hop delegation chaining.",
-      "reason_ja": "1 週間で 5 件の issue（#142、#145、#159、#160、#162）が作成またはコメントされ、マルチホップ委譲チェーンも含まれる。"
-    },
     "draft-ietf-oauth-rfc8725bis": {
       "date": "2026-11-25",
       "priority": "low",
