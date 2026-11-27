@@ -1,6 +1,6 @@
 # Deep-Dive Candidate Queue
 
-Generated at: 2026-11-27T08:39:00+00:00
+Generated at: 2026-11-27T21:20:45+00:00
 
 | Rank | Score | Candidate | Evidence |
 | --- | ---: | --- | --- |
@@ -34,10 +34,11 @@ Generated at: 2026-11-27T08:39:00+00:00
 
 Moved by this week's material. candidates.json and the site list raised candidates first and lowered ones last.
 
+- **high** `Diff active WG draft: draft-ietf-wimse-aims-01`: Thread proposes Section 6 wording on status freshness and asks the editors to take it.
 - **high** `Diff active WG draft: draft-ietf-wimse-arch-09`: Arch issue #139 on AI intermediaries and per-agent identity was commented on and closed this week.
 - **high** `Diff active WG draft: draft-ietf-wimse-http-signature-09`: Digest shows closed s2s-protocol issues on http-signature: test vectors, nonce note, editorial comments, and a broken workload-creds reference.
 - **high** `Diff active WG draft: draft-ietf-wimse-workload-identity-practices-09`: -09 adds normative-looking changes on proxy proof of possession and signing boundaries after Last Call.
-- **high** `Review related draft: draft-hulea-wimse-agent-mandate-01`: Active thread confirms a Section 10.2 expiry-recheck flaw and proposes -02 changes.
+- **high** `Review related draft: draft-hulea-wimse-agent-mandate-01`: Active thread with -02 design choices open (sum_max, alternatives, 10.2 recheck) and a new test vector.
 - **high** `Review related draft: draft-nandakumar-wimse-delegator-bound-chains-00`: Announced on the list this run, with direct feedback from the le-agent-passport author on defaults and key reuse.
 - **high** `Review related draft: draft-seymour-wimse-connected-flight-07`: -07 defines a consumption record, key requirements and replay bounds.
 - **high** `Review related draft: draft-uppalapati-wimse-pq-agent-identity-02`: The -02 was announced on the list with requirement rewording (PQ-R4, PQ-R7), a new survey entry and a Section 8.2 finding on ML-DSA.

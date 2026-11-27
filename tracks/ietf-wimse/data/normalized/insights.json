@@ -69,6 +69,11 @@
       "at": "2026-11-27T08:40:07+00:00",
       "text": "The most substantive thread is on draft-hulea-wimse-agent-mandate -01: the authors confirmed that rechecking every supporting assertion at authorization time wrongly denies requests, and floated two fixes for -02. The rest is new-proposal chatter around AIMS and agent drafts, plus a test-vector citation.",
       "text_ja": "最も実質的なのは draft-hulea-wimse-agent-mandate -01 のスレッドで、認可時にすべての裏付けアサーションを再検査する仕様が不当な拒否を生むことを著者が認め、-02 への修正案を二つ示した。ほかは AIMS とエージェント関連ドラフトをめぐる新提案の議論と、テストベクタの引用情報の告知である。"
+    },
+    {
+      "at": "2026-11-27T21:21:45+00:00",
+      "text": "The most active thread is on draft-hulea-wimse-agent-mandate: the -01 test vectors were checked, and the author set out -02 choices on cumulative limits, alternatives and expiry rechecks. A second thread settled the wording of a proposed AIMS Section 6 paragraph on how stale an agent-status answer may be.",
+      "text_ja": "最も動きがあったのは draft-hulea-wimse-agent-mandate のスレッドである。-01 のテストベクターが検証され、-02 に向けて累積上限、alternatives、有効期限の再確認についての選択肢が示された。別のスレッドでは、AIMS の Section 6 に加える、エージェント状態の応答がどこまで古くてよいかを述べる段落の文言が固まった。"
     }
   ],
   "items": {
@@ -228,6 +233,29 @@
       "use_cases_ja": [
         "保存されたツール呼び出し結果をどのエージェントまたはサービスが生成したかを確認したい監査担当者",
         "帰属情報の有無にかかわらずレシートを扱い、帰属情報がないことをエラーとしない検証者"
+      ]
+    },
+    "mail:-VxP1GbUHMsaTQ0oxgIaw9EYLHU": {
+      "diagram": "",
+      "first_seen": "2026-11-27",
+      "headline": "Review of the agent-mandate -01 test vectors turns up open design choices for -02: cumulative limits, alternatives, and expiry rechecks.",
+      "headline_ja": "agent-mandate -01 のテストベクターの検証から、-02 での累積上限、alternatives、有効期限の再確認という設計上の論点が出た。",
+      "id": "mail:-VxP1GbUHMsaTQ0oxgIaw9EYLHU",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "Reviewers checked the -01 vectors for draft-hulea-wimse-agent-mandate, and the author reports that the signatures, anchors and links match, apart from two intended exceptions. A new vector (case 17) covers an Appendix B row with one established and one expired reference, which gives a valid outcome with an expiry diagnostic. The author set out -02 choices. First, an Authority Assertion in -01 cannot express a monthly sum_max, because Section 5 keeps stateful constraints out of powers. -02 could either admit sum_max as a per-root ceiling or state that only stateless ceilings are proved. Second, alternatives could move to a separate member so that a relying party does not read them next to an indeterminate outcome. Third, a reviewer found that the Section 10.2 recheck of every supporting assertion denies issuance when one of two assertions has expired. The author called that unintended and offered two fixes: the RP selects and records one supporting assertion, or the text states that the alternatives hold only at validation time T. A third participant favoured recording the assertion relied on, and favoured stating that only stateless ceilings are proved. Nothing is decided yet.",
+      "summary_ja": "draft-hulea-wimse-agent-mandate の -01 テストベクターが検証され、意図された二つの例外を除いて、署名、トラストアンカー、リンクが一致したと作者が報告している。Appendix B の、確立済みの参照と期限切れの参照が一つずつある行を扱う新しいベクター（case 17）は、有効期限の診断付きで valid になる。作者は -02 の選択肢を示した。第一に、-01 では Section 5 が状態を持つ制約を powers から除いているため、Authority Assertion は月次の sum_max を表現できない。-02 では sum_max を root mandate ごとの上限として認めるか、状態を持たない上限だけが証明されると明記するかのいずれかになる。第二に、RP が indeterminate の結果と並べて alternatives を読んでしまわないよう、alternatives を別のメンバーに移す案がある。第三に、Section 10.2 が支持する全 assertion の有効期限を再確認するため、二つのうち一方が期限切れだと発行が拒否されることが指摘された。作者はこれを意図したものではないとし、RP が支持する assertion を一つ選んで記録する案と、alternatives は検証時刻 T でのみ成り立つと明記する案を示した。別の参加者は、依拠した assertion を記録する案と、状態を持たない上限のみを証明すると明記する案を支持した。決定はまだない。",
+      "title": "Evidence that the delegator could delegate: interest in WIMSE? (2 new messages)",
+      "updated_at": "2026-11-27T21:21:45+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/-VxP1GbUHMsaTQ0oxgIaw9EYLHU/",
+      "use_cases": [
+        "A bank accepting agent payment mandates needs to know whether a delegator's authority covers only a per-payment ceiling or also a monthly total.",
+        "An RP that issues short-lived tokens from several supporting assertions needs to know which assertion's expiry caps the token."
+      ],
+      "use_cases_ja": [
+        "エージェントの支払い mandate を受け付ける銀行は、委任者の権限が一回あたりの上限だけを対象とするのか、月次の合計も対象とするのかを知る必要がある。",
+        "複数の支持 assertion から短命のトークンを発行する RP は、どの assertion の有効期限がトークンの上限になるのかを知る必要がある。"
       ]
     },
     "mail:3i0MQcsfIoDWvsFQ5K5NerhWLGo": {
@@ -408,6 +436,29 @@
       "use_cases_ja": [
         "マンデート検証器の実装者は、別のアサーションがまだルートを裏付けている場合に、失効したアサーションが一つあるだけで発行を失敗させるべきかを知る必要がある。",
         "委任された支払いマンデートを受け付ける銀行や依拠側は、累積上限が権限アサーションからは証明できないことを知る必要がある。"
+      ]
+    },
+    "mail:9cRcWQE13sOQRtoq-aNn5fBUY8w": {
+      "diagram": "",
+      "first_seen": "2026-11-27",
+      "headline": "The AIMS thread agreed a sentence for the proposed Section 6 text: the refusal time is the source's maximum delay plus the relying party's own read interval.",
+      "headline_ja": "AIMS のスレッドで、Section 6 の案に加える一文が合意された。拒否までの時間は、情報源の最大遅延に RP 自身の読み取り間隔を加えたものとなる。",
+      "id": "mail:9cRcWQE13sOQRtoq-aNn5fBUY8w",
+      "kind": "mail",
+      "related": [],
+      "significance": "discussion",
+      "summary": "In the thread on checking agent status from outside the trust domain, Marc Miro i Rierola proposed ending paragraph 2 of the proposed AIMS Section 6 text with a sentence. It says a relying party that needs fresh answers states the longest it lets an answer age before reading again, and that the time by which it refuses is the source's maximum delay plus that interval. He argued that the bound should run from the withdrawal event until a conforming relying party refuses. Jaromir Zly accepted the sentence and asked the editors to take paragraph 2 as ending with it. He also noted that draft-zly-aibsn-agent-status-02 is posted and includes the matching Section 7.3 text. The material does not show any editor response.",
+      "summary_ja": "信頼ドメインの外からエージェントの状態を確認する件のスレッドで、Marc Miro i Rierola 氏は、AIMS の Section 6 の案の段落 2 を締める一文を提案した。最新の応答を必要とする relying party は、応答を再読み込みまでにどこまで古いままにしておくかの最長時間を明示し、拒否に至る時間は情報源の最大遅延にその間隔を加えたものになる、という内容である。氏は、この上限は取り消しイベントから、適合する relying party が拒否するまでを測るべきだと主張した。Jaromir Zly 氏はこの一文を受け入れ、編集者に段落 2 をこの文で終えるものとして扱うよう求めた。同氏は draft-zly-aibsn-agent-status-02 が公開され、対応する Section 7.3 の文言を含むことも述べている。編集者からの返答は資料には含まれていない。",
+      "title": "AIMS question: checking agent status from outside the trust domain (2 new messages)",
+      "updated_at": "2026-11-27T21:21:45+00:00",
+      "url": "https://mailarchive.ietf.org/arch/msg/wimse/9cRcWQE13sOQRtoq-aNn5fBUY8w/",
+      "use_cases": [
+        "A relying party outside the agent's trust domain needs a stated bound on how long after withdrawal it may still accept the agent.",
+        "An operator choosing a status polling interval can compute the worst-case time before a withdrawn agent is refused."
+      ],
+      "use_cases_ja": [
+        "エージェントの信頼ドメインの外にある relying party は、取り消し後にどれだけの間そのエージェントを受け入れ得るかについて、明示された上限を必要とする。",
+        "状態確認の間隔を決める運用者は、取り消されたエージェントが拒否されるまでの最悪時間を計算できる。"
       ]
     },
     "mail:A9BmP2ORAS19NSKgV_IqiAqPjXk": {
@@ -1297,6 +1348,12 @@
   },
   "overflow": [],
   "triage": {
+    "Diff active WG draft: draft-ietf-wimse-aims-01": {
+      "date": "2026-11-27",
+      "priority": "high",
+      "reason": "Thread proposes Section 6 wording on status freshness and asks the editors to take it.",
+      "reason_ja": "状態情報の鮮度に関する Section 6 の文言が提案され、編集者に採用が求められている。"
+    },
     "Diff active WG draft: draft-ietf-wimse-arch-09": {
       "date": "2026-11-22",
       "priority": "high",
@@ -1318,8 +1375,8 @@
     "Review related draft: draft-hulea-wimse-agent-mandate-01": {
       "date": "2026-11-27",
       "priority": "high",
-      "reason": "Active thread confirms a Section 10.2 expiry-recheck flaw and proposes -02 changes.",
-      "reason_ja": "スレッドで 10.2 節の失効再検査の問題が確認され、-02 への変更案が出ている。"
+      "reason": "Active thread with -02 design choices open (sum_max, alternatives, 10.2 recheck) and a new test vector.",
+      "reason_ja": "-02 の設計上の論点（sum_max、alternatives、10.2 の再確認）が未決で、新しいテストベクターも出ているスレッドがある。"
     },
     "Review related draft: draft-nandakumar-wimse-delegator-bound-chains-00": {
       "date": "2026-11-26",
