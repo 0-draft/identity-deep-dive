@@ -1,16 +1,6 @@
 {
   "briefs": [
     {
-      "at": "2026-11-20T07:21:47+00:00",
-      "text": "Two mailing-list threads, both about checking agent status from outside the trust domain (AIMS revocation and a public registry). There were no draft text changes. The discussion is exploratory, with proposals from individual and vendor participants.",
-      "text_ja": "メーリングリストの議論が二件あり、いずれも信頼ドメイン外からのエージェント状態確認（AIMS の失効や公開レジストリ）を扱っている。ドラフト本文の変更はなく、個人や事業者による探索的な提案にとどまる。"
-    },
-    {
-      "at": "2026-11-20T20:26:50+00:00",
-      "text": "Only one item this run: a procedural IPR statement on the WIMSE list, with no draft text changes. Joseph Salowey says they know of no IPR on four drafts that are past last call.",
-      "text_ja": "今回は WIMSE メーリングリストへの手続き上の IPR 声明が 1 件のみで、ドラフト本文の変更はない。Joseph Salowey が、最終コール通過済みの 4 件のドラフトについて既知の IPR はないと述べた。"
-    },
-    {
       "at": "2026-11-21T07:15:03+00:00",
       "text": "draft-ietf-wimse-http-signature-09 is mostly editorial, with one small behaviour change: a client may reuse a server-generated nonce from Accept-Signature. Alongside it, the munoz authorization-evidence draft was rewritten to build on the WG's AIMS draft.",
       "text_ja": "draft-ietf-wimse-http-signature-09 は大半が編集上の修正だが、クライアントが Accept-Signature のサーバー生成 nonce を再利用できるという小さな挙動変更を含む。あわせて munoz の authorization-evidence ドラフトが WG の AIMS ドラフトを前提とする内容に書き直された。"
@@ -461,36 +451,6 @@
         "状態確認の間隔を決める運用者は、取り消されたエージェントが拒否されるまでの最悪時間を計算できる。"
       ]
     },
-    "mail:A9BmP2ORAS19NSKgV_IqiAqPjXk": {
-      "diagram": "sequenceDiagram\n participant A as Agent\n participant R as Receiver\n participant D as DNS\n participant AS as Operator AS\n A->>R: fresh access token\n R->>D: lookup _agent-oauth.agent-name\n D-->>R: issuer and client_id\n R->>AS: fetch issuer published keys\n R->>R: validate token against record and keys",
-      "first_seen": "2026-11-20",
-      "headline": "A reply to a draft-ietf-wimse-aims-01 question proposes a DNS-based pointer so unrelated parties can check an agent's status.",
-      "headline_ja": "draft-ietf-wimse-aims-01 への質問に対し、無関係な第三者がエージェントの状態を確認できる DNS ベースのポインタが提案された。",
-      "id": "mail:A9BmP2ORAS19NSKgV_IqiAqPjXk",
-      "kind": "mail",
-      "related": [
-        {
-          "name": "draft-ietf-oauth-status-list",
-          "note": "Also addresses publishing revocation status for tokens or credentials; the thread's proposal instead uses DNS and the operator's AS as the status source.",
-          "note_ja": "トークンや資格情報の失効状態の公開を扱う点で近いが、本スレッドの提案は DNS と運営者の認可サーバーを状態の情報源とする。",
-          "track": "oauth-wg"
-        }
-      ],
-      "significance": "discussion",
-      "summary": "A thread asked whether draft-ietf-wimse-aims-01 should cover status checks by a party with no relationship to the issuer, allow a pointer from an identifier to its status source in Section 6, and cover transfer of an agent between accountable parties. The reply points to an individual draft, draft-shankarlingam-oauth-agent-dns-link. In it the agent presents a fresh access token for its OAuth client, and the receiver validates it against a DNS record at _agent-oauth.&lt;agent-name&gt; and the issuer's published keys. The record names the issuer and client_id, so it points to the operator's authorization server as the status authority. Revocation is done by disabling the client, and receivers bound the rejection delay using token age, DNS and key caching, and clock skew. The author admits there is no public history of past status, and offers to propose Section 6 text. The original poster also disclosed a pending patent application. The third question, on transfer between accountable parties, was not answered in this message.",
-      "summary_ja": "あるスレッドで、draft-ietf-wimse-aims-01 が発行者と関係のない第三者による状態確認を対象とするか、Section 6 で識別子から状態参照先へのポインタを許すか、エージェントの責任主体間の移転を扱うかが問われた。返信は個人ドラフト draft-shankarlingam-oauth-agent-dns-link を示している。そこではエージェントが自身の OAuth クライアントの新しいアクセストークンを提示し、受信側が _agent-oauth.&lt;agent-name&gt; の DNS レコードと発行者の公開鍵に照らして検証する。レコードは issuer と client_id を示すため、状態の権威である運営者の認可サーバーを指す。失効はクライアントの無効化で行い、受信側はトークンの経過時間、DNS と鍵のキャッシュ、クロックずれから拒否までの遅延を見積もる。過去の状態の公開履歴は得られないという制約も認められている。著者は Section 6 向けの文案提出を申し出ている。元の質問者は特許出願中である旨も開示した。第三の質問（責任主体間の移転）には、このメッセージでは答えていない。",
-      "title": "AIMS question: checking agent status from outside the trust domain",
-      "updated_at": "2026-11-20T07:21:47+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/A9BmP2ORAS19NSKgV_IqiAqPjXk/",
-      "use_cases": [
-        "A bank needs to confirm that an AI agent acting for a customer is still authorized by its operator, with no prior trust relationship with the operator.",
-        "An AIMS implementer wants a standard way to find the authoritative status source from an agent identifier."
-      ],
-      "use_cases_ja": [
-        "銀行が、運営者との事前の信頼関係なしに、顧客のために動く AI エージェントが運営者から今も認可されているかを確認する場合。",
-        "AIMS の実装者が、エージェント識別子から権威ある状態参照先を見つける標準的な方法を必要とする場合。"
-      ]
-    },
     "mail:AyrwD5fB3oS8tF14xYx84NRpnEQ": {
       "diagram": "flowchart TD\nA[Withdrawal event on principal standing] --> B[Source takes it in]\nB --> C[Relying party observes status]\nC --> D[Relying party refuses agent]\nA -. bound runs from event .-> D\nC -. status unreadable .-> D",
       "first_seen": "2026-11-22",
@@ -553,23 +513,6 @@
         "AIエージェントで返信やレビューを下書きする投稿者は、送信前にすべての内容を読んで自ら責任を持つ必要がある。さもなければ投稿権限を制限される恐れがある。",
         "WIMSE関連の個人ドラフトの著者は、自動生成や大量の投稿に対して、チェアによる確認がより厳しくなることを想定しておく必要がある。"
       ]
-    },
-    "mail:HAxOOzAN-8rWDfzBtbvrJt4tTq4": {
-      "diagram": "",
-      "first_seen": "2026-11-20",
-      "headline": "Joe Salowey states he knows of no IPR on four WIMSE drafts past last call; Justin Richer forwarded it to the list.",
-      "headline_ja": "Joseph Salowey が、最終コール通過済みの WIMSE ドラフト 4 件について既知の IPR はないと表明し、Justin Richer がメーリングリストに転送した",
-      "id": "mail:HAxOOzAN-8rWDfzBtbvrJt4tTq4",
-      "kind": "mail",
-      "related": [],
-      "significance": "routine",
-      "summary": "Justin Richer forwarded to the list, for the public record, a private note from Joseph Salowey. Salowey found no additional IPR queries for other drafts. He stated that he does not know of any IPR pertaining to draft-ietf-wimse-workload-creds, draft-ietf-wimse-mutual-tls, draft-ietf-wimse-identifier and draft-ietf-wimse-http-signature, which he describes as past last call. This is a process record only and changes no protocol text.",
-      "summary_ja": "Justin Richer が、Joseph Salowey から届いた私信を公式記録としてメーリングリストに転送した。Salowey は、他のドラフトに関する追加の IPR 照会は見つからなかったとし、最終コールを通過した draft-ietf-wimse-workload-creds、draft-ietf-wimse-mutual-tls、draft-ietf-wimse-identifier、draft-ietf-wimse-http-signature の 4 件について既知の IPR はないと述べた。手続き上の記録であり、プロトコル本文の変更はない。",
-      "title": "IPR declarations",
-      "updated_at": "2026-11-20T20:26:50+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/HAxOOzAN-8rWDfzBtbvrJt4tTq4/",
-      "use_cases": [],
-      "use_cases_ja": []
     },
     "mail:HTjzLGpYvTrpvHAq8msB7YqKrvU": {
       "diagram": "",
@@ -1137,29 +1080,6 @@
       "url": "https://mailarchive.ietf.org/arch/msg/wimse/jBuYevn84xvICGd9DZpufi18Jqk/",
       "use_cases": [],
       "use_cases_ja": []
-    },
-    "mail:k1ywYY7Ib2dBilB2KSDYRhuSZqM": {
-      "diagram": "",
-      "first_seen": "2026-11-20",
-      "headline": "The author of draft-molas-agent-principal-refs-00 explains how a public agent registry would be graded against properties P5 and P6.",
-      "headline_ja": "draft-molas-agent-principal-refs-00 の著者が、公開エージェントレジストリを性質 P5 と P6 に照らしてどう評価するかを説明した。",
-      "id": "mail:k1ywYY7Ib2dBilB2KSDYRhuSZqM",
-      "kind": "mail",
-      "related": [],
-      "significance": "discussion",
-      "summary": "A participant running a public agent registry (a code, a date, active or revoked status, free lookup without an account) asked how it would be evaluated in draft-molas-agent-principal-refs-00. The author replied that P6 can be met if the withdrawal event and the time from it to the status change are stated, with the bound running from the event. They distinguished per-agent status from the principal's standing, meaning whether the accountable party behind the agent is still accepted. A registry carrying the second separately is the case that none of the five evaluated drafts bounds. On P5, a lookup by code sends a per-record value, so P5 is not met on that path. P5 is not a disqualifier, since properties are graded individually. If the lookup were the only status path, the grade would be Prevents. Publishing the whole list or a commitment to it would let a relying party avoid naming a record. The author evaluates only Internet-Drafts, so a deployment would need to be described in a draft before it is listed in Appendix A of -01. A third message suggests a SCITT (RFC 9943) Trust Registry could help, and links an article.",
-      "summary_ja": "公開エージェントレジストリ（コード、日付、active または revoked の状態、アカウント不要の無料照会）を運用する参加者が、draft-molas-agent-principal-refs-00 での評価を尋ねた。著者は、撤回イベントとそこから状態変更までの時間が明示され、その上限がイベント時点から計られるなら P6 を満たせると答えた。また、エージェント単位の状態と、エージェントの背後にある責任主体が今も受け入れられているかという主体の地位（standing）を区別した。後者を別個に担うレジストリは、評価対象の 5 つのドラフトのいずれも上限を設けていないケースにあたる。P5 については、コードによる照会はレコード固有の値を送るため、その経路では P5 を満たさない。ただし各性質は個別に評価されるので失格にはならない。照会が唯一の状態確認経路であれば評価は Prevents になる。一覧全体またはそのコミットメントを公開すれば、受信側はレコードを指定せずに取得できる。著者が評価するのは Internet-Draft のみであり、実運用の仕組みは Internet-Draft に記述されて初めて -01 の Appendix A に載せられる。三通目では SCITT (RFC 9943) の Trust Registry が役立つ可能性が示され、記事へのリンクが付されている。",
-      "title": "draft-molas-agent-principal-refs-00 - public registry as a case? (3 new messages)",
-      "updated_at": "2026-11-20T07:21:47+00:00",
-      "url": "https://mailarchive.ietf.org/arch/msg/wimse/k1ywYY7Ib2dBilB2KSDYRhuSZqM/",
-      "use_cases": [
-        "A registry operator wants to know whether a lookup-by-code design would pass privacy properties such as P5 in the evaluation.",
-        "A draft author deciding whether to publish a registry description as an Internet-Draft so it can be evaluated."
-      ],
-      "use_cases_ja": [
-        "レジストリ運営者が、コードによる照会方式が評価で P5 などのプライバシー性質を満たすかを知りたい場合。",
-        "ドラフト著者が、評価対象になるようレジストリの記述を Internet-Draft として公開すべきか判断する場合。"
-      ]
     },
     "mail:nBwuYsuknbHoBGnOD5aKr3_2XkQ": {
       "diagram": "",
